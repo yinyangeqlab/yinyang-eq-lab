@@ -103,7 +103,7 @@ export default function OwnerResearch() {
     return [...map.values()];
   }, [feedback]);
   const runs = useMemo(() => (data?.listeningRuns || []).filter(row => (mode === "all" || row.testMode === mode) && (!song || songKey(row) === song) && (!query || [handle(row.voterId), row.targetAName, row.targetBName, songLabel(row)].join(" ").toLowerCase().includes(query.toLowerCase()))).sort((a,b) => b.createdAt-a.createdAt), [data, mode, song, query]);
-  return <main className="owner-research"><Link className="owner-back-link" href="/"><img src="/brand-avatar.webp" alt="" /> YinYang EQ League <span>· Welcome</span></Link><header><h1>Private listening research</h1><p>Owner access only. Listener handles are stable labels derived from browser IDs; they are not verified identities. Audio files and raw IP addresses are not stored here.</p></header>
+  return <main className="owner-research"><Link className="owner-back-link" href="/"><img src="/brand-avatar-aligned.webp" alt="" /> YinYang EQ League <span>· Welcome</span></Link><header><h1>Private listening research</h1><p>Owner access only. Listener handles are stable labels derived from browser IDs; they are not verified identities. Audio files and raw IP addresses are not stored here.</p></header>
     {!data ? <div className="owner-login"><p>{loading ? "Loading private research…" : "Private research could not be loaded."}</p>{!loading && <button type="button" onClick={() => void load()}>Try again</button>}</div> : <>
       <TesterInvites />
       <NameFilterLab />

@@ -6,14 +6,14 @@ export const metadata: Metadata = {
   title: "YinYang EQ League",
   description: "Upload frequency response targets, compare curves, and discover the community favorites.",
   icons: {
-    icon: "/brand-favicon.png",
-    shortcut: "/brand-favicon.png",
-    apple: "/brand-avatar.png",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/brand-avatar-aligned.png",
   },
   openGraph: {
     title: "YinYang EQ League",
     description: "Upload frequency response targets, compare curves, and discover the community favorites.",
-    images: [{ url: "/brand-amoled.webp", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
+    images: [{ url: "/brand-amoled-aligned.webp", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
   },
 };
 

@@ -1729,7 +1729,7 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 @media(max-width:600px) { .vote-data-dialog { padding:19px; } .vote-data-dialog p, .vote-data-dialog li { font-size:13px; } }
 
 /* The square mark stays legible in navigation; the landscape artwork fills the welcome page. */
-.brand-icon{width:46px;height:46px;background:url(/brand-avatar.webp) center/cover no-repeat;border-radius:8px}
+.brand-icon{width:46px;height:46px;background:url(/brand-avatar-aligned.webp) center/cover no-repeat;border-radius:8px}
 @media(max-width:520px){.brand-icon{width:42px;height:42px}}
 
 /* Keep the stereo source labels visible in every shared playback waveform. */

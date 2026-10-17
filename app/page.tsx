@@ -23,10 +23,10 @@ export default function Welcome() {
 
   return <main className="welcome-shell">
     <section className="welcome-hero" aria-labelledby="welcome-title">
-      <div className="welcome-art" aria-hidden="true"><img ref={artwork} src="/brand-amoled.webp" alt="" /></div>
+      <div className="welcome-art" aria-hidden="true"><img ref={artwork} src="/brand-amoled-aligned.webp" alt="" /></div>
       <div className="welcome-shade" aria-hidden="true" />
       <header className="welcome-nav">
-        <a className="welcome-brand" href="/" aria-label="YinYang EQ League home"><img src="/brand-avatar.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
+        <a className="welcome-brand" href="/" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
         <nav aria-label="Welcome navigation"><a href="#how-it-works">How it works</a><a href="/owner-login">Owner sign in</a><a className="welcome-nav-enter" href="/shootout">Enter with invitation <span aria-hidden="true">↗</span></a></nav>
       </header>
       <div className="welcome-copy">
