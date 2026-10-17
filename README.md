@@ -2,6 +2,10 @@
 
 Source for the [YinYang EQ League](https://yinyangeq.com) listening site. Visitors compare headphone EQ targets with music, save measurements and tuning preferences, and review listening results. The app uses Next.js/Vinext, Cloudflare Workers, and D1.
 
+## Development
+
+This site was vibe coded by Yin Yang EQ Lab with GPT Codex. Yin Yang EQ Lab directed the project, reviewed its releases, and used Codex to help write and revise code and documentation. Third-party components and data keep their original credits and licenses below.
+
 ## License and provenance
 
 Copyright 2026 Yin Yang EQ Lab (@yinyangeqlab). Original application code is licensed under [Apache License 2.0](LICENSE). See [NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md) for copied components, data sources, and their separate licenses. Apache 2.0 permits broad reuse, including commercial and closed-source reuse, with its required notices.
