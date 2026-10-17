@@ -691,9 +691,13 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .shootout-content .measurement-picker .add-measurement-button .action-icon { width:18px; font-size:20px; }
 .shootout-content .measurement-picker .add-measurement-button:not(:disabled):hover { background:#173746; border-color:#63bce0; color:#e1f8ff; box-shadow:0 0 13px #359dcc55; transform:translateY(-1px); }
 @media(max-width:520px) { .shootout-content .measurement-picker label { grid-template-columns:1fr; gap:3px; } }
-.shootout-content .voting-row { display:flex; align-items:center; gap:12px; width:100%; margin:0 0 8px; }
-.shootout-content .voting-row .shootout-controls { flex:1 1 auto; min-width:0; margin:0; }
-.shootout-content .voting-row .listen-progress { flex:0 1 460px; width:460px; max-width:44%; margin:0 0 0 auto; grid-template-columns:minmax(115px,.8fr) minmax(240px,1.2fr); gap:8px; padding:4px 8px; }
+.shootout-content .voting-row { display:flex; flex-wrap:wrap; align-items:flex-start; gap:12px; width:100%; margin:0 0 8px; }
+.shootout-content .vote-decision { flex:1 1 620px; min-width:0; }
+.shootout-content .voting-row .shootout-controls { flex-wrap:wrap; min-width:0; margin:0; }
+.shootout-content .voting-row .choice-controls { display:grid; grid-template-columns:1fr 1.2fr 1fr; flex:1 1 360px; min-width:0; }
+.shootout-content .voting-row .choice-controls button { min-width:0; max-width:none; height:auto; min-height:34px; white-space:normal; line-height:1.25; }
+.shootout-content .voting-row .tie-help { margin:8px 0 0; max-width:none; }
+.shootout-content .voting-row .listen-progress { flex:1 1 390px; width:auto; min-width:0; max-width:none; margin:0; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:8px; padding:4px 8px; }
 .shootout-content .voting-row .hearing-copy { display:grid; gap:2px; white-space:normal; }
 .shootout-content .voting-row .hearing-copy strong { font-size:10px; }
 .shootout-content .voting-row .hearing-copy span { font-size:10px; }
@@ -702,7 +706,8 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .shootout-content .voting-row .hearing-sides label span { font-size:10px; }
 .shootout-content .voting-row .hearing-sides progress { grid-column:1/-1; height:5px; }
 @media(max-width:1100px) {
-  .shootout-content .voting-row { flex-direction:column; align-items:stretch; gap:5px; }
+  .shootout-content .voting-row { flex-direction:column; align-items:stretch; gap:8px; }
+  .shootout-content .vote-decision { flex:0 1 auto; }
   .shootout-content .voting-row .listen-progress { flex:1 1 auto; width:100%; max-width:none; margin:0; }
 }
 
@@ -1784,3 +1789,5 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .ranking-method a {color:#5cd8c9;}
 @media(max-width:780px) {.ranking-deviation {font-size:10px;}.record .ranking-provisional {font-size:9px;}}
 .tie-help {margin:14px 0 0;color:#8da4b4;font-size:12px;line-height:1.6;max-width:760px;}
+
+@media(max-width:480px) { .shootout-content .voting-row .listen-progress { grid-template-columns:1fr; } }
