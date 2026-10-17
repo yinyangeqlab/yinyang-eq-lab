@@ -43,3 +43,18 @@
 .library-eq-switch input{flex:none;width:27px;height:27px;accent-color:#88efd0;cursor:inherit}
 .library-eq-switch-copy{display:flex;flex-direction:column;gap:3px}.library-eq-switch-copy strong{color:#f2fff9;font-size:19px;line-height:1.1}.library-eq-switch-copy small{color:#a9c5c4;font-size:11px;font-weight:750;letter-spacing:.04em;text-transform:uppercase}.library-eq-switch.is-on .library-eq-switch-copy small{color:#b9ffe8}
 @media(max-width:600px){.library-eq-heading .library-eq-switch{width:100%;justify-content:center}}
+
+/* Keep the introduction compact so listening tools appear sooner. */
+.library-header { flex-wrap:wrap; padding:18px 0; }
+.library-hero { padding:32px 0; }
+.library-hero h1 { font-size:clamp(36px,5vw,62px); line-height:1.05; margin:16px 0; }
+.library-counts { margin-top:20px; }
+.library-counts span { padding:11px 15px; }
+.library-eq { margin-top:24px; padding:24px; }
+.library-shortlist { margin:24px 0; padding:24px; }
+.library-section { padding:24px 0 32px; }
+.library-section-head { padding-top:24px; margin-bottom:20px; }
+@media(max-width:600px) {
+  .library-hero { padding:24px 0; }
+  .library-eq,.library-shortlist { padding:18px; }
+}

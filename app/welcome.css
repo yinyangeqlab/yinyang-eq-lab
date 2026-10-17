@@ -75,3 +75,8 @@
 @media(prefers-reduced-motion:reduce){.welcome-art img{transform:none!important;will-change:auto}.welcome-primary{transition:none}}
 
 @media(max-width:360px){.welcome-nav{flex-direction:column;align-items:stretch;gap:12px}.welcome-brand{justify-content:center}.welcome-nav nav{justify-content:center}.welcome-nav nav .welcome-nav-enter{width:100%;text-align:center}}
+
+/* Avoid oversized gaps between the introduction, steps, and final link. */
+.welcome-how { padding-top:48px; padding-bottom:48px; }
+.welcome-section-head { margin-bottom:28px; }
+.welcome-last-call { padding-top:32px; margin-top:32px; }
