@@ -18,6 +18,16 @@ A browser listening lab for headphone EQ: compare targets, shape your own curve,
 
 </div>
 
+## Mobile layouts supported!
+
+Take a quick, casual tour of the phone layout: **45 seconds · vertical 9:16 · actual browser interactions**.
+
+<a href="https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/mobile-layouts-2026-10-17"><img src="docs/images/mobile-demo-poster.jpg" alt="Watch the mobile walkthrough, including hands-on curve adjustments in Preference Tuning" width="270"></a>
+
+**[Watch or download the mobile walkthrough →](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/mobile-layouts-2026-10-17/yinyang-eq-league-mobile-walkthrough.mp4)**
+
+A brief look at Welcome, Shootout, Rankings, Song suggestions, Upload target, Measurements, My results, Music library, and Preference Tuning. [Video and music credits](docs/MOBILE_DEMO.md).
+
 ## Hear the difference
 
 What happens when the same song meets two different headphone targets? YinYang EQ League lets you switch between them, listen, and choose **A**, **B**, or **Unknown / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
