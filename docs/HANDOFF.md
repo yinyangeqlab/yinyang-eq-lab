@@ -10,7 +10,7 @@ This checkpoint brings the public application sources up to the live cooldown po
 - Regression checks for the write policy, ranking API privacy/filters, server listening runs, cooldown SQL, and the existing listening/ranking behavior.
 - Updated research-method documentation and the [names-only target inventory](TARGET_INVENTORY.md).
 
-The remote mobile-demo documentation and media added on `main` were preserved when integrating the two previously unpushed UI commits. No forced history rewrite is required.
+The remote mobile-demo documentation and media added on `main` were preserved when integrating the two previously unpushed UI commits. That integration did not require a history rewrite. A later, separate attribution correction replaced one misattributed commit and its descendants while preserving their file trees.
 
 ## Live targets and license rule
 
@@ -28,8 +28,18 @@ Application directories were compared with the working project using `scripts/sy
 
 ## Verification
 
-TypeScript (`tsc --noEmit`), the production build, and all ten public listening/ranking/write-policy regression scripts passed for this checkout. The source sync reported zero remaining eligible differences. The final Git index is checked with `npm run check:release` before commit. Target publication checks additionally verified the final six live rows, approved count 41, and unchanged prior target content. No synthetic production votes were submitted for this release verification.
+TypeScript (`tsc --noEmit`), the production build, and all ten public listening/ranking/write-policy regression scripts passed for this checkout. The source sync reported zero remaining eligible differences at that checkpoint; this is not a claim about later working-folder edits. The final Git index is checked with `npm run check:release` before commit. Target publication checks additionally verified the final six live rows, approved count 41, and unchanged prior target content. No synthetic production votes were submitted for this release verification.
 
 ## Next owner tasks
 
 Audit redistribution terms for the earlier live target pool before any future distribution of its curve files. Continue to keep raw target data out of this source release unless both the owner's publication scope and the curve's actual license permit it. Measurement-rig compatibility remains an owner review concern.
+
+## README and source accuracy correction — October 17, 2026
+
+The README now distinguishes the populated live site from this source release, including owner-supplied Shantae album copies, the two excluded tracks, Bandcamp embeds without application EQ, and the omitted waveform cache. Library text follows the configured soundtrack mapping. The research protocol now documents the 20 metadata entries, Open-mode owner records and actual consent boundaries.
+
+The source adds original measurement contribution/download handlers, bounded chunk storage, owner authorization and local-save recovery after failed contributions. Migration `0016_measurement_file_chunks.sql` is additive. Existing SQL filenames are retained, the journal lists every migration in filename order, and a current schema snapshot includes tables also used by raw SQL. `docs/LOCAL_SETUP.md` and `npm run setup:local` cover a fresh local database and ignored development secrets; loopback development emulates the excluded trusted edge only in development builds.
+
+GitHub publication does not deploy this correction or apply migration `0016` to the live database. Independently edited working-folder pages and styles remain separate from this bounded correction. Earlier verification and source-sync statements above describe their original dated checkpoint.
+
+Verification of this correction: TypeScript, the production build and all twelve regression checks passed. The migration chain and current schema snapshot agree, and an isolated Drizzle generation reported no schema changes. A temporary checkout successfully initialized local D1, established a mock sign-in and completed an exact-byte original-file upload/download round trip. Checks used the existing dependency installation with Node 26.11.1; a fresh dependency installation and the minimum supported Node version were not retested.

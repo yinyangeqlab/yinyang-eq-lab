@@ -51,6 +51,7 @@ for (metadata, _), rel in zip(entries, paths):
         parts & blocked_parts
         or name in blocked_names
         or name.startswith(".env")
+        or name.startswith(".dev.vars")
         or name.startswith("pulumi.") and name.endswith(".yaml")
         or rel.suffix.lower() in blocked_suffixes
         or any(word in name for word in ("credential", "token", "secret"))
