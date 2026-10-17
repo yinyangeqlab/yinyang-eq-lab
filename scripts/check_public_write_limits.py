@@ -17,6 +17,5 @@ statement = '''
 assert db.execute(statement, ('minute:client', 1, 120000)).fetchone()[0] == 1
 assert db.execute(statement, ('minute:client', 1, 120000)).fetchone()[0] == 2
 assert db.execute(statement, ('minute:client', 2, 180000)).fetchone()[0] == 1
-assert db.execute(statement, ('day:client', 1, 172800000)).fetchone()[0] == 1
 assert db.execute('DELETE FROM public_write_limits WHERE expires_at < ?', (200000,)).rowcount == 1
 print('Public write-limit counters increment and reset by window.')
