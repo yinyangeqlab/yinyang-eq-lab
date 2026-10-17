@@ -1,5 +1,13 @@
 # Source handoff — October 17, 2026
 
+## Compact header spacing — prepared October 17, 2026
+
+The Shootout header now groups Welcome, Preference Tuning, Music Library and the data notice next to the brand with consistent gaps. Its six section tabs use content-sized buttons instead of stretching across the viewport. Owner view remains a separate small static utility at the far right. Narrow layouts retain grouped controls and wrapping tabs; the smallest header also places Owner view beside the brand.
+
+The local browser preview was inspected at 320, 390, 768, 1440 and 2519 px without horizontal overflow; the final smallest layout was checked after aligning Owner view beside the brand. TypeScript and the production build passed. The working application and isolated release snapshot contain the same two changed application files. A screenshot is retained privately as `artifacts/compact-navigation-preview.png` outside this public checkout.
+
+Deployment preview showed only the existing Worker would change, with three other infrastructure resources unchanged. The live deployment attempt was rejected by automatic approval review because the spacing request did not explicitly authorize production publication. This header update is prepared locally; release 39 remains the last successfully deployed release recorded here. Obtain explicit deployment approval before publishing the prepared header change.
+
 ## Live measurement migration and verification — October 17, 2026
 
 Migration `0016_measurement_file_chunks.sql` was applied to the existing live D1 database and its columns, composite primary key and cascading foreign key were verified. Existing target, vote, listening-run and measurement counts were preserved. No initializer or historical migration replay was used.
