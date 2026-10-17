@@ -1,4 +1,4 @@
-import { and, eq, gte } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { comparisonChoices, targets } from "@/db/schema";
 import { targetHeadphoneType } from "@/lib/target-type";
@@ -22,8 +22,6 @@ export async function POST(request: Request) {
     const bType = targetHeadphoneType({ name: b.name, measurement: b.measurement });
     if ((aType && aType !== data.headphoneType) || (bType && bType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
     const now = Date.now();
-    const recent = await db.select({ id: comparisonChoices.id, createdAt: comparisonChoices.createdAt }).from(comparisonChoices).where(and(eq(comparisonChoices.participantId,participantId),gte(comparisonChoices.createdAt,now-86400000))).limit(51);
-    if (recent.length >= 50 || recent.filter(row => row.createdAt >= now-600000).length >= 6) return Response.json({ error: "Comparison limit reached. Please try later." }, { status: 429 });
     const shareSong = data.shareSong === true;
     await db.insert(comparisonChoices).values({ id, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now });
     return Response.json({ ok:true }, { status:201 });

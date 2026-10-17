@@ -4,7 +4,7 @@
 
 A listener may select a browser-saved raw headphone measurement. The browser fits up to ten peaking filters between that response and each target before playback. Target submissions include the source measurement, its in ear/over ear type, rig, fit setup, and notes. The user may name the target independently of the headphone model. The listener's selected measurement and individual trial log remain in that browser; they are not included in shared votes. **My results** includes private and recorded answers, EQ fit RMS, playback times, and descriptive repeated-pair consistency. Browser storage is not an authenticated cross-device profile.
 
-In-Ear and Over-Ear public ranking views recompute Elo from votes according to the listener's selected headphone category. A target's declared category controls which listening pool it can enter; targets without a declared category can enter both. The shared vote record does not include a specific headphone model. My results can show a browser-private preference tally by model from locally saved trials, but that tally is not a public or cross-listener ranking. A target curve and raw response measured on incompatible rigs may produce a misleading EQ fit, so source rig compatibility needs owner review before relying on the ranking.
+In-Ear and Over-Ear public ranking views fit the experimental reliability-weighted Bradley–Terry model to votes according to the listener's selected headphone category. A target's declared category controls which listening pool it can enter; targets without a declared category can enter both. The shared vote record does not include a specific headphone model. My results can show a browser-private preference tally by model from locally saved trials, but that tally is not a public or cross-listener ranking. A target curve and raw response measured on incompatible rigs may produce a misleading EQ fit, so source rig compatibility needs owner review before relying on the ranking.
 
 ## What is collected per vote
 
@@ -26,7 +26,7 @@ Both research rankings use the standard blind-vote requirement: at least 5 secon
 
 **Exact sample:** Only votes with a full-file SHA-256 plus title, artist, album, and recording ID are included. The five fields must match across at least two distinct browser IDs. Identical hashes indicate identical file bytes. Different encodings or tags can produce different hashes even when the audible content is the same.
 
-Each ranking recomputes Elo from only its qualified votes, in vote-time order. The general all-votes ranking remains an exploratory baseline.
+Each ranking fits the experimental reliability-weighted Bradley–Terry model to only its qualified votes. Accepted decisive repeats contribute to a browser/pair preference average with bounded combined evidence. Same-filter check reliability is frozen on each decisive vote; later checks affect future votes. Unknown/tie answers and identical-target checks do not directly change ratings or uncertainty. Ratings use a 1500 ± 350 SD Gaussian prior and a full-Hessian Laplace SD estimate, and are ordered by the lower approximate 95% interval bound. These weights and priors are assumptions; uncertainty is conditional on the model and estimated reliability. The general all-votes ranking remains exploratory. See [the change notes](docs/LOCAL_CHANGES.md) for migration and validation details.
 
 ## Limits before publication as research
 

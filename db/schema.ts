@@ -1,4 +1,4 @@
-import { index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { uniqueIndex, index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const targets = sqliteTable("targets", {
   id: text("id").primaryKey(),
@@ -65,6 +65,7 @@ export const listeningRuns = sqliteTable("listening_runs", {
   targetAName: text("target_a_name").notNull(),
   targetBName: text("target_b_name").notNull(),
   measurementId: text("measurement_id"),
+  trialId: text("trial_id"),
   result: text("result").notNull(),
   intervals: text("intervals").notNull(),
   heardA: real("heard_a").notNull(),
@@ -75,7 +76,7 @@ export const listeningRuns = sqliteTable("listening_runs", {
   songAlbum: text("song_album"),
   recordingId: text("recording_id"),
   createdAt: integer("created_at").notNull(),
-}, table => [index("listening_runs_voter_created_idx").on(table.voterId, table.createdAt)]);
+}, table => [index("listening_runs_voter_created_idx").on(table.voterId, table.createdAt), uniqueIndex("listening_runs_trial_idx").on(table.trialId)]);
 
 export const votes = sqliteTable("votes", {
   id: text("id").primaryKey(),
@@ -96,6 +97,7 @@ export const votes = sqliteTable("votes", {
   sampleRate: integer("sample_rate"),
   bitrate: integer("bitrate"),
   duration: real("duration"),
+  reliabilityWeight: real("reliability_weight").notNull().default(0.5),
   eligible: integer("eligible").notNull().default(0),
   testMode: text("test_mode").notNull().default("open"),
   headphoneType: text("headphone_type"),

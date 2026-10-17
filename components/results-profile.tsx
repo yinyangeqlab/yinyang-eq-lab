@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { checkReliability } from "@/lib/preference-ranking";
 
 export type Trial = {
   id: string; sessionId?: string; result?: "a" | "b" | "tie"; catchTrial?: boolean; createdAt: number; pair: [string, string]; pairNames: [string, string]; winnerId: string;
@@ -42,8 +43,11 @@ export default function ResultsProfile({ trials }: { trials: Trial[] }) {
     const counts = [group.filter(row=>row.result==="tie").length,group.filter(row=>row.result!=="tie"&&row.winnerId===group[0].pair[0]).length,group.filter(row=>row.result!=="tie"&&row.winnerId===group[0].pair[1]).length];
     return sum + Math.max(...counts) / group.length;
   }, 0) / repeated.length : null;
+  const calibrationChecks = rows.filter(row => row.mode !== "open" && row.pair?.[0] === row.pair?.[1]);
+  const calibration = checkReliability(calibrationChecks.filter(row => row.result === "tie").length, calibrationChecks.length);
   return <><div className="heading-row"><div><h1>My results</h1><p>This profile stays in this browser. Expand a trial to inspect the answer, measurement, listening time, and repeat consistency.</p></div></div>
     <div className="metric-grid"><div><strong>{rows.length}</strong><span>Total trials</span></div><div><strong>{recorded.length}</strong><span>Recorded votes</span></div><div><strong>{rows.length - recorded.length}</strong><span>Private trials</span></div><div><strong>{agreement === null ? "—" : `${Math.round(agreement * 100)}%`}</strong><span>Repeated pair agreement</span></div></div><p className="footnote">Same-filter checks: {checks.length} · correct tie answers: {checkRate===null?"—":`${Math.round(checkRate*100)}%`} · accuracy SD: {checkSd===null?"—":checkSd.toFixed(3)}.</p>
+    <p className="footnote">Identical-target check reliability: {calibrationChecks.length ? `${Math.round(calibration.mean * 100)}% ± ${Math.round(calibration.sd * 100)} percentage points SD` : "Not calibrated yet"} ({calibrationChecks.length} checks; Beta(2, 2) prior). This estimates check performance, not whether your preferences are correct. New check results change the influence of future decisive ranked answers.</p>
     <p className="footnote">Repeated pair agreement is the average majority choice rate for pairs tried more than once.</p>
     <section className="private-list personal-model-ranking"><h2>Your target preferences by headphone model</h2><p className="footnote">Private to this browser. These are your answered trials with that model, across blind and Open modes. Each tie counts as half a preference for each target; repeated choices are included. This is your tally, not a public rating.</p>{models.length ? <><label>Headphone model <select value={activeModel} onChange={event=>setSelectedModel(event.target.value)}>{models.map(model=><option key={model} value={model}>{model}</option>)}</select></label><p className="footnote">{modelTrials.length} comparisons for {activeModel}. Scores with fewer than 10 comparisons are provisional.</p><div className="personal-model-head"><span>Target</span><span>Wins / losses / ties</span><span>Preference</span></div>{modelRanking.map((target,index)=>{const total=target.wins+target.losses+target.ties;return <div className="personal-model-row" key={target.id}><span><b>{index+1}. {target.name}</b>{total<10&&<small>Provisional</small>}</span><span>{target.wins} / {target.losses} / {target.ties}</span><strong>{total?`${Math.round((target.wins+target.ties*.5)/total*100)}%`:"—"}</strong></div>;})}</> : <p className="footnote">No answered trials have a saved headphone model yet.</p>}</section>
     <div className="private-list"><h2>Trials and results</h2>{rows.length ? rows.map(row => {
