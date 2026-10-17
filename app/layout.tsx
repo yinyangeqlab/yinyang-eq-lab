@@ -13,7 +13,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "YinYang EQ League",
     description: "Upload frequency response targets, compare curves, and discover the community favorites.",
-    images: [{ url: "/brand-amoled-aligned.webp", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
+    images: [{ url: "/social-preview-aligned-v2.png", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/social-preview-aligned-v2.png"],
   },
 };
 
