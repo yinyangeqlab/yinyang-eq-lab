@@ -171,7 +171,8 @@ function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { ana
 type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: BiquadFilterNode[]; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode };
 export default function PreferenceTuning() {
   const [targets, setTargets] = useState<Target[]>([fallback]);
-  const [curatedLeader, setCuratedLeader] = useState<{ id: string; name: string } | null>(null);
+  const [curatedRanking, setCuratedRanking] = useState<{ id: string; name: string; rank: number }[]>([]);
+  const curatedLeader = curatedRanking.find(row => row.rank === 1) ?? null;
   const [selected, setSelected] = useState("flat");
   const [settings, setSettings] = useState<Settings>(defaults);
   const [expanded, setExpanded] = useState(false);
@@ -241,6 +242,8 @@ export default function PreferenceTuning() {
     try { setMeasurements(JSON.parse(localStorage.getItem("target-lab-measurements") || "[]")); } catch {}
     setMeasurementId(localStorage.getItem("target-lab-active-measurement") || "");
     try { const savedRows = JSON.parse(localStorage.getItem("target-lab-measurements") || "[]") as HeadphoneMeasurement[]; const active = savedRows.find(row => row.id === localStorage.getItem("target-lab-active-measurement")); if (active) setHeadphoneType(active.type); } catch {}
+    let stopped = false;
+    let stopRankingRefresh = () => {};
     async function load() {
       try {
         const response = await fetch("/api/targets");
@@ -249,28 +252,43 @@ export default function PreferenceTuning() {
         let privateTargets: Target[] = [];
         try { privateTargets = JSON.parse(localStorage.getItem("target-lab-private-targets") || "[]"); } catch {}
         setTargets([fallback, ...approved.filter(t => Array.isArray(t.points)), ...privateTargets.filter(t => Array.isArray(t.points))]);
-        try {
-          const rankingResponse = await fetch("/api/research", { cache: "no-store" });
-          if (rankingResponse.ok) {
+        let firstRankingLoad = true;
+        let rankingRequest = 0;
+        async function refreshRanking() {
+          const request = ++rankingRequest;
+          try {
+            const rankingResponse = await fetch("/api/research", { cache: "no-store" });
+            if (!rankingResponse.ok) return;
             const ranking = await rankingResponse.json() as { curated?: { rows?: { id: string; name: string }[] } };
-            const leader = ranking.curated?.rows?.find(row => approved.some(target => target.id === row.id));
-            setCuratedLeader(leader || null);
-            if (leader && !hadSavedSelection.current) {
+            if (stopped || request !== rankingRequest) return;
+            const rows = (ranking.curated?.rows ?? []).map((row, index) => ({ ...row, rank: index + 1 }));
+            setCuratedRanking(rows);
+            const leader = rows.find(row => row.rank === 1 && approved.some(target => target.id === row.id));
+            if (firstRankingLoad && leader && !hadSavedSelection.current) {
               editRef.current = { ...editRef.current, selected: leader.id }; setSelected(leader.id);
             }
-          }
-        } catch {}
+            firstRankingLoad = false;
+          } catch { /* Keep the last successful ranking during a temporary failure. */ }
+        }
+        if (stopped) return;
+        const timer = window.setInterval(() => { if (!document.hidden) void refreshRanking(); }, 60_000);
+        const onFocus = () => { void refreshRanking(); };
+        window.addEventListener("focus", onFocus);
+        stopRankingRefresh = () => { window.clearInterval(timer); window.removeEventListener("focus", onFocus); };
+        await refreshRanking();
       } catch { setMessage("Shared targets are unavailable right now. You can still use a flat reference or import a curve."); }
     }
     void load();
-    return () => { if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
+    return () => { stopped = true; stopRankingRefresh(); if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
   }, []);
   useEffect(() => { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); }, [settings, selected, expanded]);
   useEffect(() => { if (axisLoaded) localStorage.setItem("preference-tuning-axis-v1", JSON.stringify(axis)); }, [axis, axisLoaded]);
   const target = targets.find(t => t.id === selected) || fallback;
   const nirvanaRestricted = target.name.trim().toLowerCase() === "peqdb nirvana" || (target.name.trim().toLowerCase() === "nirvana" && target.creator.trim().toLowerCase() === "peqdb");
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
-  const targetOptions = useMemo(() => curatedLeader ? [...targets.filter(t => t.id === curatedLeader.id), ...targets.filter(t => t.id !== curatedLeader.id)] : targets, [targets, curatedLeader]);
+  const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
+  const selectedCuratedRank = curatedRanks.get(selected);
+  const targetOptions = useMemo(() => [...targets].sort((a, b) => (curatedRanks.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (curatedRanks.get(b.id) ?? Number.MAX_SAFE_INTEGER)), [targets, curatedRanks]);
   const filters = useMemo(() => filtersFor(settings), [settings]);
   const measurement = measurements.find(row => row.id === measurementId);
   const fit = useMemo(() => measurement?.points?.length && normalized.length ? fitAutoEq(measurement.points, normalized) : null, [measurement, normalized]);
@@ -437,7 +455,7 @@ export default function PreferenceTuning() {
     if (!next) for (const control of GAIN_CONTROLS) limited[control.key] = Math.max(-control.limit, Math.min(control.limit, limited[control.key]));
     applyEdit({ ...editRef.current, expanded: next, settings: limited });
   }
-  function changeTarget(id: string) { applyEdit({ ...editRef.current, selected: id }); }
+  function changeTarget(id: string) { hadSavedSelection.current = true; applyEdit({ ...editRef.current, selected: id }); }
   function undo() { if (!past.length) return; const previous = past[past.length - 1]; setPast(past.slice(0, -1)); setFuture([editRef.current, ...future]); showEdit(previous); }
   function redo() { if (!future.length) return; const next = future[0]; setPast([...past, editRef.current]); setFuture(future.slice(1)); showEdit(next); }
   function closeReset() { setResetOpen(false); resetButton.current?.focus(); }
@@ -496,7 +514,7 @@ export default function PreferenceTuning() {
       <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>
       <div className="pt-workbench">
         <section className="pt-setup" aria-label="Tuning setup">
-          <div className="pt-baseline"><div className="pt-setup-label"><span className="pt-step" title={curatedLeader ? `Current public curated blind #1: ${curatedLeader.name}` : "The public curated blind ranking has no eligible votes yet"}>{curatedLeader ? "#1 CURATED BLIND" : "CURATED: NO VOTES"}</span><strong>Target</strong></div><div className="pt-selects"><label><span className="pt-visually-hidden">Target curve</span><select aria-label="Target curve" value={selected} onChange={e => changeTarget(e.target.value)}>{targetOptions.map(t => <option key={t.id} value={t.id}>{curatedLeader?.id === t.id ? "#1 Curated blind · " : ""}{t.name} · {t.creator}</option>)}</select></label><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={e => void loadCurve(e.target.files?.[0])}/></label></div>{curatedLeader ? <span className="pt-leader-chip" title={`Current public curated blind leader: ${curatedLeader.name}`}>#1 Curated blind</span> : <span className="pt-leader-chip pt-leader-empty" title="The public curated blind ranking has no eligible votes yet">Awaiting ranked votes</span>}</div>
+          <div className="pt-baseline"><div className="pt-setup-label"><span className="pt-step" title={selectedCuratedRank ? `Selected target's current curated blind rank: #${selectedCuratedRank}` : "This target has no eligible curated blind ranking"}>{selectedCuratedRank ? `#${selectedCuratedRank} CURATED BLIND` : "UNRANKED"}</span><strong>Target</strong></div><div className="pt-selects"><label><span className="pt-visually-hidden">Target curve</span><select aria-label="Target curve" value={selected} onChange={e => changeTarget(e.target.value)}>{targetOptions.map(t => <option key={t.id} value={t.id}>{curatedRanks.has(t.id) ? `#${curatedRanks.get(t.id)} · ` : "Unranked · "}{t.name} · {t.creator}</option>)}</select></label><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={e => void loadCurve(e.target.files?.[0])}/></label></div></div>
           <div className="pt-headphones"><div className="pt-setup-label"><span className="pt-step">HEADPHONES</span><strong>Playback fit</strong></div><div className="shootout-content pt-picker"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div></div>
         </section>
         {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}
