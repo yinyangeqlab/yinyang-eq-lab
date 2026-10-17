@@ -32,7 +32,7 @@ What happens when the same song meets two different headphone targets? YinYang E
 | **Bring your music · Blind Ranked** | Compare hidden targets using your own stereo song. | Eligible A/B votes enter the bring-your-music ranking. |
 | **Open comparison · Unranked** | Choose named targets and explore freely. | Personal results and private owner research; public rankings stay blind. |
 
-Blind tests require **at least five seconds on each side** before the voting buttons unlock. Ties, repeated pairs, and same-filter checks are handled separately from ranking votes. Rankings are exploratory listener preferences, and depend on the headphones, measurement, music, and listener.
+Blind tests require **at least five seconds on each side** before the voting buttons unlock. Unknown/tie answers and same-filter checks do not change target rankings. Accepted decisive repeats count with reduced evidence weight per browser and target pair. Rankings are exploratory listener preferences, and depend on the headphones, measurement, music, and listener.
 
 ## Make the curve yours
 
@@ -69,7 +69,7 @@ npm ci
 npm run dev
 ```
 
-The checked-in `.openai/hosting.json` contains only a local D1 binding placeholder, `DB`; it has no account ID or credentials. Apply the SQL migrations in [`drizzle/`](drizzle/) in order, taking care with the separately named `0012` migrations. Use `npm run build` to build the application.
+The checked-in `.openai/hosting.json` contains only a local D1 binding placeholder, `DB`; it has no account ID or credentials. Apply the SQL migrations in [`drizzle/`](drizzle/) in order, taking care with the separately named `0012` migrations. Apply `0015_ranked_repeats_uncertainty.sql` before running the updated vote and research APIs. Use `npm run build` to build the application.
 
 This is a clean source release. Production data, credentials, deployment state, invitation-gate infrastructure, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
 
@@ -95,3 +95,7 @@ You can also reach Yin Yang EQ Lab at **[yinyangeqlab@gmail.com](mailto:yinyange
 Stage changes with Git and run `npm run check:release`. Review `git diff --cached --name-only` and each new file's redistribution rights. Never add `.env*`, local tokens, the working database, `infra/pulumi/Pulumi.*.yaml`, `public/music/`, `.sites-checkout/`, or build output.
 
 </details>
+
+## Track local updates
+
+See [the local change notes and sync workflow](docs/LOCAL_CHANGES.md) for the October 17 application checkpoint, database requirement, verification, release exclusions, and how to bring future working-folder edits into this Git checkout.

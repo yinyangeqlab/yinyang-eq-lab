@@ -1,4 +1,4 @@
-import { and, count, eq, gte } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { listeningRuns, rankedTrials } from "@/db/schema";
 import { intervalStats, parseIntervals } from "@/lib/listening";
@@ -24,16 +24,16 @@ export async function POST(request: Request) {
     const shareSong = testMode === "blind" || data.shareSong === true;
     const song = (key: string, max = 120) => shareSong ? String(data[key] ?? "").trim().slice(0, max) || null : null;
     const db = getDb();
-    if (testMode !== "open") {
-      const trialId = String(data.trialId ?? "");
+    const trialId = testMode === "open" ? null : String(data.trialId ?? "");
+    if (trialId !== null) {
       if (!uuid.test(trialId)) return Response.json({ error: "Invalid ranked trial." }, { status: 400 });
       const issued = await db.select().from(rankedTrials).where(eq(rankedTrials.id, trialId)).get();
       if (!issued || issued.voterId !== voterId || issued.testMode !== testMode || issued.sideA !== targetAId || issued.sideB !== targetBId) return Response.json({ error: "Ranked trial does not match this comparison." }, { status: 409 });
+      if (Date.now() - issued.issuedAt < 10000 || stats.heardA < 5 || stats.heardB < 5) return Response.json({ error: "Blind comparisons require at least 5 seconds of playback per side." }, { status: 400 });
+      if (Date.now() - issued.issuedAt > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
     }
-    const recent = await db.select({ total: count() }).from(listeningRuns).where(and(eq(listeningRuns.voterId, voterId), gte(listeningRuns.createdAt, Date.now() - 3600000)));
-    if (recent[0].total >= 120) return Response.json({ error: "Research run limit reached. Please try later." }, { status: 429 });
     await db.insert(listeningRuns).values({
-      id, voterId, testMode, headphoneType, targetAId, targetBId,
+      id, voterId, testMode, headphoneType, targetAId, targetBId, trialId,
       targetAName: String(data.targetAName ?? "").trim().slice(0, 80),
       targetBName: String(data.targetBName ?? "").trim().slice(0, 80),
       measurementId, result, intervals: JSON.stringify(intervals), ...stats,

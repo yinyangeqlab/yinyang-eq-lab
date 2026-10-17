@@ -1,6 +1,7 @@
 import { maintenanceResponse } from "@/lib/maintenance";
 import { getDb } from "@/db";
 import { targets, votes } from "@/db/schema";
+import { rankPreferences } from "@/lib/preference-ranking";
 import { curatedTracks } from "@/lib/curated-tracks";
 
 const norm = (value: string | null | undefined) => (value ?? "").trim().toLowerCase().replace(/\s+/g, " ");
@@ -27,21 +28,13 @@ export async function GET() {
     const key = [v.sha256, v.songTitle, v.songArtist, v.songAlbum, v.recordingId].map(norm).join("|");
     return (cohorts.get(key)?.size ?? 0) >= 2;
   });
-  const rank = (selected: typeof allVotes) => {
-    const rows = new Map(allTargets.filter(t => t.status === "approved").map(t => [t.id, { id: t.id, name: t.name, creator: t.creator, rating: 1500, wins: 0, losses: 0 }]));
-    for (const vote of selected.sort((a, b) => a.createdAt - b.createdAt)) {
-      const winner = rows.get(vote.winnerId), loser = rows.get(vote.loserId);
-      if (!winner || !loser) continue;
-      const delta = 24 * (1 - 1 / (1 + Math.pow(10, (loser.rating - winner.rating) / 400)));
-      winner.rating += delta; loser.rating -= delta; winner.wins++; loser.losses++;
-    }
-    return { voteCount: selected.length, rows: [...rows.values()].filter(t => t.wins + t.losses).sort((a, b) => b.rating - a.rating) };
-  };
+  const approvedTargets = allTargets.filter(target => target.status === "approved");
+  const rank = (selected: typeof allVotes) => rankPreferences(approvedTargets, selected);
   const byType = (selected: typeof allVotes, type: "ie" | "oe") => {
     return rank(selected.filter(v => v.headphoneType === type)).rows;
   };
   const randomVotes=qualified.filter(v=>v.testMode==="blind"),bringVotes=qualified.filter(v=>v.testMode==="bring");
   const reasonCounts=Object.fromEntries(["Sounds harsh","Too bright","Too dark","Too muddy","Too loud","Too quiet"].map(reason=>[reason,qualified.filter(v=>{try{return JSON.parse(v.reasonTags??"[]").includes(reason);}catch{return false;}}).length]));
-  return Response.json({ reasonCounts, all: rank(qualified), random: rank(randomVotes), bring: rank(bringVotes), curated: { ...rank(curatedVotes), trackCount: curatedTracks.length }, verified: rank(verifiedVotes),
+  return Response.json({ methodology: "weighted-bradley-terry-laplace-v1", reasonCounts, all: rank(qualified), random: rank(randomVotes), bring: rank(bringVotes), curated: { ...rank(curatedVotes), trackCount: curatedTracks.length }, verified: rank(verifiedVotes),
     categories: { random: { ie: byType(randomVotes, "ie"), oe: byType(randomVotes, "oe") }, bring: { ie: byType(bringVotes, "ie"), oe: byType(bringVotes, "oe") }, all: { ie: byType(qualified, "ie"), oe: byType(qualified, "oe") }, curated: { ie: byType(curatedVotes, "ie"), oe: byType(curatedVotes, "oe") }, verified: { ie: byType(verifiedVotes, "ie"), oe: byType(verifiedVotes, "oe") } } });
 }

@@ -1,6 +1,7 @@
-import { and, desc, eq, gte, or } from "drizzle-orm";
+import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb } from "@/db";
-import { rankedPairClaims, rankedTrials, targets, votes } from "@/db/schema";
+import { listeningRuns, rankedTrials, targets, votes } from "@/db/schema";
+import { checkReliability } from "@/lib/preference-ranking";
 import { intervalStats, parseIntervals } from "@/lib/listening";
 import { cleanFeedback } from "@/lib/feedback";
 import { targetHeadphoneType } from "@/lib/target-type";
@@ -38,9 +39,8 @@ export async function POST(request: Request) {
     const recentVotes = await db.select({ createdAt: votes.createdAt, otherReason: votes.otherReason }).from(votes)
       .where(and(eq(votes.voterId, voterId), gte(votes.createdAt, now - 86400000)))
       .orderBy(desc(votes.createdAt)).limit(51);
-    if (recentVotes.length >= 50 || recentVotes.filter(row => row.createdAt >= now - 600000).length >= 6) {
-      return Response.json({ error: "Submission limit reached. Please try again later." }, { status: 429, headers: { "Retry-After": "600" } });
-    }
+    // Listening trials can continue without a per-browser vote quota. The shared
+    // edge write limits and one-use trial validation still protect rankings.
     const feedback = cleanFeedback(data);
     if (feedback.otherReason && recentVotes.filter(row => row.otherReason?.toLowerCase() === feedback.otherReason.toLowerCase()).length >= 2) {
       return Response.json({ error: "This feedback was already submitted. Add details specific to this comparison." }, { status: 429 });
@@ -52,11 +52,7 @@ export async function POST(request: Request) {
     const pairType = targetHeadphoneType({ name: pair[0].name, measurement: pair[0].measurement });
     const otherType = targetHeadphoneType({ name: other[0].name, measurement: other[0].measurement });
     if ((pairType && pairType !== data.headphoneType) || (otherType && otherType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
-    const prior = await db.select().from(votes).where(and(eq(votes.voterId, voterId), eq(votes.testMode, String(data.testMode)), or(
-      and(eq(votes.winnerId, winnerId), eq(votes.loserId, loserId)),
-      and(eq(votes.winnerId, loserId), eq(votes.loserId, winnerId)),
-    )));
-    if (prior.length) return Response.json({ error: "You already voted for this pairing." }, { status: 409 });
+    if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Undecided answers do not change the rankings." }, { status: 400 });
     const expected = 1 / (1 + Math.pow(10, (other[0].rating - pair[0].rating) / 400));
     const delta = 24 * (1 - expected);
     const safeNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
@@ -64,11 +60,14 @@ export async function POST(request: Request) {
     const stats = intervalStats(intervals);
     const sha256 = String(data.sha256 ?? "");
     if (sha256 && !/^[a-f0-9]{64}$/.test(sha256)) return Response.json({ error: "Invalid file hash." }, { status: 400 });
-    const [firstId, secondId] = [winnerId, loserId].sort();
+    const completedChecks = await db.select().from(listeningRuns).where(and(eq(listeningRuns.voterId, voterId), eq(listeningRuns.targetAId, listeningRuns.targetBId)));
+    const checks = completedChecks.filter(run => run.trialId && (run.testMode === "blind" || run.testMode === "bring") && run.heardA >= 5 && run.heardB >= 5);
+    // Freeze calibration at submission. A later tie/check cannot move existing
+    // target ratings; it changes only the influence of future decisive answers.
+    const reliabilityWeight = checkReliability(checks.filter(run => run.result === "tie").length, checks.length).mean;
     await db.batch([
-      db.insert(rankedPairClaims).values({ voterId, testMode: String(data.testMode), firstId, secondId, trialId }),
       db.insert(votes).values({
-        id: trialId, winnerId, loserId, voterId, createdAt: Date.now(),
+        id: trialId, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
         songTitle: String(data.songTitle ?? "").trim().slice(0, 120) || null,
         songArtist: String(data.songArtist ?? "").trim().slice(0, 120) || null,
         songAlbum: String(data.songAlbum ?? "").trim().slice(0, 120) || null,
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
     const inputError = requestInputResponse(error);
     if (inputError) return inputError;
     if (String(error).includes("UNIQUE constraint failed") || String((error as { cause?: unknown })?.cause).includes("UNIQUE constraint failed")) {
-      return Response.json({ error: "This trial or pairing has already been submitted." }, { status: 409 });
+      return Response.json({ error: "This trial has already been submitted." }, { status: 409 });
     }
     return Response.json({ error: "Vote could not be saved." }, { status: 500 });
   }

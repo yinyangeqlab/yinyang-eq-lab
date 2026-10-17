@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ServiceWarningPopup from "@/components/service-warning";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yinyangeq.com"),
@@ -28,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased"><ServiceWarningPopup />{children}</body>
     </html>
   );
 }
