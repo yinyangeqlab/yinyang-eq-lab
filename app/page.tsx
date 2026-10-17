@@ -48,6 +48,6 @@ export default function Welcome() {
       </div>
       <div className="welcome-last-call"><div><span className="welcome-eyebrow">INVITED LISTENERS</span><h2>Ready to hear the difference?</h2><p>Have your invitation code handy. Owners can use the owner sign in link above.</p></div><a className="welcome-primary" href="/shootout">Enter the shootout <span aria-hidden="true">→</span></a></div>
     </section>
-    <footer className="welcome-footer"><span>YinYang EQ League</span><span>Built for curious ears. Blind votes shape the rankings.</span></footer>
+    <footer className="welcome-footer"><span>YinYang EQ League</span><span>Built for curious ears. Blind votes shape the rankings.</span><div className="welcome-footer-links"><a href="https://github.com/yinyangeqlab/yinyang-eq-league" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-league/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div></footer>
   </main>;
 }

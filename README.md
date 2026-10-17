@@ -12,6 +12,10 @@ Copyright 2026 Yin Yang EQ Lab (@yinyangeqlab). Original application code is lic
 
 The source includes references to PEQdB as a target creator and to its TXT preset format. **No PEQdB target curves, preset exports, or PEQdB application code are included.** The working project's target seed data was deliberately excluded from this public repository. The live site can use target data held in its separate database; this repository does not grant rights to that data.
 
+## Contact and bug reports
+
+[Open a GitHub issue](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new) to report a bug or ask a question. You can also email [yinyangeqlab@gmail.com](mailto:yinyangeqlab@gmail.com).
+
 ## Run locally
 
 Requires Node.js 22.13 or newer. Run `npm ci`, then `npm run dev`. The checked-in `.openai/hosting.json` contains only a local D1 binding placeholder, `DB`; it has no account ID or credentials. The app needs a D1 database. Apply the SQL migrations in `drizzle/` in order, taking care with the separately named `0012` migrations.
