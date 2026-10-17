@@ -1791,3 +1791,5 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .tie-help {margin:14px 0 0;color:#8da4b4;font-size:12px;line-height:1.6;max-width:760px;}
 
 @media(max-width:480px) { .shootout-content .voting-row .listen-progress { grid-template-columns:1fr; } }
+
+@media(max-width:600px) { .shootout-content .voting-row .shootout-controls button { min-height:44px; height:auto; } }
