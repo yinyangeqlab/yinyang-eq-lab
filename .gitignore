@@ -1,0 +1,50 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*token*
+*secret*
+*credentials*
+Pulumi.*.yaml
+
+# Local state and generated files
+node_modules/
+node_modules
+.next/
+.vinext/
+.wrangler/
+.sites-runtime/
+.sites-checkout/
+.agents/
+.codex/
+dist/
+out/
+coverage/
+*.tsbuildinfo
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+
+# Media and private exports
+*.mp3
+*.flac
+*.wav
+*.ogg
+*.m4a
+public/music/
+artifacts/
+outputs/
+work/
+
+# Deployment state
+infra/
+.openai/hosting.local.json

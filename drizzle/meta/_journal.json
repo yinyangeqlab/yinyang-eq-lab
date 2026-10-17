@@ -1,0 +1,104 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792010000000,
+      "tag": "0000_targets_and_votes",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792030000000,
+      "tag": "0001_target_validation",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792040000000,
+      "tag": "0002_target_measurement",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792100000000,
+      "tag": "0003_remove_withheld_target",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792200000000,
+      "tag": "0004_blind_test_mode",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1792300000000,
+      "tag": "0005_vote_feedback",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1792301000000,
+      "tag": "0006_ranked_trials",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792302000000,
+      "tag": "0007_suggestion_recording_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1792303000000,
+      "tag": "0008_listener_headphone_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1792304000000,
+      "tag": "0009_feedback_submissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1792305000000,
+      "tag": "0010_target_lineage",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1792306000000,
+      "tag": "0011_research_records",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1792214305519,
+      "tag": "0012_mature_giant_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1792214543824,
+      "tag": "0013_bouncy_kingpin",
+      "breakpoints": true
+    }
+  ]
+}

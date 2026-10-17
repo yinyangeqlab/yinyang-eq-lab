@@ -1,0 +1,541 @@
+"use client";
+
+import { FileMusic, FolderOpen, RotateCcw, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import type { Point } from "@/lib/curves";
+import { intervalStats, type Interval } from "@/lib/listening";
+import { fitAutoEq } from "@/lib/autoeq";
+import { channelBalance } from "@/lib/channel-balance";
+import type { HeadphoneMeasurement } from "@/lib/measurement";
+import { analyzeTrack, type TrackAnalysis } from "@/lib/loudness";
+import TrackWaveform from "@/components/track-waveform";
+import { curatedWaveform } from "@/lib/curated-waveforms";
+import { estimateWaveformSpread, previewDynamics } from "@/lib/dynamics-preview";
+import { matchSongSuggestion, type SongSuggestion } from "@/lib/song-match";
+import curatedMusic from "@/data/open-music.json";
+
+export type MusicContext = { songTitle: string; songArtist: string; songAlbum: string; recordingId: string; sha256: string | null; audioFormat: string | null; sampleRate: number | null; bitrate: number | null; duration: number | null; intervals: Interval[]; heardA: number; heardB: number; overlapSeconds: number };
+export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean> };
+type Target = { id: string; points: Point[] };
+
+function sourceDetails(buffer: ArrayBuffer, format: string): { sampleRate?: number; bitrate?: number } {
+  const view = new DataView(buffer);
+  const bytes = new Uint8Array(buffer);
+  if (bytes.length < 36) return {};
+  const ascii = (start: number, value: string) => [...value].every((char, i) => bytes[start + i] === char.charCodeAt(0));
+  if (ascii(0, "RIFF") && ascii(8, "WAVE")) {
+    let offset = 12;
+    while (offset + 8 <= view.byteLength) {
+      const id = view.getUint32(offset, false), size = view.getUint32(offset + 4, true);
+      if (id === 0x666d7420 && offset + 24 <= view.byteLength) return { sampleRate: view.getUint32(offset + 12, true), bitrate: view.getUint32(offset + 16, true) * 8 };
+      offset += 8 + size + size % 2;
+    }
+    return {};
+  }
+  if (ascii(0, "fLaC") && bytes.length >= 26 && (bytes[4] & 127) === 0) return { sampleRate: (bytes[18] << 12) | (bytes[19] << 4) | (bytes[20] >> 4) };
+  if (format !== "MP3") return {};
+  let start = 0;
+  if (ascii(0, "ID3") && bytes.length >= 10) start = 10 + ((bytes[6] & 127) << 21) + ((bytes[7] & 127) << 14) + ((bytes[8] & 127) << 7) + (bytes[9] & 127);
+  for (let i = start; i < Math.min(bytes.length - 4, start + 4096); i++) {
+    if (bytes[i] !== 255 || (bytes[i + 1] & 224) !== 224) continue;
+    const version = (bytes[i + 1] >> 3) & 3, layer = (bytes[i + 1] >> 1) & 3;
+    const rateIndex = (bytes[i + 2] >> 2) & 3, bitrateIndex = (bytes[i + 2] >> 4) & 15;
+    if (version === 1 || layer !== 1 || rateIndex === 3 || bitrateIndex === 0 || bitrateIndex === 15) continue;
+    const base = [44100, 48000, 32000][rateIndex];
+    return { sampleRate: version === 3 ? base : version === 2 ? base / 2 : base / 4 };
+  }
+  return {};
+}
+
+const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null; testMode: "blind" | "bring" | "open"; loudnessTarget: "-14" | "-16" | "-18" | "off"; targets: Target[]; suggestions: SongSuggestion[]; measurement?: HeadphoneMeasurement; consent: boolean; onConsentChange: (enabled: boolean) => void; onSideChange: (side: 0 | 1) => void; onHeard: (seconds: [number, number]) => void; onPlaybackChange?: (playing: boolean) => void }>(function MusicPanel({ pair, testMode, loudnessTarget, targets, suggestions, measurement, consent, onConsentChange, onSideChange, onHeard, onPlaybackChange }, ref) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const engine = useRef<{ context: AudioContext; sourceAnalyser: AnalyserNode; dynamics: AudioWorkletNode | null; filters: BiquadFilterNode[][]; balanceConvolvers: ConvolverNode[]; balanceKey?: HeadphoneMeasurement; balanceCustomAllowed?: boolean; balanceBoostDb: number; analysers: AnalyserNode[]; gates: GainNode[]; preamp: GainNode; transitionGain: GainNode } | null>(null);
+  const dynamicRangeRef = useRef(0);
+  const waveFrame = useRef<number | null>(null);
+  const waveLevels = useRef<Float32Array[][]>([[], []]);
+  const liveReadAt = useRef(0);
+  const urlRef = useRef<string | null>(null);
+  const hashSerialRef = useRef(0);
+  const sourceSerialRef = useRef(0);
+  const curatedFetchRef = useRef(0);
+  const curatedIndexRef = useRef(-1);
+  const curatedQueueRef = useRef<number[]>([]);
+  const measuredLufsRef = useRef<number | null>(null);
+  const samplesRef = useRef<File[]>([]);
+  const sampleIndexRef = useRef(-1);
+  const intervalsRef = useRef<Interval[]>([]);
+  const activeRef = useRef<{ side: 0 | 1; start: number; rate: number } | null>(null);
+  const sideRef = useRef<0 | 1>(0);
+  const heardRef = useRef<[number, number]>([0, 0]);
+  const heardStartedRef = useRef<number | null>(null);
+  const onHeardRef = useRef(onHeard);
+  onHeardRef.current = onHeard;
+  const testModeRef = useRef(testMode);
+  testModeRef.current = testMode;
+  const [file, setFile] = useState<File | null>(null);
+  const sourceKindRef = useRef<"curated" | "uploaded" | null>(null);
+  const [samples, setSamples] = useState<File[]>([]);
+  const [sampleChoice, setSampleChoice] = useState("random");
+  const [sampleStatus, setSampleStatus] = useState(`${curatedMusic.length} curated stereo tracks ready for random tests.`);
+  const [sourceError, setSourceError] = useState("");
+  const [loudnessStatus, setLoudnessStatus] = useState("Choose a track to measure loudness.");
+  const [analysis, setAnalysis] = useState<TrackAnalysis | null>(null);
+  const [curatedPreview, setCuratedPreview] = useState<Pick<TrackAnalysis, "waveform"> | null>(null);
+  const [meta, setMeta] = useState<Omit<MusicContext, "intervals" | "heardA" | "heardB" | "overlapSeconds">>({ songTitle: "", songArtist: "", songAlbum: "", recordingId: "", sha256: null, audioFormat: null, sampleRate: null, bitrate: null, duration: null });
+  const [hashing, setHashing] = useState(false);
+  const [side, setSide] = useState<0 | 1>(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [volumeOpen, setVolumeOpen] = useState(false);
+  const [dynamicRange, setDynamicRange] = useState(0);
+  const [dynamicSliderEnabled, setDynamicSliderEnabled] = useState(false);
+  const [dynamicReduction, setDynamicReduction] = useState<number | null>(null);
+  const [dynamicOutputGain, setDynamicOutputGain] = useState<number | null>(null);
+  const [dynamicRangeUnavailable, setDynamicRangeUnavailable] = useState(false);
+  const dynamicsAdjusted = Math.abs(dynamicRange) >= .0001 && !dynamicRangeUnavailable;
+  const dynamicsExpanding = dynamicRange > 0;
+  const spreadChange = useMemo(() => {
+    if (!dynamicsAdjusted || !analysis || !duration) return 0;
+    return estimateWaveformSpread(previewDynamics(analysis.waveform, dynamicRange, duration)) - estimateWaveformSpread(analysis.waveform);
+  }, [analysis, duration, dynamicRange, dynamicsAdjusted]);
+  const displayedLoudness = analysis ? `Estimated ${analysis.integratedLufs.toFixed(1)} LUFS · ${loudnessTarget === "off" && testMode === "open" ? "normalization off" : `matching to ${testMode === "open" ? loudnessTarget : "−16"} LUFS`}` : loudnessStatus;
+  const clock = (seconds: number) => Number.isFinite(seconds) ? `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}` : "0:00";
+  const pairTargets = pair?.map(id => targets.find(t => t.id === id));
+
+  function updateDynamicRange(value: number) {
+    const amount = Math.max(-1, Math.min(1, value));
+    dynamicRangeRef.current = amount;
+    setDynamicRange(amount);
+    setDynamicReduction(null);
+    setDynamicOutputGain(null);
+    engine.current?.dynamics?.port.postMessage({ amount });
+  }
+
+  useEffect(() => {
+    if (testMode !== "open") { setDynamicSliderEnabled(false); updateDynamicRange(0); }
+  }, [testMode]);
+
+  function closeInterval() {
+    stopHeard();
+    const current = activeRef.current, end = audioRef.current?.currentTime;
+    if (current && end !== undefined && Number.isFinite(end) && end > current.start + .05) intervalsRef.current.push({ ...current, end });
+    activeRef.current = null;
+  }
+  function startInterval() {
+    const audio = audioRef.current;
+    if (!audio || audio.paused || audio.seeking || activeRef.current || !Number.isFinite(audio.currentTime)) return;
+    activeRef.current = { side: sideRef.current, start: audio.currentTime, rate: audio.playbackRate };
+    if (heardStartedRef.current === null) heardStartedRef.current = performance.now();
+  }
+  function heardNow(): [number, number] {
+    const result: [number, number] = [...heardRef.current];
+    if (heardStartedRef.current !== null) result[sideRef.current] += (performance.now() - heardStartedRef.current) / 1000;
+    return result;
+  }
+  function stopHeard() {
+    heardRef.current = heardNow(); heardStartedRef.current = null; onHeardRef.current(heardRef.current);
+  }
+  useEffect(() => { const timer = window.setInterval(() => { if (heardStartedRef.current !== null) onHeardRef.current(heardNow()); }, 250); return () => clearInterval(timer); }, []);
+  useEffect(() => { const resumeVisibleAudio = () => { if (document.visibilityState === "visible" && audioRef.current && !audioRef.current.paused) void engine.current?.context.resume(); }; document.addEventListener("visibilitychange", resumeVisibleAudio); return () => document.removeEventListener("visibilitychange", resumeVisibleAudio); }, []);
+  useEffect(() => {
+    if (!file) return;
+    const toggleWithSpace = (event: KeyboardEvent) => {
+      if (event.code !== "Space" || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable], [role='textbox']")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      audioRef.current?.closest(".music-panel")?.querySelector<HTMLButtonElement>(".deck-play")?.click();
+    };
+    window.addEventListener("keydown", toggleWithSpace, true);
+    return () => window.removeEventListener("keydown", toggleWithSpace, true);
+  }, [file]);
+  function resetHeard() { closeInterval(); intervalsRef.current = []; heardRef.current = [0, 0]; heardStartedRef.current = null; onHeardRef.current([0, 0]); startInterval(); }
+  useImperativeHandle(ref, () => ({ isHashing: () => hashing, heard: heardNow, reset: resetHeard, stop: () => audioRef.current?.pause(), pause: () => audioRef.current?.pause(), isPlaying: () => !!audioRef.current && !audioRef.current.paused, randomSong: async () => { setSampleChoice("random"); return chooseRandomSample("random", true); }, listen: async next => {
+    if (!audioRef.current) return false;
+    if (!file) {
+      if (testModeRef.current === "bring") return false;
+      selectSide(next);
+      return chooseRandomSample("random", true);
+    }
+    try { setupEngine(); applyFit(); } catch { setSourceError("Could not initialize audio playback."); return false; }
+    selectSide(next);
+    try { await Promise.all([engine.current!.context.resume(), audioRef.current.play()]); setSourceError(""); return true; } catch { setSourceError("Playback could not start. Check the selected track and browser audio permissions."); return false; }
+  }, snapshot: () => ({ ...meta, intervals: [...intervalsRef.current], ...intervalStats(intervalsRef.current), heardA: +heardRef.current[0].toFixed(2), heardB: +heardRef.current[1].toFixed(2), consent: sourceKindRef.current === "curated" || consent }), finish: () => {
+    closeInterval(); audioRef.current?.pause();
+    const intervals = [...intervalsRef.current];
+    const stats = intervalStats(intervals);
+    return { ...meta, intervals, ...stats, heardA: +heardRef.current[0].toFixed(2), heardB: +heardRef.current[1].toFixed(2), consent: sourceKindRef.current === "curated" || consent };
+  } }));
+  useEffect(() => {
+    if (testMode !== "open") audioRef.current?.pause();
+    resetHeard();
+    if (testMode === "blind" && pair) void chooseRandomSample("random");
+  }, [pair, testMode]);
+  useEffect(() => { if (testMode !== "bring") return; sourceSerialRef.current++;hashSerialRef.current++; sourceKindRef.current=null; audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
+  function applyFit() {
+    const current = engine.current;
+    if (!current || !pairTargets?.[0] || !pairTargets[1]) return;
+    const raw: Point[] = measurement?.points ?? [[20, 0], [20000, 0]];
+    const fits = pairTargets.map(t => fitAutoEq(raw, t!.points));
+    const customAllowed = testMode === "open";
+    if (current.balanceKey !== measurement || current.balanceCustomAllowed !== customAllowed) {
+      const balance = channelBalance(measurement, current.context.sampleRate, customAllowed);
+      current.balanceConvolvers.forEach((node, channel) => {
+        const impulse = balance?.impulses[channel] ?? new Float32Array([1]);
+        const buffer = current.context.createBuffer(1, impulse.length, current.context.sampleRate);
+        buffer.getChannelData(0).set(impulse);
+        node.buffer = buffer;
+      });
+      current.balanceBoostDb = balance?.maxBoostDb ?? 0;
+      current.balanceKey = measurement;
+      current.balanceCustomAllowed = customAllowed;
+    }
+    fits.forEach((fit, side) => current.filters[side].forEach((node, i) => {
+      const filter = fit.filters[i];
+      node.frequency.setTargetAtTime(filter?.hz ?? 1000, current.context.currentTime, .03);
+      node.Q.setTargetAtTime(filter?.q ?? 1, current.context.currentTime, .03);
+      node.gain.setTargetAtTime(filter?.gain ?? 0, current.context.currentTime, .03);
+    }));
+    const target = loudnessTarget === "off" ? null : Number(testMode === "open" ? loudnessTarget : "-16");
+    const loudnessGainDb = target !== null && measuredLufsRef.current !== null ? target - measuredLufsRef.current : 0;
+    current.preamp.gain.setTargetAtTime(10 ** ((Math.min(fits[0].preamp, fits[1].preamp) - current.balanceBoostDb - 1 + loudnessGainDb) / 20), current.context.currentTime, .03);
+  }
+  useEffect(() => { applyFit(); }, [pair, targets, file, measurement, loudnessTarget, testMode, loudnessStatus]);
+  useEffect(() => { drawWaveforms(); return () => { if (waveFrame.current !== null) cancelAnimationFrame(waveFrame.current); if (urlRef.current) URL.revokeObjectURL(urlRef.current); void engine.current?.context.close(); }; }, []);
+
+  function updateLevelMeter(branch: number, analyser: AnalyserNode | undefined, active: boolean) {
+    const meter = document.querySelector<HTMLElement>(`[data-meter="${branch}"]`);
+    if (!meter) return;
+    const clipText = meter.querySelector<HTMLElement>("[data-clip]");
+    if (!active || !analyser) { meter.style.setProperty("--level", "0%"); meter.dataset.level="idle";meter.removeAttribute("aria-valuenow");meter.setAttribute("aria-valuetext","Idle");if(clipText)clipText.hidden=true;return; }
+    const samples = new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);
+    const gain = engine.current?.preamp.gain.value ?? 1;
+    let peak = 0;
+    for (const sample of samples) peak=Math.max(peak,Math.abs(sample*gain));
+    const peakDb=peak>0?20*Math.log10(peak):-Infinity;
+    meter.style.setProperty("--level", `${Math.max(0,Math.min(100,(peakDb+60)*100/60))}%`);
+    meter.dataset.level=peak>=1?"clip":peak>=.89125?"near":"safe";
+    meter.setAttribute("aria-valuenow",String(Math.max(-60,Math.min(0,Math.round(peakDb)))));
+    meter.setAttribute("aria-valuetext",peak>=1?"Clipping!":`Peak ${Number.isFinite(peakDb)?peakDb.toFixed(1):"below -60"} dBFS`);
+    if(peak>=1)meter.dataset.clipUntil=String(performance.now()+1200);
+    if(clipText)clipText.hidden=performance.now()>=Number(meter.dataset.clipUntil||0);
+  }
+
+  function updateLiveStats() {
+    if (testModeRef.current !== "open" || performance.now() - liveReadAt.current < 150) return;
+    liveReadAt.current = performance.now();
+    const gain = engine.current?.preamp.gain.value ?? 1;
+    for (let branch = 0; branch < 2; branch++) {
+      const analyser = engine.current?.analysers[branch];
+      const node = document.querySelector<HTMLElement>(`[data-live-branch="${branch}"]`);
+      const audio = audioRef.current;
+      if (!node) continue;
+      const active = !!analyser && !!audio && !audio.paused && !audio.seeking && !audio.ended;
+      if (!active || !analyser) { node.querySelectorAll("[data-live]").forEach(item => { item.textContent = "—"; }); continue; }
+      const samples = new Float32Array(analyser.fftSize); analyser.getFloatTimeDomainData(samples);
+      let peak = 0, sum = 0;
+      for (const value of samples) { const sample = value * gain; peak = Math.max(peak, Math.abs(sample)); sum += sample * sample; }
+      const rms = Math.sqrt(sum / samples.length);
+      const values = { peak: peak > 0 ? 20 * Math.log10(peak) : -Infinity, rms: rms > 0 ? 20 * Math.log10(rms) : -Infinity, crest: peak > 0 && rms > 0 ? 20 * Math.log10(peak / rms) : NaN };
+      for (const [key, value] of Object.entries(values)) { const target = node.querySelector(`[data-live="${key}"]`); if (target) target.textContent = Number.isFinite(value) ? `${value.toFixed(1)} dB${key === "crest" ? "" : "FS"}` : "—"; }
+    }
+  }
+
+  function drawWaveforms() {
+    for (let branch = 0; branch < 2; branch++) {
+      const analyser = engine.current?.analysers[branch];
+      const spectrum = testModeRef.current === "open" ? analyser : engine.current?.sourceAnalyser;
+      const canvas = document.querySelector<HTMLCanvasElement>(`[data-waveform="${branch}"]`);
+      const pen = canvas?.getContext("2d");
+      if (!canvas || !pen) continue;
+      const audio = audioRef.current;
+      const transportPlaying = !!audio && !audio.paused && !audio.seeking && !audio.ended;
+      const active = !!spectrum && transportPlaying && sideRef.current === branch;
+      canvas.closest(".card")?.classList.toggle("is-playing", active);
+      const data = active ? new Uint8Array(spectrum.frequencyBinCount) : null;
+      if (data) spectrum!.getByteFrequencyData(data);
+      updateLevelMeter(branch, analyser, active);
+      const count = 72, levels = waveLevels.current[branch];
+      const masked = canvas.closest(".curve-frame")?.classList.contains("blind-masked");
+      const plotStart = masked ? 0 : canvas.width * 64 / 560;
+      const plotEnd = masked ? canvas.width : canvas.width * 546 / 560;
+      const waveX = (index: number) => plotStart + index * (plotEnd - plotStart) / (count - 1);
+      while (levels.length < 3) levels.push(new Float32Array(count));
+      pen.clearRect(0, 0, canvas.width, canvas.height);
+      const idlePhase = transportPlaying ? performance.now() * .002 : 0;
+      for (let i = 0; i < count; i++) {
+        const hz = 20 * 1000 ** (i / (count - 1));
+        const bin = data ? Math.min(data.length - 1, Math.round(hz * spectrum!.fftSize / engine.current!.context.sampleRate)) : 0;
+        const energy = data ? (data[bin] + data[Math.max(0, bin - 1)] + data[Math.min(data.length - 1, bin + 1)]) / (3 * 255) : 0;
+        if (active) {
+          const idle = .09 + .035 * Math.sin(i * .42 + branch);
+          levels[0][i] += (Math.max(idle, energy) - levels[0][i]) * .22;
+          levels[1][i] += (levels[0][i] - levels[1][i]) * .11;
+          levels[2][i] += (levels[1][i] - levels[2][i]) * .07;
+        } else {
+          const low = .018 + (transportPlaying ? .008 * Math.sin(i * .42 + idlePhase + branch) : 0);
+          levels[0][i] += (low - levels[0][i]) * .42;
+          levels[1][i] += (low - levels[1][i]) * .36;
+          levels[2][i] += (low - levels[2][i]) * .3;
+        }
+      }
+      for (let layer = 2; layer >= 0; layer--) {
+        const base = 160 - layer * 19, amplitude = active ? 72 - layer * 9 : 14 - layer * 2;
+        const y = (i: number) => base - levels[layer][i] * amplitude - (active ? 3 : .7) * Math.sin(i * .32 + branch + layer * .6 + idlePhase);
+        pen.beginPath(); pen.moveTo(plotStart, y(0));
+        for (let i = 1; i < count; i++) {
+          const lastX = waveX(i - 1), x = waveX(i);
+          pen.quadraticCurveTo(lastX, y(i - 1), (lastX + x) / 2, (y(i - 1) + y(i)) / 2);
+        }
+        pen.lineTo(plotEnd, y(count - 1));
+        const tint = branch === 0 ? "255,82,111" : "72,184,255";
+        pen.strokeStyle = active ? (layer === 0 ? "rgba(255,255,255,.94)" : `rgba(${tint},${layer === 1 ? .66 : .38})`) : (layer === 0 ? "rgba(255,255,255,.27)" : `rgba(${tint},${layer === 1 ? .24 : .16})`);
+        pen.lineWidth = active ? (layer === 0 ? 2.4 : 1.8) : 1;
+        pen.shadowColor = `rgba(${tint},.7)`; pen.shadowBlur = active ? (layer === 0 ? 12 : 7) : 0; pen.stroke();
+        pen.shadowBlur = 0; pen.lineTo(plotEnd, base + 13); pen.lineTo(plotStart, base + 13); pen.closePath();
+        pen.fillStyle = `rgba(${tint},${active ? (layer === 0 ? .09 : .045) : .008})`; pen.fill();
+      }
+    }
+    updateLiveStats();
+    waveFrame.current = requestAnimationFrame(drawWaveforms);
+  }
+
+  function setupEngine() {
+    if (engine.current || !audioRef.current) return;
+    const context = new AudioContext();
+    const source = context.createMediaElementSource(audioRef.current);
+    const sourceAnalyser = context.createAnalyser(); sourceAnalyser.fftSize = 2048; sourceAnalyser.smoothingTimeConstant = .8; source.connect(sourceAnalyser);
+    const dynamicInput = context.createGain(); sourceAnalyser.connect(dynamicInput);
+    const filters: BiquadFilterNode[][] = [[], []], balanceConvolvers: ConvolverNode[] = [], analysers: AnalyserNode[] = [], gates: GainNode[] = [];
+    const preamp = context.createGain(), transitionGain = context.createGain(); preamp.connect(transitionGain); transitionGain.connect(context.destination);
+    const splitter = context.createChannelSplitter(2), merger = context.createChannelMerger(2);
+    dynamicInput.connect(splitter);
+    for (let channel = 0; channel < 2; channel++) {
+      const convolver = context.createConvolver(); convolver.normalize = false;
+      const unity = context.createBuffer(1, 1, context.sampleRate); unity.getChannelData(0)[0] = 1; convolver.buffer = unity;
+      splitter.connect(convolver, channel, 0); convolver.connect(merger, 0, channel); balanceConvolvers[channel] = convolver;
+    }
+    for (let branch = 0; branch < 2; branch++) {
+      let node: AudioNode = merger;
+      for (let i = 0; i < 10; i++) {
+        const filter = context.createBiquadFilter(); filter.type = "peaking"; filter.frequency.value = 1000; filter.Q.value = 1;
+        node.connect(filter); node = filter; filters[branch].push(filter);
+      }
+      const analyser = context.createAnalyser(); analyser.fftSize = 2048; analyser.smoothingTimeConstant = .8; node.connect(analyser); analysers.push(analyser);
+      const gate = context.createGain(); gate.gain.value = branch === sideRef.current ? 1 : 0; analyser.connect(gate); gate.connect(preamp); gates.push(gate);
+    }
+    engine.current = { context, sourceAnalyser, dynamics: null, filters, balanceConvolvers, balanceBoostDb: 0, analysers, gates, preamp, transitionGain };
+    if (context.audioWorklet) {
+      void context.audioWorklet.addModule("/dynamic-range-worklet.js").then(() => {
+        if (engine.current?.context !== context) return;
+        const dynamics = new AudioWorkletNode(context, "target-dynamic-range", { outputChannelCount: [2] });
+        dynamics.port.postMessage({ amount: dynamicRangeRef.current });
+        dynamics.port.onmessage = event => { if (engine.current?.dynamics === dynamics && event.data?.type === "dynamics") { setDynamicReduction(Math.max(0, Number(event.data.reductionDb) || 0)); setDynamicOutputGain(Number(event.data.netGainDb) || 0); } };
+        dynamics.onprocessorerror = () => {
+          if (engine.current?.dynamics !== dynamics) return;
+          dynamics.disconnect(); sourceAnalyser.connect(dynamicInput); engine.current.dynamics = null;
+          setDynamicRangeUnavailable(true); setDynamicSliderEnabled(false); updateDynamicRange(0);
+        };
+        dynamics.connect(dynamicInput);
+        sourceAnalyser.connect(dynamics);
+        sourceAnalyser.disconnect(dynamicInput);
+        engine.current.dynamics = dynamics;
+      }).catch(() => { setDynamicRangeUnavailable(true); setDynamicSliderEnabled(false); updateDynamicRange(0); });
+    } else { setDynamicRangeUnavailable(true); setDynamicSliderEnabled(false); updateDynamicRange(0); }
+    applyFit();
+  }
+  async function stereoFile(next: File) {
+    const context = new AudioContext();
+    try { const buffer = await context.decodeAudioData(await next.arrayBuffer()); return buffer.numberOfChannels === 2; }
+    catch { return false; }
+    finally { await context.close(); }
+  }
+  function startPlayback(fadeIn = false) {
+    const audio = audioRef.current;
+    if (!audio) return;
+    try {
+      setupEngine();
+      applyFit();
+      const current = engine.current!;
+      const gain = current.transitionGain.gain;
+      gain.cancelScheduledValues(current.context.currentTime);
+      gain.setValueAtTime(fadeIn ? 0 : 1, current.context.currentTime);
+      if (fadeIn) gain.linearRampToValueAtTime(1, current.context.currentTime + .18);
+      void Promise.all([current.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions."));
+    } catch { setSourceError("Could not initialize audio playback."); }
+  }
+  function processFileData(next: File, sourceSerial: number, hashSerial: number) {
+    void next.slice(0, 65536).arrayBuffer().then(header => {
+      if (sourceSerial !== sourceSerialRef.current) return;
+      const format = (next.name.split(".").pop() || next.type || "unknown").toUpperCase();
+      const details = sourceDetails(header, format);
+      setMeta(old => ({ ...old, sampleRate: details.sampleRate ?? old.sampleRate, bitrate: details.bitrate ?? old.bitrate }));
+    }).catch(() => {});
+    void analyzeTrack(next).then(result => {
+      if (sourceSerial !== sourceSerialRef.current) return;
+      setAnalysis(result);
+      measuredLufsRef.current = result.integratedLufs;
+      setLoudnessStatus(`Estimated ${result.integratedLufs.toFixed(1)} LUFS`);
+      applyFit();
+    }).catch(error => {
+      if (sourceSerial !== sourceSerialRef.current) return;
+      setAnalysis(null);
+      if (error instanceof Error && error.message === "Stereo audio required.") {
+        audioRef.current?.pause();
+        setSourceError("Choose a decodable two-channel stereo audio file.");
+      } else setLoudnessStatus("Audio analysis unavailable for this track; playback is unadjusted.");
+    });
+    setHashing(true);
+    void (async () => {
+      try {
+        if (next.size > 300_000_000) throw new Error("File exceeds the 300 MB hashing limit.");
+        const digest = await crypto.subtle.digest("SHA-256", await next.arrayBuffer());
+        const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+        if (hashSerial === hashSerialRef.current) setMeta(old => ({ ...old, sha256: hash }));
+      } catch { if (hashSerial === hashSerialRef.current) setMeta(old => ({ ...old, sha256: null })); }
+      finally { if (hashSerial === hashSerialRef.current) setHashing(false); }
+    })();
+  }
+  async function chooseRandomSample(choice = sampleChoice, autoPlay = false): Promise<boolean> {
+    if (testModeRef.current === "blind" || (choice === "random" && !samplesRef.current.length)) {
+      const mode = testModeRef.current;
+      const serial = ++curatedFetchRef.current;
+      const sourceSerial = ++sourceSerialRef.current;
+      const hashSerial = ++hashSerialRef.current;
+      if (!curatedQueueRef.current.length) {
+        const queue = curatedMusic.map((_, i) => i);
+        for (let i = queue.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [queue[i], queue[j]] = [queue[j], queue[i]];
+        }
+        if (queue.length > 1 && queue[queue.length - 1] === curatedIndexRef.current) [queue[0], queue[queue.length - 1]] = [queue[queue.length - 1], queue[0]];
+        curatedQueueRef.current = queue;
+      }
+      const index = curatedQueueRef.current.pop()!;
+      const track = curatedMusic[index];
+      sourceKindRef.current = "curated";
+      const format = track.filename.toLowerCase().endsWith(".flac") ? "FLAC" : "MP3";
+      const streamUrl = track.fileUrl;
+      audioRef.current?.pause();
+      if (urlRef.current) { URL.revokeObjectURL(urlRef.current); urlRef.current = null; }
+      updateDynamicRange(0);
+      setDynamicSliderEnabled(false);
+      resetHeard();
+      setSourceError("");
+      setAnalysis(null);
+      setCuratedPreview(curatedWaveform(track.fileUrl));
+      setPosition(0);
+      setDuration(track.duration);
+      setHashing(false);
+      measuredLufsRef.current = track.integrated_lufs;
+      setLoudnessStatus(`Curated track · ${track.integrated_lufs.toFixed(1)} LUFS estimated`);
+      setMeta({ songTitle: track.title, songArtist: track.artist, songAlbum: track.album, recordingId: "", sha256: null, audioFormat: format, sampleRate: null, bitrate: track.bitrate_kbps * 1000, duration: track.duration });
+      setFile(new File([], track.filename, { type: format === "FLAC" ? "audio/flac" : "audio/mpeg" }));
+      if (audioRef.current) { audioRef.current.src = streamUrl; audioRef.current.load(); }
+      curatedIndexRef.current = index;
+      setSampleStatus(`Curated track ${index + 1}/${curatedMusic.length}: ${track.title} · ${track.group === "dynamic" ? "broad range" : "compact range"}`);
+      if (autoPlay) startPlayback(true);
+      // Playback uses the streaming URL. Analysis and fingerprinting can finish later.
+      window.setTimeout(() => {
+        void fetch(track.fileUrl).then(response => {
+          if (!response.ok) throw new Error(`Audio source returned ${response.status}`);
+          return response.blob();
+        }).then(blob => {
+          if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return;
+          const source = new File([blob], track.filename, { type: format === "FLAC" ? "audio/flac" : "audio/mpeg" });
+          setFile(source);
+          processFileData(source, sourceSerial, hashSerial);
+        }).catch(() => {
+          if (serial === curatedFetchRef.current) setLoudnessStatus("Audio analysis unavailable for this track; playback continues.");
+        });
+      }, 800);
+      return true;
+    }
+    const samples = samplesRef.current;
+    if (!samples.length) return false;
+    let index = choice === "random" ? Math.floor(Math.random() * samples.length) : Number(choice);
+    if (!Number.isInteger(index) || index < 0 || index >= samples.length) index = Math.floor(Math.random() * samples.length);
+    if (choice === "random" && samples.length > 1 && index === sampleIndexRef.current) index = (index + 1) % samples.length;
+    sampleIndexRef.current = index;
+    chooseFile(samples[index], true, true, undefined, autoPlay);
+    setSampleStatus(`${choice === "random" ? "Random" : "Selected"} sample ${index + 1}/${samples.length}: ${samples[index].name}`);
+    return true;
+  }
+  async function chooseFolder(files: FileList | null) {
+    if (!files) return;
+    const extensions = /\.(mp3|wav|flac|m4a|aac|acc|ogg|oga|opus|webm|aif|aiff|alac|wma|caf|mka|mp4)$/i;
+    const candidates = Array.from(files).filter(item => extensions.test(item.name) && item.webkitRelativePath.split("/").length === 2);
+    setSampleStatus(`Checking ${candidates.length} root-level audio files for stereo…`);
+    const stereo: File[] = [];
+    for (const [index, item] of candidates.entries()) {
+      setSampleStatus(`Checking stereo audio ${index + 1}/${candidates.length}…`);
+      if (await stereoFile(item)) stereo.push(item);
+    }
+    samplesRef.current = stereo;
+    setSamples(stereo);
+    sampleIndexRef.current = -1;
+    setSampleChoice("random");
+    if (!stereo.length) { setSampleStatus("No decodable two-channel stereo files found directly in this folder."); return; }
+    setSampleStatus(`${stereo.length} stereo songs ready from this folder.`);
+    if (testMode === "blind") await chooseRandomSample("random");
+  }
+  function chooseFile(next: File | null, knownStereo = false, sample = false, curated?: SongSuggestion, autoPlay = false) {
+    if (!next || !audioRef.current) return;
+    sourceKindRef.current = "uploaded";
+    const sourceSerial = ++sourceSerialRef.current;
+    const hashSerial = ++hashSerialRef.current;
+    void knownStereo; void sample;
+    audioRef.current.pause();
+    updateDynamicRange(0);
+    setDynamicSliderEnabled(false);
+    resetHeard();
+    setSourceError("");
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+    const format = (next.name.split(".").pop() || next.type || "unknown").toUpperCase();
+    const matched = curated ?? matchSongSuggestion(next.name, suggestions);
+    setMeta({ songTitle: matched?.title ?? "", songArtist: matched?.artist ?? "", songAlbum: matched?.album ?? "", recordingId: matched?.recordingId ?? "", sha256: null, audioFormat: format, sampleRate: null, bitrate: null, duration: null });
+    measuredLufsRef.current = null;
+    setLoudnessStatus("Analyzing track…");
+    setAnalysis(null);
+    setCuratedPreview(null);
+    setPosition(0);
+    setDuration(0);
+    setFile(next);
+    urlRef.current = URL.createObjectURL(next);
+    audioRef.current.src = urlRef.current;
+    audioRef.current.load();
+    if (autoPlay) startPlayback(true);
+    processFileData(next, sourceSerial, hashSerial);
+  }
+  function selectSide(next: 0 | 1) {
+    closeInterval(); sideRef.current = next;
+    setSide(next); onSideChange(next);
+    const current = engine.current;
+    current?.gates.forEach((gate, i) => gate.gain.setTargetAtTime(i === next ? 1 : 0, current.context.currentTime, .02));
+    void current?.context.resume();
+    startInterval();
+  }
+  return <section className="music-panel" data-mode={testMode}><div className="music-header"><div><span className="mini-label">LOCAL PLAYBACK</span><div className="playback-title-line"><h2>Local Playback</h2><span className="playback-time"><span>{clock(position)}</span><span aria-hidden="true">/</span><span>{clock(duration)}</span></span><span className="waveform-source-caption">L / R · pre-EQ · click to seek</span></div><p>Audio from your device stays in this browser. Blind votes support public rankings, and approved-target comparisons or descriptions can enter private owner research. Listening segments are saved for every completed comparison. Song tags and file details from music you choose on your device are shared only if you opt in below; audio bytes are never uploaded.</p></div><span className="count-pill">A/B TONAL PREVIEW</span>{dynamicsAdjusted && analysis && <div className="dynamics-status" aria-live="off"><span className={`dynamics-preview-key ${dynamicsExpanding ? "expanding" : ""}`}>{dynamicsExpanding ? "Red beyond blue" : "Blue compressed"} <span>· {dynamicsExpanding ? "scaled source" : "gray source"}</span><b> · peak spread {spreadChange >= 0 ? "+" : ""}{spreadChange.toFixed(1)} dB</b></span><span className="dynamics-meter">{dynamicReduction === null || dynamicOutputGain === null ? "Waiting for audio processor…" : `${dynamicsExpanding ? "Quiet" : "Peak"} reduction ${dynamicReduction.toFixed(1)} dB · Net gain ${dynamicOutputGain >= 0 ? "+" : ""}${dynamicOutputGain.toFixed(1)} dB`}</span></div>}</div>
+    <div className={`player-row ${isPlaying ? "is-playing" : ""}`} role="group" aria-label="Music playback controls">{testMode === "open" && <><button type="button" className="deck-dynamics-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} title="Toggle Dynamic Range Compression/Expansion slider. Hover over center line of playback waveform." disabled={!duration || dynamicRangeUnavailable} onClick={() => setDynamicSliderEnabled(value => !value)}><SlidersHorizontal size={19} strokeWidth={2.4} aria-hidden="true" /></button><button type="button" className="deck-dynamics-reset" aria-label="Reset track dynamics" title="Reset track dynamics" disabled={dynamicRangeUnavailable || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19} strokeWidth={2.4} aria-hidden="true" /></button></>}<button type="button" className="deck-play" aria-label={isPlaying ? "Pause music" : "Play music"} onClick={() => { const audio=audioRef.current; if(!audio) return; if(!file){if(testModeRef.current === "bring") setSourceError("Choose your own stereo song to play.");else void chooseRandomSample("random",true);return;} if(audio.paused) { try { setupEngine(); applyFit(); void Promise.all([engine.current!.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions.")); } catch { setSourceError("Could not initialize audio playback."); } } else audio.pause(); }}></button><TrackWaveform compact analysis={curatedPreview ?? analysis} placeholder={file ? (loudnessStatus.startsWith("Audio analysis unavailable") ? "Waveform unavailable" : "Analyzing source waveform…") : "Choose a stereo track to view its waveform"} position={position} duration={duration} onSeek={seconds => { if (audioRef.current) audioRef.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={testMode === "open" && dynamicSliderEnabled} dynamicRangeDisabled={dynamicRangeUnavailable} /><div className={`volume-control ${volumeOpen ? "open" : ""}`}><button type="button" className="deck-volume-toggle" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(value => !value)}>{volume === 0 ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}</button><input className="deck-volume" hidden={!volumeOpen} type="range" min={0} max={1} step={0.01} value={volume} aria-label="Volume" onChange={e => {const value=Number(e.target.value);if(audioRef.current)audioRef.current.volume=value;setVolume(value);}} /></div><audio ref={audioRef} crossOrigin="anonymous" preload="auto" onPlay={() => {setupEngine();applyFit();void engine.current?.context.resume();onPlaybackChange?.(true);}} onPlaying={() => {startInterval();setIsPlaying(true);onPlaybackChange?.(true);}} onPause={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onWaiting={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onTimeUpdate={() => setPosition(audioRef.current?.currentTime ?? 0)} onSeeking={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onSeeked={() => {startInterval();const playing=!!audioRef.current && !audioRef.current.paused;setIsPlaying(playing);onPlaybackChange?.(playing);}} onEnded={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onError={() => setSourceError("This browser could not play the selected audio format.")} onLoadedMetadata={() => { const seconds = audioRef.current?.duration; const valid = seconds && Number.isFinite(seconds) ? seconds : null; setDuration(valid ?? 0);setPosition(0);setMeta(old => ({ ...old, duration: valid, bitrate: old.bitrate ?? (valid && file ? Math.round(file.size * 8 / valid) : null) })); }} /></div>
+    <div className="source-controls"><div className="sample-row" hidden={testMode === "bring"}><p className="music-meta">{sampleStatus}</p>{testMode === "open" && <label className="sample-choice"><span>Choose sample</span><select value={sampleChoice} onChange={e => { setSampleChoice(e.target.value); void chooseRandomSample(e.target.value); }}><option value="random">Random sample</option>{samples.map((sample,index)=><option key={`${sample.name}-${index}`} value={String(index)}>{sample.name}</option>)}</select></label>}{testMode === "open" && <label className="sample-folder" title="Choose Music folder"><input type="file" multiple ref={node => { if (node) node.setAttribute("webkitdirectory", ""); }} onChange={e => void chooseFolder(e.target.files)} /><FolderOpen size={20} aria-hidden="true" /><span className="picker-label">Choose Music folder</span></label>}</div>
+    {testMode !== "blind" && <div className="music-source-row"><label className="music-upload" title={file?.name ? `Audio file: ${file.name}` : "Choose audio file"}><input type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.aac,.acc,.ogg,.oga,.opus,.webm,.aif,.aiff,.alac,.wma,.caf,.mka,.mp4" onChange={e => void chooseFile(e.target.files?.[0] ?? null)} /><FileMusic size={20} aria-hidden="true" /><span className="file-label-text">{file?.name ?? "Choose a real stereo song"}</span></label></div>}</div>{sourceError && <p className="music-meta" role="alert">{sourceError}</p>}
+    <details className="music-details"><summary>Song metadata from website database</summary>{meta.songTitle ? <dl className="song-metadata"><div><dt>Title</dt><dd>{meta.songTitle}</dd></div><div><dt>Artist</dt><dd>{meta.songArtist || "—"}</dd></div><div><dt>Album</dt><dd>{meta.songAlbum || "—"}</dd></div><div><dt>Recording ID / ISRC</dt><dd>{meta.recordingId || "—"}</dd></div></dl> : <p className="metadata-match">{file ? "No matching song in the website database." : "Choose a track to look for saved song metadata."}</p>}</details>
+    {testMode === "open" && <details className="audio-stats"><summary>Audio stats · original file</summary>{analysis ? <><div className="audio-stats-grid">
+      <span>Integrated loudness <strong>{analysis.integratedLufs.toFixed(1)} LUFS <small>estimated</small></strong></span>
+      <span>3-second level spread <strong>{analysis.loudnessSpreadDb === null ? "—" : `${analysis.loudnessSpreadDb.toFixed(1)} dB`}</strong></span>
+      <span>Sample peak <strong>{Number.isFinite(analysis.samplePeakDbfs) ? `${analysis.samplePeakDbfs.toFixed(1)} dBFS` : "—"}</strong></span>
+      <span>Crest factor <strong>{Number.isFinite(analysis.crestDb) ? `${analysis.crestDb.toFixed(1)} dB` : "—"}</strong></span>
+      <span>Stereo correlation <strong>{analysis.stereoCorrelation.toFixed(2)}</strong></span>
+      <span>Side / mid level <strong>{Number.isFinite(analysis.sideMidDb) ? `${analysis.sideMidDb.toFixed(1)} dB` : "—"}</strong></span>
+      <span>L / R balance <strong>{Number.isFinite(analysis.channelBalanceDb) ? `${analysis.channelBalanceDb.toFixed(1)} dB` : "—"}</strong></span>
+      <span>Near-full-scale samples <strong>{analysis.clippedSamples.toLocaleString()}</strong></span>
+    </div><p>Measured before EQ or volume matching. The 3-second spread is a descriptive estimate, not certified EBU loudness range. Near-full-scale samples do not by themselves prove audible clipping.</p></> : <p>Choose a stereo track to analyze it locally.</p>}</details>}
+    {testMode === "open" && <section className="live-audio-stats" aria-label="Live after-EQ comparison"><div className="live-stats-heading"><strong>After EQ · live comparison</strong><span>Momentary mixed-channel levels at the playback position, including volume matching</span></div><div className="live-stats-grid">{[0, 1].map(branch => <div key={branch} data-live-branch={branch}><strong>Sample {branch ? "B" : "A"}</strong><span>Peak <b data-live="peak">—</b></span><span>RMS <b data-live="rms">—</b></span><span>Crest <b data-live="crest">—</b></span></div>)}</div></section>}
+    {testMode !== "blind" && <label className="research-consent"><input type="checkbox" checked={consent} onChange={e => onConsentChange(e.target.checked)} /> Share details from music I choose on this device for research, including matched song tags and a file fingerprint. Listening segments are collected for every completed comparison. This choice is saved in this browser and can be turned off here anytime. Choosing a file allows local playback and analysis; the audio itself is never uploaded.</label>}
+    <p className="music-meta">{file ? `${displayedLoudness} · ${hashing ? "hashing locally…" : meta.sha256 ? `SHA-256 ${meta.sha256.slice(0, 12)}…` : "hash unavailable"} · ${meta.audioFormat} · ${meta.sampleRate ? `${Math.round(meta.sampleRate / 100) / 10} kHz source rate` : "sample rate unavailable"} · ${meta.bitrate ? `${Math.round(meta.bitrate / 1000)} kb/s${meta.audioFormat === "WAV" ? "" : " estimated"}` : "bitrate unavailable"}` : "Choose a stereo sample, then click A or B."}</p>
+  </section>;
+});
+
+export default MusicPanel;

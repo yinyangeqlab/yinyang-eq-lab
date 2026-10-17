@@ -1,0 +1,2 @@
+ALTER TABLE suggestions ADD COLUMN album TEXT NOT NULL DEFAULT '';
+ALTER TABLE suggestions ADD COLUMN recording_id TEXT NOT NULL DEFAULT '';

@@ -1,0 +1,133 @@
+"use client";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { TrackAnalysis } from "@/lib/loudness";
+import { previewDynamics } from "@/lib/dynamics-preview";
+
+function seekClock(seconds: number) {
+  const total = Math.max(0, Math.floor(seconds));
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor(total % 3600 / 60);
+  const rest = String(total % 60).padStart(2, "0");
+  return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
+}
+
+type Props = { analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
+
+export default function TrackWaveform({ analysis, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false }: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const seekGuideRef = useRef<HTMLSpanElement>(null);
+  const seekTimeRef = useRef<HTMLSpanElement>(null);
+  const dragging = useRef(false);
+  const [internalZoom, setInternalZoom] = useState(1);
+  const zoom = controlledZoom ?? internalZoom;
+  const setZoom = onZoom ?? setInternalZoom;
+  const span = duration / zoom;
+  const start = zoom === 1 ? 0 : Math.max(0, Math.min(duration - span, position - span / 2));
+  const rangeText = dynamicRange > .01 ? `Expand +${Math.round(dynamicRange * 100)}%` : dynamicRange < -.01 ? `Compress ${Math.round(-dynamicRange * 100)}%` : "Dynamics 0%";
+  const adjusted = Math.abs(dynamicRange) >= .0001 && !dynamicRangeDisabled;
+  const expanding = adjusted && dynamicRange > 0;
+  const preview = useMemo(() => analysis && duration && adjusted ? previewDynamics(analysis.waveform, dynamicRange, duration) : analysis?.waveform, [analysis, duration, dynamicRange, adjusted]);
+  const moveRange = (clientY: number, control: HTMLElement) => {
+    const rect = control.parentElement?.getBoundingClientRect();
+    if (rect) onDynamicRangeChange(Math.max(-1, Math.min(1, (rect.top + rect.height / 2 - clientY) / (rect.height * .3))));
+  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const draw = () => {
+      const rect = canvas.getBoundingClientRect();
+      const scale = Math.min(2, window.devicePixelRatio || 1);
+      const width = Math.max(1, Math.round(rect.width * scale)), height = Math.max(1, Math.round(rect.height * scale));
+      if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+      const pen = canvas.getContext("2d");
+      if (!pen) return;
+      pen.clearRect(0, 0, width, height);
+      pen.fillStyle = "#071522"; pen.fillRect(0, 0, width, height);
+      if (!analysis || !duration) return;
+      const waves = preview || analysis.waveform;
+      const count = waves.minL.length;
+      if (adjusted) {
+        pen.strokeStyle = expanding ? "rgba(102, 182, 226, .58)" : "rgba(196, 208, 218, .42)";
+        for (let x = 0; x < width; x++) {
+          const from = Math.max(0, Math.min(count - 1, Math.floor((start + x / width * span) / duration * count)));
+          const to = Math.max(from + 1, Math.min(count, Math.ceil((start + (x + 1) / width * span) / duration * count)));
+          for (const [min, max, center] of [[analysis.waveform.minL, analysis.waveform.maxL, .25], [analysis.waveform.minR, analysis.waveform.maxR, .75]] as const) {
+            let low = 1, high = -1;
+            for (let i = from; i < to; i++) { low = Math.min(low, min[i]); high = Math.max(high, max[i]); }
+            const referenceScale = expanding ? .21 - .11 * dynamicRange : .21;
+            pen.beginPath(); pen.moveTo(x + .5, height * (center - high * referenceScale)); pen.lineTo(x + .5, height * (center - low * referenceScale)); pen.stroke();
+          }
+        }
+      }
+      for (let x = 0; x < width; x++) {
+        const from = Math.max(0, Math.min(count - 1, Math.floor((start + x / width * span) / duration * count)));
+        const to = Math.max(from + 1, Math.min(count, Math.ceil((start + (x + 1) / width * span) / duration * count)));
+        let lowL = 1, highL = -1, lowR = 1, highR = -1;
+        let sourceLowL = 1, sourceHighL = -1, sourceLowR = 1, sourceHighR = -1;
+        for (let i = from; i < to; i++) {
+          lowL = Math.min(lowL, waves.minL[i]); highL = Math.max(highL, waves.maxL[i]);
+          lowR = Math.min(lowR, waves.minR[i]); highR = Math.max(highR, waves.maxR[i]);
+          if (expanding) {
+            sourceLowL = Math.min(sourceLowL, analysis.waveform.minL[i]); sourceHighL = Math.max(sourceHighL, analysis.waveform.maxL[i]);
+            sourceLowR = Math.min(sourceLowR, analysis.waveform.minR[i]); sourceHighR = Math.max(sourceHighR, analysis.waveform.maxR[i]);
+          }
+        }
+        const played = start + x / width * span <= position;
+        if (expanding) {
+          const sourceScale = .21 - .11 * dynamicRange;
+          const drawOutside = (center: number, low: number, high: number, sourceLow: number, sourceHigh: number, color: string) => {
+            const top = height * (center - high * .21), sourceTop = height * (center - sourceHigh * sourceScale);
+            const bottom = height * (center - low * .21), sourceBottom = height * (center - sourceLow * sourceScale);
+            pen.strokeStyle = color;
+            if (top < sourceTop) { pen.beginPath(); pen.moveTo(x + .5, sourceTop); pen.lineTo(x + .5, top); pen.stroke(); }
+            if (bottom > sourceBottom) { pen.beginPath(); pen.moveTo(x + .5, sourceBottom); pen.lineTo(x + .5, bottom); pen.stroke(); }
+          };
+          drawOutside(.25, lowL, highL, sourceLowL, sourceHighL, played ? "rgba(255, 99, 115, .88)" : "rgba(208, 80, 97, .68)");
+          drawOutside(.75, lowR, highR, sourceLowR, sourceHighR, played ? "rgba(255, 142, 151, .86)" : "rgba(214, 104, 118, .65)");
+        } else {
+          pen.strokeStyle = played ? "#59b8ff" : "#3a7197";
+          pen.beginPath(); pen.moveTo(x + .5, height * (.25 - highL * .21)); pen.lineTo(x + .5, height * (.25 - lowL * .21)); pen.stroke();
+          pen.strokeStyle = played ? "#90d2ff" : "#486f99";
+          pen.beginPath(); pen.moveTo(x + .5, height * (.75 - highR * .21)); pen.lineTo(x + .5, height * (.75 - lowR * .21)); pen.stroke();
+        }
+      }
+      pen.strokeStyle = "rgba(194, 203, 210, .82)";
+      pen.lineWidth = scale;
+      for (const center of [.25, .75]) {
+        const y = Math.round(height * center) + .5;
+        pen.beginPath(); pen.moveTo(0, y); pen.lineTo(width, y); pen.stroke();
+      }
+      const playX = (position - start) / span * width;
+      if (playX >= 0 && playX <= width) { pen.strokeStyle = "#f4f9fa"; pen.lineWidth = 2 * scale; pen.beginPath(); pen.moveTo(playX, 0); pen.lineTo(playX, height); pen.stroke(); }
+    };
+    const observer = new ResizeObserver(draw); observer.observe(canvas); draw();
+    return () => observer.disconnect();
+  }, [analysis, preview, adjusted, expanding, dynamicRange, position, duration, span, start]);
+  return <div className={`track-waveform ${compact ? "compact" : ""} ${displayOnly ? "display-only" : ""}`} onPointerMove={displayOnly ? undefined : event => {
+    const rect = canvasRef.current?.getBoundingClientRect(), guide = seekGuideRef.current, time = seekTimeRef.current;
+    if (!rect || !guide || !time || !duration || !rect.width || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
+      if (guide) guide.style.visibility = "hidden";
+      if (time) time.style.visibility = "hidden";
+      return;
+    }
+    const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    guide.style.left = `${x}px`;
+    guide.style.visibility = "visible";
+    time.textContent = seekClock(Math.max(0, Math.min(duration, start + x / rect.width * span)));
+    time.style.left = `${Math.max(time.offsetWidth / 2 + 4, Math.min(rect.width - time.offsetWidth / 2 - 4, x))}px`;
+    time.style.top = `${Math.min(rect.height, Math.max(27, event.clientY - rect.top - 8))}px`;
+    time.style.visibility = "visible";
+  }} onPointerLeave={displayOnly ? undefined : () => {
+    if (seekGuideRef.current) seekGuideRef.current.style.visibility = "hidden";
+    if (seekTimeRef.current) seekTimeRef.current.style.visibility = "hidden";
+  }}>
+    {!displayOnly && !hideHeading && <div className="waveform-head"><span>{adjusted ? "DYNAMICS PREVIEW" : "SOURCE WAVEFORM"} <small>{expanding ? "Red: extension beyond scaled blue source" : adjusted ? "Blue: estimated output · gray: source" : "L / R · pre-EQ · click to seek"}</small></span>{!hideZoom && <div className="waveform-zoom"><button type="button" disabled={zoom === 1 || !analysis} onClick={() => setZoom(Math.max(1, zoom / 2))} aria-label="Zoom waveform out">−</button><span>{zoom}×</span><button type="button" disabled={zoom === 8 || !analysis} onClick={() => setZoom(Math.min(8, zoom * 2))} aria-label="Zoom waveform in">+</button></div>}</div>}
+    <div className="waveform-canvas-area"><canvas ref={canvasRef} aria-label={displayOnly ? "Stereo waveform showing left and right channels and playback position" : hideHeading ? "Seek in stereo waveform" : "Stereo source waveform, click to seek"} role={displayOnly ? "img" : "button"} tabIndex={displayOnly ? undefined : duration ? 0 : -1} onClick={displayOnly ? undefined : event => { if (!duration) return; const rect=event.currentTarget.getBoundingClientRect();onSeek(Math.max(0, Math.min(duration, start + (event.clientX - rect.left) / rect.width * span))); }} onKeyDown={displayOnly ? undefined : event => { if (!duration) return; if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); onSeek(Math.max(0, Math.min(duration, position + (event.key === "ArrowRight" ? 5 : -5)))); } }} />
+    <span className="waveform-channel-label waveform-channel-left" aria-hidden="true">L</span><span className="waveform-channel-label waveform-channel-right" aria-hidden="true">R</span>
+    {!displayOnly && duration > 0 && <span ref={seekGuideRef} className="waveform-seek-guide" aria-hidden="true" />}
+    {!displayOnly && duration > 0 && <span ref={seekTimeRef} className="waveform-seek-time" aria-hidden="true" />}
+    {duration > 0 && dynamicSliderEnabled && !dynamicRangeDisabled && <span className="waveform-center-guide" aria-hidden="true" />}
+    {duration > 0 && dynamicSliderEnabled && !dynamicRangeDisabled && <div className={`dynamic-range-control ${dynamicRange !== 0 ? "adjusted" : ""}`} style={{ top: `${50 - dynamicRange * 30}%` }} role="slider" tabIndex={0} title={expanding ? "Drag down to compress peaks. Red shows only the expansion outside the scaled blue source reference." : "Drag up to expand quiet parts; drag down to compress peaks. Blue estimates compressed output; gray is the original."} aria-label="Track dynamic range" aria-valuemin={-100} aria-valuemax={100} aria-valuenow={Math.round(dynamicRange * 100)} aria-valuetext={rangeText} onPointerDown={event => { event.preventDefault(); dragging.current = true; event.currentTarget.setPointerCapture(event.pointerId); moveRange(event.clientY, event.currentTarget); }} onPointerMove={event => { if (dragging.current) moveRange(event.clientY, event.currentTarget); }} onPointerUp={event => { dragging.current = false; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }} onPointerCancel={() => { dragging.current = false; }} onDoubleClick={() => onDynamicRangeChange(0)} onKeyDown={event => { const delta = event.key === "ArrowUp" ? .05 : event.key === "ArrowDown" ? -.05 : 0; if (delta || event.key === "Home") { event.preventDefault(); event.stopPropagation(); onDynamicRangeChange(event.key === "Home" ? 0 : Math.round(Math.max(-1, Math.min(1, dynamicRange + delta)) * 100) / 100); } }}><span className="dynamic-range-line" /><span className="dynamic-range-brackets" aria-hidden="true">↕</span><span className="dynamic-range-readout" aria-hidden="true">{rangeText}</span></div>}
+    {!analysis && <span className="waveform-placeholder">{placeholder}</span>}</div>
+  </div>;
+}

@@ -1,0 +1,1 @@
+ALTER TABLE votes ADD COLUMN test_mode TEXT NOT NULL DEFAULT 'open';
