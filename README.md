@@ -8,7 +8,7 @@ A browser listening lab for headphone EQ: compare targets, shape your own curve,
 
 **[Explore the site](https://yinyangeq.com) · [Watch the demo](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new)**
 
-[![Apache License 2.0](https://img.shields.io/badge/license-Apache_2.0-59d9ce?style=flat-square)](LICENSE)
+[![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
 [![Vibe coded with GPT Codex](https://img.shields.io/badge/vibe_coded_with-GPT_Codex-aea1ff?style=flat-square)](#made-with-gpt-codex)
 
 [![Watch the YinYang EQ League cinematic demo: Shape it. Hear it.](docs/images/demo-poster.jpg)](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17)
