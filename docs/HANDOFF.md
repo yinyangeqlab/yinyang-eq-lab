@@ -2,13 +2,13 @@
 
 ## Compact header spacing — prepared October 17, 2026
 
-The local preview also enlarges the setup chevron to 30 px in a 60 × 44 px button. Text on its right explains that it hides test mode, headphones and loudness controls, and changes to “Show test setup” with restoration instructions when collapsed. Browser checks verified both directions and the 320 px layout without overflow; TypeScript passed. Expanded/collapsed screenshots are retained privately as `artifacts/setup-toggle-expanded.png` and `artifacts/setup-toggle-collapsed.png`. This addition is preview-only and has not been deployed.
+The approved setup toggle is one centered, 26 px high pill with a 20 px arrow and a single-line label: “Hide test options” when expanded and “Show test options” when collapsed. Hover/accessibility help identifies comparison choices, headphones and loudness controls. This replaces the earlier larger button and separate explanation. TypeScript and browser hide/restore checks passed, including a 320 px viewport without horizontal overflow.
 
 The Shootout header now groups Welcome, Preference Tuning, Music Library and the data notice next to the brand with consistent gaps. Its six section tabs use content-sized buttons instead of stretching across the viewport. Owner view remains a separate small static utility at the far right. Narrow layouts retain grouped controls and wrapping tabs; the smallest header also places Owner view beside the brand.
 
 The local browser preview was inspected at 320, 390, 768, 1440 and 2519 px without horizontal overflow; the final smallest layout was checked after aligning Owner view beside the brand. TypeScript and the production build passed. The working application and isolated release snapshot contain the same two changed application files. A screenshot is retained privately as `artifacts/compact-navigation-preview.png` outside this public checkout.
 
-Deployment preview showed only the existing Worker would change, with three other infrastructure resources unchanged. The live deployment attempt was rejected by automatic approval review because the spacing request did not explicitly authorize production publication. This header update is prepared locally; release 39 remains the last successfully deployed release recorded here. Obtain explicit deployment approval before publishing the prepared header change.
+The owner explicitly approved pushing and deploying this compact layout on October 17. Publication uses only the yinyangeqlab GitHub account and repository identity. The isolated deployment build preserves the hosted audio assets and excludes unrelated owner-results edits and the unpublished credits draft.
 
 ## Live measurement migration and verification — October 17, 2026
 
