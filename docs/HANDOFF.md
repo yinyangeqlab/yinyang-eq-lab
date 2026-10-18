@@ -1,3 +1,7 @@
+## Music voting and centered playback published — October 17, 2026
+
+Owner-approved music voting, preference-ranked rotation, Upvote/Downvote labels, compact ballot, centered responsive Play control and inline blue volume slider were published in aa2c984. Cloudflare update 48 updated only the existing Worker. Build, TypeScript, music preference regression, public source release scan, exact live playback asset hashes, authenticated pages/API, private-access smoke checks and 128 selective-routing checks passed. Existing public-asset bypass savings and private audio/access protections were preserved. No database migration, synthetic votes or category changes. Prior local desktop/tablet/mobile checks cover both volume states. Separate unpublished admin work remains outside this release.
+
 ## Exact playback centering — October 17, 2026 (local preview)
 
 Replaced desktop-only pixel offsets with a symmetric three-column grid anchored on Play. Play now stays at the music-panel midpoint at desktop, tablet and phone widths, regardless of volume visibility or the presence of Open-mode dynamics controls. Grouped the two dynamics buttons for the left grid cell. At <=600 px volume uses a centered second row, with its slider still directly to the right; reserved slider width prevents toggle movement. Desktop header stays top-left within its own available width; tablet/mobile transport stays below the readout. Blue slider and compact vote below waveform/source controls retained.
