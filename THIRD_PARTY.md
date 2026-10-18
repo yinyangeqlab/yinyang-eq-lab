@@ -1,6 +1,6 @@
 # Third-party material
 
-The top-level Apache 2.0 license covers original application code. It does not replace licenses or ownership of third-party components, packages, catalogs, music, or target data.
+The top-level Apache 2.0 license covers only original software source code. It does not cover this project's names, marks, logos, branded visual assets, site copy, screenshots, or visual design; it does not replace licenses or ownership of third-party components, packages, catalogs, music, or target data. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md).
 
 - `components/ui/` contains shadcn/ui generated or adapted components. The [official shadcn/ui source](https://github.com/shadcn-ui/ui) is MIT licensed; its license and copyright notice are in `vendor/shadcn-ui.LICENSE.md`.
 - `build/sites-vite-plugin.*` and related Sites integration code retain OpenAI's MIT notice in `build/sites-vite-plugin.LICENSE`.

@@ -1,7 +1,13 @@
 YinYang EQ League
 Copyright 2026 Yin Yang EQ Lab (@yinyangeqlab)
 
-This product includes original application code licensed under Apache License 2.0.
+The original software source code in this repository is licensed under Apache
+License 2.0. That grant excludes the YinYang EQ League and Yin Yang EQ Lab
+names, logos, other brand assets, site copy, visual design, screenshots, and
+other creative works unless a separate notice says otherwise. See
+LICENSE_SCOPE.md for details. Apache License 2.0 section 6 does not grant
+broader rights to the project names or marks.
+
 Third-party components and data retain their own notices and licenses as
-listed in THIRD_PARTY.md. No rights to third-party target curves or recordings
-are granted by this NOTICE.
+listed in THIRD_PARTY.md. No rights to third-party target curves, recordings,
+or other excluded material are granted by this NOTICE.
