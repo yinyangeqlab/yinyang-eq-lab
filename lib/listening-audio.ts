@@ -56,6 +56,7 @@ export async function serveListeningAudio(request: Request, asset: AudioAsset, a
       const writer = output.writable.getWriter();
       try { await writer.close(); } finally { writer.releaseLock(); }
     } catch (error) {
+      console.warn("listening_audio_stream_failed", error instanceof Error ? error.message : "stream failure");
       const writer = output.writable.getWriter();
       try { await writer.abort(error); } finally { writer.releaseLock(); }
     }
