@@ -2,6 +2,8 @@
 
 ## Compact header spacing — prepared October 17, 2026
 
+The local preview also enlarges the setup chevron to 30 px in a 60 × 44 px button. Text on its right explains that it hides test mode, headphones and loudness controls, and changes to “Show test setup” with restoration instructions when collapsed. Browser checks verified both directions and the 320 px layout without overflow; TypeScript passed. Expanded/collapsed screenshots are retained privately as `artifacts/setup-toggle-expanded.png` and `artifacts/setup-toggle-collapsed.png`. This addition is preview-only and has not been deployed.
+
 The Shootout header now groups Welcome, Preference Tuning, Music Library and the data notice next to the brand with consistent gaps. Its six section tabs use content-sized buttons instead of stretching across the viewport. Owner view remains a separate small static utility at the far right. Narrow layouts retain grouped controls and wrapping tabs; the smallest header also places Owner view beside the brand.
 
 The local browser preview was inspected at 320, 390, 768, 1440 and 2519 px without horizontal overflow; the final smallest layout was checked after aligning Owner view beside the brand. TypeScript and the production build passed. The working application and isolated release snapshot contain the same two changed application files. A screenshot is retained privately as `artifacts/compact-navigation-preview.png` outside this public checkout.
