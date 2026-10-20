@@ -1425,15 +1425,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "1628fcb25a6c3c496504c631c554fa39c595ed7cd5425e9906f68881c7b9e443"
+      "sha256": "8e0129c99111bf09994e21a625eb624ebf872600adfdf3a8f8c24ba8503d4c91"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "f68a6d29eb2df38cd504de6922921f9c849b88d90fefa85d69264cfed37a710f"
+      "sha256": "703809cfb945d9386dbf25ead745e60608c82a6022d9688dc6a668811d364397"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "74a2c3958c586efe43e22861a007e5faad93db1b753d83d9e5dcce4efc4449ea"
+      "sha256": "60abe36fa7ef36be8cf1902e9cd9a8559202ed5442de5b6246942b04a2d13ecb"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -1449,7 +1449,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c6aef3071ec0bac3bd98f2ab22d7852ca6339bd55740a656e6333a8e76a590e3"
+      "sha256": "2232412e52f422c4207656231b58e89fd42a0a05879c81af1e70de42fc2300f7"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -5586,7 +5586,7 @@
   },
   "audit": {
     "report": "workspace/artifacts/site-audit-20261018/full-site-audit.html",
-    "outstandingFindings": 25,
+    "outstandingFindings": 26,
     "correctionsDeployed": [
       83,
       84,
