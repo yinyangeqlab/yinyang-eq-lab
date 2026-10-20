@@ -121,3 +121,10 @@ await vm.runInContext('vote(0)',practice.context);
 assert.equal(practice.calls.length,0,"Paused local comparisons must not make server submissions");
 assert.equal(practice.state.trials.length,0,"Unagreed users cannot use local-only comparison");
 assert.equal(practice.state.reviewVoteData,true);
+
+const privateOpen=harness({mode:"open"});privateOpen.state.allTargets[1].status="private";
+await vm.runInContext("vote(0)",privateOpen.context);
+assert.equal(privateOpen.state.trials.length,1);assert.equal(privateOpen.state.revealed,true);
+assert.equal(privateOpen.calls.length,0,"Private-target Open choices never make a network submission");
+assert.match(privateOpen.state.message,/only to My results/);
+console.log("Private-target Open comparison remains local without a research API call.");

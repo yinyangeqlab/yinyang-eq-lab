@@ -195,3 +195,5 @@
  .pt-content { padding-inline:28px; }
  .pt-top { padding-inline:max(28px,calc((100% - 1600px)/2 + 28px)); }
 }
+
+.pt-cohort-note{max-width:650px;color:#a9c7bf;font-size:12px;line-height:1.5;margin:6px 0 10px}.pt-cohort-note a{color:#a4e9d7;text-decoration:underline}

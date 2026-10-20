@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       env.DB!.prepare("SELECT payload FROM statistics_archive ORDER BY year"),
       env.DB!.prepare(`SELECT v.winner_id,v.loser_id,a.name winner_name,b.name loser_name,v.created_at,v.test_mode,v.headphone_type,
         CASE WHEN o.subject_id IS NOT NULL THEN 'account:'||o.subject_id ELSE 'browser:'||v.voter_id END group_id,
-        CASE WHEN o.subject_id LIKE 'invite:%' THEN 'account' WHEN o.subject_id='owner' THEN 'shared-admin' ELSE 'legacy-browser' END group_kind
+        CASE WHEN o.subject_id LIKE 'invite:%' OR o.subject_id LIKE 'browser:%' THEN 'account' WHEN o.subject_id='owner' THEN 'shared-admin' ELSE 'legacy-browser' END group_kind
         FROM votes v JOIN targets a ON a.id=v.winner_id JOIN targets b ON b.id=v.loser_id
         LEFT JOIN submission_owners o ON o.record_kind='vote' AND o.record_id=v.id
         WHERE v.eligible=1 AND v.test_mode IN ('blind','bring') AND v.heard_a>=5 AND v.heard_b>=5
@@ -63,7 +63,7 @@ export async function POST(request:Request){
     AND ((?=0 AND v.created_at>=a.agreed_at AND a.agreement_version=?) OR (?=1 AND EXISTS (
       SELECT 1 FROM legacy_record_verifications l JOIN retrospective_permissions p ON p.subject_id=l.subject_id
       WHERE l.record_kind='vote' AND l.record_id=v.id AND l.subject_id=o.subject_id AND p.study_id=? AND p.enabled=1 AND p.notice_version=? AND a.agreement_version='2026-10-18-v7')))
-    AND o.subject_id LIKE 'invite:%' AND v.eligible=1 AND v.test_mode=? AND v.headphone_type=? AND v.heard_a>=5 AND v.heard_b>=5
+    AND (o.subject_id LIKE 'invite:%' OR o.subject_id LIKE 'browser:%') AND v.eligible=1 AND v.test_mode=? AND v.headphone_type=? AND v.heard_a>=5 AND v.heard_b>=5
     AND ((v.winner_id=? AND v.loser_id=?) OR (v.winner_id=? AND v.loser_id=?))
     AND COALESCE((SELECT m.action FROM moderation_events m WHERE m.record_kind='vote' AND m.record_id=v.id ORDER BY m.sequence DESC LIMIT 1),'restore')!='remove'
     GROUP BY o.subject_id`).bind(study.target_a,study.start_at,study.end_at,retrospective?1:0,ARCHIVE_V2_NOTICE,retrospective?1:0,study.id,RETROSPECTIVE_NOTICE_VERSION,study.mode,study.headphone_type,study.target_a,study.target_b,study.target_b,study.target_a)

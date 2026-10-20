@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),ts=require('typescript');
-const mod={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/media-recovery.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:mod,exports:mod.exports,URL,setTimeout,clearTimeout});
+const mod={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/media-recovery.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:mod,exports:mod.exports,URL,setTimeout,clearTimeout,AbortSignal,fetch:async()=>({ok:true})});
 const {attachMediaRecovery,cancelMediaRecovery}=mod.exports;
 class Audio extends EventTarget {
  src='https://example.test/api/listening-audio/test';paused=false;currentTime=120;duration=241;readyState=4;error=null;seeking=false;volume=.37;playbackRate=1.25;loads=0;plays=0;

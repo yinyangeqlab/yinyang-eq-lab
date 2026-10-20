@@ -4,6 +4,7 @@ import { attachMediaRecovery } from "@/lib/media-recovery";
 
 import { FileMusic, FolderOpen, RotateCcw, Shuffle, Play, Square, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
 import { createPortal } from "react-dom";
+import {musicDisplayTitle} from "@/lib/music-display";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
 import { intervalStats, type Interval } from "@/lib/listening";
@@ -49,7 +50,8 @@ function sourceDetails(buffer: ArrayBuffer, format: string): { sampleRate?: numb
     const rateIndex = (bytes[i + 2] >> 2) & 3, bitrateIndex = (bytes[i + 2] >> 4) & 15;
     if (version === 1 || layer !== 1 || rateIndex === 3 || bitrateIndex === 0 || bitrateIndex === 15) continue;
     const base = [44100, 48000, 32000][rateIndex];
-    return { sampleRate: version === 3 ? base : version === 2 ? base / 2 : base / 4 };
+    const kbps=(version===3 ? [0,32,40,48,56,64,80,96,112,128,160,192,224,256,320] : [0,8,16,24,32,40,48,56,64,80,96,112,128,144,160])[bitrateIndex];
+    return { sampleRate: version === 3 ? base : version === 2 ? base / 2 : base / 4, bitrate: kbps*1000 };
   }
   return {};
 }
@@ -93,19 +95,24 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const sharedPlaybackTarget = requestedLoudness === "off" ? null : playbackTarget(selectedPoolTrack ? curatedMusic.filter(track => (track.songFamily || track.url) === (selectedPoolTrack.songFamily || selectedPoolTrack.url)) : [], Number(requestedLoudness));
   const candidateUrlRef = useRef(candidateUrl);
   candidateUrlRef.current = candidateUrl;
+  const musicVoteRequest = useRef(0);
   async function refreshMusicVotes() {
+    const request = ++musicVoteRequest.current;
     const response = await fetch("/api/music-votes", { cache: "no-store" });
     const result = await response.json() as MusicVoteSnapshot;
+    if (request !== musicVoteRequest.current) return;
     if (!response.ok) throw new Error(result.error || "Could not load music choices.");
     setMusicChoices(result.mine ?? {});
     setMusicSignedIn(Boolean(result.signedIn));
     setMusicVotesReady(true);
+    setMusicVoteMessage("");
   }
   useEffect(() => {
     const refresh = () => { void refreshMusicVotes().catch(() => setMusicVoteMessage("Music votes unavailable.")); };
     refresh();
     window.addEventListener("focus", refresh);
-    return () => window.removeEventListener("focus", refresh);
+    window.addEventListener("yinyang-data-changed", refresh);
+    return () => { window.removeEventListener("focus", refresh); window.removeEventListener("yinyang-data-changed", refresh); musicVoteRequest.current++; };
   }, []);
   async function voteForMusic(choice: MusicChoice | null) {
     if (!candidateUrl || musicSaving) return;
@@ -569,11 +576,19 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       setFile(new File([], track.filename, { type: mime }));
       if (audioRef.current) { audioRef.current.src = streamUrl; audioRef.current.load(); }
       curatedIndexRef.current = index;
-      setSampleStatus(`Listening pool ${index + 1}/${curatedMusic.length}: ${track.title} · ${track.versionLabel || "original recording"}`);
+      setSampleStatus(`Listening pool ${index + 1}/${curatedMusic.length}: ${musicDisplayTitle(track.title)} · ${track.versionLabel || "original recording"}`);
       if (autoPlay) startPlayback(true);
       // Long recordings keep streaming from native source measurements and peaks.
       // Decoding a 40-minute file into PCM can exhaust mobile browser memory.
-      if (track.duration > 600) return true;
+      if (track.duration > 600) {
+        // Read only a bounded header; never decode long recordings into PCM.
+        void fetch(streamUrl,{headers:{Range:"bytes=0-65535"}}).then(async response=>{
+          if(response.status!==206){await response.body?.cancel();return;}
+          const details=sourceDetails(await response.arrayBuffer(),format);
+          if(serial===curatedFetchRef.current)setMeta(old=>({...old,sampleRate:details.sampleRate??old.sampleRate,bitrate:old.bitrate??details.bitrate??null}));
+        }).catch(()=>{});
+        return true;
+      }
       // Playback uses the streaming URL. Analysis and fingerprinting can finish later.
       window.setTimeout(() => {
         if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return;
@@ -690,7 +705,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     </div><p>Measured before EQ or volume matching. The 3-second spread is a descriptive estimate, not certified EBU loudness range. Near-full-scale samples do not by themselves prove audible clipping.</p></> : <p>Choose a stereo track to analyze it locally.</p>}</details>}
     {testMode === "open" && <section className="live-audio-stats" aria-label="Live after-EQ comparison"><div className="live-stats-heading"><strong>After EQ · live comparison</strong><span>Momentary mixed-channel levels at the playback position, including volume matching</span></div><div className="live-stats-grid">{[0, 1].map(branch => <div key={branch} data-live-branch={branch}><strong>Sample {branch ? "B" : "A"}</strong><span>Peak <b data-live="peak">—</b></span><span>RMS <b data-live="rms">—</b></span><span>Crest <b data-live="crest">—</b></span></div>)}</div></section>}
     {testMode !== "blind" && <button type="button" className="music-data-settings" onClick={onDataSettings}>Song detail sharing {consent ? "on" : "off"} · Data settings</button>}
-    <p className="music-meta">{file ? `${displayedLoudness} · ${hashing ? "hashing locally…" : meta.sha256 ? `SHA-256 ${meta.sha256.slice(0, 12)}…` : "hash unavailable"} · ${meta.audioFormat} · ${meta.sampleRate ? `${Math.round(meta.sampleRate / 100) / 10} kHz source rate` : "sample rate unavailable"} · ${meta.bitrate ? `${Math.round(meta.bitrate / 1000)} kb/s${meta.audioFormat === "WAV" ? "" : " estimated"}` : "bitrate unavailable"}` : "Choose a stereo sample, then click A or B."}</p>
+    <p className="music-meta">{file ? `${displayedLoudness} · ${hashing ? "hashing locally…" : meta.sha256 ? `SHA-256 ${meta.sha256.slice(0, 12)}…` : "hash unavailable"} · ${meta.audioFormat} · ${meta.sampleRate ? `${Math.round(meta.sampleRate / 100) / 10} kHz source rate` : "source sample rate not read"} · ${meta.bitrate ? `${Math.round(meta.bitrate / 1000)} kb/s${meta.audioFormat === "WAV" ? "" : " estimated"}` : "source bitrate not read"}` : "Choose a stereo sample, then click A or B."}</p>
   </section>;
 });
 

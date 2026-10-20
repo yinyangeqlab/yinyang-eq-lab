@@ -159,7 +159,7 @@ const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
     const publicLandingAsset = isPublicAsset(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/api/maintenance" || publicLandingAsset)) {
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/api/maintenance" || publicLandingAsset)) {
       if (publicLandingAsset) return env.ASSETS.fetch(request);
       const headers = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headers.delete(name);
@@ -223,7 +223,7 @@ const privateGate = {
       const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective"].includes(path);
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
-        const redirect = new Response(null, { status: 303, headers: { Location: owner || tester ? "/shootout" : "/", "Cache-Control": "no-store" } });
+        const redirect = new Response(null, { status: 303, headers: { Location: "/", "Cache-Control": "no-store" } });
         if(data?.setCookie) redirect.headers.append("Set-Cookie",data.setCookie);
         return finish(redirect);
       }
