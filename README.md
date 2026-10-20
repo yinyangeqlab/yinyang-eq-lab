@@ -53,7 +53,7 @@ Start from a reference, then adjust bass, body, ear gain, upper presence, and tr
 
 ## Give your music a listening room
 
-Explore the music library with stereo waveforms, source credits, and listening notes. Audition tracks, keep a shortlist, and apply a saved or generated EQ to supported site-hosted previews.
+Explore the live music library with stereo waveforms, source credits, and listening notes. Audition tracks, keep a shortlist, and apply a saved or generated EQ to supported audio previews. This source release omits cached waveforms and hosted soundtrack files; its playback differences are described below.
 
 ![Music library showing track cards, stereo waveforms, playback, Keep and Pass controls, and artist credits](docs/images/music-library.jpg)
 
@@ -71,20 +71,25 @@ The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Clo
 
 ## Run locally
 
-Requires **Node.js 22.13 or newer** and a configured **D1 database**.
+Requires **Node.js 22.13 or newer**. For a fresh checkout:
 
 ```sh
 npm ci
+npm run setup:local
 npm run dev
 ```
 
-The checked-in `.openai/hosting.json` contains only a local D1 binding placeholder, `DB`; it has no account ID or credentials. Apply the SQL migrations in [`drizzle/`](drizzle/) in order, taking care with the separately named `0012` migrations. Apply `0015_ranked_repeats_uncertainty.sql` before running the updated vote and research APIs. Use `npm run build` to build the application.
+`setup:local` initializes a fresh **local D1 database** from the checked-in SQL files and creates ignored development secrets. It refuses to overwrite an existing database. Open the URL printed by the dev server (normally `http://localhost:5173`). No Cloudflare account or production credentials are needed for this preview. See [local setup](docs/LOCAL_SETUP.md) for existing databases, feature requirements, and production configuration. Use `npm run build` to build the application.
+
+The tracked `.openai/hosting.json` and `wrangler.local.json` contain local binding placeholders only. The two historical `0012` migrations are distinct and both required. Existing databases through `0015` need `0016_measurement_file_chunks.sql` for original-file research contributions. Pushing source does not migrate or deploy a database.
 
 This is a clean source release. Production data, credentials, deployment state, invitation-gate infrastructure, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
 
-The current [source handoff](docs/HANDOFF.md) describes the latest application changes. The [target inventory](docs/TARGET_INVENTORY.md) lists the 41 live target names and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
+The [source handoff](docs/HANDOFF.md) records dated application checkpoints and this accuracy correction. The [target inventory](docs/TARGET_INVENTORY.md) lists the 41 live target names and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
 
-The 32 Shantae soundtrack files hosted by the live site are omitted. `data/shantae-audio.json` is intentionally empty, so these tracks use the Bandcamp player fallback. Other music entries point to their creators' sites. The soundtrack is CC BY-NC-SA 4.0 and is **not** covered by this repository's Apache license.
+The live site uses **owner-supplied album downloads** for 32 tracks from Jake Kaufman’s *Shantae: Half-Genie Hero OST*: **26 original FLAC files and six AAC files**. These are copies of the artist’s recordings. The 32 included tracks’ [individual Bandcamp pages](https://virt.bandcamp.com/album/shantae-half-genie-hero-ost) link to CC BY-NC-SA 4.0. “Title” and “Let’s Go Shopping” are marked all rights reserved and are excluded. The recordings retain their own licenses and are **not** covered by this repository’s Apache license.
+
+Those audio files are omitted from GitHub. Here, `data/shantae-audio.json` is intentionally empty, so Shantae uses Bandcamp embeds **without the site’s EQ**. Other music entries include external audio URLs and creator/license links. `data/music-waveforms.json` is also empty: the library displays “Waveform unavailable” until a compatible cache is supplied. The live-site screenshots show the separately populated deployment.
 
 The production site has an invitation gate supplied by separate deployment infrastructure. Configure equivalent access controls, D1 bindings, and secrets in your own hosting environment before deploying a public replacement.
 

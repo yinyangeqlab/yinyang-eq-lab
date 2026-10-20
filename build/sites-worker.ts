@@ -4,6 +4,15 @@ import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 
 export default {
   fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
+    // Only the loopback development preview emulates the excluded trusted edge.
+    if (import.meta.env.DEV && ["localhost", "127.0.0.1", "[::1]"].includes(new URL(request.url).hostname)) {
+      const headers = new Headers(request.headers);
+      headers.set("CF-Connecting-IP", "127.0.0.1");
+      const token = (env as unknown as Record<string, unknown>).OWNER_ANALYTICS_TOKEN;
+      if (new URL(request.url).pathname.startsWith("/api/owner-research") && typeof token === "string")
+        headers.set("Authorization", `Bearer ${token}`);
+      request = new Request(request, { headers });
+    }
     let binding = ctx.props?.CONNECTORS;
     // Local preview emulates the same request-scoped capability. This branch and
     // the auxiliary service binding are absent from production builds.
