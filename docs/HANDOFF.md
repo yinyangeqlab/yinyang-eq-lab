@@ -1,3 +1,34 @@
+# Operational handoff — maintenance expired, October 18, 2026
+
+Live baseline remains **update93**, implementation `4dbba07333b0755a1ffbd5dc2ce0416b936c6249`. Source/build: `work/maintenance-ui-release-20261018`; infrastructure: `work/maintenance-ui-infra-20261018`. The owner approved and this chat deployed that exact redesigned maintenance UI. No deployment is required for this handoff.
+
+## Current operation
+
+At approximately 11:02 PM Pacific on October18, read-only checks verified that maintenance was inactive, no feature locks remained effective, and public `/shootout` returned HTTP200. Browser inspection confirmed the normal Shootout setup and no maintenance notice. The full stored notice row was identical to its pre-deployment capture, with original expiry `1792389524011` (October18,10:58:44PM PDT). Nothing was republished, cleared, extended or restarted. The exact transition second was not observed; the expired state was verified after the original deadline. Do not reactivate the old notice or treat its retained database row as an active lock. Effective availability is determined by expiry. No comparison was started or submitted for verification.
+
+Evidence (local, ignored): `workspace/artifacts/maintenance-expiry-20261018/verified.json` and `shootout-restored.jpg`. Earlier active-state deployment evidence is point-in-time history, not a claim maintenance is still active. The deployment comparison of the entire stored row is in `workspace/artifacts/maintenance-ui-release-20261018/live-notice-check.json`.
+
+## Completed work
+
+- The full site audit and approved fixes are recorded in `workspace/artifacts/final-site-check-20261018/final-review.html`. Broad review covered60verified-size public-page cases,24Shootout-tab cases and5admin cases. Two minor terminology/notice-duplication observations remain documented. Destructive operations and real participant research submissions were not exercised live. Physical TV/OLED hardware and native5120 rendering are not certified; browser5120 requests cap at4096.
+- Shootout Rankings defaults to recommended matched A/B passage evidence, cites the controlled-listening principles and distinguishes the practical five-second rule from a guarantee of accuracy. The historical20-song filter was removed. Counters follow the selected test version/headphone type and include ties.
+- SHA-256 matching uses valid file hashes and retains consented stored hashes for ties. The two-participant-group requirement remains. Read-only evidence found89qualifying comparisons,38current/51earlier,16ties and46validhashes, with no qualifying two-group hash cohort. Older data was not discarded or silently reclassified;3earlier records have common five-second passage evidence but retain their earlier-protocol label.
+- Initial consent includes an optional private Sync-linked nickname, no email, and explicit monitoring Yes/No. The compact layout was checked at360×640. `/participation` keeps consent accessible independently of paused Shootouts. My data remains the place to edit/remove nickname and manage privacy.
+- Maintenance supports separate feature locks and combined custom durations. The final dark-green UI has labelled Paused/Available cards, quick duration choices, a custom-unit form, readable totals and separate live-versus-draft timing. Updating a notice intentionally starts a new timer; loading or deploying controls does not. Contribution forms additionally require the Shootout page unlocked.
+- Tuning uses current matched A/B rankings from both music sources, across headphone types; its target selector fits inside its panel on mobile/tablet/desktop/ultrawide/4K. The separate20-song convenience playback menu is unchanged. Track Library and Listening Pool are accepted terminology.
+
+Update93 validation: isolated production build/TypeScript,340staticassets/200recordings,448maintenance route/method cases, duration/expiry regressions, keyboard and simulated UI interactions. Live checks verified16JS/CSS assets and all145retained earlier client assets. One Worker updated,3resources unchanged, no schema/migration/scoring/protocol change, no forced refresh or audio stop. CPU5000ms,6abuse bindings, private media/admission and edge/cost guards are preserved. Root snapshot verification passed against update93 before this documentation-only handoff.
+
+## Git reconciliation and next work
+
+Fetched `origin` before this handoff. Latest remote `origin/main` is `c41196d` (Document verified encrypted recovery snapshot and cleanup); latest local commit at inspection was `846a9f7` (Record verified maintenance UI release93 with unchanged timer). Remote is an ancestor of local main: **0behind/34ahead** before the handoff commit. Our changes already include the latest remote history; no pull, merge, rebase or cherry-pick is needed. The runtime UI implementation and release records are already committed. This handoff adds documentation only. GitHub push/publication is separate and has not been requested.
+
+The canonical working tree also contains unrelated uncommitted personal-shootout, admin-test-isolation and backup/recovery work, including an independent backup note in this handoff. Those edits are preserved and excluded from this chat's handoff commit. Do not stage them wholesale or deploy the dirty checkout. A clean committed-source check and the verified immutable live snapshot are distinct from the intentionally dirty canonical working tree. Never restore erased user records from old snapshots.
+
+For any future change: read AGENTS.md and the current live release first, fetch/reconcile again, isolate only the authorized scope against verified live source, and preserve existing schema, ownership, consent, deletion, media and cost guards. No remaining action is required for the maintenance-expiry request.
+
+## Release history
+
 # Current live release — update93, October 18, 2026
 
 Live: https://yinyangeq.com. The owner approved the redesigned maintenance UI shown in the local preview. Feature availability now uses labelled Paused/Available cards; duration uses quick choices and a custom combined-unit form with a readable total. Current live expiry and next-publication duration are clearly separated. Selections take effect only when published. Dark green styling, keyboard controls and mobile layout are retained.
