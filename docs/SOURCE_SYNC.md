@@ -1,9 +1,7 @@
 # Source and live release alignment
 
-Application runtime source matches verified live update70 (October 18, 2026). This includes agreement opt-out/rejoin controls, the deployed navigation, and the Sodium curve credit. The target’s public name is Sodium; reconstruction details appear in its credits entry. See [the handoff](HANDOFF.md) for source commits and release verification.
+Application source is committed for verified live update73 (October18,2026), including top-right Welcome Settings, the /sync handshake and destination replacement, separate optional activity monitoring, and update72 service-notice controls. Both current-source references and checks are in docs/HANDOFF.md. Implementation commit: 8cf8a82a9d49229ec466f04aca8ea00fcefa0ea8.
 
-The deployed Sodium catalog row keeps its existing ID and162 points and is shared across in-ear and over-ear comparisons. The production database is managed separately from the public source checkout; curve seeds and private publisher/configuration are excluded.
+This checkout contains the public-safe application source. Private deployment configuration, production data, recordings, numerical curve seeds and unpublished root drafts are excluded. The generic Worker handshake implementation is in lib/browser-pairing.mjs and lib/browser-sync.mjs; private infrastructure supplies authentication/context and mounts /sync. Existing source licensing and brand-scope documents remain authoritative. No additional curve/media grants or public data publication are implied.
 
-Repository licensing and brand-scope documents remain authoritative for this public source package. This sync does not change license grants. Production credentials, deployment configuration, recordings, curve seeds, personal submissions and one-time ownership repairs are excluded. Migration0026 retains the public schema and general linking logic but omits a deployment-specific historical repair. No production data is installed by these migrations.
-
-Unpublished changes in the owner’s main workspace are excluded. Existing comparisons remain exploratory. The protocol and conditional model uncertainty are described in [RESEARCH_PROTOCOL.md](../RESEARCH_PROTOCOL.md). Automatic archive scheduling is not enabled.
+Additive migrations0028–0030 support monitoring and browser sync. The service-notice configuration table is described by db/service-status.sql. Existing comparisons and rankings remain exploratory. GitHub publication/push is separate from the verified live deployment.
