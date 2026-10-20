@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import vm from 'node:vm';import ts from 'typescript';
+import {replaceSyncStorage} from '../lib/browser-sync.mjs';
+const source=ts.createSourceFile('profile.tsx',readFileSync('app/profile-access/page.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='complete')handler=node.getText(source);ts.forEachChild(node,visit)}visit(source);assert.ok(handler);const code=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+function storage(values={}){const store={...values};Object.defineProperties(store,{getItem:{value:key=>Object.hasOwn(store,key)?store[key]:null},setItem:{value:(key,value)=>{store[key]=String(value)}},removeItem:{value:key=>{delete store[key]}},key:{value:index=>Object.keys(store)[index]||null},length:{get:()=>Object.keys(store).length}});return store;}
+for(const outcome of ['reject','uncertain','success']){
+ const original={'target-lab-voter':crypto.randomUUID(),'target-lab-trials':'[]','yinyang-extra-setting':'must-return','yinyang-admin-tests-v1':'must-stay'},incoming=crypto.randomUUID();let mode=outcome;
+ const state={preview:{snapshot:{version:1,values:{'target-lab-voter':incoming,'target-lab-trials':'[]'}},snapshotDigest:'fixture-digest'},accepted:true,pendingKey:'yinyang-profile-signin-pending',localStorage:storage(original),sessionStorage:storage(),replaceSyncStorage,setBusy(){},setError(message){state.error=message},window:{location:{replace(path){state.redirect=path}}},call:async()=>{if(mode==='reject')throw Object.assign(Error('revoked'),{status:403});if(mode==='uncertain')throw Error('network interrupted');return{redirect:'/my-profile'}}};
+ const context=vm.createContext(state);vm.runInContext(code,context);await vm.runInContext('complete()',context);
+ assert.equal(state.localStorage.getItem('yinyang-admin-tests-v1'),'must-stay');
+ if(outcome==='reject'){assert.deepEqual({...state.localStorage},original);assert.equal(state.sessionStorage.getItem(state.pendingKey),null);}
+ else if(outcome==='uncertain'){assert.equal(state.localStorage.getItem('target-lab-voter'),incoming);assert.ok(state.sessionStorage.getItem(state.pendingKey));assert.equal(state.redirect,undefined);mode='success';await vm.runInContext('complete()',context);assert.equal(state.redirect,'/my-profile');assert.equal(state.sessionStorage.getItem(state.pendingKey),null);}
+ else{assert.equal(state.redirect,'/my-profile');assert.equal(state.localStorage.getItem('target-lab-voter'),incoming);}
+}
+console.log('PASS actual device replacement handler: rejection restores all prior site keys, admin test storage survives, uncertain completion retains recoverable pending state and succeeds on retry.');

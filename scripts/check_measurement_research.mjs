@@ -96,7 +96,7 @@ const ast=ts.createSourceFile('measurement.tsx',source,ts.ScriptTarget.Latest,tr
 let save;
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='saveFromForm')save=node.getText(ast);ts.forEachChild(node,visit);}visit(ast);
 let locallySaved=null,status='';
-const client=vm.createContext({Error,FormData,File,crypto:webcrypto,parseCurve,contribute:true,editing:null,isRemoved:()=>false,VOTE_DATA_NOTICE_VERSION:'test',localStorage:{getItem:()=>null,setItem(){}},fetch:async()=>{throw Error('Offline');},onAdd:row=>{locallySaved=row;},onUpdate(){},beginEdit(){},setContributionStatus:message=>{status=message;},at(){},averageChannels(){},parseChannelMatchPreset(){},isImportedMeasurement(){return false;}});
+const client=vm.createContext({Error,FormData,File,crypto:webcrypto,parseCurve,adminTestOnly:false,recordAdminTestIfNeeded:async()=>{throw Error("Offline");},contribute:true,editing:null,isRemoved:()=>false,VOTE_DATA_NOTICE_VERSION:'test',localStorage:{getItem:()=>null,setItem(){}},fetch:async()=>{throw Error('Offline');},onAdd:row=>{locallySaved=row;},onUpdate(){},beginEdit(){},setContributionStatus:message=>{status=message;},at(){},averageChannels(){},parseChannelMatchPreset(){},isImportedMeasurement(){return false;}});
 vm.runInContext(ts.transpileModule(save,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,client);
 const form=await request().formData();
 // Browser FormData(formElement) is modeled by a constructor returning the fields.
@@ -104,3 +104,5 @@ client.FormData=function(){return form;};client.formElement={reset(){}};
 await vm.runInContext('saveFromForm(formElement)',client);
 assert.ok(locallySaved);assert.match(status,/Saved in this browser.*Offline/);
 console.log('Measurement archive: consent, origin, bounds, invalid curves, throttling, exact multi-chunk UTF-8 bytes, owner-only downloads, corruption checks, and failed-upload local-save recovery pass.');
+
+let adminTests=0,adminFetches=0;client.adminTestOnly=true;client.saveAdminTestRecord=()=>adminTests++;client.fetch=async()=>{adminFetches++;throw Error('No admin upload expected');};await vm.runInContext('saveFromForm(formElement)',client);assert.equal(adminTests,1);assert.equal(adminFetches,0);assert.equal(locallySaved.adminTestOnly,true);console.log('PASS admin measurement files remain local without any submission request.');

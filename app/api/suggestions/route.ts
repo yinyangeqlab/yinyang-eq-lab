@@ -1,15 +1,15 @@
 import { submissionContext } from "@/lib/submission-ownership";
 import { maintenanceResponse } from "@/lib/maintenance";
-import { count, desc, gte } from "drizzle-orm";
+import { count, desc, gte, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { suggestions } from "@/db/schema";
+import { suggestions, submissionOwners } from "@/db/schema";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
 
 export async function GET() {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  const rows = await getDb().select().from(suggestions).orderBy(desc(suggestions.createdAt)).limit(100);
+  const rows = await getDb().select().from(suggestions).where(sql`NOT EXISTS (SELECT 1 FROM ${submissionOwners} WHERE ${submissionOwners.recordKind}='suggestion' AND ${submissionOwners.recordId}=${suggestions.id} AND ${submissionOwners.subjectId}='owner')`).orderBy(desc(suggestions.createdAt)).limit(100);
   return Response.json(rows);
 }
 

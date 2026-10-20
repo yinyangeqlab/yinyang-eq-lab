@@ -1,3 +1,4 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
@@ -19,8 +20,8 @@ export async function POST(request: Request) {
     const aId = String(data.targetAId || ""), bId = String(data.targetBId || "");
     if (![id,participantId,aId,bId].every(value => uuid.test(value)) || aId === bId || data.testMode !== "open" || !["ie","oe"].includes(String(data.headphoneType)) || !["a","b","tie"].includes(String(data.result))) return Response.json({ error: "Invalid open comparison." }, { status: 400 });
     const db = getDb();
-    const [a] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(eq(targets.id,aId)).limit(1);
-    const [b] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(eq(targets.id,bId)).limit(1);
+    const [a] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,aId),publicTargetPredicate)).limit(1);
+    const [b] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,bId),publicTargetPredicate)).limit(1);
     if (!a || !b || a.status !== "approved" || b.status !== "approved") return Response.json({ error: "Only approved targets can enter owner research." }, { status: 403 });
     const aType = targetHeadphoneType({ name: a.name, measurement: a.measurement });
     const bType = targetHeadphoneType({ name: b.name, measurement: b.measurement });
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
     if(!run||own?.subjectId!==ownership.subjectId||run.voterId!==participantId||run.testMode!=="open"||run.targetAId!==aId||run.targetBId!==bId||run.result!==data.result) return Response.json({error:"Save the matching owned Open listening record first."},{status:409});
     const now = Date.now();
     const shareSong = data.shareSong === true && ownership.shareMusic;
-    await db.batch([db.insert(comparisonChoices).values({ id, protocolVersion:LISTENING_PROTOCOL, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"open",recordId:id,comparisonId:id})]);
+    await db.batch([db.insert(comparisonChoices).values({ id, protocolVersion:run.protocolVersion, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"open",recordId:id,comparisonId:id})]);
     return Response.json({ ok:true }, { status:201 });
   } catch (error) {
     if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return Response.json({error:"This comparison was erased or changed while saving. Start a new comparison."},{status:409});

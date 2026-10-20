@@ -15,3 +15,9 @@ Build, commit, push and deploy are separate operations. Do not redeploy for docu
 # Private recovery storage
 
 Read docs/ENCRYPTED_BACKUP.md before backup work. Keep the storage service/account, destination, private receipt and recovery key outside Git and public handoffs. Public status may say only encrypted off-device backup. Never upload the recovery key alongside its archive or claim password-manager custody without owner confirmation.
+
+# Browser review identity
+
+Use only the dedicated hidden, non-contributing layout test account for browser reviews. Do not use an admin session, including for admin UI reviews, unless the owner explicitly authorizes an exception. Keep test credentials, fixture provisioning and local state out of Git. The local workflow is documented in docs/ADMIN_TEST_ISOLATION.md. Test activity must never enter research, public rankings, community song votes or participant Sync.
+
+Latest paused local feature checkpoint: read docs/TOURNAMENT_CHECKPOINT_2026-10-19.md and docs/DEPLOYMENT_STAGE_2026-10-19.md before resuming Tournament work. They identify unfinished work and failing checks; the checkpoint is not deployment approval.

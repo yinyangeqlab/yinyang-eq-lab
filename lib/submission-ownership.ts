@@ -1,3 +1,4 @@
+import { requireParticipantSubject } from "@/lib/admin-contributions";
 import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
 import { ACTIVITY_MONITORING_NOTICE_VERSION } from "@/lib/activity-monitoring";
 import { eq } from "drizzle-orm";
@@ -18,8 +19,9 @@ export async function dataIdentity(): Promise<DataIdentity> {
 }
 export async function submissionContext(kind: string) {
   const identity = await dataIdentity();
+  requireParticipantSubject(identity.subjectId);
   if (!identity.submissionsEnabled)
-    throw new RequestInputError("Agreement to comparison-data collection is required to use the listening tools. Review the agreement on Shootout.", 403);
+    throw new RequestInputError("Agreement to comparison-data collection is required to use the listening tools. Review the agreement on Tournament.", 403);
   return { ...identity, requireTrial: async (id: string) => {
     const owner = await env.DB!.prepare("SELECT subject_id FROM submission_owners WHERE record_kind='trial' AND record_id=?").bind(id).first<{subject_id:string}>();
     if (!owner || owner.subject_id !== identity.subjectId) throw new RequestInputError("This pairing is not owned by your sign-in. Start a new comparison.",403);

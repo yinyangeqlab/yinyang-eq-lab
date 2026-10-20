@@ -1,4 +1,5 @@
 "use client";
+import { saveAdminTestRecord } from "@/lib/admin-test-store";
 import { apiFetch } from "@/lib/service-warning";
 import { useState } from "react";
 import type { MusicPanelHandle } from "./music-panel";
@@ -7,7 +8,7 @@ const REASONS = ["Sounds harsh", "Too bright", "Too dark", "Too muddy", "Too lou
 type Draft = { tags: string[]; note: string };
 const empty = (): Draft => ({ tags: [], note: "" });
 
-export default function FeedbackPanel({ open, pair, trialId, testMode, headphoneType, approved, music, getComparisonId, submissionsEnabled = true }: { open: boolean; pair: [string,string]; trialId: string | null; testMode: "blind" | "bring" | "open"; headphoneType: "ie" | "oe" | null; approved: boolean; music: React.RefObject<MusicPanelHandle | null>; getComparisonId: () => string; submissionsEnabled?: boolean }) {
+export default function FeedbackPanel({ open, pair, trialId, testMode, headphoneType, approved, music, getComparisonId, submissionsEnabled = true, adminTestOnly = false, freeListening=false, researchComparisonId=null }: { open: boolean; pair: [string,string]; trialId: string | null; testMode: "blind" | "bring" | "open"; headphoneType: "ie" | "oe" | null; approved: boolean; music: React.RefObject<MusicPanelHandle | null>; getComparisonId: () => string; submissionsEnabled?: boolean;adminTestOnly?:boolean;freeListening?:boolean;researchComparisonId?:string|null }) {
   const [side, setSide] = useState<0|1>(0);
   const [drafts, setDrafts] = useState<[Draft,Draft]>([empty(),empty()]);
   const [submitted, setSubmitted] = useState<[boolean,boolean]>([false,false]);
@@ -19,15 +20,17 @@ export default function FeedbackPanel({ open, pair, trialId, testMode, headphone
     if (!submissionsEnabled) { setMessage("Agreement to comparison-data collection is required before using the listening tools."); return; }
     if (!draft.tags.length && !draft.note.trim()) { setMessage("Choose a description or enter feedback first."); return; }
     if (!headphoneType) { setMessage("Choose In-Ear or Over-Ear first."); return; }
-    if (!approved) { setMessage("Descriptions of private targets are temporary drafts and are not saved or submitted. Choose approved targets to submit a description to the owner."); return; }
-    if (testMode !== "open" && !trialId) { setMessage("Wait for the ranked pairing to load."); return; }
+    if (!approved && !adminTestOnly) { setMessage("Descriptions of private targets are temporary drafts and are not saved or submitted. Choose approved targets to submit a description to the owner."); return; }
+    if(freeListening&&!adminTestOnly&&!researchComparisonId){setMessage("Save your comparison first, then submit its description.");return;}
+    if (testMode !== "open" && !freeListening && !adminTestOnly && !trialId) { setMessage("Wait for the ranked pairing to load."); return; }
+    if(adminTestOnly){saveAdminTestRecord("feedback",{pair,side,reasonTags:draft.tags,otherReason:draft.note,headphoneType,testMode});setSubmitted(current=>current.map((value,index)=>index===side?true:value) as [boolean,boolean]);setMessage("Admin test description saved only in this browser.");return;}
     setBusy(true); setMessage("");
     try {
       let participantId = localStorage.getItem("target-lab-voter");
       if (!participantId) { participantId = crypto.randomUUID(); localStorage.setItem("target-lab-voter", participantId); }
       const context = music.current?.snapshot();
       const response = await apiFetch("/api/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
-        participantId, comparisonId: testMode === "open" ? getComparisonId() : trialId, testMode, headphoneType,
+        participantId, comparisonId: freeListening ? researchComparisonId : testMode === "open" ? getComparisonId() : trialId, matchedPassageRequired:!freeListening,testMode, headphoneType,
         targetAId: pair[0], targetBId: pair[1], reasonSide: side === 0 ? "a" : "b", reasonTags: draft.tags, otherReason: draft.note,
         shareSong: context?.consent === true, songTitle: context?.songTitle, songArtist: context?.songArtist, songAlbum: context?.songAlbum,
       }) });

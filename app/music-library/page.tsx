@@ -1,4 +1,5 @@
 "use client";
+import { adminMusicChoices, saveAdminMusicChoice } from "@/lib/admin-test-store";
 
 import {musicDisplayTitle,isAnalysisNote} from "@/lib/music-display";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +11,7 @@ import LibraryEqPanel from "@/components/library-eq-panel";
 import type { LibraryEq } from "@/lib/music-library-eq";
 import "./style.css";
 
-type MusicSnapshot = { byTrack?: MusicCounts; signedIn: boolean; totals: { keep: number; pass: number }; mine: Record<string, "keep" | "pass">; error?: string };
+type MusicSnapshot = { testOnly?:boolean; byTrack?: MusicCounts; signedIn: boolean; totals: { keep: number; pass: number }; mine: Record<string, "keep" | "pass">; error?: string };
 
 function licenseName(url: string) {
   if (url.includes("publicdomain/zero")) return "CC0 1.0";
@@ -33,6 +34,7 @@ export default function MusicLibraryPage() {
   const [totals, setTotals] = useState({ keep: 0, pass: 0 });
   const [saving, setSaving] = useState<string | null>(null);
   const [voteMessage, setVoteMessage] = useState("");
+  const [adminTestOnly,setAdminTestOnly]=useState(false);
   const [votesLoaded, setVotesLoaded] = useState(false);
   const [legacy, setLegacy] = useState<Record<string, "keep" | "pass"> | null>(null);
   const [filter, setFilter] = useState<"all" | "unrated" | "keep" | "pass" | "review">("unrated");
@@ -57,7 +59,8 @@ export default function MusicLibraryPage() {
         setSignedIn(result.signedIn === true);
         setTotals(result.totals);
         setByTrack(result.byTrack ?? {});
-        setDecisions(result.mine);
+        setAdminTestOnly(result.testOnly===true);
+    setDecisions(result.testOnly?adminMusicChoices():result.mine);
         const saved = JSON.parse(localStorage.getItem("target-lab-music-shortlist-v1") || "{}");
         if (result.signedIn && saved && typeof saved === "object" && !Array.isArray(saved)) {
           const valid = Object.fromEntries(Object.entries(saved).filter(([id, value]) => tracks.some(track => track.url === id) && (value === "keep" || value === "pass"))) as Record<string, "keep" | "pass">;
@@ -71,6 +74,7 @@ export default function MusicLibraryPage() {
     return () => { cancelled = true; };
   }, []);
   async function saveVote(trackUrl: string, choice: "keep" | "pass" | null) {
+    if(adminTestOnly){setDecisions(saveAdminMusicChoice(trackUrl,choice));setVoteMessage("Admin test rating saved locally. Community rankings are unchanged.");return;}
     const response = await fetch("/api/music-votes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ trackUrl, choice }), cache: "no-store" });
     const result = await response.json() as MusicSnapshot;
     if (!response.ok) throw new Error(result.error || "Could not save music vote.");
@@ -93,7 +97,7 @@ export default function MusicLibraryPage() {
     try {
       for (const [trackUrl, choice] of Object.entries(source)) { await saveVote(trackUrl, choice); count++; }
       setLegacy(null);
-      setVoteMessage(`Submitted ${count} music choices.`);
+      setVoteMessage(adminTestOnly?`${count} admin test choices saved locally; community ranks unchanged.`:`Submitted ${count} music choices.`);
     } catch (error) { setVoteMessage(`${count} choices submitted. ${error instanceof Error ? error.message : "The rest could not be saved."}`); }
     finally { setSaving(null); }
   }
@@ -122,8 +126,8 @@ export default function MusicLibraryPage() {
     </article>)}</div> : <p className="library-empty">No tracks match this filter in this group.</p>;
   }
   return <main className="library-page" ref={root}>
-    <header className="library-header"><a href="/home" className="library-back" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /> YinYang EQ League</a><nav className="library-nav" aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Shootout</a><a href="/preference-tuning">Preference Tuning</a><span aria-current="page">Listening pool</span></nav></header>
-    <section className="library-hero"><div className="library-kicker">OPENLY LICENSED MUSIC</div><h1>Listening pool</h1><p>Explore the music used in Random music and Open comparison. Every eligible song stays in the pool, regardless of votes or review flags. Alternate masters are grouped by song; vocal and instrumental mixes are labeled separately. Bring your music uses your own file.</p><div className="library-counts"><span><strong>{tracks.length}</strong> versions</span><span><strong>{families.size}</strong> songs</span><span><strong>{newCount}</strong> undecided</span></div></section>
+    <header className="library-header"><a href="/home" className="library-back" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /> YinYang EQ League</a><nav className="library-nav" aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/preference-tuning">Preference Tuning</a><span aria-current="page">Listening pool</span></nav></header>
+    {adminTestOnly&&<p className="admin-test-notice" role="status">Private Test Mode · song ratings are saved only in this browser and never affect community rankings.</p>}<section className="library-hero"><div className="library-kicker">OPENLY LICENSED MUSIC</div><h1>Listening pool</h1><p>Explore the music used in Random music and Open comparison. Every eligible song stays in the pool, regardless of votes or review flags. Alternate masters are grouped by song; vocal and instrumental mixes are labeled separately. Bring your music uses your own file.</p><div className="library-counts"><span><strong>{tracks.length}</strong> versions</span><span><strong>{families.size}</strong> songs</span><span><strong>{newCount}</strong> undecided</span></div></section>
     <LibraryEqPanel onChange={setEq} />
     <section className="library-shortlist" aria-label="Listening pool preferences"><div><span className="library-section-label">COMMUNITY PREFERENCES</span><h2>Top 10 preferred</h2><p>The community’s highest-rated versions so far. Early rankings can change as more people vote. This list never changes which songs play or how often you hear them.</p></div>
     {ranked.length ? <ol className="library-top-ten">{ranked.slice(0,10).map(track => <li key={track.url}><a href={`#candidate-${tracks.indexOf(track)+1}`} onClick={() => { setFilter("all"); setQuery(""); }}>{musicDisplayTitle(track.title)} · {track.artist}{track.versionLabel ? ` · ${track.versionLabel}` : ""}</a><small>{byTrack[track.url].keep} up / {byTrack[track.url].pass} down · {musicReview(byTrack[track.url]).total} account rating{musicReview(byTrack[track.url]).total===1?"":"s"}</small></li>)}</ol> : <p>{!ready ? "Loading community preferences…" : !votesLoaded ? "Community preferences could not be loaded." : "No ratings yet. The top 10 will appear as people vote."}</p>}
@@ -139,6 +143,6 @@ export default function MusicLibraryPage() {
       if (!matches) return null;
       return <div className={`library-family ${versions.length > 1 ? "has-versions" : ""}`} key={key}>{versions.length > 1 && <div className="library-family-heading"><h3>{musicDisplayTitle(versions[0].title)} · {versions.length} versions</h3><p>{versions[0].artist} · {versions.some(t => t.songFamily === "jmhbm-dreams") ? "Same performance, alternate mastering" : "Vocal / instrumental arrangement comparison"}</p></div>}{cards(versions)}</div>;
     })}</div></section>
-    <section className="library-method"><h2>Dynamics measurements</h2><p>The three provisional categories are dense / flattened peaks, preserved peaks, and exceptional dynamics. They use loud-passage crest, peak-to-short-term-loudness contrast and repeated high-peak plateaus, rather than integrated loudness or LRA alone. Borderline cases and recordings awaiting this analysis remain unclassified and eligible. A category does not prove how a recording was mastered or establish its sound quality.</p><p>Loudness matching applies constant gain without compression or limiting when EQ is off. A shared song-family target may fall below −16 LUFS to leave 1 dB of true-peak headroom; the player shows the actual target. Optional EQ retains its existing protective processing and changes the signal. Original downloads remain unchanged. Source and license links accompany each version.</p><a href="/shootout" className="library-return">Return to shootout →</a></section>
+    <section className="library-method"><h2>Dynamics measurements</h2><p>The three provisional categories are dense / flattened peaks, preserved peaks, and exceptional dynamics. They use loud-passage crest, peak-to-short-term-loudness contrast and repeated high-peak plateaus, rather than integrated loudness or LRA alone. Borderline cases and recordings awaiting this analysis remain unclassified and eligible. A category does not prove how a recording was mastered or establish its sound quality.</p><p>Loudness matching applies constant gain without compression or limiting when EQ is off. A shared song-family target may fall below −16 LUFS to leave 1 dB of true-peak headroom; the player shows the actual target. Optional EQ retains its existing protective processing and changes the signal. Original downloads remain unchanged. Source and license links accompany each version.</p><a href="/shootout" className="library-return">Return to tournament →</a></section>
   </main>;
 }

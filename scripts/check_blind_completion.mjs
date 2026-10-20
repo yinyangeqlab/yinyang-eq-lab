@@ -24,11 +24,11 @@ assert.ok(finishVisibility, "Results button must exist");
 const code = ts.transpileModule(["vote", "saveTrial", "finishBlindTest"].map(name => handlers.get(name)).join("\n"), {
   compilerOptions: { target: ts.ScriptTarget.ES2022 },
 }).outputText;
-function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure } = {}) {
+function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,passageRequired=true,sharedAdmin=false } = {}) {
   const stored = new Map();
   const calls = [];
   const state = {
-    pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
+    sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
     trialId: "trial", testMode: mode, headphoneType: "ie", sessionId: "session", trials: [],
     selectedMeasurement: { points: [[20, 0], [20000, 0]] },
     allTargets: [{ id: "a", name: "Alpha", status: "approved", points: [[20, 1]] }, { id: "b", name: "Beta", status: "approved", points: [[20, 2]] }],
@@ -128,3 +128,9 @@ assert.equal(privateOpen.state.trials.length,1);assert.equal(privateOpen.state.r
 assert.equal(privateOpen.calls.length,0,"Private-target Open choices never make a network submission");
 assert.match(privateOpen.state.message,/only to My results/);
 console.log("Private-target Open comparison remains local without a research API call.");
+
+for(const mode of ["blind","bring","open"]){for(const seconds of [0,6]){const free=harness({mode,passageRequired:false});free.state.musicPanelRef.current.heard=()=>[seconds,seconds];free.state.musicPanelRef.current.snapshot=()=>({overlapSeconds:seconds});free.state.musicPanelRef.current.finish=()=>({heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[]});free.state.trialId=null;await vm.runInContext("vote(0)",free.context);assert.equal(free.calls.length,0,"unchecked comparisons never submit, even with matched evidence");assert.equal(free.state.trials.length,1);assert.equal(free.state.trials[0].matchedPassageRequired,false);assert.equal(free.state.trials[0].matchedPassage,seconds>=5);assert.match(free.state.message,/saved only/);}}
+console.log("PASS all free-listening modes remain local at zero or qualifying matched seconds.");
+
+for(const mode of ["blind","bring","open"]){const h=harness({mode,sharedAdmin:true});h.state.trialId=null;await vm.runInContext("vote(0)",h.context);assert.equal(h.calls.length,0);assert.equal(h.state.trials.length,1);assert.equal(h.state.trials[0].adminTestOnly,true);assert.equal(h.state.trials[0].recorded,false);}
+console.log("PASS admin comparisons in every mode remain private even with matched listening and no server trial.");

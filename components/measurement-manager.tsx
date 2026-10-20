@@ -1,4 +1,5 @@
 "use client";
+import { recordAdminTestIfNeeded, saveAdminTestRecord } from "@/lib/admin-test-store";
 
 import { useState } from "react";
 import { parseCurve } from "@/lib/curves";
@@ -9,8 +10,8 @@ import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
 
 type Attachment = "single" | "left" | "right" | "preset";
 
-export default function MeasurementManager({ rows, selectedId, editId, onAdd, onUpdate, onDelete, onSelect }: {
-  rows: HeadphoneMeasurement[]; selectedId: string; editId?: string | null; onAdd: (row: HeadphoneMeasurement) => void; onUpdate: (row: HeadphoneMeasurement) => void; onDelete: (id: string) => void; onSelect: (id: string) => void;
+export default function MeasurementManager({ rows, selectedId, editId, onAdd, onUpdate, onDelete, onSelect, adminTestOnly=false }: {
+  adminTestOnly?:boolean;rows: HeadphoneMeasurement[]; selectedId: string; editId?: string | null; onAdd: (row: HeadphoneMeasurement) => void; onUpdate: (row: HeadphoneMeasurement) => void; onDelete: (id: string) => void; onSelect: (id: string) => void;
 }) {
   const [error, setError] = useState("");
   const [contribute, setContribute] = useState(false);
@@ -38,7 +39,7 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
     if (requestedMode === "custom" && !channelMatchPreset && !isRemoved("preset")) throw new Error("Attach a two-channel CH: 0 / CH: 1 preset or choose automatic matching.");
     const channelMatchMode = requestedMode === "custom" && channelMatchPreset ? "custom" : "auto";
     const row: HeadphoneMeasurement = {
-      id: editing?.id ?? crypto.randomUUID(), name: String(data.get("name") ?? "").trim(), device: String(data.get("device") ?? "").trim(),
+      id: editing && (!adminTestOnly || editing.adminTestOnly) ? editing.id : crypto.randomUUID(), name: String(data.get("name") ?? "").trim(), device: String(data.get("device") ?? "").trim(),
       type: data.get("type") === "oe" ? "oe" : "ie", rig: String(data.get("rig") ?? "").trim(),
       fit: String(data.get("fit") ?? "").trim(), notes: String(data.get("notes") ?? "").trim(),
       source: String(data.get("source") ?? "").trim(),
@@ -55,12 +56,13 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       leftLevelDb: leftText ? at(parseCurve(leftText, false), 1000) : isRemoved("left") ? undefined : editing?.leftLevelDb,
       rightLevelDb: rightText ? at(parseCurve(rightText, false), 1000) : isRemoved("right") ? undefined : editing?.rightLevelDb,
       researchContributionId: editing?.researchContributionId,
-      createdAt: editing?.createdAt ?? Date.now(),
+      adminTestOnly:adminTestOnly||editing?.adminTestOnly===true,createdAt: editing?.createdAt ?? Date.now(),
     };
     if (!row.name || !row.device || !row.rig) throw new Error("Name, headphone model, and measuring device are required.");
     let contributed = false;
     let contributionError = "";
-    if (contribute) {
+    if(adminTestOnly){saveAdminTestRecord("measurement",row);contributionError="Admin test measurement saved only in this browser.";}
+    if (contribute && !adminTestOnly) {
       try {
         if (![file, leftFile, rightFile].some(value => value instanceof File && value.size > 0)) throw new Error("Reattach the original CSV or TXT file to contribute it to research.");
         if (data.get("rights") !== "yes") throw new Error("Confirm you may contribute these files.");
@@ -74,16 +76,18 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
         contribution.set("contributorId", contributorId);
         contribution.set("localId", row.id);
         contribution.set("voteDataNoticeVersion", VOTE_DATA_NOTICE_VERSION);
+        if(await recordAdminTestIfNeeded("measurement",row)){contributionError="Private test only: measurement saved locally; no research files were submitted.";}else{
         const response = await fetch("/api/research-measurements", { method: "POST", body: contribution });
         const result = await response.json() as { id?: string; error?: string };
         if (!response.ok || !result.id) throw new Error(result.error || "Measurement contribution failed.");
         row.researchContributionId = result.id;
         contributed = true;
+        }
       } catch (cause) {
         contributionError = cause instanceof Error ? cause.message : "Research contribution failed.";
       }
     }
-    if (editing) onUpdate(row); else onAdd(row);
+    if (editing && (!adminTestOnly || editing.adminTestOnly)) onUpdate(row); else onAdd(row);
     beginEdit(null); form.reset();
     if (contributed) setContributionStatus("Original measurement files saved for research.");
     if (contributionError) setContributionStatus(`Saved in this browser. Research copy was not saved: ${contributionError} Edit this measurement and reattach the original files to try again.`);

@@ -2096,3 +2096,63 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .music-panel-host.persistent.edge-collapsed .music-header{display:none}
 .music-panel-host.persistent.edge-collapsed .playback-transport{display:block;grid-column:auto;justify-self:start;width:50px;height:50px;margin:0}
 .music-panel-host.persistent.edge-collapsed .playback-transport .deck-play{position:absolute;left:7px;right:auto;top:4px;transform:none}
+
+/* Fourth mode uses the same mode strip while keeping its run state isolated. */
+.test-tabs .personal-mode-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.7rem 1rem;border:1px solid #527961;border-radius:10px;color:#b7efd0;text-decoration:none}.test-tabs .personal-mode-link:focus-visible{outline:3px solid #b7efd0;outline-offset:3px}
+
+.mode-recommendation{margin-left:7px;font-size:10px;font-weight:400;color:#91aaa3;letter-spacing:0;text-transform:none}.personal-mode-tabs .mode-recommendation{color:#91aaa3}.test-tabs .personal-mode-link.recommended{font-weight:600}
+
+/* One research mode, with the recording source kept explicit and separately tagged. */
+
+@media(max-width:600px){.shell .topbar.compact-header nav button{white-space:normal;line-height:1.25;min-width:0;padding-inline:5px}}
+
+/* Shared tournament navigation; the personal route has a warm, restrained accent. */
+.tournament-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 14px;max-width:960px}
+.shell .tournament-modes .tournament-mode{display:flex;align-items:center;gap:10px;min-width:0;min-height:62px;padding:10px 14px;border:1px solid #34434b;border-radius:10px;background:#10171c;color:#b6c6ce;text-align:left;text-decoration:none;box-shadow:none;line-height:1.3;transition:background .15s,border-color .15s}
+.tournament-mode-copy{display:flex;flex-direction:column;gap:4px;min-width:0}.tournament-mode-label{font-size:14px;font-weight:650}.tournament-mode-copy small{font-size:11px;font-weight:400;color:#91a6b2}.tournament-mode>svg{flex:none;color:#91b4c1}
+.shell .tournament-modes .mode-personal{border-color:#76603b;background:linear-gradient(115deg,#292416,#161914);color:#f3dfaa}.tournament-mode.mode-personal>svg{color:#ebc76f}.tournament-mode-suggestion{margin-left:auto;font-size:10px;color:#c8b98e;font-weight:400}
+.shell .tournament-modes .tournament-mode:hover{background:#202c32;border-color:#82a9b6}.shell .tournament-modes .tournament-mode[aria-pressed=true],.shell .tournament-modes .tournament-mode[aria-current=page]{border-color:#7ccbc8;background:#173032;color:#e4f9f6;box-shadow:inset 0 -2px #7ccbc8}.shell .tournament-modes .mode-personal[aria-current=page]{border-color:#e4c376;background:#302b1a;color:#fff0c7;box-shadow:inset 0 -2px #e4c376}.tournament-mode:focus-visible{outline:2px solid #c8eceb;outline-offset:3px}
+.research-music-source{margin:0 0 10px}.research-source-fields{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap}.research-source-buttons{display:flex;gap:6px;flex-wrap:wrap}.shell .research-source-buttons button{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:7px 12px;border:1px solid #3c535c;border-radius:7px;background:#10191e;color:#b8cbd2;font-size:13px;line-height:1.4}.shell .research-source-buttons button[aria-pressed=true]{background:#20383d;border-color:#77b6be;color:#edfafa}.research-source-fields p{flex:1 1 260px;margin:0;color:#98adb8;font-size:12px;line-height:1.5}.research-source-switch{margin-top:10px;padding:10px;border:1px solid #75623e;border-radius:7px;background:#211e14}.research-source-switch p{margin:0 0 8px;font-size:12px;line-height:1.5;color:#dfd2af}.research-source-switch>div{display:flex;gap:8px;flex-wrap:wrap}.shell .research-source-switch button{min-height:36px;padding:7px 10px;font-size:12px}.research-source-buttons button:focus-visible{outline:2px solid #a1dfdc;outline-offset:3px}
+@media(max-width:720px){.tournament-modes{grid-template-columns:repeat(2,minmax(0,1fr))}.tournament-modes .mode-personal{grid-column:1/-1}.shell .tournament-modes .tournament-mode{padding:10px;gap:8px;min-height:60px}.tournament-mode-label{font-size:13px}.tournament-mode-copy small{font-size:10px}.research-source-buttons{width:100%}.shell .research-source-buttons button{flex:1;justify-content:center;min-height:44px}.research-source-fields p{flex-basis:100%}}
+
+/* Readable, quieter labels across Research, Open and Personal voting. */
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b),
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled{
+ font-family:inherit;font-weight:600;text-transform:none;letter-spacing:0;text-shadow:0 1px 1px #0005;
+}
+.shell .shootout-content .choice-controls .choice-a{--vote-ink:#ffd5df;--locked-label:#f4d3dc}
+.shell .shootout-content .choice-controls .choice-tie{--vote-ink:#e2e8ef;--locked-label:#dbe3ec}
+.shell .shootout-content .choice-controls .choice-b{--vote-ink:#cfe9ff;--locked-label:#d3e6f5}
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b):not(:disabled),
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b):not(:disabled):hover{color:var(--vote-ink);text-shadow:0 1px 1px #0005}
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled{font-size:14px;line-height:18px;min-height:82px}
+@media(max-width:600px){.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled{font-size:13px;letter-spacing:0}}
+
+.shell .shootout-content .choice-controls:not(.personal-votes) button:is(.choice-a,.choice-tie,.choice-b):not(:disabled){font-size:14px;min-height:44px;line-height:1.3}
+@media(max-width:600px){.shell .shootout-content .choice-controls:not(.personal-votes) button:is(.choice-a,.choice-tie,.choice-b):not(:disabled){font-size:13px}}
+/* Track status must wrap rather than lose its explanation or long recording names. */
+.shell .shootout-content .source-controls{flex-wrap:wrap}
+.shell .shootout-content .source-controls .sample-row{flex-wrap:wrap;row-gap:8px}
+.shell .shootout-content .source-controls .sample-row .music-meta{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;height:auto;max-height:none;font-weight:500;line-height:1.5}
+.music-vote-explanation{flex-basis:100%;color:#a4bac3;font-size:12px;line-height:1.5;margin-top:3px;overflow-wrap:anywhere}
+@media(max-width:900px){.shell .shootout-content .source-controls .sample-row .music-meta{flex-basis:100%}.music-vote-explanation{font-size:11px}}
+
+.playback-source-choice{display:flex;align-items:center;gap:10px;min-width:0;color:#b4cbd4;font-size:12px}
+.playback-source-choice select{min-height:40px;min-width:155px;max-width:100%;padding:8px 30px 8px 10px;border:1px solid #526e78;border-radius:7px;background:#13232a;color:#e4f2f4;font:inherit}
+.playback-source-choice select:focus-visible{outline:2px solid #8acfc9;outline-offset:3px}
+.shootout-content .source-controls .sample-row .playback-source-choice{flex:0 1 320px}
+@media(max-width:600px){.playback-source-choice{width:100%;justify-content:space-between}.playback-source-choice select{font-size:16px;min-height:44px;flex:1;min-width:0}.research-source-fields .playback-source-choice{flex-basis:100%}.shootout-content .source-controls .sample-row .playback-source-choice{flex-basis:100%}}
+
+/* Keep local source actions together, with labels that also work on touchscreens. */
+.shell .shootout-content .music-panel[data-mode="open"] .source-controls .music-source-row{flex:1 1 100%;gap:8px;flex-wrap:wrap}
+.shell .shootout-content .music-panel[data-mode="open"] .source-controls :is(.sample-folder,.music-upload){width:auto;height:auto;min-height:40px;gap:7px;padding:8px 11px;justify-content:flex-start;max-width:100%}
+.shell .shootout-content .music-panel[data-mode="open"] .source-controls :is(.picker-label,.file-label-text){position:static;width:auto;height:auto;clip:auto;overflow:visible;white-space:normal;overflow-wrap:anywhere;font-size:12px;flex:1;min-width:0}
+@media(max-width:600px){.shell .shootout-content .music-panel[data-mode="open"] .source-controls :is(.sample-folder,.music-upload){flex:1 1 120px;min-height:44px;padding:8px}.shell .shootout-content .music-panel[data-mode="open"] .source-controls :is(.sample-folder,.music-upload) svg{width:17px;height:17px}}
+
+.admin-test-notice{padding:10px 14px;margin:10px 0;border:1px solid #a78b54;border-radius:8px;background:#241f14;color:#ead9ad;font-size:13px;line-height:1.5}.admin-test-notice a{color:#ffe2a5}.admin-test-inline{padding:3px 7px;border:1px solid #927849;border-radius:5px;background:#241f14;color:#e5d1a1;font-size:11px}
+
+.profile-page{width:min(100% - 2rem,900px);margin:2rem auto 5rem;overflow-wrap:anywhere}.profile-page h1{font-size:clamp(1.7rem,4vw,2.5rem)}.profile-page p{line-height:1.6}.profile-entry,.profile-review,.profile-page>details{padding:1rem;margin:1rem 0;border:1px solid #ffffff25;border-radius:14px;background:#132323}.profile-entry .profile-entry{border:0;padding:0;background:none}.profile-review{border-color:#dfbd60;background:#332e19}.profile-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin:.8rem 0}.profile-page button,.profile-manager button{padding:.6rem .85rem;border:1px solid #ffffff35;border-radius:9px;min-height:42px}.profile-page label,.profile-manager label{display:block;margin:.8rem 0}.profile-page input:not([type=checkbox]),.profile-manager input:not([type=checkbox]),.profile-manager select{max-width:100%;padding:.6rem;border:1px solid #ffffff40;border-radius:8px;background:#142626;color:inherit}.profile-entry dl>div{display:grid;grid-template-columns:minmax(100px,30%) 1fr;gap:.7rem;margin:.4rem 0}.profile-entry dd{margin:0}.profile-entry dt{opacity:.65}.profile-manager{padding:1rem;border:1px solid #ffffff25;border-radius:14px;margin:1rem 0;overflow-wrap:anywhere}.profile-manager li{margin:.7rem 0}.profile-manager code{user-select:all;overflow-wrap:anywhere}.profile-manager .profile-code{background:#332e19;padding:1rem;border:1px solid #bba453;border-radius:10px}.profile-page button:disabled,.profile-manager button:disabled{opacity:.45;cursor:not-allowed}@media(max-width:480px){.profile-entry dl>div{grid-template-columns:1fr;gap:.15rem}.profile-actions>*{flex:1 1 auto}.profile-manager{padding:.75rem}}
+
+#admin-local-tests .owner-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin:.8rem 0}#admin-local-tests .owner-actions button{padding:.6rem .85rem;border:1px solid #ffffff35;border-radius:9px;min-height:42px}#admin-local-tests .owner-actions button:disabled{opacity:.45;cursor:not-allowed}
+
+.nickname-flag{padding:10px 12px;border:1px solid #bc9654;border-radius:8px;background:#302615;color:#f1d8a5;font-size:13px;line-height:1.5;overflow-wrap:anywhere}

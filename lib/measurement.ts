@@ -2,6 +2,7 @@ import { parseCurve, type Point } from "@/lib/curves";
 import type { ChannelMatchPreset } from "@/lib/peq-preset";
 
 export type HeadphoneMeasurement = {
+  adminTestOnly?:boolean;
   id: string;
   name: string;
   device: string;
@@ -65,9 +66,9 @@ export function parseMeasurement(value: unknown): HeadphoneMeasurement {
     return { channels: channels as ChannelMatchPreset["channels"] };
   };
   const channelMatchMode = row.channelMatchMode === "custom" ? "custom" : "auto";
-  const channelMatchPreset = channelMatchMode === "custom" ? parsePreset(row.channelMatchPreset) : undefined;
+  const channelMatchPreset = row.channelMatchPreset ? parsePreset(row.channelMatchPreset) : undefined;
   const level = (key: "leftLevelDb" | "rightLevelDb") => typeof row[key] === "number" && Number.isFinite(row[key]) && Math.abs(row[key]) <= 200 ? row[key] as number : undefined;
-  return { id: field("id", 80), name: field("name", 80, true), device: field("device", 120, true), type: row.type,
+  return { ...(row.adminTestOnly===true?{adminTestOnly:true}:{}), id: field("id", 80), name: field("name", 80, true), device: field("device", 120, true), type: row.type,
     rig: field("rig", 120, true), fit: field("fit", 120), notes: field("notes", 500), source: field("source", 500),
     origin: row.origin === "imported" || row.origin === "upload" ? row.origin : undefined,
     driverType: field("driverType", 80), nozzleDiameterMm: typeof row.nozzleDiameterMm === "number" && Number.isFinite(row.nozzleDiameterMm) && row.nozzleDiameterMm > 0 && row.nozzleDiameterMm <= 30 ? row.nozzleDiameterMm : undefined,

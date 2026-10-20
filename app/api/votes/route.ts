@@ -1,3 +1,4 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { env } from "cloudflare:workers";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
@@ -58,8 +59,8 @@ export async function POST(request: Request) {
     if (feedback.otherReason && recentVotes.filter(row => row.otherReason?.toLowerCase() === feedback.otherReason.toLowerCase()).length >= 2) {
       return Response.json({ error: "This feedback was already submitted. Add details specific to this comparison." }, { status: 429 });
     }
-    const pair = await db.select().from(targets).where(eq(targets.id, winnerId));
-    const other = await db.select().from(targets).where(eq(targets.id, loserId));
+    const pair = await db.select().from(targets).where(and(eq(targets.id, winnerId),publicTargetPredicate));
+    const other = await db.select().from(targets).where(and(eq(targets.id, loserId),publicTargetPredicate));
     if (!pair[0] || !other[0]) return Response.json({ error: "Target not found." }, { status: 404 });
     if (pair[0].status !== "approved" || other[0].status !== "approved") return Response.json({ error: "Both targets need owner approval before votes can be collected." }, { status: 403 });
     const pairType = targetHeadphoneType({ name: pair[0].name, measurement: pair[0].measurement });

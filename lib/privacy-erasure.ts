@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { RequestInputError } from "@/lib/request-json";
 
-export const dataTables = { vote: "votes", open: "comparison_choices", run: "listening_runs", feedback: "feedback_submissions", measurement: "research_measurements", export: "preference_exports", target: "targets", suggestion: "suggestions", trial: "ranked_trials" } as const;
+export const dataTables = { vote: "votes", open: "comparison_choices", run: "listening_runs", feedback: "feedback_submissions", measurement: "research_measurements", export: "preference_exports", target: "targets", suggestion: "suggestions", trial: "ranked_trials", personal: "personal_research_choices" } as const;
 export type DataKind = keyof typeof dataTables | "music";
 const uuid = /^[a-f0-9-]{36}$/i;
 // These statements execute in one D1 transaction, including the temporary audit-erasure authorization.
@@ -19,9 +19,15 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     SELECT ?,?,changes() WHERE changes()>0
     ON CONFLICT(day,record_kind) DO UPDATE SET deleted_count=deleted_count+excluded.deleted_count`, day, kind);
   // No submission IDs, subjects, content, actors, request IDs or exact times survive here.
+  // Recovery snapshots and captured browser evidence cannot preserve erased source data.
+  if(scopeOwner){
+    add("DELETE FROM owner_profile_snapshots WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner);
+    add("DELETE FROM owner_history_claims WHERE source_subject=? OR profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner,scopeOwner);
+  }
   if (selection?.kind === "music") {
     add("DELETE FROM music_votes WHERE user_id=? AND track_url=?", subjectId!, selection.id);
     tally("music");
+    add("DELETE FROM owner_profile_events WHERE record_kind='music' AND record_id=? AND profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",selection.id,subjectId!);
     add("DELETE FROM submission_owners WHERE record_kind='music' AND record_id=? AND subject_id=?", JSON.stringify([subjectId, selection.id]), subjectId!);
     await db.batch(statements); return;
   }
@@ -69,7 +75,8 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   tally("admin_note");
   for (const [kind, table] of Object.entries(dataTables)) {
     add(`DELETE FROM ${table} WHERE id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind=?)`, kind);
-    tally(kind);
+    if (kind === "personal") add("INSERT INTO personal_research_deletion_totals(day,deleted_count) SELECT ?,changes() WHERE changes()>0 ON CONFLICT(day) DO UPDATE SET deleted_count=deleted_count+excluded.deleted_count",day);
+    else tally(kind);
   }
   add("DELETE FROM ranked_pair_claims WHERE trial_id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind='trial' OR record_kind='vote')");
   add("DELETE FROM comparison_records WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=comparison_records.record_kind AND s.record_id=comparison_records.record_id)");
@@ -83,6 +90,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("DELETE FROM legacy_review_requests WHERE subject_id=?", subjectId!);
     add("DELETE FROM retrospective_permissions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_sessions WHERE subject_id=?", subjectId!);
+    add("DELETE FROM personal_research_permissions WHERE subject_id=?", subjectId!);
     add("DELETE FROM listener_nicknames WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_accounts WHERE subject_id=?", subjectId!);
     const accessId = subjectId!.startsWith("invite:") ? subjectId!.slice(7) : subjectId!.startsWith("browser:") ? `open-${subjectId!.slice(8)}` : null;
