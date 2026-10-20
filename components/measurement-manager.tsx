@@ -1,7 +1,8 @@
 "use client";
 import { recordAdminTestIfNeeded, saveAdminTestRecord } from "@/lib/admin-test-store";
 
-import { useState } from "react";
+import DataChoicesEditor from "@/components/data-choices-editor";
+import { useRef, useState } from "react";
 import { parseCurve } from "@/lib/curves";
 import { isImportedMeasurement, type HeadphoneMeasurement } from "@/lib/measurement";
 import { at, averageChannels } from "@/lib/channel-balance";
@@ -14,12 +15,16 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
   adminTestOnly?:boolean;rows: HeadphoneMeasurement[]; selectedId: string; editId?: string | null; onAdd: (row: HeadphoneMeasurement) => void; onUpdate: (row: HeadphoneMeasurement) => void; onDelete: (id: string) => void; onSelect: (id: string) => void;
 }) {
   const [error, setError] = useState("");
-  const [contribute, setContribute] = useState(false);
+  const [contribute, setContribute] = useState(false),[rights,setRights]=useState(false);
+  const formRef=useRef<HTMLFormElement>(null),revision=useRef(0);
+  const [review,setReview]=useState<{files:string[];revision:number;contribute:boolean;rights:boolean}|null>(null);
+  function invalidateApproval(){revision.current++;setContribute(false);setRights(false);}
+  function reviewContribution(){const form=formRef.current;if(!form)return;const data=new FormData(form),files=['file','leftFile','rightFile'].map(key=>data.get(key)).filter((file):file is File=>file instanceof File&&file.size>0).map(file=>file.name);if(!files.length){setError('Choose or reattach the original measurement files before reviewing contribution.');return;}setError('');setReview({files,revision:revision.current,contribute,rights});}
   const [contributionStatus, setContributionStatus] = useState("");
   const [editing, setEditing] = useState<HeadphoneMeasurement | null>(() => rows.find(row => row.id === editId) ?? null);
   const [removed, setRemoved] = useState<Attachment[]>([]);
   const isRemoved = (kind: Attachment) => removed.includes(kind);
-  function beginEdit(row: HeadphoneMeasurement | null) { setEditing(row); setRemoved([]); setError(""); setContribute(false); setContributionStatus(""); }
+  function beginEdit(row: HeadphoneMeasurement | null) { invalidateApproval();setReview(null); setEditing(row); setRemoved([]); setError(""); setContribute(false); setContributionStatus(""); }
   async function saveFromForm(form: HTMLFormElement) {
     const data = new FormData(form);
     const file = data.get("file"), leftFile = data.get("leftFile"), rightFile = data.get("rightFile"), presetFile = data.get("channelMatchFile");
@@ -107,7 +112,7 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
     ...(editing.channelMatchPreset ? [{kind:"preset" as const,label:"Channel-match preset",filename:editing.channelMatchFileName || "Saved two-channel preset (original filename unavailable)",detail:`${editing.channelMatchPreset.channels[0].filters.length} Left / ${editing.channelMatchPreset.channels[1].filters.length} Right filters`}] : []),
   ] : [];
   return <><div className="heading-row"><div><h1>Upload headphone measurement</h1></div></div>
-    <div className="upload-layout measurements-upload-layout"><form key={editing?.id ?? "new"} className="upload-form" onSubmit={e => void submit(e)}>
+    <div className="upload-layout measurements-upload-layout"><form key={editing?.id ?? "new"} ref={formRef} className="upload-form" onChange={invalidateApproval} onSubmit={e => void submit(e)}>
       {editing && <h2>{`Edit ${editing.name}`}</h2>}
       <label>Measurement name<input name="name" required maxLength={80} defaultValue={editing?.name} placeholder="My headphones · stock pads" /></label>
       <label>Headphone model<input name="device" required maxLength={120} defaultValue={editing?.device} placeholder="Manufacturer and model" /></label>
@@ -120,13 +125,13 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       <label>Nozzle diameter, mm <span>optional; in-ear</span><input name="nozzleDiameterMm" type="number" min="0.1" max="30" step="0.1" defaultValue={editing?.nozzleDiameterMm} placeholder="e.g. 5.5" /></label>
       <label className="file-label">Single response CSV / TXT <span>or use both channel files</span><input name="file" type="file" accept=".csv,.txt,text/csv,text/plain" /><span className="drop-zone">↥<strong>Choose one raw response</strong><small>Frequency (Hz), level (dB) · up to 4 MB; dense REW files accepted</small></span></label>
       <div className="channel-file-row"><label>Left channel CSV / TXT<input name="leftFile" type="file" accept=".csv,.txt,text/csv,text/plain" /></label><label>Right channel CSV / TXT<input name="rightFile" type="file" accept=".csv,.txt,text/csv,text/plain" /></label></div>
-      {editing && <section className="saved-measurement-files" aria-label="Saved measurement attachments"><strong>Saved attachments</strong><p>These responses and presets are stored with this measurement. Removing an attachment takes effect when you save.</p>{attachments.map(item=><div className={`saved-measurement-file ${isRemoved(item.kind) ? "pending-removal" : ""}`} key={item.kind}><span><b>{item.label}</b><small>{item.filename} · {item.detail}</small></span><button type="button" onClick={()=>setRemoved(current=>isRemoved(item.kind)?current.filter(kind=>kind!==item.kind):[...current,item.kind])}>{isRemoved(item.kind)?"Undo":"Remove"}</button></div>)}</section>}
+      {editing && <section className="saved-measurement-files" aria-label="Saved measurement attachments"><strong>Saved attachments</strong><p>These responses and presets are stored with this measurement. Removing an attachment takes effect when you save.</p>{attachments.map(item=><div className={`saved-measurement-file ${isRemoved(item.kind) ? "pending-removal" : ""}`} key={item.kind}><span><b>{item.label}</b><small>{item.filename} · {item.detail}</small></span><button type="button" onClick={()=>{invalidateApproval();setRemoved(current=>isRemoved(item.kind)?current.filter(kind=>kind!==item.kind):[...current,item.kind]);}}>{isRemoved(item.kind)?"Undo":"Remove"}</button></div>)}</section>}
       <fieldset className="channel-match-settings"><legend>Saved channel-matching preset</legend><p>Open Comparison can use these saved settings. Personal Tournament lets you choose Auto, Uploaded or Off in its setup. Blind Research always uses Auto Match.</p><label><input type="radio" name="channelMatchMode" value="auto" defaultChecked={editing?.channelMatchMode !== "custom"} /><span><b>Auto Match</b><small>Uses your saved Left and Right responses when both are attached.</small></span></label><label><input type="radio" name="channelMatchMode" value="custom" defaultChecked={editing?.channelMatchMode === "custom"} /><span><b>My channel-match preset</b><small>Use a two-channel PEQdB/Qudelix export with CH: 0 and CH: 1 sections.</small></span></label><label className="channel-match-file">Channel-match preset TXT<input name="channelMatchFile" type="file" accept=".txt,text/plain" /></label></fieldset>
-      <label className="research-consent"><input name="contribute" type="checkbox" value="yes" checked={contribute} onChange={event => setContribute(event.target.checked)} />Contribute the original measurement file(s) and the model, rig, fit, source, driver and nozzle details above to the owner’s long-term research archive. Private listening does not require this.</label>
-      {contribute && <label className="research-consent"><input name="rights" type="checkbox" value="yes" required />I made these measurements or have permission to contribute the original files for research. I understand they will be linked to my random listener ID and may be kept for ongoing research.</label>}
+      <input type="hidden" name="rights" value={contribute&&rights?'yes':'no'}/><p>{contribute&&rights?'Contribution approved for the currently selected files. Saving uploads a research copy. Any edit clears approval.':'Private listening copy only. No research files will be uploaded.'}</p>{!adminTestOnly&&<button type="button" onClick={reviewContribution}>Review file contribution in data choices</button>}
       <button className="primary">{editing ? "Save changes →" : "Save measurement →"}</button>{editing && <button type="button" className="export-button" onClick={() => beginEdit(null)}>Cancel edit</button>}{error && <p role="alert">{error}</p>}
       {contributionStatus && <p role="status">{contributionStatus}</p>}
     </form></div>
+    {review&&<DataChoicesEditor forceReview onClose={()=>setReview(null)} onSaved={participating=>{if(review.revision===revision.current){setContribute(participating&&review.contribute);setRights(participating&&review.contribute&&review.rights);}else{invalidateApproval();setError('The measurement changed during review. Review its files again before contributing.');}setReview(null);}} fileConsent={{files:review.files,contribute:review.contribute,rights:review.rights,onContribute:value=>setReview(current=>current?{...current,contribute:value,rights:value&&current.rights}:null),onRights:value=>setReview(current=>current?{...current,rights:value}:null)}}/>}
     <div className="private-list" id="saved-measurements"><h2>Saved measurements</h2>{rows.length ? rows.map(row => <div className="private-row" key={row.id}><span><strong>{row.name}</strong><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {row.device} · {row.rig}{row.fit ? ` · ${row.fit}` : ""} · {row.channelMatchMode === "custom" ? "custom match in Open comparison" : row.leftPoints && row.rightPoints ? "automatic Left/Right match" : "shared stereo EQ"}{row.researchContributionId ? " · contributed to research" : ""}</small>{isImportedMeasurement(row) && <small>Imported from {importedSource(row)}</small>}{row.notes && <small>{row.notes}</small>}</span><button type="button" onClick={() => onSelect(row.id)}>{row.id === selectedId ? "Selected" : "Use for listening"}</button><button type="button" className="measurement-icon-button" aria-label={`Edit ${row.name}`} title="Edit measurement" onClick={() => { beginEdit(row); window.scrollTo({top:0,behavior:"smooth"}); }}>✎</button><button type="button" className="measurement-icon-button" aria-label={`Delete ${row.name}`} title="Delete measurement" onClick={() => { if (window.confirm(`Delete ${row.name} from this browser?`)) { onDelete(row.id); if (editing?.id === row.id) beginEdit(null); } }}>×</button></div>) : <p className="footnote">No measurements saved yet.</p>}</div>
   </>;
 }
