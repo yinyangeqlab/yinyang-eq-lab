@@ -17,6 +17,7 @@ export async function serveListeningAudio(request: Request, asset: AudioAsset, a
     partial = true; headers.set("Content-Range", `bytes ${start}-${end}/${asset.bytes}`);
   }
   headers.set("Content-Length", String(end-start+1));
+  headers.set("X-Listening-Content-Length", String(end-start+1));
   if (request.method === "HEAD") return new Response(null, { status: partial ? 206 : 200, headers });
   async function* streamParts() {
     let offset = 0;
