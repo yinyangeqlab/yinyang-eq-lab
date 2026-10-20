@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 97,
-  "implementationCommit": "4d09994a48dc4a49fac288786f1315f52c383ef1",
-  "runtimeParity": "Recorded runtime matches verified update97; separate UI/recovery WIP excluded.",
+  "liveUpdate": 98,
+  "implementationCommit": "aca250b79a5b449245f22332f257754c4b700872",
+  "runtimeParity": "Recorded runtime matches verified update98; separate UI/recovery WIP excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
