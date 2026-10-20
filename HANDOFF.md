@@ -1,3 +1,39 @@
+Audit completion: the full report is workspace/artifacts/site-audit-20261018/full-site-audit.html (also.txt). It lists25 outstanding report-only findings, three separately authorised live corrections and two test-harness gaps. Public pages and six Shootout tabs were inspected; destructive/publishing operations were not executed on participant records. Final live layout matrices cover60 page cases plus24 tab cases; ranking update checked at375/1920/3440/3840. Requested5120 was capped to4096; physical OLED/TV devices were not tested. Track Library and Listening Pool are accepted terminology.
+
+Optional nickname preview commitae7c196 is tested and NOT DEPLOYED. My data can set/remove a private nickname on authenticated ownership shared through explicit Sync. No email is collected. Admin labels use verified record ownership; nicknames do not change ranking or monitoring. Migration0032 creates one empty table only and has NOT run live. TypeScript/build/full media packaging, nickname isolation/validation/removal, real synthetic sync/account erasure, agreement, activity and18 recovery checks passed. Await the owner’s explicit deployment approval; screenshot nickname-preview-saved.png. Other audit findings remain report-only.
+
+# Current live release — update85, October 18, 2026
+
+Live: https://yinyangeq.com. Matched A/B passage is the default recommended ranking view. The explanation references ITU-R BS.1116-3 §4.2/§6 and BS.1284-2 §5.2.1, and states the limits of the five-second site rule and lack of full ITU compliance. Earlier views remain available. No listening requirement, scoring or participant data was changed.
+
+Implementation `18bf9c70d4c8b383536409d217f129dea71bdb6f`. Verified source/build `work/matched-ranking-release-20261018`; infrastructure `work/matched-ranking-infra-20261018`. Develop only in workspace/. One existing Worker updated; three resources unchanged. No migration, data restoration, maintenance activation or forced refresh. Invites off. CPU5000ms, six abuse bindings, private media, disabled public Worker URLs and edge/cost guards preserved. Previous browser assets retained for open sessions; a rollout cannot guarantee zero transient network disruption. GitHub publication is separate and has not been performed for updates83 onward.
+
+The optional account nickname is a canonical-workspace preview awaiting explicit deployment approval. No nickname collection is live. Whole-site audit findings remain report-only. Browser layout checks cover375–3840 pixels; requested5120 was capped at4096, and physical TV/OS/browser testing is not claimed.
+
+## Historical release notes
+
+# Current live release — update84, October 18, 2026
+
+Live: https://yinyangeq.com. Dark green admin notice controls and combined custom duration in months (30 days), weeks, days, hours and minutes. Existing preset clients remain supported. The notice remains inactive.
+
+Implementation `0a36cfb76b3f6d70d729d7601828115f45298e46`. Verified source/build `work/admin-duration-release-20261018`; infrastructure `work/admin-duration-infra-20261018`. Develop only in workspace/. One existing Worker updated; three resources unchanged. No migration, data restoration, maintenance activation or forced refresh. Invites off. CPU5000ms, six abuse bindings, private media, disabled public Worker URLs and edge/cost guards preserved. Previous browser assets retained for open sessions; a rollout cannot guarantee zero transient network disruption. GitHub publication is separate and has not been performed for updates83 onward.
+
+The optional account nickname is a canonical-workspace preview awaiting explicit deployment approval. No nickname collection is live. Whole-site audit findings remain report-only. Browser layout checks cover375–3840 pixels; requested5120 was capped at4096, and physical TV/OS/browser testing is not claimed.
+
+## Historical release notes
+
+# Current live release — update83, October 18, 2026
+
+Live: https://yinyangeq.com. Ultrawide/TV layout update verified. Implementation commit `27aabe2b58988a17ff953a6ed72b1d07fa54c89c`; GitHub publication is separate and has not been performed for this release. Source/build: `work/ultrawide-release-20261018`; infrastructure: `work/ultrawide-infra-20261018`. Develop only in workspace/.
+
+This release changes presentation only: centered wide-screen headers, a 1600px listening workspace, proportional UI scaling at 2400/3200/4800 CSS pixels, scaled viewport-height correction, and contained library/credits/footer gutters. Sign-in and sync receive the same scale rules. No protocol, scoring, admission, participant schema or notice state changes. Invites remain off and no maintenance notice is active. One existing Worker updated, three resources unchanged. CPU5000ms, all six abuse bindings, private media, disabled public Worker URLs, edge/cost guards remain unchanged. No migration, participant restoration or forced browser refresh.
+
+All15 referenced live JS/CSS assets match;15 previous browser assets remain available byte-for-byte for already-open sessions. Existing clients keep their loaded interface. A hosting rollout cannot guarantee zero transient network disruption. Local browser layout checks covered375,768,1920,3440 and3840 pixel widths; the5120 request was capped by the browser tool at4096, so native5120 rendering and physical TV/browser testing are not claimed. Full live layout audit continues in workspace/artifacts/site-audit-20261018/.
+
+The separately requested admin dark-green duration control is pending user review and is NOT in this release. Canonical pending changes are components/service-status-panel.tsx, app/owner-research/admin-layout.css, app/api/owner-research/service-status/route.ts, lib/service-status.ts and lib/notice-duration.ts, plus its focused test. Do not deploy those until the reviewed version is approved. All audit wording/function findings remain report-only.
+
+## Historical release notes
+
 # Current live release — update82, October 18, 2026
 
 Site: https://yinyangeq.com. Invites are **off**. The admin-only control is at `/owner-research#tester-access`. Welcome says “Enter the shootout”; Shootout, Track Library and Preference Tuning navigation remain available. No additional Welcome redesign was applied.

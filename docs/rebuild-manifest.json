@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 82,
-  "implementationCommit": "3565e5b803330e716a881f72e562c24e4211bd68",
-  "runtimeParity": "All recorded runtime application files match the verified live snapshot.",
+  "liveUpdate": 85,
+  "implementationCommit": "18bf9c7",
+  "runtimeParity": "Verified live update85 plus explicitly listed canonical-only optional nickname preview; the preview and migration0032 are not deployed.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -74,7 +74,7 @@
     },
     {
       "path": "app/api/my-data/route.ts",
-      "sha256": "101ed3a5735a3cc8dcabf357265beec8478389d023857591873473f5077c3eba"
+      "sha256": "1fde576ba5841cfc01530d99ca9f867ec330e0b397a894f791b3befe885e3f78"
     },
     {
       "path": "app/api/owner-research-measurement/route.ts",
@@ -82,7 +82,7 @@
     },
     {
       "path": "app/api/owner-research/activity/route.ts",
-      "sha256": "89bf819970e9150b93323584be23c64662ad7f25c9d8eb641da1920b4dcbeefe"
+      "sha256": "fe4d865eb49b66c906c04b02f21a1864724d7f62b4051aa9613036acae838f6d"
     },
     {
       "path": "app/api/owner-research/archive/route.ts",
@@ -102,11 +102,11 @@
     },
     {
       "path": "app/api/owner-research/route.ts",
-      "sha256": "54d27887a94f21a6ec514d28573798f4a5499364d595b3f553417b554342bee3"
+      "sha256": "ba38fda4d0c40e052afa3559ae409eb945e78701efc9cf1538fb292e5a1dc0c8"
     },
     {
       "path": "app/api/owner-research/service-status/route.ts",
-      "sha256": "ccf8aa9dde69a9af9d3585ea1f17bb01fa349d71260eac6a39b491dd9958e029"
+      "sha256": "428e4c9ebfd63285964f5a481dba97b5909d5afffa6cd4c645c25b353c4ae4b6"
     },
     {
       "path": "app/api/preference-exports/route.ts",
@@ -146,11 +146,11 @@
     },
     {
       "path": "app/curve-credits/style.css",
-      "sha256": "6181f8c0f62856c6d09dd7c3162e080d209885b0b669fc1bddc30cdc99feaba3"
+      "sha256": "5b00d2bc4a1d363d22e6a24f426fb0311c64a48d8b23e3df484879357da4b0ae"
     },
     {
       "path": "app/globals.css",
-      "sha256": "87e3616b4836d7c4e7887022551be331abc52d22b137fa5d89439ea14cee49c1"
+      "sha256": "c0ebe2732b3edd4b1bb31c5d31f24d2cd9825cca2c064ca53081d038820d6afe"
     },
     {
       "path": "app/home/route.ts",
@@ -166,23 +166,23 @@
     },
     {
       "path": "app/music-library/style.css",
-      "sha256": "57366cae04e7c01eddf96a467114e6c5df3e62b330e1c994f178f18039d5d7b6"
+      "sha256": "7466bbd3fce7112b432e96bf62dc7fbd1b9e12533ea7ba30e84ca1bfc6b6aa11"
     },
     {
       "path": "app/my-data/page.tsx",
-      "sha256": "8639ae6b11d6a1f947e733bcdd85fd184cba3cb30962356a939b35e4f4f1c1fc"
+      "sha256": "863344da03b246eb42f3756d45cf5a9b41c6e209bdef0f5920e2abf53267c78e"
     },
     {
       "path": "app/my-data/style.css",
-      "sha256": "207ea14270dfe6f0516a5593683484a16965e2ff0a37eefd3eb84d0f8528d736"
+      "sha256": "acdc2576ab41a7efbcd9d6cc9069cb99dc285e16e2a83ee3a361ce35848e0267"
     },
     {
       "path": "app/owner-research/admin-layout.css",
-      "sha256": "c0985bdba9e35e3601d2943c032d0fedf794ffa3b04a2754ec4f71007c5c4086"
+      "sha256": "4b39024239773b2348107c3221a1737952b9bf80dae6819b5e267018ff9b0d90"
     },
     {
       "path": "app/owner-research/page.tsx",
-      "sha256": "c38ce042f270285c27c5af25ae0862dc0d7ed136946f0c22785083379018c973"
+      "sha256": "f9a5a1fde7830b4213be0886b3781b2c8be2bb3c41191798ec18ee9536b62353"
     },
     {
       "path": "app/page.tsx",
@@ -202,19 +202,19 @@
     },
     {
       "path": "app/preference-tuning/style.css",
-      "sha256": "7083e800dbb152d4507729576ce2d33f29ca26a9c6f656b124fa47a522aa0015"
+      "sha256": "5d9a35a53eba9f8db24c89c4253d17dc0815d6b9ea26fc315d0da3d40535cc93"
     },
     {
       "path": "app/privacy/page.tsx",
-      "sha256": "c2f9fc38984cb39f4a1cf33f89e5717ac9402d9266f5f9a6a37f79125a378921"
+      "sha256": "68ce6e5960829e8d8b148bb695f95f9eceb2d2c14b46199ea624a9c1a1928b3a"
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "5a19515e9c55f0fbe7f407890e24c1e20d572cb7d0b3695cdb6bd6c51a31ba3d"
+      "sha256": "256f756ac7e75dd7c7793243b6af0aabb7d175c7d08770e3c89f5ef9bbcced53"
     },
     {
       "path": "app/welcome.css",
-      "sha256": "e6ce1d3e5ddec14216f6dd35fec8ef8c3db79c1a81288789545bb53150d13687"
+      "sha256": "8c0f1f1f902e67735c49629f24b76c8f9f366a9a25b87b6a0b5ee9fb72f370ed"
     },
     {
       "path": "build/connector-preview-plugin.mjs",
@@ -301,6 +301,10 @@
       "sha256": "746251bd2a0bb4925935c7e9106be27e0b013ad45c471cb343ea8182f6eb80a0"
     },
     {
+      "path": "components/listener-nickname-panel.tsx",
+      "sha256": "bb6e9d3745197dfce35cfa0a0fa3489095fae67aa052a39ae95cd2851af89815"
+    },
+    {
       "path": "components/maintenance-gate.tsx",
       "sha256": "d879fe27d35e910ca90056d0adb663babe20c2e025ce705d4d403166b655865f"
     },
@@ -334,7 +338,7 @@
     },
     {
       "path": "components/service-status-panel.tsx",
-      "sha256": "5620471061e91482a6df2a406047a4f1863017b69c3b87e8c61e13a3f364de08"
+      "sha256": "60a7cb385fc4cb85ecbdeecf34c1a6bcdd1a3b038c251c432d6399bcdf96fce3"
     },
     {
       "path": "components/service-warning.tsx",
@@ -670,7 +674,7 @@
     },
     {
       "path": "db/schema.ts",
-      "sha256": "c94d266e09d9fbef38569c1db042d6d95d55b817754de803c6d6353bcb5c9b59"
+      "sha256": "00d3a488fd480ebab608faf8d3a0726bf892afc3be54769197145bb0eb7fc8c8"
     },
     {
       "path": "db/service-status.sql",
@@ -805,6 +809,10 @@
       "sha256": "ab937e2c1f4d31b76c89d4a3a440418cf08bf1d585675ed2cd4d8357f6b692a2"
     },
     {
+      "path": "drizzle/0032_listener_nicknames.sql",
+      "sha256": "4600fff3286a0123a5afaee8ee5613a7d49b5e96b8d3cea840a0caeead4ebc36"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -873,8 +881,12 @@
       "sha256": "8f8dd29f3f46430f78aa4fd113c2dc1cde56ed5563afdedfe174c1d77f2abf95"
     },
     {
+      "path": "drizzle/meta/0032_snapshot.json",
+      "sha256": "e79193d72ec81a1bec9110c441bbcda0029956881e73e15fb1b7b28cd780d219"
+    },
+    {
       "path": "drizzle/meta/_journal.json",
-      "sha256": "d1058d98b13971eecca1bc8c9f12a9234e047e96a31188fdc2c79bcb0aed6cb5"
+      "sha256": "e0b363350a1c976533c0a23f1bf2bfef22725a5e669c70751a87ebe1c5e95ac7"
     },
     {
       "path": "hooks/use-mobile.ts",
@@ -914,7 +926,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "bbbf2d8dfa31d5d9a2288aa77eb618e438f103bc0ee383747544c4b2fba5d270"
+      "sha256": "7a22ecbd78e210289aed84109e13d1d03f4ef888f1674b66a2b866f0e9bd8336"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -954,7 +966,7 @@
     },
     {
       "path": "lib/browser-pairing.mjs",
-      "sha256": "c67c94695af956fef69a7b04e931641127891d70df2010c6d0450f784a2b14a8"
+      "sha256": "0ddcd772087ebf26513aea6be82ec969fbbe6c70d20bad9a01c58f5334e6ac57"
     },
     {
       "path": "lib/browser-sync.mjs",
@@ -1029,6 +1041,10 @@
       "sha256": "8b9ed493bf313fddeaa769419e345237d1cb3fab16108e7b1319c5dd6d7e91f0"
     },
     {
+      "path": "lib/listener-nickname.ts",
+      "sha256": "08bf4e3d7d49b2a0afb29eaea643d969e4f6246d5babc23debeeb09eb312b6e6"
+    },
+    {
       "path": "lib/listening-audio.ts",
       "sha256": "8308b676eaa8842af5151e70e551f509a735b79b98d2b610d72b6618bcb42133"
     },
@@ -1073,6 +1089,10 @@
       "sha256": "5aa45be4f7678cb5acfc4c603ca948ae81d132e2b08fb3b3f6239df96b09374e"
     },
     {
+      "path": "lib/notice-duration.ts",
+      "sha256": "f70c75f0e5a740d56972e20179e97638f66288662d2cd7b21466593e2b8e60e5"
+    },
+    {
       "path": "lib/owner-access.ts",
       "sha256": "41f8e4272969e26fc8e4c5c0a680ba2f5db8686b0ade9d0b5f97775821da975c"
     },
@@ -1090,7 +1110,7 @@
     },
     {
       "path": "lib/privacy-erasure.ts",
-      "sha256": "c336c5b2397ccb716436e6649e4c140e994029dc23efa54631501cb121acebb1"
+      "sha256": "522e86a748a1762e1caa7aa8bb7009cad29d6b2a68d34ed03e453cffc542a3db"
     },
     {
       "path": "lib/public-measurements.ts",
@@ -1122,7 +1142,7 @@
     },
     {
       "path": "lib/service-status.ts",
-      "sha256": "e806177429046c258d9be807dd7d8b01222c0a9296217829130c234349b9771f"
+      "sha256": "7401d870c893472a645b6c04ceaa1dcab3d30c8fa5eaf43f46c5357f0c19878c"
     },
     {
       "path": "lib/service-warning.ts",
@@ -1270,11 +1290,11 @@
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
-      "sha256": "f61a775d674b5b96148e0fe3facdaca597fd1224e7304020fb796138d6701675"
+      "sha256": "bc016fd39fe900bceac0aa8a57ce543854089ee9b374a5cd4f17a3ed930247e6"
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "97c146f1fef3380b1e4af695a59e80882880ab6af3ad7919bc038a7261dc8554"
+      "sha256": "f245d2205e3e067480bda11a731bc6fd692c84f0c5ffbb6e6db3e9f494511efa"
     },
     {
       "path": "scripts/check_blind_completion.mjs",
@@ -1282,15 +1302,19 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "6ab0ecbd58957fd3deb5472eeee544e2158686268aab59560d23793ed069319b"
+      "sha256": "676587780808fdef5151241b3e395d3ebed558c4ddb87c85ff475ffb0764a182"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
-      "sha256": "2a8a8d1e29afc3f2c403e40592ae1b9fe8adc86f2ba9cc713c40f27d183a85c1"
+      "sha256": "4d93be3001799529ef24a93eabb47ad3ed9de6e6654cd47414ee935924baf743"
     },
     {
       "path": "scripts/check_comparison_passage.mjs",
       "sha256": "3c9456df13fe55efc7b703707f52e8044e688f9b93686386e6fa8b22c869ee72"
+    },
+    {
+      "path": "scripts/check_listener_nickname.mjs",
+      "sha256": "14ff8f18fad42a9124a7b1f4c98bd084c95c6965a72e2d99633d080f914beabe"
     },
     {
       "path": "scripts/check_listening_audio.cjs",
@@ -1315,6 +1339,10 @@
     {
       "path": "scripts/check_music_preferences.cjs",
       "sha256": "28df34ca1fbd87abeb2a17691b8e158c0f4544c1546705d146c7783358dcde2d"
+    },
+    {
+      "path": "scripts/check_notice_duration.mjs",
+      "sha256": "3441f2a532a98618cd4b96a47203f5afda26d7c129a32b0632a8d61de59a81a3"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
@@ -1501,5 +1529,7 @@
     "node": "26.12.0",
     "npm": "12.2.1",
     "testedPlatform": "linux"
-  }
+  },
+  "pendingPreviewCommit": "ae7c196",
+  "pendingDeploymentApproval": true
 }

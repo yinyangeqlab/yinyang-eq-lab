@@ -1,3 +1,5 @@
+Current live baseline is update85. Updates83–85 contain approved display, notice-duration and cited ranking-view changes. The canonical optional nickname preview atae7c196 is not deployed and requires owner approval before migration0032 or its code is published live. Use the immutable matched-ranking release for the verified live source; see LIVE_RELEASE.json.
+
 # Rebuild the current application — live update82
 
 Update82 is deployed with invites off. The implementation is `3565e5b803330e716a881f72e562c24e4211bd68`. Read HANDOFF.md and INVITE_SYSTEM.md first. Build only in workspace/. Full owner snapshots are work/invite-release-20261018 and work/invite-infra-20261018. A new database requires all32 migrations; the existing live database received only0031_site_access_settings.sql. The control table must exist before the new app/gate runs. The missing-row default is off. Consent, media, privacy and deployment protections remain enforced.

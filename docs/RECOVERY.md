@@ -1,6 +1,6 @@
 # Recovery and workspace guide
 
-Current live release is update82 with invites off; see HANDOFF.md. Recovery rehearsals and the existing private update81 bundle below are historical and require their matching source/migration revision. No new recovery bundle or production restoration was made for update82. Keep any recovery environment closed until its ownership/deletion review is complete.
+Current live release is update85 with invites off; see HANDOFF.md. The optional nickname feature and migration0032 are a canonical-only preview, not part of the live schema. Recovery rehearsals and the existing private update81 bundle below are historical and require their matching source/migration revision. No new recovery bundle or production restoration was made for update82. Keep any recovery environment closed until its ownership/deletion review is complete.
 
 ## One development checkout
 
