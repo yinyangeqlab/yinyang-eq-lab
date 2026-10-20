@@ -12,10 +12,13 @@ import TrackWaveform from "@/components/track-waveform";
 import { curatedWaveform } from "@/lib/curated-waveforms";
 import { estimateWaveformSpread, previewDynamics } from "@/lib/dynamics-preview";
 import { matchSongSuggestion, type SongSuggestion } from "@/lib/song-match";
-import curatedMusic from "@/data/open-music.json";
+import { musicCandidates } from "@/lib/music-catalog";
+import { musicRotation, type MusicChoice, type MusicCounts } from "@/lib/music-preferences";
+import curatedMusic from "@/data/music-candidates.json";
 
 export type MusicContext = { songTitle: string; songArtist: string; songAlbum: string; recordingId: string; sha256: string | null; audioFormat: string | null; sampleRate: number | null; bitrate: number | null; duration: number | null; intervals: Interval[]; heardA: number; heardB: number; overlapSeconds: number };
 export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean> };
+type MusicVoteSnapshot = { byTrack?: MusicCounts; mine?: Record<string, MusicChoice>; signedIn?: boolean; error?: string };
 type Target = { id: string; points: Point[] };
 
 function sourceDetails(buffer: ArrayBuffer, format: string): { sampleRate?: number; bitrate?: number } {
@@ -60,6 +63,47 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const curatedFetchRef = useRef(0);
   const curatedIndexRef = useRef(-1);
   const curatedQueueRef = useRef<number[]>([]);
+  const musicCountsRef = useRef<MusicCounts>({});
+  const [musicChoices, setMusicChoices] = useState<Record<string, MusicChoice>>({});
+  const [musicVotesReady, setMusicVotesReady] = useState(false);
+  const [musicSignedIn, setMusicSignedIn] = useState(false);
+  const [musicSaving, setMusicSaving] = useState(false);
+  const [musicVoteMessage, setMusicVoteMessage] = useState("");
+  const [candidateUrl, setCandidateUrl] = useState<string | null>(null);
+  const candidateUrlRef = useRef(candidateUrl);
+  candidateUrlRef.current = candidateUrl;
+  async function refreshMusicVotes() {
+    const response = await fetch("/api/music-votes", { cache: "no-store" });
+    const result = await response.json() as MusicVoteSnapshot;
+    if (!response.ok) throw new Error(result.error || "Could not load music choices.");
+    musicCountsRef.current = result.byTrack ?? {};
+    setMusicChoices(result.mine ?? {});
+    setMusicSignedIn(Boolean(result.signedIn));
+    setMusicVotesReady(true);
+  }
+  useEffect(() => {
+    const refresh = () => { void refreshMusicVotes().catch(() => setMusicVoteMessage("Music votes unavailable.")); };
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, []);
+  async function voteForMusic(choice: MusicChoice | null) {
+    if (!candidateUrl || musicSaving) return;
+    const votingUrl = candidateUrl;
+    setMusicSaving(true);
+    setMusicVoteMessage("");
+    try {
+      const response = await fetch("/api/music-votes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ trackUrl: candidateUrl, choice }), cache: "no-store" });
+      const result = await response.json() as MusicVoteSnapshot;
+      if (!response.ok) throw new Error(result.error || "Could not save music choice. Try again.");
+      musicCountsRef.current = result.byTrack ?? {};
+      setMusicChoices(result.mine ?? {});
+      // Rebuild the next cycle from current preferences; the current song keeps playing.
+      curatedQueueRef.current = [];
+      if (candidateUrlRef.current === votingUrl) setMusicVoteMessage(choice ? "Music choice saved." : "Music choice cleared.");
+    } catch (error) { if (candidateUrlRef.current === votingUrl) setMusicVoteMessage(error instanceof Error ? error.message : "Could not save music choice. Try again."); }
+    finally { setMusicSaving(false); }
+  }
   const measuredLufsRef = useRef<number | null>(null);
   const samplesRef = useRef<File[]>([]);
   const sampleIndexRef = useRef(-1);
@@ -76,7 +120,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const sourceKindRef = useRef<"curated" | "uploaded" | null>(null);
   const [samples, setSamples] = useState<File[]>([]);
   const [sampleChoice, setSampleChoice] = useState("random");
-  const [sampleStatus, setSampleStatus] = useState(`${curatedMusic.length} curated stereo tracks ready for random tests.`);
+  const [sampleStatus, setSampleStatus] = useState(`${curatedMusic.length} measured candidates · rotating top 10 dynamic + top 10 compressed, with challengers.`);
   const [sourceError, setSourceError] = useState("");
   const [loudnessStatus, setLoudnessStatus] = useState("Choose a track to measure loudness.");
   const [analysis, setAnalysis] = useState<TrackAnalysis | null>(null);
@@ -89,6 +133,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  const [waveformZoom, setWaveformZoom] = useState(1);
   const [dynamicRange, setDynamicRange] = useState(0);
   const [dynamicSliderEnabled, setDynamicSliderEnabled] = useState(false);
   const [dynamicReduction, setDynamicReduction] = useState<number | null>(null);
@@ -173,7 +218,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     resetHeard();
     if (testMode === "blind" && pair) void chooseRandomSample("random");
   }, [pair, testMode]);
-  useEffect(() => { if (testMode !== "bring") return; sourceSerialRef.current++;hashSerialRef.current++; sourceKindRef.current=null; audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
+  useEffect(() => { if (testMode !== "bring") return; sourceSerialRef.current++;hashSerialRef.current++; sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
   function applyFit() {
     const current = engine.current;
     if (!current || !pairTargets?.[0] || !pairTargets[1]) return;
@@ -405,17 +450,18 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       const sourceSerial = ++sourceSerialRef.current;
       const hashSerial = ++hashSerialRef.current;
       if (!curatedQueueRef.current.length) {
-        const queue = curatedMusic.map((_, i) => i);
-        for (let i = queue.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [queue[i], queue[j]] = [queue[j], queue[i]];
-        }
+        // Refresh between cycles, never in the middle of a target comparison.
+        try { await refreshMusicVotes(); } catch { /* Retain the last available ranking. */ }
+        if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return false;
+        const queue = musicRotation(curatedMusic, musicCountsRef.current).map(track => curatedMusic.indexOf(track));
         if (queue.length > 1 && queue[queue.length - 1] === curatedIndexRef.current) [queue[0], queue[queue.length - 1]] = [queue[queue.length - 1], queue[0]];
         curatedQueueRef.current = queue;
       }
       const index = curatedQueueRef.current.pop()!;
       const track = curatedMusic[index];
       sourceKindRef.current = "curated";
+      setCandidateUrl(track.url);
+      setMusicVoteMessage("");
       const format = track.filename.toLowerCase().endsWith(".flac") ? "FLAC" : "MP3";
       const streamUrl = track.fileUrl;
       audioRef.current?.pause();
@@ -426,6 +472,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       setSourceError("");
       setAnalysis(null);
       setCuratedPreview(curatedWaveform(track.fileUrl));
+      setWaveformZoom(1);
       setPosition(0);
       setDuration(track.duration);
       setHashing(false);
@@ -484,6 +531,8 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   function chooseFile(next: File | null, knownStereo = false, sample = false, curated?: SongSuggestion, autoPlay = false) {
     if (!next || !audioRef.current) return;
     sourceKindRef.current = "uploaded";
+    setCandidateUrl(null);
+    setMusicVoteMessage("");
     const sourceSerial = ++sourceSerialRef.current;
     const hashSerial = ++hashSerialRef.current;
     void knownStereo; void sample;
@@ -500,6 +549,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     setLoudnessStatus("Analyzing track…");
     setAnalysis(null);
     setCuratedPreview(null);
+    setWaveformZoom(1);
     setPosition(0);
     setDuration(0);
     setFile(next);
@@ -517,10 +567,16 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     void current?.context.resume();
     startInterval();
   }
-  return <section className="music-panel" data-mode={testMode}><div className="music-header"><div><span className="mini-label">LOCAL PLAYBACK</span><div className="playback-title-line"><h2>Local Playback</h2><span className="playback-time"><span>{clock(position)}</span><span aria-hidden="true">/</span><span>{clock(duration)}</span></span><span className="waveform-source-caption">L / R · pre-EQ · click to seek</span></div><p>Audio from your device stays in this browser. Blind votes support public rankings, and approved-target comparisons or descriptions can enter private owner research. Listening segments are saved for every completed comparison. Song tags and file details from music you choose on your device are shared only if you opt in below; audio bytes are never uploaded.</p></div><span className="count-pill">A/B TONAL PREVIEW</span>{dynamicsAdjusted && analysis && <div className="dynamics-status" aria-live="off"><span className={`dynamics-preview-key ${dynamicsExpanding ? "expanding" : ""}`}>{dynamicsExpanding ? "Red beyond blue" : "Blue compressed"} <span>· {dynamicsExpanding ? "scaled source" : "gray source"}</span><b> · peak spread {spreadChange >= 0 ? "+" : ""}{spreadChange.toFixed(1)} dB</b></span><span className="dynamics-meter">{dynamicReduction === null || dynamicOutputGain === null ? "Waiting for audio processor…" : `${dynamicsExpanding ? "Quiet" : "Peak"} reduction ${dynamicReduction.toFixed(1)} dB · Net gain ${dynamicOutputGain >= 0 ? "+" : ""}${dynamicOutputGain.toFixed(1)} dB`}</span></div>}</div>
-    <div className={`player-row ${isPlaying ? "is-playing" : ""}`} role="group" aria-label="Music playback controls">{testMode === "open" && <><button type="button" className="deck-dynamics-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} title="Toggle Dynamic Range Compression/Expansion slider. Hover over center line of playback waveform." disabled={!duration || dynamicRangeUnavailable} onClick={() => setDynamicSliderEnabled(value => !value)}><SlidersHorizontal size={19} strokeWidth={2.4} aria-hidden="true" /></button><button type="button" className="deck-dynamics-reset" aria-label="Reset track dynamics" title="Reset track dynamics" disabled={dynamicRangeUnavailable || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19} strokeWidth={2.4} aria-hidden="true" /></button></>}<button type="button" className="deck-play" aria-label={isPlaying ? "Pause music" : "Play music"} onClick={() => { const audio=audioRef.current; if(!audio) return; if(!file){if(testModeRef.current === "bring") setSourceError("Choose your own stereo song to play.");else void chooseRandomSample("random",true);return;} if(audio.paused) { try { setupEngine(); applyFit(); void Promise.all([engine.current!.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions.")); } catch { setSourceError("Could not initialize audio playback."); } } else audio.pause(); }}></button><TrackWaveform compact analysis={curatedPreview ?? analysis} placeholder={file ? (loudnessStatus.startsWith("Audio analysis unavailable") ? "Waveform unavailable" : "Analyzing source waveform…") : "Choose a stereo track to view its waveform"} position={position} duration={duration} onSeek={seconds => { if (audioRef.current) audioRef.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={testMode === "open" && dynamicSliderEnabled} dynamicRangeDisabled={dynamicRangeUnavailable} /><div className={`volume-control ${volumeOpen ? "open" : ""}`}><button type="button" className="deck-volume-toggle" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(value => !value)}>{volume === 0 ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}</button><input className="deck-volume" hidden={!volumeOpen} type="range" min={0} max={1} step={0.01} value={volume} aria-label="Volume" onChange={e => {const value=Number(e.target.value);if(audioRef.current)audioRef.current.volume=value;setVolume(value);}} /></div><audio ref={audioRef} crossOrigin="anonymous" preload="auto" onPlay={() => {setupEngine();applyFit();void engine.current?.context.resume();onPlaybackChange?.(true);}} onPlaying={() => {startInterval();setIsPlaying(true);onPlaybackChange?.(true);}} onPause={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onWaiting={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onTimeUpdate={() => setPosition(audioRef.current?.currentTime ?? 0)} onSeeking={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onSeeked={() => {startInterval();const playing=!!audioRef.current && !audioRef.current.paused;setIsPlaying(playing);onPlaybackChange?.(playing);}} onEnded={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onError={() => setSourceError("This browser could not play the selected audio format.")} onLoadedMetadata={() => { const seconds = audioRef.current?.duration; const valid = seconds && Number.isFinite(seconds) ? seconds : null; setDuration(valid ?? 0);setPosition(0);setMeta(old => ({ ...old, duration: valid, bitrate: old.bitrate ?? (valid && file ? Math.round(file.size * 8 / valid) : null) })); }} /></div>
+  return <section className="music-panel" data-mode={testMode}><div className="playback-topbar"><div className="music-header"><div><span className="mini-label">LOCAL PLAYBACK</span><div className="playback-title-line"><h2>Local Playback</h2><span className="playback-time"><span>{clock(position)}</span><span aria-hidden="true">/</span><span>{clock(duration)}</span></span><span className="waveform-source-caption">L / R · pre-EQ · click to seek</span></div><p>Audio from your device stays in this browser. Blind votes support public rankings, and approved-target comparisons or descriptions can enter private owner research. Listening segments are saved for every completed comparison. Song tags and file details from music you choose on your device are shared only if you opt in below; audio bytes are never uploaded.</p></div><span className="count-pill">A/B TONAL PREVIEW</span>{dynamicsAdjusted && analysis && <div className="dynamics-status" aria-live="off"><span className={`dynamics-preview-key ${dynamicsExpanding ? "expanding" : ""}`}>{dynamicsExpanding ? "Red beyond blue" : "Blue compressed"} <span>· {dynamicsExpanding ? "scaled source" : "gray source"}</span><b> · peak spread {spreadChange >= 0 ? "+" : ""}{spreadChange.toFixed(1)} dB</b></span><span className="dynamics-meter">{dynamicReduction === null || dynamicOutputGain === null ? "Waiting for audio processor…" : `${dynamicsExpanding ? "Quiet" : "Peak"} reduction ${dynamicReduction.toFixed(1)} dB · Net gain ${dynamicOutputGain >= 0 ? "+" : ""}${dynamicOutputGain.toFixed(1)} dB`}</span></div>}</div>
+    <div className={`playback-transport ${isPlaying ? "is-playing" : ""}`} role="group" aria-label="Music playback controls">{testMode === "open" && <div className="playback-dynamics"><button type="button" className="deck-dynamics-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} title="Toggle Dynamic Range Compression/Expansion slider. Hover over center line of playback waveform." disabled={!duration || dynamicRangeUnavailable} onClick={() => setDynamicSliderEnabled(value => !value)}><SlidersHorizontal size={19} strokeWidth={2.4} aria-hidden="true" /></button><button type="button" className="deck-dynamics-reset" aria-label="Reset track dynamics" title="Reset track dynamics" disabled={dynamicRangeUnavailable || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19} strokeWidth={2.4} aria-hidden="true" /></button></div>}<button type="button" className="deck-play" aria-label={isPlaying ? "Pause music" : "Play music"} onClick={() => { const audio=audioRef.current; if(!audio) return; if(!file){if(testModeRef.current === "bring") setSourceError("Choose your own stereo song to play.");else void chooseRandomSample("random",true);return;} if(audio.paused) { try { setupEngine(); applyFit(); void Promise.all([engine.current!.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions.")); } catch { setSourceError("Could not initialize audio playback."); } } else audio.pause(); }}></button><div className="waveform-zoom" role="group" aria-label="Waveform zoom"><button type="button" aria-label="Zoom waveform out" disabled={waveformZoom === 1 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.max(1, value / 2))}>−</button><span>{waveformZoom}×</span><button type="button" aria-label="Zoom waveform in" disabled={waveformZoom === 8 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.min(8, value * 2))}>+</button></div><div className={`volume-control ${volumeOpen ? "open" : ""}`}><button type="button" className="deck-volume-toggle" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(value => !value)}>{volume === 0 ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}</button><input className="deck-volume" hidden={!volumeOpen} type="range" min={0} max={1} step={0.01} value={volume} aria-label="Volume" onChange={e => {const value=Number(e.target.value);if(audioRef.current)audioRef.current.volume=value;setVolume(value);}} /></div></div></div>
+    <div className={`player-row ${isPlaying ? "is-playing" : ""}`}><TrackWaveform compact hideZoom zoom={waveformZoom} onZoom={setWaveformZoom} analysis={curatedPreview ?? analysis} placeholder={file ? (loudnessStatus.startsWith("Audio analysis unavailable") ? "Waveform unavailable" : "Analyzing source waveform…") : "Choose a stereo track to view its waveform"} position={position} duration={duration} onSeek={seconds => { if (audioRef.current) audioRef.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={testMode === "open" && dynamicSliderEnabled} dynamicRangeDisabled={dynamicRangeUnavailable} /><audio ref={audioRef} crossOrigin="anonymous" preload="auto" onPlay={() => {setupEngine();applyFit();void engine.current?.context.resume();onPlaybackChange?.(true);}} onPlaying={() => {startInterval();setIsPlaying(true);onPlaybackChange?.(true);}} onPause={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onWaiting={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onTimeUpdate={() => setPosition(audioRef.current?.currentTime ?? 0)} onSeeking={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onSeeked={() => {startInterval();const playing=!!audioRef.current && !audioRef.current.paused;setIsPlaying(playing);onPlaybackChange?.(playing);}} onEnded={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onError={() => setSourceError("This browser could not play the selected audio format.")} onLoadedMetadata={() => { const seconds = audioRef.current?.duration; const valid = seconds && Number.isFinite(seconds) ? seconds : null; setDuration(valid ?? 0);setPosition(0);setMeta(old => ({ ...old, duration: valid, bitrate: old.bitrate ?? (valid && file ? Math.round(file.size * 8 / valid) : null) })); }} /></div>
     <div className="source-controls"><div className="sample-row" hidden={testMode === "bring"}><p className="music-meta">{sampleStatus}</p>{testMode === "open" && <label className="sample-choice"><span>Choose sample</span><select value={sampleChoice} onChange={e => { setSampleChoice(e.target.value); void chooseRandomSample(e.target.value); }}><option value="random">Random sample</option>{samples.map((sample,index)=><option key={`${sample.name}-${index}`} value={String(index)}>{sample.name}</option>)}</select></label>}{testMode === "open" && <label className="sample-folder" title="Choose Music folder"><input type="file" multiple ref={node => { if (node) node.setAttribute("webkitdirectory", ""); }} onChange={e => void chooseFolder(e.target.files)} /><FolderOpen size={20} aria-hidden="true" /><span className="picker-label">Choose Music folder</span></label>}</div>
     {testMode !== "blind" && <div className="music-source-row"><label className="music-upload" title={file?.name ? `Audio file: ${file.name}` : "Choose audio file"}><input type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.aac,.acc,.ogg,.oga,.opus,.webm,.aif,.aiff,.alac,.wma,.caf,.mka,.mp4" onChange={e => void chooseFile(e.target.files?.[0] ?? null)} /><FileMusic size={20} aria-hidden="true" /><span className="file-label-text">{file?.name ?? "Choose a real stereo song"}</span></label></div>}</div>{sourceError && <p className="music-meta" role="alert">{sourceError}</p>}
+    <div className="shootout-music-vote" role="group" aria-label="Music selection preference">
+      <span className="music-vote-question" title={candidateUrl ? `${meta.songTitle} · Rate the music selection for future shootouts, separately from target preference.` : "Music Library votes apply to known candidate recordings."}>Like this selection?</span>
+      {file && sourceKindRef.current === "uploaded" && <select aria-label="Match uploaded recording to a Music Library candidate" title="Only select an entry if your file is the same recording. This connects its Upvote/Downvote vote to the library." value={candidateUrl ?? ""} onChange={event => { setCandidateUrl(event.target.value || null); setMusicVoteMessage(""); }}><option value="">Match library recording…</option>{musicCandidates.map(track => <option key={track.url} value={track.url}>{track.artist} · {track.title}</option>)}</select>}
+      {candidateUrl ? <><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "keep"} onClick={() => void voteForMusic("keep")}>Upvote</button><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "pass"} onClick={() => void voteForMusic("pass")}>Downvote</button>{musicChoices[candidateUrl] && <button type="button" className="music-vote-undo" disabled={musicSaving} onClick={() => void voteForMusic(null)}>Undo</button>}<span className="music-vote-state" role="status">{musicVoteMessage || (musicSaving ? "Saving…" : !musicVotesReady ? "Music votes unavailable" : !musicSignedIn ? "Sign in to vote" : musicChoices[candidateUrl] ? `Saved: ${musicChoices[candidateUrl] === "keep" ? "Upvote" : "Downvote"}` : "For future shootouts")}</span></> : <a href="/music-library">{file ? "Rate library candidates" : "Explore music candidates"}</a>}
+    </div>
     <details className="music-details"><summary>Song metadata from website database</summary>{meta.songTitle ? <dl className="song-metadata"><div><dt>Title</dt><dd>{meta.songTitle}</dd></div><div><dt>Artist</dt><dd>{meta.songArtist || "—"}</dd></div><div><dt>Album</dt><dd>{meta.songAlbum || "—"}</dd></div><div><dt>Recording ID / ISRC</dt><dd>{meta.recordingId || "—"}</dd></div></dl> : <p className="metadata-match">{file ? "No matching song in the website database." : "Choose a track to look for saved song metadata."}</p>}</details>
     {testMode === "open" && <details className="audio-stats"><summary>Audio stats · original file</summary>{analysis ? <><div className="audio-stats-grid">
       <span>Integrated loudness <strong>{analysis.integratedLufs.toFixed(1)} LUFS <small>estimated</small></strong></span>

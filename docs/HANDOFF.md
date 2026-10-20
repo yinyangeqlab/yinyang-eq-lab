@@ -1,3 +1,38 @@
+## Exact playback centering — October 17, 2026 (local preview)
+
+Replaced desktop-only pixel offsets with a symmetric three-column grid anchored on Play. Play now stays at the music-panel midpoint at desktop, tablet and phone widths, regardless of volume visibility or the presence of Open-mode dynamics controls. Grouped the two dynamics buttons for the left grid cell. At <=600 px volume uses a centered second row, with its slider still directly to the right; reserved slider width prevents toggle movement. Desktop header stays top-left within its own available width; tablet/mobile transport stays below the readout. Blue slider and compact vote below waveform/source controls retained.
+
+Browser verification of the active Open comparison covered 320, 390, 600, 601, 768, 1023, 1024, 1440 and 1920 CSS px, each with volume open and closed: Play midpoint error <0.001 px, no heading overlap, all controls within panel, no page overflow, open slider right of and level with volume button. Results and six screenshots: artifacts/playback-centering/. desktop-proof.png is an uncropped viewport screenshot. A fresh blind test was blocked by automatic approval review to preserve the active comparison, so mode switching was restored to Open and fresh blind sessions were not tested. Original comparison, paused state and closed volume restored; viewport reset. TypeScript, production build and whitespace validation passed. CSS/component mirrored to github-ready. Local only, no publication/commit/push. Primary dist still contains unrelated drafts and must not be directly deployed.
+
+## Blue volume slider — October 17, 2026 (local preview)
+
+Owner replaced the green/yellow/red volume color preference with blue. Updated the inline slider gradient, thumb and soft glow to muted blue tones matching the playback controls. Geometry and toggle behavior unchanged. Root and github-ready CSS match; whitespace checks pass. Unpublished.
+
+## Music vote wording — October 17, 2026 (local preview)
+
+Renamed user-facing Keep/Pass to Upvote/Downvote throughout the React shootout player, Music Library buttons/counts/filters/explanations and owner vote table/search. Saved-choice status also uses the new names. Internal keep/pass values, saved votes and ranking calculations are unchanged; no migration or submission. Updated files mirrored to github-ready, preserving existing owner edits. TypeScript and whitespace checks pass; browser confirms Upvote/Downvote labels. Unpublished.
+
+## Playback readout and centering correction — October 17, 2026
+
+Local preview moves music feedback beneath the waveform and source controls, reduces playback readout fonts and top spacing, and centers the actual Play button on desktop. Tablet/phone transport goes below the heading. Existing inline gradient volume is preserved. TypeScript/build/whitespace checks pass. Browser checks at 320–1920 px confirm placement, centering and no header overlap or horizontal overflow. Unpublished; existing service-availability and development audio-refresh limitations remain.
+
+## Compact playback revision — October 17, 2026
+
+Local preview reduces music feedback to compact inline Keep/Pass controls, centers playback transport on wide panels and reflows it rightward/below the heading as space decreases. The volume slider reserves inline space directly to the button's right and uses a soft green/yellow/red gradient. Fixed the inherited phone rule that hid the open slider. Browser checks covered 320–1920 px plus floating playback; slider placement, visibility, toggle and keyboard value changes passed. Production build and whitespace validation passed. Unpublished; existing local vote-service issue remains.
+
+## Playback layout and music-vote prominence preview — October 17, 2026
+
+The React player now uses a wrapping title/time/transport row instead of overlaying controls on the playback caption. The full transport moves beneath the heading when space runs out. Zoom remains functional through the waveform component's controlled API. Music Keep/Pass feedback moves above the waveform with clearer text, larger buttons and a subtle highlighted strip.
+
+TypeScript, production build and whitespace checks passed. Browser checks covered 320–1920 px without header overlap or horizontal overflow, plus zoom, volume and the collapsed/expanded floating player. The local vote API remains unavailable; save behavior was not retested. These changes are local and unpublished.
+
+
+## Music voting preview — October 17, 2026
+
+Local React preview adds a compact Keep/Pass/Undo prompt across the three shootout modes, sharing Music Library account choices. Uploaded files can be explicitly matched to existing library candidates. Random rotation uses the current top 10 dynamic and top 10 compressed measured tracks plus one challenger per group each cycle. The rank score is (Keep + 1) / (Keep + Pass + 2), followed by Keep count and stable track order. Unmeasured tracks stay outside random rotation. Library cards show aggregate rankings and counts.
+
+TypeScript, production build, whitespace checks and isolated music preference tests pass. Responsive browser checks observed no page-level overflow at 320–1920 px. The local vote service was unavailable, so browser persistence and a populated ranked listening session remain unverified. This source is uncommitted and unpublished; no migration or production votes. Existing publication holds remain in force.
+
 # Source handoff — October 17, 2026
 
 ## Compact header spacing — prepared October 17, 2026
