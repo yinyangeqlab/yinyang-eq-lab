@@ -1,16 +1,18 @@
+import * as requestInput from "../lib/request-json.ts";
 import * as fingerprints from "../lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {parseIntervals,intervalStats} from '../lib/listening.ts';
-import {LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS} from '../lib/listening-protocol.ts';
+import {LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS} from '../lib/listening-protocol.ts';
 import {rankPreferences} from '../lib/preference-ranking.ts';
 const targets=[{id:'a',name:'Alpha',creator:'QA',status:'approved'},{id:'b',name:'Beta',creator:'QA',status:'approved'}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[];
-const deps={'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
+const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
 function load(file){const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return module.exports;}
+deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
 const route=load('app/api/research/route.ts');
 const interval=(side,start,end)=>({side,start,end,rate:1});
@@ -29,6 +31,7 @@ votes=[row('short',pair(0,4.99))];await expectCount('Under five seconds is exclu
 votes=[row('repeat',Array.from({length:3},()=>pair(0,2)).flat())];await expectCount('Repeating two seconds cannot create five seconds of unique overlap',0);
 votes=[row('one-side',[interval(0,0,12)])];await expectCount('One side alone does not qualify',0);
 votes=[row('broken',[],{intervals:'{broken'})];await expectCount('Malformed playback evidence is excluded safely',0);
+votes=[row('free',pair(0,8),{protocolVersion:'free-listening-v1'})];await expectCount('Free listening never becomes controlled ranking evidence even with matched timing',0);
 votes=[row('legacy',[],{protocolVersion:'legacy-v1'})];await expectCount('Earlier tests remain in the earlier-test cohort',1,0);
 votes=[row('open',pair(0,8),{testMode:'open'})];await expectCount('Open comparisons do not affect rankings',0);
 votes=[row('check',pair(0,8),{loserId:'a'})];await expectCount('Identical-target checks do not affect rankings',0);

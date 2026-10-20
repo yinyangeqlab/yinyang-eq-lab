@@ -129,7 +129,7 @@ export default function PersonalShootout() {
     if (adminTesting!==null && measurement && pool.length >= 2) void fingerprint({ ...(adminTesting?{adminTest:true}:{}),algorithm: "personal-v1", protocol: personalPlaybackProtocol(playback), measurement, targets: pool.map(t => [t.id,t.points,targetFamily(t)]) }).then(value => { if (!cancelled) setContext(value); }).catch(() => setError("Could not fingerprint this setup. Use a secure browser context."));
     return () => { cancelled = true; };
   }, [measurement, pool, playback,adminTesting]);
-  useEffect(() => { setHeard(emptyPair); }, [pairToken]);
+  useEffect(() => { setHeard(emptyPair); setListenSide(0); }, [pairToken]);
   useEffect(()=>{if(pair&&!results&&!run?.paused&&!sampleRun)listeningReminder.request();},[!!pair,results,run?.paused,!!sampleRun,listeningReminder.request]);
   useEffect(() => { setResults(run?.paused === true); }, [run?.context,run?.paused]);
 
@@ -214,7 +214,7 @@ export default function PersonalShootout() {
     try { const row = parseMeasurement(await importCatalogEntry(entry)); const next = [...measurements,row]; localStorage.setItem("target-lab-measurements",JSON.stringify(next)); localStorage.setItem("target-lab-active-measurement",row.id); setMeasurements(next); setMeasurementId(row.id); setHeadphoneType(row.type); } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not import measurement."); }
   }
   const liveSnapshot=player.current?.snapshot();
-  const passageQualified=Boolean(liveSnapshot&&liveSnapshot.heardA>=5&&liveSnapshot.heardB>=5&&liveSnapshot.overlapSeconds>=5);
+  const passageQualified=Boolean(heard[0]>=5&&heard[1]>=5&&liveSnapshot&&liveSnapshot.heardA>=5&&liveSnapshot.heardB>=5&&liveSnapshot.overlapSeconds>=5);
   const canChoose=!!pair&&(!passageRequired||passageQualified);
   const shortlist = eligible.filter(row => row.heard > 0).slice(0,3);
   const crossChecks = run?.choices.filter(c => c.phase === "confirm" && c.result !== "skip") ?? [];

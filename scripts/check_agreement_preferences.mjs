@@ -1,3 +1,4 @@
+import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
@@ -21,11 +22,12 @@ class Statement{
  async run(){sql.prepare(this.query).run(...this.args);return{success:true};}
 }
 const DB={prepare:query=>new Statement(query),batch:async statements=>{sql.exec('BEGIN');try{const out=[];for(const [i,statement] of statements.entries()){out.push(await statement.run());if(failBatch&&i===0)throw Error('Synthetic transaction failure');}sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
-const deps={'@/lib/listener-nickname':nicknames,
+const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/listener-nickname':nicknames,
  'cloudflare:workers':{env:{DB}},'@/lib/activity-monitoring':{ACTIVITY_MONITORING_NOTICE_VERSION},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/target-labels':labels,'@/lib/request-json':requestJson,
  '@/lib/submission-ownership':{dataIdentity:async()=>{const a=account();return{subjectId:subject,submissionsEnabled:a.submissions_enabled===1&&a.agreement_version===VOTE_DATA_NOTICE_VERSION,shareMusic:a.share_music===1,activityMonitoringEnabled:a.activity_monitoring_enabled===1,activityMonitoringVersion:a.activity_monitoring_version,agreementVersion:a.agreement_version,agreedAt:a.agreed_at};}},
  '@/lib/privacy-erasure':{dataTables:{},eraseData:()=>{throw Error('This preference test must never erase source data');}}
 };
+const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response,Request,Headers,URL,Date,TextEncoder,TextDecoder,Uint8Array});
 vm.runInContext(ts.transpileModule(readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
 const patch=(body,origin='https://fixture.test')=>context.exports.PATCH(new Request('https://fixture.test/api/my-data',{method:'PATCH',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)}));

@@ -285,7 +285,7 @@ export default function Home() {
     },1000);
     return () => {window.removeEventListener("pointerdown",activity);window.removeEventListener("keydown",activity);clearInterval(timer);};
   },[restored,testMode,pair,revealed,sessionExpired]);
-  function resetFeedback(){openFeedbackIdRef.current=crypto.randomUUID();setFeedbackNonce(value=>value+1);setDescribeOpen(false);}
+  function resetFeedback(){setResearchComparisonId(null);openFeedbackIdRef.current=crypto.randomUUID();setFeedbackNonce(value=>value+1);setDescribeOpen(false);}
   function requireMeasurement() { if (selectedMeasurement) return true; setMessage("Select a headphone measurement before starting a test."); return false; }
   function startNewBlindTest() { if (requireMeasurement()) requestSoundCheck(beginNewBlindTest,true); }
   function beginNewBlindTest() {autoCollapseSetupRef.current=false;setSetupCollapsed(false);resetFeedback();const now=Date.now();setSessionId(crypto.randomUUID());setSessionFinished(false);lastActivityRef.current=now;lastPersistedRef.current=now;setLastActivity(now);setSessionExpired(false);setPair(null);setTrialId(null);setRevealed(false);setHeard([0,0]);setMessage("");}
@@ -403,7 +403,7 @@ export default function Home() {
     const completedRunId = testMode === "open" ? openFeedbackId() : crypto.randomUUID();
     const raw: Point[]=selectedMeasurement?.points||[[20,0],[20000,0]];
     const fits=selected.map(t=>fitAutoEq(raw,t!.points));const catchTrial=pair[0]===pair[1];const eqFits=fits.map(f=>({bands:f.filters.length,rms:+f.rms.toFixed(2),preamp:+f.preamp.toFixed(2)}));
-    const trial = (recorded: boolean): Trial => ({id:completedRunId,adminTestOnly:sharedAdmin,serverTrialId:trialId || undefined,result:i===2?"tie":i===0?"a":"b",catchTrial,sessionId:testMode!=="open"?sessionId:undefined,createdAt:Date.now(),pair,pairNames:[selected[0]?.name||"A",selected[1]?.name||"B"],winnerId:i===2?"":pair[i],winnerName:i===2?"Tie":selected[i]?.name||"",loserName:i===2?"":selected[1-i]?.name||"",recorded,matchedPassageRequired:passageRequired,matchedPassage:(context?.heardA||0)>=5&&(context?.heardB||0)>=5&&(context?.overlapSeconds||0)>=5,mode:testMode,reasonSide:"a",reasonTags:[],otherReason:"",type:headphoneType||"unknown",measurementName:selectedMeasurement?.name||null,device:selectedMeasurement?.device||null,rig:selectedMeasurement?.rig||null,heardA:context?.heardA||0,heardB:context?.heardB||0,overlapSeconds:context?.overlapSeconds||0,songTitle:context?.songTitle||"",eqFits});
+    const trial = (recorded: boolean, researchRecorded = false): Trial => ({id:completedRunId,adminTestOnly:sharedAdmin,serverTrialId:trialId || undefined,result:i===2?"tie":i===0?"a":"b",catchTrial,sessionId:testMode!=="open"?sessionId:undefined,createdAt:Date.now(),pair,pairNames:[selected[0]?.name||"A",selected[1]?.name||"B"],winnerId:i===2?"":pair[i],winnerName:i===2?"Tie":selected[i]?.name||"",loserName:i===2?"":selected[1-i]?.name||"",recorded,researchRecorded,matchedPassageRequired:passageRequired,matchedPassage:(context?.heardA||0)>=5&&(context?.heardB||0)>=5&&(context?.overlapSeconds||0)>=5,mode:testMode,reasonSide:"a",reasonTags:[],otherReason:"",type:headphoneType||"unknown",measurementName:selectedMeasurement?.name||null,device:selectedMeasurement?.device||null,rig:selectedMeasurement?.rig||null,heardA:context?.heardA||0,heardB:context?.heardB||0,overlapSeconds:context?.overlapSeconds||0,songTitle:context?.songTitle||"",eqFits});
     // Completing a comparison and publishing a ranked vote are separate outcomes.
     // Keep the answer and reveal the targets even when either write is unavailable.
     saveTrial(trial(false));
@@ -427,6 +427,7 @@ export default function Home() {
       }) });
       if (!runResponse.ok) throw new Error((await runResponse.json() as { error?: string }).error ?? "Listening record could not be saved.");
       setResearchComparisonId(completedRunId);
+      saveTrial(trial(false, true));
     } catch (error) {
       setBusy(false); setMessage(`Comparison saved to My results in this browser. Research submission failed: ${error instanceof Error ? error.message : "Listening record could not be saved."}`); return;
     }
@@ -455,7 +456,7 @@ export default function Home() {
       setMessage(`Comparison saved to My results. Public ranking unchanged: ${result.error ?? "Vote failed."}`);
       return;
     }
-    saveTrial(trial(true));
+    saveTrial(trial(true, true));
     setMessage("Comparison counted toward the rankings and saved to My results.");
     await refresh();
     } catch {
