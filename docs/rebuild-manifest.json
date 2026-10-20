@@ -1610,7 +1610,7 @@
     },
     {
       "path": "lib/yinyangeq-history.ts",
-      "sha256": "fca5667b1b035a62c5a935c974a72e63e66f3f8f3c3d2c9ad6f22b2853d43a03"
+      "sha256": "416fca37cf88f717ee9ae0e7c4d92f23bea75c294e14f92bfb2467c3f4207819"
     },
     {
       "path": "lib/yinyangeq-records.ts",
@@ -1982,7 +1982,7 @@
     },
     {
       "path": "scripts/check_yinyangeq_history.mjs",
-      "sha256": "b2d103dfe92adc636c553093064a8c00a525463285e6eb1a8349175a1a013ce9"
+      "sha256": "cbd07f0c48ca145e5caa1e21b3f91aeb168aa012366d5889872d5a066240b213"
     },
     {
       "path": "scripts/check_yinyangeq_replacement.mjs",
