@@ -16,6 +16,12 @@ for key,source,expected in files:
    parts.append({'path':f'/music/listening-pool-chunks/{key}/{name}','bytes':len(data)})
  assert digest.hexdigest()==expected,key
  manifest[key]={'bytes':total,'sha256':expected,'mime':{'.mp3':'audio/mpeg','.wav':'audio/wav','.flac':'audio/flac','.m4a':'audio/mp4','.ogg':'audio/ogg'}.get(source.suffix.lower(),'application/octet-stream'),'parts':parts}
+# Reuse the 32 existing, already-protected Shantae assets without duplicating media.
+audit={t['file_url']:t for t in json.loads((root/'artifacts/music-dynamics-audit/measurements.json').read_text())['tracks']}
+for key,url in json.loads((root/'data/shantae-audio.json').read_text()).items():
+ source=release/('public'+url);digest=hashlib.sha256(source.read_bytes()).hexdigest();assert digest==audit[url]['sha256'],key
+ size=source.stat().st_size
+ manifest['shantae-'+key]={'bytes':size,'sha256':digest,'mime':{'.flac':'audio/flac','.m4a':'audio/mp4','.mp3':'audio/mpeg'}[source.suffix], 'parts':[{'path':url,'bytes':size}]}
 (release/'data/listening-pool-audio-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 # Keep a source copy of the metadata manifest; original audio remains outside Git.
 (root/'data/listening-pool-audio-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
