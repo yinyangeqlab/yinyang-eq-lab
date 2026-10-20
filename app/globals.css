@@ -1805,6 +1805,15 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 /* Bring the rankings and their filters closer to the page heading. */
 .ranking-filters { display:flex; flex-wrap:wrap; gap:16px 32px; margin-bottom:16px; }
 .ranking-filters .rank-tabs { margin-bottom:0; }
+.ranking-protocol { flex:0 1 310px; min-width:0; max-width:100%; }
+.ranking-protocol > label { display:block; margin-bottom:8px; color:#a7bdca; font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; }
+.ranking-protocol select { display:block; width:100%; min-height:40px; padding:9px 12px; border:1px solid #425c61; border-radius:6px; background:#132226; color:#edf8fa; color-scheme:dark; font-size:13px; cursor:pointer; }
+.ranking-protocol select option { background:#132226; color:#edf8fa; }
+.ranking-protocol select:focus-visible { outline:2px solid #59d8c8; outline-offset:3px; }
+.ranking-protocol > p { margin:8px 0 0; color:#9bacb3; font-size:12px; line-height:1.5; }
+.rankings-content .ranking-summary-note { margin:0 0 16px; color:#a7bdca; font-size:13px; line-height:1.6; }
+@media(max-width:600px) { .ranking-protocol { flex-basis:100%; } }
+
 .rankings-content .ranking-research { margin:0 0 12px; padding:10px 14px; }
 .rankings-content .ranking-method { margin:12px 0; padding:10px 14px; }
 @media(max-width:600px) {
