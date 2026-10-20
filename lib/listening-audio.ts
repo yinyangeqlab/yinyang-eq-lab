@@ -21,9 +21,7 @@ export async function serveListeningAudio(request: Request, asset: AudioAsset, a
   if (request.method === "HEAD") return new Response(null, { status: partial ? 206 : 200, headers });
   // Pipe range-capable asset bodies natively. Reading every network chunk in
   // JavaScript can exhaust the Free Worker's CPU budget on a large FLAC seek.
-  const output = typeof FixedLengthStream !== "undefined"
-    ? new FixedLengthStream(end-start+1)
-    : new TransformStream<Uint8Array, Uint8Array>();
+  const output = new TransformStream<Uint8Array, Uint8Array>();
   async function pipeParts() {
     let offset = 0;
     try {
