@@ -236,11 +236,11 @@ const privateGate = {
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
-      const agreementException = dataRoute || path === "/shootout" && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      const agreementException = dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
       if ((owner || tester) && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
-          ? json({ error:"Agreement to comparison-data collection is required. Review the notice on Shootout; My data remains available for withdrawal and deletion." },403)
-          : new Response(null,{status:303,headers:{Location:"/shootout","Cache-Control":"no-store"}});
+          ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
+          : new Response(null,{status:303,headers:{Location:"/participation?return_to="+encodeURIComponent(url.pathname),"Cache-Control":"no-store"}});
         if(data?.setCookie) blocked.headers.append("Set-Cookie",data.setCookie);
         return finish(blocked);
       }
