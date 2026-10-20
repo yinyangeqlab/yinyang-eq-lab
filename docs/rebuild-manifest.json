@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 89,
-  "implementationCommit": "bc806a513bccee93b158199f93b5e9f29b821dc8",
-  "runtimeParity": "Recorded runtime inputs match verified update89; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 90,
+  "implementationCommit": "5b4cd5867f9a96aca9f8f7778abf95d90259308d",
+  "runtimeParity": "Recorded runtime inputs match verified update90; concurrent personal-shootout development is excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -28,6 +28,7 @@
       "app/shootout/page.tsx",
       "app/welcome.css",
       "components/activity-monitoring-panel.tsx",
+      "components/aura-nav-link.tsx",
       "components/comparison-data-settings.tsx",
       "components/legacy-review.tsx",
       "components/music-panel.tsx",
@@ -48,6 +49,7 @@
       "components/personal-podium.css",
       "components/personal-podium.tsx",
       "components/personal-research-sharing.tsx",
+      "components/research-music-source.tsx",
       "components/target-curve.tsx",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
@@ -60,7 +62,8 @@
       "lib/personal-shootout.ts",
       "scripts/check_personal_playback.mjs",
       "scripts/check_personal_research.mjs",
-      "scripts/check_personal_shootout.mjs"
+      "scripts/check_personal_shootout.mjs",
+      "scripts/check_research_source.mjs"
     ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -1098,6 +1101,10 @@
       "sha256": "59e25f3f06755b992188f17c73677da4c08e02f6bab60a13c5bbd0a5cfaa1ddf"
     },
     {
+      "path": "lib/file-fingerprint.ts",
+      "sha256": "6dbf28e032437849552b2ebcf27d9eaf3ddf2b43fa0a1c4ec28238ebc325d34e"
+    },
+    {
       "path": "lib/invite-settings.d.mts",
       "sha256": "a52c8b69be2daf89c20aef2784a21e00bc0c81f415fe854221b6298100389431"
     },
@@ -1392,6 +1399,10 @@
     {
       "path": "scripts/check_comparison_passage.mjs",
       "sha256": "3c9456df13fe55efc7b703707f52e8044e688f9b93686386e6fa8b22c869ee72"
+    },
+    {
+      "path": "scripts/check_file_matching.mjs",
+      "sha256": "4125ce73d8a3cc32f5c780214746e47f735bdb4a640793e759825929094c2ed7"
     },
     {
       "path": "scripts/check_listener_nickname.mjs",

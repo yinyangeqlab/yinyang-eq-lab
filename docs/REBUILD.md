@@ -1,3 +1,7 @@
+Current live baseline is update90, implementation 5b4cd5867f9a96aca9f8f7778abf95d90259308d. Source/build: work/file-matching-fix-release-20261018; infra: work/file-matching-fix-infra-20261018. SHA-256 file identity and retained tie hashes; no migration, write-API, scoring-model or listening-protocol change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update89, implementation bc806a513bccee93b158199f93b5e9f29b821dc8. Source/build: work/rankings-fix-release-20261018; infra: work/rankings-fix-infra-20261018. Rankings display fixes only; no migration, API or scoring change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes
