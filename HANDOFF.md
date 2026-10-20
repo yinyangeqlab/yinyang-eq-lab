@@ -2,7 +2,7 @@
 
 Site: https://yinyangeq.com. Invites are **off**. The admin-only control is at `/owner-research#tester-access`. Welcome says “Enter the shootout”; Shootout, Track Library and Preference Tuning navigation remain available. No additional Welcome redesign was applied.
 
-This summary supersedes historical notes below. Develop, test, commit and push only in `workspace/`. Verified deployed source/build: `work/invite-release-20261018`; infrastructure: `work/invite-infra-20261018`. Implementation commit: `3565e5b803330e716a881f72e562c24e4211bd68`. GitHub publication is separate and its verification will be recorded after push.
+This summary supersedes historical notes below. Develop, test, commit and push only in `workspace/`. Verified deployed source/build: `work/invite-release-20261018`; infrastructure: `work/invite-infra-20261018`. Implementation commit: `3565e5b803330e716a881f72e562c24e4211bd68`. Implementation and release records were published to GitHub main and independently confirmed at `21bcb1d6bcbe84b1d7a978c25cbbfd046f484a50`. Publication is separate from the verified live deployment.
 
 The persistent toggle defaults off. With invites off, code restrictions, invitation links and visitor-facing invitation wording are hidden; invitation management/redemption are inactive. Turning it on restores the existing creation, single-use redemption, 48-hour session, expiry and revocation process. Existing invitation rows and expiry times are preserved. Automatic browser access retains consent, private media, verified data ownership and deletion controls; open credentials cannot pass invite-only admission when re-enabled.
 

@@ -5,7 +5,7 @@
   "authoritativeLocalRoot": "workspace",
   "applicationSnapshot": "work/invite-release-20261018",
   "infrastructureSnapshot": "work/invite-infra-20261018",
-  "baselineCommit": "352616ece721d56d9d7133814e0612e2a6039bd1",
+  "baselineCommit": "08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6",
   "sourceBranch": "main",
   "cpuLimitMs": 5000,
   "runtimeDirectories": [
@@ -1421,15 +1421,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "b1d593034dd1cb37bcc9631286af3cd816673633eeb948dbcb068eb9f0069b9c"
+      "sha256": "1ad2876e51c408f8fca69210ff977cc738e1bd78cdf1aaaefdf8bd2f629e5bdc"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "2842a4887332c9f5aa782d23b859f88f1aa94da0896e481c00ae9fb2ae8fed93"
+      "sha256": "af5564c5dc9b28de90edd46790678b242463432a2db7e85354695debe40da358"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "613316db2e7097cc80ea94ea3eddf19e4b4ca9c6662b4bc17ea61b426c2dac31"
+      "sha256": "57093a5c6f0f256c882062e56539541343515ab8f54442d163ba7d280d2a3350"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -1445,7 +1445,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "11618d24f8071708f26b60bb363243fb2e366346ce4401d3efbc191a1e862398"
+      "sha256": "08aaefd5d91149aeff62e9304212e7990c94a8b23a0a8dc169ebfc6a18cf2e5b"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -5160,8 +5160,8 @@
   "taskClosure": {
     "at": "2026-10-18T23:43:45.160079+00:00",
     "task": "Admin-only invite toggle, default off",
-    "status": "deployed and verified; publication pending",
-    "remainingWorkForThisTask": true
+    "status": "deployed, verified and published",
+    "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
     "verifiedAt": "2026-10-18T14:51:51.827Z",
@@ -5216,12 +5216,14 @@
   "gitSource": {
     "deploymentSource": "work/invite-release-20261018",
     "implementationCommit": "3565e5b803330e716a881f72e562c24e4211bd68",
-    "pushed": false,
+    "pushed": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-league",
     "branch": "main",
     "checkout": "workspace",
-    "unrelatedLocalDocumentationEditsPreserved": true
+    "unrelatedLocalDocumentationEditsPreserved": true,
+    "publishedReleaseCommit": "21bcb1d6bcbe84b1d7a978c25cbbfd046f484a50",
+    "pushVerifiedAt": "2026-10-18T23:45:08.239677+00:00"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
