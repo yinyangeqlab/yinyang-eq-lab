@@ -1,6 +1,6 @@
 # Large saved-data sync — October 19, 2026
 
-Candidate based on deployed update100. Independent Shootout UI and recovery work remains excluded.
+Deployed as update101 from update100. Independent Shootout UI and recovery work remains excluded.
 
 ## Saved histories and measurements
 
@@ -22,4 +22,6 @@ Source erasure removes the exact affected entries and all their pieces, drops un
 
 Synthetic SQLite integration checks cover a multi-megabyte measurement larger than one database row plus 900 results, bounded requests and rows, full download/hash verification, interrupted upload resume, unchanged-section reuse, late consent/pause/revocation races, incomplete/corrupted downloads, source deletion, stale-epoch replay, full account deletion and content/consent device confirmation. Existing sync, shared consent, ownership, pairing, profile, privacy and recovery regressions remain required. Browser review used disposable synthetic data: a 6,000-result IndexedDB cache survived a real reload with no localStorage cache writes and existing history unchanged; the updated notice/device text was checked at desktop and 320px width. No new native selects were introduced.
 
-No new backup export is performed. The owner's earlier no-export decision remains in force. Existing verified encrypted off-device update96 recovery remains retained; its schema/source does not match this candidate, and matching current-release recovery baseline work remains pending. No incompatible scheduled backup is relabeled as verified.
+No new backup export is performed. The owner's earlier no-export decision remains in force. Existing verified encrypted off-device update96 recovery remains retained; its schema/source does not match this release, and matching current-release recovery baseline work remains pending. No incompatible scheduled backup is relabeled as verified.
+
+All 17 targeted clean-source suites, 18 synthetic recovery tests, bounded TypeScript and production build passed. The full 340-asset/200-recording package deployed with 414 exact live JS/CSS hashes verified and 337 prior client assets retained. Additive migration 0039 and 213 schema definitions were verified. Original data/source and consent hashes remained unchanged; Brave and the refreshed phone both confirmed matching content and account consent at revision 6. The informational notice ended after verification.

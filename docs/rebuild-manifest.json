@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 100,
-  "implementationCommit": "3471da7d69a0196bcc43c12c4618529f2d0cc32d",
-  "runtimeParity": "Recorded runtime matches verified update100; separate UI/recovery WIP excluded.",
+  "liveUpdate": 101,
+  "implementationCommit": "f9717ad698a1b889b669cd82baa25031be19f023",
+  "runtimeParity": "Recorded runtime matches verified update101; separate UI/recovery WIP excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -1145,6 +1145,10 @@
       "sha256": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8"
     },
     {
+      "path": "drizzle/0039_segmented_account_sync.sql",
+      "sha256": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -1309,6 +1313,10 @@
       "sha256": "8b18472659e59bb50a087c36793383983af627351b87dd36ade70ad22b4d005c"
     },
     {
+      "path": "lib/account-sync-cache.mjs",
+      "sha256": "ae99614d79d5001fc6e3d5b329439b6f3210f985ff640100fff0a3f2f4ecf417"
+    },
+    {
       "path": "lib/account-sync-identity.ts",
       "sha256": "6d354610dba46fa9e41785a5b8d582d2563ff1c519f592e79a81f1261512b164"
     },
@@ -1325,12 +1333,24 @@
       "sha256": "6a09c4d16b64b4e9dda9319dd84eb1be8e06e4f14d69ef6f82ad839306f828e5"
     },
     {
+      "path": "lib/account-sync-segments.ts",
+      "sha256": "8c742ef158653d766a724af45c81303799811f70715b55853ada2978e63718bb"
+    },
+    {
       "path": "lib/account-sync-server.ts",
       "sha256": "898e7d72577c1c877ca963b4a0c46b4c2ecd8fc42f068c9f89fdcd5f32e70822"
     },
     {
       "path": "lib/account-sync-state.ts",
       "sha256": "4b89cb4134c3102fa0aeb9cee641fcbeb044684fd03af9fd37cccb13076c5e8a"
+    },
+    {
+      "path": "lib/account-sync-transfer.d.mts",
+      "sha256": "0101dd79c5fd120072d58c743eb5888c0ae486c4943411e2eff1296286293cd1"
+    },
+    {
+      "path": "lib/account-sync-transfer.mjs",
+      "sha256": "d47e65589e1f7b53a6a22cf7b028ef9fc298a63fac7283c586f91c37136e852f"
     },
     {
       "path": "lib/account-sync.d.mts",
@@ -1903,6 +1923,10 @@
     {
       "path": "scripts/check_free_listening.mjs",
       "sha256": "8d246fa8f630c410e4bf0905968ca5f4f47f8bde2bc0bbe24b9c5940a28e94ad"
+    },
+    {
+      "path": "scripts/check_large_account_sync.mjs",
+      "sha256": "c1a887208d9a58bc5bba247abe821ee3db4b9d9bf88f4e40a1ed9c909f291d62"
     },
     {
       "path": "scripts/check_listener_nickname.mjs",
