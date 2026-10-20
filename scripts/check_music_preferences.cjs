@@ -17,7 +17,7 @@ const catalog = load('lib/music-catalog.ts',catalogImports);
 const productionCatalog = load('lib/music-catalog.ts',catalogImports,'production');
 assert.equal(productionCatalog.listeningPool.length,200);
 assert(productionCatalog.listeningPool.every(t=>!t.fileUrl.includes('__local-listening-pool')));
-assert.equal(productionCatalog.listeningPool.filter(t=>t.fileUrl.startsWith('/api/listening-audio/')).length,168);
+assert.equal(productionCatalog.listeningPool.filter(t=>t.fileUrl.startsWith('/api/listening-audio/')).length,200);
 const tracks = catalog.listeningPool;
 assert.equal(tracks.length,200);
 assert.equal(new Set(tracks.map(t=>t.url)).size,200);

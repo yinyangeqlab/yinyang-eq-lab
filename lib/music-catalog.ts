@@ -13,6 +13,7 @@ export type MusicCandidate = {
   integrated_lufs?: number;
   true_peak_dbtp?: number;
   localOnly?: boolean;
+  sha256?: string;
   title: string;
   artist: string;
   album: string;
@@ -54,10 +55,11 @@ const originalCandidates: MusicCandidate[] = [
 // Development uses the local source server; production streams protected assets.
 function playbackUrl(url: string | undefined) {
   const local = (originalLocalAudio as Record<string,string>)[url ?? ""] || url;
+  if (process.env.NODE_ENV === "production" && local?.startsWith("/music/shantae/")) return "/api/listening-audio/shantae-" + local.split("/").pop()!.split(".")[0];
   return process.env.NODE_ENV === "production" ? local?.replace("/__local-listening-pool/", "/api/listening-audio/") : local;
 }
 export const musicCandidates: MusicCandidate[] = [
-  ...originalCandidates.map(track => ({ ...track, ...(measurements as Record<string, object>)[track.fileUrl ?? ""], fileUrl: playbackUrl(track.fileUrl), previewNote: track.playerId ? "Official album audio; measured loudness and peaks. Peak-contrast classification pending." : track.previewNote })),
+  ...originalCandidates.map(track => ({ ...track, ...(measurements as Record<string, object>)[track.fileUrl ?? ""], filename: track.filename || track.fileUrl?.split("/").pop(), fileUrl: playbackUrl(track.fileUrl), previewNote: track.playerId ? "Official album audio; measured loudness and peaks. Peak-contrast classification pending." : track.previewNote })),
   ...(localTracks as MusicCandidate[]).map(track => ({ ...track, fileUrl: playbackUrl(track.fileUrl), localOnly: false, previewNote: "Original source audio, unchanged. Dynamics classification is provisional." })),
 ];
 export const listeningPool = musicCandidates.filter((track): track is MusicCandidate & { fileUrl: string; filename: string; integrated_lufs: number } => Boolean(track.fileUrl) && Number.isFinite(track.integrated_lufs)).map(track => ({ ...track, filename: track.filename || track.fileUrl.split("/").pop() || "recording" }));

@@ -46,6 +46,14 @@ export async function serveListeningAudio(request: Request, asset: AudioAsset, a
     async pull(controller) { try { const item = await iterator.next(); if (item.done) controller.close(); else controller.enqueue(item.value); } catch (error) { controller.error(error); } },
     async cancel() { await iterator.return(undefined); },
   });
-  return new Response(body, { status: partial ? 206 : 200, headers });
+  // Workers derive Content-Length from the body; a plain stream loses it.
+  // The fixed-length identity stream preserves exact lengths without buffering.
+  let responseBody: ReadableStream = body;
+  if (typeof FixedLengthStream !== "undefined") {
+    const fixed = new FixedLengthStream(end-start+1);
+    void body.pipeTo(fixed.writable).catch(() => {});
+    responseBody = fixed.readable;
+  }
+  return new Response(responseBody, { status: partial ? 206 : 200, headers });
   function invalidRange() { headers.set("Content-Range", `bytes */${asset.bytes}`); return new Response(null,{status:416,headers}); }
 }

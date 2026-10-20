@@ -481,15 +481,19 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       setDuration(track.duration);
       setHashing(false);
       measuredLufsRef.current = track.integrated_lufs;
-      setLoudnessStatus(`Listening pool · ${track.integrated_lufs.toFixed(1)} LUFS estimated`);
-      setMeta({ songTitle: track.title, songArtist: track.artist, songAlbum: track.album, recordingId: "", sha256: null, audioFormat: format, sampleRate: null, bitrate: track.bitrate_kbps ? track.bitrate_kbps * 1000 : null, duration: track.duration });
+      setLoudnessStatus(`Listening pool · ${track.integrated_lufs.toFixed(1)} LUFS measured`);
+      setMeta({ songTitle: track.title, songArtist: track.artist, songAlbum: track.album, recordingId: "", sha256: track.sha256 ?? null, audioFormat: format, sampleRate: null, bitrate: track.bitrate_kbps ? track.bitrate_kbps * 1000 : null, duration: track.duration });
       setFile(new File([], track.filename, { type: mime }));
       if (audioRef.current) { audioRef.current.src = streamUrl; audioRef.current.load(); }
       curatedIndexRef.current = index;
       setSampleStatus(`Listening pool ${index + 1}/${curatedMusic.length}: ${track.title} · ${track.versionLabel || "original recording"}`);
       if (autoPlay) startPlayback(true);
+      // Long recordings keep streaming from native source measurements and peaks.
+      // Decoding a 40-minute file into PCM can exhaust mobile browser memory.
+      if (track.duration > 600) return true;
       // Playback uses the streaming URL. Analysis and fingerprinting can finish later.
       window.setTimeout(() => {
+        if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return;
         void fetch(track.fileUrl).then(response => {
           if (!response.ok) throw new Error(`Audio source returned ${response.status}`);
           return response.blob();
