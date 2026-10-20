@@ -2090,3 +2090,9 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .ranking-protocol-note p { max-width:950px; margin:8px 0; color:#b4cac5; font-size:13px; line-height:1.65; }
 .ranking-protocol-note summary { margin-top:10px; color:#94ded0; cursor:pointer; font-size:13px; }
 .ranking-protocol-note a { color:#94e5d3; }
+
+/* Compact player: the transport must not inherit the expanded grid column. */
+.music-panel-host.persistent.edge-collapsed .playback-topbar{display:block;width:100%;padding:0}
+.music-panel-host.persistent.edge-collapsed .music-header{display:none}
+.music-panel-host.persistent.edge-collapsed .playback-transport{display:block;grid-column:auto;justify-self:start;width:50px;height:50px;margin:0}
+.music-panel-host.persistent.edge-collapsed .playback-transport .deck-play{position:absolute;left:7px;right:auto;top:4px;transform:none}

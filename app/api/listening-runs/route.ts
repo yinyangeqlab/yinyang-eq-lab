@@ -55,6 +55,7 @@ export async function POST(request: Request) {
     const fits=Array.isArray(context.eqFits)?context.eqFits:[];
     cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return Object.fromEntries(["bands","rms","preamp"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]]));});
     const targetRows=await db.select().from(targets);
+    if (testMode === "open" && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
     cleanContext.targetVersions=await Promise.all([targetAId,targetBId].map(async targetId=>{const target=targetRows.find(t=>t.id===targetId);if(!target)return null;return curveVersion(target.points);}));
     if(trialId && (JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions))) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
     await db.batch([db.insert(listeningRuns).values({

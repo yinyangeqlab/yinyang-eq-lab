@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {parseIntervals,intervalStats} from '../lib/listening.ts';
@@ -34,11 +34,17 @@ votes=[row('check',pair(0,8),{loserId:'a'})];await expectCount('Identical-target
 votes=[];runs=[{...row('tie',pair(0,6)),trialId:'tie-trial',targetAId:'a',targetBId:'b',result:'tie'}];await expectCount('Valid current-protocol ties qualify',1);
 runs=[{...runs[0],intervals:JSON.stringify([interval(0,0,6),interval(1,10,16)])}];await expectCount('Current-protocol ties also require shared passage evidence',0);
 runs=[];votes=[row('listener-one',pair(0,6)),row('listener-two',pair(20,26))];const sameFile=await expectCount('Two participants on the same recording qualify separately',2);assert.equal(sameFile.verified.voteCount,2,'Existing same-file cohort matches recordings, not excerpts across people');checks++;
-// Reuse the actual edited-passage browser submission, without production data.
-const events=JSON.parse(readFileSync('artifacts/full-flow-qa/events.json','utf8'));
-const browserRun=events.filter(e=>e.path==='/api/listening-runs'&&e.body?.testMode==='bring').at(-1)?.body;
-assert.ok(browserRun,'Expected saved browser QA playback');
-votes=[row('browser-edited',parseIntervals(browserRun.intervals))];const browserData=await expectCount('Actual five-second browser playback enters Bring and Matched A/B passage rankings',1);assert.equal(browserData.bring.voteCount,1);assert.equal(browserData.random.voteCount,0);
-const stats=intervalStats(parseIntervals(browserRun.intervals));assert.ok(stats.heardA>=5&&stats.heardB>=5&&stats.overlapSeconds>=5);
-writeFileSync('artifacts/full-flow-qa/ranking-eligibility.json',JSON.stringify({checks,browserPlayback:stats,current:browserData.protocols.current.all.voteCount,bring:browserData.bring.voteCount,sameFileAcrossPeopleRequiresSameExcerpt:false},null,2));
-console.log(`${checks} ranking checks passed`);
+// Optional real browser fixture is explicit; the default suite is self-contained.
+const fixtureIndex=process.argv.indexOf('--browser-events');
+let browserFixtureChecked=false,browserPlayback=null;
+if(fixtureIndex!==-1){
+ const fixture=process.argv[fixtureIndex+1];assert.ok(fixture,'Supply a browser events file after --browser-events');
+ const events=JSON.parse(readFileSync(fixture,'utf8'));
+ const browserRun=events.filter(e=>e.path==='/api/listening-runs'&&e.body?.testMode==='bring').at(-1)?.body;
+ assert.ok(browserRun,'Expected saved browser QA playback');
+ votes=[row('browser-edited',parseIntervals(browserRun.intervals))];const browserData=await expectCount('Supplied browser playback enters Bring and Matched A/B rankings',1);assert.equal(browserData.bring.voteCount,1);assert.equal(browserData.random.voteCount,0);
+ browserPlayback=intervalStats(parseIntervals(browserRun.intervals));assert.ok(browserPlayback.heardA>=5&&browserPlayback.heardB>=5&&browserPlayback.overlapSeconds>=5);browserFixtureChecked=true;
+}
+mkdirSync('artifacts/passage-ranking',{recursive:true});
+writeFileSync('artifacts/passage-ranking/results.json',JSON.stringify({checks,browserFixtureChecked,browserPlayback,sameFileAcrossPeopleRequiresSameExcerpt:false},null,2));
+console.log(`${checks} self-contained ranking assertions passed; optional browser fixture ${browserFixtureChecked?'checked':'not requested'}.`);
