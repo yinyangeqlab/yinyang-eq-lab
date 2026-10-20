@@ -226,7 +226,7 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "e68170ca8df4eed4c035d5164c4f95e218ab94a040993a582f87fabb72ca85fe"
+      "sha256": "59fbb9f57e7a83e849d6d769c4e0c11bab9640dc3229f3ce0c62206a256129cf"
     },
     {
       "path": "app/home/route.ts",
@@ -414,7 +414,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "7fc7a81033b1653dc78e70c2d009d31297f8baed17ee2705bacae0be563d1a0f"
+      "sha256": "eb3a0f8063bebf07f521028e0f74ec4e1e36c867f696614f62d090bbaaadaef9"
     },
     {
       "path": "components/name-filter-lab.tsx",
@@ -1082,7 +1082,7 @@
     },
     {
       "path": "lib/comparison-passage.ts",
-      "sha256": "a5d6559f518b6f029ca53a4aeaba980c7b29882149dcdd073c557f8f6990d99a"
+      "sha256": "8955e595ffaf08c7fe220a1bae2bbf4f830c74bff184ec11deb0c360c62c0126"
     },
     {
       "path": "lib/connector-context.ts",
@@ -1430,7 +1430,7 @@
     },
     {
       "path": "scripts/check_comparison_passage.mjs",
-      "sha256": "0a08c38c2ededf46d60096964a90afe64f082b803bda48fb8de61e362a05159c"
+      "sha256": "7ea4a888688e73a1b6179964012a707319e953e2592fd5a83241ab9423e45b07"
     },
     {
       "path": "scripts/check_file_matching.mjs",

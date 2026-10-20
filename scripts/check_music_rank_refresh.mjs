@@ -27,8 +27,17 @@ assert.equal(s.musicChoices.song,'keep');assert.equal(s.musicSaving,false);
 assert.equal(s.requests[3].options.method,'POST');
 const undo=s.voteForMusic(null);s.requests[4].resolve({ok:true,json:async()=>({byTrack:{},mine:{},signedIn:true})});await undo;
 assert.equal(s.musicCounts.song,undefined,'undo must remove an unrated recording from the community rank');
-const local=fixture();local.personalOnly=true;await local.voteForMusic('keep');assert.equal(local.requests.length,0,'Personal must not gain automatic vote writes');
-console.log('PASS actual music snapshot/vote handlers: current community counts, out-of-order reads, vote/read races, undo and Personal write protection.');
+const personal=fixture();personal.personalOnly=true;
+assert.equal(personal.requests.length,0,'Personal must not submit song ratings automatically');
+const personalVote=personal.voteForMusic('keep');
+assert.equal(personal.requests[0].url,'/api/music-votes');
+assert.equal(personal.requests[0].options.method,'POST');
+assert.deepEqual(JSON.parse(personal.requests[0].options.body),{trackUrl:'song',choice:'keep'});
+personal.requests[0].resolve(snapshot(6));await personalVote;
+assert.equal(personal.musicCounts.song.keep,6);assert.equal(personal.musicChoices.song,'keep');
+console.log('PASS actual music snapshot/vote handlers: current community counts, out-of-order reads, vote/read races, undo and explicit Personal song ratings.');
 
-const admin=fixture();let saved=0;admin.adminTestOnly=true;admin.saveAdminMusicChoice=(url,choice)=>{saved++;return {[url]:choice};};await admin.voteForMusic('keep');assert.equal(saved,1);assert.equal(admin.requests.length,0);assert.equal(admin.musicChoices.song,'keep');
+for(const personalOnly of [false,true]) {
+const admin=fixture();admin.personalOnly=personalOnly;let saved=0;admin.adminTestOnly=true;admin.saveAdminMusicChoice=(url,choice)=>{saved++;return {[url]:choice};};await admin.voteForMusic('keep');assert.equal(saved,1);assert.equal(admin.requests.length,0);assert.equal(admin.musicChoices.song,'keep');
+}
 console.log('PASS admin song choices use local test storage without any vote POST.');
