@@ -38,3 +38,26 @@ Unrelated backup/recovery scheduling edits remain untouched and excluded from th
 ## Final owner decision: dynamics stays in Open Comparison
 
 The owner explicitly chose to keep Dynamic Range Compression/Expansion exclusive to Open Comparison. Personal does not offer this source-processing control; it is not a missing feature. No additional Personal dynamics protocol, saved setting or research field is needed for this candidate. The retained Open controls were verified at390/1024/1920/3840px with centered transport and no page overflow.
+
+## Subsequent local review: passage shuffle
+
+The owner requested new regions before repeats, then confirmed that active sections should still be favored. The old selector kept only windows with energy at least65% of the peak and remembered only the previous window; it could repeatedly visit the same portion of a track. Stretched passages also inherited five-second start positions and clamped toward the right edge.
+
+The new shared selector weights toward active audio without permanently excluding quiet sections. It keeps merged selection coverage for each loaded song during this page visit. Personal supplies the history above the player so a new comparison does not erase it. A shuffle chooses a fully unselected window whenever one fits; remaining short gaps get the maximum new coverage with minimal necessary overlap to preserve the selected duration. Only complete coverage starts a new cycle. Selecting a region is not counted as actual listening, and none of this in-memory history is uploaded or saved to browser Sync. Reloading the page starts fresh. Uploaded-file history is scoped to the selected file's local name/size/modification identity, not a cross-file claim about musical recording identity.
+
+The activity weighting uses waveform energy as a convenience heuristic, not a validated estimate of musical quality or an optimal research passage. Actual listening intervals, eligibility, consent, research records and public scores retain their existing rules. The five-second minimum and chosen stretched length remain enforced. The final100ms end padding follows the existing player behavior where possible.
+
+Verification:10focused suites pass, including176full coverage cycles across durations, stretched segments and random/constant generators; no early cycle reset; quiet sections eventually explored; actual per-song button handler isolation; passage playback/cancellation, keyboard/edit constraints and source/vote continuity. Source TypeScript, build and full200-recording asset packaging pass. In the hidden browser test account,12consecutive five-second shuffles on the same song had no overlap; three extended selections retained their approximately ten-second chosen duration and explored new regions. No vote was submitted for this check. This follow-up is local review work; no push/deployment or maintenance notice.
+
+## Personal music layout follow-up (local review only)
+
+- Moved the active-run music source selector and finalist-music help into Local Playback, replacing the separate full-width setup box. Before a run or while viewing results it stays in setup. Empty playlists retain the selector in the player and cannot enable voting.
+- Added a full wrapping song title and artist above playback. Community song rank now sits beside the song-rating area; song metadata and audio/file diagnostics have separate compact disclosures. Removed the repeated combined title/rank/source line from Personal.
+- Restored explicit Upvote/Downvote/Undo song controls in Personal using the shared music-vote handlers. These rate recordings, not targets, and do not bias random selection. Hidden test/admin choices stay local, with independent server mutation denials unchanged.
+- Shortened secondary actions and arranged research/method/saved-data disclosures in a compact responsive group.
+- Validation: source typecheck, production build, full private media packaging; eight focused regression suites passed including actual Personal song-vote handler behavior, out-of-order ranking reads, 48 admin/test mutation denials plus 24 gate denials, Personal playback/passage rules and music-source switching. Desktop 1366px, tablet 768px and mobile 390px visually reviewed; mobile had no page overflow. Existing 44 saved local comparisons preserved, no comparison submitted during review.
+- Refreshed only the localhost:5175 loopback preview. No push, production notice or deployment.
+
+## Owner deployment authorization
+
+The owner subsequently clarified that the public website should be updated and explicitly authorized deployment of the latest reviewed work. Preparation has started; the earlier local-only statements above describe past status, not current authorization. Current encrypted backup, exact additive schema verification, clean committed candidate, provider preview and compatibility checks remain required before any production mutation. GitHub push remains separate. Owner profile activation, historical ownership transfer and publication are excluded from the release operation.

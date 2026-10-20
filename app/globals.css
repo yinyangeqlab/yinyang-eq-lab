@@ -2174,3 +2174,5 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .music-panel-host:not(.persistent) .sample-row .music-meta {flex-basis:100%;text-align:center;}
 @media(max-width:700px){.music-panel-host:not(.persistent) .passage-times {flex-basis:auto;text-align:center;}}
 .music-panel-host .playback-secondary > .passage-focus{display:inline-flex;align-items:center;justify-content:center;min-height:36px;height:36px;margin:0;padding:0 10px;border:1px solid #8fa9b7;border-radius:8px;background:#0c171d;color:#edf8ff;font-size:12px;line-height:1.3;cursor:pointer;}
+
+.passage-shuffle-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}
