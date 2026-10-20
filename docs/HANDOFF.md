@@ -1,3 +1,21 @@
+# Pending maintenance-controls review, October 18, 2026
+
+Live baseline remains update91. Automatic approval review rejected the attempted Worker deployment because exact-preview approval is required. No update92 deployment occurred. A question for approval of the initial controls is pending; the reviewed release now additionally fixes three audit findings, so make sure approval covers this final bundle.
+
+Final isolated source/build: `work/maintenance-controls-consent-release-20261018`. Infra: `work/maintenance-controls-consent-infra-20261018`. Implementation `8eb2789dd805fd5d1534659c147cc10ec61a6c06`. Use `workspace/artifacts/maintenance-controls-20261018/release-scope.json`. Earlier maintenance-controls-release and maintenance-controls-final-release snapshots are superseded and must not be deployed. Canonical personal-shootout work remains dirty and excluded; do not build/deploy that working tree.
+
+Prepared: four maintenance scopes with legacy timer decoding, dark-green admin checkboxes and custom durations; independent /participation entry reusing the existing consent popup, optional nickname and explicit monitoring Yes/No; Tuning selector layout; Tuning rank source changed from historical20-song subset to protocols.current.all. Contribution controls explain their forms require the Shootout page unlocked. No new schema or migration.
+
+Live one-hour pause expires `1792389524011` (10:58:44 PM Pacific October18). Do not republish, extend or clear it just to test the deployment. Existing consented users can use Pool/Tuning, but the live new-visitor consent redirect is blocked by paused Shootout until the prepared entry fix deploys. Read-only HTTP /devices without a session returns403; established browser device view works. No data writes should be used to test research functions.
+
+Final report `workspace/artifacts/final-site-check-20261018/final-review.html`:89 layout cases,6 ranking counter cases,3 substantive findings plus2 minor copy/usability findings. The initial public layout matrix targeted the wrong tab and was replaced with60 verified-size measurements. The inner-panel selector bug is real despite no page-edge overflow. 5120 requests cap4096; no physical OLED/TV certification. Existing comparison evidence:89 qualified,38 current/51 earlier,16ties,46validhashes,12currenthashedties,0hashes qualifying across2groups. Three earlier records have common5seconds but remain earlier protocol.
+
+Final build/types/340assets/200recordings/448scope cases/consent-entry guard/atomic agreement and nickname tests pass. Final read-only Pulumi preview completed:1Workerupdate/3unchanged; no deployment occurred. Final release retains118 earlier client assets. Read-only preview tool must not be mistaken for deploy success.
+
+After explicit approval: confirm baseline91/current notice, inspect final Pulumi preview, deploy final isolated infra with DEPLOY_BUILD_ROOT final source; verify assets, plain public notice/scope and exact expiry, established and fresh-cookie consent redirects, all2Tuning fixes, private/media/CPU/rate guards. Do not accept participation on behalf of a real listener. Then update all4live metadata/handoffs plus rebuild docs/mirrors together under AGENTS instructions, run root snapshot/source checks and commit only owned metadata. GitHub push remains separately unrequested.
+
+## Prior handoff
+
 # Current live release — update91, October 18, 2026
 
 Live: https://yinyangeq.com. The owner-requested one-hour maintenance freeze is active until Oct 18, 2026, 10:58 PM Pacific, with automatic expiry. The notice explains that major updates are underway. Public Shootout pages and new trial/comparison/vote/feedback writes are paused. Listening Pool playback/votes and Preference Tuning/downloads remain usable; My data, privacy and admin access are preserved. Already-loaded audio is not forcibly stopped, and no browser refresh is forced.
