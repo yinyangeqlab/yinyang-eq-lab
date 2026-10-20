@@ -1,3 +1,11 @@
+# Rebuild the current application — live update82
+
+Update82 is deployed with invites off. The implementation is `3565e5b803330e716a881f72e562c24e4211bd68`. Read HANDOFF.md and INVITE_SYSTEM.md first. Build only in workspace/. Full owner snapshots are work/invite-release-20261018 and work/invite-infra-20261018. A new database requires all32 migrations; the existing live database received only0031_site_access_settings.sql. The control table must exist before the new app/gate runs. The missing-row default is off. Consent, media, privacy and deployment protections remain enforced.
+
+Git source includes the deployed canonical-origin binding. Recovery tooling is not a production data restore; the previously verified update81 bundle remains tied to its matching source revision. The clone/build commands and private deployment boundaries below still apply; update81-specific audit statements are historical.
+
+## Historical update81 rebuild audit
+
 # Rebuild the current application — live update81
 
 For complete external-data recovery and canonical workspace layout, start at [RECOVERY.md](RECOVERY.md). It supersedes the earlier root-difference notes; the owner mirror config/licenses have now been reconciled. Recovery tools and domain configuration additions are not deployed.
