@@ -83,6 +83,8 @@ The checked-in `.openai/hosting.json` contains only a local D1 binding placehold
 
 This is a clean source release. Production data, credentials, deployment state, invitation-gate infrastructure, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
 
+The current [source handoff](docs/HANDOFF.md) describes the latest application changes. The [target inventory](docs/TARGET_INVENTORY.md) lists the 41 live target names and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
+
 The 32 Shantae soundtrack files hosted by the live site are omitted. `data/shantae-audio.json` is intentionally empty, so these tracks use the Bandcamp player fallback. Other music entries point to their creators' sites. The soundtrack is CC BY-NC-SA 4.0 and is **not** covered by this repository's Apache license.
 
 The production site has an invitation gate supplied by separate deployment infrastructure. Configure equivalent access controls, D1 bindings, and secrets in your own hosting environment before deploying a public replacement.
