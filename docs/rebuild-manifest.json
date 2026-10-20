@@ -416,7 +416,7 @@
     },
     {
       "path": "components/service-status-panel.tsx",
-      "sha256": "44aebcf1d268144e21fb95a62ea2e0331701b778c9d7e3b8eeb53d803cc42288"
+      "sha256": "c9f4ebf87be87d3b7467be6d995b660df1e5c582b14bb769bce8fc80654b2b43"
     },
     {
       "path": "components/service-warning.tsx",
