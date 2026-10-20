@@ -150,7 +150,7 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "1d1a8bb899c13b79792fe7e6d2ec6f30a6e1d05a837b29df1019624bd0339df3"
+      "sha256": "c0ebe2732b3edd4b1bb31c5d31f24d2cd9825cca2c064ca53081d038820d6afe"
     },
     {
       "path": "app/home/route.ts",
@@ -210,7 +210,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "5a19515e9c55f0fbe7f407890e24c1e20d572cb7d0b3695cdb6bd6c51a31ba3d"
+      "sha256": "256f756ac7e75dd7c7793243b6af0aabb7d175c7d08770e3c89f5ef9bbcced53"
     },
     {
       "path": "app/welcome.css",
