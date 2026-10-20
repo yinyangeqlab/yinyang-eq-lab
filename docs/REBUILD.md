@@ -1,3 +1,7 @@
+Current live baseline is update88, implementation a80e13a5505d7de79b374d5c15c0c0ce86016d74. Source/build: work/consent-compact-final-release-20261018; infra: work/consent-compact-final-infra-20261018. No migration for this update. A fresh database still uses all33 migrations. Separate uncommitted personal-shootout changes are not deployed. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update87, implementation 158e059965976b49d1763124d72081fd9f940477. Source/build: work/consent-release-20261018; infra: work/consent-infra-20261018. No migration for this update. A fresh database still uses all33 migrations. Separate uncommitted personal-shootout changes are not deployed. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes
