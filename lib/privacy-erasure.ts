@@ -5,7 +5,7 @@ export const dataTables = { vote: "votes", open: "comparison_choices", run: "lis
 export type DataKind = keyof typeof dataTables | "music";
 const uuid = /^[a-f0-9-]{36}$/i;
 // These statements execute in one D1 transaction, including the temporary audit-erasure authorization.
-export async function eraseData(subjectId: string | null, selection?: { kind: string; id: string }) {
+export async function eraseData(subjectId: string | null, selection?: { kind: string; id: string },includeOwnerAccount=false) {
   const db = env.DB;
   if (!db) throw new Error("Database unavailable");
   if (selection && (!(Object.hasOwn(dataTables, selection.kind)) && selection.kind !== "music" || selection.kind !== "music" && !uuid.test(selection.id))) throw new RequestInputError("Invalid submission.", 400);
@@ -13,6 +13,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   const statements: D1PreparedStatement[] = [];
   const browserIds: string[] = [];
   const scopeOwner = subjectId || (selection ? (await db.prepare("SELECT subject_id FROM submission_owners WHERE record_kind=? AND record_id=?").bind(selection.kind, selection.id).first<{subject_id:string}>())?.subject_id : null);
+  if(scopeOwner&&!includeOwnerAccount&&await db.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(scopeOwner).first())throw new RequestInputError("YinYangEQ is protected from general deletion. Explicitly include this account and confirm INCLUDE YINYANGEQ ACCOUNT.",403);
   const add = (sql: string, ...args: (string | number)[]) => statements.push(db.prepare(sql).bind(...args));
   const day = new Date().toISOString().slice(0, 10);
   const tally = (kind: string) => add(`INSERT INTO deletion_daily_totals(day,record_kind,deleted_count)
@@ -21,6 +22,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   // No submission IDs, subjects, content, actors, request IDs or exact times survive here.
   // Recovery snapshots and captured browser evidence cannot preserve erased source data.
   if(scopeOwner){
+    if(!selection)add("UPDATE owner_account_sync SET payload='{}',initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",Date.now(),scopeOwner);
     add("DELETE FROM owner_profile_snapshots WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner);
     add("DELETE FROM owner_history_claims WHERE source_subject=? OR profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner,scopeOwner);
   }
@@ -64,6 +66,15 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?", subjectId!);
   }
   if(scopeOwner) add(`INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT 'feedback',f.id FROM feedback_submissions f JOIN submission_owners o ON o.record_kind='feedback' AND o.record_id=f.id WHERE o.subject_id=? AND f.comparison_id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind IN ('run','vote','open','trial'))`,scopeOwner);
+  if(scopeOwner&&selection&&selection.kind!=="music"){
+    // Erase only rows tied to the exact reviewed graph. Rotate the epoch so
+    // offline devices cannot reintroduce the erased values from an old base.
+    for(const key of ["target-lab-trials","target-lab-measurements","target-lab-private-targets","target-lab-personal-shootouts-v1"]){
+      const path='$.'+JSON.stringify(key);
+      add(`UPDATE owner_account_sync SET payload=json_set(payload,?,printf('%s',(SELECT json_group_array(json(j.value)) FROM json_each(json_extract(payload,?)) j WHERE NOT EXISTS(SELECT 1 FROM privacy_erasure_scope s WHERE s.record_id IN(json_extract(j.value,'$.id'),json_extract(j.value,'$.serverTrialId'),json_extract(j.value,'$.researchContributionId'),json_extract(j.value,'$.submissionId')))))) WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?) AND json_type(payload,?) IS NOT NULL`,path,path,scopeOwner,path);
+    }
+    add("UPDATE owner_account_sync SET initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",Date.now(),scopeOwner);
+  }
   // Verification requests and reasons are source-side personal data, never an immutable audit exception.
   add(`DELETE FROM legacy_review_requests WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=legacy_review_requests.record_kind AND s.record_id=legacy_review_requests.record_id) OR id IN (SELECT request_id FROM legacy_record_verifications l WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=l.record_kind AND s.record_id=l.record_id))`);
   // Explicit cleanup also works with adapters that do not enable FK cascades.

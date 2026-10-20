@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     const body = await readJsonObject(request, 4096);
     if (body.confirmation !== "ERASE VERIFIED SUBMISSION" || typeof body.kind !== "string" || typeof body.id !== "string") return Response.json({ error:"Verify the requester's ownership and confirm erasure." }, { status:400, headers });
-    await eraseData(null, { kind:body.kind, id:body.id });
+    await eraseData(null, { kind:body.kind, id:body.id },body.includeOwnerAccount===true&&body.ownerAccountConfirmation==="INCLUDE YINYANGEQ ACCOUNT");
     return Response.json({ ok:true }, { headers });
   } catch (error) { return requestInputResponse(error) || Response.json({ error:"Erasure failed; no partial deletion was saved." }, { status:503, headers }); }
 }

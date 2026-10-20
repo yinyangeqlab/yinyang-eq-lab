@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const now = Date.now();
     const db = env.DB!;
     await db.batch([
-      db.prepare("DELETE FROM activity_events WHERE created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?)").bind(now - ACTIVITY_LOG_RETENTION_MS,ACTIVITY_MONITORING_NOTICE_VERSION),
+      db.prepare("DELETE FROM activity_events WHERE subject_id NOT IN(SELECT subject_id FROM owner_public_profiles) AND (created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?))").bind(now - ACTIVITY_LOG_RETENTION_MS,ACTIVITY_MONITORING_NOTICE_VERSION),
       db.prepare("INSERT INTO activity_events(id,subject_id,session_id,event_type,route,shootout_tab,test_mode,test_active,created_at) SELECT ?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM privacy_accounts WHERE subject_id=? AND submissions_enabled=1 AND agreement_version=? AND activity_monitoring_enabled=1 AND activity_monitoring_version=?) AND (SELECT COUNT(*) FROM activity_events WHERE subject_id=? AND created_at>?) < 120").bind(crypto.randomUUID(),identity.subjectId,body.sessionId,body.eventType,body.route,tab,mode,testActive,now,identity.subjectId,VOTE_DATA_NOTICE_VERSION,ACTIVITY_MONITORING_NOTICE_VERSION,identity.subjectId,now - 60_000),
     ]);
     return Response.json({ ok: true }, { headers });

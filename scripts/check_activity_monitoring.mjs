@@ -48,4 +48,7 @@ await event();assert.equal(count(),0,'In-flight event cannot recreate logs after
 await opt(true,acknowledgement);await event();assert.equal(count(),1);
 assert.equal((await mine.PATCH(req('/api/my-data',{submissionsEnabled:false,shareMusic:false,activityMonitoringEnabled:false}))).status,200);assert.equal(count(),0);assert.equal(profile().activity_monitoring_enabled,0);
 assert.equal((await mine.GET()).status,200,'Data management remains accessible after withdrawal');
+sql.prepare("INSERT INTO owner_public_profiles(slug,subject_id,invite_id,policy_at,created_at) VALUES('yinyangeq',?,'monitor-fixture',0,0)").run(subject);
+sql.prepare('INSERT INTO activity_events VALUES(?,?,?,?,?,?,?,?,?)').run(crypto.randomUUID(),subject,session,'page_view','/privacy',null,null,0,0);
+await opt(false);assert.equal(count(),1,'Protected history survives monitoring opt-out and normal cleanup');let protectedData=await(await mine.GET()).json();assert.equal(protectedData.protectedAccount,true);assert.equal(protectedData.activityLogs.length,1,'Protected participant can view old history while monitoring is off');protectedData=await(await authorized()).json();assert.equal(protectedData.events.length,1,'Admin can view protected old history');assert.equal(protectedData.events[0].retained_indefinitely,1);
 console.log('Activity monitoring passed: separate current consent, refusal and withdrawal, admin-only labels/timeline, minimized event fields, exact routes, 30-day purge, flood limit, origin protection and concurrent opt-out race. Synthetic SQLite only.');sql.close();

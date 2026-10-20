@@ -17,7 +17,7 @@ function failed(error: unknown) { const response = requestInputResponse(error); 
 export async function GET() {
   try {
     const identity = await dataIdentity();
-    await env.DB!.prepare("DELETE FROM activity_events WHERE created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?)").bind(Date.now()-30*86400000,ACTIVITY_MONITORING_NOTICE_VERSION).run();
+    await env.DB!.prepare("DELETE FROM activity_events WHERE subject_id NOT IN(SELECT subject_id FROM owner_public_profiles) AND (created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?))").bind(Date.now()-30*86400000,ACTIVITY_MONITORING_NOTICE_VERSION).run();
     const profile = await env.DB!.prepare("SELECT nickname FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId).first<{nickname:string}>();
     const titles: Record<string,string> = {community:"'Community Personal: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id) || ' · ' || t.result", "community-reference":"'Community reference block · ' || COALESCE((SELECT period FROM community_catalogs WHERE id=t.catalog_id),'reference checks')", vote:"'Preferred: ' || COALESCE((SELECT name FROM targets WHERE id=t.winner_id),t.winner_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.loser_id),t.loser_id)", open:"'Open: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)", run:"t.target_a_name || ' / ' || t.target_b_name", feedback:"t.test_mode || ' description'", measurement:"t.name", export:"t.target_name || ' · ' || t.export_kind", target:"t.name", suggestion:"t.title", personal:"'Personal: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)" };
     const specs = Object.entries(dataTables).filter(([kind]) => kind !== "trial");
@@ -26,9 +26,10 @@ export async function GET() {
       return (result.results || []).map(row => ({ kind, id: String(row.id), createdAt: Number(row.created_at), title: ["vote","open","run","export","target"].includes(kind) ? targetLabelText(String(row.display_title || kind)) : String(row.display_title || kind), localId: kind === "run" ? String(row.id) : undefined, trialId: row.trial_id || (kind === "vote" ? row.id : undefined) }));
     }));
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
-    const activity = identity.activityMonitoringEnabled ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND created_at>=? ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
+    const protectedAccount=!!await env.DB!.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(identity.subjectId).first();
+    const activity = identity.activityMonitoringEnabled||protectedAccount ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND (created_at>=? OR subject_id IN(SELECT subject_id FROM owner_public_profiles)) ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
@@ -61,14 +62,14 @@ export async function PATCH(request: Request) {
       const now=Date.now();
       statements.push(
         env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=0,share_music=0,withdrawn_at=?,activity_monitoring_enabled=0,activity_monitoring_withdrawn_at=CASE WHEN activity_monitoring_enabled=1 THEN ? ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(now,now,identity.subjectId),
-        env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=?").bind(identity.subjectId),
+        env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=? AND subject_id NOT IN(SELECT subject_id FROM owner_public_profiles)").bind(identity.subjectId),
         env.DB!.prepare("UPDATE retrospective_permissions SET enabled=0,withdrawn_at=? WHERE subject_id=? AND enabled=1").bind(now,identity.subjectId),
       );
     } else {
       const now=Date.now();
       statements.push(
         env.DB!.prepare("UPDATE privacy_accounts SET share_music=?,activity_monitoring_enabled=?,activity_monitoring_version=CASE WHEN ?=1 THEN ? ELSE activity_monitoring_version END,activity_monitoring_agreed_at=CASE WHEN ?=1 AND activity_monitoring_enabled=0 THEN ? ELSE activity_monitoring_agreed_at END,activity_monitoring_withdrawn_at=CASE WHEN ?=1 THEN NULL WHEN activity_monitoring_enabled=1 THEN ? ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(body.shareMusic?1:0,monitor?1:0,monitor?1:0,ACTIVITY_MONITORING_NOTICE_VERSION,monitor?1:0,now,monitor?1:0,now,identity.subjectId),
-        ...(monitor ? [] : [env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=?").bind(identity.subjectId)]),
+        ...(monitor ? [] : [env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=? AND subject_id NOT IN(SELECT subject_id FROM owner_public_profiles)").bind(identity.subjectId)]),
       );
     }
     if (!body.submissionsEnabled || body.personalResearchEnabled !== undefined) statements.push(personalPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled && body.personalResearchEnabled === true));
@@ -84,13 +85,13 @@ export async function DELETE(request: Request) {
   try {
     origin(request); const identity = await dataIdentity(); const body = await readJsonObject(request, 4096);
     if (body.scope === "all" && body.confirmation === "DELETE ALL MY DATA") {
-      await eraseData(identity.subjectId);
+      await eraseData(identity.subjectId,undefined,body.includeOwnerAccount===true&&body.ownerAccountConfirmation==="INCLUDE YINYANGEQ ACCOUNT");
       const response = Response.json({ ok:true, all:true }, { headers });
       for (const name of ["__Host-yinyangeq_data", "__Host-yinyangeq_tester", "__Host-yinyangeq_owner"]) response.headers.append("Set-Cookie", `${name}=; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Strict`);
       return response;
     }
     if (body.scope !== "one" || body.confirmation !== "DELETE" || typeof body.kind !== "string" || typeof body.id !== "string") throw new RequestInputError("Confirm the deletion.", 400);
-    const erased = await eraseData(identity.subjectId, { kind:body.kind, id:body.id });
+    const erased = await eraseData(identity.subjectId, { kind:body.kind, id:body.id },body.includeOwnerAccount===true&&body.ownerAccountConfirmation==="INCLUDE YINYANGEQ ACCOUNT");
     return Response.json({ ok:true, browserIds: erased?.browserIds || [] }, { headers });
   } catch (error) { return failed(error); }
 }
