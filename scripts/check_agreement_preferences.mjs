@@ -1,3 +1,4 @@
+import{accountSyncFixtureDeps}from'./account-sync-fixture.mjs';
 import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
@@ -30,6 +31,7 @@ const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/listener-nickn
 const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
 const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
 deps['@/lib/legacy-notice']={RETROSPECTIVE_NOTICE_VERSION:'retrospective-2026-10-18-v1'};const studiesExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/consent-studies.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:studiesExports,require:name=>deps[name]});deps['@/lib/consent-studies']=studiesExports;
+Object.assign(deps,accountSyncFixtureDeps(deps));
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response,Request,Headers,URL,Date,TextEncoder,TextDecoder,Uint8Array});
 vm.runInContext(ts.transpileModule(readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
 const patch=(body,origin='https://fixture.test')=>context.exports.PATCH(new Request('https://fixture.test/api/my-data',{method:'PATCH',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)}));
@@ -87,4 +89,11 @@ assert.equal((await studiesExports.consentStudies(DB,eligible)).find(row=>row.id
 sql.prepare("INSERT INTO owner_public_profiles(slug,subject_id,invite_id,policy_at,created_at) VALUES('yinyangeq',?,'synthetic',1,1)").run(eligible);
 await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,[{studyId:secondId,enabled:true}],true,notice,true),/protected YinYangEQ/);
 await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,[{studyId:'00000000-0000-4000-8000-000000000099',enabled:true}],true,notice,true),/study changed/);
+const privateSync={...combined,activityMonitoringEnabled:false,syncEnabled:true};
+assert.equal((await patch(privateSync)).status,400,'Sync needs its own explicit current notice');assert.equal((await patch({...privateSync,syncAcknowledged:true,syncNoticeVersion:'old'})).status,400);
+assert.equal((await patch({...privateSync,syncAcknowledged:true,syncNoticeVersion:'account-sync-2026-10-19-v1'})).status,200);assert.equal((await(await context.exports.GET()).json()).syncEnabled,true);
+failBatch=true;assert.equal((await patch({...privateSync,syncEnabled:false})).status,503);failBatch=false;assert.equal((await(await context.exports.GET()).json()).syncEnabled,true,'A failed shared Save rolls back sync consent too');
+assert.equal((await patch({submissionsEnabled:false,shareMusic:false})).status,200);assert.equal((await(await context.exports.GET()).json()).syncEnabled,true,'Research withdrawal alone does not silently disable independent private sync');
+assert.equal((await patch({submissionsEnabled:false,shareMusic:false,syncEnabled:false})).status,200);assert.equal((await(await context.exports.GET()).json()).syncEnabled,false);
+console.log('Private sync consent verified: default-off, separate explicit/versioned acknowledgement, atomic shared Save, no silent research-to-sync opt-in, independent research withdrawal and explicit sync opt-out.');
 sql.close();

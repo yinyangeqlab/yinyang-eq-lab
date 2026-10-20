@@ -22,6 +22,9 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   // No submission IDs, subjects, content, actors, request IDs or exact times survive here.
   // Recovery snapshots and captured browser evidence cannot preserve erased source data.
   if(scopeOwner){
+    if(!selection)add("DELETE FROM account_device_status WHERE session_hash IN(SELECT d.session_hash FROM private_tester_devices d WHERE d.invite_id=CASE WHEN ? LIKE 'invite:%' THEN substr(?,8) ELSE 'open-'||substr(?,9) END)",scopeOwner,scopeOwner,scopeOwner);
+    if(!selection)add("DELETE FROM account_browser_sync WHERE subject_id=?",scopeOwner);
+    if(!selection)add("DELETE FROM account_sync_permissions WHERE subject_id=?",scopeOwner);
     if(!selection)add("UPDATE owner_account_sync SET payload='{}',initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",Date.now(),scopeOwner);
     add("DELETE FROM owner_profile_snapshots WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner);
     add("DELETE FROM owner_history_claims WHERE source_subject=? OR profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",scopeOwner,scopeOwner);
@@ -72,8 +75,10 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     for(const key of ["target-lab-trials","target-lab-measurements","target-lab-private-targets","target-lab-personal-shootouts-v1"]){
       const path='$.'+JSON.stringify(key);
       add(`UPDATE owner_account_sync SET payload=json_set(payload,?,printf('%s',(SELECT json_group_array(json(j.value)) FROM json_each(json_extract(payload,?)) j WHERE NOT EXISTS(SELECT 1 FROM privacy_erasure_scope s WHERE s.record_id IN(json_extract(j.value,'$.id'),json_extract(j.value,'$.serverTrialId'),json_extract(j.value,'$.researchContributionId'),json_extract(j.value,'$.submissionId')))))) WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?) AND json_type(payload,?) IS NOT NULL`,path,path,scopeOwner,path);
+      add(`UPDATE account_browser_sync SET payload=json_set(payload,?,printf('%s',(SELECT json_group_array(json(j.value)) FROM json_each(json_extract(payload,?)) j WHERE NOT EXISTS(SELECT 1 FROM privacy_erasure_scope s WHERE s.record_id IN(json_extract(j.value,'$.id'),json_extract(j.value,'$.serverTrialId'),json_extract(j.value,'$.researchContributionId'),json_extract(j.value,'$.submissionId')))))) WHERE subject_id=? AND json_type(payload,?) IS NOT NULL`,path,path,scopeOwner,path);
     }
     add("UPDATE owner_account_sync SET initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",Date.now(),scopeOwner);
+    add("UPDATE account_browser_sync SET initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE subject_id=?",Date.now(),scopeOwner);
   }
   // Verification requests and reasons are source-side personal data, never an immutable audit exception.
   add(`DELETE FROM legacy_review_requests WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=legacy_review_requests.record_kind AND s.record_id=legacy_review_requests.record_id) OR id IN (SELECT request_id FROM legacy_record_verifications l WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=l.record_kind AND s.record_id=l.record_id))`);

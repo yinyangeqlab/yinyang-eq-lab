@@ -1,0 +1,9 @@
+// Actual account-sync modules for synthetic SQLite/VM regression fixtures only.
+import{readFileSync}from'node:fs';import vm from'node:vm';import ts from'typescript';
+import*as device from'../lib/device-sync.mjs';import*as syncNotice from'../lib/account-sync-notice.mjs';
+import{VOTE_DATA_NOTICE_VERSION}from'../lib/vote-data-notice.ts';import{ACTIVITY_MONITORING_NOTICE_VERSION}from'../lib/activity-monitoring.ts';import{PERSONAL_RESEARCH_NOTICE_VERSION}from'../lib/personal-research-notice.ts';import{COMMUNITY_NOTICE_VERSION}from'../lib/community-notice.ts';
+export function accountSyncFixtureDeps(original={}){
+ const deps={...original,'@/lib/device-sync.mjs':device,'@/lib/account-sync-notice.mjs':syncNotice,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/activity-monitoring':{...original['@/lib/activity-monitoring'],ACTIVITY_MONITORING_NOTICE_VERSION},'@/lib/personal-research-notice':{PERSONAL_RESEARCH_NOTICE_VERSION},'@/lib/community-notice':{COMMUNITY_NOTICE_VERSION}};
+ for(const name of ['account-sync-permission','account-consent','account-sync-state','account-sync-identity','account-devices']){if(name==='account-sync-identity'&&!deps['@/lib/yinyangeq-account'])continue;const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/'+name+'.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(!(name in deps))throw Error('Missing synthetic dependency '+name);return deps[name];},crypto,Date,TextEncoder,TextDecoder,btoa,atob,Response,Request,URL,Headers});deps['@/lib/'+name]=exports;}
+ return deps;
+}

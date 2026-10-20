@@ -1,3 +1,4 @@
+import{accountSyncFixtureDeps}from'./account-sync-fixture.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
@@ -12,7 +13,7 @@ const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(f=>/^\d{4}.*\.sql$/.test(f)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 let beforeBatch=null;
 const db={prepare(sql){const p={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(sql).get(...this.args)||null;},async all(){return {results:sqlite.prepare(sql).all(...this.args)};},async run(){return sqlite.prepare(sql).run(...this.args);}};return p;},async batch(statements){if(beforeBatch){const action=beforeBatch;beforeBatch=null;action();}sqlite.exec('BEGIN');try{const results=[];for(const statement of statements)results.push(await statement.run());sqlite.exec('COMMIT');return results;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
-function load(path,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==='@/lib/admin-contributions')return adminPolicy;assert.ok(name in deps,`Unmocked dependency ${name}`);return deps[name];},Response,Request,URL,Date,JSON,Number,String,Array,Set,Map,crypto,TextEncoder,TextDecoder,Object,Error});return exports;}
+function load(path,deps={}){if(path==='app/api/my-data/route.ts')deps=accountSyncFixtureDeps(deps);const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==='@/lib/admin-contributions')return adminPolicy;assert.ok(name in deps,`Unmocked dependency ${name}`);return deps[name];},Response,Request,URL,Date,JSON,Number,String,Array,Set,Map,crypto,TextEncoder,TextDecoder,Object,Error});return exports;}
 const input=load('lib/request-json.ts');
 const adminPolicy=load('lib/admin-contributions.ts',{'@/lib/request-json':input});
 const notice={PERSONAL_RESEARCH_NOTICE_VERSION};

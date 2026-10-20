@@ -7,7 +7,7 @@ import {execFileSync} from 'node:child_process';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 export const sha=p=>{const h=createHash('sha256');h.update(readFileSync(p));return h.digest('hex')};
 const fail=s=>{throw Error(s)};
-const authTables=['privacy_sessions','private_tester_devices','browser_pairings','private_access_attempts','public_write_limits','owner_profile_grants','owner_history_claims','owner_history_transfer_scope'];
+const authTables=['privacy_sessions','private_tester_devices','browser_pairings','private_access_attempts','public_write_limits','owner_profile_grants','owner_history_claims','owner_history_transfer_scope','account_device_status'];
 const ident=s=>'"'+s.replaceAll('"','""')+'"';
 function safe(base,path){if(existsSync(base)&&lstatSync(base).isSymbolicLink())fail('Symlink base refused');if(typeof path!=='string'||path.includes('\\')||path.split('/').some(p=>!p||p==='.'||p==='..')||path.startsWith('/'))fail('Unsafe bundle path');const target=resolve(base,path);if(!target.startsWith(resolve(base)+sep))fail('Path escapes destination');let cursor=resolve(base);for(const segment of path.split('/')){cursor=resolve(cursor,segment);if(existsSync(cursor)&&lstatSync(cursor).isSymbolicLink())fail('Symlink refused');}return target;}
 function json(p){return JSON.parse(readFileSync(p,'utf8'))}

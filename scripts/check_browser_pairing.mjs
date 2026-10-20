@@ -1,3 +1,4 @@
+import{ACCOUNT_SYNC_NOTICE_VERSION}from'../lib/account-sync-notice.mjs';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -28,6 +29,7 @@ for(const binding of abuseBindings)env[binding.name]={limit:async()=>({success:t
 const origin='https://fixture.test', now=Math.floor(Date.now()/1000), original='A'.repeat(43);
 const tester={id:'fixture-invite',label:'Synthetic tester'};
 sql.prepare('INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)').run(tester.id,tester.label,'fixture-code',now,now+500,now,await pairingHash(original),now+3600);
+sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run('invite:'+tester.id);sql.prepare("INSERT INTO account_sync_permissions(subject_id,enabled,notice_version,consent_source,updated_at) VALUES(?,1,?,'synthetic',0)").run('invite:'+tester.id,ACCOUNT_SYNC_NOTICE_VERSION);
 const request=(path,fields,jar='',extra={})=>new Request(origin+path,{method:fields?'POST':'GET',headers:{Cookie:jar,'CF-Connecting-IP':'192.0.2.50',...(fields?{'Content-Type':'application/x-www-form-urlencoded',Origin:origin}:{}),...extra},...(fields?{body:new URLSearchParams(fields)}:{})});
 const source=(path,fields,t=tester)=>browserPairing(request(path,fields,`__Host-yinyangeq_tester=${original}`),env,t);
 const cookies=response=>response.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
@@ -35,7 +37,7 @@ const state=hash=>sql.prepare('SELECT * FROM browser_pairings WHERE code_hash=?'
 async function create() {
   const response=await source('/devices/create',{});assert.equal(response.status,200);
   const html=await response.text(), code=html.match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/)?.slice(1).join('');
-  assert.ok(code,'Source receives a human-readable code');return {code,hash:await pairingHash(code)};
+  assert.ok(code,'Source receives a human-readable code');const hash=await pairingHash(code);sql.prepare("UPDATE browser_pairings SET sync_mode='legacy' WHERE code_hash=?").run(hash);/* Exercise compatibility for requests already in flight before the automatic-sync upgrade. New requests are tested separately. */return {code,hash};
 }
 async function claim(pair) {
   const response=await browserPairing(request('/pair',{code:pair.code}),env,null);assert.equal(response.status,303);return cookies(response);
@@ -177,8 +179,10 @@ assert.doesNotMatch(await (await gated('/admin-login')).text(),/href="\/access"/
 // The existing two-sided sync works for automatic browser identities too.
 const openId='open-'+openIdentity.subject.slice(8);
 const openTester={id:openId,label:'Listener'};
+sql.prepare("INSERT INTO account_sync_permissions(subject_id,enabled,notice_version,consent_source,updated_at) VALUES(?,1,?,'synthetic',0)").run(openIdentity.subject,ACCOUNT_SYNC_NOTICE_VERSION);
 const openPairing=await browserPairing(request('/devices/create',{},openJar),env,openTester,false,false);
 const openCode=(await openPairing.text()).match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/).slice(1).join('');
+sql.prepare("UPDATE browser_pairings SET sync_mode='legacy' WHERE code_hash=?").run(await pairingHash(openCode));
 const openClaim=await browserPairing(request('/pair',{code:openCode}),env,null,false,false);
 const openClaimJar=cookies(openClaim),openPair=state(await pairingHash(openCode));
 assert.equal((await browserPairing(request('/devices/approve',{pairing:openPair.code_hash,confirmation:openPair.confirmation},openJar),env,openTester,false,false)).status,303);

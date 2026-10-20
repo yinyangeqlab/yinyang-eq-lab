@@ -346,6 +346,10 @@ export const browserPairings = sqliteTable("browser_pairings", {
   transferPayload: text("transfer_payload"),
   payloadHash: text("payload_hash"),
   replacementAccepted: integer("replacement_accepted").notNull().default(0),
+  syncMode: text("sync_mode").notNull().default("legacy"),
+  deviceLabel: text("device_label"),
+  browserName: text("browser_name"),
+  approvalVersion: text("approval_version"),
   createdAt: integer("created_at").notNull(),
   expiresAt: integer("expires_at").notNull(),
 }, table => [index("browser_pairings_invite_idx").on(table.inviteId)]);
@@ -445,3 +449,7 @@ export const communityModeration=sqliteTable("community_moderation",{recordKind:
 export const ownerAccountSync = sqliteTable("owner_account_sync", {
  profileSlug:text("profile_slug").primaryKey().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),epoch:text("epoch").notNull(),revision:integer("revision").notNull().default(0),initialized:integer("initialized").notNull().default(0),payload:text("payload").notNull().default("{}"),updatedAt:integer("updated_at").notNull(),
 },t=>[check("owner_sync_revision",sql`${t.revision}>=0`),check("owner_sync_initialized",sql`${t.initialized} IN(0,1)`),check("owner_sync_json",sql`json_valid(${t.payload})`)]);
+
+export const accountSyncPermissions = sqliteTable("account_sync_permissions", {subjectId:text("subject_id").primaryKey().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),enabled:integer("enabled").notNull().default(0),noticeVersion:text("notice_version").notNull(),consentSource:text("consent_source").notNull(),agreedAt:integer("agreed_at"),updatedAt:integer("updated_at").notNull()});
+export const accountBrowserSync=sqliteTable("account_browser_sync",{subjectId:text("subject_id").primaryKey().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),epoch:text("epoch").notNull(),revision:integer("revision").notNull().default(0),initialized:integer("initialized").notNull().default(0),payload:text("payload").notNull().default("{}"),updatedAt:integer("updated_at").notNull()});
+export const accountDeviceStatus=sqliteTable("account_device_status",{id:text("id").primaryKey(),sessionHash:text("session_hash").notNull().unique().references(()=>privateTesterDevices.sessionHash,{onDelete:"cascade"}),label:text("label").notNull().default("Unnamed device"),browserName:text("browser_name").notNull().default(""),notes:text("notes").notNull().default(""),syncEnabled:integer("sync_enabled").notNull().default(1),epoch:text("epoch"),revision:integer("revision"),dataDigest:text("data_digest"),consentStamp:text("consent_stamp"),state:text("state"),checkedAt:integer("checked_at")});

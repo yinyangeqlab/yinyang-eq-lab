@@ -1,5 +1,5 @@
 export const PERSONAL_MUSIC_TOKENS_KEY="target-lab-personal-music-tokens-v1";
-/** The content fingerprint stays local; research receives an unrelated random ID. */
+/** Research receives only an unrelated random ID. Fingerprints may be copied by separately consented private account sync, never with audio bytes. */
 export function personalMusicToken(storage:Pick<Storage,"getItem"|"setItem">, fingerprint:string, uuid=()=>crypto.randomUUID()) {
   if(!/^[a-f0-9]{64}$/i.test(fingerprint))throw Error("Wait for the local music fingerprint before choosing.");
   const tokens=JSON.parse(storage.getItem(PERSONAL_MUSIC_TOKENS_KEY)||"{}");

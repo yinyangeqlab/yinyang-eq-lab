@@ -1,3 +1,6 @@
+import {accountSyncPermission,accountSyncPermissionStatement} from '@/lib/account-sync-permission';
+import {ACCOUNT_SYNC_NOTICE_VERSION} from '@/lib/account-sync-notice.mjs';
+import {requireParticipantSubject} from '@/lib/admin-contributions';
 import {consentStudies,consentStudyStatements} from '@/lib/consent-studies';
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
 import { communityPermission, communityPermissionStatement } from "@/lib/community-server";
@@ -29,10 +32,11 @@ export async function GET() {
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
     const protectedAccount=!!await env.DB!.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(identity.subjectId).first();
     const activity = identity.activityMonitoringEnabled||protectedAccount ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND (created_at>=? OR subject_id IN(SELECT subject_id FROM owner_public_profiles)) ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
+    const syncPermission=await accountSyncPermission(env.DB!,identity.subjectId);
     const historicalStudies = await consentStudies(env.DB!,identity.subjectId);
     const community = await communityPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ syncEnabled:syncPermission.enabled,historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
@@ -56,6 +60,7 @@ export async function PATCH(request: Request) {
     const nickname = nicknameProvided ? normalizeListenerNickname(body.nickname) : undefined;
     if (nicknameProvided && (identity.subjectId === "owner" || nickname === null)) throw new RequestInputError(identity.subjectId === "owner" ? "The shared admin account does not use a listener nickname." : listenerNicknameError(body.nickname)!,400);
     const statements: D1PreparedStatement[] = [];
+    if(body.syncEnabled!==undefined){if(typeof body.syncEnabled!=='boolean')throw new RequestInputError('Choose whether to sync saved account data.',400);if(body.syncEnabled){requireParticipantSubject(identity.subjectId);if(body.syncAcknowledged!==true||body.syncNoticeVersion!==ACCOUNT_SYNC_NOTICE_VERSION)throw new RequestInputError('Review and explicitly opt in to private account sync.',400);}statements.push(accountSyncPermissionStatement(env.DB!,identity.subjectId,body.syncEnabled));}
     const monitor = body.activityMonitoringEnabled === undefined ? identity.activityMonitoringEnabled : body.activityMonitoringEnabled;
     if (monitor && !identity.activityMonitoringEnabled && (body.activityMonitoringAcknowledged !== true || body.activityMonitoringNoticeVersion !== ACTIVITY_MONITORING_NOTICE_VERSION)) throw new RequestInputError("Read and explicitly opt in to the current activity-monitoring notice.",400);
     if (body.submissionsEnabled && (!identity.submissionsEnabled || body.acknowledged === true)) {

@@ -27,9 +27,10 @@ export async function createProfileAccount(db:D1Database){
  return requireProfileAccount(db);
 }
 // Revalidate source ownership at recovery time. Deleted server records never return via old snapshots.
-export async function currentProfileSnapshot(db:D1Database,profile:ProfileAccount,raw:unknown){
+export async function currentProfileSnapshot(db:D1Database,profile:ProfileAccount,raw:unknown){return currentAccountSnapshot(db,profile.subject_id,raw);}
+export async function currentAccountSnapshot(db:D1Database,subject:string,raw:unknown){
  const payload=validateSyncPayload(raw);
- const result=await db.prepare("SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?").bind(profile.subject_id).all<{record_kind:string;record_id:string}>();
+ const result=await db.prepare("SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?").bind(subject).all<{record_kind:string;record_id:string}>();
  const owned=new Set(result.results.map(row=>`${row.record_kind}:${row.record_id}`));
  const values:Record<string,string>={...payload.values};
  for(const key of ["target-lab-trials","target-lab-measurements","target-lab-private-targets"]){
