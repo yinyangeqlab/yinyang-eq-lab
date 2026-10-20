@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-18T22:16:25.622Z",
+  "origin": "https://yinyangeq.com",
+  "checks": [
+    "Anonymous target and private audio access remain denied",
+    "desktop: isolated invitation and current data agreement accepted; optional sharing off",
+    "Live Shootout JS/CSS exactly match isolated release build",
+    "Live ranking API available with existing method",
+    "Authenticated protected media range matches original packaged bytes",
+    "mobile: isolated invitation and current data agreement accepted; optional sharing off"
+  ],
+  "assets": [
+    "/_next/static/css/index.BiRf2jUn.css",
+    "/_next/static/css/page.BX6Y3a79.css",
+    "/_next/static/css/legacy-review.CHeAXA7B.css",
+    "/_next/static/chunks/index-CTSyOlSl.js",
+    "/_next/static/chunks/rolldown-runtime-C60lm6uB.js",
+    "/_next/static/chunks/framework-D_rUT4EX.js",
+    "/_next/static/chunks/navigation-errors-By4dF-Cc.js",
+    "/_next/static/chunks/layout-segment-context-ahBug3eS.js",
+    "/_next/static/chunks/service-warning-Bu7iEJ-6.js",
+    "/_next/static/chunks/service-warning-CaAV97mj.js",
+    "/_next/static/chunks/privacy-events-CYBf6BsP.js",
+    "/_next/static/chunks/page-0sDipO72.js",
+    "/_next/static/chunks/createLucideIcon-B6FZYTj3.js",
+    "/_next/static/chunks/autoeq-CQkBIiYp.js",
+    "/_next/static/chunks/loudness-BFC-cP9t.js",
+    "/_next/static/chunks/shield-check-DbPK5q3b.js",
+    "/_next/static/chunks/music-catalog-D1Jcl3hY.js",
+    "/_next/static/chunks/curated-waveforms-D4GhP6nk.js",
+    "/_next/static/chunks/activity-monitoring-Czw87qfx.js",
+    "/_next/static/chunks/target-name-policy-BujCzORk.js"
+  ],
+  "cleanup": [
+    {
+      "device": "desktop",
+      "erased": true
+    },
+    {
+      "device": "mobile",
+      "erased": true
+    }
+  ]
+}

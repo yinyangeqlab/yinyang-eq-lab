@@ -1,3 +1,37 @@
+# Current live release — update80, October 18, 2026
+
+Site: https://yinyangeq.com. Verified application source/build: `work/continue-button-release-20261018`. Infrastructure remains `work/welcome-header-infra-20261018`.
+
+## Approved Continue button release
+
+Deployed the reviewed gold Continue test button with dark bold text, raised edge, arrow badge, short hover lift, visible keyboard focus and reduced-motion support. Full-width mobile layout; existing nextPair and disabled handling preserved, with Saving… busy label. Only app/globals.css and app/shootout/page.tsx differ from verified update79. Unrelated root Welcome draft excluded.
+
+Build, TypeScript and340-asset/200-recording packaging passed. Live deployed assets matched the release build. Desktop1280 and responsive mobile390 passage→vote→Continue checks passed, with new blinded pair and listening credits reset to0/0;320px fit checked. These use deployed app/API through isolated loopback tester sessions and synthetic audio, not physical mobile devices. Test submissions erased afterward. Private access/media and cost protections unchanged; one Worker updated, three resources unchanged, final preview four unchanged. No migrations or GitHub push.
+
+Implementation commit: `15ec1a7` in `work/github-live-sync-20261018` on main. This records all approved deployed upload/passage/vote cleanup changes plus Continue. Portable test-only adjustments already in that checkout retained. Exact deployed build/source remains the manifest snapshot.
+
+Evidence: `artifacts/continue-button-release/` — deployment.log, no-drift.log, live-verification.json, live-flow-events.json, live-desktop.png, live-mobile.png and REPORT.md.
+
+## Prior release and retained notes (historical)
+
+# Current live release — update79, October 18, 2026
+
+Site: https://yinyangeq.com. Verified application source/build: `work/shootout-passage-release-20261018`. Unchanged infrastructure: `work/welcome-header-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede older release statements.
+
+## Upload, matched passage and site style release
+
+Upload resets expired/finished sessions and chooses a compatible reference. Open Continue advances properly. Guided playback uses a movable fixed five-second passage on A and B in random order; exact boundaries unlock voting reliably. Gold controls remain gold after unlock, time is larger, and the button labels are PREFER A, UNSURE / TIE and PREFER B. Locked text is softened; locked and unlocked hover share a short lift/glow. Ranking subset explanations and identical-EQ consistency wording are clearer. Current-protocol ranking evidence independently validates shared playback intervals. Site style cleanup removes superseded declarations while preserving active layouts.
+
+Verified baseline update77 plus reviewed changes; unrelated root Welcome tagline draft excluded. Intermediate update78 exposed a pre-existing stale analysis-stage JS preload reference. Packaging now checks actual imports and removes only redundant stale preloads with a current emitted counterpart; final update79 passes all referenced live JS/CSS hashes. Snapshots preserve intermediate source separately.
+
+Production build, TypeScript, 340-asset/200-protected-recording packaging, client dependency audit and focused upload/passage/ranking checks passed. Real deployed application and APIs were exercised at desktop1280 and mobile390 (plus320 layout check), using isolated tester sessions through a loopback relay. Invalid CSV recovery, valid private uploads, five-second passage edits/playback, early-stop locks, saved decisive/tie choices and Continue reset passed. Browser native picker automation was blocked by Brave extension file-URL permissions; synthetic File objects went through the deployed real input handlers. These are responsive desktop-browser checks, not physical iOS/Android tests. Test identities and their owned submissions were erased afterward. No real-user records restored or removed.
+
+One existing Worker updated per rollout, three resources unchanged; final preview four unchanged. No migrations or access/media/cost-guard changes. CPU5000ms, six abuse bindings, private gate/media, disabled public Worker URLs and independent cost guard preserved. GitHub publication remains separate and was not performed.
+
+Evidence: `artifacts/shootout-release/` — source-scope.json, build-final.log, types-final.log, assets-final.log, deployment-final.log, no-drift-final.log, live-verification.json, live-flow-events.json, live-browser.json, live-desktop-unlocked.png and live-mobile-unlocked.png.
+
+## Prior release and retained work notes (historical)
+
 # Current live release — update77, October 18, 2026
 
 ## Git commit and handoff — curve credits, update77
@@ -121,3 +155,15 @@ Post-consolidation checks passed:18 upload cases;11 actual route checks;19 ranki
 
 ## Vote label refinement — local only, 2026-10-18
 Renamed A IS BETTER / B IS BETTER to Prefer A / Prefer B in main source and the v3 candidate. Unknown / Tie retained. Verified disabled labels before listening and enabled labels after actual five seconds on both sides, plus 390px mobile and desktop layout. Screenshots: artifacts/full-flow-qa/prefer-labels-mobile.png and prefer-labels-desktop.png. No deployment.
+
+## Gold guide and prominent vote labels — draft only
+Removed green ready-state overrides: the listening requirement panel and progress bars remain gold after unlock. Decisive buttons now say PREFER A / PREFER B, 900 weight, 15px desktop / 13px narrow mobile, white text with shadow. Locked buttons use 12px corners to keep enlarged labels visible; narrow decisive buttons use 4px side padding. Checked actual 320px locked layout. No deployment; live release is update77 per latest manifest, concurrent release work preserved.
+
+## Vote label contrast correction — local draft
+An older enabled-state selector at globals.css around line1580 overrode the previous white declaration, leaving unlocked labels pink/blue. Added matching specificity for enabled, hover and locked states across all three choices: solid white text and a small dark shadow. Main and v3 candidate synchronized. No deployment.
+
+## Site style cleanup and final vote refinements — local only
+Audited 12 app/component stylesheets, removed611 superseded declarations, replaced73 layered vote rules with one section, and archived superseded previews under artifacts/preview-history/20261018. Current runner: artifacts/full-flow-qa/server-current.mjs (QA_PORT8915). Retained gold guide; UNSURE / TIE label and clear identical-EQ consistency explanation; softened locked text; locked and unlocked votes share verified lift/glow, with disabled votes still blocked and reduced-motion behavior. Desktop/mobile flows, actual handlers, site/tab width checks and focused regressions passed locally. See artifacts/full-flow-qa/cleanup/REPORT.md for resolved fixture issues and exact limitations. Latest source hashes in tested-source.json. No deployment, push or publication; live77 and release/access/media/cost configuration preserved. Concurrent Welcome changes retained.
+
+## Continue test button — local review after update79
+Live update79 is deployed and verified. New root-only Continue design adds a warm gold plate, dark label, raised edge, arrow badge, matching short hover lift, keyboard focus and reduced-motion support. At ≤520px it spans the row. Existing nextPair, busy and disabled behavior retained; saving label added. Responsive1280/390/320 checks and passage→vote→Continue reset passed with disposable local data. Evidence: artifacts/continue-button-review/. Not deployed; awaiting design review. Root Welcome/config/license differences remain preserved.

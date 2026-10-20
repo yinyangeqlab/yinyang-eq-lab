@@ -1,0 +1,84 @@
+npm notice run yinyang-eq-league@0.1.0 build
+npm notice run node scripts/run-framework.mjs build
+
+  vinext build  (Vite 8.0.13)
+
+(node:23) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[1/5] analyze client references...
+[2Ktransforming...✓ 423 modules transformed.
+rendering chunks...
+✓ built in 1.71s
+[2/5] analyze server references...
+[2Ktransforming...✓ 220 modules transformed.
+rendering chunks...
+✓ built in 781ms
+[3/5] build rsc environment...
+[2Ktransforming...✓ 420 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 1.52s
+[4/5] build client environment...
+[2Ktransforming...✓ 1982 modules transformed.
+rendering chunks...
+computing gzip size...
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+[33m[FILE_NAME_CONFLICT] [0mThe emitted file _next/static/css/page.DsdY862R.css overwrites a previously emitted file of the same name.
+
+✓ built in 2.10s
+[5/5] build ssr environment...
+[2Ktransforming...✓ 225 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 1.17s
+[0m
+  Route (app)
+  ┌ ? /                                 
+  ├ λ /api/activity                     
+  ├ λ /api/comparison-choices           
+  ├ λ /api/feedback                     
+  ├ λ /api/headphone-catalog            
+  ├ λ /api/listening-audio/:id          
+  ├ λ /api/listening-runs               
+  ├ λ /api/maintenance                  
+  ├ λ /api/music-votes                  
+  ├ λ /api/my-data                      
+  ├ λ /api/my-data/legacy               
+  ├ λ /api/my-data/retrospective        
+  ├ λ /api/owner-research               
+  ├ λ /api/owner-research-measurement   
+  ├ λ /api/owner-research/activity      
+  ├ λ /api/owner-research/archive       
+  ├ λ /api/owner-research/erasure       
+  ├ λ /api/owner-research/legacy        
+  ├ λ /api/owner-research/moderation    
+  ├ λ /api/owner-research/service-status
+  ├ λ /api/preference-exports           
+  ├ λ /api/research                     
+  ├ λ /api/research-measurements        
+  ├ λ /api/suggestions                  
+  ├ λ /api/targets                      
+  ├ λ /api/trials                       
+  ├ λ /api/votes                        
+  ├ ? /curve-credits                    
+  ├ λ /home                             
+  ├ ? /music-library                    
+  ├ ? /my-data                          
+  ├ ? /owner-research                   
+  ├ ? /personal-tuning                  
+  ├ ? /preference-tuning                
+  ├ ? /privacy                          
+  └ ? /shootout                         
+
+  λ API  ? Unknown
+
+  ? Some routes could not be classified. vinext currently uses static analysis
+    and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+    Automatic classification will be improved in a future release.
+
+  Build complete. Run `vinext start` to start the production server.
+
