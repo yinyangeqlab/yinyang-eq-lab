@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import * as requestJson from '../lib/request-json.ts';
 import * as labels from '../lib/target-labels.ts';
+import * as nicknames from '../lib/listener-nickname.ts';
 import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../lib/activity-monitoring.ts';
 import {VOTE_DATA_NOTICE_VERSION} from '../lib/vote-data-notice.ts';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
@@ -20,7 +21,7 @@ class Statement{
  async run(){sql.prepare(this.query).run(...this.args);return{success:true};}
 }
 const DB={prepare:query=>new Statement(query),batch:async statements=>{sql.exec('BEGIN');try{const out=[];for(const [i,statement] of statements.entries()){out.push(await statement.run());if(failBatch&&i===0)throw Error('Synthetic transaction failure');}sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
-const deps={
+const deps={'@/lib/listener-nickname':nicknames,
  'cloudflare:workers':{env:{DB}},'@/lib/activity-monitoring':{ACTIVITY_MONITORING_NOTICE_VERSION},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/target-labels':labels,'@/lib/request-json':requestJson,
  '@/lib/submission-ownership':{dataIdentity:async()=>{const a=account();return{subjectId:subject,submissionsEnabled:a.submissions_enabled===1&&a.agreement_version===VOTE_DATA_NOTICE_VERSION,shareMusic:a.share_music===1,activityMonitoringEnabled:a.activity_monitoring_enabled===1,activityMonitoringVersion:a.activity_monitoring_version,agreementVersion:a.agreement_version,agreedAt:a.agreed_at};}},
  '@/lib/privacy-erasure':{dataTables:{},eraseData:()=>{throw Error('This preference test must never erase source data');}}

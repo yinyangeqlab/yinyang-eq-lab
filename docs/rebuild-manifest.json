@@ -74,7 +74,7 @@
     },
     {
       "path": "app/api/my-data/route.ts",
-      "sha256": "101ed3a5735a3cc8dcabf357265beec8478389d023857591873473f5077c3eba"
+      "sha256": "1fde576ba5841cfc01530d99ca9f867ec330e0b397a894f791b3befe885e3f78"
     },
     {
       "path": "app/api/owner-research-measurement/route.ts",
@@ -82,7 +82,7 @@
     },
     {
       "path": "app/api/owner-research/activity/route.ts",
-      "sha256": "89bf819970e9150b93323584be23c64662ad7f25c9d8eb641da1920b4dcbeefe"
+      "sha256": "fe4d865eb49b66c906c04b02f21a1864724d7f62b4051aa9613036acae838f6d"
     },
     {
       "path": "app/api/owner-research/archive/route.ts",
@@ -102,7 +102,7 @@
     },
     {
       "path": "app/api/owner-research/route.ts",
-      "sha256": "54d27887a94f21a6ec514d28573798f4a5499364d595b3f553417b554342bee3"
+      "sha256": "ba38fda4d0c40e052afa3559ae409eb945e78701efc9cf1538fb292e5a1dc0c8"
     },
     {
       "path": "app/api/owner-research/service-status/route.ts",
@@ -170,11 +170,11 @@
     },
     {
       "path": "app/my-data/page.tsx",
-      "sha256": "8639ae6b11d6a1f947e733bcdd85fd184cba3cb30962356a939b35e4f4f1c1fc"
+      "sha256": "863344da03b246eb42f3756d45cf5a9b41c6e209bdef0f5920e2abf53267c78e"
     },
     {
       "path": "app/my-data/style.css",
-      "sha256": "207ea14270dfe6f0516a5593683484a16965e2ff0a37eefd3eb84d0f8528d736"
+      "sha256": "acdc2576ab41a7efbcd9d6cc9069cb99dc285e16e2a83ee3a361ce35848e0267"
     },
     {
       "path": "app/owner-research/admin-layout.css",
@@ -182,7 +182,7 @@
     },
     {
       "path": "app/owner-research/page.tsx",
-      "sha256": "c38ce042f270285c27c5af25ae0862dc0d7ed136946f0c22785083379018c973"
+      "sha256": "f9a5a1fde7830b4213be0886b3781b2c8be2bb3c41191798ec18ee9536b62353"
     },
     {
       "path": "app/page.tsx",
@@ -206,7 +206,7 @@
     },
     {
       "path": "app/privacy/page.tsx",
-      "sha256": "c2f9fc38984cb39f4a1cf33f89e5717ac9402d9266f5f9a6a37f79125a378921"
+      "sha256": "68ce6e5960829e8d8b148bb695f95f9eceb2d2c14b46199ea624a9c1a1928b3a"
     },
     {
       "path": "app/shootout/page.tsx",
@@ -670,7 +670,7 @@
     },
     {
       "path": "db/schema.ts",
-      "sha256": "c94d266e09d9fbef38569c1db042d6d95d55b817754de803c6d6353bcb5c9b59"
+      "sha256": "00d3a488fd480ebab608faf8d3a0726bf892afc3be54769197145bb0eb7fc8c8"
     },
     {
       "path": "db/service-status.sql",
@@ -874,7 +874,7 @@
     },
     {
       "path": "drizzle/meta/_journal.json",
-      "sha256": "d1058d98b13971eecca1bc8c9f12a9234e047e96a31188fdc2c79bcb0aed6cb5"
+      "sha256": "e0b363350a1c976533c0a23f1bf2bfef22725a5e669c70751a87ebe1c5e95ac7"
     },
     {
       "path": "hooks/use-mobile.ts",
@@ -1090,7 +1090,7 @@
     },
     {
       "path": "lib/privacy-erasure.ts",
-      "sha256": "c336c5b2397ccb716436e6649e4c140e994029dc23efa54631501cb121acebb1"
+      "sha256": "522e86a748a1762e1caa7aa8bb7009cad29d6b2a68d34ed03e453cffc542a3db"
     },
     {
       "path": "lib/public-measurements.ts",
@@ -1270,11 +1270,11 @@
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
-      "sha256": "f61a775d674b5b96148e0fe3facdaca597fd1224e7304020fb796138d6701675"
+      "sha256": "bc016fd39fe900bceac0aa8a57ce543854089ee9b374a5cd4f17a3ed930247e6"
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "97c146f1fef3380b1e4af695a59e80882880ab6af3ad7919bc038a7261dc8554"
+      "sha256": "f245d2205e3e067480bda11a731bc6fd692c84f0c5ffbb6e6db3e9f494511efa"
     },
     {
       "path": "scripts/check_blind_completion.mjs",
@@ -1282,11 +1282,11 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "6ab0ecbd58957fd3deb5472eeee544e2158686268aab59560d23793ed069319b"
+      "sha256": "676587780808fdef5151241b3e395d3ebed558c4ddb87c85ff475ffb0764a182"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
-      "sha256": "2a8a8d1e29afc3f2c403e40592ae1b9fe8adc86f2ba9cc713c40f27d183a85c1"
+      "sha256": "4d93be3001799529ef24a93eabb47ad3ed9de6e6654cd47414ee935924baf743"
     },
     {
       "path": "scripts/check_comparison_passage.mjs",

@@ -18,9 +18,10 @@ export async function GET(request: Request) {
     if (beforeAt !== null && !/^[a-f0-9-]{36}$/i.test(beforeId)) return Response.json({ error: "Invalid activity cursor." }, { status: 400, headers });
     const query = db.prepare(`SELECT e.id,e.subject_id,e.session_id,e.event_type,e.route,e.shootout_tab,e.test_mode,e.test_active,e.created_at,
       CASE WHEN e.subject_id='owner' THEN 'Owner/admin account'
+        WHEN n.nickname IS NOT NULL THEN n.nickname
         WHEN e.subject_id LIKE 'invite:%' THEN COALESCE(i.label,'Tester '||substr(e.subject_id,8,10))
         ELSE 'Tester '||substr(e.subject_id,1,12) END AS listener_label
-      FROM activity_events e LEFT JOIN private_tester_invites i ON i.id=substr(e.subject_id,8)
+      FROM activity_events e LEFT JOIN listener_nicknames n ON n.subject_id=e.subject_id LEFT JOIN private_tester_invites i ON i.id=substr(e.subject_id,8)
       WHERE e.created_at>=? ${beforeAt === null ? "" : "AND (e.created_at<? OR (e.created_at=? AND e.id<?))"}
       ORDER BY e.created_at DESC,e.id DESC LIMIT 201`);
     const rows = beforeAt === null
