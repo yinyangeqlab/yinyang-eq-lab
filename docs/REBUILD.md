@@ -1,3 +1,7 @@
+Current live baseline is update89, implementation bc806a513bccee93b158199f93b5e9f29b821dc8. Source/build: work/rankings-fix-release-20261018; infra: work/rankings-fix-infra-20261018. Rankings display fixes only; no migration, API or scoring change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update88, implementation a80e13a5505d7de79b374d5c15c0c0ce86016d74. Source/build: work/consent-compact-final-release-20261018; infra: work/consent-compact-final-infra-20261018. No migration for this update. A fresh database still uses all33 migrations. Separate uncommitted personal-shootout changes are not deployed. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes

@@ -1,3 +1,15 @@
+# Current live release — update89, October 18, 2026
+
+Live: https://yinyangeq.com. The historical 20-song research filter is removed from the Rankings interface as requested. Its comparison records remain available to the broader eligible views. Old saved selections fall back to All blind votes. The main and same-file counters use the selected test version and headphone type and include ties. The same-file explanation distinguishes matching SHA-256 file bytes plus tags/recording ID from tag-only song selection and from matching audio across encodings. Matched A/B passage remains the recommended default with its existing research references and limitations.
+
+Implementation `bc806a513bccee93b158199f93b5e9f29b821dc8`. Source/build `work/rankings-fix-release-20261018`; infrastructure `work/rankings-fix-infra-20261018`. Only app/shootout/page.tsx changed at runtime; scripts/check_ranking_view.mjs adds real-fragment regression coverage. Clean build isolated under workspace/artifacts/rankings-fix-20261018/build-input. Pending personal-shootout application, schema and gate work is preserved and excluded. Develop only in workspace/. GitHub publication remains separate and has not been performed for updates83–89.
+
+One existing Worker updated; three resources unchanged. No migration, API, ranking model, audio protocol, data or maintenance change. Submissions stayed open; no forced refresh. 78 prior browser assets retained. CPU5000ms, six abuse bindings, private media/consent/ownership/erasure, disabled public Worker URLs and edge/cost guards preserved. A hosting rollout cannot guarantee zero transient network interruption.
+
+Validation: isolated TypeScript/build and340-asset/200-recording packaging;24 actual ranking-fragment renders cover all visible modes, test versions and headphone types, including tie-only/singular and loading states; old-filter restoration; ranking API/model and passage regressions passed. Browser preview exercised changing cohort counts and mobile/ultrawide/TV layouts. Live checks confirm filter removal, displayed counters against ranking rows for every selected test version/headphone type, accurate SHA-256 wording, asset hashes and submissions open. Evidence is workspace/artifacts/rankings-fix-20261018/. Requested5120 is capped at4096 by the browser backend; physical TV/OLED hardware is not certified. No live research votes or participant settings were changed.
+
+## Historical release notes
+
 # Current live release — update88, October 18, 2026
 
 Live: https://yinyangeq.com. The consent popup is compact: optional listener nickname, participation and explicit monitoring Yes/No appear together. Music sharing and full privacy/retention/deletion explanations remain expandable. The initial 360×640 layout fits its controls and action buttons without scrolling; smaller 320×568 and landscape layouts keep nickname and monitoring choices visible and action buttons accessible. Full terms scroll independently. Monitoring remains optional and is never preselected on; the same atomic save and browser Sync identity apply.
