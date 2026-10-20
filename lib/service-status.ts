@@ -1,6 +1,6 @@
 import {env} from 'cloudflare:workers';
 export type ServiceStatus={id:string;active:boolean;message:string;pauseSubmissions:boolean;expiresAt:number|null;enabled:boolean};
-export const DEFAULT_MAINTENANCE_MESSAGE='We’re doing maintenance. Thanks for your patience! Music playback and seeking remain available. Please try saving again shortly.';
+export const DEFAULT_MAINTENANCE_MESSAGE='Major updates are underway. Shootouts are temporarily paused. Listening Pool and Preference Tuning remain available. Thanks for your patience!';
 function database(){if(!env.DB)throw new Error('Service status is unavailable');return env.DB;}
 const inactive:ServiceStatus={id:'',active:false,message:'',pauseSubmissions:false,expiresAt:null,enabled:false};
 export async function readServiceStatus(fresh=false):Promise<ServiceStatus>{
