@@ -8,7 +8,7 @@ Replaced “THE SOUND BETWEEN” with “Two curves. Your choice.” Larger14–
 
 Build and packaging passed with340 assets and200 protected recordings; client dependency/preload packaging checks passed. Live Welcome and /sync returned200; all13 referenced JS/CSS assets matched the intended build. Browser screenshot verifies the shadow-only tagline. One existing Worker updated, three resources unchanged; final preview four unchanged. No migrations or participant-data writes. Evidence: artifacts/tagline-release/{source-scope.json,build.log,assets.log,preview.log,deployment.log,no-drift.log,live-verification.json,live-tagline.png}.
 
-Implementation commit `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6` is on main in work/github-live-sync-20261018. A following documentation commit records the verified release. This release is committed locally; no GitHub push was requested. The earlier update80 publication remains separate. Root tooling/license differences remain preserved; build uses the exact snapshot configuration. Never restore erased user records.
+Implementation commit `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6` is on main in work/github-live-sync-20261018. A following documentation commit records the verified release. The approved update81 implementation and handoff were pushed to GitHub main (release commit17f8a8c). GitHub publication is separate from the already verified live deployment. Root tooling/license differences remain preserved; build uses the exact snapshot configuration. Never restore erased user records.
 
 ## Prior releases and retained work notes (historical)
 
