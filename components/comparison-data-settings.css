@@ -39,3 +39,10 @@
 .comparison-data-settings .agreement-policy { padding-top:16px; }
 .comparison-data-settings .agreement-policy p { margin:0 0 16px; }
 .comparison-data-settings .agreement-policy p:last-child { margin-bottom:0; }
+.comparison-data-settings .agreement-nickname,.comparison-data-settings .monitoring-choice{border:1px solid #42665d;border-radius:10px;background:#0b1d19;padding:14px;margin:0 0 16px;min-width:0}
+.comparison-data-settings .agreement-nickname input{display:block;width:100%;box-sizing:border-box;margin:10px 0;background:#081713;border:1px solid #557c70;border-radius:7px;color:#e4f6ee;padding:12px;font:inherit;min-height:44px}
+.comparison-data-settings .agreement-nickname p,.comparison-data-settings .monitoring-choice p{font-size:13px;line-height:1.5;color:#bbd1c8;margin:8px 0}
+.comparison-data-settings .monitoring-choice legend{font-weight:700;padding:0 5px;color:#e1f5ec}
+.comparison-data-settings .monitoring-option{display:flex;align-items:flex-start;gap:10px;padding:10px 0;color:#e1f5ec;line-height:1.4}
+.comparison-data-settings .monitoring-option input{width:20px;height:20px;flex:none;margin:0;accent-color:#89d9ba}
+.comparison-data-settings .monitoring-saved-state{color:#b5ecd5;font-weight:600}

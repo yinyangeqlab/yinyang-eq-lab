@@ -74,7 +74,7 @@
     },
     {
       "path": "app/api/my-data/route.ts",
-      "sha256": "1fde576ba5841cfc01530d99ca9f867ec330e0b397a894f791b3befe885e3f78"
+      "sha256": "53e9e87ec15a0ac27a0f2d3978f13098dab2520126385fda997d98e948b23ddd"
     },
     {
       "path": "app/api/owner-research-measurement/route.ts",
@@ -234,7 +234,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "dc759a865c8d919685d671518076977d7c90a1670fb8ecb0bbc092edd2ede4e6"
+      "sha256": "e2891a77bbdee4b6376833ad7c3fbc11255f2a3496e7ebbbb070de1c06587c5e"
     },
     {
       "path": "app/welcome.css",
@@ -286,11 +286,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "25cac3d4ca9cc0a173059b1cea1553095cf3ac298cb36317e66dc09d9d74e1ce"
+      "sha256": "e5f9588b4a0cca585307d2beae829334009a0a4acf6e4f565a8811568733db2f"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "a61d725418ce6ab4a1f2494fb1d4c53bfde834476b0221573d8b89a81852ae17"
+      "sha256": "a55d502bcce765204e89605ddbfeabc95793f4f2e1b049c01bf1751f35aa54ff"
     },
     {
       "path": "components/connector-error.tsx",
@@ -1322,7 +1322,7 @@
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "f245d2205e3e067480bda11a731bc6fd692c84f0c5ffbb6e6db3e9f494511efa"
+      "sha256": "95526ae26e66f51f86c6b6849e524d1857d65f2e866b2b79d206e46181d10efd"
     },
     {
       "path": "scripts/check_audit_privacy.mjs",
