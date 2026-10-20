@@ -1,3 +1,4 @@
+import {LEGACY_CUTOFF,RETROSPECTIVE_NOTICE_VERSION} from "@/lib/legacy-review";
 import { env } from "cloudflare:workers";
 import { ARCHIVE_V2_METHOD, ARCHIVE_V2_NOTICE, archiveAccounting, buildArchiveV2, validTargets, type ArchiveStudy, type ArchiveAccount } from "@/lib/archive-v2";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
@@ -33,12 +34,15 @@ export async function POST(request:Request){
   const db=env.DB!,body=await readJsonObject(request,2048);
   if(body.action==="plan"){
    if(body.confirmation!=="PLAN ARCHIVE STUDY"||typeof body.targetA!=="string"||typeof body.targetB!=="string"||!validTargets(body.targetA,body.targetB)||!["blind","bring"].includes(String(body.mode))||!["ie","oe"].includes(String(body.headphoneType)))return Response.json({error:"Choose two different public catalog targets, a music mode and a headphone category."},{status:400,headers});
-   const start=body.startAt,end=body.endAt,day=86400000;
-   if(typeof start!=="number"||typeof end!=="number"||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start%day||end%day||start<Date.now()||end<start+day||end>8640000000000000)return Response.json({error:"Plan whole UTC days in advance, with at least one collection day. The end is exclusive."},{status:400,headers});
+   const retrospective=body.sourceMode==='retrospective',day=86400000;
+   if(retrospective&&body.independentQuestion!==true)return Response.json({error:"Declare this public historical question independently of private preferences, participation counts or identities."},{status:400,headers});
+   const start=retrospective?0:body.startAt,end=retrospective?LEGACY_CUTOFF:body.endAt;
+   const sealAfter=retrospective?Date.now()+7*day:null;
+   if(!retrospective&&(typeof start!=="number"||typeof end!=="number"||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start%day||end%day||start<Date.now()||end<start+day||end>8640000000000000))return Response.json({error:"Plan whole UTC days in advance, with at least one collection day. The end is exclusive."},{status:400,headers});
    const existing=await db.prepare("SELECT id FROM archive_studies WHERE target_a=? AND target_b=? AND mode=? AND headphone_type=? AND start_at=? AND end_at=?").bind(body.targetA,body.targetB,body.mode,body.headphoneType,start,end).first<{id:string}>();
    if(existing)return Response.json({ok:true,studyId:existing.id,existing:true},{headers});
    const id=crypto.randomUUID();
-   await db.prepare("INSERT INTO archive_studies VALUES (?,?,?,?,?,?,?,?,?)").bind(id,body.targetA,body.targetB,body.mode,body.headphoneType,start,end,ARCHIVE_V2_NOTICE,ARCHIVE_V2_METHOD).run();
+   await db.prepare("INSERT INTO archive_studies(id,target_a,target_b,mode,headphone_type,start_at,end_at,notice_version,methodology,source_mode,seal_after) VALUES (?,?,?,?,?,?,?,?,?,?,?)").bind(id,body.targetA,body.targetB,body.mode,body.headphoneType,start,end,retrospective?RETROSPECTIVE_NOTICE_VERSION:ARCHIVE_V2_NOTICE,ARCHIVE_V2_METHOD,retrospective?"retrospective":"prospective",sealAfter).run();
    return Response.json({ok:true,studyId:id},{headers});
   }
   if(body.action!=="seal"||body.confirmation!=="SEAL PROTECTED RESULT"||typeof body.studyId!=="string")return Response.json({error:"Choose a planned study and confirm sealing."},{status:400,headers});
@@ -46,7 +50,8 @@ export async function POST(request:Request){
   if(!study)return Response.json({error:"Study not found."},{status:404,headers});
   const prior=await db.prepare("SELECT payload FROM archive_releases WHERE study_id=?").bind(study.id).first<{payload:string}>();
   if(prior)return Response.json({release:JSON.parse(prior.payload),existing:true},{headers});
-  if(study.end_at>Date.now()||study.methodology!==ARCHIVE_V2_METHOD||study.notice_version!==ARCHIVE_V2_NOTICE)return Response.json({error:"The collection period must close and the planned notice/method must match this release program."},{status:400,headers});
+  const retrospective=study.source_mode==="retrospective";
+  if(Math.max(study.end_at,study.seal_after||0)>Date.now()||study.methodology!==ARCHIVE_V2_METHOD||study.notice_version!==(retrospective?RETROSPECTIVE_NOTICE_VERSION:ARCHIVE_V2_NOTICE))return Response.json({error:"The collection period must close and the planned notice/method must match this release program."},{status:400,headers});
   const next=await db.prepare("SELECT id FROM archive_studies s WHERE NOT EXISTS (SELECT 1 FROM archive_releases r WHERE r.study_id=s.id) ORDER BY end_at,id LIMIT 1").first<{id:string}>();
   if(next?.id!==study.id)return Response.json({error:"Seal planned studies in collection-end order. A result cannot be skipped based on its private outcomes."},{status:409,headers});
   const snapshot=await db.batch([
@@ -54,11 +59,14 @@ export async function POST(request:Request){
    db.prepare("SELECT COALESCE(MAX(sequence)+1,0) next FROM archive_releases"),
    db.prepare(`SELECT o.subject_id,COUNT(*) comparisons,SUM(CASE WHEN v.winner_id=? THEN 1 ELSE 0 END) a_wins
     FROM votes v JOIN submission_owners o ON o.record_kind='vote' AND o.record_id=v.id JOIN privacy_accounts a ON a.subject_id=o.subject_id
-    WHERE v.created_at>=? AND v.created_at<? AND v.created_at>=a.agreed_at AND a.agreement_version=? AND a.submissions_enabled=1
+    WHERE v.created_at>=? AND v.created_at<? AND a.submissions_enabled=1
+    AND ((?=0 AND v.created_at>=a.agreed_at AND a.agreement_version=?) OR (?=1 AND EXISTS (
+      SELECT 1 FROM legacy_record_verifications l JOIN retrospective_permissions p ON p.subject_id=l.subject_id
+      WHERE l.record_kind='vote' AND l.record_id=v.id AND l.subject_id=o.subject_id AND p.study_id=? AND p.enabled=1 AND p.notice_version=? AND a.agreement_version='2026-10-18-v7')))
     AND o.subject_id LIKE 'invite:%' AND v.eligible=1 AND v.test_mode=? AND v.headphone_type=? AND v.heard_a>=5 AND v.heard_b>=5
     AND ((v.winner_id=? AND v.loser_id=?) OR (v.winner_id=? AND v.loser_id=?))
     AND COALESCE((SELECT m.action FROM moderation_events m WHERE m.record_kind='vote' AND m.record_id=v.id ORDER BY m.sequence DESC LIMIT 1),'restore')!='remove'
-    GROUP BY o.subject_id`).bind(study.target_a,study.start_at,study.end_at,study.notice_version,study.mode,study.headphone_type,study.target_a,study.target_b,study.target_b,study.target_a)
+    GROUP BY o.subject_id`).bind(study.target_a,study.start_at,study.end_at,retrospective?1:0,ARCHIVE_V2_NOTICE,retrospective?1:0,study.id,RETROSPECTIVE_NOTICE_VERSION,study.mode,study.headphone_type,study.target_a,study.target_b,study.target_b,study.target_a)
   ]);
   const sequence=Number((snapshot[1].results[0] as {next:number}).next),revision=Number((snapshot[0].results[0] as {revision:number}).revision);
   const release=buildArchiveV2(sequence,study.id,snapshot[2].results as unknown as ArchiveAccount[]);

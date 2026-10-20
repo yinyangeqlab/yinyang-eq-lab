@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ComparisonDataActions from "@/components/comparison-data-actions";
 import { checkReliability } from "@/lib/preference-ranking";
 
 export type Trial = {
@@ -55,7 +56,8 @@ export default function ResultsProfile({ trials, onDeleteBrowser }: { trials: Tr
       const scores=group.map(x=>x.result==="tie"?.5:x.winnerId===row.pair[0]?1:0),rate=scores.reduce<number>((n,x)=>n+x,0)/scores.length;
       const sd=group.length>1?Math.sqrt(scores.reduce<number>((n,x)=>n+(x-rate)**2,0)/(scores.length-1)):0;
       return <details className="trial-row" key={row.id}><summary><strong>{new Date(row.createdAt).toLocaleString()}</strong> · {row.result === "tie" ? "Unsure / tie" : `${row.winnerName} preferred over ${row.loserName}`} <span>{row.mode === "blind" ? "Random blind" : row.mode === "bring" ? "Own music blind" : "Open"} · {row.catchTrial ? "Same-filter check" : row.recorded ? "Ranked" : "Private"} · {row.type === "ie" ? "In ear" : row.type === "oe" ? "Over ear" : "Unclassified"}</span></summary><div className="trial-detail">
-        <div className="trial-data-actions"><a href={`/my-data?trial=${encodeURIComponent(row.id)}`}>Delete / manage submitted comparison</a>{onDeleteBrowser && <button type="button" onClick={()=>{if(window.confirm("Permanently delete this trial and its local notes from this browser? Server submissions will remain."))onDeleteBrowser(row.id);}}>Delete browser copy</button>}</div>
+        <ComparisonDataActions row={row} onDeleted={onDeleteBrowser} />
+        {onDeleteBrowser && <button type="button" onClick={()=>{if(window.confirm("Remove this browser copy only? This will change your local headphone tally, but will NOT delete server submissions or update shared rankings."))onDeleteBrowser(row.id);}}>Remove browser copy only (keeps server data)</button>}
         <p><b>Trial:</b> {row.pairNames[0]} (A) vs {row.pairNames[1]} (B). Answer: {row.result === "tie" ? "Unsure / tie" : row.winnerId === row.pair[0] ? "A" : "B"}. {row.catchTrial ? "Both sides used the same EQ filters; tie is the accuracy answer." : ""}</p>
         <p><b>Reasons for {row.reasonSide?.toUpperCase() || "selected side"}:</b> {row.reasonTags?.length ? row.reasonTags.join(", ") : "None selected"}{row.otherReason ? ` · ${row.otherReason}` : ""}</p>
         <p><b>Measurement:</b> {row.measurementName || "None"} · {row.device || "Unknown headphone"} · {row.rig || "Unknown rig"}</p>

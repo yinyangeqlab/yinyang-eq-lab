@@ -49,6 +49,10 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   } else {
     add("INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?", subjectId!);
   }
+  // Verification requests and reasons are source-side personal data, never an immutable audit exception.
+  add(`DELETE FROM legacy_review_requests WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=legacy_review_requests.record_kind AND s.record_id=legacy_review_requests.record_id) OR id IN (SELECT request_id FROM legacy_record_verifications l WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=l.record_kind AND s.record_id=l.record_id))`);
+  // Explicit cleanup also works with adapters that do not enable FK cascades.
+  add("DELETE FROM legacy_record_verifications WHERE request_id NOT IN (SELECT id FROM legacy_review_requests)");
   // Delete original attachment bytes explicitly as well as their metadata.
   add("DELETE FROM research_measurement_chunks WHERE measurement_id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind='measurement')");
   tally("measurement_file_chunk");
@@ -64,6 +68,9 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   if (!selection) {
     add("DELETE FROM music_votes WHERE user_id=?", subjectId!);
     tally("music");
+    add("DELETE FROM legacy_record_verifications WHERE subject_id=?", subjectId!);
+    add("DELETE FROM legacy_review_requests WHERE subject_id=?", subjectId!);
+    add("DELETE FROM retrospective_permissions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_sessions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_accounts WHERE subject_id=?", subjectId!);
     if (subjectId!.startsWith("invite:")) add("DELETE FROM private_tester_invites WHERE id=?", subjectId!.slice(7));

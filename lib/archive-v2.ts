@@ -2,7 +2,7 @@ import { ARCHIVE_TARGETS } from "@/lib/archive-targets";
 export const ARCHIVE_V2_METHOD="account-fraction-discrete-laplace-v2";
 export const ARCHIVE_V2_NOTICE="2026-10-18-v7";
 export const ARCHIVE_V2_BOUND=25/16;
-export type ArchiveStudy={id:string;target_a:string;target_b:string;mode:string;headphone_type:string;start_at:number;end_at:number;notice_version:string;methodology:string};
+export type ArchiveStudy={id:string;target_a:string;target_b:string;mode:string;headphone_type:string;start_at:number;end_at:number;notice_version:string;methodology:string;source_mode?:string;seal_after?:number|null};
 export type ArchiveAccount={subject_id:string;a_wins:number;comparisons:number};
 export type ArchiveV2Release={sequence:number;studyId:string;methodology:string;epsilon:{numerator:number;denominator:string};result:{preferencePercent:number|null;lowerPercent:number;upperPercent:number;outcome:"a-leaning"|"b-leaning"|"inconclusive"};uncertainty:"at-least-95-percent-noise-only";quantisationPercent:1};
 const allowed=new Set<string>(ARCHIVE_TARGETS.map(t=>t.id));

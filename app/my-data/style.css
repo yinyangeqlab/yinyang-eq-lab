@@ -20,3 +20,6 @@
 .my-data .data-confirm { border-color: #bb7584; }
 .data-notice { padding: 12px; border-left: 3px solid #e6b96d; }
 @media(max-width:600px) { .my-data { padding: 22px 14px 50px; } .my-data section { padding: 18px 14px; } .data-records article,.data-browser-trial { align-items: flex-start; flex-direction: column; gap: 8px; } }
+.my-data textarea { display:block; box-sizing:border-box; width:100%; min-height:85px; margin:8px 0 16px; background:#091319; color:#e2eef1; border:1px solid #435a65; border-radius:8px; padding:12px; font:inherit; }
+.trial-data-actions { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; }
+.trial-data-actions [role="region"] { flex-basis:100%; border:1px solid #bb7584; padding:14px; }

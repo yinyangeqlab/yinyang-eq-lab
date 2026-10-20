@@ -1,4 +1,10 @@
 import type { Trial } from "@/components/results-profile";
+// A tie/check has a server trial ID but no vote: review its listening-run ID.
+export function comparisonLookup(row: Pick<Trial,"id"|"serverTrialId"|"recorded"|"mode">) {
+  return row.recorded && row.serverTrialId
+    ? {kind:"vote",id:row.serverTrialId}
+    : {kind:row.mode==="open"?"open":"run",id:row.id};
+}
 export function deleteBrowserTrial(id: string) {
   const rows = JSON.parse(localStorage.getItem("target-lab-trials") || "[]") as Trial[];
   const reviews = JSON.parse(localStorage.getItem("target-lab-browser-reviews") || "[]") as {recordId:string}[];
@@ -16,6 +22,7 @@ export function clearSiteBrowserData() {
   localStorage.removeItem("yinyang-erasure-event");
 }
 export function notifySharingChoicesChanged() {
+  window.dispatchEvent(new Event("yinyang-data-changed"));
   localStorage.setItem("yinyang-sharing-event", crypto.randomUUID());
   localStorage.removeItem("yinyang-sharing-event");
 }
