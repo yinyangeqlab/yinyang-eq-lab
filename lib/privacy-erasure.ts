@@ -11,6 +11,8 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   if (selection && (!(Object.hasOwn(dataTables, selection.kind)) && selection.kind !== "music" || selection.kind !== "music" && !uuid.test(selection.id))) throw new RequestInputError("Invalid submission.", 400);
   if (!subjectId && (!selection || selection.kind === "music")) throw new RequestInputError("Choose a submission.", 400);
   const statements: D1PreparedStatement[] = [];
+  const browserIds: string[] = [];
+  const scopeOwner = subjectId || (selection ? (await db.prepare("SELECT subject_id FROM submission_owners WHERE record_kind=? AND record_id=?").bind(selection.kind, selection.id).first<{subject_id:string}>())?.subject_id : null);
   const add = (sql: string, ...args: (string | number)[]) => statements.push(db.prepare(sql).bind(...args));
   const day = new Date().toISOString().slice(0, 10);
   const tally = (kind: string) => add(`INSERT INTO deletion_daily_totals(day,record_kind,deleted_count)
@@ -33,6 +35,12 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   }
   if (selection) {
     add("INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) VALUES (?,?)", selection.kind, selection.id);
+    if (scopeOwner) {
+      const related = await db.prepare(`SELECT c.record_kind,c.record_id FROM comparison_records c JOIN submission_owners o ON o.record_kind=c.record_kind AND o.record_id=c.record_id WHERE o.subject_id=? AND c.comparison_id IN (SELECT comparison_id FROM comparison_records WHERE record_kind=? AND record_id=?)`).bind(scopeOwner,selection.kind,selection.id).all<{record_kind:string;record_id:string}>();
+      browserIds.push(selection.id,...(related.results||[]).map(row=>row.record_id));
+      add(`INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT c.record_kind,c.record_id FROM comparison_records c JOIN submission_owners o ON o.record_kind=c.record_kind AND o.record_id=c.record_id WHERE o.subject_id=? AND c.comparison_id IN (SELECT comparison_id FROM comparison_records WHERE record_kind=? AND record_id=?)`,scopeOwner,selection.kind,selection.id);
+    }
+
     if (subjectId && ["vote", "run", "open", "trial"].includes(selection.kind)) {
       // Expand only through authenticated ownership, never through a supplied browser ID.
       let comparisonId = selection.id;
@@ -49,6 +57,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   } else {
     add("INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?", subjectId!);
   }
+  if(scopeOwner) add(`INSERT OR IGNORE INTO privacy_erasure_scope(record_kind,record_id) SELECT 'feedback',f.id FROM feedback_submissions f JOIN submission_owners o ON o.record_kind='feedback' AND o.record_id=f.id WHERE o.subject_id=? AND f.comparison_id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind IN ('run','vote','open','trial'))`,scopeOwner);
   // Verification requests and reasons are source-side personal data, never an immutable audit exception.
   add(`DELETE FROM legacy_review_requests WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=legacy_review_requests.record_kind AND s.record_id=legacy_review_requests.record_id) OR id IN (SELECT request_id FROM legacy_record_verifications l WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=l.record_kind AND s.record_id=l.record_id))`);
   // Explicit cleanup also works with adapters that do not enable FK cascades.
@@ -63,6 +72,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     tally(kind);
   }
   add("DELETE FROM ranked_pair_claims WHERE trial_id IN (SELECT record_id FROM privacy_erasure_scope WHERE record_kind='trial' OR record_kind='vote')");
+  add("DELETE FROM comparison_records WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=comparison_records.record_kind AND s.record_id=comparison_records.record_id)");
   add("DELETE FROM submission_owners WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=submission_owners.record_kind AND s.record_id=submission_owners.record_id)");
   add("DELETE FROM privacy_erasure_scope");
   if (!selection) {
@@ -76,4 +86,5 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     if (subjectId!.startsWith("invite:")) add("DELETE FROM private_tester_invites WHERE id=?", subjectId!.slice(7));
   }
   await db.batch(statements);
+  return { browserIds: [...new Set(browserIds)] };
 }

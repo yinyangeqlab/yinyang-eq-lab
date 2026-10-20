@@ -1,0 +1,11 @@
+.model-comparisons { margin-top:22px; border-top:1px solid #30434b; padding-top:18px; }
+.model-comparisons > summary { cursor:pointer; color:#c2e9e3; font-weight:600; }
+.model-comparisons > .footnote { margin:16px 0; }
+.model-comparisons .trial-row summary { overflow-wrap:anywhere; line-height:1.6; }
+.model-comparisons .trial-row summary span { display:block; margin-left:0; }
+.model-comparisons .trial-detail { padding:10px 4px; }
+.model-comparisons .trial-data-actions input { max-width:100%; box-sizing:border-box; }
+@media(max-width:600px) { .model-comparisons .trial-data-actions { align-items:flex-start; flex-direction:column; } }
+.model-comparisons button { min-height:40px; padding:8px 12px; border:1px solid #527879; border-radius:6px; background:#102a29; color:#d3eeeb; font:inherit; cursor:pointer; }
+.model-comparisons button:disabled { opacity:.5; cursor:default; }
+.model-comparisons a { text-decoration:underline; text-underline-offset:3px; }

@@ -1,9 +1,11 @@
+import { env } from "cloudflare:workers";
+import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { activeSubmissions } from "@/lib/active-submissions";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb } from "@/db";
 import { listeningRuns, rankedTrials, targets, votes } from "@/db/schema";
-import { checkReliability } from "@/lib/preference-ranking";
 import { intervalStats, parseIntervals } from "@/lib/listening";
 import { cleanFeedback } from "@/lib/feedback";
 import { targetHeadphoneType } from "@/lib/target-type";
@@ -40,6 +42,12 @@ export async function POST(request: Request) {
     if (trialAge > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
     const alreadyUsed = await db.select({ id: votes.id }).from(votes).where(eq(votes.id, trialId)).limit(1);
     if (alreadyUsed.length) return Response.json({ error: "This trial has already been submitted." }, { status: 409 });
+    const completed = await db.select().from(listeningRuns).where(eq(listeningRuns.trialId,trialId)).get();
+    if (!completed || completed.voterId!==voterId || completed.testMode!==data.testMode || completed.headphoneType!==data.headphoneType || completed.targetAId!==trial.sideA || completed.targetBId!==trial.sideB || completed.result==="tie" || (completed.result==="a" ? trial.sideA : trial.sideB)!==winnerId || completed.protocolVersion!==LISTENING_PROTOCOL || trial.protocolVersion!==LISTENING_PROTOCOL) return Response.json({error:"A matching completed listening record is required before a ranked vote."},{status:409});
+    const owner = await env.DB!.prepare("SELECT subject_id FROM submission_owners WHERE record_kind='run' AND record_id=?").bind(completed.id).first<{subject_id:string}>();
+    if(owner?.subject_id!==ownership.subjectId) return Response.json({error:"The listening record is not owned by your sign-in."},{status:403});
+    const activeRun=await activeSubmissions();
+    if(!activeRun("run",completed.id)) return Response.json({error:"This listening record was excluded from research."},{status:409});
     const now = Date.now();
     const recentVotes = await db.select({ createdAt: votes.createdAt, otherReason: votes.otherReason }).from(votes)
       .where(and(eq(votes.voterId, voterId), gte(votes.createdAt, now - 86400000)))
@@ -57,42 +65,38 @@ export async function POST(request: Request) {
     const pairType = targetHeadphoneType({ name: pair[0].name, measurement: pair[0].measurement });
     const otherType = targetHeadphoneType({ name: other[0].name, measurement: other[0].measurement });
     if ((pairType && pairType !== data.headphoneType) || (otherType && otherType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
-    if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Undecided answers do not change the rankings." }, { status: 400 });
-    const expected = 1 / (1 + Math.pow(10, (other[0].rating - pair[0].rating) / 400));
-    const delta = 24 * (1 - expected);
+    if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Submit a tie through its completed listening record; this endpoint accepts decisive votes." }, { status: 400 });
     const safeNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
-    const intervals = parseIntervals(data.intervals);
+    const intervals = parseIntervals(JSON.parse(completed.intervals));
     const stats = intervalStats(intervals);
-    const sha256 = String(data.sha256 ?? "");
+    if(stats.heardA<5||stats.heardB<5||stats.overlapSeconds<5) return Response.json({error:"The completed run does not meet the same-passage listening requirement."},{status:400});
+    const shareDetails=data.testMode==="blind" || ownership.shareMusic;
+    const provenance = shareDetails ? JSON.parse(completed.researchContext || "{}") : {};
+    const sha256 = String(provenance.sha256 ?? "");
     if (sha256 && !/^[a-f0-9]{64}$/.test(sha256)) return Response.json({ error: "Invalid file hash." }, { status: 400 });
-    const completedChecks = await db.select().from(listeningRuns).where(and(eq(listeningRuns.voterId, voterId), eq(listeningRuns.targetAId, listeningRuns.targetBId)));
-    const active = await activeSubmissions();
-    const checks = completedChecks.filter(run => active("run", run.id) && run.trialId && (run.testMode === "blind" || run.testMode === "bring") && run.heardA >= 5 && run.heardB >= 5);
-    // Freeze calibration at submission. A later tie/check cannot move existing
-    // target ratings; it changes only the influence of future decisive answers.
-    const reliabilityWeight = checkReliability(checks.filter(run => run.result === "tie").length, checks.length).mean;
+    // Check outcomes remain diagnostics; no unvalidated hearing-ability weights.
+    const reliabilityWeight = 1;
     await db.batch([
       db.insert(votes).values({
-        id: trialId, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
-        songTitle: String(data.songTitle ?? "").trim().slice(0, 120) || null,
-        songArtist: String(data.songArtist ?? "").trim().slice(0, 120) || null,
-        songAlbum: String(data.songAlbum ?? "").trim().slice(0, 120) || null,
-        recordingId: String(data.recordingId ?? "").trim().slice(0, 80) || null,
+        id: trialId, protocolVersion: LISTENING_PROTOCOL, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
+        songTitle: String(shareDetails ? completed.songTitle ?? "" : "").trim().slice(0, 120) || null,
+        songArtist: String(shareDetails ? completed.songArtist ?? "" : "").trim().slice(0, 120) || null,
+        songAlbum: String(shareDetails ? completed.songAlbum ?? "" : "").trim().slice(0, 120) || null,
+        recordingId: String(provenance.recordingId ?? "").trim().slice(0, 80) || null,
         sha256: sha256 || null,
         intervals: JSON.stringify(intervals),
-        ...stats, heardA: data.heardA, heardB: data.heardB, eligible: 1, testMode: String(data.testMode), headphoneType: data.headphoneType,
+        ...stats, eligible: 1, testMode: String(data.testMode), headphoneType: data.headphoneType,
         reasonSide: feedback.reasonSide, reasonTags: JSON.stringify(feedback.reasonTags), otherReason: feedback.otherReason || null,
-        audioFormat: String(data.audioFormat ?? "").trim().slice(0, 40) || null,
-        sampleRate: safeNumber(data.sampleRate),
-        bitrate: safeNumber(data.bitrate),
-        duration: safeNumber(data.duration),
+        audioFormat: String(provenance.audioFormat ?? "").trim().slice(0, 40) || null,
+        sampleRate: safeNumber(provenance.sampleRate),
+        bitrate: safeNumber(provenance.bitrate),
+        duration: safeNumber(provenance.duration),
       }),
-      ownership.record(trialId),
-      db.update(targets).set({ rating: pair[0].rating + delta, wins: pair[0].wins + 1 }).where(eq(targets.id, winnerId)),
-      db.update(targets).set({ rating: other[0].rating - delta, losses: other[0].losses + 1 }).where(eq(targets.id, loserId)),
+      ownership.record(trialId), db.insert(comparisonRecords).values({recordKind:"vote",recordId:trialId,comparisonId:trialId}),
     ]);
     return Response.json({ ok: true });
   } catch (error) {
+    if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return Response.json({error:"This comparison was erased or changed while saving. Start a new comparison."},{status:409});
     const inputError = requestInputResponse(error);
     if (inputError) return inputError;
     if (String(error).includes("UNIQUE constraint failed") || String((error as { cause?: unknown })?.cause).includes("UNIQUE constraint failed")) {

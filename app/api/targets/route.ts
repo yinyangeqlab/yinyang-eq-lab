@@ -1,3 +1,5 @@
+import { rankingEvidence } from "@/lib/ranking-evidence";
+import { rankPreferences } from "@/lib/preference-ranking";
 import { submissionContext } from "@/lib/submission-ownership";
 import { maintenanceResponse } from "@/lib/maintenance";
 import { count, desc, eq, gte, and } from "drizzle-orm";
@@ -12,7 +14,9 @@ import { publicWriteGate } from "@/lib/public-write-gate";
 export async function GET() {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  const rows = await getDb().select().from(targets).where(eq(targets.status, "approved")).orderBy(desc(targets.rating));
+  const evidence = await rankingEvidence();
+  const ratings = new Map(rankPreferences(evidence.targets,evidence.votes).rows.map(row=>[row.id,row]));
+  const rows = evidence.targets.map(target=>({...target,rating:ratings.get(target.id)?.rating??1500,wins:ratings.get(target.id)?.wins??0,losses:ratings.get(target.id)?.losses??0})).sort((a,b)=>b.rating-a.rating||a.id.localeCompare(b.id));
   return Response.json(rows.map(({ points, measurement, ...row }) => ({ ...row, points: JSON.parse(points), measurement: measurement ? JSON.parse(measurement) : null })));
 }
 

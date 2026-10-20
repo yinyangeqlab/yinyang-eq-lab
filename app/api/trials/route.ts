@@ -1,3 +1,6 @@
+import { curveVersion } from "@/lib/curve-version";
+import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
@@ -26,7 +29,7 @@ export async function POST(request: Request) {
     if (recent[0] && now - recent[0].issuedAt < 1000) {
       return Response.json({ error: "Please wait a moment before starting another pairing." }, { status: 429 });
     }
-    const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement }).from(targets).where(eq(targets.status, "approved"));
+    const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement, points:targets.points }).from(targets).where(eq(targets.status, "approved"));
     const approved = approvedRows.filter(target => {
       let measurement: unknown = null;
       try { measurement = target.measurement ? JSON.parse(target.measurement) : null; } catch {}
@@ -52,8 +55,9 @@ export async function POST(request: Request) {
       pair = pool[random(pool.length)];
       if (random(2)) pair = [pair[1], pair[0]];
     }
+    const targetVersions=await Promise.all(pair.map(id=>curveVersion(approved.find(t=>t.id===id)!.points)));
     const id = crypto.randomUUID();
-    await db.batch([db.insert(rankedTrials).values({ id, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id)]);
+    await db.batch([db.insert(rankedTrials).values({ id, protocolVersion: LISTENING_PROTOCOL, targetVersions:JSON.stringify(targetVersions),headphoneType, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"trial",recordId:id,comparisonId:id})]);
     return Response.json({ trialId: id, pair }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const inputError = requestInputResponse(error);

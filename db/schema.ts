@@ -75,6 +75,8 @@ export const listeningRuns = sqliteTable("listening_runs", {
   targetBName: text("target_b_name").notNull(),
   measurementId: text("measurement_id"),
   trialId: text("trial_id"),
+  protocolVersion: text("protocol_version").notNull().default("legacy-v1"),
+  researchContext: text("research_context"),
   result: text("result").notNull(),
   intervals: text("intervals").notNull(),
   heardA: real("heard_a").notNull(),
@@ -106,6 +108,7 @@ export const votes = sqliteTable("votes", {
   sampleRate: integer("sample_rate"),
   bitrate: integer("bitrate"),
   duration: real("duration"),
+  protocolVersion: text("protocol_version").notNull().default("legacy-v1"),
   reliabilityWeight: real("reliability_weight").notNull().default(0.5),
   eligible: integer("eligible").notNull().default(0),
   testMode: text("test_mode").notNull().default("open"),
@@ -113,9 +116,12 @@ export const votes = sqliteTable("votes", {
   reasonSide: text("reason_side"),
   reasonTags: text("reason_tags"),
   otherReason: text("other_reason"),
-}, table => [index("votes_voter_id_idx").on(table.voterId)]);
+}, table => [index("votes_voter_id_idx").on(table.voterId),index("votes_winner_idx").on(table.winnerId),index("votes_loser_idx").on(table.loserId)]);
 
 export const rankedTrials = sqliteTable("ranked_trials", {
+  targetVersions: text("target_versions"),
+  headphoneType: text("headphone_type"),
+  protocolVersion: text("protocol_version").notNull().default("legacy-v1"),
   id: text("id").primaryKey(),
   voterId: text("voter_id").notNull(),
   testMode: text("test_mode").notNull(),
@@ -154,6 +160,7 @@ export const feedbackSubmissions = sqliteTable("feedback_submissions", {
 ]);
 
 export const comparisonChoices = sqliteTable("comparison_choices", {
+  protocolVersion:text("protocol_version").notNull().default("legacy-v1"),
   id: text("id").primaryKey(),
   participantId: text("participant_id").notNull(),
   testMode: text("test_mode").notNull(),
@@ -291,3 +298,9 @@ export const legacyRecordVerifications = sqliteTable("legacy_record_verification
 export const retrospectivePermissions = sqliteTable("retrospective_permissions", {
  studyId:text("study_id").notNull().references(()=>archiveStudies.id),subjectId:text("subject_id").notNull(),enabled:integer("enabled").notNull().default(0),noticeVersion:text("notice_version").notNull(),agreedAt:integer("agreed_at").notNull(),withdrawnAt:integer("withdrawn_at"),
 },t=>[primaryKey({columns:[t.studyId,t.subjectId]}),check("retrospective_permission_enabled",sql`${t.enabled} IN (0,1)`)]);
+
+export const comparisonRecords = sqliteTable("comparison_records", {
+ recordKind: text("record_kind").notNull(), recordId: text("record_id").notNull(), comparisonId: text("comparison_id").notNull(),
+}, table => [primaryKey({columns:[table.recordKind,table.recordId]}),index("comparison_records_group_idx").on(table.comparisonId)]);
+
+export const rankingRevision = sqliteTable("ranking_revision", { id:integer("id").primaryKey(), revision:integer("revision").notNull() });

@@ -1,7 +1,9 @@
-/** Experimental reliability-weighted Bradley–Terry preference model.
+/** Exploratory participant-balanced fractional Bradley–Terry score.
  * Gaussian prior N(1500, 350²); Laplace SD from the full inverse Hessian.
- * Weights below are declared product assumptions, not independently validated
- * measures of hearing ability. Preferences are never marked right or wrong.
+ * Ties score one half. Each participant group has total likelihood weight one,
+ * shared across its distinct pairs; all repeats enter each pair mean.
+ * Laplace ranges are conditional on this scoring model, never population CIs.
+ * Participant groups are authenticated accounts when known, otherwise browsers.
  */
 export type RankingTarget = { id: string; name: string; creator: string };
 export type RankingVote = { id: string; voterId: string; winnerId: string; loserId: string; result?: string | null; reliabilityWeight?: number | null };
@@ -43,14 +45,16 @@ function solve(lower: number[][], rhs: number[]) {
   return x;
 }
 export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) {
-  const rows = targets.map(({ id, name, creator }) => ({ id, name, creator, wins: 0, losses: 0, ties: 0, comparisons: 0, listeners: 0, effectiveComparisons: 0 }));
+  const validTargets=new Set(targets.map(t=>t.id));
+  const involved=new Set(votes.filter(v=>v.winnerId!==v.loserId&&validTargets.has(v.winnerId)&&validTargets.has(v.loserId)).flatMap(v=>[v.winnerId,v.loserId]));
+  const rows = targets.filter(t=>involved.has(t.id)).map(({ id, name, creator }) => ({ id, name, creator, wins: 0, losses: 0, ties: 0, comparisons: 0, listeners: 0, effectiveComparisons: 0 }));
   const index = new Map(rows.map((target, i) => [target.id, i]));
   const listeners = rows.map(() => new Set<string>());
-  const clusters = new Map<string, { a: number; b: number; n: number; sum: number; reliabilitySum: number }>();
+  const clusters = new Map<string, { a: number; b: number; n: number; sum: number; participant: string }>();
   const unique = new Set<string>();
   let count = 0;
   for (const vote of votes) {
-    if (vote.result === "tie" || unique.has(vote.id)) continue; unique.add(vote.id);
+    if (unique.has(vote.id)) continue; unique.add(vote.id);
     const ids = [vote.winnerId, vote.loserId].sort(), a = index.get(ids[0]), b = index.get(ids[1]);
     if (a === undefined || b === undefined || a === b) continue;
     const tie = vote.result === "tie", score = tie ? .5 : vote.winnerId === ids[0] ? 1 : 0;
@@ -58,13 +62,14 @@ export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) 
     if (tie) { rows[a].ties++; rows[b].ties++; }
     else { rows[index.get(vote.winnerId)!].wins++; rows[index.get(vote.loserId)!].losses++; }
     const key = JSON.stringify([vote.voterId, ...ids]);
-    const calibration = Number.isFinite(vote.reliabilityWeight) ? Math.min(1, Math.max(.001, vote.reliabilityWeight!)) : .5;
-    const group = clusters.get(key) ?? { a, b, n: 0, sum: 0, reliabilitySum: 0 };
-    group.n++; group.sum += score * calibration; group.reliabilitySum += calibration; clusters.set(key, group); count++;
+    const group = clusters.get(key) ?? { a, b, n: 0, sum: 0, participant:vote.voterId };
+    group.n++; group.sum += score; clusters.set(key, group); count++;
   }
-  // All repeated answers enter the preference average. Their combined information
-  // saturates below two independent answers per browser/pair, across music modes.
-  const observations = [...clusters.values()].map(group => ({ ...group, score: group.sum / group.reliabilitySum, weight: 2 * group.reliabilitySum / (group.n + 1) }));
+  // Bound a participant's total contribution across pairs, not just repeats of
+  // one pair. More browser sessions on the same verified account add no people.
+  const pairCounts=new Map<string,number>();
+  for(const group of clusters.values()) pairCounts.set(group.participant,(pairCounts.get(group.participant)||0)+1);
+  const observations=[...clusters.values()].map(group=>({...group,score:group.sum/group.n,weight:1/pairCounts.get(group.participant)!}));
   for (const group of observations) for (const i of [group.a, group.b]) rows[i].effectiveComparisons += group.weight;
   const n = rows.length, x = Array(n).fill(0) as number[];
   function derivatives() {
@@ -96,10 +101,10 @@ export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) 
     for (let i = 0; i < n; i++) x[i] -= fraction * step[i];
   }
   const lower = cholesky(derivatives().hessian);
-  return { voteCount: count, rows: rows.map((row, i) => {
+  return { voteCount: count, participantGroups:pairCounts.size, uncertainty:"Conditional scoring-model range; not a population confidence interval", rows: rows.map((row, i) => {
     const unit = Array(n).fill(0); unit[i] = 1;
     const sd = Math.sqrt(Math.max(0, solve(lower, unit)[i])) * SCALE;
     const rating = 1500 + x[i] * SCALE;
     return { ...row, listeners: listeners[i].size, rating, sd, lower: rating - 1.96 * sd, upper: rating + 1.96 * sd };
-  }).filter(row => row.comparisons > 0).sort((a, b) => b.lower - a.lower || b.rating - a.rating || a.id.localeCompare(b.id)) };
+  }).filter(row => row.comparisons > 0).sort((a, b) => b.rating - a.rating || a.id.localeCompare(b.id)) };
 }
