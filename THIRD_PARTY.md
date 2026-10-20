@@ -14,3 +14,5 @@ The top-level Apache 2.0 license covers original application code. It does not r
 - Both indexes link to external measurements. Measurement creators retain their rights; raw measurements are not included.
 
 No PEQdB application code, target curves, or preset exports are included. The working project's PEQdB and other outside-contributor curve seeds were excluded because this package does not establish redistribution rights for them.
+
+The names-only [live target inventory](docs/TARGET_INVENTORY.md) credits the target families used or added on the separate live service, including Tryptify, AutoEq and MrChillStorm sources. No numerical target data is included, including the MIT-licensed experimental curves. Their inclusion on the live service does not relicense this repository or imply creator endorsement. New live imports require explicit redistribution terms; the earlier pool's licensing audit remains incomplete.

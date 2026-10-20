@@ -24,11 +24,11 @@ except sqlite3.IntegrityError:
     pass
 def start(now,until=None):
     until=until or now+60000
-    return db.execute(sql('START_PENALTY_SQL'),('hashed-ip',until,now,now+172800000,now,until,now,now,now,now+172800000,now)).fetchone()
+    return db.execute(sql('START_PENALTY_SQL'),('hashed-ip',until,now,now+172800000,now)).fetchone()
 def hit(now):
     return db.execute(sql('BLOCKED_HIT_SQL'),('hashed-ip',now)).fetchone()
 def escalate(now):
-    return db.execute(sql('ESCALATE_PENALTY_SQL'),(now,now,now+172800000,'hashed-ip',now-60000)).fetchone()
+    return db.execute(sql('ESCALATE_PENALTY_SQL'),(now,now,now+172800000,'hashed-ip',now-60000,now)).fetchone()
 now=1000000
 row=start(now); assert row['level']==1 and row['blocked_until']==now+60000
 assert start(now) is None, 'Concurrent over-limit requests must not stack penalties'
@@ -43,10 +43,17 @@ for expected,delay in [(3,3600000),(4,21600000),(5,86400000),(5,86400000)]:
     row=escalate(now)
     assert row['level']==expected and row['blocked_until']==now+delay
 assert hit(row['blocked_until']+1) is None
-# After quiet expiry, the next violation resets rather than permanently banning.
+# A request arriving at/after expiry cannot escalate an old cooldown, even
+# with old blocked-hit history. Respecting the wait starts the next incident fresh.
+expired=row['blocked_until']
+for _ in range(10): hit(expired-1)
+assert escalate(expired) is None, 'Escalation must never extend an expired cooldown'
+row=start(expired); assert row['level']==1 and row['hits']==0 and row['blocked_until']==expired+60000
+# This also applies after a partial incident, before 48-hour retention expires.
+hit(expired+1000)
+row=start(expired+60000); assert row['level']==1 and row['hits']==0
+assert row['blocked_until']==expired+120000
+# Old records are harmless after retention as well.
 now=row['expires_at']+1
 row=start(now); assert row['level']==1
-# A daily quota must not be bypassed by the shorter default first cooldown.
-now=row['expires_at']+1
-row=start(now,now+40000000); assert row['blocked_until']==now+40000000
-print('Cooldowns: normal first wait, ten-hit threshold, concurrent guards, escalation through 24 hours, quiet reset, daily reset floor, and additive migration pass.')
+print('Cooldowns: ten blocked-hit threshold, concurrent guards, active-only escalation through 24 hours, and a fresh normal wait after every completed cooldown pass.')
