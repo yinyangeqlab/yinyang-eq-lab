@@ -159,10 +159,10 @@ button { cursor: pointer; }
 .owner-research .owner-back-link:hover,.owner-research .owner-back-link:focus-visible { text-decoration:underline; }
 .owner-research .owner-back-link{display:inline-flex;align-items:center;gap:8px;font-weight:750}.owner-research .owner-back-link img{width:36px;height:36px;object-fit:cover;border-radius:7px}.owner-research .owner-back-link span{color:#93b8ba;font-weight:500}
 .owner-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;margin-bottom:16px}.owner-top .owner-back-link{margin-bottom:0}.owner-top nav{display:flex;align-items:center;flex-wrap:wrap;gap:10px 20px;font-size:13px}.owner-top nav a{color:#a9c8cb;text-decoration:none}.owner-top nav a:hover{text-decoration:underline}.owner-top nav [aria-current=page]{color:#91e7e2;font-weight:700}
-.content { max-width: 1200px; margin: 0 auto; padding: 60px 28px 110px; min-height: calc(100vh - 136px); }
+.content { max-width: 1200px; width:100%; margin: 0 auto; padding: 32px 28px 56px; }
 .eyebrow, .mini-label { color: #59d2c4; font-size: 11px; letter-spacing: .17em; font-weight: 800; }
 .status-dot { display: inline-block; width: 7px; height: 7px; background: #5bd9ba; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 15px #5bd9ba; }
-.heading-row { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 17px 0 38px; }
+.heading-row { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 17px 0 24px; }
 h1 { font-size: clamp(36px, 5vw, 62px); letter-spacing: -.055em; margin: 0 0 10px; line-height: 1.05; }
 .heading-row p { color: #97aabd; max-width: 630px; line-height: 1.55; margin: 0; font-size: 15px; }
 .count-pill { flex: none; border: 1px solid #303030; border-radius: 5px; color: #79d9cf; letter-spacing: .12em; padding: 11px 13px; font-size: 10px; font-weight: 800; }
@@ -222,7 +222,7 @@ button:disabled { opacity: .48; cursor: not-allowed; }
 .message { margin-top: 22px; border: 1px solid #38675f; background: #15352f; color: #a7f3e4; padding: 14px 17px; border-radius: 6px; font-size: 13px; }
 footer { display: flex; justify-content: space-between; gap: 20px; padding: 22px max(28px, calc((100vw - 1200px)/2)); border-top: 1px solid #253747; color: #6f8798; font-size: 11px; }
 footer span:first-child { color: #8da9b7; font-weight: 800; letter-spacing: .12em; }
-@media (max-width: 780px) { .topbar { flex-wrap: wrap; padding: 16px 20px 0; gap: 10px; } .topbar nav { order: 3; width: 100%; justify-content: space-around; } .topbar nav button { padding: 14px 5px; } .top-note { display: none; } .content { padding: 40px 20px 70px; } .heading-row { display: block; } .count-pill { display: inline-block; margin-top: 20px; } .cards, .upload-layout { grid-template-columns: 1fr; } .card-bottom {align-items:flex-start;flex-direction:column}.card-actions {width:100%;justify-content:space-between} .ranking-head, .ranking-row { grid-template-columns: 1fr 75px 60px; } .ranking-head, .ranking-row { padding-left: 12px; padding-right: 12px; gap: 6px; } .rank-name { gap: 8px; } .record { font-size: 10px; } footer { padding: 22px 20px; } }
+@media (max-width: 780px) { .topbar { flex-wrap: wrap; padding: 16px 20px 0; gap: 10px; } .topbar nav { order: 3; width: 100%; justify-content: space-around; } .topbar nav button { padding: 14px 5px; } .top-note { display: none; } .content { padding: 24px 20px 40px; } .heading-row { display: block; } .count-pill { display: inline-block; margin-top: 20px; } .cards, .upload-layout { grid-template-columns: 1fr; } .card-bottom {align-items:flex-start;flex-direction:column}.card-actions {width:100%;justify-content:space-between} .ranking-head, .ranking-row { grid-template-columns: 1fr 75px 60px; } .ranking-head, .ranking-row { padding-left: 12px; padding-right: 12px; gap: 6px; } .rank-name { gap: 8px; } .record { font-size: 10px; } footer { padding: 22px 20px; } }
 
 .music-panel { background:#070707; border:1px solid #292929; border-radius:11px; padding:26px; margin:22px 0 34px; }
 .music-panel[hidden] { display:none; }
@@ -1793,3 +1793,29 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 @media(max-width:480px) { .shootout-content .voting-row .listen-progress { grid-template-columns:1fr; } }
 
 @media(max-width:600px) { .shootout-content .voting-row .shootout-controls button { min-height:44px; height:auto; } }
+
+/* Keep the full navigation inside the viewport, including on wide screens. */
+.topbar { flex-wrap:wrap; padding-left:clamp(16px,2vw,28px); padding-right:clamp(16px,2vw,28px); }
+@media(min-width:601px) and (max-width:1800px) {
+  .topbar { gap:8px 14px; padding-top:12px; }
+  .topbar nav { order:3; flex-basis:100%; min-width:0; justify-content:space-between; }
+  .topbar nav button { flex:1; min-width:0; padding:12px 4px; }
+}
+/* Bring the rankings and their filters closer to the page heading. */
+.ranking-filters { display:flex; flex-wrap:wrap; gap:16px 32px; margin-bottom:16px; }
+.ranking-filters .rank-tabs { margin-bottom:0; }
+.rankings-content .ranking-research { margin:0 0 12px; padding:10px 14px; }
+.rankings-content .ranking-method { margin:12px 0; padding:10px 14px; }
+@media(max-width:600px) {
+  .ranking-filters { gap:16px; }
+}
+
+/* Let short sections fill the screen without adding a second viewport of space. */
+.site-contents { display:flex; flex-direction:column; min-height:100svh; }
+.site-contents > .content { flex:1; min-height:0; }
+.heading-row > div { min-width:0; }
+
+/* Keep long research filter options inside the page; tables scroll locally. */
+.owner-filters label { min-width:0; max-width:100%; flex:1 1 190px; }
+.owner-filters input,.owner-filters select { min-width:0; width:100%; max-width:100%; }
+.owner-table-wrap { min-width:0; max-width:100%; }

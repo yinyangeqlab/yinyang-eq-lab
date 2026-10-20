@@ -1,6 +1,14 @@
 # Source handoff — October 17, 2026
 
-This checkpoint brings the public application sources up to the live cooldown policy and records the target-pool changes without distributing target data. Website deployment, live database updates, and GitHub publication are separate operations.
+## Responsive spacing fixes — October 17, 2026
+
+The site uses tighter spacing above page headings and between sections. Ranking filters sit side by side when they fit, and the shared navigation wraps within the viewport. Music Library has a compact introduction so listening controls appear sooner; the welcome page has smaller gaps between sections. Long catalog names in Preference Tuning and long song-filter options in Owner view now shrink inside their containers instead of widening the page.
+
+These five application files match the deployed spacing source. Cloudflare releases 36 and 37 deployed the changes to yinyangeq.com; release 37 includes the populated-data width corrections. Authenticated live browser checks covered Welcome, Preference Tuning, Music Library, Owner view, and all six Shootout tabs at 320, 390, 768, 1440, and 1920 pixels: 50 checks passed with no page-level horizontal overflow. All four live stylesheets matched the release build byte for byte, and the existing private-access smoke check passed. The unpublished credits draft remains excluded from this source update and deployment.
+
+The production build and TypeScript check passed for the isolated deployed source, and private-gate tests passed. The public checkout also passed TypeScript and the production build; its staged release-file scan passed before commit. This update contains styling and ranking-filter markup only; it does not apply database migrations or establish live verification of the measurement upload/download workflow discussed later in this handoff.
+
+The earlier checkpoint below brought the public application sources up to the live cooldown policy and recorded the target-pool changes without distributing target data. Website deployment, live database updates, and GitHub publication are separate operations.
 
 ## Changes included
 
@@ -44,8 +52,8 @@ GitHub publication does not deploy this correction or apply migration `0016` to 
 
 Verification of this correction: TypeScript, the production build and all twelve regression checks passed. The migration chain and current schema snapshot agree, and an isolated Drizzle generation reported no schema changes. A temporary checkout successfully initialized local D1, established a mock sign-in and completed an exact-byte original-file upload/download round trip. Checks used the existing dependency installation with Node 26.11.1; a fresh dependency installation and the minimum supported Node version were not retested.
 
-### Published checkpoint and remaining deployment
+### Published accuracy checkpoint and live workflow follow-up
 
 These corrections were pushed to `main` as [f6c493c](https://github.com/yinyangeqlab/yinyang-eq-league/commit/f6c493c7ffa4c6867bbb7f49e867972d03232f6e). The push used the `yinyangeqlab` account, and GitHub confirmed `yinyangeqlab` as both author and committer. Continue using the repository identity `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>` and the `yinyangeqlab` GitHub account for subsequent commits and pushes.
 
-The GitHub source is updated. The live website has not received these functional fixes through this publication: apply the additive `drizzle/0016_measurement_file_chunks.sql` migration to its existing database and deploy the corrected Worker separately. Preserve existing data and access controls; do not run the fresh-local-database initializer against production. After deployment, verify the contribution/download routes with an authorized test and confirm the original file bytes are preserved. The twelve regression checks and upload/download round trip above were local verification, not proof of a live deployment.
+At the time of that source publication, the functional fixes had not been deployed. The later spacing release 37 rebuilt the Worker from the primary workspace; source comparisons confirm that its measurement contribution/download routes, helper modules, schema declarations, and measurement manager match this corrected checkout. That deployment did not apply migration `0016_measurement_file_chunks.sql`, and this spacing pass did not establish whether it was already present in the live database or verify the live original-file round trip. Confirm the additive migration state before testing that workflow. Preserve existing data and access controls; do not run the fresh-local-database initializer against production. The twelve regression checks and upload/download round trip above remain local verification.

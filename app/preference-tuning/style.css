@@ -188,3 +188,9 @@
 .pt-instructions-more>div{display:grid;gap:8px;padding:0 16px 15px}
 .pt-instructions-more p{margin:0;color:#bdd5d2;font-size:12px;line-height:1.55}
 .pt-instructions-more b{color:#e8f8f5}
+
+/* Long catalog names must shrink within their grid tracks on phones. */
+.pt-workbench > *, .pt-layout > *, .pt-setup > * { min-width:0; }
+.pt-setup .pt-selects { max-width:100%; }
+.pt-setup .pt-selects > label:first-child { width:100%; }
+.pt-setup .pt-selects select { max-width:100%; }
