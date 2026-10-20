@@ -1,3 +1,5 @@
+Current live release is update94.0033/0034 applied; a fresh database uses all35 migrations. Matching encrypted off-device backup, full reconstruction and the refreshed hosted baseline are verified; the daily backup schedule is enabled. See LIVE_RELEASE.json for the latest verified status. Historical update93/81 instructions below require their matching source/schema.
+
 # Recovery and workspace guide
 
 Current live release is update93 with invites off; see HANDOFF.md. The approved nickname feature and migration0032 are live; a fresh database uses all33 migrations. Recovery rehearsals and the existing private update81 bundle below are historical and require their matching source/migration revision. No new recovery bundle or production restoration was made for update82. Keep any recovery environment closed until its ownership/deletion review is complete.

@@ -1,3 +1,17 @@
+> Update94 recovery verification: a matching encrypted off-device backup passed independent download/decryption, complete reconstruction with original source/schema fingerprints, and source-history/build portability checks. The private hosted baseline was refreshed, its validation run passed, and the same daily03:00 America/Los_Angeles schedule was re-enabled. Existing retention is unchanged. No storage details, keys or private receipts are published.
+
+# Current live release — update94, October 19, 2026
+
+Live: https://yinyangeq.com. The owner explicitly authorized deployment of the latest reviewed Tournament work. Personal Tournament is the first suggested mode, with saved personal progress, themed results, uploads/shared playback, compact music source and full title/artist display, restored song ratings, and activity-weighted passage exploration without early repeats. Blind Research/Open Comparison, listening/consent explanations, responsive controls, admin/private-test isolation and reserved-name protections are included. Dynamic Range Compression/Expansion remains Open Comparison only.
+
+Implementation `3762ff728bd545f92530eccbe7a40dcf56658251`. Immutable source/build `work/tournament-release-20261019`; infrastructure `work/tournament-infra-20261019`. One existing Worker updated; three resources unchanged. Migrations0033/0034 applied:46 new schema definitions and the reviewed scoped replacement of ownership_update_guard; existing tables and historical participant rows were not rewritten. No YinYangEQ activation, device enrollment, historical transfer or profile publication occurred. No official participant test vote was cast. These operations remain separately reviewed execution steps.
+
+Deployment began with an informational notice and no feature locks. Existing tests/submissions stayed open; no forced refresh or audio stop. The notice ended after verification. All183 prior browser assets retained. CPU5000ms, six abuse bindings, protected media/admission, disabled Worker public URLs and edge/cost guards preserved.52 focused regression suites, all35 synthetic migrations, source TypeScript, isolated production build and340staticassets/200protected recordings pass. Live checks verified six public pages and223exact asset hashes. Existing schema matched the migration chain before rollout; final schema matches all35 migrations. Physical-device coverage remains limited to the documented browser viewport review.
+
+A fresh encrypted off-device backup succeeded before deployment. A matching update94 encrypted backup and hosted baseline refresh are verified; the daily schedule is enabled. Unrelated backup/recovery development is preserved. GitHub publication is separate and was not requested or performed. Evidence: workspace/artifacts/tournament-release-20261019/.
+
+## Historical release notes
+
 # Current live release — update93, October 18, 2026
 
 Live: https://yinyangeq.com. The owner approved the redesigned maintenance UI shown in the local preview. Feature availability now uses labelled Paused/Available cards; duration uses quick choices and a custom combined-unit form with a readable total. Current live expiry and next-publication duration are clearly separated. Selections take effect only when published. Dark green styling, keyboard controls and mobile layout are retained.

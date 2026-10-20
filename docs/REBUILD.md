@@ -1,3 +1,7 @@
+Current live baseline is update94, implementation3762ff728bd545f92530eccbe7a40dcf56658251. Source/build: work/tournament-release-20261019; infra: work/tournament-infra-20261019. Reviewed Personal Tournament/shared controls and contribution isolation;0033/0034 applied. A fresh database uses all35 migrations. See LIVE_RELEASE.json and docs/TOURNAMENT_REVIEW_2026-10-19.md.
+
+## Historical rebuild notes
+
 Current live baseline is update93, implementation 4dbba07333b0755a1ffbd5dc2ce0416b936c6249. Source/build: work/maintenance-ui-release-20261018; infra: work/maintenance-ui-infra-20261018. Reviewed maintenance-control UI only; no backend or schema change. A fresh database uses all33 migrations. Pending personal-shootout work excluded. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes

@@ -1,3 +1,7 @@
+# Executed with explicit owner authorization — update94
+
+The owner authorized deployment after this plan was written. Release3762ff7 is live and verified;0033/0034 applied, old assets retained, informational notice ended with tests open. Matching encrypted backup and hosted validation passed; daily scheduling resumed. Earlier pending/approval statements below are historical planning context. No account activation, historical transfer, publication or GitHub push. See LIVE_STATE.md and artifacts/tournament-release-20261019/.
+
 # Staged deployment plan — owner review pending, not executed
 
 This is a preparation document for the local Tournament checkpoint. It does not authorize deployment or GitHub publication. Current live release is update93; no new release number is assigned. Do not deploy the current dirty checkout or the local preview assembly.
