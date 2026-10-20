@@ -1,6 +1,6 @@
 # Participant automatic sync and approved devices — October 19, 2026
 
-Candidate for the existing update99 baseline. No real participant data is used for implementation tests or layout fixtures. Independent Shootout and recovery development remains excluded.
+Deployed as update100 from the existing update99 baseline. No real participant data is used for implementation tests or layout fixtures. Independent Shootout and recovery development remains excluded.
 
 ## Behavior and consent
 
@@ -22,6 +22,6 @@ Migration0038 adds three account-scoped tables and four pairing columns; it does
 
 ## Verification and limits
 
-Sixteen targeted suites cover the actual APIs/client, consent acknowledgement and atomic rollback, first-link merge, independent/offline edits, conflicts, erasure, legacy in-flight transfer compatibility, updated transport, account/device isolation and authorization races. All18 synthetic recovery checks passed. Desktop and320px synthetic browser review checked optional naming, keyboard focus, readable wrapping, pause/resume, shared-form sync choice and match/stale states. No new native selects were added. Physical phone access is unavailable; actual cross-device status requires that browser to refresh and report. Production build and deployment are separate from these candidate checks.
+Sixteen targeted suites cover the actual APIs/client, consent acknowledgement and atomic rollback, first-link merge, independent/offline edits, conflicts, erasure, legacy in-flight transfer compatibility, updated transport, account/device isolation and authorization races. All18 synthetic recovery checks passed. Desktop and320px synthetic browser review checked optional naming, keyboard focus, readable wrapping, pause/resume, shared-form sync choice and match/stale states. No new native selects were added. Physical phone access is unavailable; actual cross-device status requires that browser to refresh and report. The isolated production build, full340-asset/200-recording package, additive migration and one-Worker deployment passed verification;390 live JS/CSS hashes matched, original history and research choices were retained, and Brave confirmed matching data/consent. After the owner refreshed the phone, both approved browsers reported matching content and account consent at revision5, and the server all-device indicator was green.
 
 The owner previously declined a fresh backup export. Existing verified encrypted off-device update96 recovery remains retained; a matching current release data/schema baseline remains pending. Do not claim it matches migration0038 or that scheduled exports succeed while the configured baseline is incompatible. This feature does not export or duplicate a backup for each commit.
