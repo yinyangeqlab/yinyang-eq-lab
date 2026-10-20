@@ -1,5 +1,17 @@
 # Source handoff — October 17, 2026
 
+## Live measurement migration and verification — October 17, 2026
+
+Migration `0016_measurement_file_chunks.sql` was applied to the existing live D1 database and its columns, composite primary key and cascading foreign key were verified. Existing target, vote, listening-run and measurement counts were preserved. No initializer or historical migration replay was used.
+
+The corrected application was deployed to [yinyangeq.com](https://yinyangeq.com) in Cloudflare release 39. Deployment used the current public application sources with the live soundtrack mapping, waveform cache and all 32 owner-supplied Shantae assets restored to an isolated build. The unpublished credits draft remained excluded. Only the existing Worker changed; three other infrastructure resources and the access configuration were unchanged.
+
+Live verification used a temporary approved-listener invitation and clearly labeled synthetic CSV/TXT responses. The listener uploaded single, left and right attachments; the single response spanned multiple storage chunks and included a UTF-8 BOM, accented text and CRLF line endings. Owner downloads of all three files matched the originals byte for byte and by SHA-256. The private owner API listed the contribution. Missing rights confirmation was rejected, and both anonymous visitors and approved non-owner listeners were denied owner downloads. The synthetic contribution, its chunks and the temporary invitation were removed after verification; no synthetic votes or listening runs were submitted.
+
+The four main pages loaded successfully. All 32 live soundtrack URLs remained available, the library retained its hosted-audio EQ wording and waveform controls, and the live stylesheets and measurement-client asset matched the verified build exactly. TypeScript, the production build and all twelve regression checks passed before deployment. The README now explicitly distinguishes hosted FLAC/AAC playback from the asset-free GitHub fallback. Git commits and pushes for this follow-up use `yinyangeqlab` only.
+
+This completes the migration/deployment and original-file workflow follow-up recorded later in this document; those earlier pending statements describe their historical checkpoints.
+
 ## Approved navigation treatment — October 17, 2026
 
 Welcome, Preference Tuning, and Music Library now have distinct icons, soft hover glows, floating musical notes, sound ripples, and small animated equalizer bars in the Shootout header. Owner view is a separate, smaller utility button on the far right, with a muted shield icon and no glow or animation. Keyboard focus is supported, and reduced-motion preferences suppress the moving decorations.
