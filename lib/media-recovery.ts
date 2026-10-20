@@ -56,6 +56,11 @@ export function attachMediaRecovery(audio: HTMLAudioElement, options: RecoveryOp
     if (retries >= maxRetries) {
       recovering = false; exhausted = true; options.onFailure(); return false;
     }
+    if(retries===0) {
+      // Native audio errors hide HTTP status. A small HEAD probe lets the
+      // existing yellow notice explain a rate limit without downloading audio.
+      void fetch(audio.src,{method:"HEAD",cache:"no-store",credentials:"same-origin",signal:AbortSignal.timeout(4000)}).catch(()=>{});
+    }
     retries++;
     if (!recovering) {
       if (Number.isFinite(audio.currentTime)) position = audio.currentTime;

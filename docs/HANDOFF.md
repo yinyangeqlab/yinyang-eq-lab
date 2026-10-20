@@ -1,3 +1,19 @@
+# Browser sync, Settings and optional activity monitoring
+
+Prepared October 18, 2026 on top of live update72. The source commit contains the reviewed Sync browsers flow, top-right Welcome Settings disclosure, existing-browser hero entry, and separate explicit activity-monitoring opt-in. Deployment verification and final release reference will be recorded after rollout.
+
+Both browsers open /sync. A ten-minute one-use code and matching confirmation require original-browser approval. The receiving browser separately accepts replacement and finishes copying saved results, measurements, private targets, EQs, tuning/display choices and voter ID. Music files, unfinished tests, cookies and cached consent do not transfer. Both browsers use one verified tester identity afterward; later local edits are not continuously mirrored. Four additional browsers maximum. Disconnect revokes access and data-management credentials. Temporary payloads clear on completion/cancellation; expired transfers purge on the next code creation. Client rollback and idempotent completion cover failure/retry.
+
+Activity monitoring is separate and off by default. Current explicit consent permits route, Shootout tab/mode, active-state and event-time logging for the private admin timeline, with thirty-day retention and deletion on opt-out. Atomic consent rechecking prevents an in-flight event from recreating withdrawn logs. No typed contents, keystrokes, audio, raw IP or device fingerprints enter activity records.
+
+Apply additive migrations0028–0030 before deploying these APIs. The generic Worker modules are lib/browser-pairing.mjs and lib/browser-sync.mjs; a deployment-specific private gate mounts them before normal tester admission and supplies authenticated tester context, D1 and origin/cookie protections. Private deployment configuration/credentials and production content are excluded from this public source checkout. Existing service-notice UI/logic from live update72 is preserved; its operational configuration table is in db/service-status.sql.
+
+Checks: TypeScript, full production build and340-asset/200-recording packaging in the private release; all31 migration/schema checks; actual-route SQLite consent, activity, pairing and sync suites; browser walkthrough of replacement and same identity. The release preserves private audio, current rankings, required comparison participation, cost controls and current service notices. Separate passage/upload/ranking drafts are excluded. Git commit does not by itself deploy or push to GitHub.
+
+---
+
+## Earlier source handoffs
+
 # Current source handoff — live update70, October 18, 2026
 
 The application source now matches the verified live update70 runtime. Commit `f9d150f` brings the previously deployed agreement controls and navigation into Git; `b3b0f9e` adds the deployed Sodium credits entry. This source sync excludes unpublished privacy/activity/browser-pairing, passage/upload, welcome and ranking drafts in the owner workspace.
