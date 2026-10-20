@@ -272,7 +272,7 @@
     },
     {
       "path": "app/preference-tuning/style.css",
-      "sha256": "d65cc4f060eb22a8d51856f675f42da6fce4bc5921157e1806b701c773b7ab22"
+      "sha256": "870386b71039001a3a85babf29773ef7bfdafe052c24ff7c05224aa3c4268e1c"
     },
     {
       "path": "app/privacy/layout.tsx",
