@@ -2,7 +2,7 @@ export const MAINTENANCE_FEATURES = [
   {id:"shootouts",label:"Shootouts",description:"Shootout pages, new tests, comparisons, votes and feedback."},
   {id:"listeningPool",label:"Listening Pool",description:"Listening Pool page and music votes. Shared audio stays available to other enabled tools."},
   {id:"preferenceTuning",label:"Preference Tuning",description:"Preference Tuning pages and target/EQ downloads."},
-  {id:"contributions",label:"Uploads & suggestions",description:"Target uploads, contributed measurements and song suggestions."},
+  {id:"contributions",label:"Shared uploads & suggestions",description:"Submitting public targets, contributed measurements and song suggestions."},
 ] as const;
 export type MaintenanceFeature = typeof MAINTENANCE_FEATURES[number]["id"];
 export function validMaintenanceLocks(value:unknown):value is MaintenanceFeature[] {
