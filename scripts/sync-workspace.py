@@ -17,6 +17,7 @@ CHECKS = {
     "check_rate_penalties.py", "check_service_warning.mjs", "check_vote_limits.mjs",
     "check_public_write_limits.py", "check_request_json.mjs",
     "check_write_policy.mjs", "check_ranking_api.mjs", "check_ranked_runs.mjs",
+    "check_measurement_research.mjs", "check_migration_chain.py",
 }
 PRESERVED = {
     "drizzle/0001_target_validation.sql",  # Working copy contains withheld seeds.

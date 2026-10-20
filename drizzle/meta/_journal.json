@@ -80,11 +80,11 @@
       "breakpoints": true
     },
     {
-      "idx": 11,
       "version": "6",
-      "when": 1792306000000,
-      "tag": "0011_research_records",
-      "breakpoints": true
+      "when": 1792306000011,
+      "breakpoints": true,
+      "idx": 11,
+      "tag": "0011_public_write_limits"
     },
     {
       "idx": 12,
@@ -94,11 +94,39 @@
       "breakpoints": true
     },
     {
+      "version": "6",
+      "when": 1792306000013,
+      "breakpoints": true,
       "idx": 13,
+      "tag": "0012_private_tester_invites"
+    },
+    {
+      "idx": 14,
       "version": "6",
       "when": 1792214543824,
       "tag": "0013_bouncy_kingpin",
       "breakpoints": true
+    },
+    {
+      "version": "6",
+      "when": 1792306000015,
+      "breakpoints": true,
+      "idx": 15,
+      "tag": "0014_research_records"
+    },
+    {
+      "version": "6",
+      "when": 1792306000016,
+      "breakpoints": true,
+      "idx": 16,
+      "tag": "0015_ranked_repeats_uncertainty"
+    },
+    {
+      "version": "6",
+      "when": 1792306000017,
+      "breakpoints": true,
+      "idx": 17,
+      "tag": "0016_measurement_file_chunks"
     }
   ]
 }
