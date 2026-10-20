@@ -167,7 +167,7 @@
     },
     {
       "path": "app/api/research/route.ts",
-      "sha256": "145fc78bf3a3a69ea5ee105a9c27f510b7cd231b33000f5e69f501365f09fd2c"
+      "sha256": "bf9e5f44026b0f523392efd15fa36eb07761b0b0aa787e1504e1cad4129a1eef"
     },
     {
       "path": "app/api/suggestions/route.ts",
@@ -283,7 +283,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "575a76dca70ad17b4219cfb523aafe5a590a68b70b63dc5c85e7e3941dd9e108"
+      "sha256": "1824d6c2024168bf875cb2ab6e098ea0a16f3e3d2fbc35ea98f8bd6696bccb52"
     },
     {
       "path": "app/welcome.css",
@@ -1199,7 +1199,7 @@
     },
     {
       "path": "lib/ranking-evidence.ts",
-      "sha256": "910988bc23ec8ec7071e9337a4179cbd577636d409c50b027db4b6e190958cc5"
+      "sha256": "4ef6583c36c20017d453d865b49d17c6ded58e8747e3eceb8cbe3d6b3ce0c35d"
     },
     {
       "path": "lib/rate-penalty.ts",
@@ -1435,7 +1435,7 @@
     },
     {
       "path": "scripts/check_passage_ranking.mjs",
-      "sha256": "a96cdfb3451b86e948460a2e5f5f37cb138148cd5b1abb3a468e828cd7f2fe00"
+      "sha256": "d5b6bfa3d6d4a38f240df2d08f9cfff2110c6363013372a3a6ec08e8c583ed57"
     },
     {
       "path": "scripts/check_preference_ranking.mjs",
@@ -1451,7 +1451,7 @@
     },
     {
       "path": "scripts/check_ranking_api.mjs",
-      "sha256": "bdddde093e07bbeacf952820a258b77834dc179acea1c8c2ab5075fa38547853"
+      "sha256": "841053b4743e0296543e09116dddacc8c8daa23d66685b7e79a3d0201afc2466"
     },
     {
       "path": "scripts/check_ranking_view.mjs",
