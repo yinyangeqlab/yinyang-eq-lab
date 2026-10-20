@@ -1,3 +1,4 @@
+import { activeSubmissions } from "@/lib/active-submissions";
 import { maintenanceResponse } from "@/lib/maintenance";
 import { getDb } from "@/db";
 import { targets, votes } from "@/db/schema";
@@ -12,7 +13,8 @@ export async function GET() {
   const db = getDb();
   const [allTargets, allVotes] = await Promise.all([db.select().from(targets), db.select().from(votes)]);
   const approved = new Set(allTargets.filter(t => t.status === "approved").map(t => t.id));
-  const qualified = allVotes.filter(v => (v.testMode === "blind" || v.testMode === "bring") && v.eligible === 1 && approved.has(v.winnerId) && approved.has(v.loserId) && (v.heardA ?? 0) >= 5 && (v.heardB ?? 0) >= 5);
+  const active = await activeSubmissions();
+  const qualified = allVotes.filter(v => active("vote", v.id) && (v.testMode === "blind" || v.testMode === "bring") && v.eligible === 1 && approved.has(v.winnerId) && approved.has(v.loserId) && (v.heardA ?? 0) >= 5 && (v.heardB ?? 0) >= 5);
   const cohorts = new Map<string, Set<string>>();
   for (const vote of qualified) {
     if (!vote.sha256 || !vote.songTitle || !vote.songArtist || !vote.songAlbum || !vote.recordingId) continue;

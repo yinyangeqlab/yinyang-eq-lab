@@ -35,6 +35,8 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     async batch() { batches++; },
   };
   const imports = {
+    "@/lib/submission-ownership": { submissionContext: async () => ({shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },
+    "@/lib/active-submissions": { activeSubmissions: async () => (kind,id) => id !== "removed-check" },
     "drizzle-orm": Object.fromEntries(["and", "desc", "eq", "gte", "or"].map(name => [name, (...args) => ({ name, args })])),
     "@/db": { getDb: () => db }, "@/db/schema": schema,
     "@/lib/preference-ranking": { checkReliability: (correct, total) => ({ mean: (correct + 2) / (total + 4) }) },
@@ -62,3 +64,6 @@ for (const [options, status] of [[{ gate: true }, 429], [{ used: true }, 409], [
 const checked = await submit({checks:Array.from({length:12},()=>({trialId:'issued',testMode:'blind',heardA:6,heardB:6,result:'tie'}))});
 assert.equal(checked.status,200); assert.equal(checked.reliabilityWeight,14/16,'Calibration is persisted on the decisive vote');
 console.log("Vote route accepts the seventh and 51st votes; shared throttling, replay protection, repeated pairs, undecided exclusion, and listening requirements remain enforced.");
+
+const removedCheck = await submit({checks:[{id:'removed-check',trialId:'issued',testMode:'blind',heardA:6,heardB:6,result:'tie'}]});
+assert.equal(removedCheck.reliabilityWeight,.5,'Removed checks cannot calibrate future votes');

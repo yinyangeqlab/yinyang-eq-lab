@@ -7,8 +7,9 @@ const code=ts.transpileModule(readFileSync(new URL('../app/api/listening-runs/ro
 const ids=Array.from({length:5},(_,i)=>`${i+1}1111111-1111-4111-8111-111111111111`);
 async function run({age=11000,heard=6,mismatch=false,mode='blind'}={}) {
  let saved;
- const db={select:()=>({from:()=>({where:()=>({get:async()=>({voterId:ids[1],testMode:'blind',sideA:mismatch?ids[3]:ids[2],sideB:ids[3],issuedAt:Date.now()-age})})})}),insert:()=>({values:value=>({onConflictDoNothing:async()=>{saved=value;}})})};
+ const db={select:()=>({from:()=>({where:()=>({get:async()=>({voterId:ids[1],testMode:'blind',sideA:mismatch?ids[3]:ids[2],sideB:ids[3],issuedAt:Date.now()-age})})})}),insert:()=>({values:value=>({value})}),batch:async commands=>{saved=commands[0].value;}};
  const deps={
+  "@/lib/submission-ownership":{submissionContext:async()=>({shareMusic:true,requireTrial:async()=>{},record:()=>({ownership:true})})},
   'drizzle-orm':{eq:(...args)=>args},'@/db':{getDb:()=>db},'@/db/schema':{listeningRuns:{},rankedTrials:{}},
   '@/lib/listening':{parseIntervals,intervalStats},'@/lib/request-json':{readJsonObject:r=>r.json(),requestInputResponse:()=>null},
   '@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'test'},'@/lib/public-write-gate':{publicWriteGate:async()=>null},

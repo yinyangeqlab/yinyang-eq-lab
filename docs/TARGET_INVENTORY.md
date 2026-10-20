@@ -11,9 +11,9 @@ For future additions, require a clear license covering redistribution of the act
 | Target | Creator or source credit | Pool |
 | --- | --- | --- |
 | PEQdB Diamond β | PEQdB | Both |
-| YinYang EQ Preference Target I | YinYang EQ Lab | Both |
-| YinYang EQ Preference Target II | YinYang EQ Lab | Both |
-| YinYang EQ Preference Target II (rev. 2) | YinYang EQ Lab | Both |
+| YinYang EQ Preference Target I | Yin Yang EQ Lab | Both |
+| YinYang EQ Preference Target II | Yin Yang EQ Lab | Both |
+| YinYang EQ Preference Target II (rev. 2) | Yin Yang EQ Lab | Both |
 | Diffuse Field | Headphone Filters library | Both |
 | Endgame IE | Headphone Filters library | IE |
 | Harman IE 2019 | Headphone Filters library | IE |

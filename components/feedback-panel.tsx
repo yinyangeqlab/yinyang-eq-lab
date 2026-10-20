@@ -7,7 +7,7 @@ const REASONS = ["Sounds harsh", "Too bright", "Too dark", "Too muddy", "Too lou
 type Draft = { tags: string[]; note: string };
 const empty = (): Draft => ({ tags: [], note: "" });
 
-export default function FeedbackPanel({ open, pair, trialId, testMode, headphoneType, approved, music, getComparisonId }: { open: boolean; pair: [string,string]; trialId: string | null; testMode: "blind" | "bring" | "open"; headphoneType: "ie" | "oe" | null; approved: boolean; music: React.RefObject<MusicPanelHandle | null>; getComparisonId: () => string }) {
+export default function FeedbackPanel({ open, pair, trialId, testMode, headphoneType, approved, music, getComparisonId, submissionsEnabled = true }: { open: boolean; pair: [string,string]; trialId: string | null; testMode: "blind" | "bring" | "open"; headphoneType: "ie" | "oe" | null; approved: boolean; music: React.RefObject<MusicPanelHandle | null>; getComparisonId: () => string; submissionsEnabled?: boolean }) {
   const [side, setSide] = useState<0|1>(0);
   const [drafts, setDrafts] = useState<[Draft,Draft]>([empty(),empty()]);
   const [submitted, setSubmitted] = useState<[boolean,boolean]>([false,false]);
@@ -16,6 +16,7 @@ export default function FeedbackPanel({ open, pair, trialId, testMode, headphone
   const draft = drafts[side];
   function update(next: Draft) { setDrafts(current => current.map((value,index) => index === side ? next : value) as [Draft,Draft]); }
   async function submit() {
+    if (!submissionsEnabled) { setMessage("Agreement to comparison-data collection is required before using the listening tools."); return; }
     if (!draft.tags.length && !draft.note.trim()) { setMessage("Choose a description or enter feedback first."); return; }
     if (!headphoneType) { setMessage("Choose In-Ear or Over-Ear first."); return; }
     if (!approved) { setMessage("Feedback about private targets stays in this browser's My results. Choose approved targets to submit research feedback."); return; }

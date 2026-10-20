@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { maintenanceResponse } from "@/lib/maintenance";
 import { count, desc, gte } from "drizzle-orm";
 import { getDb } from "@/db";
@@ -14,6 +15,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("suggestion");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 2048);
@@ -30,7 +32,8 @@ export async function POST(request: Request) {
     ]);
     if (hourly[0].total >= 30 || daily[0].total >= 150)
       return Response.json({ error: "The suggestion queue is full. Please try later." }, { status: 429, headers: { "Retry-After": "3600" } });
-    await db.insert(suggestions).values({ id: crypto.randomUUID(), title, artist, album, recordingId, note, createdAt: now });
+    const id = crypto.randomUUID();
+    await db.batch([db.insert(suggestions).values({ id, title, artist, album, recordingId, note, createdAt: now }), ownership.record(id)]);
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

@@ -19,6 +19,7 @@ const db = {
   async batch(commands) {
     queries++;
     for (const { table, value } of commands) {
+      if (table === "ownership") continue;
       if (table === metadata) records.set(value.id, value); else storedChunks.push(value);
     }
   },
@@ -29,6 +30,7 @@ const db = {
   } }; } }; },
 };
 const deps = {
+  "@/lib/submission-ownership": { submissionContext:async()=>({record:()=>({table:"ownership",value:{}})}) },
   '@/db': { getDb: () => db },
   '@/db/schema': { researchMeasurements: metadata, researchMeasurementChunks: chunkTable },
   '@/lib/curves': { parseCurve },

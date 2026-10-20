@@ -1,0 +1,13 @@
+.legacy-review article { border-top:1px solid #30434b; margin-top:22px; padding:20px 0 4px; }
+.legacy-review h3 { font-size:18px; font-weight:600; margin:0 0 12px; }
+.legacy-review label { display:block; margin:14px 0; line-height:1.6; }
+.legacy-review input:not([type=checkbox]),.legacy-review textarea,.legacy-review select { display:block; box-sizing:border-box; width:100%; max-width:650px; border:1px solid #526c77; border-radius:7px; padding:11px; margin-top:7px; background:#071116; color:#e2eef1; font:inherit; }
+.legacy-review textarea { min-height:90px; }
+.legacy-review input[type=checkbox] { width:18px; height:18px; margin-right:9px; accent-color:#7bdccd; vertical-align:middle; }
+.legacy-review button { display:inline-block; min-height:42px; border:1px solid #578b87; border-radius:7px; padding:9px 14px; margin:6px 10px 6px 0; background:#12332f; color:#c2f5ed; font:inherit; cursor:pointer; }
+.legacy-review button:disabled { opacity:.5; cursor:default; }
+.legacy-review details { margin:10px 0; }
+.legacy-review code { overflow-wrap:anywhere; }
+.trial-data-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin:14px 0; }
+.trial-data-actions [role=region] { flex-basis:100%; border:1px solid #bb7584; padding:16px; border-radius:8px; }
+.trial-data-actions input { color:#e6f2f4; background:#061015; border:1px solid #4d6a76; border-radius:6px; font:inherit; padding:10px; margin:8px; }
