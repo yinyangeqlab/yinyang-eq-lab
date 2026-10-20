@@ -1,6 +1,6 @@
 # Browser sync, Settings and optional activity monitoring
 
-Prepared October 18, 2026 on top of live update72. The source commit contains the reviewed Sync browsers flow, top-right Welcome Settings disclosure, existing-browser hero entry, and separate explicit activity-monitoring opt-in. Deployment verification and final release reference will be recorded after rollout.
+Deployed and verified as update73 on October 18, 2026, preserving live update72. The source commit contains the reviewed Sync browsers flow, top-right Welcome Settings disclosure, existing-browser hero entry, and separate explicit activity-monitoring opt-in. Live checks verified11 exact JS/CSS assets, original private audio, consent, handshake, shared identity and revocation. All disposable verification records were erased; no comparisons were submitted. Final infrastructure preview: four unchanged.
 
 Both browsers open /sync. A ten-minute one-use code and matching confirmation require original-browser approval. The receiving browser separately accepts replacement and finishes copying saved results, measurements, private targets, EQs, tuning/display choices and voter ID. Music files, unfinished tests, cookies and cached consent do not transfer. Both browsers use one verified tester identity afterward; later local edits are not continuously mirrored. Four additional browsers maximum. Disconnect revokes access and data-management credentials. Temporary payloads clear on completion/cancellation; expired transfers purge on the next code creation. Client rollback and idempotent completion cover failure/retry.
 
@@ -8,7 +8,7 @@ Activity monitoring is separate and off by default. Current explicit consent per
 
 Apply additive migrations0028–0030 before deploying these APIs. The generic Worker modules are lib/browser-pairing.mjs and lib/browser-sync.mjs; a deployment-specific private gate mounts them before normal tester admission and supplies authenticated tester context, D1 and origin/cookie protections. Private deployment configuration/credentials and production content are excluded from this public source checkout. Existing service-notice UI/logic from live update72 is preserved; its operational configuration table is in db/service-status.sql.
 
-Checks: TypeScript, full production build and340-asset/200-recording packaging in the private release; all31 migration/schema checks; actual-route SQLite consent, activity, pairing and sync suites; browser walkthrough of replacement and same identity. The release preserves private audio, current rankings, required comparison participation, cost controls and current service notices. Separate passage/upload/ranking drafts are excluded. Git commit does not by itself deploy or push to GitHub.
+Checks: TypeScript, full production build and340-asset/200-recording packaging in the private release; all31 migration/schema checks; actual-route SQLite consent, activity, pairing and sync suites; browser walkthrough of replacement and same identity. The release preserves private audio, current rankings, required comparison participation, cost controls and current service notices. Separate passage/upload/ranking drafts are excluded. The live deployment is verified. GitHub has not been pushed.
 
 ---
 
