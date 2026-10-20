@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 82,
-  "implementationCommit": "3565e5b803330e716a881f72e562c24e4211bd68",
-  "runtimeParity": "All recorded runtime application files match the verified live snapshot.",
+  "liveUpdate": 85,
+  "implementationCommit": "18bf9c7",
+  "runtimeParity": "Verified live update85 plus explicitly listed canonical-only optional nickname preview; the preview and migration0032 are not deployed.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -299,6 +299,10 @@
     {
       "path": "components/library-wave-player.tsx",
       "sha256": "746251bd2a0bb4925935c7e9106be27e0b013ad45c471cb343ea8182f6eb80a0"
+    },
+    {
+      "path": "components/listener-nickname-panel.tsx",
+      "sha256": "bb6e9d3745197dfce35cfa0a0fa3489095fae67aa052a39ae95cd2851af89815"
     },
     {
       "path": "components/maintenance-gate.tsx",
@@ -805,6 +809,10 @@
       "sha256": "ab937e2c1f4d31b76c89d4a3a440418cf08bf1d585675ed2cd4d8357f6b692a2"
     },
     {
+      "path": "drizzle/0032_listener_nicknames.sql",
+      "sha256": "4600fff3286a0123a5afaee8ee5613a7d49b5e96b8d3cea840a0caeead4ebc36"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -871,6 +879,10 @@
     {
       "path": "drizzle/meta/0031_snapshot.json",
       "sha256": "8f8dd29f3f46430f78aa4fd113c2dc1cde56ed5563afdedfe174c1d77f2abf95"
+    },
+    {
+      "path": "drizzle/meta/0032_snapshot.json",
+      "sha256": "e79193d72ec81a1bec9110c441bbcda0029956881e73e15fb1b7b28cd780d219"
     },
     {
       "path": "drizzle/meta/_journal.json",
@@ -1029,6 +1041,10 @@
       "sha256": "8b9ed493bf313fddeaa769419e345237d1cb3fab16108e7b1319c5dd6d7e91f0"
     },
     {
+      "path": "lib/listener-nickname.ts",
+      "sha256": "08bf4e3d7d49b2a0afb29eaea643d969e4f6246d5babc23debeeb09eb312b6e6"
+    },
+    {
       "path": "lib/listening-audio.ts",
       "sha256": "8308b676eaa8842af5151e70e551f509a735b79b98d2b610d72b6618bcb42133"
     },
@@ -1071,6 +1087,10 @@
     {
       "path": "lib/music-preferences.ts",
       "sha256": "5aa45be4f7678cb5acfc4c603ca948ae81d132e2b08fb3b3f6239df96b09374e"
+    },
+    {
+      "path": "lib/notice-duration.ts",
+      "sha256": "f70c75f0e5a740d56972e20179e97638f66288662d2cd7b21466593e2b8e60e5"
     },
     {
       "path": "lib/owner-access.ts",
@@ -1293,6 +1313,10 @@
       "sha256": "3c9456df13fe55efc7b703707f52e8044e688f9b93686386e6fa8b22c869ee72"
     },
     {
+      "path": "scripts/check_listener_nickname.mjs",
+      "sha256": "14ff8f18fad42a9124a7b1f4c98bd084c95c6965a72e2d99633d080f914beabe"
+    },
+    {
       "path": "scripts/check_listening_audio.cjs",
       "sha256": "f3e08f6776cf3f6388cda84dc5511b73c64ce272226792117d79241a6559127d"
     },
@@ -1315,6 +1339,10 @@
     {
       "path": "scripts/check_music_preferences.cjs",
       "sha256": "28df34ca1fbd87abeb2a17691b8e158c0f4544c1546705d146c7783358dcde2d"
+    },
+    {
+      "path": "scripts/check_notice_duration.mjs",
+      "sha256": "3441f2a532a98618cd4b96a47203f5afda26d7c129a32b0632a8d61de59a81a3"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
@@ -1501,5 +1529,7 @@
     "node": "26.12.0",
     "npm": "12.2.1",
     "testedPlatform": "linux"
-  }
+  },
+  "pendingPreviewCommit": "ae7c196",
+  "pendingDeploymentApproval": true
 }
