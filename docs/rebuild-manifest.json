@@ -1,6 +1,6 @@
 {
-  "liveUpdate": 81,
-  "implementationCommit": "08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6",
+  "liveUpdate": 82,
+  "implementationCommit": "3565e5b803330e716a881f72e562c24e4211bd68",
   "runtimeParity": "All recorded runtime application files match the verified live snapshot.",
   "sourceVariants": {
     "portableTests": [
@@ -279,6 +279,10 @@
     {
       "path": "components/headphone-picker.tsx",
       "sha256": "756b4ed573cf6a8d317c936056446e07256d492b759968e66810c9617740e456"
+    },
+    {
+      "path": "components/invite-mode.tsx",
+      "sha256": "3271be5071ce07517529f52c2d1aa3cb5956840bff046d8aa8b354860c264a1c"
     },
     {
       "path": "components/legacy-review.css",
@@ -797,6 +801,10 @@
       "sha256": "68ea6eb359aab87a53e60dd422ba47d4429d26e07b3565c99d04605454d2e688"
     },
     {
+      "path": "drizzle/0031_site_access_settings.sql",
+      "sha256": "ab937e2c1f4d31b76c89d4a3a440418cf08bf1d585675ed2cd4d8357f6b692a2"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -859,6 +867,10 @@
     {
       "path": "drizzle/meta/0030_snapshot.json",
       "sha256": "349d3ce82915cf9c8b5f1823cfadf3cbe66da816ea4543a47b2b2d75e7db54e4"
+    },
+    {
+      "path": "drizzle/meta/0031_snapshot.json",
+      "sha256": "8f8dd29f3f46430f78aa4fd113c2dc1cde56ed5563afdedfe174c1d77f2abf95"
     },
     {
       "path": "drizzle/meta/_journal.json",
@@ -999,6 +1011,14 @@
     {
       "path": "lib/feedback.ts",
       "sha256": "59e25f3f06755b992188f17c73677da4c08e02f6bab60a13c5bbd0a5cfaa1ddf"
+    },
+    {
+      "path": "lib/invite-settings.d.mts",
+      "sha256": "a52c8b69be2daf89c20aef2784a21e00bc0c81f415fe854221b6298100389431"
+    },
+    {
+      "path": "lib/invite-settings.mjs",
+      "sha256": "ded4893d61765953f84e56ea8cee52981261e875d62624aa8aa62781177586ea"
     },
     {
       "path": "lib/legacy-notice.ts",

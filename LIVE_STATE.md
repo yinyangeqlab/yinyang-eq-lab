@@ -1,3 +1,21 @@
+# Current live release — update82, October 18, 2026
+
+Site: https://yinyangeq.com. Invites are **off**. The admin-only control is at `/owner-research#tester-access`. Welcome says “Enter the shootout”; Shootout, Track Library and Preference Tuning navigation remain available. No additional Welcome redesign was applied.
+
+This summary supersedes historical notes below. Develop, test, commit and push only in `workspace/`. Verified deployed source/build: `work/invite-release-20261018`; infrastructure: `work/invite-infra-20261018`. Implementation commit: `3565e5b803330e716a881f72e562c24e4211bd68`. GitHub publication is separate and its verification will be recorded after push.
+
+The persistent toggle defaults off. With invites off, code restrictions, invitation links and visitor-facing invitation wording are hidden; invitation management/redemption are inactive. Turning it on restores the existing creation, single-use redemption, 48-hour session, expiry and revocation process. Existing invitation rows and expiry times are preserved. Automatic browser access retains consent, private media, verified data ownership and deletion controls; open credentials cannot pass invite-only admission when re-enabled.
+
+Applied only additive migration `0031_site_access_settings.sql` to the existing database. No existing schema was altered or participant records restored. One existing Worker updated; three resources unchanged; final preview four unchanged. CPU5000ms, six abuse bindings, private media routing, disabled public Worker/preview URLs and the independently scheduled cost guard are retained. Separate edge/budget rules were not modified; the app token lacks zone-rule read scope, so those rules were not freshly read back.
+
+Verified both live modes, then restored invites off. Thirty-six live assertions covered the admin-only toggle and CSRF, open admission, required consent, protected audio range, ownership, original invitation creation/redemption/single-use/48-hour expiry, rejection of open credentials when enabled and continued data management. Only disposable fixture accounts were created and erased; cleanup was independently checked. All14 live referenced JS/CSS assets matched the intended build. Live browser inspection confirmed Welcome wording in both modes and retained navigation. The final screenshot is `workspace/artifacts/invite-release/live-invites-off.png`.
+
+Build, app/infra TypeScript, 340-asset/200-recording packaging,32-migration checks, invite/browser pairing, browser sync, participation preferences, activity monitoring, passage regressions and18 recovery safety tests passed. No physical-device testing was performed. Evidence is private/ignored under `workspace/artifacts/invite-release/`.
+
+The previously tested update81 recovery bundle remains bound to its recorded source/migration fingerprint. This release did not create a new participant-data backup. Use the matching source revision and a fresh deletion review for any recovery. Unrelated local backup-documentation edits remain outside this release's commits.
+
+## Historical release notes
+
 # Current live release — update81, October 18, 2026
 
 ## Canonical workspace and tested recovery — October 18, 2026

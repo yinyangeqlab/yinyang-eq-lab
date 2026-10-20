@@ -1,5 +1,7 @@
 # Recovery and workspace guide
 
+Current live release is update82 with invites off; see HANDOFF.md. Recovery rehearsals and the existing private update81 bundle below are historical and require their matching source/migration revision. No new recovery bundle or production restoration was made for update82. Keep any recovery environment closed until its ownership/deletion review is complete.
+
 ## One development checkout
 
 The owner container has one active development checkout: `workspace/`. Fetch, edit, test, commit and push there. Its tracked files match GitHub after publication. Dependencies and local state stay ignored. Do not run a blind pull over local changes; inspect status and divergence first.
