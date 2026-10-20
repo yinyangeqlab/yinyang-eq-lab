@@ -1,3 +1,7 @@
+Current live baseline is update92, implementation 8eb2789dd805fd5d1534659c147cc10ec61a6c06. Source/build: work/maintenance-controls-consent-release-20261018; infra: work/maintenance-controls-consent-infra-20261018. Per-feature maintenance, independent participation entry and Tuning layout/ranking fixes; no migration. A fresh database uses all33 migrations. Pending personal-shootout work excluded. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update91, implementation 44a63aea01da8c85cf045fdd00fc5614e254b4e2. Source/build: work/maintenance-freeze-release-20261018; infra: work/maintenance-freeze-infra-20261018. Selective timed Shootout maintenance; no migration, scoring-model or listening-protocol change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes

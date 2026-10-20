@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 91,
-  "implementationCommit": "44a63aea01da8c85cf045fdd00fc5614e254b4e2",
-  "runtimeParity": "Recorded runtime inputs match verified update91; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 92,
+  "implementationCommit": "8eb2789dd805fd5d1534659c147cc10ec61a6c06",
+  "runtimeParity": "Recorded runtime matches verified update92; concurrent personal-shootout development excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -17,6 +17,7 @@
       "app/api/my-data/route.ts",
       "app/curve-credits/page.tsx",
       "app/globals.css",
+      "app/layout.tsx",
       "app/music-library/page.tsx",
       "app/my-data/page.tsx",
       "app/my-data/style.css",
@@ -28,31 +29,39 @@
       "app/shootout/page.tsx",
       "app/welcome.css",
       "components/activity-monitoring-panel.tsx",
+      "components/aura-nav-link.css",
       "components/aura-nav-link.tsx",
       "components/comparison-data-settings.tsx",
       "components/legacy-review.tsx",
       "components/music-panel.tsx",
+      "components/results-profile.tsx",
       "components/track-waveform.tsx",
       "db/schema.ts",
       "drizzle/meta/_journal.json",
-      "infra/pulumi/private-gate.mjs",
       "lib/browser-pairing.mjs",
       "lib/browser-sync.mjs",
       "lib/comparison-passage.ts",
       "lib/measurement.ts",
       "lib/privacy-erasure.ts",
       "lib/submission-ownership.ts",
+      "scripts/check_blind_completion.mjs",
       "app/api/personal-research/route.ts",
       "app/shootout/personal/layout.tsx",
       "app/shootout/personal/page.tsx",
       "app/shootout/personal/personal.css",
+      "components/action-hover.css",
+      "components/before-you-listen.tsx",
+      "components/matched-passage-control.css",
+      "components/matched-passage-control.tsx",
       "components/personal-podium.css",
       "components/personal-podium.tsx",
       "components/personal-research-sharing.tsx",
       "components/research-music-source.tsx",
+      "components/setup-auto-hide-note.tsx",
       "components/target-curve.tsx",
       "components/tournament-mode-tabs.css",
       "components/tournament-mode-tabs.tsx",
+      "components/use-listening-reminder.ts",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
       "drizzle/meta/0033_snapshot.json",
@@ -62,10 +71,14 @@
       "lib/personal-research-notice.ts",
       "lib/personal-research-server.ts",
       "lib/personal-shootout.ts",
+      "scripts/check_listening_reminder.mjs",
+      "scripts/check_open_music_source.mjs",
+      "scripts/check_personal_passage_optout.mjs",
       "scripts/check_personal_playback.mjs",
       "scripts/check_personal_research.mjs",
       "scripts/check_personal_shootout.mjs",
-      "scripts/check_research_source.mjs"
+      "scripts/check_research_source.mjs",
+      "scripts/check_setup_auto_hide.mjs"
     ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -160,7 +173,7 @@
     },
     {
       "path": "app/api/owner-research/service-status/route.ts",
-      "sha256": "428e4c9ebfd63285964f5a481dba97b5909d5afffa6cd4c645c25b353c4ae4b6"
+      "sha256": "fd2e96ada5605a6000db03cd7d2613a25b99a1793e1719bd321a704371c43df1"
     },
     {
       "path": "app/api/preference-exports/route.ts",
@@ -259,6 +272,10 @@
       "sha256": "c68d0acb4ec3018cf34fecd33137749baf1772cd2b7c0bd46414323c1a118561"
     },
     {
+      "path": "app/participation/page.tsx",
+      "sha256": "8b41c676dd6e71f25cc3b6bbdcc9b189ff402aca14b291da7d325f4f621c2163"
+    },
+    {
       "path": "app/personal-tuning/page.tsx",
       "sha256": "884cb52cb25f091aa4d6f686b60771186a8a2fc1587e46c6b515a4c97c10fbc6"
     },
@@ -268,11 +285,11 @@
     },
     {
       "path": "app/preference-tuning/page.tsx",
-      "sha256": "604ab0d4a7b563010e9b8eea40d6a17de165e6fff5f436c44e35cc28665ee5b6"
+      "sha256": "67029cdabfab1210f54426fd8a70315ef995e77651a0ab5ef5cd200fca08ca0c"
     },
     {
       "path": "app/preference-tuning/style.css",
-      "sha256": "d65cc4f060eb22a8d51856f675f42da6fce4bc5921157e1806b701c773b7ab22"
+      "sha256": "870386b71039001a3a85babf29773ef7bfdafe052c24ff7c05224aa3c4268e1c"
     },
     {
       "path": "app/privacy/layout.tsx",
@@ -415,12 +432,16 @@
       "sha256": "39bc2c88c00239ca20ecf4da3a3bc0bc8e96c551666d4fa3ac64e3d672f2aafb"
     },
     {
+      "path": "components/service-status-panel.css",
+      "sha256": "01b0c04d5e3f163b4c9fe4ad375fea7af364bc22a8acdab2c49b0cf8000b333d"
+    },
+    {
       "path": "components/service-status-panel.tsx",
-      "sha256": "8a9990a1d5c88991fd9eb68dad8208541830b44ae543dbc768aabd55443a0cad"
+      "sha256": "c9f4ebf87be87d3b7467be6d995b660df1e5c582b14bb769bce8fc80654b2b43"
     },
     {
       "path": "components/service-warning.tsx",
-      "sha256": "63d5657e284271fc6647a81265d182c25928a795f7c7a677dc029f02d8126b3a"
+      "sha256": "98524cfd6aa2c218cd5ce7847d45e9a70b886e0b7358cd2c8996048a520364be"
     },
     {
       "path": "components/statistics-archive.tsx",
@@ -992,7 +1013,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "07015c2f05624251a981cf44b43a72d2de27bfdb557c21361942a75556a4673b"
+      "sha256": "6733d17af98ad2a72a693de020a38b455a35a085a788e0a0e9d4221283d0486e"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1004,7 +1025,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "78447fbf54ddcda512c23f1c73892d13b95f65048e1a7fa34756e25c3959226f"
+      "sha256": "96c8ac1d6dd6a9cc437d9f7fab92c293cfb060cda8257a07c4274a26891fa998"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1143,6 +1164,10 @@
       "sha256": "f3b95678095d8a53f32af701d9feb6de5a4c8771ab0b9a116fca8989e822f9ee"
     },
     {
+      "path": "lib/maintenance-options.ts",
+      "sha256": "93fc4b016c997611140a068e7a9fb1739290390ad3b659fa7fa1f1d56a079aa1"
+    },
+    {
       "path": "lib/maintenance.ts",
       "sha256": "6125884458d2a2f967c2e80489f5350b2c7e54a330bb971bd9921f438a5c088f"
     },
@@ -1228,11 +1253,11 @@
     },
     {
       "path": "lib/service-status.ts",
-      "sha256": "3374f32fee218fb559b03b29ae9eace39a1af3e7d8c330f1ef5a8e37bfcfa1f0"
+      "sha256": "2577c0fc920405af74efc9b2680a1020ff0bc0226d3fbedb42819013962047de"
     },
     {
       "path": "lib/service-warning.ts",
-      "sha256": "6f26f21d7284697bbb850a4d574342d8178d2962e20ac4e0648d7701a93cf611"
+      "sha256": "f2a9a5f0887e0459264cb7b326a0dff252a4127b89822584090600dfada63c99"
     },
     {
       "path": "lib/song-match.ts",
@@ -1420,7 +1445,7 @@
     },
     {
       "path": "scripts/check_maintenance_scope.mjs",
-      "sha256": "3760e7b2750907cfb60508a4fec7406feb73b2144df045a590851039ebbaeac9"
+      "sha256": "dafdee18da0b1962f661004f4f444147cf186ef1694eb3d39e364572f052683a"
     },
     {
       "path": "scripts/check_measurement_research.mjs",
@@ -1440,7 +1465,11 @@
     },
     {
       "path": "scripts/check_notice_duration.mjs",
-      "sha256": "3441f2a532a98618cd4b96a47203f5afda26d7c129a32b0632a8d61de59a81a3"
+      "sha256": "4642b103d3e1f4472de03c0969372f6a0bd55ef0b58d0bf10cf97dce7a491503"
+    },
+    {
+      "path": "scripts/check_participation_entry.mjs",
+      "sha256": "6c72e98ed0396a6c3f301dc426b43317aefa8a3513c077c529c3ed042f0c2edd"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
