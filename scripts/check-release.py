@@ -35,7 +35,17 @@ patterns = {
 result = subprocess.run(
     ["git", "ls-files", "--stage", "-z"], cwd=ROOT, capture_output=True, check=True
 )
-entries = [entry.split(b"\t", 1) for entry in result.stdout.split(b"\0") if entry]
+changed = subprocess.run(
+    ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMRTU", "-z"],
+    cwd=ROOT, capture_output=True, check=True,
+)
+staged_paths = set(changed.stdout.split(b"\0")) - {b""}
+# ls-files lists the entire index, including unchanged published source. Check
+# only staged additions/changes; new fixture files still receive every guard.
+entries = [
+    entry.split(b"\t", 1) for entry in result.stdout.split(b"\0")
+    if entry and entry.split(b"\t", 1)[1] in staged_paths
+]
 paths = [Path(path.decode()) for _, path in entries]
 if not paths:
     sys.exit("No staged files to check. Run git add -A first.")

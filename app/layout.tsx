@@ -7,6 +7,7 @@ import "./globals.css";
 import "@/components/action-hover.css";
 import PrivacyEvents from "@/components/privacy-events";
 import ServiceWarningPopup from "@/components/service-warning";
+import SiteDataFooter from "@/components/site-data-footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yinyangeq.com"),
@@ -36,7 +37,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync />{children}<footer className="site-data-footer" aria-label="Data and credits"><a href="/my-data">My data · sharing &amp; deletion</a><a href="/curve-credits">Curve credits</a></footer></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync />{children}<SiteDataFooter /></InviteModeProvider></body>
     </html>
   );
 }

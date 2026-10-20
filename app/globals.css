@@ -2207,6 +2207,7 @@ footer.site-data-footer { justify-content:center; align-items:center; flex-wrap:
 .site-data-footer a { color:#9dbcc5; }
 .site-data-footer a:hover { color:#d1edf4; }
 .site-data-footer a:focus-visible { outline:2px solid #9bd8ff; outline-offset:4px; border-radius:2px; }
+.site-data-footer .site-footer-license { flex-basis:100%; max-width:960px; margin:4px 0 0; color:#9dbcc5; font-size:12px; font-weight:400; line-height:1.6; overflow-wrap:anywhere; }
 
 /* The dock is a playback surface; song voting and source setup stay in the full player. */
 .music-panel-host.persistent .music-panel > :not(.playback-topbar):not(.player-row):not([role="alert"]),
