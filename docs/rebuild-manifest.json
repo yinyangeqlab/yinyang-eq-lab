@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 100,
-  "implementationCommit": "3471da7d69a0196bcc43c12c4618529f2d0cc32d",
-  "runtimeParity": "Recorded runtime matches verified update100; separate UI/recovery WIP excluded.",
+  "liveUpdate": 101,
+  "implementationCommit": "f9717ad698a1b889b669cd82baa25031be19f023",
+  "runtimeParity": "Recorded runtime matches verified update101; separate UI/recovery WIP excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -110,7 +110,7 @@
     },
     {
       "path": "app/api/my-profile/sync/route.ts",
-      "sha256": "e27bbf91da36b0378dded1b86082a56cbd27ea1349e0e896943aeaefdfa8998b"
+      "sha256": "bdb832928806505b3edd07c3cf2e7a27b411967c09ffd748a00be26c8e1b2e63"
     },
     {
       "path": "app/api/owner-research-measurement/route.ts",
@@ -270,7 +270,7 @@
     },
     {
       "path": "app/my-data/page.tsx",
-      "sha256": "23d8c908c923a6fe6abbf986eb9488d2f2ed465f4c34fc48982a7f1df960e1a7"
+      "sha256": "601b81416a05c18ef5f72fe17dd0c6abcf92436bfef0398592fb8aad414f46e0"
     },
     {
       "path": "app/my-data/style.css",
@@ -322,7 +322,7 @@
     },
     {
       "path": "app/privacy/page.tsx",
-      "sha256": "f2518f64a478772bd701b8a239fcd96a661bd5b3310d6057343e82052b24b3aa"
+      "sha256": "b720c9f9475eeb34a984c2b043a59c65a7e3f12fa029330d199a8db8b210608b"
     },
     {
       "path": "app/profile-access/page.tsx",
@@ -386,7 +386,7 @@
     },
     {
       "path": "components/account-auto-sync.tsx",
-      "sha256": "da4d84092d402cea790fc29610606618e6aa87bc0765358d1fe33b56b9797416"
+      "sha256": "37904e84350c1e3b4199c910cf04461ca53907beb9245ce51b64bdd953033c82"
     },
     {
       "path": "components/account-device-status.css",
@@ -394,11 +394,11 @@
     },
     {
       "path": "components/account-device-status.tsx",
-      "sha256": "68199916f7f9a4b30bb9cbd828af7493b04e37bab6a6a766432fd47385674e22"
+      "sha256": "514a9a18daffd1337c3a2cfd9af322d97a1a55de99010ff2d6f8e7cf3476a815"
     },
     {
       "path": "components/account-sync-manager.tsx",
-      "sha256": "664bb8ca0de03095827e46755fffc9b92343874b712fcfa5c192143cc05d77f3"
+      "sha256": "83900f5ee1ef5cff34ee454a85faffaea4b80877dd361bcbe14f5ab8809d54b7"
     },
     {
       "path": "components/action-hover.css",
@@ -974,7 +974,7 @@
     },
     {
       "path": "db/schema.ts",
-      "sha256": "4bf617a15cdd94b828747a1f88f2741fdb77198db14ce645e46920f4fafbac1e"
+      "sha256": "d4118ae667f01e8ff1e06574a93f101f7a5245eb8a82d34ce31cc9a3060379ec"
     },
     {
       "path": "db/service-status.sql",
@@ -1145,6 +1145,10 @@
       "sha256": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8"
     },
     {
+      "path": "drizzle/0039_segmented_account_sync.sql",
+      "sha256": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -1302,11 +1306,15 @@
     },
     {
       "path": "lib/account-devices.ts",
-      "sha256": "4a983e5c85702795500bff4e279b770d972ee2fe6afe8f6479f33788b784a947"
+      "sha256": "16d6c411cbbcfd3873a542e62b99a9b4a643ae50a4664906618f700cb4d910b4"
     },
     {
       "path": "lib/account-preferences.mjs",
       "sha256": "8b18472659e59bb50a087c36793383983af627351b87dd36ade70ad22b4d005c"
+    },
+    {
+      "path": "lib/account-sync-cache.mjs",
+      "sha256": "ae99614d79d5001fc6e3d5b329439b6f3210f985ff640100fff0a3f2f4ecf417"
     },
     {
       "path": "lib/account-sync-identity.ts",
@@ -1318,27 +1326,39 @@
     },
     {
       "path": "lib/account-sync-notice.mjs",
-      "sha256": "7671734cfa73481d6bd42b9d07068b204a5a1e193a4a23402a8d8782c9775878"
+      "sha256": "17ed9c00efce05276867d02b124355e5814e69aa4f78853f6effb467fbc7947f"
     },
     {
       "path": "lib/account-sync-permission.ts",
       "sha256": "6a09c4d16b64b4e9dda9319dd84eb1be8e06e4f14d69ef6f82ad839306f828e5"
     },
     {
+      "path": "lib/account-sync-segments.ts",
+      "sha256": "8c742ef158653d766a724af45c81303799811f70715b55853ada2978e63718bb"
+    },
+    {
       "path": "lib/account-sync-server.ts",
-      "sha256": "8cdaf4358900e9cf5f0008eadf487d61ee0a65a4765c7c91cc9ef7f9e22c865a"
+      "sha256": "898e7d72577c1c877ca963b4a0c46b4c2ecd8fc42f068c9f89fdcd5f32e70822"
     },
     {
       "path": "lib/account-sync-state.ts",
       "sha256": "4b89cb4134c3102fa0aeb9cee641fcbeb044684fd03af9fd37cccb13076c5e8a"
     },
     {
+      "path": "lib/account-sync-transfer.d.mts",
+      "sha256": "0101dd79c5fd120072d58c743eb5888c0ae486c4943411e2eff1296286293cd1"
+    },
+    {
+      "path": "lib/account-sync-transfer.mjs",
+      "sha256": "d47e65589e1f7b53a6a22cf7b028ef9fc298a63fac7283c586f91c37136e852f"
+    },
+    {
       "path": "lib/account-sync.d.mts",
-      "sha256": "531690ac55dd82da986b881e3428e582b25fd39e7519e7da6fd81779cf183dbf"
+      "sha256": "6936f1c08a6377bf45f8de87230c883d22e14658e58840cde43d5e484480445c"
     },
     {
       "path": "lib/account-sync.mjs",
-      "sha256": "152d0b5308a08df56e348d2e4db6dca3693766db1224ffb441ab358c9ceaa85c"
+      "sha256": "c0d307f60ba9f92207c07d8a6714d5089b8a3abcaf6278bd76a87aaedf54645c"
     },
     {
       "path": "lib/active-submissions.ts",
@@ -1370,7 +1390,7 @@
     },
     {
       "path": "lib/browser-data.ts",
-      "sha256": "020be13cf166dbc830d23ae09bba96fb14ddee9fa95c544b0359ed6ba2138379"
+      "sha256": "155077edf4c0f498b37685a4e54a6caa45e3c33d8f396c69dcc36626417976e0"
     },
     {
       "path": "lib/browser-pairing.mjs",
@@ -1378,7 +1398,7 @@
     },
     {
       "path": "lib/browser-sync.mjs",
-      "sha256": "f6ef2ed9dbff086eeacd5ef60bb9ae365217bca8c101fd4c23f17480e60b02cc"
+      "sha256": "f5b6e6d57ee5567fc2e06ddc6981a949592016dd8113bb9efd9dc7fb988a5962"
     },
     {
       "path": "lib/channel-balance.ts",
@@ -1450,11 +1470,11 @@
     },
     {
       "path": "lib/device-sync.d.mts",
-      "sha256": "0f3f688fb8a5db40c65a2f7630058530a5a00176102642607b8920691ffe50bd"
+      "sha256": "d71f5bffacfe36389ff661352f19bf27f7da71e588862ab2738ac54ed99e32bf"
     },
     {
       "path": "lib/device-sync.mjs",
-      "sha256": "0ed65fdf767773e8c9b8cd18352180a7b66293214604a14517d326ca72d2c27f"
+      "sha256": "124c680391c4172ed6e9e37ef1ea963cb9ca82c0f31a5f68f1492ddc329223b6"
     },
     {
       "path": "lib/dynamics-preview.ts",
@@ -1602,7 +1622,7 @@
     },
     {
       "path": "lib/privacy-erasure.ts",
-      "sha256": "81cbaac72c324832da6565ca59f2897c219390e4234aaf0c792d469c038109c5"
+      "sha256": "d5c51468bef38967a0261307b791437e1816eb319b653d1fbf168906a21890ee"
     },
     {
       "path": "lib/profile-api.ts",
@@ -1706,7 +1726,7 @@
     },
     {
       "path": "lib/yinyangeq-account.ts",
-      "sha256": "026b6551c53c46222adcb8c432030da11daf8877907626a2e9a5e9cb5f189ca2"
+      "sha256": "7baf65bc2fb4c2fec2819375a732c8be8bb05a9421f9b67c3ccc9d0bfd894787"
     },
     {
       "path": "lib/yinyangeq-history.ts",
@@ -1806,7 +1826,7 @@
     },
     {
       "path": "scripts/account-sync-fixture.mjs",
-      "sha256": "2dc655b65aaaedc3b09417aeb9aae389b7f1dea9e23672159dc08d82d481bbf1"
+      "sha256": "44b0a1e0d0f308acf1bfde9c46e57a643450d4a9b3271f53de38ff112335c0c8"
     },
     {
       "path": "scripts/build-verified.sh",
@@ -1830,11 +1850,11 @@
     },
     {
       "path": "scripts/check_account_auto_sync.mjs",
-      "sha256": "390e3f4b210770eb7dd23d1ba46db1c607aa1abdfe1a9b823b9151c377823e5e"
+      "sha256": "5e59b8d928973dc19295aceceb12dd422f3881c03fc8a6126296a1d60a318025"
     },
     {
       "path": "scripts/check_account_sync_manager.mjs",
-      "sha256": "a6cf3ca935f2bf4d81766ee7e27488c5f1a744ab02b03eec6d10476d4af0289d"
+      "sha256": "87738b533c0186dffbe9fd540bb200a3b0d7dfe3544db338ab5fb11161809b59"
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
@@ -1903,6 +1923,10 @@
     {
       "path": "scripts/check_free_listening.mjs",
       "sha256": "8d246fa8f630c410e4bf0905968ca5f4f47f8bde2bc0bbe24b9c5940a28e94ad"
+    },
+    {
+      "path": "scripts/check_large_account_sync.mjs",
+      "sha256": "c1a887208d9a58bc5bba247abe821ee3db4b9d9bf88f4e40a1ed9c909f291d62"
     },
     {
       "path": "scripts/check_listener_nickname.mjs",
@@ -2178,7 +2202,7 @@
     },
     {
       "path": "scripts/recovery/recovery.mjs",
-      "sha256": "33201daa5f3b722382a3cd3db0037a4eb3a63fa35182660ad03a511cebbc23c0"
+      "sha256": "376a56b7348e817fc90de0e4a76cfff48c808df1635a07c26015746ca1d8183a"
     },
     {
       "path": "scripts/recovery/snapshot-d1.mjs",
@@ -2186,7 +2210,7 @@
     },
     {
       "path": "scripts/recovery/test-recovery.mjs",
-      "sha256": "d9795c5fef156bc12d1ab3a0469838633f4aa49963b688dcb1540a927a414f9a"
+      "sha256": "1edc71caae2dcaf69093bbf8ea2ca11f139ab4015a8415bbf0b06529f87c5d1b"
     },
     {
       "path": "scripts/research/community-ranking-pilot.mjs",
