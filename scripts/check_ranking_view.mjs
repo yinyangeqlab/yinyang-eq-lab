@@ -1,0 +1,57 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import vm from 'node:vm';
+import ts from 'typescript';
+import {renderToStaticMarkup} from 'react-dom/server';
+
+// Render the actual page fragment against deliberately different protocol and
+// headphone cohorts. No database or participant records are used.
+const page=readFileSync(new URL('../app/shootout/page.tsx',import.meta.url),'utf8');
+const start=page.indexOf('{tab === "rankings" && ');
+const end=page.indexOf('{tab === "music"',start);
+assert.ok(start>=0&&end>start);
+const expression=page.slice(start,end).trim().slice('{tab === "rankings" && '.length,-1);
+const source=`export function ranking({research,rankProtocol,rankMode,rankType}) { const setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{}; return (${expression}); }`;
+const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+const context=vm.createContext({exports:{},require:createRequire(import.meta.url)});
+vm.runInContext(compiled,context);
+const modes=['all','random','bring','curated','verified'];
+function rows(preferences,ties){
+ const total=preferences+ties;
+ return [
+  {id:'a',name:'Alpha',creator:'Fixture',rating:1500,sd:30,wins:preferences,losses:0,ties,comparisons:total,listeners:2},
+  {id:'b',name:'Beta',creator:'Fixture',rating:1500,sd:30,wins:0,losses:preferences,ties,comparisons:total,listeners:2},
+ ];
+}
+function cohort(offset){
+ const categories=Object.fromEntries(modes.map((mode,i)=>[mode,{ie:rows(offset+i,2),oe:rows(offset+i+5,3)}]));
+ return {...Object.fromEntries(modes.map(mode=>[mode,{rows:categories[mode].ie,voteCount:0,...(mode==='curated'?{trackCount:20}:{})}])),categories};
+}
+const research={...cohort(20),protocols:{current:cohort(1),legacy:cohort(10)}};
+const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&#x27;/g,"'").replace(/&amp;/g,'&');
+let cases=0;
+for(const protocol of ['all','current','legacy'])for(const type of ['ie','oe'])for(const mode of modes){
+ const view=protocol==='all'?research:research.protocols[protocol];
+ const markup=renderToStaticMarkup(context.exports.ranking({research,rankProtocol:protocol,rankMode:mode,rankType:type}));
+ const expected=key=>view.categories[key][type][0].comparisons;
+ const countPill=plain(markup.match(/<span class="count-pill">(.*?)<\/span>/s)?.[1]??'');
+ assert.equal(countPill,`${expected(mode)} QUALIFIED COMPARISONS`,`${protocol}/${type}/${mode} main count includes ties`);
+ const buttons=[...markup.matchAll(/<button[^>]*>(.*?)<\/button>/gs)].map(m=>plain(m[1]));
+ assert.ok(buttons.includes(`Original 20 selected songs · ${expected('curated')} comparisons`),`${protocol}/${type}/${mode} selected-song count`);
+ assert.ok(buttons.includes(`Same file across listeners · ${expected('verified')} comparisons`),`${protocol}/${type}/${mode} same-file count`);
+ assert.ok(!markup.includes('owner-curated tracks configured')&&!markup.includes('after 5 seconds per side count'));
+ if(mode==='curated')assert.ok(markup.includes('Matching tags alone does not verify identical audio files'));
+ if(mode==='verified')assert.ok(markup.includes('re-encoding or changing embedded tags can change the hash'));
+ cases++;
+}
+// A tie-only cohort must show one comparison, not zero wins or two target rows.
+const one=cohort(0);one.categories.curated.ie=rows(0,1);one.categories.verified.ie=rows(0,1);
+const singular=renderToStaticMarkup(context.exports.ranking({research:{...research,protocols:{...research.protocols,current:one}},rankProtocol:'current',rankMode:'curated',rankType:'ie'}));
+assert.ok(singular.includes('1 QUALIFIED COMPARISON</span>'));
+assert.ok(singular.includes('selected songs · 1 comparison</button>'));
+assert.ok(singular.includes('Same file across listeners · 1 comparison</button>'));
+const loading=renderToStaticMarkup(context.exports.ranking({research:null,rankProtocol:'current',rankMode:'all',rankType:'oe'}));
+assert.ok(loading.includes('0 QUALIFIED COMPARISONS'));
+assert.ok(loading.includes('No votes meet this ranking'));
+console.log(`Ranking view: ${cases} actual page renders verify protocol/headphone filters, main and both subset counters including ties; tie-only singular and loading states passed.`);
