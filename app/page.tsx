@@ -1,29 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import "./welcome.css";
 
 export default function Welcome() {
-  const artwork = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const image = artwork.current;
-    if (!image || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let frame = 0;
-    const move = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        image.style.transform = `translate3d(0, ${Math.min(window.scrollY * 0.16, 95)}px, 0) scale(1.16)`;
-      });
-    };
-    move();
-    window.addEventListener("scroll", move, { passive: true });
-    return () => { window.removeEventListener("scroll", move); cancelAnimationFrame(frame); };
-  }, []);
-
   return <main className="welcome-shell">
     <section className="welcome-hero" aria-labelledby="welcome-title">
-      <div className="welcome-art" aria-hidden="true"><img ref={artwork} src="/brand-amoled-aligned.webp" alt="" /></div>
+      <picture className="welcome-art" aria-hidden="true"><source media="(min-width: 761px)" srcSet="/brand-landscape.webp" /><img src="/brand-amoled-aligned.webp" alt="" /></picture>
       <div className="welcome-shade" aria-hidden="true" />
       <header className="welcome-nav">
         <a className="welcome-brand" href="/home" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
