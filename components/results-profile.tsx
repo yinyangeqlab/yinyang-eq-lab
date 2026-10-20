@@ -7,7 +7,7 @@ import ComparisonDataActions from "@/components/comparison-data-actions";
 import { checkReliability } from "@/lib/preference-ranking";
 
 export type Trial = {
-  id: string; serverTrialId?: string; sessionId?: string; result?: "a" | "b" | "tie"; catchTrial?: boolean; createdAt: number; pair: [string, string]; pairNames: [string, string]; winnerId: string;
+  id: string; adminTestOnly?:boolean; matchedPassageRequired?:boolean;matchedPassage?:boolean; serverTrialId?: string; sessionId?: string; result?: "a" | "b" | "tie"; catchTrial?: boolean; createdAt: number; pair: [string, string]; pairNames: [string, string]; winnerId: string;
   winnerName: string; loserName: string; recorded: boolean; mode?: "blind" | "bring" | "open"; type: string;
   reasonSide?: "a" | "b"; reasonTags?: string[]; otherReason?: string;
   measurementName: string | null; device: string | null; rig: string | null;
@@ -57,7 +57,7 @@ export default function ResultsProfile({ trials, onDeleteBrowser }: { trials: Tr
       const group = groups.get(`${row.mode || "open"}|${[...row.pair].sort().join("|")}`)!;
       const scores=group.map(x=>x.result==="tie"?.5:x.winnerId===row.pair[0]?1:0),rate=scores.reduce<number>((n,x)=>n+x,0)/scores.length;
       const sd=group.length>1?Math.sqrt(scores.reduce<number>((n,x)=>n+(x-rate)**2,0)/(scores.length-1)):0;
-      return <details className="trial-row" key={row.id}><summary><strong>{new Date(row.createdAt).toLocaleString()}</strong> · {row.result === "tie" ? "Unsure / tie" : `${row.winnerName} preferred over ${row.loserName}`} <span>{row.mode === "blind" ? "Random blind" : row.mode === "bring" ? "Own music blind" : "Open"} · {row.catchTrial ? "Same-filter check" : row.recorded ? "Ranked" : "Private"} · {row.type === "ie" ? "In ear" : row.type === "oe" ? "Over ear" : "Unclassified"}</span></summary><div className="trial-detail">
+      return <details className="trial-row" key={row.id}><summary><strong>{new Date(row.createdAt).toLocaleString()}</strong> · {row.result === "tie" ? "Unsure / tie" : `${row.winnerName} preferred over ${row.loserName}`} <span>{row.mode === "blind" ? "Random blind" : row.mode === "bring" ? "Own music blind" : "Open"} · {row.adminTestOnly?"Admin test only":row.matchedPassageRequired===false?"Free listening · local only":row.catchTrial ? "Same-filter check" : row.recorded ? "Ranked" : "Private"} · {row.type === "ie" ? "In ear" : row.type === "oe" ? "Over ear" : "Unclassified"}</span></summary><div className="trial-detail">
         <TrialRemovalActions row={row} onDeleteBrowser={onDeleteBrowser} />
         <p><b>Trial:</b> {row.pairNames[0]} (A) vs {row.pairNames[1]} (B). Answer: {row.result === "tie" ? "Unsure / tie" : row.winnerId === row.pair[0] ? "A" : "B"}. {row.catchTrial ? "Both sides used the same EQ filters; tie is the accuracy answer." : ""}</p>
         <p><b>Reasons for {row.reasonSide?.toUpperCase() || "selected side"}:</b> {row.reasonTags?.length ? row.reasonTags.join(", ") : "No reasons saved in this browser result. Separately submitted descriptions are managed in My data."}{row.otherReason ? ` · ${row.otherReason}` : ""}</p>

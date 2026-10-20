@@ -1,10 +1,13 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb } from "@/db";
-import { feedbackSubmissions, rankedTrials, targets } from "@/db/schema";
+import { feedbackSubmissions, rankedTrials, targets, listeningRuns, submissionOwners } from "@/db/schema";
 import { cleanFeedback } from "@/lib/feedback";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
+
+import {FREE_LISTENING_PROTOCOL} from "@/lib/listening-protocol";
 
 const uuid = /^[a-f0-9-]{36}$/i;
 
@@ -25,15 +28,19 @@ export async function POST(request: Request) {
     const { reasonSide, reasonTags, otherReason } = cleanFeedback(data);
     if (!reasonTags.length && !otherReason) return Response.json({ error: "Choose a description or enter feedback before submitting." }, { status: 400 });
     const db = getDb();
-    if (testMode !== "open") {
+    if(data.matchedPassageRequired===false){
+      const [run]=await db.select().from(listeningRuns).where(eq(listeningRuns.id,comparisonId)).limit(1);
+      const [owner]=await db.select().from(submissionOwners).where(and(eq(submissionOwners.recordKind,"run"),eq(submissionOwners.recordId,comparisonId),eq(submissionOwners.subjectId,ownership.subjectId))).limit(1);
+      if(!run||!owner||run.protocolVersion!==FREE_LISTENING_PROTOCOL||run.voterId!==participantId||run.testMode!==testMode||run.targetAId!==targetAId||run.targetBId!==targetBId||run.headphoneType!==data.headphoneType)return Response.json({error:"This feedback does not match your saved free-listening comparison."},{status:403});
+    } else if (testMode !== "open") {
       await ownership.requireTrial(comparisonId);
       const [trial] = await db.select().from(rankedTrials).where(eq(rankedTrials.id, comparisonId)).limit(1);
       if (!trial || trial.voterId !== participantId || trial.testMode !== testMode || trial.sideA !== targetAId || trial.sideB !== targetBId || Date.now() - trial.issuedAt > 7200000) {
         return Response.json({ error: "This feedback does not match an active trial." }, { status: 403 });
       }
     }
-    const [a] = await db.select({ status: targets.status }).from(targets).where(eq(targets.id, targetAId)).limit(1);
-    const [b] = await db.select({ status: targets.status }).from(targets).where(eq(targets.id, targetBId)).limit(1);
+    const [a] = await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetAId),publicTargetPredicate)).limit(1);
+    const [b] = await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetBId),publicTargetPredicate)).limit(1);
     if (!a || !b || a.status !== "approved" || b.status !== "approved") return Response.json({ error: "Shared feedback needs approved targets." }, { status: 403 });
     const now = Date.now();
     const recent = await db.select({ createdAt: feedbackSubmissions.createdAt, otherReason: feedbackSubmissions.otherReason }).from(feedbackSubmissions)

@@ -358,3 +358,58 @@ export const listenerNicknames = sqliteTable("listener_nicknames", {
   subjectId: text("subject_id").primaryKey().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
   nickname: text("nickname").notNull(),
 });
+
+// Optional adaptive-discovery research, deliberately separate from ranking inputs.
+export const personalResearchPermissions = sqliteTable("personal_research_permissions", {
+  subjectId:text("subject_id").primaryKey().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  enabled:integer("enabled").notNull().default(0), noticeVersion:text("notice_version").notNull(),
+  consentToken:text("consent_token").notNull(), updatedAt:integer("updated_at").notNull(),
+},table=>[check("personal_permission_enabled",sql`${table.enabled} IN (0,1)`)]);
+export const personalResearchChoices = sqliteTable("personal_research_choices", {
+  id:text("id").primaryKey(), subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  consentToken:text("consent_token").notNull(), noticeVersion:text("notice_version").notNull(),
+  targetAId:text("target_a_id").notNull(),targetBId:text("target_b_id").notNull(),
+  result:text("result").notNull(),headphoneType:text("headphone_type").notNull(),setupFingerprint:text("setup_fingerprint").notNull(),
+  recordingId:text("recording_id").notNull(),playbackJson:text("playback_json").notNull(),selectionJson:text("selection_json").notNull(),
+  phase:text("phase").notNull(),roundNumber:integer("round_number").notNull(),protocolVersion:text("protocol_version").notNull(),schedulerVersion:text("scheduler_version").notNull(),createdAt:integer("created_at").notNull(),
+},table=>[index("personal_research_subject_created").on(table.subjectId,table.createdAt),check("personal_result",sql`${table.result} IN ('a','b','tie')`),check("personal_category",sql`${table.headphoneType} IN ('ie','oe')`),check("personal_phase",sql`${table.phase} IN ('explore','confirm')`),check("personal_pair_distinct",sql`${table.targetAId} != ${table.targetBId}`)]);
+
+export const personalResearchDeletionTotals = sqliteTable("personal_research_deletion_totals", {day:text("day").primaryKey(),deletedCount:integer("deleted_count").notNull()},table=>[check("personal_deletion_positive",sql`${table.deletedCount}>0`)]);
+
+// One owner-controlled ordinary participant identity. Public projection is opt-in per entry.
+export const ownerPublicProfiles = sqliteTable("owner_public_profiles", {
+  slug:text("slug").primaryKey(),subjectId:text("subject_id").notNull().unique().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  inviteId:text("invite_id").notNull().unique(),policyAt:integer("policy_at").notNull(),createdAt:integer("created_at").notNull(),
+},t=>[check("owner_profile_reserved_slug",sql`${t.slug}='yinyangeq'`)]);
+export const ownerProfileSnapshots = sqliteTable("owner_profile_snapshots", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  label:text("label").notNull(),payload:text("payload").notNull(),createdAt:integer("created_at").notNull(),
+},t=>[check("owner_snapshot_json",sql`json_valid(${t.payload})`)]);
+export const ownerProfileGrants = sqliteTable("owner_profile_grants", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  tokenHash:text("token_hash").notNull().unique(),label:text("label").notNull(),snapshotId:text("snapshot_id").references(()=>ownerProfileSnapshots.id,{onDelete:"cascade"}),
+  claimHash:text("claim_hash").unique(),deviceId:text("device_id"),completedAt:integer("completed_at"),activationNonce:text("activation_nonce"),
+  createdAt:integer("created_at").notNull(),expiresAt:integer("expires_at").notNull(),usedAt:integer("used_at"),cancelledAt:integer("cancelled_at"),
+});
+export const ownerProfileDevices = sqliteTable("owner_profile_devices", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  sessionHash:text("session_hash").unique(),label:text("label").notNull(),createdAt:integer("created_at").notNull(),revokedAt:integer("revoked_at"),
+});
+export const ownerProfileEntries = sqliteTable("owner_profile_entries", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),state:text("state").notNull().default("draft"),
+  payload:text("payload").notNull(),sourceHash:text("source_hash").notNull(),createdAt:integer("created_at").notNull(),publishedAt:integer("published_at"),
+},t=>[uniqueIndex("owner_profile_record_unique").on(t.profileSlug,t.recordKind,t.recordId),check("owner_entry_state",sql`${t.state} IN ('draft','published','hidden')`),check("owner_entry_json",sql`json_valid(${t.payload})`)]);
+export const ownerHistoryClaims = sqliteTable("owner_history_claims", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  codeHash:text("code_hash").notNull().unique(),sourceSubject:text("source_subject").notNull(),sourceSession:text("source_session").notNull(),
+  evidence:text("evidence").notNull(),createdAt:integer("created_at").notNull(),expiresAt:integer("expires_at").notNull(),completedAt:integer("completed_at"),
+},t=>[check("owner_history_evidence_json",sql`json_valid(${t.evidence})`)]);
+export const ownerHistoryTransferScope = sqliteTable("owner_history_transfer_scope", {
+  batchId:text("batch_id").notNull(),recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),
+  newRecordId:text("new_record_id").notNull(),fromSubject:text("from_subject").notNull(),toSubject:text("to_subject").notNull(),
+},t=>[primaryKey({columns:[t.batchId,t.recordKind,t.recordId]})]);
+export const ownerProfileEvents = sqliteTable("owner_profile_events", {
+  id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
+  recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),action:text("action").notNull(),payload:text("payload").notNull().default("{}"),createdAt:integer("created_at").notNull(),
+},t=>[index("owner_events_source_idx").on(t.profileSlug,t.recordKind,t.recordId),index("owner_events_time_idx").on(t.profileSlug,t.createdAt),check("owner_event_json",sql`json_valid(${t.payload})`)]);

@@ -24,3 +24,5 @@
 .trial-data-actions { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; }
 .trial-data-actions [role="region"] { flex-basis:100%; border:1px solid #bb7584; padding:14px; }
 .nickname-actions{display:flex;gap:12px;flex-wrap:wrap}.nickname-actions button{margin:0}
+
+.data-sharing-shortcuts{display:flex;flex-wrap:wrap;gap:14px;margin:24px 0 12px}.data-sharing-shortcuts button{border:1px solid #739b8a;background:#142c23;color:#e3f1e7;border-radius:7px;padding:10px 16px;min-height:42px}.data-sharing-review{padding:20px;margin:20px 0;border:1px solid #a5b786;border-radius:10px;background:#17251b}.data-sharing-review button{margin:8px 16px 0 0}

@@ -1,5 +1,6 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
-import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { eq } from "drizzle-orm";
@@ -29,8 +30,9 @@ export async function POST(request: Request) {
     const shareSong = testMode === "blind" || data.shareSong === true && ownership.shareMusic;
     const song = (key: string, max = 120) => shareSong ? String(data[key] ?? "").trim().slice(0, max) || null : null;
     const db = getDb();
-    const trialId = testMode === "open" ? null : String(data.trialId ?? "");
-    let protocolVersion = LISTENING_PROTOCOL;
+    const matchedPassageRequired=data.matchedPassageRequired!==false;
+    const trialId = testMode === "open" || !matchedPassageRequired ? null : String(data.trialId ?? "");
+    let protocolVersion = matchedPassageRequired ? LISTENING_PROTOCOL : FREE_LISTENING_PROTOCOL;
     let issuedVersions: string[] | null=null;
     if (trialId !== null) {
       if (!uuid.test(trialId)) return Response.json({ error: "Invalid ranked trial." }, { status: 400 });
@@ -47,15 +49,15 @@ export async function POST(request: Request) {
       if (Date.now() - issued.issuedAt > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
     }
     const context = data.researchContext && typeof data.researchContext === "object" ? data.researchContext as Record<string,unknown> : {};
-    const cleanContext: Record<string,unknown> = { protocolVersion };
+    const cleanContext: Record<string,unknown> = { protocolVersion, matchedPassageRequired, matchedPassage:stats.heardA>=5&&stats.heardB>=5&&stats.overlapSeconds>=5 };
     // Technical provenance only; no audio bytes, filenames or raw headphone response.
     for (const key of ["rig","measurementType","normalizationStatus","loudnessTarget","recordingId","sha256","audioFormat"]) if(typeof context[key]==="string") cleanContext[key]=context[key].slice(0,160);
     for (const key of ["sampleRate","bitrate","duration"]) if(typeof context[key]==="number" && Number.isFinite(context[key]) && Number(context[key])>=0) cleanContext[key]=context[key];
     if (!shareSong) for (const key of ["recordingId","sha256","audioFormat","sampleRate","bitrate","duration"]) delete cleanContext[key];
     const fits=Array.isArray(context.eqFits)?context.eqFits:[];
     cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return Object.fromEntries(["bands","rms","preamp"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]]));});
-    const targetRows=await db.select().from(targets);
-    if (testMode === "open" && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
+    const targetRows=await db.select().from(targets).where(publicTargetPredicate);
+    if ((testMode === "open" || !matchedPassageRequired) && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
     cleanContext.targetVersions=await Promise.all([targetAId,targetBId].map(async targetId=>{const target=targetRows.find(t=>t.id===targetId);if(!target)return null;return curveVersion(target.points);}));
     if(trialId && (JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions))) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
     await db.batch([db.insert(listeningRuns).values({

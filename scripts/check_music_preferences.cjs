@@ -10,7 +10,7 @@ function load(file, imports = {}, nodeEnv = "development") {
   vm.runInNewContext(code, { module, exports: module.exports, require: id => { if (id in imports) return imports[id]; throw Error(`Unexpected import: ${id}`); }, Response, Set, Date, process: {env:{NODE_ENV:nodeEnv}} });
   return module.exports;
 }
-const { rankMusic, musicRotation, musicReview, playbackGain, playbackTarget } = load('lib/music-preferences.ts');
+const { rankMusic, musicCommunityRank, musicRotation, musicReview, playbackGain, playbackTarget } = load('lib/music-preferences.ts');
 const json = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
 const catalogImports = Object.fromEntries(['listening-pool-original-audio','music-candidates','shantae-cc-tracks','shantae-audio','listening-pool-local','listening-pool-measurements'].map(name=>['@/data/'+name+'.json',json('data/'+name+'.json')]));
 const catalog = load('lib/music-catalog.ts',catalogImports);
@@ -38,6 +38,22 @@ assert.equal(musicReview({keep:25,pass:25}).flagged, false);
 assert.equal(musicReview({keep:10,pass:40}).flagged, true);
 assert.equal(musicReview({keep:20,pass:30}).flagged, false);
 assert.equal(rankMusic([{ url: 'a' }, { url: 'b' }], { a: { keep: 1, pass: 0 }, b: { keep: 9, pass: 1 } })[0].url, 'b');
+// Community positions must match the rated-only library, never catalog order.
+const rankFixture=[{url:'unrated'}, {url:'down'}, {url:'middle'}, {url:'best'}, {url:'tied'}];
+const rankCounts={down:{keep:0,pass:8},middle:{keep:2,pass:2},best:{keep:9,pass:1},tied:{keep:9,pass:1}};
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'unrated'),null);
+assert.equal(musicCommunityRank(rankFixture,{},'best'),null);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'best').position,1);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'tied').position,2);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'middle').position,3);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'down').position,4);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'down').total,4);
+rankCounts.down={keep:100,pass:0};
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'down').position,1);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'best').position,2);
+delete rankCounts.down;
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'down'),null);
+assert.equal(musicCommunityRank(rankFixture,rankCounts,'best').total,3);
 const dreams=[{integrated_lufs:-14.7,true_peak_dbtp:0},{integrated_lufs:-11,true_peak_dbtp:.3}];
 assert.equal(playbackTarget(dreams),-16);
 assert(Math.abs(20*Math.log10(playbackGain(-14.7)) + 1.3) < 1e-10);
@@ -72,13 +88,16 @@ const db = {
   delete: table => ({ where: async test => { if(table === musicTable) rows = rows.filter(r => !test(r)); } }),
 };
 const musicTable={userId:'userId',trackUrl:'trackUrl',choice:'choice'};
+const requestInput=load('lib/request-json.ts');
+const adminPolicy=load('lib/admin-contributions.ts',{'@/lib/request-json':requestInput});
 const endpoint = load('app/api/music-votes/route.ts', {
+  '@/lib/admin-contributions':adminPolicy,
   'drizzle-orm': { and: (...args) => row => args.every(test=>test(row)), eq: (key,value) => row => row[key] === value },
   '@/app/chatgpt-auth': { getChatGPTUser: async () => user },
   '@/lib/submission-ownership': {submissionContext:async()=>({subjectId:user.userId,record:()=>Promise.resolve()})},
   '@/db': { getDb: () => db }, '@/db/schema': { musicVotes: musicTable, submissionOwners: {} },
   '@/lib/music-catalog': { musicCandidates: tracks },
-  '@/lib/request-json': { readJsonObject: request => request.json(), requestInputResponse: () => null },
+  '@/lib/request-json': { readJsonObject: request => request.json(), requestInputResponse: requestInput.requestInputResponse },
 });
 const request = (choice,trackUrl = tracks[0].url) => new Request('http://localhost/api/music-votes', { method: 'POST', body: JSON.stringify({ trackUrl, choice }) });
 (async () => {
@@ -89,6 +108,7 @@ const request = (choice,trackUrl = tracks[0].url) => new Request('http://localho
   assert.equal(result.mine[tracks[0].url], 'pass');
   assert(!JSON.stringify(result).includes('private@example.test'));
   assert(!JSON.stringify(result).includes('other'));
+  assert.equal(musicCommunityRank(tracks,result.byTrack,tracks[0].url).position,1);
   result = await (await endpoint.POST(request('keep'))).json();
   assert.deepEqual(result.byTrack[tracks[0].url], { keep: 2, pass: 0 });
   result = await (await endpoint.POST(request(null))).json();
@@ -112,6 +132,14 @@ const request = (choice,trackUrl = tracks[0].url) => new Request('http://localho
   boundary=await (await endpoint.GET()).json();
   assert.equal(musicReview(boundary.byTrack[masters[0].url]).flagged,true);
   assert.equal(musicReview(boundary.byTrack[masters[1].url]).flagged,false);
+  const beforeAdmin=JSON.stringify(rows);user={userId:'owner',email:'',displayName:'Owner'};
+  assert.equal((await endpoint.POST(request('keep'))).status,403);
+  assert.equal(JSON.stringify(rows),beforeAdmin);
+  rows.push({userId:'owner',trackUrl:tracks[0].url,choice:'keep'});
+  const adminSnapshot=await (await endpoint.GET()).json();
+  assert.equal(adminSnapshot.byTrack[tracks[0].url],undefined);
+  assert.equal(adminSnapshot.testOnly,true);
+  assert.deepEqual(adminSnapshot.mine,{});
   user = null;
   assert.equal((await endpoint.POST(request('keep'))).status, 401);
   assert.deepEqual((await (await endpoint.GET()).json()).mine, {});

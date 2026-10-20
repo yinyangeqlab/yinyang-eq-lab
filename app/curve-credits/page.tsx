@@ -15,7 +15,7 @@ export default function CurveCreditsPage() {
   return <main className="curve-credits">
     <header className="credits-header">
       <a href="/" className="credits-brand"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
-      <nav aria-label="Credits navigation"><a href="/shootout">Shootout</a><a href="/music-library">Listening pool</a></nav>
+      <nav aria-label="Credits navigation"><a href="/shootout">Tournament</a><a href="/music-library">Listening pool</a></nav>
     </header>
     <section className="credits-intro">
       <span className="credits-eyebrow">THE PEOPLE BEHIND THE CURVES</span>

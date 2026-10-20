@@ -130,7 +130,7 @@ async function admin(request, env, path) {
   if (!await invitesEnabled(env.DB)) return json({error: "Not found."}, 404);
   const db = env.DB;
   if (request.method === "GET" && path === "/__private/admin/invites") {
-    const result = await db.prepare("SELECT id, label, created_at, code_expires_at, redeemed_at, session_expires_at, revoked_at FROM private_tester_invites WHERE id NOT LIKE 'open-%' ORDER BY created_at DESC LIMIT 200").all();
+    const result = await db.prepare("SELECT id, label, created_at, code_expires_at, redeemed_at, session_expires_at, revoked_at FROM private_tester_invites WHERE id NOT LIKE 'open-%' AND NOT EXISTS(SELECT 1 FROM owner_public_profiles p WHERE p.invite_id=private_tester_invites.id) ORDER BY created_at DESC LIMIT 200").all();
     return json({ invites: result.results });
   }
   if (request.method === "POST" && path === "/__private/admin/invites") {
@@ -144,6 +144,7 @@ async function admin(request, env, path) {
     return json({ id, label, code, codeExpiresAt: now + testerSeconds }, 201);
   }
   const change = /^\/__private\/admin\/invites\/([a-f0-9-]{36})(\/revoke)?$/.exec(path);
+  if(change && await db.prepare("SELECT 1 FROM owner_public_profiles WHERE invite_id=?").bind(change[1]).first())return json({error:"Use the dedicated YinYangEQ device controls for this account."},409);
   if (request.method === "POST" && change?.[2] === "/revoke") {
     if (!sameOrigin(request)) return json({ error: "Invalid origin." }, 403);
     const result = await db.prepare("UPDATE private_tester_invites SET revoked_at = ? WHERE id = ? AND revoked_at IS NULL").bind(Math.floor(Date.now() / 1000), change[1]).run();
@@ -160,8 +161,10 @@ const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
     const publicLandingAsset = isPublicAsset(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/api/maintenance" || publicLandingAsset)) {
+    const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
       if (publicLandingAsset) return env.ASSETS.fetch(request);
+      if(publicProfile){const limited=await preDatabaseGuard(request,env,false);if(limited)return limited;}
       const headers = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headers.delete(name);
       return app.fetch(new Request(request, { headers }), env, context);
@@ -172,6 +175,12 @@ const privateGate = {
       const hasOwnerSession = await validOwnerSession(request, password);
       const admission = await preDatabaseGuard(request, env, hasOwnerSession);
       if(admission)return admission;
+      if(path==="/api/admin-session"){
+        if(!["GET","HEAD"].includes(request.method))return json({error:"Method not allowed."},405);
+        // Only the validated host-only admin cookie controls this indicator.
+        const issued=hasOwnerSession?Number(cookie(request,ownerCookie).split(".")[0]):null;
+        return Response.json({admin:hasOwnerSession,expiresAt:issued===null?null:(issued+ownerSeconds)*1000},{headers:{"Cache-Control":"private, no-store","Vary":"Cookie"}});
+      }
       if(request.method !== "GET" && request.method !== "HEAD" && (hasOwnerSession || ["/access","/admin-login","/owner-login"].includes(path))) {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
@@ -191,13 +200,21 @@ const privateGate = {
         if (request.method === "POST") return await redeem(request, env.DB);
         return request.method === "GET" ? privateResponse(200, "Enter your approved invitation code to submit votes and other contributions. Your browser stays signed in for 48 hours.", true, safeReturnTo(url.searchParams.get("return_to"))) : privateResponse(405);
       }
+      // Device grants use their own one-use credential and cannot inherit admin headers.
+      if(path==="/profile-access"||path==="/api/profile-access"){
+        if(!["GET","HEAD","POST"].includes(request.method)||path==="/profile-access"&&request.method==="POST")return json({error:"Method not allowed."},405);
+        const bounded=request.method==="POST"?await boundedBody(request):request;if(bounded instanceof Response)return bounded;
+        const clean=new Headers(bounded.headers);for(const name of ["authorization","oai-authenticated-user-id","oai-authenticated-user-email","oai-authenticated-user-full-name","oai-authenticated-user-full-name-encoding","x-yinyang-data-session"])clean.delete(name);
+        return app.fetch(new Request(bounded,{headers:clean}),env,context);
+      }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
+      if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method))return json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403);
       // Open access still uses host-only credentials and the existing ownership,
       // consent, erasure and sync tables. No usable invitation code is created.
       let accessCookie = null;
       const syncReceive = path === "/pair" || path === "/pair/reset" || path === "/sync" && (url.searchParams.get("receive") === "1" || request.method !== "GET");
       const adminPath = path === "/owner-research" || path.startsWith("/api/owner-research");
-      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective"].includes(path) && cookie(request, dataCookie);
+      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path) && cookie(request, dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
         const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
         await env.DB.prepare("INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(id,"Listener",await hash(randomToken()),now,now,now,await hash(session),now+dataSeconds).run();
@@ -221,7 +238,7 @@ const privateGate = {
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective"].includes(path);
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path);
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
         const redirect = new Response(null, { status: 303, headers: { Location: "/", "Cache-Control": "no-store" } });
@@ -236,8 +253,8 @@ const privateGate = {
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
-      const agreementException = dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
-      if ((owner || tester) && !data?.canParticipate && !agreementException) {
+      const agreementException = tester?.id==="layout-test-only" || dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      if (!owner && tester && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
           : new Response(null,{status:303,headers:{Location:"/participation?return_to="+encodeURIComponent(url.pathname),"Cache-Control":"no-store"}});
@@ -261,14 +278,14 @@ const privateGate = {
       // This cache is consulted only AFTER owner/tester validation. Cache only
       // aggregate rankings; never research records, music, HTML or auth responses.
       const rankingCache = typeof caches !== "undefined" ? caches.default : null;
-      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v2`);
+      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only`);
       const cacheRanking = request.method === "GET" && path === "/api/research" && env.MAINTENANCE_MODE !== "true";
       if (cacheRanking && rankingCache) {
         // Revision keys prevent stale results after erasure across cache locations
         // and prevent an in-flight old computation from repopulating the new key.
         const version=await env.DB.prepare("SELECT revision FROM ranking_revision WHERE id=1").first();
         if(!version) throw new Error("Ranking revision unavailable");
-        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v2/${version.revision}`);
+        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only/${version.revision}`);
         try {
           const cached = await rankingCache.match(rankingKey);
           if (cached) { const hit=rankingResponse(cached, "HIT"); if(data?.setCookie) hit.headers.append("Set-Cookie",data.setCookie); return hit; }

@@ -1,22 +1,22 @@
-import { House, LibraryBig, Music2, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { House, LibraryBig, Music2, SlidersHorizontal } from "lucide-react";
 import "./aura-nav-link.css";
+import AdminAccountLink from "./admin-account-link";
 
 const icons = { welcome: House, tuning: SlidersHorizontal, library: LibraryBig };
 
 export function OwnerUtilityLink() {
-  return <a className="owner-utility-link" href="/owner-research">
-    <ShieldCheck aria-hidden="true" />
-    <span>Admin view</span>
-  </a>;
+  return <AdminAccountLink />;
 }
 
-export default function AuraNavLink({ href, label, kind }: {
+export default function AuraNavLink({ href, label, kind, className = "", ariaLabel }: {
   href: string;
   label: string;
   kind: keyof typeof icons;
+  className?: string;
+  ariaLabel?: string;
 }) {
   const Icon = icons[kind];
-  return <a className="top-note owner-link aura-nav" href={href} data-kind={kind}>
+  return <a className={`top-note owner-link aura-nav ${className}`} href={href} data-kind={kind} aria-label={ariaLabel}>
     <span className="aura-nav-halo" aria-hidden="true" />
     <span className="aura-nav-ripple" aria-hidden="true" />
     <span className="aura-nav-note note-one" aria-hidden="true"><Music2 /></span>

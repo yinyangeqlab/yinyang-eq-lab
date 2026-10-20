@@ -12,6 +12,10 @@ export function maintenanceLocks(pause:boolean,value?:unknown):MaintenanceFeatur
   if(!pause)return [];
   return validMaintenanceLocks(value)&&value.length?[...value]:["shootouts"];
 }
+// Preserve independently saved locks; derive dependent availability at read time.
+export function effectiveMaintenanceLocks(locks:MaintenanceFeature[]):MaintenanceFeature[] {
+  return locks.includes("shootouts")&&!locks.includes("contributions")?[...locks,"contributions"]:[...locks];
+}
 const storagePrefix="yinyang-maintenance-v2:";
 export function encodeMaintenanceNotice(message:string,lockedFeatures:MaintenanceFeature[]):string {
   return storagePrefix+JSON.stringify({message,lockedFeatures});
@@ -40,7 +44,7 @@ export function maintenanceFeatureFor(request:Request):MaintenanceFeature|null {
 }
 export function featureMaintenanceResponse(request:Request,status:{active:boolean;pauseSubmissions:boolean;lockedFeatures?:MaintenanceFeature[];message:string;expiresAt?:number|null}):Response|null {
   if(!status.active||!status.pauseSubmissions)return null;
-  const feature=maintenanceFeatureFor(request),locks=maintenanceLocks(true,status.lockedFeatures);
+  const feature=maintenanceFeatureFor(request),locks=effectiveMaintenanceLocks(maintenanceLocks(true,status.lockedFeatures));
   if(!feature||!locks.includes(feature))return null;
   const label=MAINTENANCE_FEATURES.find(f=>f.id===feature)!.label;
   const headers={"Cache-Control":"private, no-store","Retry-After":"60","X-YinYang-Service":"maintenance","X-YinYang-Maintenance-Feature":feature};

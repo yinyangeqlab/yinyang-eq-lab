@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync,readdirSync} from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+import {validateSyncPayload} from '../lib/browser-sync.mjs';
+import {linkedTester,browserPairing} from '../lib/browser-pairing.mjs';
+const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
+for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
+const db={prepare(query){const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
+function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},crypto,Date,TextEncoder,TextDecoder,btoa,atob,Response,Request,URL,Headers});return exports;}
+const input=load('lib/request-json.ts'),account=load('lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
+
+const records=load('lib/yinyangeq-records.ts',{'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':{parseCurve:()=>[]},'@/lib/research-measurement-files':{measurementFileHash:async()=>''}});
+const history=load('lib/yinyangeq-history.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload},'@/lib/legacy-notice':{LEGACY_CUTOFF:Date.parse('2026-10-18T07:47:46.750Z')},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'2026-10-18-v7'},'@/lib/yinyangeq-account':account,'@/lib/yinyangeq-records':records});
+const profile=await account.createProfileAccount(db),browser=crypto.randomUUID(),otherBrowser=crypto.randomUUID(),a=crypto.randomUUID(),b=crypto.randomUUID(),vote=crypto.randomUUID(),run=crypto.randomUUID(),session='a'.repeat(64),dest='b'.repeat(64),at=1000;
+for(const subject of ['owner',profile.subject_id,'other']){sqlite.prepare("INSERT OR IGNORE INTO privacy_accounts(subject_id) VALUES(?)").run(subject);sqlite.prepare("UPDATE privacy_accounts SET submissions_enabled=1,agreement_version='2026-10-18-v7' WHERE subject_id=?").run(subject);}
+sqlite.prepare("INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,'owner',?)").run(session,Date.now()+1000000);sqlite.prepare('INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,?,?)').run(dest,profile.subject_id,Date.now()+1000000);
+for(const [id,name]of [[a,'Alpha'],[b,'Beta']])sqlite.prepare("INSERT INTO targets(id,name,creator,points,status,created_at) VALUES(?,?,'Fixture','[[20,0],[20000,0]]','approved',?)").run(id,name,at);
+function addVote(id,voter=browser){sqlite.prepare("INSERT INTO votes(id,winner_id,loser_id,voter_id,created_at) VALUES(?,?,?,?,?)").run(id,a,b,voter,at);}
+function own(kind,id,subject='owner',hash=session){sqlite.prepare('INSERT INTO submission_owners(record_kind,record_id,subject_id,session_hash) VALUES(?,?,?,?)').run(kind,id,subject,hash);}
+addVote(vote);own('vote',vote);
+sqlite.prepare("INSERT INTO listening_runs(id,voter_id,test_mode,headphone_type,target_a_id,target_b_id,target_a_name,target_b_name,result,intervals,heard_a,heard_b,overlap_seconds,created_at,trial_id) VALUES(?,?,'blind','ie',?,?,'Alpha','Beta','a','[]',6,6,6,?,?)").run(run,browser,a,b,at,vote);own('run',run);
+for(const [kind,id]of [['vote',vote],['run',run]])sqlite.prepare('INSERT INTO comparison_records VALUES(?,?,?)').run(kind,id,vote);
+const snapshot={version:1,values:{'target-lab-voter':browser,'target-lab-trials':JSON.stringify([{id:run,serverTrialId:vote,recorded:true}])}};
+const capture=await history.createHistoryCapture(db);await history.captureBraveHistory(db,'owner',session,capture.code,snapshot);await assert.rejects(()=>history.captureBraveHistory(db,'owner',session,capture.code,snapshot),/already used/);
+let preview=await history.historyPreview(db,capture.id);assert.equal(preview.rows.find(row=>row.id===vote).verified,true);
+const before=sqlite.prepare('SELECT * FROM votes WHERE id=?').get(vote);
+await assert.rejects(()=>history.migrateHistoryBatch(db,capture.id,[{kind:'vote',id:vote}],'stale',false,'','MOVE VERIFIED HISTORICAL RECORDS'),/changed/);
+await history.migrateHistoryBatch(db,capture.id,[{kind:'vote',id:vote}],preview.digest,false,'','MOVE VERIFIED HISTORICAL RECORDS');
+assert.deepEqual(sqlite.prepare('SELECT * FROM votes WHERE id=?').get(vote),before,'scientific source data must be untouched');
+for(const id of [vote,run])assert.equal(sqlite.prepare('SELECT subject_id FROM submission_owners WHERE record_id=?').get(id).subject_id,profile.subject_id);
+assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM owner_history_transfer_scope').get().n,0);
+assert.equal((await records.publicProfilePage(db)).entries.length,0,'migration never publishes');
+await assert.rejects(()=>db.prepare("UPDATE submission_owners SET subject_id='other' WHERE record_kind='vote' AND record_id=?").bind(vote).run(),/Ownership cannot/);
+const review=await records.ownedProfilePreview(db,profile.subject_id,'vote',vote);await records.setProfileEntry(db,profile.subject_id,'vote',vote,'published',false,review.hash);let published=await records.publicProfilePage(db);assert.equal(published.entries.length,1);const publicJSON=JSON.stringify(published);for(const privateValue of [browser,session,profile.subject_id,vote,a,b])assert.ok(!publicJSON.includes(privateValue),'private source identifier leaked');
+await assert.rejects(()=>records.ownedProfilePreview(db,'owner','vote',vote),/separate/);
+await records.setProfileEntry(db,profile.subject_id,'vote',vote,'hidden');assert.equal((await records.publicProfilePage(db)).entries.length,0);
+const legacy=crypto.randomUUID();addVote(legacy);const legacyCapture=await history.createHistoryCapture(db);await history.captureBraveHistory(db,'owner',session,legacyCapture.code,snapshot);preview=await history.historyPreview(db,legacyCapture.id);assert.equal(preview.rows.find(row=>row.id===legacy).needsIndependentReview,true);
+await assert.rejects(()=>history.migrateHistoryBatch(db,legacyCapture.id,[{kind:'vote',id:legacy}],preview.digest,false,'','MOVE VERIFIED HISTORICAL RECORDS'),/Independently verify/);
+await history.migrateHistoryBatch(db,legacyCapture.id,[{kind:'vote',id:legacy}],preview.digest,true,'Owner independently verified this exact historical comparison.','MOVE VERIFIED HISTORICAL RECORDS');assert.equal(sqlite.prepare('SELECT subject_id FROM submission_owners WHERE record_id=?').get(legacy).subject_id,profile.subject_id);
+
+// A matching browser identifier never gives authority over another participant's linked record.
+const outsider='c'.repeat(64);sqlite.prepare("INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,'other',?)").run(outsider,Date.now()+1000000);
+const conflictVote=crypto.randomUUID(),conflictRun=crypto.randomUUID();addVote(conflictVote);own('vote',conflictVote);
+sqlite.prepare("INSERT INTO listening_runs(id,voter_id,test_mode,headphone_type,target_a_id,target_b_id,target_a_name,target_b_name,result,intervals,heard_a,heard_b,overlap_seconds,created_at,trial_id) VALUES(?,?,'blind','ie',?,?,'Alpha','Beta','a','[]',6,6,6,?,?)").run(conflictRun,browser,a,b,at,conflictVote);own('run',conflictRun,'other',outsider);
+const conflictCapture=await history.createHistoryCapture(db);await history.captureBraveHistory(db,'owner',session,conflictCapture.code,{version:1,values:{'target-lab-voter':browser,'target-lab-trials':JSON.stringify([{id:conflictRun,serverTrialId:conflictVote,recorded:true}])}});preview=await history.historyPreview(db,conflictCapture.id);
+await assert.rejects(()=>history.migrateHistoryBatch(db,conflictCapture.id,[{kind:'vote',id:conflictVote}],preview.digest,false,'','MOVE VERIFIED HISTORICAL RECORDS'),/another account/);assert.equal(sqlite.prepare('SELECT subject_id FROM submission_owners WHERE record_id=?').get(conflictVote).subject_id,'owner');
+// Same song on both accounts is an explicit conflict, never a silent overwrite.
+const song='/music/synthetic.mp3';for(const subject of ['owner',profile.subject_id])sqlite.prepare("INSERT INTO music_votes(user_id,user_name,user_email,track_url,choice,updated_at) VALUES(?,'Fixture','',?,'keep',?)").run(subject,song,at);
+const musicCapture=await history.createHistoryCapture(db);await history.captureBraveHistory(db,'owner',session,musicCapture.code,snapshot);preview=await history.historyPreview(db,musicCapture.id);
+await assert.rejects(()=>history.migrateHistoryBatch(db,musicCapture.id,[{kind:'music',id:song}],preview.digest,true,'Independently verified the original song rating.','MOVE VERIFIED HISTORICAL RECORDS'),/already has a rating/);
+sqlite.prepare('DELETE FROM music_votes WHERE user_id=? AND track_url=?').run(profile.subject_id,song);preview=await history.historyPreview(db,musicCapture.id);await history.migrateHistoryBatch(db,musicCapture.id,[{kind:'music',id:song}],preview.digest,true,'Independently verified the original song rating.','MOVE VERIFIED HISTORICAL RECORDS');assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM music_votes WHERE track_url=?').get(song).n,1);assert.equal(sqlite.prepare('SELECT updated_at FROM music_votes WHERE user_id=?').get(profile.subject_id).updated_at,at);
+const musicReview=await records.ownedProfilePreview(db,profile.subject_id,'music',song);await records.setProfileEntry(db,profile.subject_id,'music',song,'published',false,musicReview.hash);assert.equal((await records.publicProfilePage(db)).entries.length,1);
+sqlite.prepare("UPDATE music_votes SET choice='skip',updated_at=? WHERE user_id=? AND track_url=?").run(at+1,profile.subject_id,song);assert.equal((await records.publicProfilePage(db)).entries.length,0,'changed rating must require review again');
+const events=sqlite.prepare("SELECT id FROM owner_profile_events WHERE record_kind='music'").all();assert.ok(events.length>=3,'rating history retained privately');for(const event of events)assert.ok((await records.ownedProfilePreview(db,profile.subject_id,'history',event.id)).payload);
+// Source changes invalidate preview, while hiding remains possible even after source removal.
+const review2=await records.ownedProfilePreview(db,profile.subject_id,'vote',vote);sqlite.prepare("UPDATE votes SET other_reason='Changed note' WHERE id=?").run(vote);await assert.rejects(()=>records.setProfileEntry(db,profile.subject_id,'vote',vote,'published',false,review2.hash),/changed/);
+const review3=await records.ownedProfilePreview(db,profile.subject_id,'vote',vote);await records.setProfileEntry(db,profile.subject_id,'vote',vote,'published',false,review3.hash);sqlite.prepare("INSERT INTO moderation_events(record_kind,record_id,action,reason,actor,created_at) VALUES('vote',?,'remove','Fixture moderation','owner',?)").run(vote,Date.now());assert.equal((await records.publicProfilePage(db)).entries.length,0);await records.setProfileEntry(db,profile.subject_id,'vote',vote,'hidden');
+
+const erasure=load('lib/privacy-erasure.ts',{'cloudflare:workers':{env:{DB:db}},'@/lib/request-json':input});
+await account.saveProfileSnapshot(db,profile.subject_id,'Before deletion',snapshot);assert.ok(sqlite.prepare('SELECT COUNT(*) n FROM owner_profile_snapshots').get().n>0);
+await erasure.eraseData(profile.subject_id,{kind:'vote',id:vote});assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM owner_profile_snapshots').get().n,0);assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_entries WHERE record_kind='vote' AND record_id=?").get(vote).n,0);assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_events WHERE record_kind='vote' AND record_id=?").get(vote).n,0);
+await erasure.eraseData(profile.subject_id,{kind:'music',id:song});assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_events WHERE record_kind='music' AND record_id=?").get(song).n,0,'permanent erase removes historic song choices, unlike ordinary undo');
+await erasure.eraseData(profile.subject_id);for(const table of ['owner_public_profiles','owner_profile_devices','owner_profile_grants','owner_profile_entries','owner_profile_events','owner_profile_snapshots','owner_history_claims'])assert.equal(sqlite.prepare(`SELECT COUNT(*) n FROM ${table}`).get().n,0,table);
+console.log('PASS synthetic history: complete graphs, original evidence, private publication, stale previews, other-owner conflicts, anonymous verification, song conflict/atomic move, source changes, moderation, hiding, individual erasure and complete account erasure without recovery copies.');sqlite.close();

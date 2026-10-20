@@ -63,3 +63,14 @@ assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().
 assert.equal((await target({action:'download'},jar)).status,409,'Used payload cannot be downloaded again');
 assert.equal((await browserPairing(request(null),env,null,true)).status,403,'Admin credentials cannot sync');
 console.log('Browser sync passed: single /sync page, explicit replacement acknowledgement, approved snapshot transfer, same voter/account identity, no credential change before replacement, one-time payload erasure, retry, size/key restrictions, unrelated-storage preservation and quota rollback. Synthetic SQLite only.');sql.close();
+// Local admin provenance must never become participant history through Sync.
+const adminStorage=new Storage({'target-lab-voter':'11111111-1111-4111-8111-111111111111','target-lab-trials':JSON.stringify([{id:'real'},{id:'test',adminTestOnly:true}]),'target-lab-personal-shootouts-v1':JSON.stringify([{context:'real'},{context:'admin',adminTestOnly:true}]),'yinyang-admin-tests-v1':'private test history','yinyang-admin-music-tests-v1':'private test ratings'});
+const participantPayload=captureSyncPayload(adminStorage);
+assert.deepEqual(JSON.parse(participantPayload.values['target-lab-trials']),[{id:'real'}]);
+assert.deepEqual(JSON.parse(participantPayload.values['target-lab-personal-shootouts-v1']),[{context:'real'}]);
+assert.equal(participantPayload.values['yinyang-admin-tests-v1'],undefined);
+assert.throws(()=>validateSyncPayload({version:1,values:{...participantPayload.values,'target-lab-trials':JSON.stringify([{adminTestOnly:true}])}}),/Admin test data/);
+replaceSyncStorage(adminStorage,participantPayload);
+assert.equal(adminStorage.getItem('yinyang-admin-tests-v1'),'private test history');
+assert.equal(adminStorage.getItem('yinyang-admin-music-tests-v1'),'private test ratings');
+console.log('PASS participant Sync excludes tagged admin trials/runs and private admin storage; forged flagged imports fail closed and local admin history survives replacement.');

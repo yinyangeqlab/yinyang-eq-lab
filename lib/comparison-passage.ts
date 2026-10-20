@@ -32,3 +32,17 @@ export function adjustComparisonPassage(passage: ComparisonPassage, mode: "move"
   const start = Math.round(Math.max(0, Math.min(limit - length, passage.start + delta)) * 100) / 100;
   return { start, end: Math.min(duration, start + length) };
 }
+
+/** Personal exploration: body moves preserve length; only edges resize, min 5s. */
+export function adjustResizablePassage(passage: ComparisonPassage, mode: "move" | "start" | "end", delta: number, duration: number): ComparisonPassage {
+  if (!Number.isFinite(duration)||!Number.isFinite(delta)||duration<PASSAGE_SECONDS) return passage;
+  const limit=duration>=PASSAGE_SECONDS+.1?duration-.1:duration;
+  const round=(n:number)=>Math.round(n*100)/100;
+  const length=Math.min(limit,Math.max(PASSAGE_SECONDS,passage.end-passage.start));
+  const baseStart=Math.max(0,Math.min(limit-length,passage.start));
+  const baseEnd=baseStart+length;
+  if(mode==="start")return {start:Math.min(baseEnd-PASSAGE_SECONDS,Math.max(0,round(baseStart+delta))),end:baseEnd};
+  if(mode==="end")return {start:baseStart,end:Math.max(baseStart+PASSAGE_SECONDS,Math.min(limit,round(baseEnd+delta)))};
+  const start=Math.max(0,Math.min(limit-length,round(baseStart+delta)));
+  return {start,end:start+length};
+}

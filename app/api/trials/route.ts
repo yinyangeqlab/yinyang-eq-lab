@@ -1,3 +1,4 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
     if (recent[0] && now - recent[0].issuedAt < 1000) {
       return Response.json({ error: "Please wait a moment before starting another pairing." }, { status: 429 });
     }
-    const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement, points:targets.points }).from(targets).where(eq(targets.status, "approved"));
+    const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement, points:targets.points }).from(targets).where(and(eq(targets.status, "approved"),publicTargetPredicate));
     const approved = approvedRows.filter(target => {
       let measurement: unknown = null;
       try { measurement = target.measurement ? JSON.parse(target.measurement) : null; } catch {}

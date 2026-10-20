@@ -10,6 +10,13 @@ export function rankMusic<T extends Candidate>(tracks: readonly T[], counts: Mus
   });
 }
 
+// Unrated recordings have no community position, matching the Listening Pool page.
+export function musicCommunityRank<T extends Candidate>(tracks: readonly T[], counts: MusicCounts, url: string) {
+  const ranked = rankMusic(tracks.filter(track => (counts[track.url]?.keep ?? 0) + (counts[track.url]?.pass ?? 0) > 0), counts);
+  const index = ranked.findIndex(track => track.url === url);
+  return index < 0 ? null : { position: index + 1, total: ranked.length, ...counts[url] };
+}
+
 // Each cycle visits every song family once, choosing a version uniformly.
 // Ratings and review flags never change eligibility or selection probability.
 export function musicRotation<T extends Candidate>(tracks: readonly T[], _counts: MusicCounts = {}, random = Math.random): T[] {

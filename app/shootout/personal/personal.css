@@ -1,0 +1,130 @@
+.personal-shootout .personal-topnav a{display:inline-flex;align-items:center;padding:0 11px;border-bottom:2px solid transparent;color:#93a5b5;font-size:12px;text-decoration:none;white-space:nowrap}.personal-shootout .personal-topnav a.active{border-color:#58d8c9;color:#f4fafb}.personal-shootout .personal-topnav a:hover{color:#fff;background:#101010}.personal-shootout .personal-mode-tabs{margin:8px 0 12px;flex-wrap:wrap}.personal-mode-tabs a{padding:7px 10px;border:1px solid #333;border-radius:7px;color:#aebcc6;background:#0c0c0c;font-size:12px;font-weight:700;text-decoration:none;min-height:34px;display:inline-flex;align-items:center}.personal-mode-tabs a.active{border-color:#58d8c9;color:#c8fff4;background:#102e2b;box-shadow:0 0 12px #57d8c822}.personal-shootout .personal-private,.personal-shootout .personal-setup-note{font-size:12px;color:#9bb1c0;line-height:1.6;margin:7px 0 10px}.personal-shootout .personal-progress{border:1px solid #333;border-radius:8px;background:#080808;padding:10px 14px;margin:10px 0}.personal-progress>div:first-child{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.personal-progress span{color:#b8c6cf;font-size:13px}.personal-progress progress{width:100%;height:6px;accent-color:#58d8c9;margin:8px 0 0}.personal-progress p{font-size:12px;color:#9bb1c0;line-height:1.5;margin:6px 0}.personal-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}.personal-shootout .personal-actions button,.personal-shootout .personal-music-settings select{min-height:40px}.personal-actions button{padding:7px 12px;border:1px solid #3c535c;background:#0e1b20;border-radius:7px;color:#c9e8ec;font-size:12px;cursor:pointer}.personal-shootout button:disabled{opacity:.45;cursor:not-allowed}.personal-shootout button:focus-visible,.personal-shootout a:focus-visible,.personal-shootout summary:focus-visible{outline:2px solid #91f3e6;outline-offset:3px}.personal-duel>h2{font-size:18px;margin:12px 0 4px}.personal-duel>p{font-size:12px;line-height:1.5;color:#9bb1c0;margin:4px 0 8px}.personal-ab{display:grid;grid-template-columns:1fr 1fr;gap:12px}.personal-ab .card{padding-bottom:12px}.personal-hidden-target{text-align:center;padding:14px}.personal-hidden-target strong{display:block;font-size:25px;color:#b9fff4}.personal-ab .card+article strong{color:#ffe5bc}.personal-hidden-target small{display:block;color:#93a5b5;font-size:11px;margin-top:5px}.personal-ab .single-listen{display:block;margin:0 auto;padding:7px 20px;border:1px solid #57d8c8;background:#10302d;color:#b9fff4;border-radius:8px}.personal-ab .switch-to-b{border-color:#e9b466;background:#352716;color:#ffe5bc}.personal-votes{justify-content:center}.personal-votes button{flex:1;max-width:240px;font-size:13px;padding:10px}.personal-shootout .music-panel{margin:10px 0}.personal-shootout .personal-results,.personal-shootout .personal-method,.personal-shootout .shootout-view>details{border:1px solid #333;background:#080808;border-radius:11px;padding:14px 18px;margin:12px 0}.personal-results h2{font-size:20px;margin:0 0 8px}.personal-results p,.personal-method p,.personal-evidence li,.personal-shootout .shootout-view>details p{color:#9bb1c0;font-size:13px;line-height:1.7}.personal-shortlist{padding-left:24px}.personal-shortlist li{padding:8px 0}.personal-shortlist span,.personal-contender small{display:block;color:#9bb1c0;font-size:12px;margin-top:4px}.personal-contender{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid #242424;padding:8px 0}.personal-contender>span{flex:1;min-width:150px;overflow-wrap:anywhere}.personal-contender button{border:1px solid #3c535c;background:#0e1b20;color:#c9e8ec;border-radius:6px;padding:5px 9px}.personal-shootout summary{cursor:pointer;min-height:36px;padding:5px 0;color:#c9dbe3;font-size:13px}.personal-break{padding:10px;border:1px solid #8e713f;background:#211a10;border-radius:8px;color:#f4d497}.personal-evidence{padding-left:20px}.personal-evidence li{margin:8px 0}.personal-shootout .message{overflow-wrap:anywhere}@media(max-width:780px){.personal-shootout .personal-topnav{flex-wrap:wrap;gap:0}.personal-shootout .personal-topnav a{padding:12px 8px}.personal-mode-tabs a{flex:1 1 45%;font-size:11px}.personal-actions button{min-height:44px}.personal-ab{gap:8px}.personal-hidden-target{padding:12px 5px}.personal-hidden-target strong{font-size:21px}.personal-votes button{font-size:12px;padding:10px 6px}.personal-shootout .personal-mode-tabs{margin-top:8px}.personal-shootout .shootout-heading-aside .count-pill{margin-top:0}}
+
+.personal-music-settings>label{display:grid;gap:5px;margin:10px 0;font-size:12px;color:#9bb1c0}.personal-music-settings select,.personal-music-settings input[type=search]{width:100%;min-width:0}.personal-playlist{max-height:240px;overflow:auto;border:1px solid #30424a;border-radius:8px;padding:5px 10px}.personal-playlist>label{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;cursor:pointer}.personal-playlist input{flex:none;width:18px;height:18px}.personal-playlist small{display:block;color:#91a9b7;margin-top:3px}.personal-playlist span{overflow-wrap:anywhere}
+
+.personal-data-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px 28px;margin-top:24px;padding-top:20px;border-top:1px solid #345449}.personal-data-actions .personal-download,.personal-data-actions .personal-manage-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:40px;padding:9px 15px;border:1px solid #679f90;border-radius:7px;background:#142b26;color:#e0f1e9;font-size:13px;line-height:1.4;text-decoration:none;font-weight:500}.personal-data-actions .personal-manage-link{border-color:#68717b;background:transparent;color:#d7e0e6}.personal-data-actions .personal-download:hover,.personal-data-actions .personal-manage-link:hover{background:#29463c;border-color:#a2d9c4}.personal-data-actions span{font-size:18px}.personal-contender{gap:16px}.personal-contender>button{padding:8px 13px;min-height:38px;border:1px solid #5d8175;background:#152820;border-radius:7px}.personal-contender>button:last-child{border-color:#986d69;color:#efbfb6;background:transparent}.personal-research-settings{margin:20px 0;padding:16px 18px;border:1px solid #456c5e;border-radius:9px;background:#10231c}.personal-research-settings label{display:flex;gap:10px;align-items:flex-start;line-height:1.6}.personal-research-settings input{margin-top:6px;flex:none}.personal-research-settings p{max-width:90ch;line-height:1.7}@media(max-width:600px){.personal-data-actions{align-items:stretch;gap:14px}.personal-data-actions>*{width:100%}.personal-contender{flex-wrap:wrap}.personal-contender>span{flex-basis:100%}}
+
+.personal-shootout .personal-music-settings{display:flex;gap:12px 24px;align-items:center;flex-wrap:wrap;margin:8px 0;padding:10px 14px;background:#0b1215;border:1px solid #293a40;border-radius:8px}.personal-music-fields{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px 18px;flex:1}.personal-music-fields>label{display:grid;gap:5px;font-size:11px;color:#9bb1c0;min-width:180px;flex:0 1 260px}.personal-music-fields select,.personal-music-fields input[type=search]{min-height:36px;border:1px solid #4c626c;border-radius:6px;padding:6px 32px 6px 10px;background:#121e24;color:#e1eef2;max-width:100%;font-size:12px}.personal-music-fields option{background:#121e24;color:#e1eef2}.personal-music-settings .personal-music-help{margin-left:auto;flex:0 1 290px}.personal-music-help summary{font-size:11px;min-height:30px}.personal-music-help p{font-size:12px;line-height:1.6;color:#9bb1c0}.personal-music-fields .personal-playlist{flex-basis:100%;width:100%}.personal-result-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:#a4b7bf}.personal-result-toolbar button,.personal-resume{border:1px solid #65bca9!important;background:#173c32!important;color:#d2fff0!important;padding:9px 15px;border-radius:7px}.personal-result-curves{margin:14px 0 24px;padding:12px 0;border-block:1px solid #30423f}.personal-result-curves .cards{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.personal-result-curves .card{min-width:0}.personal-result-curves .curve-frame{height:150px}.personal-shootout .personal-duel .cards{margin-top:8px}.personal-duel .card-bottom{padding:10px 14px}.personal-duel .music-panel{margin:8px 0}.personal-shootout .personal-progress{padding:9px 12px}.personal-shootout .personal-private{font-size:11px;max-width:100ch;margin:7px 0}.personal-shootout .personal-research-settings{margin-top:20px}@media(max-width:600px){.personal-music-fields{flex-basis:100%}.personal-music-fields>label{flex:1 1 100%;min-width:0}.personal-music-settings .personal-music-help{flex-basis:100%}.personal-result-toolbar button{width:100%}}
+
+.personal-result-curves .card .curve-frame{opacity:1}.personal-result-curves .curve{height:100%;border:0}.personal-shootout .personal-duel .music-panel-host{margin:8px 0}
+
+/* Personal decisions are prominent; the shared playback component keeps its own sizing. */
+.personal-shootout .personal-actions button,.personal-shootout .personal-contender>button,.personal-shootout .personal-data-actions>button,.personal-shootout .personal-data-actions>a,.personal-shootout .personal-result-toolbar button{font-size:clamp(14px,.92vw,16px);line-height:1.4;min-height:44px;padding:10px 15px}.personal-shootout .personal-votes{gap:12px;margin:16px 0}.personal-shootout .personal-votes button{font-size:clamp(16px,1.12vw,19px);font-weight:600;min-height:50px;max-width:none;padding:13px 18px}.personal-shootout .personal-mode-tabs a{font-size:clamp(12px,.86vw,15px);line-height:1.4;min-height:40px}.personal-shootout .personal-music-fields select,.personal-shootout .personal-music-fields input[type=search]{font-size:14px;min-height:42px}.personal-shootout .personal-music-fields>label{font-size:12px}.personal-shootout .personal-progress span{font-size:13px}.personal-shootout .personal-listen-status{font-size:13px}.personal-shootout .personal-actions button:disabled{color:#b7c9cf;opacity:.6}@media(max-width:600px){.personal-shootout .personal-votes{gap:7px}.personal-shootout .personal-votes button{font-size:15px;min-height:52px;padding:10px 7px}.personal-shootout .personal-actions:not(.personal-votes) button{flex:1 1 auto}.personal-shootout .personal-votes .choice-tie{flex:1.3}.personal-shootout .personal-mode-tabs a{font-size:12px;min-height:44px}.personal-shootout .personal-music-fields select{font-size:16px}}
+.personal-shootout .shootout-content .personal-votes.choice-controls{align-items:stretch}.personal-shootout .shootout-content .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b){font-size:clamp(16px,1.12vw,19px);font-weight:600;line-height:1.35;min-height:52px;height:auto;padding:13px 18px;white-space:normal}@media(max-width:600px){.personal-shootout .shootout-content .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b){font-size:15px;min-height:52px;padding:11px 7px}}
+
+.personal-shootout .personal-ab .card-bottom strong{flex:0 0 auto;white-space:nowrap}
+
+.personal-channel-settings{display:flex;gap:12px 20px;align-items:center;flex-wrap:wrap;margin:10px 0}.personal-channel-settings>label:first-child{display:flex;align-items:center;gap:10px;color:#c1d7dc;font-size:13px}.personal-channel-settings select{min-height:40px;padding:7px 30px 7px 10px;background:#142127;border:1px solid #56717a;border-radius:7px;color:#e6f5f3;font-size:14px}.personal-channel-settings>span{font-size:12px;color:#a2b7bf}.personal-preset-upload{display:inline-flex;align-items:center;gap:8px;border:1px solid #486d63;border-radius:7px;padding:9px 12px;color:#c3e3d6;font-size:13px;flex-wrap:wrap}.personal-preset-upload input{max-width:220px;font-size:12px}.personal-preset-upload input::file-selector-button{border:1px solid #739e90;background:#162f26;color:#d9f3e9;border-radius:5px;padding:6px 10px;cursor:pointer}@media(max-width:600px){.personal-channel-settings>label,.personal-channel-settings>span{flex-basis:100%}.personal-channel-settings select{font-size:16px}.personal-preset-upload input{max-width:100%}}
+
+.personal-shootout .waveform-passage.resizable.editable{pointer-events:none}.personal-shootout .waveform-passage.resizable .passage-region-move{inset:auto;left:50%;top:50%;width:100%;min-width:52px;height:28px;transform:translate(-50%,-50%);border:1px solid #9addb1;border-radius:6px;background:#173f30e8;z-index:5;pointer-events:auto;cursor:grab}.personal-shootout .waveform-passage.resizable .passage-grip{position:static;display:block;width:auto;height:auto;opacity:1;background:none;color:#ddffe7;font-size:20px;line-height:1}.personal-shootout .waveform-passage.resizable .passage-edge{z-index:3;pointer-events:auto}.personal-shootout .waveform-passage.resizable .passage-edge::before,.personal-shootout .waveform-passage.resizable .passage-edge::after{background:#f1cd83}.personal-shootout .passage-hover-info{position:absolute;left:50%;top:1px;transform:translateX(-50%);max-width:100%;width:max-content;padding:5px 8px;border:1px solid #769a86;border-radius:5px;background:#102119f2;color:#e1f7e8;font-size:11px;line-height:1.3;z-index:8;pointer-events:none;opacity:0}.personal-shootout .track-waveform.resizable-passage:hover .passage-hover-info,.personal-shootout .track-waveform.resizable-passage:focus-within .passage-hover-info{opacity:1}.personal-shootout .music-panel-host .passage-focus{font-size:24px!important}.personal-shootout .passage-times{font-variant-numeric:tabular-nums;font-size:12px}@media(max-width:600px){.personal-shootout .passage-hover-info{font-size:10px;white-space:normal;text-align:center}.personal-shootout .waveform-passage.resizable .passage-region-move{min-width:48px}}
+
+.personal-shootout .music-panel-host .playback-transport .passage-focus{width:auto;min-width:56px;height:36px;padding:0 10px;font-size:13px!important;font-weight:600}
+.personal-example-setup{min-width:0;margin:0;padding:0;border:0}
+.personal-example-notice{margin:14px 0;padding:14px 18px;border:1px solid #71a998;border-radius:10px;background:#102d25;color:#e0f3e9}
+.personal-example-notice p{font-size:13px;line-height:1.6;color:#b8d3ca}
+.personal-example-notice a{display:inline-flex;align-items:center;min-height:44px;color:#c5fff0;font-size:14px}
+
+/* Bound the listening surfaces so waveform playback and decisions stay close. */
+.personal-shootout .shootout-heading-row{grid-template-columns:minmax(0,1fr) auto}
+.personal-shootout .shootout-heading-row>div{min-width:0}
+.personal-shootout .shootout-heading-row p{display:block;font-size:13px;line-height:1.6;margin-top:6px}
+.personal-shootout .personal-ab .listen-card{min-width:0}
+.personal-shootout .personal-ab .listen-card .curve-frame{height:clamp(180px,22vh,260px)}
+.personal-shootout .personal-ab .card-bottom>div{flex-wrap:wrap;white-space:normal;gap:4px 10px}
+.personal-shootout .personal-ab .card-bottom small{white-space:normal}
+.personal-shootout .personal-duel>p,.personal-shootout .personal-private{font-size:13px;line-height:1.6}
+.personal-shootout .personal-music-fields{min-width:0}
+.personal-shootout .personal-music-fields>label{max-width:100%}
+.personal-shootout .personal-upload-help{flex:1 1 320px;min-width:0;max-width:75ch;font-size:13px;line-height:1.6;color:#a9bfc8}
+.personal-shootout .personal-ab .chart{min-width:0}
+.personal-shootout .personal-actions{gap:12px}
+.personal-shootout summary{display:flex;align-items:center;gap:5px;min-height:44px}
+.personal-shootout summary::before{content:"▸";flex:none;font-size:12px}
+.personal-shootout details[open]>summary::before{content:"▾"}
+.personal-shootout summary::marker{content:""}
+.personal-shootout summary::-webkit-details-marker{display:none}
+.personal-shootout .personal-channel-settings select{min-height:44px}
+@media(min-width:640px) and (max-width:780px){
+ .personal-shootout .personal-ab.cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .personal-shootout .personal-ab .listen-card .curve-frame{height:180px}
+}
+@media(max-width:639px){
+ .personal-shootout .shootout-heading-row{grid-template-columns:minmax(0,1fr)}
+ .personal-shootout .personal-ab .listen-card .curve-frame{height:120px}
+ .personal-shootout .personal-ab .card-bottom{padding:8px 12px}
+ .personal-shootout .personal-ab .card{padding-bottom:4px}
+ .personal-shootout .personal-ab .card-bottom small{font-size:11px}
+ .personal-shootout .personal-ab .listen-card .curve-hover-choice{font-size:17px}
+ .personal-shootout .personal-preset-upload{min-width:0;max-width:100%}
+ .personal-shootout .personal-mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .personal-shootout .personal-mode-tabs a{min-width:0;white-space:normal}
+ .personal-shootout .personal-mode-tabs .personal-mode-link{grid-column:1/-1;justify-content:center}
+ .personal-shootout .personal-mode-tabs a:last-child{grid-column:auto;justify-content:center}
+ .personal-shootout .personal-results{padding:12px}
+ .personal-shootout .personal-actions.personal-votes{gap:7px}
+}
+@media(max-width:980px){
+ .personal-shootout .music-panel-host .playback-transport{flex-wrap:wrap;gap:8px}
+ .personal-shootout .music-panel-host .playback-transport button{min-width:44px;min-height:44px}
+ .personal-shootout .music-panel-host .playback-transport .passage-focus{min-height:44px}
+ .personal-shootout .music-panel-host .passage-controls button{min-height:44px;min-width:44px}
+ .personal-shootout .personal-preset-upload input::file-selector-button{min-height:44px}
+}
+
+/* Keep setup actions beside the setting they affect. */
+.personal-shootout .personal-channel-settings{gap:8px 12px;align-items:center;margin:10px 0}
+.personal-shootout .personal-preset-upload{position:relative;flex:0 0 auto;gap:7px;min-height:36px;padding:7px 10px;border:1px solid #4c786d;background:#10251f;cursor:pointer;font-size:12px}
+.personal-shootout .personal-preset-upload input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;padding:0;clip-path:inset(50%)}
+.personal-shootout .personal-preset-upload:focus-within{outline:2px solid #91f3e6;outline-offset:3px}
+.personal-shootout .personal-channel-settings>span{flex:1 1 280px;line-height:1.5}
+.personal-shootout .personal-music-settings{justify-content:flex-start;gap:10px 18px;padding:10px 12px}
+.personal-shootout .personal-music-fields{flex:0 1 auto;gap:10px 14px}
+.personal-shootout .personal-music-settings:has(.personal-playlist) .personal-music-fields{flex:1 1 100%}
+.personal-shootout .personal-music-settings .personal-music-help{flex:0 1 420px;margin-left:0;min-width:0}
+.personal-shootout .personal-music-help summary{font-size:13px;min-height:36px}
+.personal-shootout .personal-progress-help{margin-top:8px;border-top:1px solid #2d3e3b;padding-top:4px}
+.personal-shootout .personal-progress-help summary{font-size:12px;min-height:32px}
+.personal-shootout .personal-progress-help p{max-width:95ch;line-height:1.6}
+.personal-shootout .personal-shortlist{list-style:none;padding-left:0}
+.personal-shortlist-heading,.personal-curve-caption{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.personal-shortlist-heading>strong{flex:1 1 180px;min-width:0;overflow-wrap:anywhere}
+.personal-shootout .personal-shortlist-heading .personal-place{display:inline-flex;margin:0;font-size:14px}
+.personal-shootout .personal-shortlist>li>span{margin:6px 0 0 45px}
+.personal-shootout .personal-fine-tune-callout{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;margin:12px 0 0;padding:12px 14px;border:1px solid #c6a44e;border-left:3px solid #ffd86d;border-radius:8px;background:linear-gradient(115deg,#352b15,#211e14);color:#fff1c4}
+.personal-shootout .personal-fine-tune-callout>div{min-width:0;flex:1}
+.personal-shootout .personal-fine-tune-callout h3{margin:0;font-size:16px;line-height:1.4;color:#ffdf80}
+.personal-shootout .personal-fine-tune-callout p{color:#e2d4ad;max-width:65ch;margin:4px 0 0;font-size:13px;line-height:1.5}
+.personal-shootout .personal-fine-tune-callout .personal-curve-tune{flex:none}
+.personal-shootout .personal-podium:has(.personal-fine-tune-callout) .personal-full-standings{margin-top:16px;padding-top:16px}
+.personal-shootout .personal-fine-tune-callout .personal-curve-tune{padding:9px 13px;min-height:44px;border:1px solid #edc967;border-radius:7px;background:#f2d27c;color:#292113;font-size:14px;font-weight:700}
+@media(max-width:600px){
+ .personal-shootout .personal-channel-settings>label{flex-basis:auto}
+ .personal-shootout .personal-channel-settings>span{flex-basis:100%}
+ .personal-shootout .personal-preset-upload{min-height:40px}
+ .personal-shootout .personal-music-fields{flex:1 1 100%}
+ .personal-shootout .personal-music-settings .personal-music-help{flex:1 1 100%}
+ .personal-shootout .personal-music-help summary,.personal-shootout .personal-progress-help summary{min-height:44px}
+ .personal-shootout .personal-shortlist>li>span{margin-left:0}
+ .personal-shootout .personal-fine-tune-callout{align-items:center;flex-direction:row;gap:10px;padding:10px 12px}
+ .personal-shootout .personal-fine-tune-callout h3{font-size:15px}
+ .personal-shootout .personal-fine-tune-callout p{display:none}
+ .personal-shootout .personal-fine-tune-callout .personal-curve-tune{white-space:normal;text-align:center;flex:0 1 120px;padding:8px;min-width:0}
+}
+.personal-shootout .personal-shortlist-heading .personal-place-1{color:#f5d275}.personal-shootout .personal-shortlist-heading .personal-place-2{color:#cedce8}.personal-shootout .personal-shortlist-heading .personal-place-3{color:#e6ac86}
+
+.tune-copy-narrow{display:none}
+.personal-shootout .personal-fine-tune-callout .personal-tune-launcher{flex:0 0 auto;max-width:100%}
+.personal-shootout .personal-fine-tune-callout .personal-tune-cta{font-size:14px;font-weight:700;letter-spacing:0;text-transform:none;min-height:44px}
+.personal-shootout .personal-fine-tune-callout .personal-tune-cta .aura-nav-icon{color:inherit}
+.personal-shootout .personal-fine-tune-callout .personal-tune-cta:is(:hover,:focus-visible){color:#e6faff;border-color:#85dcff;background:linear-gradient(140deg,#183d49,#10212c);box-shadow:0 0 16px #75d9ff38,inset 0 1px 0 #ffffff20}
+.personal-shootout .personal-fine-tune-callout .personal-tune-cta:is(:hover,:focus-visible) .aura-nav-icon{color:#a5e8ff}
+@media(max-width:600px){
+ .personal-shootout .personal-fine-tune-callout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px}
+ .personal-shootout .personal-fine-tune-callout>div{display:contents}
+ .personal-shootout .personal-fine-tune-callout h3{grid-column:1;grid-row:1}
+ .personal-shootout .personal-fine-tune-callout p{display:block;grid-column:1/-1;grid-row:2;margin:0;font-size:12px}
+ .tune-copy-wide{display:none}.tune-copy-narrow{display:inline}
+ .personal-shootout .personal-fine-tune-callout .personal-tune-launcher{grid-column:2;grid-row:1;max-width:145px}
+ .personal-shootout .personal-fine-tune-callout .personal-tune-cta{width:100%;white-space:normal;font-size:13px;padding:8px;line-height:1.35}
+}
+@media(max-width:600px){.personal-shootout .personal-topnav a{white-space:normal;line-height:1.25;text-align:center;justify-content:center;min-width:0;padding:8px 5px}}

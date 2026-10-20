@@ -1,4 +1,5 @@
 "use client";
+import { recordAdminTestIfNeeded } from "@/lib/admin-test-store";
 import {musicDisplayTitle} from "@/lib/music-display";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
@@ -250,7 +251,18 @@ export default function PreferenceTuning() {
         const approved: Target[] = await response.json();
         let privateTargets: Target[] = [];
         try { privateTargets = JSON.parse(localStorage.getItem("target-lab-private-targets") || "[]"); } catch {}
-        setTargets([fallback, ...approved.filter(t => Array.isArray(t.points)), ...privateTargets.filter(t => Array.isArray(t.points))]);
+        if (stopped) return;
+        const available=[fallback, ...approved.filter(t => Array.isArray(t.points)), ...privateTargets.filter(t => Array.isArray(t.points))];
+        setTargets(available);
+        const requestedId=new URLSearchParams(window.location.search).get("target");
+        if (requestedId) {
+          const requested=available.find(row=>row.id===requestedId);
+          hadSavedSelection.current=true;
+          if (requested) {
+            applyEdit({selected:requested.id,settings:{...defaults},expanded:false});
+            setMessage(`Loaded ${requested.name} for fine-tuning with neutral adjustments. Undo restores your previous tuning.`);
+          } else setMessage("The requested curve is unavailable. Your existing tuning is unchanged; choose a target or import its curve.");
+        }
         let firstRankingLoad = true;
         let rankingRequest = 0;
         async function refreshRanking() {
@@ -315,15 +327,18 @@ export default function PreferenceTuning() {
     const exportKind = variant ? "eq" : filename === "original-target.csv" ? "original-target" : "preference-target";
     const format = filename.endsWith("-equalizerapo.txt") ? "equalizerapo" : filename.endsWith("-easyeffects.txt") ? "easyeffects" : filename.endsWith("-qudelix5k.txt") ? "qudelix5k" : variant ? "txt" : "csv";
     try {
+      const adminTestOnly=await recordAdminTestIfNeeded("export",{targetName:target.name,exportKind,format,filename,contents,settings,curve:exportKind==="original-target"?normalized:preferenceCurve,variant});
+      if(!adminTestOnly){
       const response = await fetch("/api/preference-exports", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
         targetId: target.id, targetName: target.name, targetCreator: target.creator, measurementName: variant ? measurement?.name : null,
         exportKind, format, filename, contents, settings, curve: exportKind === "original-target" ? normalized : preferenceCurve, variant,
       }) });
       if (!response.ok) throw new Error((await response.json() as { error?: string }).error || "Export could not be recorded.");
+      }
       const url = URL.createObjectURL(new Blob([contents], { type }));
       const link = document.createElement("a"); link.href = url; link.download = filename; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setMessage("");
+      setMessage(adminTestOnly?"Admin test download · saved locally; no official contribution was recorded.":"");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Export could not be recorded. Please try again."); }
   }
   useEffect(() => {
@@ -498,12 +513,12 @@ export default function PreferenceTuning() {
   const slider = (key: keyof Settings, title: string, detail: string, min: number, max: number, step = .5, unit = "dB", color?: string) =>
     <label className="pt-control" key={key} title={detail}><span><strong>{title}</strong><small>{detail}</small></span><input type="range" min={min} max={max} step={step} value={settings[key]} style={color ? { accentColor: color } : undefined} onPointerDown={beginGesture} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={e => set(key, Number(e.target.value))} aria-label={title} /><output style={color ? { color } : undefined}>{settings[key] > 0 && unit === "dB" ? "+" : ""}{settings[key]} {unit}</output></label>;
   return <main className="pt-shell">
-    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ League home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ League</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Shootout</a><a href="/music-library">Listening pool</a><span aria-current="page">Preference Tuning</span></nav></header>
+    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ League home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ League</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/music-library">Listening pool</a><span aria-current="page">Preference Tuning</span></nav></header>
     <div className="pt-content">
       <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>
       <div className="pt-workbench">
         <section className="pt-setup" aria-label="Tuning setup">
-          <div className="pt-baseline"><div className="pt-setup-label"><span className="pt-step" title={selectedCuratedRank ? `Matched A/B blind rank across all headphone types: #${selectedCuratedRank}` : "This target has no eligible matched A/B blind ranking"}>{selectedCuratedRank ? `#${selectedCuratedRank} MATCHED A/B · ALL HEADPHONES` : "NO MATCHED A/B RANK"}</span><strong>Target</strong></div><p className="pt-cohort-note">Ranks use matched A/B blind comparisons from both music sources, across all headphone types. Positions can differ from filtered <a href="/shootout">Shootout rankings</a>.</p><div className="pt-selects"><label><span className="pt-visually-hidden">Target curve</span><select aria-label="Target curve" value={selected} onChange={e => changeTarget(e.target.value)}>{targetOptions.map(t => <option key={t.id} value={t.id}>{curatedRanks.has(t.id) ? `#${curatedRanks.get(t.id)} · ` : "No matched A/B rank · "}{t.name} · {t.creator}</option>)}</select></label><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={e => void loadCurve(e.target.files?.[0])}/></label></div></div>
+          <div className="pt-baseline"><div className="pt-setup-label"><span className="pt-step" title={selectedCuratedRank ? `Matched A/B blind rank across all headphone types: #${selectedCuratedRank}` : "This target has no eligible matched A/B blind ranking"}>{selectedCuratedRank ? `#${selectedCuratedRank} MATCHED A/B · ALL HEADPHONES` : "NO MATCHED A/B RANK"}</span><strong>Target</strong></div><p className="pt-cohort-note">Ranks use matched A/B blind comparisons from both music sources, across all headphone types. Positions can differ from filtered <a href="/shootout">Tournament rankings</a>.</p><div className="pt-selects"><label><span className="pt-visually-hidden">Target curve</span><select aria-label="Target curve" value={selected} onChange={e => changeTarget(e.target.value)}>{targetOptions.map(t => <option key={t.id} value={t.id}>{curatedRanks.has(t.id) ? `#${curatedRanks.get(t.id)} · ` : "No matched A/B rank · "}{t.name} · {t.creator}</option>)}</select></label><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={e => void loadCurve(e.target.files?.[0])}/></label></div></div>
           <div className="pt-headphones"><div className="pt-setup-label"><span className="pt-step">HEADPHONES</span><strong>Playback fit</strong></div><div className="shootout-content pt-picker"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div></div>
         </section>
         {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}

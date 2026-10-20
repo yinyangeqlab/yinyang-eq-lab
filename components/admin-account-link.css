@@ -1,0 +1,13 @@
+/* Persistent session signal; no hover or animation is required to see it. */
+.admin-session-link.admin-session-active,
+.welcome-footer .welcome-admin-link.admin-session-active,
+.topbar .owner-utility-link.admin-session-active {
+  border-color:#67b9f7;
+  background:linear-gradient(140deg,#102c48,#091827);
+  color:#d4edff;
+  box-shadow:0 0 0 1px #7ec8ff26,0 0 12px #419dff66,0 0 25px #388cff38,inset 0 0 9px #4ba8ff1c;
+}
+.admin-session-link.admin-session-active svg { color:#9bd8ff; filter:drop-shadow(0 0 4px #59b7ff); }
+.admin-session-link.admin-session-active:focus-visible { outline:2px solid #9bd8ff; outline-offset:4px; }
+.admin-session-link.admin-session-active:hover { box-shadow:0 0 0 1px #9bd8ff50,0 0 16px #419dff88,0 0 28px #388cff55,inset 0 0 9px #4ba8ff26; }
+@media(forced-colors:active) { .admin-session-link.admin-session-active { outline:2px solid Highlight; } }

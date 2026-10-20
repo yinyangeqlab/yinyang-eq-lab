@@ -278,3 +278,21 @@
  .welcome-hero-foot .welcome-foot-line { display:none; }
  .welcome-hero-foot span:nth-child(3) { display:block; }
 }
+
+/* Explain the three listening paths within the existing Welcome design. */
+.welcome-modes{max-width:1240px;margin:0 auto;padding:70px 28px 25px}.welcome-mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:30px}.welcome-mode{padding:27px;border:1px solid #263c42;border-radius:16px;background:linear-gradient(145deg,#0d1a20,#080d12)}.welcome-mode.recommended{border-color:#518b78;box-shadow:0 0 24px #4bc99a12}.welcome-mode-badge{color:#91b4c1;font-size:11px;letter-spacing:.13em;font-weight:800}.recommended .welcome-mode-badge{color:#9de7bd}.welcome-mode h3{font-size:22px;color:#eef7f8;margin:12px 0}.welcome-mode p,.welcome-research-invite p{color:#a7bac5;font-size:14px;line-height:1.8}.welcome-mode .welcome-mode-data{font-size:12px;color:#8ca3b0;border-top:1px solid #263c42;padding-top:12px}.welcome-mode a,.welcome-research-invite a{display:inline-flex;align-items:center;gap:10px;min-height:44px;color:#9de7d6;font-size:14px;font-weight:700;text-decoration:none}.welcome-mode a:hover,.welcome-research-invite a:hover{color:#fff}.welcome-mode a:focus-visible,.welcome-research-invite a:focus-visible{outline:2px solid #9de7d6;outline-offset:4px}.welcome-research-invite{margin-top:22px;padding:23px 27px;border:1px solid #354250;border-radius:14px;background:#0c121a}.welcome-research-invite h3{color:#f0f4f7;margin:0;font-size:20px}@media(max-width:760px){.welcome-modes{padding:40px 20px 15px}.welcome-mode-grid{grid-template-columns:1fr;gap:14px}.welcome-mode{padding:22px}.welcome-mode h3{font-size:21px}.welcome-research-invite{padding:20px}}
+
+.recommended .welcome-mode-badge{color:#93aca1;font-weight:500;letter-spacing:.06em}
+
+.welcome-ranking-guide{margin:24px 0 0;padding:0 18px;border:1px solid #35535c;border-radius:10px;background:#0a151b;color:#d7e7e9}
+.welcome-ranking-guide summary{cursor:pointer;min-height:48px;align-content:center;padding:12px 0;font-size:14px;font-weight:600;line-height:1.5}
+.welcome-ranking-guide summary:focus-visible{outline:2px solid #8be8d6;outline-offset:4px;border-radius:4px}
+.welcome-ranking-guide dl{margin:0}.welcome-ranking-guide dl>div{display:grid;grid-template-columns:minmax(170px,.6fr) minmax(0,1.7fr);gap:12px 24px;padding:16px 0;border-top:1px solid #29434b}
+.welcome-ranking-guide dt{font-size:15px;font-weight:650;line-height:1.5}.welcome-ranking-guide dt span{display:block;margin-top:5px;font-size:10px;letter-spacing:.09em;color:#8cd9c6}
+.welcome-ranking-guide dl>div:last-child dt span{color:#e0c790}
+.welcome-ranking-guide dd,.welcome-ranking-guide>p{margin:0;color:#a9c0c9;font-size:13px;line-height:1.7}
+.welcome-ranking-guide>p{border-top:1px solid #29434b;padding:14px 0 18px}
+@media(max-width:600px){.welcome-ranking-guide{padding:0 14px}.welcome-ranking-guide summary{font-size:13px}.welcome-ranking-guide dl>div{grid-template-columns:minmax(0,1fr);gap:7px;padding:14px 0}.welcome-ranking-guide dt span{display:inline;margin-left:8px}}
+
+@media(min-width:1050px){.welcome-mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:761px) and (max-width:1049px){.welcome-mode-grid>.welcome-mode:last-child{grid-column:1/-1}}

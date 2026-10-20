@@ -232,6 +232,20 @@
       "when": 1792369370759,
       "tag": "0032_listener_nicknames",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "6",
+      "when": 1792375150705,
+      "tag": "0033_personal_research",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "6",
+      "when": 1792392701988,
+      "tag": "0034_owner_public_profile",
+      "breakpoints": true
     }
   ]
 }

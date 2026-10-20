@@ -11,7 +11,7 @@ const base={protocolVersion:'legacy-v1',testMode:'blind',eligible:1,heardA:6,hea
 const votes=[{...base,id:'one',winnerId:'a',loserId:'b',voterId:'private-browser-one'},{...base,id:'two',winnerId:'b',loserId:'a',voterId:'private-browser-one'},{...base,id:'three',winnerId:'a',loserId:'b',voterId:'private-browser-two'},{...base,id:'short',winnerId:'a',loserId:'b',voterId:'private-browser-one',heardA:4}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let removed = new Set();let owners=[];let runs=[];
-const deps={'@/lib/file-fingerprint':fingerprints,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
+const deps={'@/lib/admin-contributions':{isTestSubject:subject=>subject==='owner'||subject==='invite:layout-test-only'},'@/lib/file-fingerprint':fingerprints,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
 deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2',MIN_SIDE_SECONDS:5,MIN_COMMON_SECONDS:5};
 deps['@/lib/listening']={intervalStats,parseIntervals};
 const evidenceCode=ts.transpileModule(readFileSync(new URL('../lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
@@ -48,3 +48,32 @@ runs=[{id:'tie-run',trialId:'tie-trial',voterId:'another-browser',testMode:'blin
 const tied=await (await context.exports.GET()).json();assert.equal(tied.all.voteCount,4);assert.equal(tied.protocols.current.all.voteCount,1);assert.equal(tied.all.rows[0].ties,1);
 removed=new Set(['run:tie-run']);assert.equal((await (await context.exports.GET()).json()).all.voteCount,3);
 console.log('Authenticated cross-browser grouping and current-protocol ties work; removed listening runs cannot survive as ranking evidence.');
+
+// Historical admin observations cannot enter any public cohort, even if valid/moderation-restored.
+const savedOwners=owners,savedRuns=runs;const savedVotes=votes.slice();
+const baselineAdmin=(await (await context.exports.GET()).json()).all.voteCount;
+votes.push({...base,id:'admin-decisive',winnerId:'a',loserId:'b',voterId:'admin-private-browser'});
+owners=[...owners,{recordKind:'vote',recordId:'admin-decisive',subjectId:'owner'}];
+runs=[...runs,{...base,id:'admin-tie',result:'tie',targetAId:'a',targetBId:'b',voterId:'admin-private-browser',trialId:null}];
+owners.push({recordKind:'run',recordId:'admin-tie',subjectId:'owner'});
+const withoutAdmin=await (await context.exports.GET()).json();assert.equal(withoutAdmin.all.voteCount,baselineAdmin);
+owners=savedOwners;runs=savedRuns;votes.splice(0,votes.length,...savedVotes);
+console.log('PASS valid historical admin decisive votes and ties never enter public rankings.');
+
+for(const link of ['trial','run','target']){
+ owners=[...savedOwners,{recordKind:link,recordId:link==='trial'?'one':link==='run'?'linked-admin-run':'a',subjectId:'owner'}];
+ runs=link==='run'?[...savedRuns,{...savedRuns[0],id:'linked-admin-run',trialId:'one',result:'a'}]:savedRuns;
+ const result=await(await context.exports.GET()).json();assert.ok(result.all.voteCount<baselineAdmin,`admin ${link} cannot leak official votes`);
+}
+owners=savedOwners;runs=savedRuns;
+votes.push({...base,id:'explicit-owner-id',winnerId:'a',loserId:'b',voterId:'owner'});assert.equal((await(await context.exports.GET()).json()).all.voteCount,baselineAdmin);
+owners=[...savedOwners,{recordKind:'vote',recordId:'explicit-owner-id',subjectId:'invite:verified-yinyangeq'}];assert.equal((await(await context.exports.GET()).json()).all.voteCount,baselineAdmin+1,'verified transfer uses the participant owner, preserving original browser field');votes.splice(0,votes.length,...savedVotes);owners=savedOwners;
+console.log('PASS admin-owned targets, linked runs/trials and unowned explicit admin IDs are excluded; verified participant transfers preserve historical source identifiers.');
+const beforeTest=(await(await context.exports.GET()).json()).all.voteCount;
+votes.push({...base,id:'layout-test-vote',voterId:'layout-browser',winnerId:'a',loserId:'b'});
+owners=[...savedOwners,{recordKind:'vote',recordId:'layout-test-vote',subjectId:'invite:layout-test-only'}];
+runs=[...savedRuns,{...base,id:'layout-test-tie',voterId:'layout-browser',trialId:null,result:'tie',targetAId:'a',targetBId:'b'}];
+owners.push({recordKind:'run',recordId:'layout-test-tie',subjectId:'invite:layout-test-only'});
+assert.equal((await(await context.exports.GET()).json()).all.voteCount,beforeTest,'Private review identity cannot enter any public ranking');
+votes.splice(0,votes.length,...savedVotes);owners=savedOwners;runs=savedRuns;
+console.log('PASS private layout-test decisive votes and ties excluded from public ranking evidence.');

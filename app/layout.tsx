@@ -3,6 +3,7 @@ import { invitesEnabled } from "@/lib/invite-settings.mjs";
 import { InviteModeProvider } from "@/components/invite-mode";
 import type { Metadata } from "next";
 import "./globals.css";
+import "@/components/action-hover.css";
 import PrivacyEvents from "@/components/privacy-events";
 import ServiceWarningPopup from "@/components/service-warning";
 

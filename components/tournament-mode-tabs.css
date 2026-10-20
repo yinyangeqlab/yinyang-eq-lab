@@ -1,0 +1,52 @@
+/* Keep the existing mode palette and footprint, with the header links' soft aura. */
+.shell .tournament-modes .tournament-mode {
+  --mode-glow:#7ccbc8;
+  --mode-surface:#173032;
+  position:relative;
+  isolation:isolate;
+  transition:background .08s,border-color .08s,box-shadow .08s,color .08s,transform .08s;
+}
+.shell .tournament-modes .mode-personal { --mode-glow:#e4c376;--mode-surface:#302b1a; }
+.shell .tournament-modes .mode-open { --mode-glow:#a4bdca;--mode-surface:#202b33; }
+.tournament-mode>svg { position:relative;transition:filter .08s,transform .08s; }
+.mode-hover-halo,.mode-hover-ripple,.mode-hover-spark { position:absolute;pointer-events:none;opacity:0; }
+.mode-hover-halo { z-index:-1;inset:-9px;border-radius:20px;background:radial-gradient(ellipse at 30% 70%,color-mix(in srgb,var(--mode-glow) 26%,transparent),transparent 72%);filter:blur(8px);transition:opacity .08s; }
+.mode-hover-ripple { inset:-1px;border:1px solid var(--mode-glow);border-radius:inherit; }
+.mode-hover-spark { width:6px;height:6px;left:22px;top:15px;background:var(--mode-glow);clip-path:polygon(50% 0,62% 37%,100% 50%,62% 62%,50% 100%,37% 62%,0 50%,37% 37%); }
+.mode-hover-spark.spark-two { left:37px;top:28px;width:4px;height:4px; }
+.shell .tournament-modes .tournament-mode:focus-visible {
+  outline:2px solid var(--mode-glow);outline-offset:4px;
+}
+/* Hover stays off touch devices; keyboard focus gets the same treatment everywhere. */
+@media(hover:hover) and (pointer:fine) {
+  .shell .tournament-modes .tournament-mode:hover {
+    border-color:var(--mode-glow);
+    background:linear-gradient(125deg,var(--mode-surface),color-mix(in srgb,var(--mode-surface) 60%,#0c1216));
+    box-shadow:0 0 19px color-mix(in srgb,var(--mode-glow) 23%,transparent),inset 0 1px #ffffff14,inset 0 -2px color-mix(in srgb,var(--mode-glow) 70%,transparent);
+    transform:translateY(-2px);
+  }
+  .tournament-mode:hover>svg { color:var(--mode-glow);filter:drop-shadow(0 0 5px var(--mode-glow));transform:translateY(-1px) rotate(-5deg); }
+  .tournament-mode:hover .mode-hover-halo { opacity:1; }
+  .tournament-mode:hover .mode-hover-ripple { animation:mode-aura-ripple 1.6s ease-out infinite; }
+  .tournament-mode:hover .mode-hover-spark { animation:mode-spark-rise 1.4s ease-out infinite; }
+  .tournament-mode:hover .spark-two { animation-delay:.18s; }
+}
+.shell .tournament-modes .tournament-mode:focus-visible {
+  border-color:var(--mode-glow);
+  background:linear-gradient(125deg,var(--mode-surface),color-mix(in srgb,var(--mode-surface) 60%,#0c1216));
+  box-shadow:0 0 19px color-mix(in srgb,var(--mode-glow) 23%,transparent),inset 0 1px #ffffff14,inset 0 -2px color-mix(in srgb,var(--mode-glow) 70%,transparent);
+  transform:translateY(-2px);
+}
+.tournament-mode:focus-visible>svg { color:var(--mode-glow);filter:drop-shadow(0 0 5px var(--mode-glow));transform:translateY(-1px) rotate(-5deg); }
+.tournament-mode:focus-visible .mode-hover-halo { opacity:1; }
+.tournament-mode:focus-visible .mode-hover-ripple { animation:mode-aura-ripple 1.6s ease-out infinite; }
+.tournament-mode:focus-visible .mode-hover-spark { animation:mode-spark-rise 1.4s ease-out infinite; }
+.tournament-mode:focus-visible .spark-two { animation-delay:.18s; }
+.shell .tournament-modes .tournament-mode:active { transform:translateY(0); }
+@keyframes mode-aura-ripple { from{opacity:.3;transform:scale(1)}to{opacity:0;transform:scale(1.025,1.18)} }
+@keyframes mode-spark-rise { 0%{opacity:.55;transform:translateY(3px) scale(.6)}25%{opacity:.8}100%{opacity:0;transform:translateY(-15px) scale(.4)} }
+@media(prefers-reduced-motion:reduce) {
+  .shell .tournament-modes .tournament-mode,.tournament-mode>svg { transition:none; }
+  .shell .tournament-modes .tournament-mode:is(:hover,:focus-visible,:active),.tournament-mode:is(:hover,:focus-visible)>svg { transform:none; }
+  .mode-hover-ripple,.mode-hover-spark { display:none;animation:none!important; }
+}

@@ -1,3 +1,4 @@
+import { publicTargetPredicate } from "@/lib/public-targets";
 import { rankingEvidence } from "@/lib/ranking-evidence";
 import { rankPreferences } from "@/lib/preference-ranking";
 import { submissionContext } from "@/lib/submission-ownership";
@@ -38,12 +39,12 @@ export async function POST(request: Request) {
     const db = getDb();
     const now = Date.now();
     const [hourly, daily] = await Promise.all([
-      db.select({ total: count() }).from(targets).where(and(eq(targets.status, "pending"), gte(targets.createdAt, now - 3600000))),
-      db.select({ total: count() }).from(targets).where(and(eq(targets.status, "pending"), gte(targets.createdAt, now - 86400000))),
+      db.select({ total: count() }).from(targets).where(and(eq(targets.status, "pending"), gte(targets.createdAt, now - 3600000),publicTargetPredicate)),
+      db.select({ total: count() }).from(targets).where(and(eq(targets.status, "pending"), gte(targets.createdAt, now - 86400000),publicTargetPredicate)),
     ]);
     if (hourly[0].total >= 20 || daily[0].total >= 100)
       return Response.json({ error: "The review queue is full. Please try later." }, { status: 429, headers: { "Retry-After": "3600" } });
-    const existing = await db.select().from(targets);
+    const existing = await db.select().from(targets).where(publicTargetPredicate);
     if (parentTargetId && !existing.some(target => target.id === parentTargetId && target.status === "approved"))
       return Response.json({ error: "Choose an available approved parent target." }, { status: 400 });
     const matches = compareTargets(name, points, existing.map(t => ({ id:t.id,name:t.name,points:JSON.parse(t.points) })));

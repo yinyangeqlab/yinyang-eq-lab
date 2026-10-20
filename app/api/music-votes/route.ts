@@ -1,3 +1,4 @@
+import { isTestSubject, requireParticipantSubject } from "@/lib/admin-contributions";
 import { submissionContext } from "@/lib/submission-ownership";
 import { submissionOwners } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
@@ -18,7 +19,7 @@ async function snapshot(userId?: string) {
   const byTrack: MusicCounts = {};
   const mine: Record<string, "keep" | "pass"> = {};
   for (const row of new Map(rows.map(row => [JSON.stringify([row.userId, row.trackUrl]), row])).values()) {
-    if (!knownTracks.has(row.trackUrl)) continue;
+    if (isTestSubject(row.userId) || !knownTracks.has(row.trackUrl)) continue;
     if (row.choice === "keep" || row.choice === "pass") {
       totals[row.choice]++;
       const counts = byTrack[row.trackUrl] ??= { keep: 0, pass: 0 };
@@ -26,7 +27,7 @@ async function snapshot(userId?: string) {
       if (userId && row.userId === userId) mine[row.trackUrl] = row.choice;
     }
   }
-  return { totals, byTrack, mine, signedIn: Boolean(userId) };
+  return { totals, byTrack, mine, signedIn: Boolean(userId), testOnly: Boolean(userId && isTestSubject(userId)) };
 }
 
 export async function GET() {
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
   const user = await getChatGPTUser();
   if (!user) return Response.json({ error: "Sign in to submit music votes." }, { status: 401, headers: privateHeaders });
   try {
+    requireParticipantSubject(user.userId);
     const ownership = await submissionContext("music");
     if (ownership.subjectId !== user.userId) return Response.json({ error: "Sign in again to manage this account." }, { status:403, headers:privateHeaders });
     const data = await readJsonObject(request, 4096);
