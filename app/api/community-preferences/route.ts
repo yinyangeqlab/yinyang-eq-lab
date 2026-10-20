@@ -1,0 +1,2 @@
+// No participant-level or unvalidated numerical community results are public.
+export async function GET() { return Response.json({ method: 'uniform-reference-fixed10-v1', publicReady: false, status: 'validation-pilot', message: 'Community Preferences is collecting prospective, separately opted-in evidence. Public numeric results await independent listener validation and privacy review.' }, { headers: { 'Cache-Control': 'no-store' } }); }

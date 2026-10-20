@@ -21,3 +21,7 @@ Read docs/ENCRYPTED_BACKUP.md before backup work. Keep the storage service/accou
 Use only the dedicated hidden, non-contributing layout test account for browser reviews. Do not use an admin session, including for admin UI reviews, unless the owner explicitly authorizes an exception. Keep test credentials, fixture provisioning and local state out of Git. The local workflow is documented in docs/ADMIN_TEST_ISOLATION.md. Test activity must never enter research, public rankings, community song votes or participant Sync.
 
 Latest feature review (deployed as update94 with explicit owner authorization; account activation/history transfer/publication remain separate): read docs/TOURNAMENT_REVIEW_2026-10-19.md and docs/DEPLOYMENT_STAGE_2026-10-19.md. The earlier WIP checkpoint is historical; its four failing suites were resolved. Owner review, live account/history execution and any push/deployment remain separate.
+
+# Dropdown review
+
+For UI changes, check both closed native selects and their expanded option menus. Preserve dark, readable surfaces with explicit option/optgroup backgrounds and an appropriate color-scheme; a gradient on the closed control alone does not style its popup. Include desktop and narrow viewport checks, keyboard focus, and selected/disabled readability.

@@ -37,6 +37,7 @@ export function maintenanceFeatureFor(request:Request):MaintenanceFeature|null {
   if(read&&["/preference-tuning","/personal-tuning"].includes(path))return "preferenceTuning";
   if(["GET","HEAD","OPTIONS"].includes(request.method))return null;
   if(["/api/trials","/api/votes","/api/listening-runs","/api/comparison-choices","/api/feedback"].includes(path))return "shootouts";
+  if(path==="/api/community-preferences/reference" || request.method==="POST" && ["/api/personal-research","/api/community-preferences/personal"].includes(path))return "shootouts";
   if(path==="/api/music-votes")return "listeningPool";
   if(path==="/api/preference-exports")return "preferenceTuning";
   if(["/api/targets","/api/research-measurements","/api/suggestions"].includes(path))return "contributions";

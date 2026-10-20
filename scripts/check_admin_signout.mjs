@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const gate=readFileSync('infra/pulumi/private-gate.mjs','utf8');
+const source=gate.slice(gate.indexOf('function adminSignOut('),gate.indexOf('function safeReturnTo('));
+const signOut=new Function('Response','ownerCookie','dataCookie',source+';return adminSignOut;')(Response,'__Host-yinyangeq_owner','__Host-yinyangeq_data');
+for(const method of ['GET','HEAD','PUT','DELETE','OPTIONS']){const r=signOut(new Request('https://fixture.invalid/admin-logout',{method}));assert.equal(r.status,405);assert.equal(r.headers.get('Allow'),'POST');assert.equal(r.headers.get('Set-Cookie'),null);}
+for(const origin of [null,'https://other.invalid','https://fixture.invalid.evil','null']){const r=signOut(new Request('https://fixture.invalid/admin-logout',{method:'POST',headers:origin?{Origin:origin}:{}}));assert.equal(r.status,403);assert.equal(r.headers.get('Set-Cookie'),null);}
+for(const cookie of ['', '__Host-yinyangeq_owner=synthetic-admin; __Host-yinyangeq_data=synthetic-data; __Host-yinyangeq_tester=synthetic-test']){const r=signOut(new Request('https://fixture.invalid/admin-logout',{method:'POST',headers:{Origin:'https://fixture.invalid',Cookie:cookie}}));assert.equal(r.status,303);assert.equal(r.headers.get('Location'),'/');assert.match(r.headers.get('Cache-Control'),/private, no-store/);const cleared=r.headers.getSetCookie();assert.equal(cleared.length,2);for(const name of ['owner','data'])assert.ok(cleared.some(c=>c===`__Host-yinyangeq_${name}=; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Strict`));assert.ok(!cleared.some(c=>c.includes('_tester')));assert.equal(r.headers.get('Clear-Site-Data'),null);}
+assert.ok(gate.indexOf('if(path==="/admin-logout")return adminSignOut(request);')<gate.indexOf('const enabled = await invitesEnabled(env.DB);'));
+const header=readFileSync('components/admin-page-header.tsx','utf8');assert.match(header,/<form[^>]*method="post" action="\/admin-logout"/);assert.match(header,/<button type="submit"/);assert.ok(readFileSync('app/owner-research/page.tsx','utf8').includes('<AdminPageHeader />'));
+console.log('PASS admin sign-out: POST and same-origin required, idempotent cookie removal with exact secure scope, tester preserved, local saved tests not cleared, real header connected to gate.');

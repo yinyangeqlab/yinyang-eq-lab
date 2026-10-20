@@ -35,7 +35,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents />{children}<footer style={{textAlign:"center",padding:"16px",fontSize:"13px"}}><a href="/my-data" style={{color:"#9dbcc5"}}>My data · sharing &amp; deletion</a><span aria-hidden="true"> · </span><a href="/curve-credits" style={{color:"#9dbcc5"}}>Curve credits</a></footer></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents />{children}<footer className="site-data-footer" aria-label="Data and credits"><a href="/my-data">My data · sharing &amp; deletion</a><a href="/curve-credits">Curve credits</a></footer></InviteModeProvider></body>
     </html>
   );
 }

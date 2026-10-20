@@ -16,6 +16,9 @@ export const targets = sqliteTable("targets", {
   status: text("status").notNull().default("pending"),
   reviewReason: text("review_reason").notNull().default(""),
   measurement: text("measurement"),
+  headphoneType: text("headphone_type"),
+  referenceSystem: text("reference_system").notNull().default("Unknown"),
+  submissionKind: text("submission_kind").notNull().default("target"),
 });
 
 export const researchMeasurements = sqliteTable("research_measurements", {
@@ -413,3 +416,28 @@ export const ownerProfileEvents = sqliteTable("owner_profile_events", {
   id:text("id").primaryKey(),profileSlug:text("profile_slug").notNull().references(()=>ownerPublicProfiles.slug,{onDelete:"cascade"}),
   recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),action:text("action").notNull(),payload:text("payload").notNull().default("{}"),createdAt:integer("created_at").notNull(),
 },t=>[index("owner_events_source_idx").on(t.profileSlug,t.recordKind,t.recordId),index("owner_events_time_idx").on(t.profileSlug,t.createdAt),check("owner_event_json",sql`json_valid(${t.payload})`)]);
+
+export const rankingChangeDays = sqliteTable("ranking_change_days", {day:text("day").notNull(),reason:text("reason").notNull(),methodVersion:text("method_version").notNull()},table=>[primaryKey({columns:[table.day,table.reason,table.methodVersion]})]);
+
+// Prospective community permission is separate from private-only Personal consent.
+export const communityPersonalPermissions = sqliteTable("community_personal_permissions", {
+  subjectId:text("subject_id").primaryKey().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  enabled:integer("enabled").notNull().default(0), noticeVersion:text("notice_version").notNull(),
+  consentToken:text("consent_token").notNull(), updatedAt:integer("updated_at").notNull(),
+},table=>[check("community_permission_enabled",sql`${table.enabled} IN (0,1)`)]);
+export const communityPersonalChoices = sqliteTable("community_personal_choices", {
+  id:text("id").primaryKey(), subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  consentToken:text("consent_token").notNull(), noticeVersion:text("notice_version").notNull(),
+  targetAId:text("target_a_id").notNull(),targetBId:text("target_b_id").notNull(),
+  result:text("result").notNull(),headphoneType:text("headphone_type").notNull(),setupFingerprint:text("setup_fingerprint").notNull(),
+  recordingId:text("recording_id").notNull(),playbackJson:text("playback_json").notNull(),selectionJson:text("selection_json").notNull(),
+  phase:text("phase").notNull(),roundNumber:integer("round_number").notNull(),protocolVersion:text("protocol_version").notNull(),schedulerVersion:text("scheduler_version").notNull(),createdAt:integer("created_at").notNull(),
+},table=>[index("community_personal_subject_created").on(table.subjectId,table.createdAt),check("community_result",sql`${table.result} IN ('a','b','tie')`),check("community_category",sql`${table.headphoneType} IN ('ie','oe')`),check("community_phase",sql`${table.phase} IN ('explore','confirm')`),check("community_pair_distinct",sql`${table.targetAId} != ${table.targetBId}`)]);
+
+export const communityPersonalDeletionTotals = sqliteTable("community_personal_deletion_totals", {day:text("day").primaryKey(),deletedCount:integer("deleted_count").notNull()},table=>[check("community_deletion_positive",sql`${table.deletedCount}>0`)]);
+
+
+export const communityCatalogs = sqliteTable("community_catalogs", {id:text("id").primaryKey(),period:text("period").notNull(),headphoneType:text("headphone_type").notNull(),catalogJson:text("catalog_json").notNull(),musicJson:text("music_json").notNull(),methodVersion:text("method_version").notNull()},t=>[uniqueIndex("community_catalog_period_type").on(t.period,t.headphoneType)]);
+export const communityReferenceBlocks = sqliteTable("community_reference_blocks",{id:text("id").primaryKey(),subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),catalogId:text("catalog_id").notNull().references(()=>communityCatalogs.id),consentToken:text("consent_token").notNull(),noticeVersion:text("notice_version").notNull(),setupFingerprint:text("setup_fingerprint").notNull(),createdAt:integer("created_at").notNull()},t=>[uniqueIndex("community_one_block_account_catalog").on(t.subjectId,t.catalogId)]);
+export const communityReferenceAssignments = sqliteTable("community_reference_assignments",{id:text("id").primaryKey(),blockId:text("block_id").notNull().references(()=>communityReferenceBlocks.id,{onDelete:"cascade"}),ordinal:integer("ordinal").notNull(),pairIndex:integer("pair_index").notNull(),pairProbability:real("pair_probability").notNull(),sideProbability:real("side_probability").notNull(),targetAId:text("target_a_id").notNull(),targetBId:text("target_b_id").notNull(),recordingId:text("recording_id").notNull(),recordingProbability:real("recording_probability").notNull(),recordingVersion:text("recording_version"),result:text("result"),playbackJson:text("playback_json"),answeredAt:integer("answered_at")},t=>[uniqueIndex("community_assignment_ordinal").on(t.blockId,t.ordinal)]);
+export const communityModeration=sqliteTable("community_moderation",{recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),excluded:integer("excluded").notNull(),note:text("note").notNull()},t=>[primaryKey({columns:[t.recordKind,t.recordId]})]);

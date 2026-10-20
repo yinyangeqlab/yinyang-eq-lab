@@ -7,6 +7,7 @@ import{validNoticeMinutes}from'../lib/notice-duration.ts';
 const ids=options.MAINTENANCE_FEATURES.map(f=>f.id),routes=[
  ['/shootout','GET','shootouts'],['/shootout/','HEAD','shootouts'],['/shootout/personal','GET','shootouts'],['/api/trials','POST','shootouts'],['/api/votes','POST','shootouts'],['/api/listening-runs','POST','shootouts'],['/api/comparison-choices','POST','shootouts'],['/api/feedback','POST','shootouts'],
  ['/music-library','GET','listeningPool'],['/api/music-votes','POST','listeningPool'],['/preference-tuning','GET','preferenceTuning'],['/personal-tuning','GET','preferenceTuning'],['/api/preference-exports','POST','preferenceTuning'],['/api/targets','POST','contributions'],['/api/research-measurements','POST','contributions'],['/api/suggestions','POST','contributions'],
+ ['/api/community-preferences/reference','POST','shootouts'],['/api/community-preferences/personal','POST','shootouts'],['/api/community-preferences/personal','PATCH',null],['/api/community-preferences/personal','GET',null],['/community-preferences','GET',null],['/api/personal-research','POST','shootouts'],
  ['/api/listening-audio/file','GET',null],['/music/source.flac','GET',null],['/api/targets','GET',null],['/api/research','GET',null],['/participation','GET',null],['/my-data','GET',null],['/api/my-data','PATCH',null],['/api/my-data','DELETE',null],['/owner-research','GET',null],['/api/owner-research/service-status','POST',null],['/privacy','GET',null],['/sync','GET',null]
 ];
 let checks=0;
