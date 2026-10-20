@@ -42,4 +42,14 @@ assert.equal((await patch({submissionsEnabled:true,shareMusic:false,acknowledged
 failBatch=true;assert.equal((await patch({submissionsEnabled:false,shareMusic:false})).status,503);assert.equal(account().submissions_enabled,1,'Failed withdrawal transaction rolls back saved settings');failBatch=false;
 assert.equal((await patch({submissionsEnabled:false,shareMusic:false},'https://attacker.test')).status,403);assert.equal(account().submissions_enabled,1);
 assert.equal((await patch({submissionsEnabled:false,shareMusic:false})).status,200);
+const combined={submissionsEnabled:true,shareMusic:false,nickname:"  Consent Owl  ",activityMonitoringEnabled:true,acknowledged:true,noticeVersion:VOTE_DATA_NOTICE_VERSION,activityMonitoringAcknowledged:true,activityMonitoringNoticeVersion:ACTIVITY_MONITORING_NOTICE_VERSION};
+assert.equal((await patch(combined)).status,200);
+let saved=await(await context.exports.GET()).json();assert.equal(saved.nickname,"Consent Owl");assert.equal(saved.activityMonitoringEnabled,true);
+assert.equal((await patch({...combined,nickname:"email@example.test",activityMonitoringEnabled:false})).status,400);
+saved=await(await context.exports.GET()).json();assert.equal(saved.nickname,"Consent Owl");assert.equal(saved.activityMonitoringEnabled,true,"Invalid nickname never changes monitoring consent");
+failBatch=true;assert.equal((await patch({...combined,nickname:"Changed Owl",activityMonitoringEnabled:false})).status,503);failBatch=false;
+saved=await(await context.exports.GET()).json();assert.equal(saved.nickname,"Consent Owl");assert.equal(saved.activityMonitoringEnabled,true,"Consent and nickname save atomically");
+assert.equal((await patch({...combined,nickname:"",activityMonitoringEnabled:false})).status,200);
+saved=await(await context.exports.GET()).json();assert.equal(saved.nickname,"");assert.equal(saved.activityMonitoringEnabled,false);
+console.log("Combined popup nickname and consent verified: save/read, email rejection without partial writes, transaction rollback, explicit monitoring on/off and nickname removal.");
 sql.close();console.log('Agreement preference checks passed: current opt-in acknowledgement, optional opt-out without reacknowledgement, participation withdrawal, accessible My data, explicit rejoin, failed-save rollback, and origin protection. Synthetic SQLite only.');

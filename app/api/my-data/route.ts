@@ -38,26 +38,34 @@ export async function PATCH(request: Request) {
     }
     if (typeof body.submissionsEnabled !== "boolean" || typeof body.shareMusic !== "boolean") throw new RequestInputError("Choose your sharing settings.", 400);
     if (body.activityMonitoringEnabled !== undefined && typeof body.activityMonitoringEnabled !== "boolean") throw new RequestInputError("Choose whether to share testing activity.", 400);
+    const nicknameProvided = body.nickname !== undefined;
+    const nickname = nicknameProvided ? normalizeListenerNickname(body.nickname) : undefined;
+    if (nicknameProvided && (identity.subjectId === "owner" || nickname === null)) throw new RequestInputError("Use an optional nickname of up to 40 characters, without email addresses or control characters. The shared admin account does not use a listener nickname.",400);
+    const statements: D1PreparedStatement[] = [];
     const monitor = body.activityMonitoringEnabled === undefined ? identity.activityMonitoringEnabled : body.activityMonitoringEnabled;
     if (monitor && !identity.activityMonitoringEnabled && (body.activityMonitoringAcknowledged !== true || body.activityMonitoringNoticeVersion !== ACTIVITY_MONITORING_NOTICE_VERSION)) throw new RequestInputError("Read and explicitly opt in to the current activity-monitoring notice.",400);
     if (body.submissionsEnabled && (!identity.submissionsEnabled || body.acknowledged === true)) {
       if (body.acknowledged !== true || body.noticeVersion !== VOTE_DATA_NOTICE_VERSION) throw new RequestInputError("Read and explicitly agree to the current comparison-data notice on Shootout.",400);
-      await env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=1,share_music=?,agreement_version=?,agreed_at=?,withdrawn_at=NULL,activity_monitoring_enabled=?,activity_monitoring_version=CASE WHEN ?=1 THEN ? ELSE activity_monitoring_version END,activity_monitoring_agreed_at=CASE WHEN ?=1 AND activity_monitoring_enabled=0 THEN ? ELSE activity_monitoring_agreed_at END,activity_monitoring_withdrawn_at=CASE WHEN ?=1 THEN NULL ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(body.shareMusic?1:0,VOTE_DATA_NOTICE_VERSION,Date.now(),monitor?1:0,monitor?1:0,ACTIVITY_MONITORING_NOTICE_VERSION,monitor?1:0,Date.now(),monitor?1:0,identity.subjectId).run();
+      statements.push(env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=1,share_music=?,agreement_version=?,agreed_at=?,withdrawn_at=NULL,activity_monitoring_enabled=?,activity_monitoring_version=CASE WHEN ?=1 THEN ? ELSE activity_monitoring_version END,activity_monitoring_agreed_at=CASE WHEN ?=1 AND activity_monitoring_enabled=0 THEN ? ELSE activity_monitoring_agreed_at END,activity_monitoring_withdrawn_at=CASE WHEN ?=1 THEN NULL ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(body.shareMusic?1:0,VOTE_DATA_NOTICE_VERSION,Date.now(),monitor?1:0,monitor?1:0,ACTIVITY_MONITORING_NOTICE_VERSION,monitor?1:0,Date.now(),monitor?1:0,identity.subjectId));
     } else if (!body.submissionsEnabled) {
       const now=Date.now();
-      await env.DB!.batch([
+      statements.push(
         env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=0,share_music=0,withdrawn_at=?,activity_monitoring_enabled=0,activity_monitoring_withdrawn_at=CASE WHEN activity_monitoring_enabled=1 THEN ? ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(now,now,identity.subjectId),
         env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=?").bind(identity.subjectId),
         env.DB!.prepare("UPDATE retrospective_permissions SET enabled=0,withdrawn_at=? WHERE subject_id=? AND enabled=1").bind(now,identity.subjectId),
-      ]);
+      );
     } else {
       const now=Date.now();
-      await env.DB!.batch([
+      statements.push(
         env.DB!.prepare("UPDATE privacy_accounts SET share_music=?,activity_monitoring_enabled=?,activity_monitoring_version=CASE WHEN ?=1 THEN ? ELSE activity_monitoring_version END,activity_monitoring_agreed_at=CASE WHEN ?=1 AND activity_monitoring_enabled=0 THEN ? ELSE activity_monitoring_agreed_at END,activity_monitoring_withdrawn_at=CASE WHEN ?=1 THEN NULL WHEN activity_monitoring_enabled=1 THEN ? ELSE activity_monitoring_withdrawn_at END WHERE subject_id=?").bind(body.shareMusic?1:0,monitor?1:0,monitor?1:0,ACTIVITY_MONITORING_NOTICE_VERSION,monitor?1:0,now,monitor?1:0,now,identity.subjectId),
         ...(monitor ? [] : [env.DB!.prepare("DELETE FROM activity_events WHERE subject_id=?").bind(identity.subjectId)]),
-      ]);
+      );
     }
-    return Response.json({ ok:true }, { headers });
+    if (nicknameProvided) statements.push(nickname
+      ? env.DB!.prepare("INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?) ON CONFLICT(subject_id) DO UPDATE SET nickname=excluded.nickname").bind(identity.subjectId,nickname)
+      : env.DB!.prepare("DELETE FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId));
+    await env.DB!.batch(statements);
+    return Response.json({ ok:true, ...(nicknameProvided ? {nickname} : {}), activityMonitoringEnabled:body.submissionsEnabled && monitor }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function DELETE(request: Request) {
