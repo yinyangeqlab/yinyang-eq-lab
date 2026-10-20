@@ -28,8 +28,8 @@ export async function createProfileAccount(db:D1Database){
 }
 // Revalidate source ownership at recovery time. Deleted server records never return via old snapshots.
 export async function currentProfileSnapshot(db:D1Database,profile:ProfileAccount,raw:unknown){return currentAccountSnapshot(db,profile.subject_id,raw);}
-export async function currentAccountSnapshot(db:D1Database,subject:string,raw:unknown){
- const payload=validateSyncPayload(raw);
+export async function currentAccountSnapshot(db:D1Database,subject:string,raw:unknown,segmentedAccount=false){
+ const payload=validateSyncPayload(raw,segmentedAccount);
  const result=await db.prepare("SELECT record_kind,record_id FROM submission_owners WHERE subject_id=?").bind(subject).all<{record_kind:string;record_id:string}>();
  const owned=new Set(result.results.map(row=>`${row.record_kind}:${row.record_id}`));
  const values:Record<string,string>={...payload.values};
@@ -43,7 +43,7 @@ export async function currentAccountSnapshot(db:D1Database,subject:string,raw:un
    return true;
   }));
  }
- return validateSyncPayload({version:1,values});
+ return validateSyncPayload({version:1,values},segmentedAccount);
 }
 export async function saveProfileSnapshot(db:D1Database,subject:string,label:unknown,raw:unknown){
  const profile=await requireProfileAccount(db);if(subject!==profile.subject_id)throw new RequestInputError("Only the YinYangEQ participant session can save its browser snapshot.",403);

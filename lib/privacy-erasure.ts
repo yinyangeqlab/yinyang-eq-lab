@@ -23,6 +23,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   // Recovery snapshots and captured browser evidence cannot preserve erased source data.
   if(scopeOwner){
     if(!selection)add("DELETE FROM account_device_status WHERE session_hash IN(SELECT d.session_hash FROM private_tester_devices d WHERE d.invite_id=CASE WHEN ? LIKE 'invite:%' THEN substr(?,8) ELSE 'open-'||substr(?,9) END)",scopeOwner,scopeOwner,scopeOwner);
+    if(!selection)add("DELETE FROM account_sync_versions WHERE subject_id=?",scopeOwner);
     if(!selection)add("DELETE FROM account_browser_sync WHERE subject_id=?",scopeOwner);
     if(!selection)add("DELETE FROM account_sync_permissions WHERE subject_id=?",scopeOwner);
     if(!selection)add("UPDATE owner_account_sync SET payload='{}',initialized=1,epoch=lower(hex(randomblob(16))),revision=revision+1,updated_at=? WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?)",Date.now(),scopeOwner);
@@ -72,6 +73,10 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   if(scopeOwner&&selection&&selection.kind!=="music"){
     // Erase only rows tied to the exact reviewed graph. Rotate the epoch so
     // offline devices cannot reintroduce the erased values from an old base.
+    add("DELETE FROM account_sync_versions WHERE subject_id=? AND committed_at IS NULL",scopeOwner);
+    add("DELETE FROM account_sync_entries WHERE version_id IN(SELECT id FROM account_sync_versions WHERE subject_id=?) AND EXISTS(SELECT 1 FROM json_each(account_sync_entries.source_ids) r JOIN privacy_erasure_scope s ON s.record_id=r.value)",scopeOwner);
+    add("UPDATE owner_account_sync SET payload=json_set(payload,'$.digest',NULL) WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?) AND json_extract(payload,'$.format')=3",scopeOwner);
+    add("UPDATE account_browser_sync SET payload=json_set(payload,'$.digest',NULL) WHERE subject_id=? AND json_extract(payload,'$.format')=3",scopeOwner);
     for(const key of ["target-lab-trials","target-lab-measurements","target-lab-private-targets","target-lab-personal-shootouts-v1"]){
       const path='$.'+JSON.stringify(key);
       add(`UPDATE owner_account_sync SET payload=json_set(payload,?,printf('%s',(SELECT json_group_array(json(j.value)) FROM json_each(json_extract(payload,?)) j WHERE NOT EXISTS(SELECT 1 FROM privacy_erasure_scope s WHERE s.record_id IN(json_extract(j.value,'$.id'),json_extract(j.value,'$.serverTrialId'),json_extract(j.value,'$.researchContributionId'),json_extract(j.value,'$.submissionId')))))) WHERE profile_slug IN(SELECT slug FROM owner_public_profiles WHERE subject_id=?) AND json_type(payload,?) IS NOT NULL`,path,path,scopeOwner,path);
