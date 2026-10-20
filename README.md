@@ -96,7 +96,7 @@ The production site has an invitation gate supplied by separate deployment infra
 
 ## License and provenance
 
-Copyright 2026 **Yin Yang EQ Lab (@yinyangeqlab)**. Original application code is licensed under [Apache License 2.0](LICENSE), permitting broad reuse, including commercial and closed-source reuse, with its required notices. See [NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md) for copied components, data sources, and their separate licenses.
+Copyright 2026 **Yin Yang EQ Lab (@yinyangeqlab)**. The [Apache License 2.0](LICENSE) covers only the original software source code; it permits broad reuse, including commercial and closed-source reuse, with its required notices. It does not grant rights to the YinYang EQ League or Yin Yang EQ Lab names, logos, marks, branded assets, site copy, screenshots, or visual design. Those rights are reserved unless a separate notice says otherwise. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md), [NOTICE](NOTICE), and [THIRD_PARTY.md](THIRD_PARTY.md) for the detailed boundaries and other materials' licenses.
 
 The source includes references to PEQdB as a target creator and to its TXT preset format. **No PEQdB target curves, preset exports, or PEQdB application code are included.** Working-project target seed data is excluded from this public repository. The demo can show targets held in a separate database; a screenshot or video does not grant rights to the underlying target data. Music keeps its own license and attribution, including the trailer soundtrack described in [the demo credits](docs/DEMO.md).
 
