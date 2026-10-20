@@ -1,5 +1,5 @@
 {
-  "updated": "October 17, 2026",
+  "updated": "October 18, 2026",
   "previewOnly": false,
   "contact": "yinyangeq@gmail.com",
   "targets": [
@@ -101,6 +101,16 @@
       "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
       "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
       "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "4f5539cc-7ee0-547f-9902-204ead1513ec",
+      "name": "Sodium",
+      "credit": "Sodium (Discord)",
+      "status": "credited",
+      "license": "Reuse terms not specified",
+      "sourceUrl": "https://www.youtube.com/watch?v=INB0LmhsNHg",
+      "changes": "Reproduced from the blue “Average Script” curve in the supplied comparison screenshot. This 162-point trace uses pixel extraction and interpolation, with estimated points where another curve obscures it, and is normalized to 0 dB at 1 kHz. The values are approximate; the original numerical target file was unavailable.",
+      "notice": "Target credited to Discord user Sodium at the site owner’s request. The reconstruction was prepared for YinYang EQ League. No endorsement or license grant is claimed."
     }
   ]
 }
