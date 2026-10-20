@@ -1,3 +1,4 @@
+import { normalizeListenerNickname } from "@/lib/listener-nickname";
 import { targetLabelText } from "@/lib/target-labels";
 import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
 import { ACTIVITY_MONITORING_NOTICE_VERSION } from "@/lib/activity-monitoring";
@@ -12,6 +13,7 @@ export async function GET() {
   try {
     const identity = await dataIdentity();
     await env.DB!.prepare("DELETE FROM activity_events WHERE created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?)").bind(Date.now()-30*86400000,ACTIVITY_MONITORING_NOTICE_VERSION).run();
+    const profile = await env.DB!.prepare("SELECT nickname FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId).first<{nickname:string}>();
     const titles: Record<string,string> = { vote:"'Preferred: ' || COALESCE((SELECT name FROM targets WHERE id=t.winner_id),t.winner_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.loser_id),t.loser_id)", open:"'Open: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)", run:"t.target_a_name || ' / ' || t.target_b_name", feedback:"t.test_mode || ' description'", measurement:"t.name", export:"t.target_name || ' · ' || t.export_kind", target:"t.name", suggestion:"t.title" };
     const specs = Object.entries(dataTables).filter(([kind]) => kind !== "trial");
     const rows = await Promise.all(specs.map(async ([kind,table]) => {
@@ -20,12 +22,20 @@ export async function GET() {
     }));
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
     const activity = identity.activityMonitoringEnabled ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND created_at>=? ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
-    return Response.json({ submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
   try {
     origin(request); const identity = await dataIdentity(); const body = await readJsonObject(request, 1024);
+    if (body.action === "nickname") {
+      if (identity.subjectId === "owner") throw new RequestInputError("The shared admin account cannot have a listener nickname.", 400);
+      const nickname = normalizeListenerNickname(body.nickname);
+      if (nickname === null) throw new RequestInputError("Use a nickname of up to 40 characters, without email addresses or control characters.", 400);
+      if (nickname) await env.DB!.prepare("INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?) ON CONFLICT(subject_id) DO UPDATE SET nickname=excluded.nickname").bind(identity.subjectId,nickname).run();
+      else await env.DB!.prepare("DELETE FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId).run();
+      return Response.json({ok:true,nickname}, {headers});
+    }
     if (typeof body.submissionsEnabled !== "boolean" || typeof body.shareMusic !== "boolean") throw new RequestInputError("Choose your sharing settings.", 400);
     if (body.activityMonitoringEnabled !== undefined && typeof body.activityMonitoringEnabled !== "boolean") throw new RequestInputError("Choose whether to share testing activity.", 400);
     const monitor = body.activityMonitoringEnabled === undefined ? identity.activityMonitoringEnabled : body.activityMonitoringEnabled;

@@ -83,6 +83,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("DELETE FROM legacy_review_requests WHERE subject_id=?", subjectId!);
     add("DELETE FROM retrospective_permissions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_sessions WHERE subject_id=?", subjectId!);
+    add("DELETE FROM listener_nicknames WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_accounts WHERE subject_id=?", subjectId!);
     const accessId = subjectId!.startsWith("invite:") ? subjectId!.slice(7) : subjectId!.startsWith("browser:") ? `open-${subjectId!.slice(8)}` : null;
     if (accessId) {

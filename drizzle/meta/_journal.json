@@ -225,6 +225,13 @@
       "when": 1792366186915,
       "tag": "0031_site_access_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "6",
+      "when": 1792369370759,
+      "tag": "0032_listener_nicknames",
+      "breakpoints": true
     }
   ]
 }

@@ -9,6 +9,8 @@ class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind
 const DB={prepare:q=>new Statement(q),batch:async statements=>{sql.exec('BEGIN');try{const out=[];for(const s of statements)out.push(await s.run());sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
 const env={DB,PRIVATE_ACCESS_PASSWORD:crypto.randomUUID()+crypto.randomUUID()},origin='https://fixture.test',tester={id:'fixture-sync',label:'Sync fixture'},original='S'.repeat(43),now=Math.floor(Date.now()/1000);
 sql.prepare('INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)').run(tester.id,tester.label,'fixture-code',now,now+600,now,await pairingHash(original),now+3600);
+sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run('invite:'+tester.id);
+sql.prepare('INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?)').run('invite:'+tester.id,'Synced Owl');
 class Storage{
  constructor(values={}){this.values=new Map(Object.entries(values));this.failKey=null;}
  get length(){return this.values.size;}key(index){return [...this.values.keys()][index]||null;}getItem(key){return this.values.get(key)??null;}removeItem(key){this.values.delete(key);}setItem(key,value){if(key===this.failKey){this.failKey=null;throw Error('Synthetic quota failure');}this.values.set(key,String(value));}
@@ -54,6 +56,7 @@ const download=await target({action:'download'},jar);assert.deepEqual((await dow
 assert.equal((await target({action:'complete',replacementApplied:true,payloadHash:'wrong'},jar)).status,400);
 const finished=await target({action:'complete',replacementApplied:true,payloadHash:row().payload_hash},jar);assert.equal(finished.status,200);
 const linked=await linkedTester(request(null,cookie(finished)),DB);assert.equal(linked.id,tester.id,'Server account identity also matches source');
+assert.equal(sql.prepare('SELECT nickname FROM listener_nicknames WHERE subject_id=?').get('invite:'+linked.id).nickname,'Synced Owl','Completed sync resolves the original account nickname without trusting the transfer payload');
 assert.equal(row().transfer_payload,null,'Payload erased after completed transfer');
 assert.equal((await target({action:'complete',replacementApplied:true,payloadHash:row().payload_hash},jar)).status,200,'Lost completion can retry');
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().n,1);

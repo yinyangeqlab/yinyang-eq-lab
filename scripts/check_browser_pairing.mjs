@@ -135,7 +135,10 @@ sql.prepare('INSERT INTO browser_pairings(code_hash,invite_id,source_hash,create
 const deps={'cloudflare:workers':{env},'@/lib/request-json':{RequestInputError}};
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Date,Response,Request,Headers});
 vm.runInContext(ts.transpileModule(readFileSync(new URL('../lib/privacy-erasure.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
+sql.prepare('INSERT OR IGNORE INTO privacy_accounts(subject_id) VALUES(?)').run('invite:'+tester.id);
+sql.prepare('INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?)').run('invite:'+tester.id,'Erase Owl');
 await context.exports.eraseData('invite:'+tester.id);
+assert.equal(sql.prepare('SELECT count(*) n FROM listener_nicknames').get().n,0,'Account erasure removes the optional nickname explicitly');
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().n,0,'Account erasure removes every browser link');
 assert.equal(sql.prepare('SELECT count(*) n FROM browser_pairings').get().n,0,'Account erasure removes pending handshakes');
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_invites').get().n,0,'Account erasure removes invitation access');

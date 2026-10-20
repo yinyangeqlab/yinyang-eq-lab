@@ -23,3 +23,4 @@
 .my-data textarea { display:block; box-sizing:border-box; width:100%; min-height:85px; margin:8px 0 16px; background:#091319; color:#e2eef1; border:1px solid #435a65; border-radius:8px; padding:12px; font:inherit; }
 .trial-data-actions { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0; }
 .trial-data-actions [role="region"] { flex-basis:100%; border:1px solid #bb7584; padding:14px; }
+.nickname-actions{display:flex;gap:12px;flex-wrap:wrap}.nickname-actions button{margin:0}

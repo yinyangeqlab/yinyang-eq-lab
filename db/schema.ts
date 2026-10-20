@@ -352,3 +352,9 @@ export const siteAccessSettings = sqliteTable("site_access_settings", {
   id: integer("id").primaryKey(),
   invitesEnabled: integer("invites_enabled").notNull().default(0),
 });
+
+// Optional account-level nickname; never an authentication credential.
+export const listenerNicknames = sqliteTable("listener_nicknames", {
+  subjectId: text("subject_id").primaryKey().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
+  nickname: text("nickname").notNull(),
+});
