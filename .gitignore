@@ -50,5 +50,23 @@ outputs/
 work/
 
 # Deployment state
-infra/
+/infra/*
+!/infra/pulumi/
+/infra/pulumi/*
+!/infra/cost-guard/
+/infra/cost-guard/*
 .openai/hosting.local.json
+
+# Audited deployment source only; stack configuration/state stays ignored.
+!/infra/pulumi/index.ts
+!/infra/pulumi/private-gate.mjs
+!/infra/pulumi/abuse-controls.mjs
+!/infra/pulumi/abuse-controls.d.mts
+!/infra/pulumi/public-assets.mjs
+!/infra/pulumi/public-assets.d.mts
+!/infra/pulumi/package.json
+!/infra/pulumi/package-lock.json
+!/infra/pulumi/tsconfig.json
+!/infra/pulumi/Pulumi.yaml
+!/infra/cost-guard/worker.mjs
+!/infra/cost-guard/policy.mjs

@@ -40,6 +40,23 @@ paths = [Path(path.decode()) for _, path in entries]
 if not paths:
     sys.exit("No staged files to check. Run git add -A first.")
 
+# Only these reviewed source files may cross the infrastructure exclusion.
+public_infra = {
+    "infra/pulumi/" + name for name in (
+        "index.ts", "private-gate.mjs", "abuse-controls.mjs", "abuse-controls.d.mts",
+        "public-assets.mjs", "public-assets.d.mts", "package.json", "package-lock.json",
+        "tsconfig.json", "Pulumi.yaml",
+    )
+} | {"infra/cost-guard/worker.mjs", "infra/cost-guard/policy.mjs"}
+# This release evidence contains disposable, erased fixture IDs, never credentials.
+public_evidence = {
+    "artifacts/continue-button-release/" + name for name in (
+        "REPORT.md", "assets.log", "build.log", "deployment.log", "erasure-verification.json",
+        "live-desktop.png", "live-flow-events.json", "live-mobile.png", "live-verification.json",
+        "no-drift.log", "source-scope.json", "types.log",
+    )
+}
+
 issues = []
 for (metadata, _), rel in zip(entries, paths):
     if metadata.startswith(b"120000 "):
@@ -48,11 +65,11 @@ for (metadata, _), rel in zip(entries, paths):
     name = rel.name.lower()
     parts = {part.lower() for part in rel.parts}
     if (
-        parts & blocked_parts
+        (parts & blocked_parts and rel.as_posix() not in public_infra | public_evidence)
         or name in blocked_names
         or name.startswith(".env")
         or name.startswith(".dev.vars")
-        or name.startswith("pulumi.") and name.endswith(".yaml")
+        or (name.startswith("pulumi.") and name.endswith(".yaml") and rel.as_posix() != "infra/pulumi/Pulumi.yaml")
         or rel.suffix.lower() in blocked_suffixes
         or any(word in name for word in ("credential", "token", "secret"))
     ):

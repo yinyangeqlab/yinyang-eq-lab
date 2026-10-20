@@ -1,5 +1,12 @@
 # Current live release — update81, October 18, 2026
 
+## GitHub rebuild audit — October18,2026
+
+Current live release remains update81; this audit did not redeploy or write production data. Git runtime files match the verified live snapshot. GitHub now includes missing source validation/pairing coverage, audited credential-free deployment/gate and cost-guard source, clone-safe packaging and current rebuild/session instructions. Private media, numerical curves, participant data, credentials and stack configuration/state remain excluded.
+
+Start the next session at docs/HANDOFF.md and docs/REBUILD.md. Public clones use `node scripts/check-live-source.mjs --source-only`; full owner snapshot checking requires the recorded local snapshots. Fresh app/infrastructure npm ci, build, separate TypeScript checks,31-migration local setup and focused regressions passed. A public-only preview package is explicitly rejected by the deployment code. Details and limitations: docs/REBUILD_AUDIT.md. Existing root tooling/license differences remain preserved; no erased user records may be restored.
+
+
 Site: https://yinyangeq.com. Verified application source/build: `work/tagline-release-20261018`. Infrastructure snapshot: `work/tagline-infra-20261018`. These pointers supersede historical current-release statements below.
 
 ## Two curves. Your choice.
