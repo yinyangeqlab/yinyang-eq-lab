@@ -1,3 +1,4 @@
+import * as maintenanceOptions from "../lib/maintenance-options.ts";
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
@@ -14,7 +15,7 @@ const source=readFileSync(new URL('../app/api/owner-research/service-status/rout
 let published=[];
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export async function/g,'async function');
 const route=vm.runInNewContext(js+';({GET,POST})',{
- Response,URL,validNoticeMinutes,ownerAccessResponse:async()=>null,readJsonObject:async r=>r.json(),requestInputResponse:()=>null,
+ ...maintenanceOptions,Response,URL,validNoticeMinutes,ownerAccessResponse:async()=>null,readJsonObject:async r=>r.json(),requestInputResponse:()=>null,
  DEFAULT_MAINTENANCE_MESSAGE:'Default notice',readServiceStatus:async()=>({active:false}),
  publishServiceStatus:async input=>{published.push(input);return {active:input.active,expiresAt:Date.now()+input.durationMinutes*60000};}
 });
@@ -38,7 +39,7 @@ const serviceSource=readFileSync(new URL('../lib/service-status.ts',import.meta.
 const serviceJs=ts.transpileModule(serviceSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export /g,'');
 const fixed=1800000000000;let stored=null;
 const service=vm.runInNewContext(serviceJs+';({publishServiceStatus})',{
- Response,Request,crypto,Date:class extends Date{static now(){return fixed;}},
+ ...maintenanceOptions,Response,Request,crypto,Date:class extends Date{static now(){return fixed;}},
  env:{DB:{prepare(query){return {bind(...args){return {async run(){stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async first(){return stored}}}}}
 });
 assert.equal((await service.publishServiceStatus({...body,durationMinutes:150})).expiresAt,fixed+150*60000);

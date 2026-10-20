@@ -1,6 +1,7 @@
 import {ownerAccessResponse} from '@/lib/owner-access';
 import {readJsonObject,requestInputResponse} from '@/lib/request-json';
 import {publishServiceStatus,readServiceStatus,DEFAULT_MAINTENANCE_MESSAGE} from '@/lib/service-status';
+import {validMaintenanceLocks} from '@/lib/maintenance-options';
 import {validNoticeMinutes} from '@/lib/notice-duration';
 const headers={'Cache-Control':'private, no-store'};
 export async function GET(request:Request){const denied=await ownerAccessResponse(request);if(denied)return denied;try{return Response.json(await readServiceStatus(true),{headers});}catch{return Response.json({error:'Could not load the site notice.'},{status:503,headers});}}
@@ -10,7 +11,8 @@ export async function POST(request:Request){
  try{const body=await readJsonObject(request,4096);
  const durationMinutes=body.durationMinutes===undefined&&typeof body.hours==='number'&&[1,2,8,24].includes(body.hours)?body.hours*60:body.durationMinutes;
  if(typeof body.active!=='boolean'||typeof body.pauseSubmissions!=='boolean'||!validNoticeMinutes(durationMinutes)||typeof body.message!=='string'||body.message.length>500)return Response.json({error:'Choose a notice, duration and maintenance setting.'},{status:400,headers});
+ if(body.lockedFeatures!==undefined&&(!validMaintenanceLocks(body.lockedFeatures)||body.pauseSubmissions!==(body.lockedFeatures.length>0)))return Response.json({error:'Choose valid maintenance locks. Leave all unchecked for an informational notice.'},{status:400,headers});
  const message=body.message.trim()||DEFAULT_MAINTENANCE_MESSAGE;
- return Response.json(await publishServiceStatus({active:body.active,message,pauseSubmissions:body.pauseSubmissions,durationMinutes}),{headers});
+ return Response.json(await publishServiceStatus({active:body.active,message,pauseSubmissions:body.pauseSubmissions,durationMinutes,...(body.lockedFeatures!==undefined?{lockedFeatures:body.lockedFeatures}:{} )}),{headers});
  }catch(error){return requestInputResponse(error)||Response.json({error:'The site notice could not be saved. Try again.'},{status:503,headers});}
 }
