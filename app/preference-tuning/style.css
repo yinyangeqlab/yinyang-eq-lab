@@ -197,3 +197,11 @@
 }
 
 .pt-cohort-note{max-width:650px;color:#a9c7bf;font-size:12px;line-height:1.5;margin:6px 0 10px}.pt-cohort-note a{color:#a4e9d7;text-decoration:underline}
+
+/* Keep the rank explanation above the target selector instead of competing for its row. */
+.pt-setup .pt-baseline{display:grid;grid-template-columns:minmax(0,1fr);align-content:center;align-items:stretch;gap:7px}
+.pt-setup .pt-baseline .pt-cohort-note{margin:0;max-width:none}
+.pt-setup .pt-baseline .pt-selects{display:flex;align-items:stretch;width:100%;min-width:0;max-width:100%}
+.pt-setup .pt-baseline .pt-selects>label:first-child{flex:1;min-width:0;width:auto}
+.pt-setup .pt-baseline .pt-selects select{width:100%;min-width:0;max-width:100%;margin:0}
+.pt-setup .pt-baseline .pt-import{flex:none}
