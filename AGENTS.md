@@ -1,3 +1,7 @@
+# MANDATORY: PROJECT GITHUB IDENTITY — LAB ACCOUNT ONLY
+
+Owner requirement: use ONLY the `yinyangeqlab` GitHub account for all project contributions, commits, pushes, pull requests, and publication. NEVER use a personal GitHub account, personal email, or the inherited global Git identity. Set Git author AND committer to `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>`; GitHub connector commits must use the yinyangeqlab connection. Verify both actual identities before every commit/publication, including in temporary clones, worktrees, scripts, and tools. Repository ownership alone does not control attribution. Preserve local identity guards and never bypass them. Never republish pre-scrub history: use the scrubbed main history for publication, while preserving original historical release provenance. Stop if the lab identity cannot be verified. This is a permanent owner instruction for every future session.
+
 # Canonical development and recovery workspace
 
 This checkout is the active source. In the owner container it is workspace/. Do not edit the parent live mirror or archived previews. Read docs/HANDOFF.md and docs/RECOVERY.md; fetch and inspect status/divergence before editing. Use the pinned recovery toolchain and keep all external inputs outside Git.
