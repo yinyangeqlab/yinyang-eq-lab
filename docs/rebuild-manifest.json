@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 89,
-  "implementationCommit": "bc806a513bccee93b158199f93b5e9f29b821dc8",
-  "runtimeParity": "Recorded runtime inputs match verified update89; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 90,
+  "implementationCommit": "5b4cd5867f9a96aca9f8f7778abf95d90259308d",
+  "runtimeParity": "Recorded runtime inputs match verified update90; concurrent personal-shootout development is excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -28,6 +28,7 @@
       "app/shootout/page.tsx",
       "app/welcome.css",
       "components/activity-monitoring-panel.tsx",
+      "components/aura-nav-link.tsx",
       "components/comparison-data-settings.tsx",
       "components/legacy-review.tsx",
       "components/music-panel.tsx",
@@ -48,6 +49,7 @@
       "components/personal-podium.css",
       "components/personal-podium.tsx",
       "components/personal-research-sharing.tsx",
+      "components/research-music-source.tsx",
       "components/target-curve.tsx",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
@@ -60,7 +62,8 @@
       "lib/personal-shootout.ts",
       "scripts/check_personal_playback.mjs",
       "scripts/check_personal_research.mjs",
-      "scripts/check_personal_shootout.mjs"
+      "scripts/check_personal_shootout.mjs",
+      "scripts/check_research_source.mjs"
     ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -167,7 +170,7 @@
     },
     {
       "path": "app/api/research/route.ts",
-      "sha256": "145fc78bf3a3a69ea5ee105a9c27f510b7cd231b33000f5e69f501365f09fd2c"
+      "sha256": "bf9e5f44026b0f523392efd15fa36eb07761b0b0aa787e1504e1cad4129a1eef"
     },
     {
       "path": "app/api/suggestions/route.ts",
@@ -283,7 +286,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "575a76dca70ad17b4219cfb523aafe5a590a68b70b63dc5c85e7e3941dd9e108"
+      "sha256": "1824d6c2024168bf875cb2ab6e098ea0a16f3e3d2fbc35ea98f8bd6696bccb52"
     },
     {
       "path": "app/welcome.css",
@@ -1098,6 +1101,10 @@
       "sha256": "59e25f3f06755b992188f17c73677da4c08e02f6bab60a13c5bbd0a5cfaa1ddf"
     },
     {
+      "path": "lib/file-fingerprint.ts",
+      "sha256": "6dbf28e032437849552b2ebcf27d9eaf3ddf2b43fa0a1c4ec28238ebc325d34e"
+    },
+    {
       "path": "lib/invite-settings.d.mts",
       "sha256": "a52c8b69be2daf89c20aef2784a21e00bc0c81f415fe854221b6298100389431"
     },
@@ -1199,7 +1206,7 @@
     },
     {
       "path": "lib/ranking-evidence.ts",
-      "sha256": "910988bc23ec8ec7071e9337a4179cbd577636d409c50b027db4b6e190958cc5"
+      "sha256": "4ef6583c36c20017d453d865b49d17c6ded58e8747e3eceb8cbe3d6b3ce0c35d"
     },
     {
       "path": "lib/rate-penalty.ts",
@@ -1394,6 +1401,10 @@
       "sha256": "3c9456df13fe55efc7b703707f52e8044e688f9b93686386e6fa8b22c869ee72"
     },
     {
+      "path": "scripts/check_file_matching.mjs",
+      "sha256": "4125ce73d8a3cc32f5c780214746e47f735bdb4a640793e759825929094c2ed7"
+    },
+    {
       "path": "scripts/check_listener_nickname.mjs",
       "sha256": "14ff8f18fad42a9124a7b1f4c98bd084c95c6965a72e2d99633d080f914beabe"
     },
@@ -1435,7 +1446,7 @@
     },
     {
       "path": "scripts/check_passage_ranking.mjs",
-      "sha256": "a96cdfb3451b86e948460a2e5f5f37cb138148cd5b1abb3a468e828cd7f2fe00"
+      "sha256": "d5b6bfa3d6d4a38f240df2d08f9cfff2110c6363013372a3a6ec08e8c583ed57"
     },
     {
       "path": "scripts/check_preference_ranking.mjs",
@@ -1451,7 +1462,7 @@
     },
     {
       "path": "scripts/check_ranking_api.mjs",
-      "sha256": "bdddde093e07bbeacf952820a258b77834dc179acea1c8c2ab5075fa38547853"
+      "sha256": "841053b4743e0296543e09116dddacc8c8daa23d66685b7e79a3d0201afc2466"
     },
     {
       "path": "scripts/check_ranking_view.mjs",
