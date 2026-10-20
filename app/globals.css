@@ -1819,3 +1819,57 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .owner-filters label { min-width:0; max-width:100%; flex:1 1 190px; }
 .owner-filters input,.owner-filters select { min-width:0; width:100%; max-width:100%; }
 .owner-table-wrap { min-width:0; max-width:100%; }
+
+/* Group navigation by function instead of distributing every item across the viewport. */
+.topbar.compact-header {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  justify-content:normal;
+  gap:4px 20px;
+  padding:10px clamp(16px,2vw,28px) 0;
+}
+.compact-header .brand { grid-column:1; grid-row:1; }
+.compact-header .topbar-actions {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  grid-column:2;
+  grid-row:1;
+}
+.topbar.compact-header .topbar-actions > .owner-link,
+.topbar.compact-header .topbar-actions > .vote-data-review-link { width:auto; margin:0; }
+.topbar.compact-header > .owner-utility-link { grid-column:3; grid-row:1; justify-self:end; margin:0; }
+.topbar.compact-header nav {
+  display:flex;
+  flex-wrap:wrap;
+  grid-column:1/-1;
+  grid-row:2;
+  order:initial;
+  align-self:stretch;
+  justify-content:flex-start;
+  gap:4px;
+  width:auto;
+  min-width:0;
+  margin:0;
+}
+.shell .topbar.compact-header nav button { flex:0 0 auto; min-width:0; min-height:36px; padding:8px 14px; font-size:12px; }
+@media(max-width:1050px) {
+  .topbar.compact-header { grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; }
+  .compact-header .topbar-actions { grid-column:1/-1; grid-row:2; }
+  .topbar.compact-header > .owner-utility-link { grid-column:2; }
+  .topbar.compact-header nav { grid-row:3; }
+}
+@media(max-width:600px) {
+  .topbar.compact-header { grid-template-columns:minmax(0,1fr) auto; gap:6px 8px; }
+  .compact-header .brand { grid-column:1; min-width:0; }
+  .compact-header .topbar-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .topbar.compact-header .topbar-actions > .owner-link,
+  .topbar.compact-header .topbar-actions > .vote-data-review-link { width:100%; min-height:40px; }
+  .topbar.compact-header nav { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; }
+  .shell .topbar.compact-header nav button { min-height:42px; padding:7px 4px; white-space:normal; }
+  .topbar.compact-header > .owner-utility-link { grid-row:1; margin:0; }
+}
+@media(max-width:360px) { .compact-header .brand-name { font-size:12px; } }
