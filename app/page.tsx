@@ -10,12 +10,14 @@ export default function Welcome() {
       <header className="welcome-nav">
         <a className="welcome-brand" href="/home" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
         <nav aria-label="Welcome navigation"><a href="#how-it-works">How it works</a><a className="welcome-tool-link" href="/shootout">Shootout</a><a className="welcome-tool-link" href="/music-library">Listening pool</a><a className="welcome-tool-link" href="/preference-tuning">Preference Tuning</a><a href="/admin-login">Admin sign in</a><a className="welcome-nav-enter" href="/shootout">Enter with invitation <span aria-hidden="true">↗</span></a></nav>
+        <details className="welcome-settings"><summary><span aria-hidden="true">⚙</span> Settings</summary><div className="welcome-settings-panel"><a href="/sync"><strong>Sync browsers</strong><span>Use your saved data on another browser</span></a><a href="/my-data"><strong>My data &amp; sharing</strong><span>Manage participation and saved submissions</span></a><a href="/privacy"><strong>Privacy notice</strong><span>How your data is used</span></a></div></details>
       </header>
       <div className="welcome-copy">
         <span className="welcome-kicker"><span aria-hidden="true" /> WELCOME TO YINYANG EQ LEAGUE</span>
         <h1 id="welcome-title">Find your sound.<br /><strong>Let your ears decide.</strong></h1>
         <p>Hear two headphone EQ targets side by side. Choose the sound you prefer, then see which curves were behind A and B.</p>
         <div className="welcome-actions"><a className="welcome-primary" href="/shootout">Enter with invitation <span aria-hidden="true">→</span></a><a className="welcome-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div>
+        <p className="welcome-sync-note">Already using another browser? <a href="/sync">Sync browsers <span aria-hidden="true">↗</span></a></p>
         <p className="welcome-access-note">Invited testers must agree to comparison-data collection before using the listening tools. Sharing details from your own music is optional.</p>
       </div>
       <div className="welcome-hero-foot"><span><i className="welcome-a" /> TARGET A</span><span className="welcome-foot-line" aria-hidden="true" /><span>THE SOUND BETWEEN</span><span className="welcome-foot-line" aria-hidden="true" /><span><i className="welcome-b" /> TARGET B</span></div>
@@ -30,6 +32,6 @@ export default function Welcome() {
       </div>
       <div className="welcome-last-call"><div><span className="welcome-eyebrow">INVITED LISTENERS</span><h2>Ready to hear the difference?</h2><p>Have your invitation code handy. Admins can use the admin sign in link above.</p></div><a className="welcome-primary" href="/shootout">Enter the shootout <span aria-hidden="true">→</span></a></div>
     </section>
-    <footer className="welcome-footer"><span>YinYang EQ League</span><span>Built for curious ears. Blind votes shape the rankings.</span><div className="welcome-footer-links"><a href="/privacy">Privacy notice</a><a href="/my-data">My data</a><a href="https://github.com/yinyangeqlab/yinyang-eq-league" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-league/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div></footer>
+    <footer className="welcome-footer"><span>YinYang EQ League</span><span>Built for curious ears. Blind votes shape the rankings.</span><div className="welcome-footer-links"><a href="/privacy">Privacy notice</a><a href="/my-data">My data</a><a href="/sync">Sync browsers</a><a href="https://github.com/yinyangeqlab/yinyang-eq-league" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-league/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div></footer>
   </main>;
 }

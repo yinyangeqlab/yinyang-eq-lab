@@ -241,7 +241,27 @@ export const privacyAccounts = sqliteTable("privacy_accounts", {
   agreementVersion: text("agreement_version"),
   agreedAt: integer("agreed_at"),
   withdrawnAt: integer("withdrawn_at"),
+  activityMonitoringEnabled: integer("activity_monitoring_enabled").notNull().default(0),
+  activityMonitoringVersion: text("activity_monitoring_version"),
+  activityMonitoringAgreedAt: integer("activity_monitoring_agreed_at"),
+  activityMonitoringWithdrawnAt: integer("activity_monitoring_withdrawn_at"),
 });
+// Identifiable, user-opted-in first-party activity only. No raw URL query,
+// typed content, IP address, device fingerprint, audio, or general clickstream.
+export const activityEvents = sqliteTable("activity_events", {
+  id: text("id").primaryKey(),
+  subjectId: text("subject_id").notNull(),
+  sessionId: text("session_id").notNull(),
+  eventType: text("event_type").notNull(),
+  route: text("route").notNull(),
+  shootoutTab: text("shootout_tab"),
+  testMode: text("test_mode"),
+  testActive: integer("test_active").notNull().default(0),
+  createdAt: integer("created_at").notNull(),
+}, table => [
+  index("activity_events_subject_created_idx").on(table.subjectId, table.createdAt),
+  index("activity_events_session_created_idx").on(table.sessionId, table.createdAt),
+]);
 export const privacySessions = sqliteTable("privacy_sessions", {
   tokenHash: text("token_hash").primaryKey(),
   subjectId: text("subject_id").notNull(),
@@ -304,3 +324,25 @@ export const comparisonRecords = sqliteTable("comparison_records", {
 }, table => [primaryKey({columns:[table.recordKind,table.recordId]}),index("comparison_records_group_idx").on(table.comparisonId)]);
 
 export const rankingRevision = sqliteTable("ranking_revision", { id:integer("id").primaryKey(), revision:integer("revision").notNull() });
+
+// Explicit browser linking; all browsers retain one invitation/account identity.
+export const privateTesterDevices = sqliteTable("private_tester_devices", {
+  sessionHash: text("session_hash").primaryKey(),
+  inviteId: text("invite_id").notNull(),
+  dataTokenHash: text("data_token_hash").notNull(),
+  createdAt: integer("created_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("tester_devices_invite_idx").on(table.inviteId)]);
+export const browserPairings = sqliteTable("browser_pairings", {
+  codeHash: text("code_hash").primaryKey(),
+  inviteId: text("invite_id").notNull(),
+  sourceHash: text("source_hash").notNull(),
+  claimHash: text("claim_hash").unique(),
+  confirmation: text("confirmation"),
+  state: text("state").notNull().default("waiting"),
+  transferPayload: text("transfer_payload"),
+  payloadHash: text("payload_hash"),
+  replacementAccepted: integer("replacement_accepted").notNull().default(0),
+  createdAt: integer("created_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("browser_pairings_invite_idx").on(table.inviteId)]);

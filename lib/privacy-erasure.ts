@@ -76,6 +76,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   add("DELETE FROM submission_owners WHERE EXISTS (SELECT 1 FROM privacy_erasure_scope s WHERE s.record_kind=submission_owners.record_kind AND s.record_id=submission_owners.record_id)");
   add("DELETE FROM privacy_erasure_scope");
   if (!selection) {
+    add("DELETE FROM activity_events WHERE subject_id=?", subjectId!);
     add("DELETE FROM music_votes WHERE user_id=?", subjectId!);
     tally("music");
     add("DELETE FROM legacy_record_verifications WHERE subject_id=?", subjectId!);
@@ -83,6 +84,10 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("DELETE FROM retrospective_permissions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_sessions WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_accounts WHERE subject_id=?", subjectId!);
+    if (subjectId!.startsWith("invite:")) {
+      add("DELETE FROM browser_pairings WHERE invite_id=?",subjectId!.slice(7));
+      add("DELETE FROM private_tester_devices WHERE invite_id=?",subjectId!.slice(7));
+    }
     if (subjectId!.startsWith("invite:")) add("DELETE FROM private_tester_invites WHERE id=?", subjectId!.slice(7));
   }
   await db.batch(statements);

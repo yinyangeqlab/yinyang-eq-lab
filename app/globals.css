@@ -2025,3 +2025,10 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
  .music-panel-host .playback-dynamics button { width:32px;height:32px;min-height:32px; }
  .music-panel-host:not(.persistent) .playback-transport { grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px; }
 }
+
+.service-status-panel {padding:20px;border:1px solid #6f5733;border-radius:12px;margin:20px 0;background:#17130e;}
+.service-status-panel label {display:grid;gap:8px;margin:16px 0;max-width:720px;}
+.service-status-panel textarea {width:100%;box-sizing:border-box;background:#090d10;color:#f7ead2;border:1px solid #84704a;border-radius:8px;padding:12px;font:inherit;}
+.service-status-panel .service-status-check {display:flex;align-items:center;gap:10px;}
+.service-status-panel select {width:160px;}
+.service-status-panel button {margin-top:8px;min-height:44px;}
