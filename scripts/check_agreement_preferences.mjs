@@ -29,6 +29,7 @@ const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/listener-nickn
 };
 const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
 const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
+deps['@/lib/legacy-notice']={RETROSPECTIVE_NOTICE_VERSION:'retrospective-2026-10-18-v1'};const studiesExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/consent-studies.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:studiesExports,require:name=>deps[name]});deps['@/lib/consent-studies']=studiesExports;
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response,Request,Headers,URL,Date,TextEncoder,TextDecoder,Uint8Array});
 vm.runInContext(ts.transpileModule(readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
 const patch=(body,origin='https://fixture.test')=>context.exports.PATCH(new Request('https://fixture.test/api/my-data',{method:'PATCH',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)}));
@@ -65,4 +66,25 @@ assert.equal((await patch({submissionsEnabled:false,shareMusic:false,activityMon
 assert.equal((await patch({submissionsEnabled:true,shareMusic:false,acknowledged:true,noticeVersion:VOTE_DATA_NOTICE_VERSION})).status,200);saved=await(await context.exports.GET()).json();assert.equal(saved.personalResearchEnabled,false);assert.equal(saved.communityEnabled,false,'Old permission does not silently revive after required-only rejoin');
 assert.equal((await patch(all)).status,200);assert.equal((await patch({submissionsEnabled:true,shareMusic:false,activityMonitoringEnabled:false,personalResearchEnabled:false,communityEnabled:false})).status,200);saved=await(await context.exports.GET()).json();assert.equal(saved.submissionsEnabled,true);assert.equal(saved.personalResearchEnabled,false);assert.equal(saved.communityEnabled,false);assert.equal(saved.shareMusic,false);assert.equal(saved.activityMonitoringEnabled,false);
 console.log('Unified consent verified: all five saved/read together, separate notice acknowledgements, atomic rollback, required-only, withdrawal and no silent research reactivation.');
-sql.close();console.log('Agreement preference checks passed: current opt-in acknowledgement, optional opt-out without reacknowledgement, participation withdrawal, accessible My data, explicit rejoin, failed-save rollback, and origin protection. Synthetic SQLite only.');
+console.log('Agreement preference checks passed: current opt-in acknowledgement, optional opt-out without reacknowledgement, participation withdrawal, accessible My data, explicit rejoin, failed-save rollback, and origin protection. Synthetic SQLite only.');
+
+const studyId='00000000-0000-4000-8000-000000000001',notice=deps['@/lib/legacy-notice'].RETROSPECTIVE_NOTICE_VERSION;
+sql.prepare("INSERT INTO archive_studies(id,target_a,target_b,mode,headphone_type,start_at,end_at,notice_version,methodology,source_mode,seal_after) VALUES(?,?,?,'blind','ie',1,2,?,'synthetic','retrospective',3)").run(studyId,'a','b',notice);
+const historical={...combined,activityMonitoringEnabled:false,retrospectiveChoices:[{studyId,enabled:true}],retrospectiveAcknowledged:true,retrospectiveNoticeVersion:notice};
+assert.equal((await patch(historical)).status,400,'Ineligible synthetic account cannot grant historical permission');
+const eligible='browser:00000000-0000-4000-8000-000000000002';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(eligible);
+// Exercise actual helper against SQLite with an eligible participant, independent of identity fixture.
+let statements=await studiesExports.consentStudyStatements(DB,eligible,historical.retrospectiveChoices,true,notice,true);await DB.batch(statements);
+assert.equal((await studiesExports.consentStudies(DB,eligible))[0].opted_in,1);
+await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,historical.retrospectiveChoices,false,notice,true),/Review each/);
+await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,[{studyId,enabled:true},{studyId,enabled:false}],true,notice,true),/Choose your listed/);
+statements=await studiesExports.consentStudyStatements(DB,eligible,[{studyId,enabled:false}],false,notice,true);await DB.batch(statements);assert.equal((await studiesExports.consentStudies(DB,eligible))[0].opted_in,0);
+sql.prepare('INSERT INTO archive_releases(sequence,study_id,payload) VALUES(0,?,?)').run(studyId,'{}');await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,historical.retrospectiveChoices,true,notice,true),/already sealed/);
+console.log('Historical permissions verified against actual SQLite: listed studies, eligibility, explicit current receipt, duplicate rejection, withdrawal and sealed-result protection.');
+
+const secondId='00000000-0000-4000-8000-000000000003';sql.prepare("INSERT INTO archive_studies(id,target_a,target_b,mode,headphone_type,start_at,end_at,notice_version,methodology,source_mode,seal_after) VALUES(?,?,?,'blind','ie',3,4,?,'synthetic','retrospective',5)").run(secondId,'a','b',notice);
+assert.equal((await studiesExports.consentStudies(DB,eligible)).find(row=>row.id===secondId).opted_in,0,'A future study never inherits all-current-sharing');
+sql.prepare("INSERT INTO owner_public_profiles(slug,subject_id,invite_id,policy_at,created_at) VALUES('yinyangeq',?,'synthetic',1,1)").run(eligible);
+await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,[{studyId:secondId,enabled:true}],true,notice,true),/protected YinYangEQ/);
+await assert.rejects(()=>studiesExports.consentStudyStatements(DB,eligible,[{studyId:'00000000-0000-4000-8000-000000000099',enabled:true}],true,notice,true),/study changed/);
+sql.close();

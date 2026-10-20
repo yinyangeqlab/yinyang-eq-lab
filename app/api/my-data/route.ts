@@ -1,3 +1,4 @@
+import {consentStudies,consentStudyStatements} from '@/lib/consent-studies';
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
 import { communityPermission, communityPermissionStatement } from "@/lib/community-server";
 import { isTestSubject } from "@/lib/admin-contributions";
@@ -28,14 +29,15 @@ export async function GET() {
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
     const protectedAccount=!!await env.DB!.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(identity.subjectId).first();
     const activity = identity.activityMonitoringEnabled||protectedAccount ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND (created_at>=? OR subject_id IN(SELECT subject_id FROM owner_public_profiles)) ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
+    const historicalStudies = await consentStudies(env.DB!,identity.subjectId);
     const community = await communityPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
   try {
-    origin(request); const identity = await dataIdentity(); const body = await readJsonObject(request, 1024);
+    origin(request); const identity = await dataIdentity(); const body = await readJsonObject(request, 20000);
     if (body.action === "nickname") {
       if (identity.subjectId === "owner") throw new RequestInputError("The shared admin account cannot have a listener nickname.", 400);
       const nickname = normalizeListenerNickname(body.nickname);
@@ -49,7 +51,7 @@ export async function PATCH(request: Request) {
     if (body.personalResearchEnabled !== undefined && typeof body.personalResearchEnabled !== "boolean") throw new RequestInputError("Choose whether to contribute personal comparisons.",400);
     if (body.personalResearchEnabled === true && (body.personalResearchAcknowledged !== true || body.personalResearchNoticeVersion !== PERSONAL_RESEARCH_NOTICE_VERSION)) throw new RequestInputError("Review and explicitly enable the personal research notice.",400);
     if(body.communityEnabled!==undefined&&typeof body.communityEnabled!=="boolean")throw new RequestInputError("Choose whether to contribute to Community Preferences.",400);
-    if(body.communityEnabled===true&&(body.communityAcknowledged!==true||body.communityNoticeVersion!==COMMUNITY_NOTICE_VERSION))throw new RequestInputError("Review and explicitly enable the separate Community Preferences notice.",400);
+    if(body.communityEnabled===true&&(body.communityAcknowledged!==true||body.communityNoticeVersion!==COMMUNITY_NOTICE_VERSION))throw new RequestInputError("Review and explicitly enable Personal research sharing, including Community use.",400);
     const nicknameProvided = body.nickname !== undefined;
     const nickname = nicknameProvided ? normalizeListenerNickname(body.nickname) : undefined;
     if (nicknameProvided && (identity.subjectId === "owner" || nickname === null)) throw new RequestInputError(identity.subjectId === "owner" ? "The shared admin account does not use a listener nickname." : listenerNicknameError(body.nickname)!,400);
@@ -78,6 +80,7 @@ export async function PATCH(request: Request) {
     if (nicknameProvided) statements.push(nickname
       ? env.DB!.prepare("INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?) ON CONFLICT(subject_id) DO UPDATE SET nickname=excluded.nickname").bind(identity.subjectId,nickname)
       : env.DB!.prepare("DELETE FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId));
+    statements.push(...await consentStudyStatements(env.DB!,identity.subjectId,body.retrospectiveChoices,body.retrospectiveAcknowledged,body.retrospectiveNoticeVersion,body.submissionsEnabled));
     await env.DB!.batch(statements);
     return Response.json({ ok:true, ...(nicknameProvided ? {nickname} : {}), activityMonitoringEnabled:body.submissionsEnabled && monitor }, { headers });
   } catch (error) { return failed(error); }
