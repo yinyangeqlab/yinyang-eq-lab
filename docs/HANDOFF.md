@@ -1,3 +1,7 @@
+# Local consent follow-up ready — October 19, 2026
+
+Live update95 (implementation0ef217b; published handoff2e5d987) is deployed and verified, with a matching reconstructed encrypted backup and an active validated daily schedule. A later owner request found the hidden music opt-in: the local draft now shows all three numbered choices and all/required-only draft shortcuts. It does not save automatically or enable separate Personal/Community permissions. This follow-up is not pushed or deployed. Read [CONSENT_UI_REVIEW_2026-10-19.md](CONSENT_UI_REVIEW_2026-10-19.md). Local preview: localhost:5175/shootout?mode=open → Data Agreement & Sharing; the dialog is open in the hidden tester browser. Build input: artifacts/consent-choices-20261019/build-input. Do not deploy that local preview assembly. Preserve unrelated backup/recovery work.
+
 > Update95 recovery verification: a matching encrypted off-device backup passed independent download/decryption, complete reconstruction with original source/schema fingerprints, and source-history/build portability checks. The private hosted baseline was refreshed, its validation run passed, and the same daily03:00 America/Los_Angeles schedule was re-enabled. Existing retention is unchanged. No storage details, keys or private receipts are published.
 
 # Current live release — update95, October 19, 2026
