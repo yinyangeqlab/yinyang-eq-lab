@@ -2,7 +2,8 @@
 
 import { attachMediaRecovery } from "@/lib/media-recovery";
 
-import { FileMusic, FolderOpen, RotateCcw, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
+import { FileMusic, FolderOpen, RotateCcw, Shuffle, Play, Square, SlidersHorizontal, Volume2, VolumeX } from "lucide-react";
+import { createPortal } from "react-dom";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
 import { intervalStats, type Interval } from "@/lib/listening";
@@ -11,6 +12,7 @@ import { channelBalance } from "@/lib/channel-balance";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import { analyzeTrack, type TrackAnalysis } from "@/lib/loudness";
 import TrackWaveform from "@/components/track-waveform";
+import { chooseComparisonPassage, comparisonOrder, type ComparisonPassage } from "@/lib/comparison-passage";
 import { curatedWaveform } from "@/lib/curated-waveforms";
 import { estimateWaveformSpread, previewDynamics } from "@/lib/dynamics-preview";
 import { matchSongSuggestion, type SongSuggestion } from "@/lib/song-match";
@@ -19,7 +21,7 @@ import { musicRotation, playbackTarget, type MusicChoice, type MusicCounts } fro
 import { listeningPool as curatedMusic } from "@/lib/music-catalog";
 
 export type MusicContext = { songTitle: string; songArtist: string; songAlbum: string; recordingId: string; sha256: string | null; audioFormat: string | null; sampleRate: number | null; bitrate: number | null; duration: number | null; intervals: Interval[]; heardA: number; heardB: number; overlapSeconds: number; normalizationStatus: string; loudnessTarget: string };
-export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean>; replay: () => Promise<boolean> };
+export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean>; replay: () => Promise<boolean>; playPassage: () => Promise<boolean> };
 type MusicVoteSnapshot = { byTrack?: MusicCounts; mine?: Record<string, MusicChoice>; signedIn?: boolean; error?: string };
 type Target = { id: string; points: Point[] };
 
@@ -52,7 +54,9 @@ function sourceDetails(buffer: ArrayBuffer, format: string): { sampleRate?: numb
   return {};
 }
 
-const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null; testMode: "blind" | "bring" | "open"; loudnessTarget: "-14" | "-16" | "-18" | "off"; targets: Target[]; suggestions: SongSuggestion[]; measurement?: HeadphoneMeasurement; consent: boolean; onDataSettings?: () => void; onConsentChange?: (enabled: boolean) => void; onSideChange: (side: 0 | 1) => void; onHeard: (seconds: [number, number]) => void; onPlaybackChange?: (playing: boolean) => void }>(function MusicPanel({ pair, testMode, loudnessTarget, targets, suggestions, measurement, consent, onDataSettings, onSideChange, onHeard, onPlaybackChange }, ref) {
+const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null; testMode: "blind" | "bring" | "open"; loudnessTarget: "-14" | "-16" | "-18" | "off"; targets: Target[]; suggestions: SongSuggestion[]; measurement?: HeadphoneMeasurement; consent: boolean; onDataSettings?: () => void; onPassagePlay?: () => void; passageControlsHostId?: string; comparisonComplete?: boolean; onConsentChange?: (enabled: boolean) => void; onSideChange: (side: 0 | 1) => void; onHeard: (seconds: [number, number]) => void; onPlaybackChange?: (playing: boolean) => void }>(function MusicPanel({ pair, testMode, loudnessTarget, targets, suggestions, measurement, consent, onDataSettings, onPassagePlay, passageControlsHostId, comparisonComplete = false, onSideChange, onHeard, onPlaybackChange }, ref) {
+  const [passageHost, setPassageHost] = useState<HTMLElement | null>(null);
+  useEffect(() => { setPassageHost(passageControlsHostId ? document.getElementById(passageControlsHostId) : null); }, [passageControlsHostId]);
   const audioRef = useRef<HTMLAudioElement>(null);
   const mediaRecovery = useRef<ReturnType<typeof attachMediaRecovery> | null>(null);
   useEffect(() => {
@@ -164,6 +168,50 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const displayedLoudness = analysis ? `${selectedPoolTrack && sourceKindRef.current === "curated" ? `${selectedPoolTrack.integrated_lufs.toFixed(1)} LUFS measured` : `Estimated ${analysis.integratedLufs.toFixed(1)} LUFS`} · ${loudnessTarget === "off" && testMode === "open" ? "normalization off" : `matching to ${sharedPlaybackTarget?.toFixed(1)} LUFS`}` : loudnessStatus;
   const clock = (seconds: number) => Number.isFinite(seconds) ? `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}` : "0:00";
   const pairTargets = pair?.map(id => targets.find(t => t.id === id));
+  const [passageOverride, setPassageOverride] = useState<ComparisonPassage | null>(null);
+  const passage = useMemo(() => passageOverride ?? chooseComparisonPassage(duration, (curatedPreview ?? analysis)?.waveform, () => .5), [duration, curatedPreview, analysis, passageOverride]);
+  const passageRunRef = useRef<{ order: [0 | 1, 0 | 1]; step: number; range: ComparisonPassage; transitioning: boolean; pendingStart: boolean } | null>(null);
+  const [passageRun, setPassageRun] = useState<{ step: number } | null>(null);
+  const [passageDone, setPassageDone] = useState(false);
+  const passageTickRef = useRef<() => void>(() => {});
+  function cancelPassage() { passageRunRef.current = null; setPassageRun(null); }
+  async function playPassageSide(run: NonNullable<typeof passageRunRef.current>) {
+    const audio = audioRef.current;
+    if (!audio || passageRunRef.current !== run) return;
+    run.transitioning = true;
+    closeInterval(); audio.pause(); selectSide(run.order[run.step]);
+    run.pendingStart = true; audio.currentTime = run.range.start; setPosition(run.range.start); setPassageRun({ step: run.step });
+    try {
+      await engine.current!.context.resume();
+      if (passageRunRef.current !== run) return;
+      await audio.play();
+      if (passageRunRef.current === run) { run.transitioning = false; setSourceError(""); }
+    } catch { if (passageRunRef.current === run) { cancelPassage(); audio.pause(); setSourceError("Passage playback stopped. Press Play both targets to try again."); } }
+  }
+  async function completePassageSide() {
+    const run = passageRunRef.current;
+    if (!run || run.transitioning) return;
+    run.transitioning = true; closeInterval(run.range.end); audioRef.current?.pause();
+    const stats = intervalStats(intervalsRef.current); heardRef.current = [stats.heardA, stats.heardB]; onHeardRef.current(heardRef.current);
+    if (run.step === 0) { run.step = 1; await playPassageSide(run); }
+    else { cancelPassage(); setPassageDone(true); }
+  }
+  function checkPassageEnd() {
+    const audio = audioRef.current, run = passageRunRef.current;
+    // Media time, not a wall-clock timeout: buffering never earns progress.
+    if (audio && run && !run.transitioning && !audio.paused && !audio.seeking && audio.currentTime >= run.range.end) void completePassageSide();
+  }
+  passageTickRef.current = checkPassageEnd;
+  useEffect(() => { const timer = window.setInterval(() => passageTickRef.current(), 40); return () => { window.clearInterval(timer); passageRunRef.current = null; }; }, []);
+  async function playPassage() {
+    if (!audioRef.current || !file || !passage || !pair || !measurement || comparisonComplete) return false;
+    cancelPassage(); setPassageDone(false); setPassageOverride(passage);
+    try { setupEngine(); applyFit(); } catch { setSourceError("Could not initialize audio playback."); return false; }
+    const run = { order: comparisonOrder(), step: 0, range: passage, transitioning: true, pendingStart: true };
+    passageRunRef.current = run; await playPassageSide(run);
+    return passageRunRef.current === run;
+  }
+
 
   function updateDynamicRange(value: number) {
     const amount = Math.max(-1, Math.min(1, value));
@@ -188,7 +236,10 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     const audio = audioRef.current;
     if (!audio || audio.paused || audio.seeking || activeRef.current || !Number.isFinite(audio.currentTime)) return;
     lastPlaybackPosition.current=audio.currentTime;
-    activeRef.current = { side: sideRef.current, start: audio.currentTime, rate: audio.playbackRate };
+    const run = passageRunRef.current;
+    const start = run?.pendingStart ? run.range.start : audio.currentTime;
+    if (run) run.pendingStart = false;
+    activeRef.current = { side: sideRef.current, start, rate: audio.playbackRate };
     if (heardStartedRef.current === null) heardStartedRef.current = performance.now();
   }
   function heardNow(): [number, number] {
@@ -205,7 +256,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     if (!file) return;
     const toggleWithSpace = (event: KeyboardEvent) => {
       if (event.code !== "Space" || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
-      if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable], [role='textbox']")) return;
+      if (event.target instanceof Element && event.target.closest("button, a, input, textarea, select, [contenteditable], [role='button'], [role='textbox'], [role='slider']")) return;
       event.preventDefault();
       event.stopPropagation();
       audioRef.current?.closest(".music-panel")?.querySelector<HTMLButtonElement>(".deck-play")?.click();
@@ -219,14 +270,16 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     return rows;
   }
   async function replayPassage() {
+    cancelPassage();
     const audio=audioRef.current;if(!audio||!file)return false;
     const other=intervalsRef.current.find(row=>row.side!==sideRef.current);
     const start=other?.start ?? intervalsRef.current[0]?.start ?? activeRef.current?.start ?? 0;
     closeInterval();audio.currentTime=start;
     try{await audio.play();return true;}catch{return false;}
   }
-  function resetHeard() { closeInterval(); intervalsRef.current = []; heardRef.current = [0, 0]; heardStartedRef.current = null; onHeardRef.current([0, 0]); startInterval(); }
-  useImperativeHandle(ref, () => ({ replay: replayPassage, isHashing: () => hashing, heard: heardNow, reset: resetHeard, stop: () => audioRef.current?.pause(), pause: () => audioRef.current?.pause(), isPlaying: () => !!audioRef.current && !audioRef.current.paused, randomSong: async () => { setSampleChoice("random"); return chooseRandomSample("random", true); }, listen: async next => {
+  function resetHeard() { cancelPassage(); setPassageDone(false); closeInterval(); intervalsRef.current = []; heardRef.current = [0, 0]; heardStartedRef.current = null; onHeardRef.current([0, 0]); startInterval(); }
+  useImperativeHandle(ref, () => ({ replay: replayPassage, isHashing: () => hashing, heard: heardNow, reset: resetHeard, stop: () => { cancelPassage(); audioRef.current?.pause(); }, pause: () => { cancelPassage(); audioRef.current?.pause(); }, playPassage, isPlaying: () => !!audioRef.current && !audioRef.current.paused, randomSong: async () => { setSampleChoice("random"); return chooseRandomSample("random", true); }, listen: async next => {
+    cancelPassage();
     if (!audioRef.current) return false;
     if (!file) {
       if (testModeRef.current === "bring") return false;
@@ -237,6 +290,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     selectSide(next);
     try { await Promise.all([engine.current!.context.resume(), audioRef.current.play()]); setSourceError(""); return true; } catch { setSourceError("Playback could not start. Check the selected track and browser audio permissions."); return false; }
   }, snapshot: () => ({ ...meta, normalizationStatus:loudnessStatus,loudnessTarget:requestedLoudness,intervals: snapshotIntervals(), ...intervalStats(snapshotIntervals()), consent: sourceKindRef.current === "curated" || consent }), finish: () => {
+    cancelPassage();
     closeInterval(); audioRef.current?.pause();
     const intervals = [...intervalsRef.current];
     const stats = intervalStats(intervals);
@@ -247,7 +301,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     resetHeard();
     if (testMode === "blind" && pair) void chooseRandomSample("random");
   }, [pair, testMode]);
-  useEffect(() => { if (testMode !== "bring") return; curatedFetchRef.current++;sourceSerialRef.current++;hashSerialRef.current++;candidateUrlRef.current=null;measuredLufsRef.current=null;setDuration(0);setPosition(0); sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
+  useEffect(() => { if (testMode !== "bring") return; curatedFetchRef.current++;sourceSerialRef.current++;hashSerialRef.current++;candidateUrlRef.current=null;measuredLufsRef.current=null;setDuration(0);setPassageOverride(null);setPosition(0); sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
   function applyFit() {
     const current = engine.current;
     if (!current || !pairTargets?.[0] || !pairTargets[1]) return;
@@ -590,7 +644,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     setCuratedPreview(null);
     setWaveformZoom(1);
     setPosition(0);
-    setDuration(0);
+    setDuration(0);setPassageOverride(null);
     setFile(next);
     urlRef.current = URL.createObjectURL(next);
     audioRef.current.src = urlRef.current;
@@ -606,10 +660,16 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     void current?.context.resume();
     startInterval();
   }
-  return <section className="music-panel" data-mode={testMode}><div className="playback-topbar"><div className="music-header"><div><span className="mini-label">LOCAL PLAYBACK</span><div className="playback-title-line"><h2>Local Playback</h2><span className="playback-time"><span>{clock(position)}</span><span aria-hidden="true">/</span><span>{clock(duration)}</span></span><span className="waveform-source-caption">L / R · pre-EQ · click to seek</span></div><p>Audio from your device stays in this browser. Blind votes support public rankings, and approved-target comparisons or descriptions can enter private owner research. Listening segments are saved for every completed comparison. Song tags and file details from music you choose on your device are shared only if you opt in below; audio bytes are never uploaded.</p></div><span className="count-pill">A/B TONAL PREVIEW</span>{dynamicsAdjusted && analysis && <div className="dynamics-status" aria-live="off"><span className={`dynamics-preview-key ${dynamicsExpanding ? "expanding" : ""}`}>{dynamicsExpanding ? "Red beyond blue" : "Blue compressed"} <span>· {dynamicsExpanding ? "scaled source" : "gray source"}</span><b> · peak spread {spreadChange >= 0 ? "+" : ""}{spreadChange.toFixed(1)} dB</b></span><span className="dynamics-meter">{dynamicReduction === null || dynamicOutputGain === null ? "Waiting for audio processor…" : `${dynamicsExpanding ? "Quiet" : "Peak"} reduction ${dynamicReduction.toFixed(1)} dB · Net gain ${dynamicOutputGain >= 0 ? "+" : ""}${dynamicOutputGain.toFixed(1)} dB`}</span></div>}</div>
-    <div className={`playback-transport ${isPlaying ? "is-playing" : ""}`} role="group" aria-label="Music playback controls">{testMode === "open" && <div className="playback-dynamics"><button type="button" className="deck-dynamics-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} title="Toggle Dynamic Range Compression/Expansion slider. Hover over center line of playback waveform." disabled={!duration || dynamicRangeUnavailable} onClick={() => setDynamicSliderEnabled(value => !value)}><SlidersHorizontal size={19} strokeWidth={2.4} aria-hidden="true" /></button><button type="button" className="deck-dynamics-reset" aria-label="Reset track dynamics" title="Reset track dynamics" disabled={dynamicRangeUnavailable || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19} strokeWidth={2.4} aria-hidden="true" /></button></div>}<button type="button" className="deck-play" aria-label={isPlaying ? "Pause music" : "Play music"} onClick={() => { const audio=audioRef.current; if(!audio) return; if(!file){if(testModeRef.current === "bring") setSourceError("Choose your own stereo song to play.");else void chooseRandomSample("random",true);return;} if(audio.paused) { try { setupEngine(); applyFit(); void Promise.all([engine.current!.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions.")); } catch { setSourceError("Could not initialize audio playback."); } } else audio.pause(); }}></button><div className="waveform-zoom" role="group" aria-label="Waveform zoom"><button type="button" aria-label="Zoom waveform out" disabled={waveformZoom === 1 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.max(1, value / 2))}>−</button><span>{waveformZoom}×</span><button type="button" aria-label="Zoom waveform in" disabled={waveformZoom === 8 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.min(8, value * 2))}>+</button></div><div className={`volume-control ${volumeOpen ? "open" : ""}`}><button type="button" className="deck-volume-toggle" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(value => !value)}>{volume === 0 ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}</button><input className="deck-volume" hidden={!volumeOpen} type="range" min={0} max={1} step={0.01} value={volume} aria-label="Volume" onChange={e => {const value=Number(e.target.value);if(audioRef.current)audioRef.current.volume=value;setVolume(value);}} /></div></div></div>
-    {testMode!=="open" && <div className="matched-passage-help"><button type="button" onClick={()=>void replayPassage()} disabled={!file}>Replay same passage on current side</button><p>Hear at least 5 seconds of the same passage under A and B. Switch sides, then replay to compare. Source normalization does not guarantee equal perceived loudness after EQ.</p></div>}
-    <div className={`player-row ${isPlaying ? "is-playing" : ""}`}><TrackWaveform compact hideZoom zoom={waveformZoom} onZoom={setWaveformZoom} analysis={curatedPreview ?? analysis} placeholder={file ? (loudnessStatus.startsWith("Audio analysis unavailable") ? "Waveform unavailable" : "Analyzing source waveform…") : "Choose a stereo track to view its waveform"} position={position} duration={duration} onSeek={seconds => { closeInterval(); if (audioRef.current) audioRef.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={testMode === "open" && dynamicSliderEnabled} dynamicRangeDisabled={dynamicRangeUnavailable} /><audio ref={audioRef} crossOrigin="anonymous" preload="auto" onPlay={() => {setupEngine();applyFit();void engine.current?.context.resume();onPlaybackChange?.(true);}} onPlaying={() => {startInterval();setIsPlaying(true);onPlaybackChange?.(true);}} onPause={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onWaiting={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onTimeUpdate={() => {if(!audioRef.current?.seeking)lastPlaybackPosition.current=audioRef.current?.currentTime??0;setPosition(audioRef.current?.currentTime ?? 0);}} onSeeking={() => {closeInterval(lastPlaybackPosition.current);setIsPlaying(false);onPlaybackChange?.(false);}} onSeeked={() => {startInterval();const playing=!!audioRef.current && !audioRef.current.paused;setIsPlaying(playing);onPlaybackChange?.(playing);}} onEnded={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onError={() => { if (!mediaRecovery.current?.handleError()) setSourceError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This browser could not play the selected audio format."); }} onLoadedMetadata={() => { const seconds = audioRef.current?.duration; const valid = seconds && Number.isFinite(seconds) ? seconds : null; setDuration(valid ?? 0);setPosition(0);setMeta(old => ({ ...old, duration: valid, bitrate: old.bitrate ?? (valid && file ? Math.round(file.size * 8 / valid) : null) })); }} /></div>
+  const passageControls = pair && onPassagePlay && <div className={`passage-controls ${passageRun ? "running" : ""}`}>
+      
+      <span className="passage-times">{passage ? `${clock(passage.start)} – ${clock(passage.end)}` : "Select audio"}</span>
+      <span className={`passage-copy ${passageRun ? `side-${side ? "b" : "a"}` : ""}`} role="status">{comparisonComplete ? "Saved" : passageRun ? `${side ? "B" : "A"} · ${passageRun.step + 1}/2` : passageDone ? "Ready to vote" : passage ? "Drag the five-second window" : "Choose a track"}</span>
+      <button type="button" className="passage-new" aria-label="Shuffle passage" title="Shuffle passage" disabled={!passage || duration <= 5.1 || !!passageRun || comparisonComplete} onClick={() => { setPassageDone(false); setPassageOverride(chooseComparisonPassage(duration, (curatedPreview ?? analysis)?.waveform, Math.random, passage ?? undefined)); }}><Shuffle size={14} aria-hidden="true"/><span>Shuffle passage</span></button>
+    <button type="button" className="passage-play" disabled={comparisonComplete || !passage} onClick={() => { if (passageRun) { cancelPassage(); audioRef.current?.pause(); } else onPassagePlay(); }}>{passageRun ? <Square size={15} fill="currentColor" aria-hidden="true"/> : <Play size={15} fill="currentColor" aria-hidden="true"/>}{passageRun ? "Stop comparison" : "Play both targets"}</button></div>;
+  return <section className="music-panel" data-mode={testMode} data-passage-external={!!passageControlsHostId}><div className="playback-topbar"><div className="music-header"><div><span className="mini-label">LOCAL PLAYBACK</span><div className="playback-title-line"><h2>Local Playback</h2><span className="playback-time"><span>{clock(position)}</span><span aria-hidden="true">/</span><span>{clock(duration)}</span></span><span className="waveform-source-caption">L / R · pre-EQ · click to seek</span></div><p>Audio from your device stays in this browser. Blind votes support public rankings, and approved-target comparisons or descriptions can enter private owner research. Listening segments are saved for every completed comparison. Song tags and file details from music you choose on your device are shared only if you opt in below; audio bytes are never uploaded.</p></div><span className="count-pill">A/B TONAL PREVIEW</span>{dynamicsAdjusted && analysis && <div className="dynamics-status" aria-live="off"><span className={`dynamics-preview-key ${dynamicsExpanding ? "expanding" : ""}`}>{dynamicsExpanding ? "Red beyond blue" : "Blue compressed"} <span>· {dynamicsExpanding ? "scaled source" : "gray source"}</span><b> · peak spread {spreadChange >= 0 ? "+" : ""}{spreadChange.toFixed(1)} dB</b></span><span className="dynamics-meter">{dynamicReduction === null || dynamicOutputGain === null ? "Waiting for audio processor…" : `${dynamicsExpanding ? "Quiet" : "Peak"} reduction ${dynamicReduction.toFixed(1)} dB · Net gain ${dynamicOutputGain >= 0 ? "+" : ""}${dynamicOutputGain.toFixed(1)} dB`}</span></div>}</div>
+    <div className={`playback-transport ${isPlaying ? "is-playing" : ""}`} role="group" aria-label="Music playback controls">{testMode === "open" && <div className="playback-dynamics"><button type="button" className="deck-dynamics-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} title="Toggle Dynamic Range Compression/Expansion slider. Hover over center line of playback waveform." disabled={!duration || dynamicRangeUnavailable} onClick={() => setDynamicSliderEnabled(value => !value)}><SlidersHorizontal size={19} strokeWidth={2.4} aria-hidden="true" /></button><button type="button" className="deck-dynamics-reset" aria-label="Reset track dynamics" title="Reset track dynamics" disabled={dynamicRangeUnavailable || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19} strokeWidth={2.4} aria-hidden="true" /></button></div>}<button type="button" className="deck-play" aria-label={isPlaying ? "Pause music" : "Play music"} onClick={() => { cancelPassage(); const audio=audioRef.current; if(!audio) return; if(!file){if(testModeRef.current === "bring") setSourceError("Choose your own stereo song to play.");else void chooseRandomSample("random",true);return;} if(audio.paused) { try { setupEngine(); applyFit(); void Promise.all([engine.current!.context.resume(), audio.play()]).then(() => setSourceError("")).catch(() => setSourceError("Playback could not start. Check the selected track and browser audio permissions.")); } catch { setSourceError("Could not initialize audio playback."); } } else audio.pause(); }}></button><div className="waveform-zoom" role="group" aria-label="Waveform zoom"><button type="button" aria-label="Zoom waveform out" disabled={waveformZoom === 1 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.max(1, value / 2))}>−</button><span>{waveformZoom}×</span><button type="button" aria-label="Zoom waveform in" disabled={waveformZoom === 8 || !(curatedPreview ?? analysis)} onClick={() => setWaveformZoom(value => Math.min(8, value * 2))}>+</button></div><div className={`volume-control ${volumeOpen ? "open" : ""}`}><button type="button" className="deck-volume-toggle" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(value => !value)}>{volume === 0 ? <VolumeX size={20} aria-hidden="true" /> : <Volume2 size={20} aria-hidden="true" />}</button><input className="deck-volume" hidden={!volumeOpen} type="range" min={0} max={1} step={0.01} value={volume} aria-label="Volume" onChange={e => {const value=Number(e.target.value);if(audioRef.current)audioRef.current.volume=value;setVolume(value);}} /></div></div>{passageControlsHostId ? (passageHost ? createPortal(passageControls, passageHost) : null) : passageControls}</div>
+
+    <div className={`player-row ${isPlaying ? "is-playing" : ""}`}><TrackWaveform compact hideZoom zoom={waveformZoom} onZoom={setWaveformZoom} analysis={curatedPreview ?? analysis} placeholder={file ? (loudnessStatus.startsWith("Audio analysis unavailable") ? "Waveform unavailable" : "Analyzing source waveform…") : "Choose a stereo track to view its waveform"} position={position} duration={duration} passage={pair ? passage : null} passageActive={!!passageRun} onPassageChange={comparisonComplete ? undefined : next => { cancelPassage(); audioRef.current?.pause(); closeInterval(); setPassageDone(false); setPassageOverride(next); }} onSeek={seconds => { cancelPassage(); closeInterval(); if (audioRef.current) audioRef.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={testMode === "open" && dynamicSliderEnabled} dynamicRangeDisabled={dynamicRangeUnavailable} /><audio ref={audioRef} crossOrigin="anonymous" preload="auto" onPlay={() => {setupEngine();applyFit();void engine.current?.context.resume();onPlaybackChange?.(true);}} onPlaying={() => {startInterval();setIsPlaying(true);onPlaybackChange?.(true);}} onPause={() => {if(passageRunRef.current && !passageRunRef.current.transitioning && audioRef.current?.paused) cancelPassage(); closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onWaiting={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);}} onTimeUpdate={() => {if(!audioRef.current?.seeking)lastPlaybackPosition.current=audioRef.current?.currentTime??0;setPosition(audioRef.current?.currentTime ?? 0);}} onSeeking={() => {closeInterval(lastPlaybackPosition.current);setIsPlaying(false);onPlaybackChange?.(false);}} onSeeked={() => {startInterval();const playing=!!audioRef.current && !audioRef.current.paused;setIsPlaying(playing);onPlaybackChange?.(playing);}} onEnded={() => {closeInterval();setIsPlaying(false);onPlaybackChange?.(false);if(passageRunRef.current) void completePassageSide();}} onError={() => { cancelPassage(); if (!mediaRecovery.current?.handleError()) setSourceError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This browser could not play the selected audio format."); }} onLoadedMetadata={() => { const seconds = audioRef.current?.duration; const valid = seconds && Number.isFinite(seconds) ? seconds : null; setDuration(valid ?? 0);setPosition(0);setMeta(old => ({ ...old, duration: valid, bitrate: old.bitrate ?? (valid && file ? Math.round(file.size * 8 / valid) : null) })); }} /></div>
     <div className="source-controls"><div className="sample-row" hidden={testMode === "bring"}><p className="music-meta">{sampleStatus}</p>{testMode === "open" && <label className="sample-choice"><span>Choose sample</span><select value={sampleChoice} onChange={e => { setSampleChoice(e.target.value); void chooseRandomSample(e.target.value); }}><option value="random">Random sample</option>{samples.map((sample,index)=><option key={`${sample.name}-${index}`} value={String(index)}>{sample.name}</option>)}</select></label>}{testMode === "open" && <label className="sample-folder" title="Choose Music folder"><input type="file" multiple ref={node => { if (node) node.setAttribute("webkitdirectory", ""); }} onChange={e => void chooseFolder(e.target.files)} /><FolderOpen size={20} aria-hidden="true" /><span className="picker-label">Choose Music folder</span></label>}</div>
     {testMode !== "blind" && <div className="music-source-row"><label className="music-upload" title={file?.name ? `Audio file: ${file.name}` : "Choose audio file"}><input type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.aac,.acc,.ogg,.oga,.opus,.webm,.aif,.aiff,.alac,.wma,.caf,.mka,.mp4" onChange={e => void chooseFile(e.target.files?.[0] ?? null)} /><FileMusic size={20} aria-hidden="true" /><span className="file-label-text">{file?.name ?? "Choose a real stereo song"}</span></label></div>}</div>{sourceError && <p className="music-meta" role="alert">{sourceError}</p>}
     <div className="shootout-music-vote" role="group" aria-label="Music selection preference">

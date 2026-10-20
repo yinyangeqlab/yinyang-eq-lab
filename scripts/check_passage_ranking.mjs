@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+import {parseIntervals,intervalStats} from '../lib/listening.ts';
+import {LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS} from '../lib/listening-protocol.ts';
+import {rankPreferences} from '../lib/preference-ranking.ts';
+const targets=[{id:'a',name:'Alpha',creator:'QA',status:'approved'},{id:'b',name:'Beta',creator:'QA',status:'approved'}];
+const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
+let votes=[],runs=[],owners=[];
+const deps={'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
+function load(file){const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return module.exports;}
+deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
+const route=load('app/api/research/route.ts');
+const interval=(side,start,end)=>({side,start,end,rate:1});
+const pair=(start,end)=>[interval(0,start,end),interval(1,start,end)];
+const row=(id,intervals,extra={})=>({id,voterId:'listener-'+id,winnerId:'a',loserId:'b',testMode:'bring',headphoneType:'ie',protocolVersion:LISTENING_PROTOCOL,eligible:1,heardA:8,heardB:8,overlapSeconds:8,intervals:JSON.stringify(intervals),songTitle:'Track',songArtist:'Artist',songAlbum:'Album',recordingId:'recording',sha256:'a'.repeat(64),reasonTags:'[]',...extra});
+const get=async()=> (await route.GET()).json();let checks=0;
+async function expectCount(label,expected,current=expected){const data=await get();assert.equal(data.all.voteCount,expected,label);assert.equal(data.protocols.current.all.voteCount,current,label+' (current cohort)');checks++;console.log('PASS '+label);return data;}
+votes=[row('moved',pair(35,43))];await expectCount('Moved same excerpt qualifies',1);
+votes=[row('trimmed',pair(35,41))];await expectCount('Six-second trimmed excerpt qualifies',1);
+votes=[row('exact',pair(35,40))];await expectCount('Five seconds exactly qualifies',1);
+votes=[row('partial-five',[interval(0,0,8),interval(1,3,11)])];await expectCount('Partially shifted windows qualify with five shared seconds',1);
+votes=[row('partial-short',[interval(0,0,8),interval(1,3.01,11.01)])];await expectCount('Shifted windows with under five shared seconds are excluded',0);
+votes=[row('fast',[{side:0,start:0,end:8,rate:2},{side:1,start:0,end:8,rate:2}])];await expectCount('Faster playback must still provide five elapsed seconds per side',0);
+votes=[row('different',[interval(0,0,8),interval(1,20,28)])];await expectCount('Different A/B passages do not qualify despite stored totals',0);
+votes=[row('short',pair(0,4.99))];await expectCount('Under five seconds is excluded despite inflated stored totals',0);
+votes=[row('repeat',Array.from({length:3},()=>pair(0,2)).flat())];await expectCount('Repeating two seconds cannot create five seconds of unique overlap',0);
+votes=[row('one-side',[interval(0,0,12)])];await expectCount('One side alone does not qualify',0);
+votes=[row('broken',[],{intervals:'{broken'})];await expectCount('Malformed playback evidence is excluded safely',0);
+votes=[row('legacy',[],{protocolVersion:'legacy-v1'})];await expectCount('Earlier tests remain in the earlier-test cohort',1,0);
+votes=[row('open',pair(0,8),{testMode:'open'})];await expectCount('Open comparisons do not affect rankings',0);
+votes=[row('check',pair(0,8),{loserId:'a'})];await expectCount('Identical-target checks do not affect rankings',0);
+votes=[];runs=[{...row('tie',pair(0,6)),trialId:'tie-trial',targetAId:'a',targetBId:'b',result:'tie'}];await expectCount('Valid current-protocol ties qualify',1);
+runs=[{...runs[0],intervals:JSON.stringify([interval(0,0,6),interval(1,10,16)])}];await expectCount('Current-protocol ties also require shared passage evidence',0);
+runs=[];votes=[row('listener-one',pair(0,6)),row('listener-two',pair(20,26))];const sameFile=await expectCount('Two participants on the same recording qualify separately',2);assert.equal(sameFile.verified.voteCount,2,'Existing same-file cohort matches recordings, not excerpts across people');checks++;
+// Reuse the actual edited-passage browser submission, without production data.
+const events=JSON.parse(readFileSync('artifacts/full-flow-qa/events.json','utf8'));
+const browserRun=events.filter(e=>e.path==='/api/listening-runs'&&e.body?.testMode==='bring').at(-1)?.body;
+assert.ok(browserRun,'Expected saved browser QA playback');
+votes=[row('browser-edited',parseIntervals(browserRun.intervals))];const browserData=await expectCount('Actual five-second browser playback enters Bring and Matched A/B passage rankings',1);assert.equal(browserData.bring.voteCount,1);assert.equal(browserData.random.voteCount,0);
+const stats=intervalStats(parseIntervals(browserRun.intervals));assert.ok(stats.heardA>=5&&stats.heardB>=5&&stats.overlapSeconds>=5);
+writeFileSync('artifacts/full-flow-qa/ranking-eligibility.json',JSON.stringify({checks,browserPlayback:stats,current:browserData.protocols.current.all.voteCount,bring:browserData.bring.voteCount,sameFileAcrossPeopleRequiresSameExcerpt:false},null,2));
+console.log(`${checks} ranking checks passed`);

@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { adjustComparisonPassage, type ComparisonPassage } from "@/lib/comparison-passage";
 import type { TrackAnalysis } from "@/lib/loudness";
 import { previewDynamics } from "@/lib/dynamics-preview";
 
@@ -11,13 +12,14 @@ function seekClock(seconds: number) {
   return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
 }
 
-type Props = { analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
+type Props = { onPassageChange?: (passage: ComparisonPassage) => void; passage?: ComparisonPassage | null; passageActive?: boolean; analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
 
-export default function TrackWaveform({ analysis, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false }: Props) {
+export default function TrackWaveform({ analysis, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false, passage = null, passageActive = false, onPassageChange }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const seekGuideRef = useRef<HTMLSpanElement>(null);
   const seekTimeRef = useRef<HTMLSpanElement>(null);
   const dragging = useRef(false);
+  const passageDrag = useRef<{ pointerId: number; x: number; secondsPerPixel: number; range: ComparisonPassage; mode: "move" | "start" | "end" } | null>(null);
   const [internalZoom, setInternalZoom] = useState(1);
   const zoom = controlledZoom ?? internalZoom;
   const setZoom = onZoom ?? setInternalZoom;
@@ -27,6 +29,32 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
   const adjusted = Math.abs(dynamicRange) >= .0001 && !dynamicRangeDisabled;
   const expanding = adjusted && dynamicRange > 0;
   const preview = useMemo(() => analysis && duration && adjusted ? previewDynamics(analysis.waveform, dynamicRange, duration) : analysis?.waveform, [analysis, duration, dynamicRange, adjusted]);
+  function beginPassageDrag(event: ReactPointerEvent<HTMLButtonElement>, mode: "move" | "start" | "end") {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!passage || !onPassageChange || !rect?.width) return;
+    event.preventDefault(); event.stopPropagation();
+    passageDrag.current = { pointerId: event.pointerId, x: event.clientX, secondsPerPixel: span / rect.width, range: passage, mode };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    onPassageChange(passage); // Stop a running audition before editing its bounds.
+  }
+  function dragPassage(event: ReactPointerEvent<HTMLButtonElement>) {
+    const drag = passageDrag.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    event.preventDefault(); event.stopPropagation();
+    onPassageChange?.(adjustComparisonPassage(drag.range, drag.mode, (event.clientX - drag.x) * drag.secondsPerPixel, duration));
+  }
+  function endPassageDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    passageDrag.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+  function passageKey(event: ReactKeyboardEvent<HTMLButtonElement>, mode: "move" | "start" | "end") {
+    if (!passage || !onPassageChange) return;
+    const direction = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
+    if (!direction) return;
+    event.preventDefault(); event.stopPropagation();
+    onPassageChange(adjustComparisonPassage(passage, mode, direction * (event.shiftKey ? 2 : .5), duration));
+  }
+  useEffect(() => { passageDrag.current = null; }, [duration]);
   const moveRange = (clientY: number, control: HTMLElement) => {
     const rect = control.parentElement?.getBoundingClientRect();
     if (rect) onDynamicRangeChange(Math.max(-1, Math.min(1, (rect.top + rect.height / 2 - clientY) / (rect.height * .3))));
@@ -104,6 +132,11 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
     return () => observer.disconnect();
   }, [analysis, preview, adjusted, expanding, dynamicRange, position, duration, span, start]);
   return <div className={`track-waveform ${compact ? "compact" : ""} ${displayOnly ? "display-only" : ""}`} onPointerMove={displayOnly ? undefined : event => {
+    if (passageDrag.current || (event.target instanceof Element && event.target.closest(".waveform-passage"))) {
+      if (seekGuideRef.current) seekGuideRef.current.style.visibility = "hidden";
+      if (seekTimeRef.current) seekTimeRef.current.style.visibility = "hidden";
+      return;
+    }
     const rect = canvasRef.current?.getBoundingClientRect(), guide = seekGuideRef.current, time = seekTimeRef.current;
     if (!rect || !guide || !time || !duration || !rect.width || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
       if (guide) guide.style.visibility = "hidden";
@@ -123,6 +156,11 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
   }}>
     {!displayOnly && !hideHeading && <div className="waveform-head"><span>{adjusted ? "DYNAMICS PREVIEW" : "SOURCE WAVEFORM"} <small>{expanding ? "Red: extension beyond scaled blue source" : adjusted ? "Blue: estimated output · gray: source" : "L / R · pre-EQ · click to seek"}</small></span>{!hideZoom && <div className="waveform-zoom"><button type="button" disabled={zoom === 1 || !analysis} onClick={() => setZoom(Math.max(1, zoom / 2))} aria-label="Zoom waveform out">−</button><span>{zoom}×</span><button type="button" disabled={zoom === 8 || !analysis} onClick={() => setZoom(Math.min(8, zoom * 2))} aria-label="Zoom waveform in">+</button></div>}</div>}
     <div className="waveform-canvas-area"><canvas ref={canvasRef} aria-label={displayOnly ? "Stereo waveform showing left and right channels and playback position" : hideHeading ? "Seek in stereo waveform" : "Stereo source waveform, click to seek"} role={displayOnly ? "img" : "button"} tabIndex={displayOnly ? undefined : duration ? 0 : -1} onClick={displayOnly ? undefined : event => { if (!duration) return; const rect=event.currentTarget.getBoundingClientRect();onSeek(Math.max(0, Math.min(duration, start + (event.clientX - rect.left) / rect.width * span))); }} onKeyDown={displayOnly ? undefined : event => { if (!duration) return; if (event.key === "ArrowRight" || event.key === "ArrowLeft") { event.preventDefault(); onSeek(Math.max(0, Math.min(duration, position + (event.key === "ArrowRight" ? 5 : -5)))); } }} />
+    {passage && duration > 0 && passage.end > start && passage.start < start + span && <span className={`waveform-passage ${passageActive ? "active" : ""} ${onPassageChange ? "editable" : ""}`} style={{ left: `${Math.max(0, (passage.start - start) / span * 100)}%`, width: `${(Math.min(start + span, passage.end) - Math.max(start, passage.start)) / span * 100}%` }} role="group" aria-label={`Comparison passage from ${seekClock(passage.start)} to ${seekClock(passage.end)}`}>
+      <button type="button" className="passage-region-move" role="slider" aria-label="Move comparison passage" aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={Math.max(0, duration - (passage.end - passage.start) - .1)} aria-valuenow={passage.start} aria-valuetext={`${seekClock(passage.start)} to ${seekClock(passage.end)}`} disabled={!onPassageChange} title="Drag to move the passage. Arrow keys move by half a second; Shift + arrow moves by two seconds." onPointerDown={event => beginPassageDrag(event, "move")} onPointerMove={dragPassage} onPointerUp={endPassageDrag} onPointerCancel={endPassageDrag} onKeyDown={event => passageKey(event, "move")}><span className="passage-grip" aria-hidden="true" /></button>
+      <button type="button" className="passage-edge passage-edge-start" style={{ visibility:passage.start < start ? "hidden" : undefined }} role="slider" aria-label="Passage start" aria-orientation="horizontal" aria-valuemin={0} aria-valuemax={Math.max(0, duration - 5)} aria-valuenow={passage.start} aria-valuetext={seekClock(passage.start)} disabled={!onPassageChange} title="Drag to move the fixed five-second passage." onPointerDown={event => beginPassageDrag(event, "start")} onPointerMove={dragPassage} onPointerUp={endPassageDrag} onPointerCancel={endPassageDrag} onKeyDown={event => passageKey(event, "start")} />
+      <button type="button" className="passage-edge passage-edge-end" style={{ visibility:passage.end > start + span ? "hidden" : undefined }} role="slider" aria-label="Passage end" aria-orientation="horizontal" aria-valuemin={Math.min(5, duration)} aria-valuemax={Math.max(0, duration - .1)} aria-valuenow={passage.end} aria-valuetext={seekClock(passage.end)} disabled={!onPassageChange} title="Drag to move the fixed five-second passage." onPointerDown={event => beginPassageDrag(event, "end")} onPointerMove={dragPassage} onPointerUp={endPassageDrag} onPointerCancel={endPassageDrag} onKeyDown={event => passageKey(event, "end")} />
+    </span>}
     <span className="waveform-channel-label waveform-channel-left" aria-hidden="true">L</span><span className="waveform-channel-label waveform-channel-right" aria-hidden="true">R</span>
     {!displayOnly && duration > 0 && <span ref={seekGuideRef} className="waveform-seek-guide" aria-hidden="true" />}
     {!displayOnly && duration > 0 && <span ref={seekTimeRef} className="waveform-seek-time" aria-hidden="true" />}
