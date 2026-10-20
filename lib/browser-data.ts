@@ -3,7 +3,7 @@ import type { Trial } from "@/components/results-profile";
 export function comparisonLookup(row: Pick<Trial,"id"|"serverTrialId"|"recorded"|"mode">) {
   return row.recorded && row.serverTrialId
     ? {kind:"vote",id:row.serverTrialId}
-    : {kind:row.mode==="open"?"open":"run",id:row.id};
+    : {kind:"run",id:row.id};
 }
 export function deleteBrowserTrial(id: string) {
   const rows = JSON.parse(localStorage.getItem("target-lab-trials") || "[]") as Trial[];

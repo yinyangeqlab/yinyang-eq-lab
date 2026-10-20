@@ -5,14 +5,17 @@ import ts from 'typescript';
 import { rankPreferences } from '../lib/preference-ranking.ts';
 const code=ts.transpileModule(readFileSync(new URL('../app/api/research/route.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const targets=[{id:'a',name:'Alpha',creator:'Test',status:'approved',measurement:'must-not-leak'},{id:'b',name:'Beta',creator:'Test',status:'approved'},{id:'pending',name:'Pending',creator:'Test',status:'pending'}];
-const base={testMode:'blind',eligible:1,heardA:6,heardB:6,headphoneType:'ie',songTitle:'private-title',songArtist:'private-artist',songAlbum:'private-album',recordingId:'private-recording',sha256:'private-file-hash',otherReason:'private-comment',reasonTags:'[]',createdAt:1000,reliabilityWeight:.5};
+const base={protocolVersion:'legacy-v1',testMode:'blind',eligible:1,heardA:6,heardB:6,headphoneType:'ie',songTitle:'private-title',songArtist:'private-artist',songAlbum:'private-album',recordingId:'private-recording',sha256:'private-file-hash',otherReason:'private-comment',reasonTags:'[]',createdAt:1000,reliabilityWeight:.5};
 const votes=[{...base,id:'one',winnerId:'a',loserId:'b',voterId:'private-browser-one'},{...base,id:'two',winnerId:'b',loserId:'a',voterId:'private-browser-one'},{...base,id:'three',winnerId:'a',loserId:'b',voterId:'private-browser-two'},{...base,id:'short',winnerId:'a',loserId:'b',voterId:'private-browser-one',heardA:4}];
-const schema={targets:{},votes:{}};
-let removed = new Set();
-const deps={'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:votes})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
+const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
+let removed = new Set();let owners=[];let runs=[];
+const deps={'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
+deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2'};
+const evidenceCode=ts.transpileModule(readFileSync(new URL('../lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+const evidenceContext=vm.createContext({exports:{},require:name=>deps[name]});vm.runInContext(evidenceCode,evidenceContext);deps['@/lib/ranking-evidence']=evidenceContext.exports;
 const context=vm.createContext({exports:{},require:name=>deps[name],Response});vm.runInContext(code,context);
 const response=await context.exports.GET();assert.equal(response.status,200);
-const data=await response.json();assert.equal(data.methodology,'weighted-bradley-terry-laplace-v1');
+const data=await response.json();assert.equal(data.methodology,'participant-balanced-fractional-bt-v2');
 for(const mode of ['all','random','curated','verified']) {
  assert.equal(data[mode].voteCount,3); assert.equal(data[mode].rows.length,2);
  assert.equal(data.categories[mode].ie[0].comparisons,3);
@@ -32,3 +35,13 @@ assert.equal(moderated.verified.voteCount,2);
 removed.clear();
 assert.equal((await (await context.exports.GET()).json()).all.voteCount,3);
 console.log('Removed observations are excluded from every ranking cohort; restoration includes them again.');
+
+const protocolData=await (await context.exports.GET()).json();assert.equal(protocolData.protocols.legacy.all.voteCount,3);assert.equal(protocolData.protocols.current.all.voteCount,0);
+console.log('Historical comparisons remain explicitly available in the exploratory cohort; no retroactive validation claim.');
+
+owners=votes.filter(v=>v.id!=='short').map(v=>({recordKind:'vote',recordId:v.id,subjectId:'invite:same-authenticated-account'}));
+const grouped=await (await context.exports.GET()).json();assert.equal(grouped.all.rows[0].listeners,1,'One account across browsers counts as one participant group');assert.equal(grouped.all.voteCount,3);
+runs=[{id:'tie-run',trialId:'tie-trial',voterId:'another-browser',testMode:'blind',headphoneType:'ie',result:'tie',targetAId:'a',targetBId:'b',heardA:6,heardB:6,protocolVersion:'matched-passage-v2'}];
+const tied=await (await context.exports.GET()).json();assert.equal(tied.all.voteCount,4);assert.equal(tied.protocols.current.all.voteCount,1);assert.equal(tied.all.rows[0].ties,1);
+removed=new Set(['run:tie-run']);assert.equal((await (await context.exports.GET()).json()).all.voteCount,3);
+console.log('Authenticated cross-browser grouping and current-protocol ties work; removed listening runs cannot survive as ranking evidence.');

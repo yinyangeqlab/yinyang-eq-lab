@@ -22,7 +22,7 @@ try:
     raise AssertionError("Retired generator must not create new archive releases")
 except sqlite3.IntegrityError:
     pass
-snapshot = json.loads((root / "drizzle/meta/0024_snapshot.json").read_text())
+snapshot = json.loads((root / "drizzle/meta/0027_snapshot.json").read_text())
 tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
 assert tables - {"sqlite_sequence"} == set(snapshot["tables"]), (tables, set(snapshot["tables"]))
 for name, table in snapshot["tables"].items():

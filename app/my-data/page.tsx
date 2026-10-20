@@ -31,10 +31,10 @@ export default function MyDataPage() {
       else {
         const all = pending === "all";
         const response = await fetch("/api/my-data", { method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify(all?{scope:"all",confirmation}:{scope:"one",kind:pending.kind,id:pending.id,confirmation}) });
-        const result = await response.json() as {error?:string}; if(!response.ok) throw new Error(result.error || "Deletion failed.");
+        const result = await response.json() as {error?:string;browserIds?:string[]}; if(!response.ok) throw new Error(result.error || "Deletion failed.");
         // Clear local copies only after the server confirms successful erasure.
         if (all) { setData(null); try { clearSiteBrowserData(); loadLocal(); } catch { setError("Server erasure succeeded, but browser storage could not be cleared. Clear this site’s browser data manually."); } setMessage("Data linked to this sign-in was deleted from the active site database, including associated admin notes. This browser’s site data was cleared and access was signed out. Older unlinked records still require admin assistance."); }
-        else { const ids = new Set([pending.id,pending.localId,pending.trialId].filter(Boolean)); for(const row of local) if(ids.has(row.id)||row.serverTrialId && ids.has(row.serverTrialId)) deleteBrowserTrial(row.id); loadLocal(); await load(); notifySharingChoicesChanged(); setMessage("Submission and its linked owned comparison records were permanently deleted. Associated admin notes were erased and shared results will update."); }
+        else { const ids = new Set([pending.id,pending.localId,pending.trialId,...(result.browserIds||[])].filter(Boolean)); for(const row of local) if(ids.has(row.id)||row.serverTrialId && ids.has(row.serverTrialId)) deleteBrowserTrial(row.id); loadLocal(); await load(); notifySharingChoicesChanged(); setMessage("Submission and its linked owned comparison records were permanently deleted. Associated admin notes were erased and shared results will update."); }
       }
       setPending(null);
     } catch(cause) {setError(cause instanceof Error?cause.message:"Deletion failed. Please try again.");} finally {setBusy(false);}

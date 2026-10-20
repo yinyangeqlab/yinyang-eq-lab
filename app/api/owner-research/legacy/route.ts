@@ -18,6 +18,7 @@ export async function POST(request:Request){const denied=await ownerAccessRespon
  const session=await db.prepare("SELECT token_hash FROM privacy_sessions WHERE subject_id=? AND expires_at>? ORDER BY expires_at DESC LIMIT 1").bind(row.subject_id,Date.now()).first<{token_hash:string}>();if(!session)throw new RequestInputError("Ask the requester to open My data again before approval.",409);
  const statements=[db.prepare("UPDATE legacy_review_requests SET status='approved',admin_reason=?,reviewed_at=? WHERE id=? AND status='pending'").bind(body.reason.trim(),Date.now(),row.id)];
  for(const record of graph.rows){statements.push(db.prepare("INSERT INTO legacy_record_verifications(record_kind,record_id,subject_id,request_id) VALUES (?,?,?,?)").bind(record.kind,record.id,row.subject_id,row.id));statements.push(db.prepare("INSERT INTO submission_owners(record_kind,record_id,subject_id,session_hash) VALUES (?,?,?,?) ON CONFLICT(record_kind,record_id) DO NOTHING").bind(record.kind,record.id,row.subject_id,session.token_hash));}
+ for(const record of graph.rows) statements.push(db.prepare("INSERT OR IGNORE INTO comparison_records(record_kind,record_id,comparison_id) VALUES (?,?,?)").bind(record.kind,record.id,String(graph.root.trial_id||graph.root.id)));
  await db.batch(statements);return Response.json({ok:true,linkedRecords:graph.rows.length},{headers});
  }catch(e){return requestInputResponse(e)||Response.json({error:"Approval conflicted with an erasure or ownership change. No partial claim was saved."},{status:409,headers});}
 }

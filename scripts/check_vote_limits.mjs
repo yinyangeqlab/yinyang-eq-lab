@@ -8,7 +8,7 @@ const source = readFileSync(new URL("../app/api/votes/route.ts", import.meta.url
 const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const voterId = "11111111-1111-4111-8111-111111111111";
 const trialId = "22222222-2222-4222-8222-222222222222";
-const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPairClaims", "listeningRuns"].map(table => [table, new Proxy({ table }, { get: (target, key) => target[key] ?? key })]));
+const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPairClaims", "listeningRuns", "comparisonRecords"].map(table => [table, new Proxy({ table }, { get: (target, key) => target[key] ?? key })]));
 async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [] } = {}) {
   let batches = 0; let savedVote;
   let targetRead = 0;
@@ -16,11 +16,11 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     select(fields) {
       let table;
       const query = {
-        from(value) { table = value; return query; }, where() { return query; }, orderBy() { return query; }, limit() { return query; },
+        from(value) { table = value; return query; }, get: async()=>({id:"run",voterId,testMode:"blind",headphoneType:"ie",targetAId:"a",targetBId:"b",result:"a",protocolVersion:"matched-passage-v2",intervals:"[]",researchContext:"{}"}), where() { return query; }, orderBy() { return query; }, limit() { return query; },
         then(resolve, reject) {
           let rows;
           if (table === schema.listeningRuns) rows = checks;
-          else if (table === schema.rankedTrials) rows = [{ id: trialId, voterId, testMode: "blind", sideA: "a", sideB: "b", issuedAt: Date.now() - age }];
+          else if (table === schema.rankedTrials) rows = [{ id: trialId, voterId, testMode: "blind", sideA: "a", sideB: "b", protocolVersion:"matched-passage-v2",issuedAt: Date.now() - age }];
           else if (table === schema.targets) rows = [{ id: targetRead++ ? "b" : "a", name: "Target", rating: 1500, wins: 0, losses: 0, status: "approved" }];
           else if (fields?.otherReason) rows = Array.from({ length: recentCount }, () => ({ createdAt: Date.now() - 1000, otherReason: "" }));
           else if (fields?.id) rows = used ? [{ id: trialId }] : [];
@@ -30,17 +30,19 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
       };
       return query;
     },
-    insert() { return { values: value => { savedVote = value; return value; } }; },
+    insert(table) { return { values: value => { if(table===schema.votes)savedVote = value; return value; } }; },
     update() { return { set: () => ({ where() {} }) }; },
     async batch() { batches++; },
   };
   const imports = {
-    "@/lib/submission-ownership": { submissionContext: async () => ({shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },
+    "@/lib/listening-protocol":{LISTENING_PROTOCOL:"matched-passage-v2"},
+    "cloudflare:workers":{env:{DB:{prepare:()=>({bind:()=>({first:async()=>({subject_id:"test-account"})})})}}},
+    "@/lib/submission-ownership": { submissionContext: async () => ({subjectId:"test-account",shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },
     "@/lib/active-submissions": { activeSubmissions: async () => (kind,id) => id !== "removed-check" },
     "drizzle-orm": Object.fromEntries(["and", "desc", "eq", "gte", "or"].map(name => [name, (...args) => ({ name, args })])),
     "@/db": { getDb: () => db }, "@/db/schema": schema,
     "@/lib/preference-ranking": { checkReliability: (correct, total) => ({ mean: (correct + 2) / (total + 4) }) },
-    "@/lib/listening": { parseIntervals: value => value, intervalStats: () => ({}) },
+    "@/lib/listening": { parseIntervals: value => value, intervalStats: () => ({heardA:6,heardB:6,overlapSeconds:6}) },
     "@/lib/feedback": { cleanFeedback: () => ({ otherReason: "", reasonSide: "a", reasonTags: [] }) },
     "@/lib/target-type": { targetHeadphoneType: () => "ie" },
     "@/lib/request-json": { readJsonObject: request => request.json(), requestInputResponse: () => null },
@@ -62,8 +64,8 @@ for (const [options, status] of [[{ gate: true }, 429], [{ used: true }, 409], [
   assert.deepEqual(await submit(options), { status, batches: 0 });
 }
 const checked = await submit({checks:Array.from({length:12},()=>({trialId:'issued',testMode:'blind',heardA:6,heardB:6,result:'tie'}))});
-assert.equal(checked.status,200); assert.equal(checked.reliabilityWeight,14/16,'Calibration is persisted on the decisive vote');
+assert.equal(checked.status,200); assert.equal(checked.reliabilityWeight,1,'Checks do not weight preferences');
 console.log("Vote route accepts the seventh and 51st votes; shared throttling, replay protection, repeated pairs, undecided exclusion, and listening requirements remain enforced.");
 
 const removedCheck = await submit({checks:[{id:'removed-check',trialId:'issued',testMode:'blind',heardA:6,heardB:6,result:'tie'}]});
-assert.equal(removedCheck.reliabilityWeight,.5,'Removed checks cannot calibrate future votes');
+assert.equal(removedCheck.reliabilityWeight,1,'Removed checks cannot calibrate future votes');

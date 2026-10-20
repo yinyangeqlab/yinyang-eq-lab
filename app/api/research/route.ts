@@ -1,7 +1,6 @@
-import { activeSubmissions } from "@/lib/active-submissions";
+import { rankingEvidence, type EvidenceVote } from "@/lib/ranking-evidence";
+import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { maintenanceResponse } from "@/lib/maintenance";
-import { getDb } from "@/db";
-import { targets, votes } from "@/db/schema";
 import { rankPreferences } from "@/lib/preference-ranking";
 import { curatedTracks } from "@/lib/curated-tracks";
 
@@ -10,11 +9,10 @@ const norm = (value: string | null | undefined) => (value ?? "").trim().toLowerC
 export async function GET() {
   const maintenance = maintenanceResponse();
   if (maintenance) return maintenance;
-  const db = getDb();
-  const [allTargets, allVotes] = await Promise.all([db.select().from(targets), db.select().from(votes)]);
-  const approved = new Set(allTargets.filter(t => t.status === "approved").map(t => t.id));
-  const active = await activeSubmissions();
-  const qualified = allVotes.filter(v => active("vote", v.id) && (v.testMode === "blind" || v.testMode === "bring") && v.eligible === 1 && approved.has(v.winnerId) && approved.has(v.loserId) && (v.heardA ?? 0) >= 5 && (v.heardB ?? 0) >= 5);
+  const evidence=await rankingEvidence();
+  const allTargets=evidence.targets;
+  const qualified: EvidenceVote[]=evidence.votes;
+  function build(qualified: EvidenceVote[]) {
   const cohorts = new Map<string, Set<string>>();
   for (const vote of qualified) {
     if (!vote.sha256 || !vote.songTitle || !vote.songArtist || !vote.songAlbum || !vote.recordingId) continue;
@@ -31,12 +29,14 @@ export async function GET() {
     return (cohorts.get(key)?.size ?? 0) >= 2;
   });
   const approvedTargets = allTargets.filter(target => target.status === "approved");
-  const rank = (selected: typeof allVotes) => rankPreferences(approvedTargets, selected);
-  const byType = (selected: typeof allVotes, type: "ie" | "oe") => {
+  const rank = (selected: EvidenceVote[]) => rankPreferences(approvedTargets, selected);
+  const byType = (selected: EvidenceVote[], type: "ie" | "oe") => {
     return rank(selected.filter(v => v.headphoneType === type)).rows;
   };
   const randomVotes=qualified.filter(v=>v.testMode==="blind"),bringVotes=qualified.filter(v=>v.testMode==="bring");
   const reasonCounts=Object.fromEntries(["Sounds harsh","Too bright","Too dark","Too muddy","Too loud","Too quiet"].map(reason=>[reason,qualified.filter(v=>{try{return JSON.parse(v.reasonTags??"[]").includes(reason);}catch{return false;}}).length]));
-  return Response.json({ methodology: "weighted-bradley-terry-laplace-v1", reasonCounts, all: rank(qualified), random: rank(randomVotes), bring: rank(bringVotes), curated: { ...rank(curatedVotes), trackCount: curatedTracks.length }, verified: rank(verifiedVotes),
-    categories: { random: { ie: byType(randomVotes, "ie"), oe: byType(randomVotes, "oe") }, bring: { ie: byType(bringVotes, "ie"), oe: byType(bringVotes, "oe") }, all: { ie: byType(qualified, "ie"), oe: byType(qualified, "oe") }, curated: { ie: byType(curatedVotes, "ie"), oe: byType(curatedVotes, "oe") }, verified: { ie: byType(verifiedVotes, "ie"), oe: byType(verifiedVotes, "oe") } } });
+  return { methodology: "participant-balanced-fractional-bt-v2", reasonCounts, all: rank(qualified), random: rank(randomVotes), bring: rank(bringVotes), curated: { ...rank(curatedVotes), trackCount: curatedTracks.length }, verified: rank(verifiedVotes),
+    categories: { random: { ie: byType(randomVotes, "ie"), oe: byType(randomVotes, "oe") }, bring: { ie: byType(bringVotes, "ie"), oe: byType(bringVotes, "oe") }, all: { ie: byType(qualified, "ie"), oe: byType(qualified, "oe") }, curated: { ie: byType(curatedVotes, "ie"), oe: byType(curatedVotes, "oe") }, verified: { ie: byType(verifiedVotes, "ie"), oe: byType(verifiedVotes, "oe") } } };
+  }
+  return Response.json({...build(qualified), protocols:{current:build(qualified.filter(v=>v.protocolVersion===LISTENING_PROTOCOL)),legacy:build(qualified.filter(v=>v.protocolVersion!==LISTENING_PROTOCOL))}});
 }

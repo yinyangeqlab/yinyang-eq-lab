@@ -1,7 +1,9 @@
+import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getDb } from "@/db";
-import { comparisonChoices, targets } from "@/db/schema";
+import { comparisonChoices, targets, listeningRuns, submissionOwners } from "@/db/schema";
 import { targetHeadphoneType } from "@/lib/target-type";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
@@ -23,11 +25,15 @@ export async function POST(request: Request) {
     const aType = targetHeadphoneType({ name: a.name, measurement: a.measurement });
     const bType = targetHeadphoneType({ name: b.name, measurement: b.measurement });
     if ((aType && aType !== data.headphoneType) || (bType && bType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
+    const run=await db.select().from(listeningRuns).where(eq(listeningRuns.id,id)).get();
+    const own=await db.select().from(submissionOwners).where(and(eq(submissionOwners.recordKind,"run"),eq(submissionOwners.recordId,id))).get();
+    if(!run||own?.subjectId!==ownership.subjectId||run.voterId!==participantId||run.testMode!=="open"||run.targetAId!==aId||run.targetBId!==bId||run.result!==data.result) return Response.json({error:"Save the matching owned Open listening record first."},{status:409});
     const now = Date.now();
     const shareSong = data.shareSong === true && ownership.shareMusic;
-    await db.batch([db.insert(comparisonChoices).values({ id, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now }), ownership.record(id)]);
+    await db.batch([db.insert(comparisonChoices).values({ id, protocolVersion:LISTENING_PROTOCOL, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"open",recordId:id,comparisonId:id})]);
     return Response.json({ ok:true }, { status:201 });
   } catch (error) {
+    if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return Response.json({error:"This comparison was erased or changed while saving. Start a new comparison."},{status:409});
     const inputError = requestInputResponse(error);
     if (inputError) return inputError;
     if (String(error).includes("UNIQUE constraint failed") || String((error as { cause?: unknown })?.cause).includes("UNIQUE constraint failed")) return Response.json({ error:"This comparison was already saved." }, { status:409 });
