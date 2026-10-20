@@ -47,3 +47,9 @@ All local code items above are implemented or existing workflows verified. These
 ## Full-site review follow-up
 
 See FULL_SITE_REVIEW_2026-10-19.md and artifacts/full-review-20261019/review.html. Exact Community overlap meters and additional local fixes are implemented; 63 suites and the verified build pass. The remaining framework/Cloudflare toolchain advisory chains (15 high, 4 moderate in the full tree; zero in the production-only scan) require coordinated upgrade/reachability review before release sign-off. Design recommendations and the finite screenshot/function coverage limits remain explicit for owner review.
+
+## Remediation follow-up completed locally
+
+Checkpoint `5a53a63` is committed locally. The remaining patchable dependency chains, shared Community shell, compact mobile utilities/modes, sharing-first My data, and paginated continuous music playback are implemented and checked. The gallery now includes66 follow-up images alongside the original438. The48-case affected-view sweep has no horizontal overflow. Source typecheck, isolated build, Drizzle check and63 suites pass. See FULL_SITE_REVIEW_2026-10-19.md and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md.
+
+The earlier15-high/4-moderate scan is historical: the new full-tree scan has8 high flags, all one upstream unpatched braces advisory in build/lint chains, absent from the inspected emitted Worker. Human study/privacy/reference curation, account/history execution and all production/GitHub operations remain outside the completed local work. No push or deployment.

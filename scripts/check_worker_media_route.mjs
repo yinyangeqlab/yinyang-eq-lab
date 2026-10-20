@@ -1,4 +1,4 @@
-import {Miniflare} from 'miniflare';
+import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import ts from 'typescript';
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
@@ -10,7 +10,7 @@ const manifest={song:{bytes:100,sha256:'hash',mime:'audio/flac',parts:[{path:'/0
 const bytes=new Uint8Array(100).map((_,i)=>i);
 const env={ASSETS:{async fetch(request){const [start,end]=request.headers.get('Range').slice(6).split('-').map(Number);const index=Number(new URL(request.url).pathname.slice(1)),offset=[0,40,70][index],size=[40,30,30][index];return new Response(bytes.slice(offset+start,offset+end+1),{status:206,headers:{'Content-Range':\`bytes \${start}-\${end}/\${size}\`}})}}};
 export default{async fetch(request){return withMediaLength(request,await serveWorkerMedia(request,env))}};`;
-const mf=new Miniflare({modules:true,script,compatibilityDate:'2026-05-15',cf:false});
+const mf=new Miniflare(convertV4MiniflareOptions({modules:true,script,compatibilityDate:'2026-05-15',cf:false}));
 try{
  for(const[method,range,status,length]of[['HEAD',null,200,100],['GET',null,200,100],['GET','bytes=30-39',206,10],['HEAD','bytes=30-39',206,10]]){
   console.log('Checking',method,range);
