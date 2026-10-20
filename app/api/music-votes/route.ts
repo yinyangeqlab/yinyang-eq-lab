@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { getDb } from "@/db";
 import { musicVotes } from "@/db/schema";
+import type { MusicCounts } from "@/lib/music-preferences";
 import { musicCandidates } from "@/lib/music-catalog";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 
@@ -12,15 +13,18 @@ async function snapshot(userId?: string) {
   const db = getDb();
   const rows = await db.select({ userId: musicVotes.userId, trackUrl: musicVotes.trackUrl, choice: musicVotes.choice }).from(musicVotes);
   const totals = { keep: 0, pass: 0 };
+  const byTrack: MusicCounts = {};
   const mine: Record<string, "keep" | "pass"> = {};
   for (const row of rows) {
     if (!knownTracks.has(row.trackUrl)) continue;
     if (row.choice === "keep" || row.choice === "pass") {
       totals[row.choice]++;
+      const counts = byTrack[row.trackUrl] ??= { keep: 0, pass: 0 };
+      counts[row.choice]++;
       if (userId && row.userId === userId) mine[row.trackUrl] = row.choice;
     }
   }
-  return { totals, mine, signedIn: Boolean(userId) };
+  return { totals, byTrack, mine, signedIn: Boolean(userId) };
 }
 
 export async function GET() {
