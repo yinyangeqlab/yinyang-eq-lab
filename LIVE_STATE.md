@@ -1,3 +1,13 @@
+# Current live release — update99, October 19, 2026
+
+The owner-authorized release adds reviewed public-profile category selection, consolidates collection consent in the shared data form, and clarifies account-sync conflict controls. Four ongoing choices include one combined Personal research/Community control with explicit admin-versus-public-summary wording. Historical-study choices and selected measurement-file contribution/rights approvals use that same form. Current account choices stay authoritative; old all-sharing agreements never silently grant new permission. Unspecified future studies are not preapproved, and the protected owner account remains excluded from ordinary archives.
+
+Implementation `04257bf4312d613b6d43a5ff55d52eca40933fb4` is pushed. Source/build `work/sharing-consent-final-release-20261019`; infrastructure `work/sharing-consent-final-infra-20261019`. Schema206 definitions remain unchanged. One existing Worker updated; three resources unchanged. All14 clean-source regression suites, TypeScript, production build, full340-asset/200-recording packaging and367 exact live JS/CSS checks passed;295 prior client assets retained. Desktop/320px synthetic browser and keyboard checks passed. Physical phone rendering is not certified. CPU5000ms, six abuse bindings, private access/media, disabled public Worker URLs and edge/cost controls remain. Tests stayed open; the informational deployment notice ended after verification.
+
+Read-only before/after hashes verified existing linked source records, saved browser collection entries, sync epoch and consent receipts preserved. Existing approved devices remain approved. Original Brave history was already linked and remains in the account; deployment performs no enrollment, transfer, deletion, permission grant or publication. Automatic sync and indefinite protected retention remain deployed. The owner declined a new backup export; verified encrypted off-device update96 recovery remains retained, with matching current-release hosted baseline refresh pending. No current-release data backup is claimed. Unrelated Shootout UI and recovery WIP remain excluded. Evidence: workspace/artifacts/sharing-consent-final-release-20261019/.
+
+## Historical release notes
+
 # Current live release — update98, October 19, 2026
 
 The owner-authorized account-link follow-up fixes historical review reads that exceeded D1's compound SELECT limit. Queries now read each fixed source separately and merge bounded results; legacy review includes up to100 candidates rather than silently truncating at25. Ownership verification, consent, complete graph transfer, erased-record protection and private publication remain enforced. This release performs no migration, enrollment or historical transfer.
