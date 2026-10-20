@@ -58,7 +58,8 @@ modules["invite-settings.mjs"] = {contentType:"application/javascript+module",co
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
 modules["browser-sync.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-sync.mjs")) };
 
-modules["service-status.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/service-status.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText))};
+modules["service-status.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/service-status.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replaceAll("@/lib/maintenance-options","./maintenance-options.mjs")))};
+modules["maintenance-options.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/maintenance-options.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText))};
 modules["abuse-controls.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(here,"abuse-controls.mjs")) };
 modules["public-assets.mjs"] = {
   contentType: "application/javascript+module",

@@ -1,0 +1,8 @@
+.service-status-panel .maintenance-locks{min-width:0;max-width:720px;border:1px solid #426653;border-radius:10px;padding:14px;background:#0d2018;margin:18px 0;color:#d9eddf}
+.service-status-panel .maintenance-locks legend{padding:0 6px;font-weight:700}
+.service-status-panel .maintenance-locks p{font-size:13px;line-height:1.5;margin:5px 0 12px}
+.service-status-panel .maintenance-lock-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.service-status-panel .maintenance-lock-grid label{margin:0;padding:10px;min-height:44px;align-items:flex-start;border:1px solid #365847;border-radius:7px;background:#112b1f}
+.service-status-panel .maintenance-lock-grid input{flex:none;accent-color:#8cd8b6;width:20px;height:20px;margin:2px 0 0}
+.service-status-panel .maintenance-lock-grid small{display:block;color:#b4cbbd;font-size:12px;line-height:1.45;margin-top:4px}
+@media(max-width:600px){.service-status-panel .maintenance-lock-grid{grid-template-columns:1fr}}

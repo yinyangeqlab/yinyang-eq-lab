@@ -1,4 +1,5 @@
 "use client";
+import {MAINTENANCE_FEATURES,maintenanceLocks} from "@/lib/maintenance-options";
 
 import { useEffect, useRef, useState } from "react";
 import { SERVICE_WARNING_EVENT, warningFor, type ServiceWarning } from "@/lib/service-warning";
@@ -24,11 +25,13 @@ export default function ServiceWarningPopup() {
       try{
         const r=await fetch("/api/maintenance",{cache:"no-store",signal:AbortSignal.timeout(8000)});
         if(!r.ok)return;
-        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean};
+        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean;lockedFeatures?:unknown};
         if(stopped)return;
         if(!status.active||!status.id){setNotice(null);currentNotice.current="";dismissed.current="";return;}
         currentNotice.current=status.id;
-        if(dismissed.current!==status.id)setNotice({kind:"maintenance",title:status.pauseSubmissions?"Maintenance in progress":"A note from YinYang EQ",detail:status.message||"We’re doing maintenance. Thanks for your patience!",retry:status.pauseSubmissions?"Shootouts are paused. Listening Pool and Preference Tuning remain available.":null});
+        const locked=maintenanceLocks(!!status.pauseSubmissions,status.lockedFeatures);
+        const unavailable=MAINTENANCE_FEATURES.filter(f=>locked.includes(f.id)).map(f=>f.label).join(", ");
+        if(dismissed.current!==status.id)setNotice({kind:"maintenance",title:status.pauseSubmissions?"Maintenance in progress":"A note from YinYang EQ",detail:status.message||"We’re doing maintenance. Thanks for your patience!",retry:status.pauseSubmissions?`Unavailable: ${unavailable}. Other enabled tools remain available.`:null});
       }catch{}finally{busy=false;}
     };
     const wake=()=>void check();void check();
