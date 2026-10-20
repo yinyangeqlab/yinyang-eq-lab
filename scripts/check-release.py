@@ -54,7 +54,7 @@ if not paths:
 public_infra = {
     "infra/pulumi/" + name for name in (
         "index.ts", "private-gate.mjs", "abuse-controls.mjs", "abuse-controls.d.mts",
-        "public-assets.mjs", "public-assets.d.mts", "package.json", "package-lock.json",
+        "public-assets.mjs", "public-assets.d.mts", "public-demos.mjs", "package.json", "package-lock.json",
         "tsconfig.json", "Pulumi.yaml",
     )
 } | {"infra/cost-guard/worker.mjs", "infra/cost-guard/policy.mjs"}
