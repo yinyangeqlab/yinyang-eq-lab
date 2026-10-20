@@ -1,3 +1,33 @@
+# Current live release — update77, October 18, 2026
+
+## Git commit and handoff — curve credits, update77
+
+Implementation committed locally as `0ca660625ecae923c39158213fc2904e948f1851` in `work/github-live-sync-20261018` on branch `main`. This includes all42 curve attributions, source/use explanations and alphabetical ordering. The live release remains update77. GitHub push/publication was not requested and has not been performed. Build, packaging and live ordering/asset checks already passed; no application changes followed those checks. Root drafts remain preserved and uncommitted. The source checkout retains prior portable/sanitized test-script adjustments; it is a handoff checkout, while `LIVE_RELEASE.json` points to the exact deployed snapshot.
+
+Site: https://yinyangeq.com. Verified source/build: `work/curve-credits-alphabetical-release-20261018`. Unchanged infrastructure: `work/welcome-header-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede older current-release statements.
+
+The /curve-credits page now lists all42 curves alphabetically by name, ignoring case and leading symbols such as ∆. Filtering preserves this order. Only data/curve-credits.json was reordered from the verified update76 snapshot; all entry content, attribution, licenses and use explanations are unchanged. Build and340-asset/200-recording packaging passed. Live verification confirms the exact42-entry rendered order and referenced asset hashes. One Worker updated, three resources unchanged; final preview four unchanged. No target or participant-data writes, migrations, access/media changes or cost-guard changes. CPU5000ms, private access/media, abuse controls, edge protections, disabled public Worker URLs and independent cost guard remain preserved. Unpublished root drafts remain excluded. GitHub publication is separate and was not performed.
+
+Evidence: artifacts/curve-credits-alphabetical-{build,assets,preview,deployment,no-drift}.log, curve-credits-alphabetical-live-verification.json and curve-credits-alphabetical-source-scope.json.
+
+## Prior release and retained work notes (historical)
+
+# Current live release — update76, October 18, 2026
+
+Site: https://yinyangeq.com. Verified source/build: `work/curve-credits-release-20261018`. Unchanged verified infrastructure: `work/welcome-header-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede older current-release statements; `LIVE_RELEASE.json` records the exact source/build hashes.
+
+## Attribution for every built-in curve — update76
+
+The /curve-credits page now covers all42 approved built-in target curves, verified by a read-only live catalog query. Every entry has a creator/source credit, source reference, import or reconstruction details, and a use-basis explanation. The nine documented licenses (three scoped CC BY4.0 grants and six MIT grants) retain their terms/notices. Other entries show “Source credited” without an invented license. PEQdB download provenance is distinguished from original authorship; unresolved authorship and processing details remain explicit. The three YinYang variants also credit their Diamond-derived foundation. Sodium remains an approximate screenshot reconstruction.
+
+The page describes comparative listening, technical evaluation and commentary as the purpose of use. It distinguishes imported numerical data from independent recreation and discusses the four fair-use factors, whole-curve use and potential substitution without claiming legal clearance or granting visitor redistribution rights. Creator correction, source clarification, reuse-concern and removal requests use the existing contact address.
+
+Built from the hash-verified update75 snapshot with only app/curve-credits/page.tsx, app/curve-credits/style.css and data/curve-credits.json changed. TypeScript, production build, and340-asset/200-recording packaging passed. Live verification confirms all42 names render, the authenticated page returns200, referenced JS/CSS match the release build, and anonymous target access remains401. One Worker updated, three resources unchanged; final preview four unchanged. No target/participant writes, migrations, access/media changes or cost-guard changes. CPU5000ms, abuse bindings, edge burst protection, disabled public Worker URLs, private access/media and independent cost guard remain preserved. GitHub publication is separate and was not performed.
+
+Evidence: artifacts/curve-credits-full-{catalog,live}-verification.json, curve-credits-full-source-scope.json, curve-credits-full-{build,assets,types-scoped,preview,deployment,no-drift}.log. Separate root passage/playback/upload/ranking drafts remain unpublished and excluded from this release.
+
+## Prior release and retained work notes (historical)
+
 # Current handoff — responsive welcome header, live update75
 
 
@@ -70,3 +100,24 @@ User proposed moving passage playback/randomizer near or inside gold5-second box
 Preview server-gold-final.mjs port8900 (fresh cache); actual component preview queryreview12/layout12. TypeScript passed. Browser: shuffle changed green selection6.14→2.3s; Play both targets triggered existing sound-check then B first and A second automatically from the portal button. Phone390px shows no horizontal overflow. Screenshot gold-actions-desktop.png, with further mobile/ready evidence to follow. The gold design supersedes the requested right-edge placement only as this new user-requested alternative, awaiting approval.
 
 Gold guide browser completion confirmed: READY TO VOTE with7.8sA /7.9sB after shuffled excerpt played under both targets. Mobile screenshot gold-actions-mobile.png; temporary viewport override reset. Desktop screenshot actual fullapp reviewed. No production reads/writes or deployment.
+
+### Mobile gold-panel fit and larger passage time — approval preview only
+
+User requested mobile layout, neat gold-panel/button fit, larger pictured passage time on all layouts, and explicitly no deployment. Added staged v3 globals CSS only: selected range14px bold monospace (was10px), high-contrast pale gold and inset readout background. Listening guide is named inline-size container; at guide widths<=410px, time has a separate upper row and two equal button columns beneath, min40px tap height with safe label wrapping at320px. Larger guide widths retain compact inline actions/readout. Actual screenshots large-time-mobile.png (focused viewport), large-time-mobile-full.png and large-time-desktop.png; CSS export large-passage-time.css. Phone390px visually inspected gold buttons, time and waveform together.
+
+Browser verified320,360,390,430,768,1024,1280px: all14px time, no horizontal overflow, both actions within gold-panel bounds, no clipped button text. At320px button height42.83px;360–430px40px; tablet/desktop32px. Evidence large-time-responsive-checks.json. Full desktop source still isolated v3, server-gold-mobile.mjs8901, queryreview13/layout13. Normal viewport reset, review tab retained. No production changes, tests added or deployment. Await design approval. Current live release74 per latest manifest; root now includes independent pending Welcome edits—untouched.
+
+### Full upload/Shootout QA completed; five-second cap — main source local, not deployed
+
+User approved visual direction and requested full desktop/mobile testing before deployment, then requested maximum5-second passages. Candidate now selects exactly5s; dragging body/start/end moves fixed5s window. Initial playing-event/source end accounting preserves exact5s credit without extending recorded range. Actual browser and real route submissions accept5.00s A/B/common and unlock. UI retains larger time, gold actions, textured chains/padlocks and red/gray/blue gradients. No deployment authorization or deployment.
+
+Completed full local browser QA with actual Home/MusicPanel/TrackWaveform and real trial/listening-run/vote handlers through disposable in-memory table and ownership/gate adapters. Desktop invalid/oversize/valid upload, compatible reference, Open A/B/Tie/Continue, ranked Bring A/Tie, finish/upload recovery, partial Stop, edit cancellation and fresh trial resets pass. Mobile390: confirmed expired-session upload recovery, two-target A/B reversal, Open B/Tie, Space activation, Bring B and Random A after exact-five unlock, Continue resets and gold-panel fit pass. Saved12 trials,9 runs,4 ranked runs (1Tie),3 decisive ranked votes; all successful browser write requests accepted, no Open calls to ranked vote endpoint. Replayed final browser payload into ranking reader/API. Native OS chooser not exercised; synthetic File objects used actual input handlers. Production auth/D1/hosting untested; no real data read or written.
+
+QA fixes: global Space now ignores focused buttons/links/inputs/sliders, preserving native passage button activation; persistent edge player hides passage controls during mode previews so mobile mode transition remains clickable. Local QA server interrupted once (exit143), restarted with disposable records preserved and affected flows rerun. No unresolved app failure in exercised flows.
+
+Consolidated exactly five tested files from work/passage-design-v3-20261018 into main root: app/globals.css, app/shootout/page.tsx, components/music-panel.tsx, components/track-waveform.tsx, lib/comparison-passage.ts. Verified shared base CSS and non-layout Shootout logic unchanged before consolidation; root/staged ranking guard already identical. Unrelated Welcome work preserved. Pre-consolidation originals under artifacts/full-flow-qa/before-consolidation; source hashes tested-source.json. Main root now contains latest candidate, superseding earlier notes that v3 was isolated only. Live release remains75; do not deploy until explicit user instruction.
+
+Post-consolidation checks passed:18 upload cases;11 actual route checks;19 ranking cases using latest5s browser record; passage playback/edit/keyboard regressions; existing ranking API checks; active app TypeScript via artifacts/upload-flow-qa/tsconfig.json. Scripts/check_comparison_passage.mjs and check_passage_edit.mjs updated to5s; new check_passage_keyboard.mjs. Full QA scripts/evidence/limitations: artifacts/full-flow-qa/REPORT.md and verification.json. Current retained QA browser uses8903/artifacts/full-flow-qa/index.html?case=mobile (actual routes, local only); preview scripts need update to root alias for future source changes or use frozen source hashes. Viewport reset. Final screenshots desktop-unlocked.png, mobile-five-second-final.png. No commits, pushes or deployments.
+
+## Vote label refinement — local only, 2026-10-18
+Renamed A IS BETTER / B IS BETTER to Prefer A / Prefer B in main source and the v3 candidate. Unknown / Tie retained. Verified disabled labels before listening and enabled labels after actual five seconds on both sides, plus 390px mobile and desktop layout. Screenshots: artifacts/full-flow-qa/prefer-labels-mobile.png and prefer-labels-desktop.png. No deployment.
