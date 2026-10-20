@@ -1004,7 +1004,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "e84a801a4d0ce62c838dbb8440316bc6b8c17e0ed1e3fe8207ab84ec352f3071"
+      "sha256": "96c8ac1d6dd6a9cc437d9f7fab92c293cfb060cda8257a07c4274a26891fa998"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
