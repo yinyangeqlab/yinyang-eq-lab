@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 90,
-  "implementationCommit": "5b4cd5867f9a96aca9f8f7778abf95d90259308d",
-  "runtimeParity": "Recorded runtime inputs match verified update90; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 91,
+  "implementationCommit": "44a63aea01da8c85cf045fdd00fc5614e254b4e2",
+  "runtimeParity": "Recorded runtime inputs match verified update91; concurrent personal-shootout development is excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -51,6 +51,8 @@
       "components/personal-research-sharing.tsx",
       "components/research-music-source.tsx",
       "components/target-curve.tsx",
+      "components/tournament-mode-tabs.css",
+      "components/tournament-mode-tabs.tsx",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
       "drizzle/meta/0033_snapshot.json",
@@ -414,11 +416,11 @@
     },
     {
       "path": "components/service-status-panel.tsx",
-      "sha256": "60a7cb385fc4cb85ecbdeecf34c1a6bcdd1a3b038c251c432d6399bcdf96fce3"
+      "sha256": "8a9990a1d5c88991fd9eb68dad8208541830b44ae543dbc768aabd55443a0cad"
     },
     {
       "path": "components/service-warning.tsx",
-      "sha256": "85cd2faee15c85f88b53db32a84332f68b1c6768bdb9641a6c56170dc8267374"
+      "sha256": "63d5657e284271fc6647a81265d182c25928a795f7c7a677dc029f02d8126b3a"
     },
     {
       "path": "components/statistics-archive.tsx",
@@ -1002,7 +1004,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "4fc4a67703185c9a71df4da48efe4563d5ed4308247d5ebbe84ba0ee9de21a35"
+      "sha256": "78447fbf54ddcda512c23f1c73892d13b95f65048e1a7fa34756e25c3959226f"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1226,11 +1228,11 @@
     },
     {
       "path": "lib/service-status.ts",
-      "sha256": "7401d870c893472a645b6c04ceaa1dcab3d30c8fa5eaf43f46c5357f0c19878c"
+      "sha256": "3374f32fee218fb559b03b29ae9eace39a1af3e7d8c330f1ef5a8e37bfcfa1f0"
     },
     {
       "path": "lib/service-warning.ts",
-      "sha256": "442381424c1b852b0b41d2b82758aff8ade49d9dc41d20e0d3d5d9b3faeddf38"
+      "sha256": "6f26f21d7284697bbb850a4d574342d8178d2962e20ac4e0648d7701a93cf611"
     },
     {
       "path": "lib/song-match.ts",
@@ -1415,6 +1417,10 @@
     {
       "path": "scripts/check_listening_audio_worker.mjs",
       "sha256": "93285b05953666835d2a0302ddce62ee732699c034116400e7fdfe727e67683e"
+    },
+    {
+      "path": "scripts/check_maintenance_scope.mjs",
+      "sha256": "3760e7b2750907cfb60508a4fec7406feb73b2144df045a590851039ebbaeac9"
     },
     {
       "path": "scripts/check_measurement_research.mjs",
