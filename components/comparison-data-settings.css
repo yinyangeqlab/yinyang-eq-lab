@@ -46,3 +46,5 @@
 .comparison-data-settings .monitoring-option{display:flex;align-items:flex-start;gap:10px;padding:10px 0;color:#e1f5ec;line-height:1.4}
 .comparison-data-settings .monitoring-option input{width:20px;height:20px;flex:none;margin:0;accent-color:#89d9ba}
 .comparison-data-settings .monitoring-saved-state{color:#b5ecd5;font-weight:600}
+.comparison-data-settings{max-height:min(calc(100svh / var(--display-scale,1) - 36px),820px)}
+@media(max-height:650px){.comparison-data-settings{display:block;overflow:auto}.comparison-data-settings .agreement-copy{overflow:visible}.comparison-data-settings .agreement-status{margin-bottom:14px}}
