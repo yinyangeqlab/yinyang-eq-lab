@@ -7,8 +7,12 @@ Start with [../LIVE_STATE.md](../LIVE_STATE.md), [../LIVE_RELEASE.json](../LIVE_
 - Live: https://yinyangeq.com, update81. Welcome tagline “Two curves. Your choice.”, gold Continue, fixed five-second matched passages and approved vote styling are deployed.
 - Git runtime source matches the verified live snapshot. Implementation08f166f; update81 release records17f8a8c/ad667aa. Later rebuild-audit commits change documentation, validation and rebuild support only.
 - `work/tagline-release-20261018` and `work/tagline-infra-20261018` are paths in the owner's workspace, not folders expected in a fresh clone.
-- Known owner-root differences: tsconfig.json and two missing vendor license copies. Use the snapshot config/licenses for live rebuilding; do not overwrite root differences without reviewing them.
+- Owner-root config/licenses were reconciled to the verified live mirror after archiving the previous config. Canonical source is workspace/; legacy previews are archived privately.
 - No new deployment, data writes, schema migrations or changes to live access/cost protections were performed by the rebuild audit.
+
+## Recovery and workspace cleanup
+
+Use [RECOVERY.md](RECOVERY.md) and [RECOVERY_TESTS.md](RECOVERY_TESTS.md). A tested external bundle/restore workflow is now supplied. Credentials are regenerated; deletion status must be reviewed before restoring participant records. New recovery/infra portability changes are not deployed; live remains update81.
 
 ## First actions
 

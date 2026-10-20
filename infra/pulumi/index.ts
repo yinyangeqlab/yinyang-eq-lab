@@ -27,6 +27,9 @@ const config = new pulumi.Config();
 const accountId = config.require("cloudflareAccountId");
 const scriptName = config.get("scriptName") ?? "yinyangeq-staging";
 const maintenanceMode = config.getBoolean("maintenanceMode") ?? true;
+const canonicalOrigin = config.get("canonicalOrigin") ?? "https://yinyangeq.com";
+const canonicalUrl = new URL(canonicalOrigin);
+if(canonicalUrl.protocol !== "https:" || canonicalUrl.pathname !== "/" || canonicalUrl.username || canonicalUrl.password || canonicalUrl.search || canonicalUrl.hash) throw new Error("canonicalOrigin must be an HTTPS origin");
 
 function allFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true })
@@ -131,6 +134,7 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     ...abuseBindings,
     { name: "ASSETS", type: "assets" },
     { name: "DB", type: "d1", databaseId: database.uuid },
+    { name: "CANONICAL_ORIGIN", type: "plain_text", text: canonicalUrl.origin },
     { name: "MAINTENANCE_MODE", type: "plain_text", text: String(maintenanceMode) },
     { name: "ABUSE_RATE_SECRET", type: "secret_text", text: requiredSecret("abuseRateSecret") },
     { name: "OWNER_ANALYTICS_TOKEN", type: "secret_text", text: requiredSecret("ownerAnalyticsToken") },

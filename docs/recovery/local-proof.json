@@ -1,0 +1,12 @@
+{
+  "productionTouched": false,
+  "checks": [
+    "Unauthenticated targets and protected audio remain denied",
+    "Fresh local credentials authenticate and restored target catalog is available",
+    "Restored ranking API runs with current methodology",
+    "Actual protected audio range bytes match recovered recording",
+    "Welcome and Shootout render; owner is correctly excluded from tester-only Sync",
+    "A newly issued local tester credential works with fresh participation consent and Sync; old credentials remain invalid",
+    "Disposable local tester erased after verification"
+  ]
+}

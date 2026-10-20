@@ -10,14 +10,23 @@
     ],
     "packaging": "Explicit public-only preview mode; full media validation preserved.",
     "publicationCheck": "Narrow path allowlist for audited infrastructure source and existing sanitized evidence; credential scans retained.",
-    "infrastructure": "Credential-free live app source plus public-package deployment guard and whitespace normalization.",
-    "typecheck": "Root tsconfig excludes separately managed infra; infrastructure uses its own locked dependencies and config."
+    "infrastructure": "Undeployed canonical-origin and guard-rule bindings plus public-package refusal; security limits unchanged.",
+    "typecheck": "Canonical checkout excludes separately managed infra; parent legacy previews archived.",
+    "recovery": "External checksum bundle, fresh credential generation, strict local restore and deletion review. No live deployment."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
     {
+      "path": ".node-version",
+      "sha256": "b20a182c7b42cbf1ab3e380c2a050d469f6b5eacdf55dff575afb3ca372b6f2b"
+    },
+    {
       "path": ".npmrc",
       "sha256": "a3909ac0447c469fda12c57374993be70f47ce73e49fd3124678c7c047f2214d"
+    },
+    {
+      "path": ".nvmrc",
+      "sha256": "b20a182c7b42cbf1ab3e380c2a050d469f6b5eacdf55dff575afb3ca372b6f2b"
     },
     {
       "path": ".openai/hosting.json",
@@ -865,7 +874,7 @@
     },
     {
       "path": "infra/cost-guard/worker.mjs",
-      "sha256": "0f148336ed4ddf42e41d1a3229adc75e5f94c7ea6472ed2aaa5e2c5999264c65"
+      "sha256": "1d400c87138298631451037e47fcaffbcab2fdb10593f05d6d80e2e921f92a1a"
     },
     {
       "path": "infra/pulumi/Pulumi.yaml",
@@ -881,7 +890,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "578661a7b7250e460c0441600e548e875742aa7811759dddc8c45618a509b350"
+      "sha256": "4fe37d5fb704fc6990c37e7bff54dd1100d69675d8660ae3046d3d98ed827788"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -893,7 +902,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "5ebab0327a0aaa810d2c426c2ab84c7256138b94af3eda98a9539b8931d70333"
+      "sha256": "c8c6c15be7918075b1fef2b6904a26b193ec19f761b52e6cc663e762d25591bc"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1149,7 +1158,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "3b6632002e78601d4ff39b17604a52885a4d35c7c304a6416ac3fba83a761555"
+      "sha256": "366cd3f353238b59a40fd43c4689570b9a68c24646fd2e941ebbef3edc5a44ad"
     },
     {
       "path": "public/brand-amoled-aligned.webp",
@@ -1237,7 +1246,7 @@
     },
     {
       "path": "scripts/check-release.py",
-      "sha256": "4fcb13a2640617a500f4ea7583e3bfe896329a8180b41ce3b573e3bf1e00df78"
+      "sha256": "5855218b613c94ef01f4db585532fb1067e915da4867d934603f96fbe5ae9245"
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
@@ -1253,7 +1262,7 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "3164ec9b59b976e409bee423810655a6391a439d5526fb131386c03a37755f6f"
+      "sha256": "717f4694bd5c0208bf091b06880dcb3f201d531f603b8f498057b18ed6f395c5"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
@@ -1396,6 +1405,34 @@
       "sha256": "a83164e344c1947053def83b546be8115deaa827314bbaead7afe6b6451c5cdf"
     },
     {
+      "path": "scripts/recovery/check-environment.mjs",
+      "sha256": "9d093445d15b901a90eb21d302155101e388c53cf57f32f80de7046b9a4b5dc9"
+    },
+    {
+      "path": "scripts/recovery/check-local.mjs",
+      "sha256": "a979abc733f6b0a00dcc5f5a9e5f0f4da46413bc989dd8a558d75f8e5c56d531"
+    },
+    {
+      "path": "scripts/recovery/prepare-environment.mjs",
+      "sha256": "415c1e5b80beed05aaa6691ecb7bc6c3cc1b52117eade985e8f3c0c116131baa"
+    },
+    {
+      "path": "scripts/recovery/prepare-local-worker.mjs",
+      "sha256": "e04000bb21546385e081fc2020e40ba15848ef43ccf7c6412db41a3336455b4c"
+    },
+    {
+      "path": "scripts/recovery/recovery.mjs",
+      "sha256": "481a2362431bd39a6a26990ceffe1d83ad76ae8991e425a99a42c85d9d11c2e8"
+    },
+    {
+      "path": "scripts/recovery/snapshot-d1.mjs",
+      "sha256": "1c11429d0ca22731f125fe69a490f04624fab5155a1e4bf83ef20e84455f98b9"
+    },
+    {
+      "path": "scripts/recovery/test-recovery.mjs",
+      "sha256": "c900cfcf26335c96bd885b9b144798589fd5f05f2e01c29cf199dfd9575fa884"
+    },
+    {
       "path": "scripts/run-framework.mjs",
       "sha256": "9bf9f41a29314cabe0238b8e9c540ec3f7b5a6adafc7c8fb6c3940722d061dca"
     },
@@ -1439,5 +1476,10 @@
       "path": "wrangler.local.json",
       "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d"
     }
-  ]
+  ],
+  "environment": {
+    "node": "26.12.0",
+    "npm": "12.2.1",
+    "testedPlatform": "linux"
+  }
 }

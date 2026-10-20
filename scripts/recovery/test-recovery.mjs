@@ -1,0 +1,39 @@
+import assert from 'node:assert/strict';
+import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,readdirSync,symlinkSync,copyFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {resolve} from 'node:path';
+import {DatabaseSync} from 'node:sqlite';
+import {pack,verify,restore,sanitizeDatabase,sha,dumpDatabase} from './recovery.mjs';
+import {assertRule,EXPRESSION,DESCRIPTION} from '../../infra/cost-guard/worker.mjs';
+const root=resolve(import.meta.dirname,'../..'),dir=mkdtempSync(resolve(tmpdir(),'eq-recovery-test-'));let passed=0;
+function test(name,fn){fn();passed++;console.log('PASS '+name)}
+try{
+ const input=resolve(dir,'input.sqlite'),db=new DatabaseSync(input);
+ for(const n of readdirSync(resolve(root,'drizzle')).filter(n=>n.endsWith('.sql')).sort())db.exec(readFileSync(resolve(root,'drizzle',n),'utf8'));
+ db.prepare('INSERT INTO '+ 'private_tester_invites (id,label,code_hash,created_at,code_expires_at) VALUES (?,?,?,?,?)').run('fixture','Fixture', 'old-credential-hash',0,9999999999);
+ db.prepare('INSERT INTO '+ 'privacy_sessions(token_hash,subject_id,expires_at) VALUES (?,?,?)').run('old-data-hash','fixture',9999999999999);
+ const clean=resolve(dir,'clean.sqlite');test('sanitize removes active credentials, retains schema',()=>{sanitizeDatabase(input,clean);const d=new DatabaseSync(clean);assert.equal(d.prepare('SELECT count(*) n FROM privacy_sessions').get().n,0);assert.equal(d.prepare('SELECT count(*) n FROM private_tester_invites WHERE revoked_at IS NULL').get().n,0);d.close()});db.close();
+ const pub=resolve(dir,'public');mkdirSync(pub);writeFileSync(resolve(pub,'asset.txt'),'synthetic recovery fixture');
+ const release=resolve(dir,'release.json');writeFileSync(release,JSON.stringify({update:81,assetFiles:[{path:'public/asset.txt',sha256:sha(resolve(pub,'asset.txt'))}]}));
+ const review=resolve(dir,'review.json');writeFileSync(review,JSON.stringify({databaseSha256:sha(clean),reviewedAt:new Date().toISOString(),source:'current-live-export',deletedRecordsExcluded:true}));
+ const bundle=resolve(dir,'bundle');
+ test('pack and verify exact external input set',()=>{pack({publicRoot:pub,database:clean,out:bundle,release,attestation:review});assert.equal(verify(bundle,{release}).files.length,2);writeFileSync(review,JSON.stringify({databaseSha256:sha(clean),reviewedAt:new Date().toISOString(),source:'current-live-export',deletedRecordsExcluded:true}))});
+ test('bundle overwrite rejected',()=>assert.throws(()=>pack({publicRoot:pub,database:clean,out:bundle,release,attestation:review}),/overwrite/));
+ test('unreviewed database rejected',()=>assert.throws(()=>pack({publicRoot:pub,database:input,out:resolve(dir,'bad-auth'),release,attestation:review}),/authentication|credentials/));
+ const checkout=resolve(dir,'checkout');mkdirSync(checkout);writeFileSync(resolve(checkout,'package.json'),'{}');writeFileSync(resolve(checkout,'wrangler.local.json'),'{}');
+ test('restore preserves data with fresh generated secrets',()=>{const report=restore({bundle,checkout,attestation:review,release});assert(report.freshCredentials);assert.match(readFileSync(resolve(checkout,'.dev.vars'),'utf8'),/ABUSE_RATE_SECRET=[a-f0-9]{64}/);const restored=new DatabaseSync(resolve(checkout,'.recovery-local/database.sqlite'));assert.equal(restored.prepare('SELECT count(*) n FROM privacy_sessions').get().n,0);restored.close()});
+ test('existing local state is protected',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/fresh checkout/));
+ const reviewData=JSON.parse(readFileSync(review));writeFileSync(review,JSON.stringify({...reviewData,reviewedAt:'2000-01-01T00:00:00Z'}));test('stale deletion review rejected',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/Fresh owner/));writeFileSync(review,JSON.stringify(reviewData));
+ writeFileSync(resolve(bundle,'public/asset.txt'),'tampered');test('tampered bytes rejected',()=>assert.throws(()=>verify(bundle,{release}),/checksum/));writeFileSync(resolve(bundle,'public/asset.txt'),'synthetic recovery fixture');
+ const manifestPath=resolve(bundle,'manifest.json'),m=JSON.parse(readFileSync(manifestPath));
+ writeFileSync(review,JSON.stringify({...reviewData,databaseSha256:'wrong'}));test('deletion review bound to exact DB checksum',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/Fresh owner/));writeFileSync(review,JSON.stringify({...reviewData,reviewedAt:new Date(Date.parse(m.createdAt)-1000).toISOString()}));test('pre-bundle deletion review cannot authorize restore',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/after bundle/));writeFileSync(review,JSON.stringify(reviewData));
+ writeFileSync(manifestPath,JSON.stringify({...m,migrationsSha256:'wrong'}));test('schema mismatch rejected',()=>assert.throws(()=>verify(bundle,{release}),/version mismatch/));writeFileSync(manifestPath,JSON.stringify(m));
+ rmSync(resolve(bundle,'public/asset.txt'));test('missing asset rejected',()=>assert.throws(()=>verify(bundle,{release}),/checksum/));copyFileSync(resolve(pub,'asset.txt'),resolve(bundle,'public/asset.txt'));
+ const alias=resolve(dir,'bundle-link');symlinkSync(bundle,alias,'dir');test('symlink bundle base rejected',()=>assert.throws(()=>verify(alias,{release}),/Symlink/));rmSync(alias);
+writeFileSync(manifestPath,JSON.stringify({...m,files:[...m.files,{path:'../escape',bytes:0,sha256:''}]}));test('path traversal rejected',()=>assert.throws(()=>verify(bundle,{release}),/Unexpected|Unsafe/));writeFileSync(manifestPath,JSON.stringify(m));
+ rmSync(resolve(bundle,'public/asset.txt'));symlinkSync(resolve(pub,'asset.txt'),resolve(bundle,'public/asset.txt'));test('symlink substitution rejected',()=>assert.throws(()=>verify(bundle,{release}),/Symlink/));rmSync(resolve(bundle,'public/asset.txt'));copyFileSync(resolve(pub,'asset.txt'),resolve(bundle,'public/asset.txt'));
+ const gitParent=resolve(dir,'git');mkdirSync(resolve(gitParent,'.git'),{recursive:true});writeFileSync(resolve(gitParent,'.git/HEAD'),'ref: refs/heads/main');test('private bundle inside Git refused',()=>assert.throws(()=>pack({publicRoot:pub,database:clean,out:resolve(gitParent,'bundle'),release,attestation:review}),/outside every Git/));
+ const sql=resolve(dir,'portable.sql');dumpDatabase(clean,sql);const round=new DatabaseSync(resolve(dir,'round.sqlite'));test('portable database SQL roundtrip',()=>{round.exec(readFileSync(sql,'utf8'));assert.equal(round.prepare('PRAGMA integrity_check').get().integrity_check,'ok');assert.equal(round.prepare('SELECT count(*) n FROM private_tester_invites').get().n,1)});round.close();
+ test('guard keeps rule identity checks for new bindings',()=>{const expression='(http.host eq "recovery.invalid")';assertRule({action:'block',expression,description:DESCRIPTION},expression);assert.throws(()=>assertRule({action:'block',expression,description:DESCRIPTION}),/identity/);assertRule({action:'block',expression:EXPRESSION,description:DESCRIPTION})});
+ console.log(`${passed} recovery checks passed; synthetic data only.`);
+}finally{rmSync(dir,{recursive:true,force:true})}

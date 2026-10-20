@@ -1,0 +1,23 @@
+// Generate an offline review plan using new owner-supplied resource IDs. Never deploys.
+import {readFileSync,existsSync,mkdirSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {randomBytes} from 'node:crypto';
+import {external} from './recovery.mjs';
+import {publicAssetBypassPatterns} from '../../infra/pulumi/public-assets.mjs';
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i].slice(2)]=process.argv[i+1];
+const p=JSON.parse(readFileSync(resolve(args.profile),'utf8')),out=external(args.out);
+if(existsSync(out))throw Error('Refusing plan overwrite');
+const origin=new URL(p.canonicalOrigin);if(origin.protocol!=='https:'||origin.pathname!=='/'||origin.username||origin.password||origin.search||origin.hash)throw Error('Require an HTTPS origin');
+for(const k of ['accountId','zoneId','rulesetId','budgetRuleId'])if(!/^[a-f0-9]{32}$/.test(p[k]))throw Error('Provide new authorized '+k);
+if(!/^[a-f0-9-]{36}$/.test(p.databaseId)||!/^[a-z0-9-]+$/.test(p.scriptName)||!/^[a-z0-9-]+$/.test(p.guardName))throw Error('Invalid new resource identifiers');
+if(!Number.isInteger(p.billingCycleDay??18)||(p.billingCycleDay??18)<1||(p.billingCycleDay??18)>28)throw Error('Invalid billing cycle day');
+const hosts=[origin.hostname,'www.'+origin.hostname,'staging.'+origin.hostname];const hostExpression='(http.host in {'+hosts.map(JSON.stringify).join(' ')+'})';
+const exclusions=publicAssetBypassPatterns.map(x=>x.slice(1)).map(x=>x.endsWith('*')?'starts_with(http.request.uri.path, '+JSON.stringify(x.slice(0,-1))+')':'http.request.uri.path eq '+JSON.stringify(x));
+const edge={description:'Listening pool edge burst protection',action:'block',expression:hostExpression+' and not ('+exclusions.join(' or ')+')',ratelimit:{characteristics:['cf.colo.id','ip.src'],period:10,requests_per_period:120,mitigation_timeout:10}};
+mkdirSync(out,{recursive:true,mode:0o700});
+const save=(n,x)=>writeFileSync(resolve(out,n),JSON.stringify(x,null,2)+'\n',{mode:0o600});
+save('app-profile.json',{canonicalOrigin:origin.origin,scriptName:p.scriptName,maintenanceMode:true,cloudflareAccountId:p.accountId,cpuMs:5000,workersDev:false,previewUrls:false,existingDatabaseId:p.databaseId,note:'Import/adopt existing resources into the intended Pulumi state; inspect a plan. This profile is not a stack export or automatic provisioning command.'});
+save('edge-rule.json',edge);save('budget-rule.json',{description:'Listening pool budget circuit breaker — manual reset only',action:'block',expression:hostExpression,enabled:false});
+save('guard-wrangler.json',{name:p.guardName,main:'worker.mjs',account_id:p.accountId,compatibility_date:'2026-10-18',workers_dev:false,preview_urls:false,limits:{cpu_ms:1000},triggers:{crons:['* * * * *']},vars:{ACCOUNT_ID:p.accountId,ZONE_ID:p.zoneId,APP_SCRIPT:p.scriptName,DATABASE_ID:p.databaseId,BILLING_CYCLE_DAY:String(p.billingCycleDay||18),RULESET_ID:p.rulesetId,RULE_ID:p.budgetRuleId,BUDGET_EXPRESSION:hostExpression}});
+writeFileSync(resolve(out,'fresh-app-secrets.env'),['ABUSE_RATE_SECRET','OWNER_ANALYTICS_TOKEN','PRIVATE_ACCESS_PASSWORD'].map(k=>k+'='+randomBytes(32).toString('hex')).join('\n')+'\n',{mode:0o600});
+console.log('Offline private review plan generated. No remote calls or deployment. Encrypt fresh secrets in the owner secret manager; provider and cost-guard API tokens must be supplied separately.');

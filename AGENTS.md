@@ -1,3 +1,7 @@
+# Canonical development and recovery workspace
+
+This checkout is the active source. In the owner container it is workspace/. Do not edit the parent live mirror or archived previews. Read docs/HANDOFF.md and docs/RECOVERY.md; fetch and inspect status/divergence before editing. Use the pinned recovery toolchain and keep all external inputs outside Git.
+
 # Current release and rebuild instructions
 
 Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update81; historical handoffs are not deployment instructions.

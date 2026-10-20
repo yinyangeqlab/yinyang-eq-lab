@@ -2,7 +2,7 @@
   "site": "https://yinyangeq.com",
   "update": 81,
   "verifiedAt": "2026-10-18T22:27:10.879688+00:00",
-  "authoritativeLocalRoot": ".",
+  "authoritativeLocalRoot": "workspace",
   "applicationSnapshot": "work/tagline-release-20261018",
   "infrastructureSnapshot": "work/tagline-infra-20261018",
   "baselineCommit": "352616ece721d56d9d7133814e0612e2a6039bd1",
@@ -1417,19 +1417,19 @@
   "documentationFiles": [
     {
       "path": "AGENTS.md",
-      "sha256": "108623a2910e599ded691f447749a55e60c03af0a50fbb6e15cc434b74d472e8"
+      "sha256": "b96be1d17a06ff4534b455e2b870fbae064cd35e06795343f8cc9713309a683b"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "12fce4765261a2966383a682da55922003de9dcc1b39ed60c839903443858fca"
+      "sha256": "12ec2fe16b8b0514ea8d379150aa6b545216b405a02f92b70361b999e75e82ac"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "8688cfae0888908e41c7dd70d3580a5970891f34e4111496debde085b9060c9b"
+      "sha256": "80607da532c98454b95c302560c19fd2f0032013a853fe36ea9560e4dd08f413"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "9e24428c49c0fff642dbfbfae7f1db14960368b6a4e555551bd974a9971639fa"
+      "sha256": "669305593e5aee39b2393fa96fa07befaffa3e2194ac01cb972f06f5e45bc931"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -1437,7 +1437,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "5627002e48b357bdd654392ed73be789c9b0d039119ad278dd112198f34701a0"
+      "sha256": "2e2f47cf1575e48d8de1c66523103da54a01aaaa286ea55dfa8b7be79f7e59f3"
     },
     {
       "path": "RESEARCH_PROTOCOL.md",
@@ -1445,11 +1445,11 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a56efbffc5ea0db3aa30463bbb5b0c23bf03d6d61128974b05d661fcc9b7e394"
+      "sha256": "225ea102817331850a4b6861d353bec0494e5abdd72740c1399aeaf102e90a43"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
-      "sha256": "0f5284425ad9e7d46d589af90ca26ef2a698ba118829278d59abd6265f29bd60"
+      "sha256": "262b220139fb1c63f9687090188354cc5408eb0199509a2ab89bc7acb7519c6b"
     },
     {
       "path": "docs/LOCAL_CHANGES.md",
@@ -1457,7 +1457,7 @@
     },
     {
       "path": "local/README.md",
-      "sha256": "4800f2022d0cdd5732942671bdd758b06213f83838a4bb98352636ca05f9315b"
+      "sha256": "152725bc672ad246ec3558af9b4af64f0ed4a105aef9ba5f7e10f0868b949d07"
     },
     {
       "path": "scripts/check-live-source.mjs",
@@ -1479,7 +1479,7 @@
   "localConfigurationFiles": [
     {
       "path": "tsconfig.json",
-      "sha256": "d83dc2f61c17a70115856b462915ea63b604fca4aa68bf117b7815670b65d8ec"
+      "sha256": "7199c6e4e400921e8049729840165a39f1476fa97901bed00239e7697bfe8da4"
     }
   ],
   "localConfigurationNotes": "Recorded root tooling configuration differs from the exact build snapshot; preserve intentional root tooling changes.",
@@ -5134,12 +5134,8 @@
     "documentation": "infra/edge-rate-limit/README.md"
   },
   "pendingLocalChanges": {
-    "description": "Pre-existing root tooling/license differences preserved; build uses exact snapshot configuration.",
-    "files": [
-      "tsconfig.json",
-      "vendor/autoeq.LICENSE.md",
-      "vendor/shadcn-ui.LICENSE.md"
-    ]
+    "description": "Verified owner live mirror is reconciled. Canonical Git contains separately recorded undeployed recovery and infrastructure portability work; use its source-only manifest, not the owner mirror for development.",
+    "files": []
   },
   "taskClosure": {
     "at": "2026-10-18T22:27:10.879688+00:00",
@@ -5203,7 +5199,7 @@
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-league",
     "branch": "main",
     "workingTreeClean": true,
-    "checkout": "work/github-live-sync-20261018",
+    "checkout": "workspace",
     "priorPublishedReleaseCommit": "f44e0c0a4d19a2adf65729272e43042de0810399",
     "publishedReleaseCommit": "17f8a8c",
     "pushVerifiedAt": "2026-10-18T22:28:05.471362+00:00"
@@ -5346,5 +5342,26 @@
     "privateInputsExcluded": true,
     "status": "verified and published",
     "publishedCommit": "8f730771acdf397f2a4eea113dadd6cd715dc90a"
+  },
+  "canonicalDevelopmentRoot": "workspace",
+  "liveMirrorRoot": ".",
+  "recoveryProcess": {
+    "status": "tested; publication pending",
+    "liveUpdateUnchanged": 81,
+    "canonicalCheckout": "workspace",
+    "archive": "archive/legacy-workspaces-20261018",
+    "privateBundle": "private/recovery/final-bundle-update81",
+    "guide": "docs/RECOVERY.md",
+    "verification": "docs/RECOVERY_TESTS.md",
+    "node": "26.12.0",
+    "npm": "12.2.1",
+    "localRestoreTested": true,
+    "remoteOperation": "read-only current D1 export",
+    "productionWrites": false,
+    "deploymentPerformed": false,
+    "oldCredentialsRestored": false,
+    "freshDeletionReviewRequired": true,
+    "offDeviceBackupConfigured": false,
+    "safetyTestsPassed": 18
   }
 }

@@ -1,10 +1,12 @@
 # Rebuild the current application — live update81
 
-As of October18,2026, the current live application is update81. Its implementation commit is `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6`; subsequent commits contain release records and this rebuild audit. `LIVE_RELEASE.json` identifies the immutable owner-workspace snapshot. `docs/rebuild-manifest.json` verifies the public rebuild inputs in this repository. Runtime application files match the verified live snapshot.
+For complete external-data recovery and canonical workspace layout, start at [RECOVERY.md](RECOVERY.md). It supersedes the earlier root-difference notes; the owner mirror config/licenses have now been reconciled. Recovery tools and domain configuration additions are not deployed.
+
+As of October18,2026, the current live application is update81. Its implementation commit is `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6`; subsequent commits contain release records and this rebuild audit. `LIVE_RELEASE.json` identifies the immutable owner-workspace snapshot. `docs/rebuild-manifest.json` verifies the public rebuild inputs in this repository. Runtime application files match the verified live snapshot; recovery tooling and undeployed infrastructure portability improvements are separately recorded.
 
 ## Fresh clone: build without production access
 
-Use Node.js22.13+ and npm. Node22.18+ or24+ is needed for the optional TypeScript/SQLite regression scripts. Python3 is used by the publication and migration checks.
+Use the pinned Node26.12.0/npm12.2.1 toolchain for recovery. Ordinary preview builds declare Node.js22.13+ support; Node22.18+ or24+ is needed for the optional TypeScript/SQLite regression scripts. Python3 is used by the publication and migration checks.
 
 ```sh
 git clone https://github.com/yinyangeqlab/yinyang-eq-league.git

@@ -69,7 +69,7 @@ async function dataSession(request, env, subject, linkedSessionHash = null) {
 }
 function safeReturnTo(value, fallback = "/") {
   if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) return fallback;
-  try { const url = new URL(value, "https://yinyangeq.com"); return url.origin === "https://yinyangeq.com" ? `${url.pathname}${url.search}` : fallback; }
+  try { const url = new URL(value, "https://return.invalid"); return url.origin === "https://return.invalid" ? `${url.pathname}${url.search}` : fallback; }
   catch { return fallback; }
 }
 function decodedReturnTo(value) { try { return safeReturnTo(decodeURIComponent(String(value || "/"))); } catch { return "/"; } }
@@ -165,7 +165,9 @@ const privateGate = {
       if ((path === "/owner-login" || path === "/admin-login") && !hasOwnerSession) return request.method === "GET" ? ownerLoginPage() : new Response(null, { status: 405 });
       if ((path === "/owner-login" || path === "/admin-login")) return new Response(null, { status: 303, headers: { Location: "/owner-research", "Cache-Control": "no-store" } });
       // The tester session is host-only. Redirect www to the canonical apex before invite redemption.
-      if (url.hostname === "www.yinyangeq.com" && !hasOwnerSession) return Response.redirect(`https://yinyangeq.com${url.pathname}${url.search}`, 307);
+      const canonical = new URL(env.CANONICAL_ORIGIN || "https://yinyangeq.com");
+      if (canonical.protocol !== "https:" || canonical.pathname !== "/" || canonical.username || canonical.password || canonical.search || canonical.hash) throw new Error("Invalid canonical origin");
+      if (url.hostname === `www.${canonical.hostname}` && !hasOwnerSession) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 307);
       const owner = hasOwnerSession;
       if (path.startsWith("/__private/admin/")) return owner ? await admin(request, env, path) : json({ error: denied }, 403);
       if (path === "/access") {

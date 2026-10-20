@@ -1,3 +1,5 @@
+> Current workflow: canonical workspace and external recovery are documented in [RECOVERY.md](RECOVERY.md), with results in [RECOVERY_TESTS.md](RECOVERY_TESTS.md). Live remains update81; recovery infrastructure/tooling changes are not deployed.
+
 # Source and live release alignment — update81
 
 The checked-in runtime source matches verified live update81 (October18,2026), including the gold Continue button, upload/session fixes, fixed five-second matched passages, refined vote styling, curve credits, browser sync, consent and Welcome tagline. The current implementation commit is08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6; later commits record verification and rebuild support.

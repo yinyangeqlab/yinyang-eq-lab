@@ -66,6 +66,7 @@ for (metadata, _), rel in zip(entries, paths):
     parts = {part.lower() for part in rel.parts}
     if (
         (parts & blocked_parts and rel.as_posix() not in public_infra | public_evidence)
+        or rel.parts[0] in {"private", "archive", "recovery-inputs", ".recovery-local"}
         or name in blocked_names
         or name.startswith(".env")
         or name.startswith(".dev.vars")
