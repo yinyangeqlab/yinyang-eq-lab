@@ -1,3 +1,17 @@
+> Update96 recovery verified: matching encrypted off-device database/source/build backup and source-history restore passed independent verification. This month’s full reconstruction remains valid for the identical schema/media; its original rehearsal identity is preserved. The refreshed hosted baseline passed validation, and the daily03:00 America/Los_Angeles schedule is enabled. Existing retention is unchanged.
+
+# Current live release — update96, October 19, 2026
+
+Live: https://yinyangeq.com. The owner authorized pushing and deploying the reviewed consent choices. The dialog shows all three numbered choices before nickname/profile details, including the optional own-music setting outside the full terms. “Opt in to all three” and “Required only” change drafts only; Save remains explicit. Separate Personal/Community contribution permissions are unchanged. No consent policy/version, backend, scoring, dependency or schema change.
+
+Implementation `89dc69e1bfc1e00bdb17e72fc711ebe2fea783b8`. Immutable source/build `work/consent-release-20261019`; infrastructure `work/consent-infra-20261019`. One existing Worker updated; three resources unchanged. No migrations. Existing37 migrations plus operational service status remain unchanged. No owner account activation, device grants, historical transfer, profile publication or participant test votes.
+
+An informational notice began only at actual deployment start. Tests and submissions remained open without feature locks, forced refresh or audio stop. All248 previous client assets retained. CPU5000ms, six abuse bindings, protected media/admission, disabled public Worker URLs and existing edge/cost controls preserved. Notice ended after live verification. The actual consent component, agreement, activity-monitoring and nickname regressions passed, along with bounded typecheck, clean isolated build and340 static assets/200 protected recordings. Reviewed layouts1280×720,390×844,320×568,768×1024,1024×320 and280×320; physical devices are not certified. Evidence: workspace/artifacts/consent-release-20261019/ and docs/CONSENT_UI_REVIEW_2026-10-19.md.
+
+GitHub implementation publication succeeded. A fresh verified encrypted off-device backup preceded deployment. Matching update96 encrypted backup and hosted baseline refresh are verified; the daily schedule is enabled. Unrelated recovery work remains excluded. Existing Community validation/privacy limits and the unpatched build-tool advisory remain tracked. Never restore erased records or rewrite original source/schema fingerprints.
+
+## Historical release notes
+
 > Update95 recovery verification: a matching encrypted off-device backup passed independent download/decryption, complete reconstruction with original source/schema fingerprints, and source-history/build portability checks. The private hosted baseline was refreshed, its validation run passed, and the same daily03:00 America/Los_Angeles schedule was re-enabled. Existing retention is unchanged. No storage details, keys or private receipts are published.
 
 # Current live release — update95, October 19, 2026

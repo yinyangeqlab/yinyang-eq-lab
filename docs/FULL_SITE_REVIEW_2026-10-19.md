@@ -1,3 +1,7 @@
+# Consent follow-up deployed — update96
+
+Deployed with owner authorization as update96, implementation89dc69e1bfc1. All three consent choices are visible; the shortcuts edit drafts only. No consent was saved during the hidden tester review. Tests stayed open, previous browser assets were retained, and the informational notice ended after verification. Matching encrypted backup and independent daily baseline validation passed. Evidence: artifacts/consent-release-20261019/. Earlier local-only statements below are historical review-stage notes.
+
 # Local consent follow-up — not deployed
 
 After update95 deployment, the owner reported a hidden third music opt-in. The local follow-up shows three numbered sections outside disclosures, with draft-only all/required-only controls. Actual component, consent/monitoring/nickname checks, typecheck, build and six finite viewport checks pass; no browser consent was saved. Six new screenshots bring the local gallery to510 images, with72 follow-up images including this separate local draft. A pre-existing style-cleanup check reports27 superseded declarations on both baseline and draft. See [CONSENT_UI_REVIEW_2026-10-19.md](CONSENT_UI_REVIEW_2026-10-19.md).

@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 95,
-  "implementationCommit": "0ef217b900198760f7f81adb447a0fbd1e5ef731",
-  "runtimeParity": "Local consent UI differs from verified update95; this follow-up is not deployed.",
+  "liveUpdate": 96,
+  "implementationCommit": "89dc69e1bfc1e00bdb17e72fc711ebe2fea783b8",
+  "runtimeParity": "Recorded runtime matches verified update96; unrelated backup/recovery development excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -922,7 +922,7 @@
     },
     {
       "path": "docs/CONSENT_UI_REVIEW_2026-10-19.md",
-      "sha256": "7eae3ec17a7573c6503df30c6e9cf90d87e3793b30fed0add51c92ae32e6f21e"
+      "sha256": "38bd964a2ef9c942ac21a09c1df0cdd84b6273219e81fd7fa25eecb2b37243ce"
     },
     {
       "path": "drizzle.config.ts",
@@ -2078,5 +2078,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": true
+  "pendingDeploymentApproval": false
 }

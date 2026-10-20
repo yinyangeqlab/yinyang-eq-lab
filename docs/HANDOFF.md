@@ -1,3 +1,17 @@
+> Update96 recovery verified: matching encrypted off-device database/source/build backup and source-history restore passed independent verification. This month’s full reconstruction remains valid for the identical schema/media; its original rehearsal identity is preserved. The refreshed hosted baseline passed validation, and the daily03:00 America/Los_Angeles schedule is enabled. Existing retention is unchanged.
+
+# Current live release — update96, October 19, 2026
+
+Live: https://yinyangeq.com. The owner authorized pushing and deploying the reviewed consent choices. The dialog shows all three numbered choices before nickname/profile details, including the optional own-music setting outside the full terms. “Opt in to all three” and “Required only” change drafts only; Save remains explicit. Separate Personal/Community contribution permissions are unchanged. No consent policy/version, backend, scoring, dependency or schema change.
+
+Implementation `89dc69e1bfc1e00bdb17e72fc711ebe2fea783b8`. Immutable source/build `work/consent-release-20261019`; infrastructure `work/consent-infra-20261019`. One existing Worker updated; three resources unchanged. No migrations. Existing37 migrations plus operational service status remain unchanged. No owner account activation, device grants, historical transfer, profile publication or participant test votes.
+
+An informational notice began only at actual deployment start. Tests and submissions remained open without feature locks, forced refresh or audio stop. All248 previous client assets retained. CPU5000ms, six abuse bindings, protected media/admission, disabled public Worker URLs and existing edge/cost controls preserved. Notice ended after live verification. The actual consent component, agreement, activity-monitoring and nickname regressions passed, along with bounded typecheck, clean isolated build and340 static assets/200 protected recordings. Reviewed layouts1280×720,390×844,320×568,768×1024,1024×320 and280×320; physical devices are not certified. Evidence: workspace/artifacts/consent-release-20261019/ and docs/CONSENT_UI_REVIEW_2026-10-19.md.
+
+GitHub implementation publication succeeded. A fresh verified encrypted off-device backup preceded deployment. Matching update96 encrypted backup and hosted baseline refresh are verified; the daily schedule is enabled. Unrelated recovery work remains excluded. Existing Community validation/privacy limits and the unpatched build-tool advisory remain tracked. Never restore erased records or rewrite original source/schema fingerprints.
+
+## Historical release notes
+
 # Local consent follow-up ready — October 19, 2026
 
 Live update95 (implementation0ef217b; published handoff2e5d987) is deployed and verified, with a matching reconstructed encrypted backup and an active validated daily schedule. A later owner request found the hidden music opt-in: the local draft now shows all three numbered choices and all/required-only draft shortcuts. It does not save automatically or enable separate Personal/Community permissions. This follow-up is not pushed or deployed. Read [CONSENT_UI_REVIEW_2026-10-19.md](CONSENT_UI_REVIEW_2026-10-19.md). Local preview: localhost:5175/shootout?mode=open → Data Agreement & Sharing; the dialog is open in the hidden tester browser. Build input: artifacts/consent-choices-20261019/build-input. Do not deploy that local preview assembly. Preserve unrelated backup/recovery work.
