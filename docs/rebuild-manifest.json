@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 85,
-  "implementationCommit": "18bf9c7",
-  "runtimeParity": "Verified live update85 plus explicitly listed canonical-only optional nickname preview; the preview and migration0032 are not deployed.",
+  "liveUpdate": 86,
+  "implementationCommit": "fb30ec5dc40d813a4a031d3e2e60150892d68a5e",
+  "runtimeParity": "All recorded runtime application files match verified live update86.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -10,7 +10,7 @@
     ],
     "packaging": "Explicit public-only preview mode; full media validation preserved.",
     "publicationCheck": "Narrow path allowlist for audited infrastructure source and existing sanitized evidence; credential scans retained.",
-    "infrastructure": "Undeployed canonical-origin and guard-rule bindings plus public-package refusal; security limits unchanged.",
+    "infrastructure": "Verified live canonical-origin and guard bindings; private media, CPU5000ms, six abuse bindings and public-package refusal preserved.",
     "typecheck": "Canonical checkout excludes separately managed infra; parent legacy previews archived.",
     "recovery": "External checksum bundle, fresh credential generation, strict local restore and deletion review. No live deployment."
   },
@@ -141,6 +141,10 @@
       "sha256": "cf6cab176ddcf6684a5d15af4dff12d4bffc1d223dcdc6393aa4c4637278f82d"
     },
     {
+      "path": "app/curve-credits/layout.tsx",
+      "sha256": "b05014108d323274dbeaf47e288d8fd813f494148e1b5f2c4d99fcba154945e6"
+    },
+    {
       "path": "app/curve-credits/page.tsx",
       "sha256": "83783d2dd1adad5c897a38a84f91e6261e922c7b6e3236dff0c7134619703db6"
     },
@@ -161,12 +165,20 @@
       "sha256": "c94fdcad8436875c4e8f16242b819afd0c597b7ba3ee04c15f0a07ac3063fb05"
     },
     {
+      "path": "app/music-library/layout.tsx",
+      "sha256": "6051823be4b0e7805e003da8d4a798436316b67f0555b723fabcb69a4f993d8c"
+    },
+    {
       "path": "app/music-library/page.tsx",
       "sha256": "1934669c3b761be4f556b5d629a2a8294d2ffaab601369c3c2c124a199d6c44e"
     },
     {
       "path": "app/music-library/style.css",
       "sha256": "7466bbd3fce7112b432e96bf62dc7fbd1b9e12533ea7ba30e84ca1bfc6b6aa11"
+    },
+    {
+      "path": "app/my-data/layout.tsx",
+      "sha256": "e0843b724c63a9fcbf6ac4ad2d4cde02cc62736afaee3d7508806f6a0c99f8cc"
     },
     {
       "path": "app/my-data/page.tsx",
@@ -179,6 +191,10 @@
     {
       "path": "app/owner-research/admin-layout.css",
       "sha256": "4b39024239773b2348107c3221a1737952b9bf80dae6819b5e267018ff9b0d90"
+    },
+    {
+      "path": "app/owner-research/layout.tsx",
+      "sha256": "09a65926a6c257137c947420f926c6c76ddac1cc2aa8de181de7035554dd052d"
     },
     {
       "path": "app/owner-research/page.tsx",
@@ -205,8 +221,16 @@
       "sha256": "d65cc4f060eb22a8d51856f675f42da6fce4bc5921157e1806b701c773b7ab22"
     },
     {
+      "path": "app/privacy/layout.tsx",
+      "sha256": "edab0555a343ec2a56511ffe26dc4d88662f40ba0120d0b339b471172a991040"
+    },
+    {
       "path": "app/privacy/page.tsx",
       "sha256": "a7055c4551d3df35856256adb5898b8d47494b3b939e32ba95fc82d36e0679d5"
+    },
+    {
+      "path": "app/shootout/layout.tsx",
+      "sha256": "c85957d13360fd271b4925c4169e354342401435b349d1f4c6be12a8040a8437"
     },
     {
       "path": "app/shootout/page.tsx",
@@ -1081,6 +1105,10 @@
       "sha256": "7c3980d2a5c27444de41a0d5c26d3b8ed8948ce8e22714a50b804236fd1e85e2"
     },
     {
+      "path": "lib/music-display.ts",
+      "sha256": "ef119de1ca5ebb0c360e78698e79515eabf1e8a44c379d44245a42348a836f4e"
+    },
+    {
       "path": "lib/music-library-eq.ts",
       "sha256": "50cb0cfdf9f61fba86c791f22705d21ff1561abbb4d327c89f61064882adee68"
     },
@@ -1295,6 +1323,10 @@
     {
       "path": "scripts/check_agreement_preferences.mjs",
       "sha256": "f245d2205e3e067480bda11a731bc6fd692c84f0c5ffbb6e6db3e9f494511efa"
+    },
+    {
+      "path": "scripts/check_audit_privacy.mjs",
+      "sha256": "e55254dee6521fb1ef121050871b885427ed5eeec315f013746ffed47d2102d6"
     },
     {
       "path": "scripts/check_blind_completion.mjs",
@@ -1530,6 +1562,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingPreviewCommit": "ae7c196",
-  "pendingDeploymentApproval": true
+  "pendingDeploymentApproval": false
 }
