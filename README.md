@@ -30,7 +30,7 @@ A brief look at Welcome, Shootout, Rankings, Song suggestions, Upload target, Me
 
 ## Hear the difference
 
-What happens when the same song meets two different headphone targets? YinYang EQ League lets you switch between them, listen, and choose **A**, **B**, or **Unknown / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
+What happens when the same song meets two different headphone targets? YinYang EQ League lets you switch between them, listen, and choose **Prefer A**, **Prefer B**, or **Unsure / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
 
 ![Open comparison with two targets, A/B voting, a clipping meter, and stereo playback](docs/images/shootout.jpg)
 
@@ -42,7 +42,7 @@ What happens when the same song meets two different headphone targets? YinYang E
 | **Bring your music · Blind Ranked** | Compare hidden targets using your own stereo song. | Eligible A/B votes enter the bring-your-music ranking. |
 | **Open comparison · Unranked** | Choose named targets and explore freely. | Personal results and private owner research; public rankings stay blind. |
 
-Blind tests require **at least five seconds on each side** before the voting buttons unlock. Unknown/tie answers and same-filter checks do not change target rankings. Accepted decisive repeats count with reduced evidence weight per browser and target pair. Rankings are exploratory listener preferences, and depend on the headphones, measurement, music, and listener.
+Blind tests require **five seconds on each side of the same passage** before voting unlocks. Play both targets plays the selected five-second passage in random order; its highlighted window can be moved. Unsure/tie answers contribute fractional evidence; identical-EQ comparisons check listening consistency and do not affect target rankings. Accepted comparisons use participant-balanced evidence weighting. Rankings are exploratory listener preferences, and depend on the headphones, measurement, music, and listener.
 
 ## Make the curve yours
 
@@ -70,6 +70,10 @@ The screenshots and trailer show demo sessions captured on October 17, 2026. Tar
 
 The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Cloudflare Workers, and D1**. The browser handles interactive curves and audio processing; the server stores shared records and serves the application.
 
+## Current release and rebuilding
+
+Live update81 is recorded in [LIVE_STATE.md](LIVE_STATE.md). Start the next session at [docs/HANDOFF.md](docs/HANDOFF.md); follow [docs/REBUILD.md](docs/REBUILD.md) for fresh-clone commands, private-input restoration and deployment boundaries. GitHub contains application and credential-free deployment code, not production recordings, curve seeds, credentials or database state. This audit does not redeploy.
+
 ## Run locally
 
 Requires **Node.js 22.13 or newer**. For a fresh checkout:
@@ -80,13 +84,13 @@ npm run setup:local
 npm run dev
 ```
 
-`setup:local` initializes a fresh **local D1 database** from the checked-in SQL files and creates ignored development secrets. It refuses to overwrite an existing database. Open the URL printed by the dev server (normally `http://localhost:5173`). No Cloudflare account or production credentials are needed for this preview. See [local setup](docs/LOCAL_SETUP.md) for existing databases, feature requirements, and production configuration. Use `npm run build` to build the application.
+`setup:local` initializes a fresh **local D1 database** from the checked-in SQL files and creates ignored development secrets. It refuses to overwrite an existing database. Open the URL printed by the dev server (normally `http://localhost:5173`). No Cloudflare account or production credentials are needed for this preview. See [local setup](docs/LOCAL_SETUP.md) for existing databases, feature requirements, and production configuration. Use `npm run build` followed by `node scripts/package-static-assets.mjs --public-only` for a public-clone preview package. Full live packaging requires authorized media and omits --public-only; deployment rejects public-only packages.
 
 The tracked `.openai/hosting.json` and `wrangler.local.json` contain local binding placeholders only. The two historical `0012` migrations are distinct and both required. Existing databases through `0015` need `0016_measurement_file_chunks.sql` for original-file research contributions. Pushing source does not migrate or deploy a database.
 
-This is a clean source release. Production data, credentials, deployment state, invitation-gate infrastructure, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
+This is a clean source release. Production data, credentials, deployment state, account-specific deployment configuration, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
 
-The [source handoff](docs/HANDOFF.md) records dated application checkpoints and this accuracy correction. The [target inventory](docs/TARGET_INVENTORY.md) lists the 41 live target names and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
+The [source handoff](docs/HANDOFF.md) records dated application checkpoints and this accuracy correction. The [target inventory](docs/TARGET_INVENTORY.md) lists an earlier target-name inventory and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
 
 The live site uses **owner-supplied album downloads** for 32 tracks from Jake Kaufman’s *Shantae: Half-Genie Hero OST*: **26 original FLAC files and six AAC files**. These are copies of the artist’s recordings. The 32 included tracks’ [individual Bandcamp pages](https://virt.bandcamp.com/album/shantae-half-genie-hero-ost) link to CC BY-NC-SA 4.0. “Title” and “Let’s Go Shopping” are marked all rights reserved and are excluded. The recordings retain their own licenses and are **not** covered by this repository’s Apache license.
 

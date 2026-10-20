@@ -18,7 +18,7 @@ During `npm run dev`, the portable preview supplies a mock sign-in. Use the welc
 
 ## What a fresh clone includes
 
-The welcome, tuning and music-library interfaces are present. The 20-track blind manifest and 62 measured music candidates contain external source audio URLs. Network availability and source browser-access policy affect playback. The 32 Shantae entries use Bandcamp players because the hosted-audio map is empty; the application's EQ cannot process those embeds. Library waveform summaries are omitted, so their players show “Waveform unavailable.”
+The welcome, tuning and music-library interfaces are present. Library metadata and audio manifests describe current live recordings and external source URLs, but actual protected audio bytes are excluded. Audio maps can reference missing hosted files; clone playback is not guaranteed equivalent. Network availability and source browser-access policy affect playback. Without restored hosted audio, supported Shantae entries may use Bandcamp fallback players; the application's EQ cannot process those embeds. Waveform availability depends on available summaries and recording sources.
 
 No approved target records or numerical target seeds are included. Listening comparisons and reference-based EQ need target records that you are authorized to use. A private local target does not automatically become an approved database target. No production votes, accounts, measurement archives or access invitations are supplied.
 
@@ -40,7 +40,7 @@ If you already initialized a local DB outside the new setup command, create an i
 
 ## Production configuration
 
-The public repository supplies application source and local configuration, not the live invitation/password gate or its deployment state. A production replacement needs:
+The repository supplies application source, local configuration and audited credential-free gate/deployment code under infra/pulumi. Account-specific stack configuration/state and secret values remain excluded. See REBUILD.md for the restoration inventory. A production replacement needs:
 
 - A real D1 binding named `DB`, the required SQL migrations, and appropriately licensed target records.
 - A server-side `ABUSE_RATE_SECRET` of at least 32 characters and a trusted edge-supplied `CF-Connecting-IP` header. Protected writes fail closed when these are absent.
@@ -48,6 +48,6 @@ The public repository supplies application source and local configuration, not t
 - A trusted identity layer for account music votes. The application reads `oai-authenticated-user-*` identity headers; the edge must remove caller-supplied values and supply verified ones.
 - Access controls appropriate to the deployment, with upload authorization, retention/deletion policy and backups. A pseudonymous contributor ID is not proof of identity or rights.
 
-The application's public write gate rate-limits and bounds measurement contributions; the production invitation gate provides participant access. The application does not reproduce that invitation system. Do not expose an unprotected replacement while assuming these local development conveniences provide production authentication.
+The application's public write gate rate-limits and bounds measurement contributions; the production invitation gate provides participant access. The standalone development preview does not install that invitation system; the tracked production gate wraps the built app. Do not expose an unprotected replacement while assuming these local development conveniences provide production authentication.
 
-Build with `npm run build`. Publishing code to GitHub does not deploy a Worker, install recordings or apply a migration. Existing production databases need their own reviewed migration operation before using new attachment storage.
+Build with `npm run build` and package public-clone assets with `node scripts/package-static-assets.mjs --public-only`. This marks output as nondeployable until authorized protected media is restored and full packaging succeeds. Publishing code to GitHub does not deploy a Worker, install recordings or apply a migration. Existing production databases need their own reviewed migration operation before using new attachment storage.

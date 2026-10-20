@@ -1,0 +1,16 @@
+{
+  "name": "yinyangeq-cloudflare-infra",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pulumi/cloudflare": "6.22.1",
+    "@pulumi/pulumi": "3.270.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.19",
+    "typescript": "5.9.3"
+  }
+}

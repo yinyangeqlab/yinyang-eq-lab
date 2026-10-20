@@ -1421,19 +1421,19 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "56bf86aeee64b65942ff48b5c92ee84643d92e120f42c576a842049f5ada49f2"
+      "sha256": "12fce4765261a2966383a682da55922003de9dcc1b39ed60c839903443858fca"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "5fae86529a097644df69ab6a566ef7bee2034e73ab9b399c1690385ea72088ee"
+      "sha256": "8688cfae0888908e41c7dd70d3580a5970891f34e4111496debde085b9060c9b"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "339287912a48af93543b533b7aaa29f39f8260a120a412a416b794d7573086e3"
+      "sha256": "9e24428c49c0fff642dbfbfae7f1db14960368b6a4e555551bd974a9971639fa"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
-      "sha256": "d96c1400c8a1e372f0d7ffad11c75f257783db834b13a14f961af011d99c1f94"
+      "sha256": "afb416bc96354a7803984355e23f29f744fcd0eab66087820b0623d2b3b1dcaf"
     },
     {
       "path": "README.md",
@@ -1445,11 +1445,11 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "16b9573f0e32892b268f72d3ff55d4d32dfedf426888ac4a2753c5dfab5b9340"
+      "sha256": "a56efbffc5ea0db3aa30463bbb5b0c23bf03d6d61128974b05d661fcc9b7e394"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
-      "sha256": "745d0b81e18ea463530fd6f44ce6b8d66a3b51d42f39bc7a93f7bd32c1ef3b36"
+      "sha256": "0f5284425ad9e7d46d589af90ca26ef2a698ba118829278d59abd6265f29bd60"
     },
     {
       "path": "docs/LOCAL_CHANGES.md",
@@ -5334,5 +5334,16 @@
     "background": false,
     "textShadow": true,
     "mobileVisible": true
+  },
+  "rebuildAudit": {
+    "date": "2026-10-18",
+    "liveUpdateUnchanged": 81,
+    "report": "docs/REBUILD_AUDIT.md",
+    "cloneManifest": "docs/rebuild-manifest.json",
+    "runtimeParity": true,
+    "freshInstallBuildVerified": true,
+    "deploymentPerformed": false,
+    "privateInputsExcluded": true,
+    "status": "verified; publication pending"
   }
 }

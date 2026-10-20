@@ -1,0 +1,9 @@
+# Current release and rebuild instructions
+
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update81; historical handoffs are not deployment instructions.
+
+In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
+
+GitHub contains application and reviewed credential-free deployment source, but excludes credentials, recordings, numerical target seeds, participant records, stack configuration/state and generated output. Never restore erased user records. Keep private access/media controls, CPU5000ms, six abuse bindings, disabled public Worker URLs, edge burst protection and independent cost guard.
+
+Build, commit, push and deploy are separate operations. Do not redeploy for documentation/rebuild audits. After a verified deployment update LIVE_RELEASE.json, LIVE_STATE.md, HANDOFF.md and HOSTING_HANDOFF.md together; publish separately when authorized. Public-only packages are for clone previews and must not be deployed.

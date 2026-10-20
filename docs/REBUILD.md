@@ -1,0 +1,62 @@
+# Rebuild the current application — live update81
+
+As of October18,2026, the current live application is update81. Its implementation commit is `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6`; subsequent commits contain release records and this rebuild audit. `LIVE_RELEASE.json` identifies the immutable owner-workspace snapshot. `docs/rebuild-manifest.json` verifies the public rebuild inputs in this repository. Runtime application files match the verified live snapshot.
+
+## Fresh clone: build without production access
+
+Use Node.js22.13+ and npm. Node22.18+ or24+ is needed for the optional TypeScript/SQLite regression scripts. Python3 is used by the publication and migration checks.
+
+```sh
+git clone https://github.com/yinyangeqlab/yinyang-eq-league.git
+cd yinyang-eq-league
+npm ci
+node scripts/check-live-source.mjs --source-only
+npm run build
+node scripts/package-static-assets.mjs --public-only
+```
+
+`npm ci` uses the committed package-lock.json, including dev/optional build dependencies. `.npmrc`, `.openai/hosting.json`, Vite plugins, build adapters, public branding/worklet assets and vendor license/CSS files are tracked. Packaging copies public assets because Vite disables automatic public copying, then checks emitted client imports and removes stale redundant preloads. A public clone has no protected recordings, so --public-only explicitly creates a preview package that the deployment code rejects. An owner release must restore the private inputs below and run packaging without that flag. `npm run build` alone does not create a complete asset package.
+
+For a local functional preview, run `npm run setup:local` once against a fresh local database, then `npm run dev`. The initializer applies all SQL migrations in filename order and creates ignored development-only secrets. It does not seed approved target curves or touch production. See [LOCAL_SETUP.md](LOCAL_SETUP.md). Do not run the initializer against an existing database. No deployment is part of these commands.
+
+## What GitHub can and cannot reproduce
+
+GitHub contains all application code, migration/schema files, dependency locks, public static assets and the credential-free app deployment/gate code. It can rebuild the application bundle. A clone alone cannot reproduce live media availability, numerical target records, participant state or production authentication credentials. Those are intentionally not published.
+
+| Owner-only input | Restore from | Verification / constraint |
+| --- | --- | --- |
+|200 protected recordings under public/music | Owner's existing authorized media package | `LIVE_RELEASE.json` assetFiles and data/listening-pool-audio-manifest.json; run packaging, expect340 total public assets/200 recordings. Keep the gate in front of music and audio APIs. |
+|Approved numerical target records | Existing live D1 / authorized current curve source | No target seeds in GitHub. For disaster recovery use only owner-authorized current data respecting deletion records; never restore erased participant records from old recovery material. |
+|Pulumi stack configuration/state and Cloudflare account/route identities | Existing owner Pulumi backend and secret manager | Select existing staging stack, whose Worker serves yinyangeq.com. Do not create a replacement stack/database or overwrite bindings. |
+|ABUSE_RATE_SECRET, OWNER_ANALYTICS_TOKEN, PRIVATE_ACCESS_PASSWORD | Existing encrypted Pulumi secret config | Required secret values at least32 characters. Never put values in source, logs, screenshots or shell arguments. |
+|Cloudflare deployment credentials | Existing authorized credential store | Supply through the normal provider/Pulumi mechanism. Do not commit tokens or encrypted stack exports. |
+|Cost-guard bindings and narrow API credential | Existing scheduled guard Worker / secret manager | Preserve separate guard cron, WAF rule, IDs and COST_GUARD_API_TOKEN. Source is infra/cost-guard/{worker,policy}.mjs; account-specific config is excluded. |
+|Edge/WAF/domain configuration | Existing Cloudflare account | Separate from app Pulumi. Preserve edge burst120 requests/10s/IP,10s block; static-only exclusions, never music. |
+
+Git source hashes prove input alignment, not byte-for-byte deterministic output across OS/Node/compiler environments. The public TypeScript config excludes the separately managed infra project; check that project after its own npm ci with npm run check. Runtime application code is unchanged. For exact rollback use the recorded immutable owner build and its hashes, not a new build assumed identical.
+
+## Owner deployment rebuild — documentation only
+
+No deployment was performed by the rebuild audit. For a later authorized release:
+
+1. In the owner workspace read LIVE_STATE.md and LIVE_RELEASE.json, run `node scripts/check-live-source.mjs --snapshot`, and review intentional root differences. Old work/, github-ready and local Python previews are not a baseline.
+2. Make an isolated release checkout from the verified source. Restore authorized media without publishing it; retain package locks and exact runtime configuration. Build and package; validate all required media and assets before deployment.
+3. The tracked `infra/pulumi` code is the verified app deployment source; it includes the private gate, media routing and six abuse bindings. It imports runtime modules from the explicit `DEPLOY_BUILD_ROOT`. From infra/pulumi install its locked dependencies with `npm ci`, authenticate to the existing backend/account and inspect existing `staging` state/config through authorized tooling. Do not run `pulumi stack init` or replace missing existing state with new resources.
+4. Set `DEPLOY_BUILD_ROOT` to the absolute intended build directory for preview/up. The app resource retains CPU5000ms, protected D1, private/media admission, disabled workers.dev/preview URLs and existing static routing. A normal app release changes one Worker and leaves the other resources unchanged. Review any different resource plan before proceeding.
+5. Keep the independent once-per-minute cost guard, its current thresholds/manual-reset budget rule and edge burst protection. They are separate from this app stack. Never disable them to get a build or rollout through.
+6. Deploy only with user authorization. Verify live assets, admission/media and relevant UI flows; erase only disposable fixtures. Update LIVE_RELEASE.json, LIVE_STATE.md, HANDOFF.md and HOSTING_HANDOFF.md together, then commit/push separately as authorized.
+
+No database migrations are needed to rebuild update81 on its already-current live database. A fresh local database uses every checked-in migration, including both distinct0012 files and0028–0030. Existing production migration history must be inspected; never replay the chain blindly.
+
+## Verification commands
+
+```sh
+node scripts/check-live-source.mjs --source-only
+npx tsc --noEmit
+node scripts/check_target_upload.mjs
+node scripts/check_comparison_passage.mjs
+node scripts/check_browser_pairing.mjs
+python3 scripts/check_migration_chain.py
+```
+
+The source-only check is clone-safe. Full `--snapshot` verification requires the owner-only build snapshots and configuration identified by LIVE_RELEASE.json. Its absence in a clone is expected; copying private stack files into GitHub is not a fix.
