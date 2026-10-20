@@ -1,3 +1,5 @@
+Current live baseline is update100. Optional participant automatic sync and approved device controls are deployed. Migration0038 is additive; fresh databases require39 migrations plus db/service-status.sql (209 definitions). Verified update96 encrypted recovery is retained; no new export authorized and matching current schema/source baseline remains pending. Read LIVE_RELEASE.json and current handoff.
+
 Current live baseline is update99. Category sharing, consolidated ongoing/historical/file consent and clearer sync controls are deployed; schema unchanged from update98. Existing encrypted update96 recovery remains retained and matching hosted baseline refresh pending. Read LIVE_RELEASE.json and current handoff.
 
 Current live baseline is update98, implementation aca250b79a5b. Historical review uses bounded D1-compatible queries. Schema is unchanged from update97; existing encrypted update96 recovery is retained and matching hosted baseline refresh remains pending. Read LIVE_RELEASE.json and the current handoff.

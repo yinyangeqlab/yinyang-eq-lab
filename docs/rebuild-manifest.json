@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 99,
-  "implementationCommit": "04257bf4312d613b6d43a5ff55d52eca40933fb4",
-  "runtimeParity": "Recorded runtime matches verified update99; separate UI/recovery WIP excluded.",
+  "liveUpdate": 100,
+  "implementationCommit": "3471da7d69a0196bcc43c12c4618529f2d0cc32d",
+  "runtimeParity": "Recorded runtime matches verified update100; separate UI/recovery WIP excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -35,6 +35,10 @@
     {
       "path": ".openai/hosting.json",
       "sha256": "89610cb100afd3db32d865423a69a3fe2de1da54150570ea979a63143a6d5bdd"
+    },
+    {
+      "path": "app/account-sync/page.tsx",
+      "sha256": "45f4f451d4fb0eb575a75a4e6901013ec59ffea8ed7979faf7905c7ed7afd15c"
     },
     {
       "path": "app/api/activity/route.ts",
@@ -97,6 +101,10 @@
       "sha256": "1bc2de3248d12c70f2fa450cedf4cfc55951203a530cb64765b6c4e38031ccaa"
     },
     {
+      "path": "app/api/my-profile/devices/route.ts",
+      "sha256": "aba4a29e7d1a85526c7a71015bc75ed5b8513c00650e670ee035f991aeeb2b9b"
+    },
+    {
       "path": "app/api/my-profile/route.ts",
       "sha256": "c525315a681d27b47150fa2dad910d2c563f32536e5ce1b33e27c13e45f034a4"
     },
@@ -143,6 +151,10 @@
     {
       "path": "app/api/owner-research/service-status/route.ts",
       "sha256": "fd2e96ada5605a6000db03cd7d2613a25b99a1793e1719bd321a704371c43df1"
+    },
+    {
+      "path": "app/api/owner-research/yinyangeq/devices/route.ts",
+      "sha256": "9d6df0bf18ea84f2193fe07566da06a1fcb85c1c7d97a5b8890e74df89822214"
     },
     {
       "path": "app/api/owner-research/yinyangeq/route.ts",
@@ -375,6 +387,14 @@
     {
       "path": "components/account-auto-sync.tsx",
       "sha256": "da4d84092d402cea790fc29610606618e6aa87bc0765358d1fe33b56b9797416"
+    },
+    {
+      "path": "components/account-device-status.css",
+      "sha256": "b2107ef32f6402868f0a9a535f8e0be7c3497419e31fdbee9a877b81350249aa"
+    },
+    {
+      "path": "components/account-device-status.tsx",
+      "sha256": "68199916f7f9a4b30bb9cbd828af7493b04e37bab6a6a766432fd47385674e22"
     },
     {
       "path": "components/account-sync-manager.tsx",
@@ -1121,6 +1141,10 @@
       "sha256": "a4bff8c3657f87213b4017117d5dce9d7c4c98652fbe4c3dd7f5bac599b7bbf6"
     },
     {
+      "path": "drizzle/0038_participant_account_sync.sql",
+      "sha256": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -1273,8 +1297,40 @@
       "sha256": "7f6d047b21f307f4648136e72a1e94198f74cc8fc9d01f3356bb64cf7d5b63bc"
     },
     {
+      "path": "lib/account-consent.ts",
+      "sha256": "ff5599c5f63c75bccb1e6f1180e041e30f159cc23bd05f933fa5b4bfc92e9301"
+    },
+    {
+      "path": "lib/account-devices.ts",
+      "sha256": "4a983e5c85702795500bff4e279b770d972ee2fe6afe8f6479f33788b784a947"
+    },
+    {
+      "path": "lib/account-preferences.mjs",
+      "sha256": "8b18472659e59bb50a087c36793383983af627351b87dd36ade70ad22b4d005c"
+    },
+    {
+      "path": "lib/account-sync-identity.ts",
+      "sha256": "6d354610dba46fa9e41785a5b8d582d2563ff1c519f592e79a81f1261512b164"
+    },
+    {
+      "path": "lib/account-sync-notice.d.mts",
+      "sha256": "42b41837d9f13b3fd18ad89bc7ee4502bc7619391b4e11bdd8e80c56fb026f88"
+    },
+    {
+      "path": "lib/account-sync-notice.mjs",
+      "sha256": "7671734cfa73481d6bd42b9d07068b204a5a1e193a4a23402a8d8782c9775878"
+    },
+    {
+      "path": "lib/account-sync-permission.ts",
+      "sha256": "6a09c4d16b64b4e9dda9319dd84eb1be8e06e4f14d69ef6f82ad839306f828e5"
+    },
+    {
       "path": "lib/account-sync-server.ts",
       "sha256": "8cdaf4358900e9cf5f0008eadf487d61ee0a65a4765c7c91cc9ef7f9e22c865a"
+    },
+    {
+      "path": "lib/account-sync-state.ts",
+      "sha256": "4b89cb4134c3102fa0aeb9cee641fcbeb044684fd03af9fd37cccb13076c5e8a"
     },
     {
       "path": "lib/account-sync.d.mts",
@@ -1391,6 +1447,14 @@
     {
       "path": "lib/curves.ts",
       "sha256": "76693bae8ddbeae5caf95dc4d763c99e17aedd3e9f7cd5dafcde9c7e94df8c4e"
+    },
+    {
+      "path": "lib/device-sync.d.mts",
+      "sha256": "0f3f688fb8a5db40c65a2f7630058530a5a00176102642607b8920691ffe50bd"
+    },
+    {
+      "path": "lib/device-sync.mjs",
+      "sha256": "0ed65fdf767773e8c9b8cd18352180a7b66293214604a14517d326ca72d2c27f"
     },
     {
       "path": "lib/dynamics-preview.ts",
@@ -1741,6 +1805,10 @@
       "sha256": "decf1cf7bb22b5c99c4857cfcd5718ce5465c4454166317589c83fc73df74b66"
     },
     {
+      "path": "scripts/account-sync-fixture.mjs",
+      "sha256": "2dc655b65aaaedc3b09417aeb9aae389b7f1dea9e23672159dc08d82d481bbf1"
+    },
+    {
       "path": "scripts/build-verified.sh",
       "sha256": "2ae5329ac860076070c9217a43106a15cb5ecf907a0f7baeb9ef903f76b53c68"
     },
@@ -1895,6 +1963,10 @@
     {
       "path": "scripts/check_open_music_source.mjs",
       "sha256": "0beb5ff58e0a4f57990217a71e5fba68872e29e54b43e454028492260697ff07"
+    },
+    {
+      "path": "scripts/check_participant_device_sync.mjs",
+      "sha256": "8904d5a838117342345befb59d4e309eac817f78fb179acd13f8e64c0c742a97"
     },
     {
       "path": "scripts/check_participation_entry.mjs",

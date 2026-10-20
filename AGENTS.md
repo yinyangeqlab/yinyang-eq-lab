@@ -4,7 +4,7 @@ This checkout is the active source. In the owner container it is workspace/. Do 
 
 # Current release and rebuild instructions
 
-Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update99. Per-feature timed maintenance, independent consent entry and Tuning fixes are deployed; read the active notice and audit limits in HANDOFF.md. Preserve and exclude separate uncommitted personal-shootout work when selecting a baseline. Historical handoffs are not deployment instructions.
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update100. Per-feature timed maintenance, independent consent entry and Tuning fixes are deployed; read the active notice and audit limits in HANDOFF.md. Preserve and exclude separate uncommitted personal-shootout work when selecting a baseline. Historical handoffs are not deployment instructions.
 
 In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
 
