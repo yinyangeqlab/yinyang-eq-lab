@@ -2,6 +2,13 @@
 
 [Watch both embedded videos](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2) · [Project](https://yinyangeq.com)
 
+Short direct GitHub-hosted links to paste into Discord:
+
+- **Trailer:** (retired demo)
+- **Mobile demo:** (retired demo)
+
+The MP4 files are served directly by the lab account’s GitHub Pages. No external URL shortener, Discord upload or application deployment is involved.
+
 These are historical demos recorded on October 17, 2026. The current site includes additional features. The README and credit pages contain inline GitHub video players. Streaming copies use H.264/AAC, fast-start MP4, 720p landscape or portrait, and are approximately 4 MB each. The original 1080p release downloads remain available.
 
 ## Cinematic trailer — 54.6 seconds
@@ -35,4 +42,4 @@ Music: “The Funk” by Hotham — [source](https://freemusicarchive.org/music/
 - Include the applicable music credit above with your post, or link its full credits page.
 - Discord controls preview fetching and playback; server permissions, client settings and caching can affect the result. If a preview is missing, the video is still accessible through the link. In-channel Discord playback has not been independently verified.
 
-No video folder, Git LFS or application deployment is needed. The video bytes live in public GitHub attachments under the lab account, outside the source history. Keep the permanent `github.com/user-attachments/assets/…` URLs; temporary redirected storage URLs expire. Full-size release assets and their historical tags are preserved.
+No video folder, Git LFS or application deployment is needed. The short-link MP4 copies live in the lab’s separate [GitHub Pages media repository](https://github.com/yinyangeqlab/yinyangeqlab.github.io); the README inline players also retain their public GitHub attachments. Keep the permanent `github.com/user-attachments/assets/…` URLs; temporary redirected storage URLs expire. Full-size release assets and their historical tags are preserved.

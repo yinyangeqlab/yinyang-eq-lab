@@ -2,7 +2,7 @@
 
 (retired demo)
 
-[Copy a direct link for Discord](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
+**Short link for Discord: (retired demo)** · [Sharing guide](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
 
 [Watch or download the trailer]((retired demo)) · [Demo release](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17)
 

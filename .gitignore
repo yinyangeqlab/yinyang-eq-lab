@@ -63,7 +63,6 @@ work/
 !/infra/pulumi/abuse-controls.mjs
 !/infra/pulumi/abuse-controls.d.mts
 !/infra/pulumi/public-assets.mjs
-!/infra/pulumi/public-demos.mjs
 !/infra/pulumi/public-assets.d.mts
 !/infra/pulumi/package.json
 !/infra/pulumi/package-lock.json

@@ -32,7 +32,7 @@ Take a quick, casual tour of the phone layout: **45 seconds · vertical 9:16 · 
 
 A historical look at the October 17 interface, including comparisons, measurements, the music library, and Preference Tuning. The current site also includes Personal Tournament, Research Rankings, Community Preferences, and optional account sync. [Video and music credits](docs/MOBILE_DEMO.md).
 
-**[Copy video links for Discord →](docs/VIDEOS.md)** · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
+**Share to Discord:** [Trailer]((retired demo)) · [Mobile demo]((retired demo)) · [Copy short links and credits →](docs/VIDEOS.md) · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
 
 ## Hear the difference
 

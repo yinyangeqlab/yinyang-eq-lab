@@ -1274,7 +1274,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "535b47701600d724df097ce1e5f6484b3cb207d1adf6bad40696ae5037a16fce"
+      "sha256": "d4a4d8ecbe2537aaf56a9937133d8148c38c7c4f1b547617f949e2e5d8c96678"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "e6d55e01c349243dfdf954ae4bda49e86f3f27cc6685f931fe435f4fbd29443a"
+      "sha256": "e37a792d3e76afd07cbcd00090b3bed83fc8dc81c7de39e5fe48264394393424"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1846,7 +1846,7 @@
     },
     {
       "path": "scripts/check-release.py",
-      "sha256": "583d56fbf1988985393f000da9e1eba993b05d120f2b2a80455b03405654cee3"
+      "sha256": "b50765c4d4e8d11d26b3f742062996837a08763918ab385c985d8ab2e6558f64"
     },
     {
       "path": "scripts/check_account_auto_sync.mjs",
