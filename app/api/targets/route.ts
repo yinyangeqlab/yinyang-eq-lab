@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { maintenanceResponse } from "@/lib/maintenance";
 import { count, desc, eq, gte, and } from "drizzle-orm";
 import { getDb } from "@/db";
@@ -17,6 +18,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("target");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 300_000);
@@ -42,7 +44,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Choose an available approved parent target." }, { status: 400 });
     const matches = compareTargets(name, points, existing.map(t => ({ id:t.id,name:t.name,points:JSON.parse(t.points) })));
     const id = crypto.randomUUID();
-    await db.insert(targets).values({ id, name, creator, description, curveKind, parentTargetId: parentTargetId || null, points: JSON.stringify(points), measurement: JSON.stringify(measurement), createdAt: now, status:"pending", reviewReason:JSON.stringify(matches) });
+    await db.batch([db.insert(targets).values({ id, name, creator, description, curveKind, parentTargetId: parentTargetId || null, points: JSON.stringify(points), measurement: JSON.stringify(measurement), createdAt: now, status:"pending", reviewReason:JSON.stringify(matches) }), ownership.record(id)]);
     return Response.json({ id, status:"pending", matches }, { status: 201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

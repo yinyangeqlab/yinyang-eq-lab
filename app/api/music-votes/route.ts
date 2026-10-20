@@ -1,3 +1,5 @@
+import { submissionContext } from "@/lib/submission-ownership";
+import { submissionOwners } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { getDb } from "@/db";
@@ -15,7 +17,7 @@ async function snapshot(userId?: string) {
   const totals = { keep: 0, pass: 0 };
   const byTrack: MusicCounts = {};
   const mine: Record<string, "keep" | "pass"> = {};
-  for (const row of rows) {
+  for (const row of new Map(rows.map(row => [JSON.stringify([row.userId, row.trackUrl]), row])).values()) {
     if (!knownTracks.has(row.trackUrl)) continue;
     if (row.choice === "keep" || row.choice === "pass") {
       totals[row.choice]++;
@@ -40,6 +42,8 @@ export async function POST(request: Request) {
   const user = await getChatGPTUser();
   if (!user) return Response.json({ error: "Sign in to submit music votes." }, { status: 401, headers: privateHeaders });
   try {
+    const ownership = await submissionContext("music");
+    if (ownership.subjectId !== user.userId) return Response.json({ error: "Sign in again to manage this account." }, { status:403, headers:privateHeaders });
     const data = await readJsonObject(request, 4096);
     const trackUrl = data.trackUrl;
     const choice = data.choice;
@@ -47,11 +51,12 @@ export async function POST(request: Request) {
       return Response.json({ error: "Invalid music vote." }, { status: 400, headers: privateHeaders });
     }
     const db = getDb();
+    const ownershipId = JSON.stringify([user.userId, trackUrl]);
     if (choice === null) {
-      await db.delete(musicVotes).where(and(eq(musicVotes.userId, user.userId), eq(musicVotes.trackUrl, trackUrl)));
+      await db.batch([db.delete(musicVotes).where(and(eq(musicVotes.userId, user.userId), eq(musicVotes.trackUrl, trackUrl))), db.delete(submissionOwners).where(and(eq(submissionOwners.recordKind,"music"),eq(submissionOwners.recordId,ownershipId),eq(submissionOwners.subjectId,user.userId)))]);
     } else {
-      await db.insert(musicVotes).values({ userId: user.userId, trackUrl, choice, userEmail: user.email, userName: user.displayName, updatedAt: Date.now() })
-        .onConflictDoUpdate({ target: [musicVotes.userId, musicVotes.trackUrl], set: { choice, userEmail: user.email, userName: user.displayName, updatedAt: Date.now() } });
+      await db.batch([db.insert(musicVotes).values({ userId: user.userId, trackUrl, choice, userEmail: user.email, userName: user.displayName, updatedAt: Date.now() })
+        .onConflictDoUpdate({ target: [musicVotes.userId, musicVotes.trackUrl], set: { choice, userEmail: user.email, userName: user.displayName, updatedAt: Date.now() } }), ownership.record(ownershipId)]);
     }
     return Response.json(await snapshot(user.userId), { headers: privateHeaders });
   } catch (error) {

@@ -1,0 +1,106 @@
+{
+  "updated": "October 17, 2026",
+  "previewOnly": false,
+  "contact": "yinyangeq@gmail.com",
+  "targets": [
+    {
+      "id": "80814769-6c61-4d24-801b-d80c20c1d5f4",
+      "name": "YinYang EQ Preference Target I",
+      "credit": "Yin Yang EQ Lab",
+      "status": "licensed",
+      "license": "CC BY 4.0",
+      "sourceUrl": "",
+      "changes": "Normalized to 0 dB at 1 kHz.",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+      "notice": "YinYang EQ Preference Target I — © 2026 Yin Yang EQ Lab. Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). Credit Yin Yang EQ Lab, link to the license, and indicate modifications. This grant covers the owner’s rights in the curve."
+    },
+    {
+      "id": "7a8ee296-ac62-4e56-b413-0b1042e9f46f",
+      "name": "YinYang EQ Preference Target II",
+      "credit": "Yin Yang EQ Lab",
+      "status": "licensed",
+      "license": "CC BY 4.0",
+      "sourceUrl": "",
+      "changes": "Normalized to 0 dB at 1 kHz.",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+      "notice": "YinYang EQ Preference Target II — © 2026 Yin Yang EQ Lab. Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). Credit Yin Yang EQ Lab, link to the license, and indicate modifications. This grant covers the owner’s rights in the curve."
+    },
+    {
+      "id": "fefbaa8f-563f-4c1b-ace9-74b299afa2fe",
+      "name": "YinYang EQ Preference Target II (rev. 2)",
+      "credit": "Yin Yang EQ Lab",
+      "status": "licensed",
+      "license": "CC BY 4.0",
+      "sourceUrl": "",
+      "changes": "Normalized to 0 dB at 1 kHz.",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+      "notice": "YinYang EQ Preference Target II (rev. 2) — © 2026 Yin Yang EQ Lab. Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0). Credit Yin Yang EQ Lab, link to the license, and indicate modifications. This grant covers the owner’s rights in the curve."
+    },
+    {
+      "id": "62d0a04c-7975-4a26-977c-47c399fcfa5c",
+      "name": "MrChillStorm ISO 226 85 phon 0.00",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_0.00.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "dbdfb95d-95c8-4b2a-9913-e13f44245323",
+      "name": "MrChillStorm ISO 226 85 phon 0.25",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_0.25.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "10358920-1c9b-4882-a251-58100e7b7c43",
+      "name": "MrChillStorm ISO 226 85 phon 0.3661543",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_0.3661543.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "d27f5c62-d162-48aa-9dc9-55de1742aa08",
+      "name": "MrChillStorm ISO 226 85 phon 0.50",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_0.50.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "3978a27c-2fcf-493b-81b6-2979fb3af51c",
+      "name": "MrChillStorm ISO 226 85 phon 0.75",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_0.75.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    },
+    {
+      "id": "52ca168e-b0b9-441c-ac11-c6a2c3d5d30f",
+      "name": "MrChillStorm ISO 226 85 phon 1.00",
+      "credit": "MrChillStorm",
+      "status": "licensed",
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/MrChillStorm/Headphone_Target/447d959aa8b363993ac2abdf1dfa264dc2037bdd/targets/headphone_target_1.00.csv",
+      "changes": "Normalized to 0 dB at 1 kHz. Log-frequency resampling from 2,048 to at most 2,000 points.",
+      "licenseUrl": "https://github.com/MrChillStorm/Headphone_Target/blob/447d959aa8b363993ac2abdf1dfa264dc2037bdd/LICENSE",
+      "notice": "MIT License\n\nCopyright (c) 2026 MrChillStorm\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
+    }
+  ]
+}

@@ -127,6 +127,55 @@
       "breakpoints": true,
       "idx": 17,
       "tag": "0016_measurement_file_chunks"
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1792306000018,
+      "tag": "0017_admin_moderation",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1792306000019,
+      "tag": "0018_self_service_erasure",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1792306000020,
+      "tag": "0019_required_participation_agreement",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1792306000021,
+      "tag": "0020_retention_and_deletion_totals",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1792306000022,
+      "tag": "0021_statistics_archive",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1792306000023,
+      "tag": "0022_small_study_retention",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1792306000024,
+      "tag": "0023_repeat_aware_archive",
+      "breakpoints": true
     }
   ]
 }
