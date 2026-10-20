@@ -1421,15 +1421,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "3ea1fc4516c68b0f8c20b3d3a881131f7b898fc88ba84bf00950ae361b96e252"
+      "sha256": "1795e1c5701d6283e8abd7563e82b077254bd139b6756238467c3a2ceba9557f"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "a80a0dde747345793e18f6b2e655b4d29e6a9907718dfe67a938383026d22004"
+      "sha256": "ef2f1002f01da5059de178d9add09f986689bc94afcf26d29b4558b01d55dd9f"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "c58ff267daefbaf8224de601eccbc13b531d3eeced63a77b263e2c2f8986f09f"
+      "sha256": "a511fbdf6768d484d36eeceeaa6791351c23b09cadd85746558251c08d09d648"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -5200,8 +5200,12 @@
   "gitSource": {
     "deploymentSource": "work/continue-button-release-20261018",
     "implementationCommit": "15ec1a7",
-    "pushed": false,
-    "publicationSeparateFromDeployment": true
+    "pushed": true,
+    "publicationSeparateFromDeployment": true,
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-league",
+    "branch": "main",
+    "publishedReleaseCommit": "f44e0c0a4d19a2adf65729272e43042de0810399",
+    "pushVerifiedAt": "2026-10-18T22:23:09.180680+00:00"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
