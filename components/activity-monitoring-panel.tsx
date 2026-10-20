@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-type EventRow = { id:string; subject_id:string; session_id:string; event_type:string; route:string; shootout_tab:string|null; test_mode:string|null; test_active:number; created_at:number; listener_label:string };
+type EventRow = { retained_indefinitely?:number; id:string; subject_id:string; session_id:string; event_type:string; route:string; shootout_tab:string|null; test_mode:string|null; test_active:number; created_at:number; listener_label:string };
 type Cursor = { beforeAt:number; beforeId:string } | null;
 type Payload = { events:EventRow[]; hasMore:boolean; next:Cursor; retentionDays:number; activeWindowSeconds:number; error?:string };
 const eventNames:Record<string,string> = { page_view:"Page visit", heartbeat:"Active page heartbeat", shootout_tab:"Tournament tab", test_started:"Test started", test_ended:"Test ended" };
@@ -24,7 +24,7 @@ export default function ActivityMonitoringPanel() {
       setEvents(current => {
         if (!older && result.events.length === 0) return [];
         const merged = new Map<string,EventRow>();
-        const retained = current.filter(row=>row.created_at>=Date.now()-result.retentionDays*86400000);
+        const retained = current.filter(row=>row.retained_indefinitely===1||row.created_at>=Date.now()-result.retentionDays*86400000);
         for (const row of [...retained,...result.events]) merged.set(row.id,row);
         return [...merged.values()].sort((a,b)=>b.created_at-a.created_at || b.id.localeCompare(a.id));
       });
@@ -41,7 +41,7 @@ export default function ActivityMonitoringPanel() {
   const liveCount = useMemo(()=>[...latestBySession.values()].filter(row=>row.test_active===1 && Date.now()-row.created_at<=windowSeconds*1000).length,[latestBySession,windowSeconds]);
   return <section id="activity-monitoring" aria-label="Opted-in activity monitoring">
     <h2>Opted-in test activity</h2>
-    <p>{liveCount} session{liveCount===1?"":"s"} currently reporting an active Tournament test. “Active” means the page sent a heartbeat in the last {windowSeconds} seconds; it does not prove someone is listening. Logged routes and Tournament tabs are visible below. Entries are kept for 30 days, then purged the next time the monitoring service runs; logs are deleted immediately when the user opts out.</p>
+    <p>{liveCount} session{liveCount===1?"":"s"} currently reporting an active Tournament test. “Active” means the page sent a heartbeat in the last {windowSeconds} seconds; it does not prove someone is listening. Logged routes and Tournament tabs are visible below. Ordinary participant entries are kept for 30 days and deleted on opt-out. Protected YinYangEQ history is kept indefinitely, including after monitoring is turned off, until explicitly included in an account-specific deletion.</p>
     <p>Only users who enabled identifiable activity monitoring are listed. Labels identify the browser or shared account, not a verified person. No IP address, device fingerprint, typed content, form values, audio or external browser history is collected by this feature.</p>
     {error&&<p role="alert">{error}</p>}
     <div className="owner-table-wrap"><table><thead><tr><th>Time</th><th>Tester</th><th>Status</th><th>Location</th><th>Event</th></tr></thead><tbody>

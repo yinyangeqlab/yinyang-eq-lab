@@ -260,6 +260,13 @@
       "when": 1792406130065,
       "tag": "0036_community_prospective_pilot",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "6",
+      "when": 1792440000000,
+      "tag": "0037_owner_account_sync",
+      "breakpoints": true
     }
   ]
 }

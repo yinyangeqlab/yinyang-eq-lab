@@ -2276,3 +2276,9 @@ footer.site-data-footer { justify-content:center; align-items:center; flex-wrap:
  .shootout-content .tournament-mode-copy small{display:none}
  .shootout-content .tournament-mode-suggestion{margin-left:0;font-size:9px}
 }
+
+.profile-manager select{color-scheme:dark;background-color:#142626}.profile-manager select option,.profile-manager select optgroup{background:#142626;color:#f1f5f4}.profile-device-signin input:not([type=checkbox]){display:block;width:min(100%,34rem);box-sizing:border-box}.profile-device-signin button:focus-visible,.profile-manager select:focus-visible,.profile-device-signin input:focus-visible{outline:2px solid #e2c56e;outline-offset:3px}
+
+.account-sync-status{max-width:900px;margin:1rem auto;padding:.6rem 1rem;border:1px solid #ffffff25;border-radius:10px;overflow-wrap:anywhere}.account-sync-status p{margin:.3rem 0}.account-sync-status a,.account-sync-status button{display:inline-block;margin:.3rem .7rem .3rem 0}
+
+.profile-sync-manager{padding:1rem;margin:1rem 0;border:1px solid #ffffff35;border-radius:12px}.profile-sync-manager pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:20rem;overflow:auto}.profile-sync-manager details{margin:.8rem 0}

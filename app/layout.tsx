@@ -1,3 +1,4 @@
+import AccountAutoSync from "@/components/account-auto-sync";
 import { env } from "cloudflare:workers";
 import { invitesEnabled } from "@/lib/invite-settings.mjs";
 import { InviteModeProvider } from "@/components/invite-mode";
@@ -35,7 +36,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents />{children}<footer className="site-data-footer" aria-label="Data and credits"><a href="/my-data">My data · sharing &amp; deletion</a><a href="/curve-credits">Curve credits</a></footer></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync />{children}<footer className="site-data-footer" aria-label="Data and credits"><a href="/my-data">My data · sharing &amp; deletion</a><a href="/curve-credits">Curve credits</a></footer></InviteModeProvider></body>
     </html>
   );
 }

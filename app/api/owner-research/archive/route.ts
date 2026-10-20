@@ -60,6 +60,7 @@ export async function POST(request:Request){
    db.prepare(`SELECT o.subject_id,COUNT(*) comparisons,SUM(CASE WHEN v.winner_id=? THEN 1 ELSE 0 END) a_wins
     FROM votes v JOIN submission_owners o ON o.record_kind='vote' AND o.record_id=v.id JOIN privacy_accounts a ON a.subject_id=o.subject_id
     WHERE v.created_at>=? AND v.created_at<? AND a.submissions_enabled=1
+    AND NOT EXISTS(SELECT 1 FROM owner_public_profiles protected WHERE protected.subject_id=o.subject_id)
     AND ((?=0 AND v.created_at>=a.agreed_at AND a.agreement_version=?) OR (?=1 AND EXISTS (
       SELECT 1 FROM legacy_record_verifications l JOIN retrospective_permissions p ON p.subject_id=l.subject_id
       WHERE l.record_kind='vote' AND l.record_id=v.id AND l.subject_id=o.subject_id AND p.study_id=? AND p.enabled=1 AND p.notice_version=? AND a.agreement_version='2026-10-18-v7')))
