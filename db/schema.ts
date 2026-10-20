@@ -273,8 +273,21 @@ export const archiveStudies = sqliteTable("archive_studies", {
  id:text("id").primaryKey().notNull(), targetA:text("target_a").notNull(), targetB:text("target_b").notNull(),
  mode:text("mode").notNull(), headphoneType:text("headphone_type").notNull(), startAt:integer("start_at").notNull(), endAt:integer("end_at").notNull(),
  noticeVersion:text("notice_version").notNull(),methodology:text("methodology").notNull(),
+ sourceMode:text("source_mode").notNull().default("prospective"),sealAfter:integer("seal_after"),
 },table=>[uniqueIndex("archive_studies_query_unique").on(table.targetA,table.targetB,table.mode,table.headphoneType,table.startAt,table.endAt),
 check("archive_study_mode",sql`${table.mode} IN ('blind','bring')`),check("archive_study_headphone",sql`${table.headphoneType} IN ('ie','oe')`),check("archive_study_window",sql`${table.endAt}>${table.startAt}`)]);
 export const archiveReleases = sqliteTable("archive_releases", {
  sequence:integer("sequence").primaryKey().notNull(), studyId:text("study_id").notNull().unique("archive_releases_study_id_unique").references(()=>archiveStudies.id),payload:text("payload").notNull(),
 },table=>[check("archive_release_nonnegative",sql`${table.sequence}>=0`),check("archive_release_json",sql`json_valid(${table.payload})`)]);
+
+// Private verification/permission records: erased with their linked source/account.
+export const legacyReviewRequests = sqliteTable("legacy_review_requests", {
+ id:text("id").primaryKey().notNull(),subjectId:text("subject_id").notNull(),recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),
+ message:text("message").notNull(),status:text("status").notNull().default("pending"),adminReason:text("admin_reason"),createdAt:integer("created_at").notNull(),reviewedAt:integer("reviewed_at"),
+},t=>[index("legacy_requests_subject_idx").on(t.subjectId),check("legacy_request_status",sql`${t.status} IN ('pending','approved','rejected')`),check("legacy_request_kind",sql`${t.recordKind} IN ('vote','open','run')`)]);
+export const legacyRecordVerifications = sqliteTable("legacy_record_verifications", {
+ recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),subjectId:text("subject_id").notNull(),requestId:text("request_id").notNull().references(()=>legacyReviewRequests.id,{onDelete:"cascade"}),
+},t=>[primaryKey({columns:[t.recordKind,t.recordId]}),index("legacy_verified_subject_idx").on(t.subjectId)]);
+export const retrospectivePermissions = sqliteTable("retrospective_permissions", {
+ studyId:text("study_id").notNull().references(()=>archiveStudies.id),subjectId:text("subject_id").notNull(),enabled:integer("enabled").notNull().default(0),noticeVersion:text("notice_version").notNull(),agreedAt:integer("agreed_at").notNull(),withdrawnAt:integer("withdrawn_at"),
+},t=>[primaryKey({columns:[t.studyId,t.subjectId]}),check("retrospective_permission_enabled",sql`${t.enabled} IN (0,1)`)]);

@@ -131,6 +131,7 @@ export default function Home() {
     finally {setSavingDataChoices(false);}
   }
   function changeResearchSharing(enabled: boolean) { setResearchSharing(enabled); }
+  useEffect(()=>{const refreshErased=()=>{void refresh();};window.addEventListener("yinyang-server-erased",refreshErased);return()=>window.removeEventListener("yinyang-server-erased",refreshErased);},[]);
   function removeBrowserTrial(id: string) {
     try { deleteBrowserTrial(id); setTrials(current=>current.filter(row=>row.id!==id)); }
     catch {setMessage("Could not delete the saved browser copy.");}

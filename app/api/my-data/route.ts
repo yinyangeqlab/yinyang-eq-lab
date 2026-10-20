@@ -27,7 +27,11 @@ export async function PATCH(request: Request) {
       if (body.acknowledged !== true || body.noticeVersion !== VOTE_DATA_NOTICE_VERSION) throw new RequestInputError("Read and explicitly agree to the current comparison-data notice on Shootout.",400);
       await env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=1,share_music=?,agreement_version=?,agreed_at=?,withdrawn_at=NULL WHERE subject_id=?").bind(body.shareMusic?1:0,VOTE_DATA_NOTICE_VERSION,Date.now(),identity.subjectId).run();
     } else if (!body.submissionsEnabled) {
-      await env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=0,share_music=0,withdrawn_at=? WHERE subject_id=?").bind(Date.now(),identity.subjectId).run();
+      const now=Date.now();
+      await env.DB!.batch([
+        env.DB!.prepare("UPDATE privacy_accounts SET submissions_enabled=0,share_music=0,withdrawn_at=? WHERE subject_id=?").bind(now,identity.subjectId),
+        env.DB!.prepare("UPDATE retrospective_permissions SET enabled=0,withdrawn_at=? WHERE subject_id=? AND enabled=1").bind(now,identity.subjectId),
+      ]);
     } else {
       await env.DB!.prepare("UPDATE privacy_accounts SET share_music=? WHERE subject_id=?").bind(body.shareMusic?1:0,identity.subjectId).run();
     }

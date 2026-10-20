@@ -1,4 +1,5 @@
 "use client";
+import {AdminLegacyReview} from "@/components/legacy-review";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import StatisticsArchivePanel from "@/components/statistics-archive";
 import AdminReview from "@/components/admin-review";
@@ -115,6 +116,7 @@ export default function OwnerResearch() {
     {!data ? <div className="owner-login"><p>{loading ? "Loading private research…" : "Private research could not be loaded."}</p>{!loading && <button type="button" onClick={() => void load()}>Try again</button>}</div> : <>
       {rawData && <AdminReview data={rawData} reload={load} />}
       <section aria-label="Deletion statistics"><h2>Deletion statistics</h2><p>Private totals by UTC date and data category. Counts describe erased database records, not unique submissions or people. Linked comparison records, file chunks and admin notes are counted separately. No identity, deleted content or individual deletion history is retained here.</p><div className="owner-table-wrap"><table><thead><tr><th>UTC date</th><th>Data category</th><th>Records deleted</th></tr></thead><tbody>{[...(data.deletionTotals || [])].sort((a,b)=>b.day.localeCompare(a.day)||a.recordKind.localeCompare(b.recordKind)).map(row=><tr key={`${row.day}:${row.recordKind}`}><td>{row.day}</td><td>{row.recordKind}</td><td>{row.deletedCount}</td></tr>)}{!data.deletionTotals?.length && <tr><td colSpan={3}>No recorded deletions yet. Earlier deletions are not backfilled.</td></tr>}</tbody></table></div></section>
+      <AdminLegacyReview />
       <StatisticsArchivePanel />
       <TesterInvites />
       <NameFilterLab />
