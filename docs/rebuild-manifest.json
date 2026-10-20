@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 90,
-  "implementationCommit": "5b4cd5867f9a96aca9f8f7778abf95d90259308d",
-  "runtimeParity": "Recorded runtime inputs match verified update90; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 91,
+  "implementationCommit": "44a63aea01da8c85cf045fdd00fc5614e254b4e2",
+  "runtimeParity": "Recorded runtime inputs match verified update91; concurrent personal-shootout development is excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -51,6 +51,8 @@
       "components/personal-research-sharing.tsx",
       "components/research-music-source.tsx",
       "components/target-curve.tsx",
+      "components/tournament-mode-tabs.css",
+      "components/tournament-mode-tabs.tsx",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
       "drizzle/meta/0033_snapshot.json",
@@ -1415,6 +1417,10 @@
     {
       "path": "scripts/check_listening_audio_worker.mjs",
       "sha256": "93285b05953666835d2a0302ddce62ee732699c034116400e7fdfe727e67683e"
+    },
+    {
+      "path": "scripts/check_maintenance_scope.mjs",
+      "sha256": "3760e7b2750907cfb60508a4fec7406feb73b2144df045a590851039ebbaeac9"
     },
     {
       "path": "scripts/check_measurement_research.mjs",

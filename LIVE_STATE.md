@@ -1,3 +1,15 @@
+# Current live release — update91, October 18, 2026
+
+Live: https://yinyangeq.com. The owner-requested one-hour maintenance freeze is active until Oct 18, 2026, 10:58 PM Pacific, with automatic expiry. The notice explains that major updates are underway. Public Shootout pages and new trial/comparison/vote/feedback writes are paused. Listening Pool playback/votes and Preference Tuning/downloads remain usable; My data, privacy and admin access are preserved. Already-loaded audio is not forcibly stopped, and no browser refresh is forced.
+
+Implementation `44a63aea01da8c85cf045fdd00fc5614e254b4e2`. Source/build `work/maintenance-freeze-release-20261018`; infrastructure `work/maintenance-freeze-infra-20261018`. The maintenance gate was narrowed from all writes to Shootouts, and the notice/admin wording updated. No schema, scoring, listening protocol or participant-record change. One existing Worker updated; three resources unchanged; 95 earlier client assets retained. CPU5000ms, six abuse bindings, private media and edge/cost guards preserved. Pending personal-shootout work is excluded. GitHub publication remains separate.
+
+Build/types, full340-asset/200-recording packaging,19 selective route/method cases, warning and duration regressions passed. Live public Shootout shows the maintenance page, with working Listening Pool and Preference Tuning links. The freeze starts from the stored activation time and expires automatically; it is not extended by later deployments. Evidence: workspace/artifacts/maintenance-freeze-20261018/.
+
+Outstanding work in this chat: configurable per-feature admin maintenance locks and the final whole-site wording/counter/layout audit. The user requested the freeze after originally asking to keep Shootouts open; this explicit newer instruction authorises pausing Shootouts for the stated hour.
+
+## Historical release notes
+
 # Current live release — update90, October 18, 2026
 
 Live: https://yinyangeq.com. Same file across listeners now matches valid SHA-256 fingerprints across at least two participant groups. Song tags and recording IDs are descriptive, so missing or different tags no longer exclude identical files. Ties preserve valid hashes already retained in their consented listening-run context. Invalid or missing hashes fail closed. Synced browsers remain one authenticated group; test-version filtering, moderation, common-passage requirements and private output are preserved.

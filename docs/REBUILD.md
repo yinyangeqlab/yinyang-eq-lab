@@ -1,3 +1,7 @@
+Current live baseline is update91, implementation 44a63aea01da8c85cf045fdd00fc5614e254b4e2. Source/build: work/maintenance-freeze-release-20261018; infra: work/maintenance-freeze-infra-20261018. Selective timed Shootout maintenance; no migration, scoring-model or listening-protocol change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update90, implementation 5b4cd5867f9a96aca9f8f7778abf95d90259308d. Source/build: work/file-matching-fix-release-20261018; infra: work/file-matching-fix-infra-20261018. SHA-256 file identity and retained tie hashes; no migration, write-API, scoring-model or listening-protocol change. A fresh database still uses all33 migrations. Pending personal-shootout work is excluded. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes
