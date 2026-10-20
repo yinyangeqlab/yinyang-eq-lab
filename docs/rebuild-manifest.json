@@ -304,11 +304,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "1a01e248b1374f7fb417a1c349d78cc46c9024b3837a63cad12a42b89aae2bb4"
+      "sha256": "d91d3fb6f108b6b40310eef146310dc3ec6ec8b42253eb0ac1fe905e72e9edcc"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "a55d502bcce765204e89605ddbfeabc95793f4f2e1b049c01bf1751f35aa54ff"
+      "sha256": "a99851bdaa4ea525403346061d8b112b3479f2c9ec9811a7ce8da9163cfb0d6b"
     },
     {
       "path": "components/connector-error.tsx",
