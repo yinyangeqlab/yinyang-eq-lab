@@ -23,11 +23,11 @@ export async function publicWriteGate(request: Request): Promise<Response | null
     if (penalty && penalty.blocked_until > now) {
       const hit = await env.DB.prepare(BLOCKED_HIT_SQL).bind(client, now).first<Penalty>();
       const escalated = hit && hit.hits >= 10 && (hit.level === 1 || now - hit.last_escalated_at >= 60_000)
-        ? await env.DB.prepare(ESCALATE_PENALTY_SQL).bind(now, now, now + 172800000, client, now - 60_000).first<Penalty>() : null;
+        ? await env.DB.prepare(ESCALATE_PENALTY_SQL).bind(now, now, now + 172800000, client, now - 60_000, now).first<Penalty>() : null;
       const active = escalated ?? hit ?? penalty;
       return cooldownResponse(active.blocked_until, now, active.level);
     }
-    for (const [period, window, limit] of [["minute", 60_000, 30], ["day", 86_400_000, 500]] as const) {
+    for (const [period, window, limit] of [["minute", 60_000, 30]] as const) {
       const bucket = Math.floor(now / window);
       const row = await env.DB.prepare(`
         INSERT INTO public_write_limits (key, window_start, count, expires_at) VALUES (?, ?, 1, ?)
@@ -39,8 +39,7 @@ export async function publicWriteGate(request: Request): Promise<Response | null
       `).bind(`${period}:${client}`, bucket, (bucket + 2) * window).first<Counter>();
       if (!row || row.count > limit) {
         const until = now + Math.max(60_000, window - now % window);
-        const started = await env.DB.prepare(START_PENALTY_SQL).bind(client, until, now, now + 172800000,
-          now, until, now, now, now, now + 172800000, now).first<Penalty>();
+        const started = await env.DB.prepare(START_PENALTY_SQL).bind(client, until, now, now + 172800000, now).first<Penalty>();
         const active = started ?? await env.DB.prepare(READ_PENALTY_SQL).bind(client).first<Penalty>();
         return cooldownResponse(active?.blocked_until ?? until, now, active?.level ?? 1);
       }

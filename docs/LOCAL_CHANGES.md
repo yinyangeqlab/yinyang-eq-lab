@@ -2,6 +2,8 @@
 
 Compared with public commit `ad581f0`, this snapshot includes the working application's listening, ranking, cooldown and navigation updates. It is a source checkpoint, not a deployment.
 
+The latest source sync also includes update 35: no shared daily testing quota, and a normal one-minute wait after each completed cooldown. Only continued submissions during an active cooldown can escalate the penalty. The current [handoff](HANDOFF.md) records the source and deployment boundary; the [target inventory](TARGET_INVENTORY.md) lists the 41 live names without numerical target data. Future target imports require a clear redistribution license covering the curve itself.
+
 ## Listening completion and repeated choices
 
 A completed comparison is saved in this browser and its targets are revealed before research or ranking requests finish. A failed request leaves the personal answer available and explains that the shared write failed. A successful vote upgrades the same personal row rather than appending a duplicate. Finish & see results works after two completed trials, including from the next unanswered pairing, and waits for pending submissions.

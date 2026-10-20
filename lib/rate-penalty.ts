@@ -9,14 +9,17 @@ export const ESCALATE_PENALTY_SQL = `UPDATE public_write_penalties SET
   level = min(level + 1, 5),
   blocked_until = max(blocked_until, ? + CASE level WHEN 1 THEN 900000 WHEN 2 THEN 3600000 WHEN 3 THEN 21600000 ELSE 86400000 END),
   hits = 0, last_escalated_at = ?, expires_at = ?
-  WHERE key = ? AND hits >= 10 AND (level = 1 OR last_escalated_at <= ?)
+  WHERE key = ? AND hits >= 10 AND (level = 1 OR last_escalated_at <= ?) AND blocked_until > ?
   RETURNING level, hits, blocked_until, last_escalated_at, expires_at`;
+// A completed cooldown always resets the next incident to the normal wait.
+// Only ESCALATE_PENALTY_SQL may increase a level, while a block is active.
 export const START_PENALTY_SQL = `INSERT INTO public_write_penalties (key, level, hits, blocked_until, last_escalated_at, expires_at)
   VALUES (?, 1, 0, ?, ?, ?)
   ON CONFLICT(key) DO UPDATE SET
-    level = CASE WHEN expires_at <= ? THEN 1 ELSE min(level + 1, 5) END,
-    blocked_until = max(?, ? + CASE WHEN expires_at <= ? THEN 60000 WHEN level = 1 THEN 900000 WHEN level = 2 THEN 3600000 WHEN level = 3 THEN 21600000 ELSE 86400000 END),
-    hits = 0, last_escalated_at = ?, expires_at = ?
+    level = 1, hits = 0,
+    blocked_until = excluded.blocked_until,
+    last_escalated_at = excluded.last_escalated_at,
+    expires_at = excluded.expires_at
   WHERE public_write_penalties.blocked_until <= ?
   RETURNING level, hits, blocked_until, last_escalated_at, expires_at`;
 export function cooldownResponse(until: number, now: number, level: number) {
