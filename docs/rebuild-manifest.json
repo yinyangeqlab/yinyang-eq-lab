@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 91,
-  "implementationCommit": "44a63aea01da8c85cf045fdd00fc5614e254b4e2",
-  "runtimeParity": "Recorded runtime inputs match verified update91; concurrent personal-shootout development is excluded.",
+  "liveUpdate": 92,
+  "implementationCommit": "8eb2789dd805fd5d1534659c147cc10ec61a6c06",
+  "runtimeParity": "Recorded runtime matches verified update92; concurrent personal-shootout development excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -17,6 +17,7 @@
       "app/api/my-data/route.ts",
       "app/curve-credits/page.tsx",
       "app/globals.css",
+      "app/layout.tsx",
       "app/music-library/page.tsx",
       "app/my-data/page.tsx",
       "app/my-data/style.css",
@@ -28,31 +29,39 @@
       "app/shootout/page.tsx",
       "app/welcome.css",
       "components/activity-monitoring-panel.tsx",
+      "components/aura-nav-link.css",
       "components/aura-nav-link.tsx",
       "components/comparison-data-settings.tsx",
       "components/legacy-review.tsx",
       "components/music-panel.tsx",
+      "components/results-profile.tsx",
       "components/track-waveform.tsx",
       "db/schema.ts",
       "drizzle/meta/_journal.json",
-      "infra/pulumi/private-gate.mjs",
       "lib/browser-pairing.mjs",
       "lib/browser-sync.mjs",
       "lib/comparison-passage.ts",
       "lib/measurement.ts",
       "lib/privacy-erasure.ts",
       "lib/submission-ownership.ts",
+      "scripts/check_blind_completion.mjs",
       "app/api/personal-research/route.ts",
       "app/shootout/personal/layout.tsx",
       "app/shootout/personal/page.tsx",
       "app/shootout/personal/personal.css",
+      "components/action-hover.css",
+      "components/before-you-listen.tsx",
+      "components/matched-passage-control.css",
+      "components/matched-passage-control.tsx",
       "components/personal-podium.css",
       "components/personal-podium.tsx",
       "components/personal-research-sharing.tsx",
       "components/research-music-source.tsx",
+      "components/setup-auto-hide-note.tsx",
       "components/target-curve.tsx",
       "components/tournament-mode-tabs.css",
       "components/tournament-mode-tabs.tsx",
+      "components/use-listening-reminder.ts",
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
       "drizzle/meta/0033_snapshot.json",
@@ -62,10 +71,14 @@
       "lib/personal-research-notice.ts",
       "lib/personal-research-server.ts",
       "lib/personal-shootout.ts",
+      "scripts/check_listening_reminder.mjs",
+      "scripts/check_open_music_source.mjs",
+      "scripts/check_personal_passage_optout.mjs",
       "scripts/check_personal_playback.mjs",
       "scripts/check_personal_research.mjs",
       "scripts/check_personal_shootout.mjs",
-      "scripts/check_research_source.mjs"
+      "scripts/check_research_source.mjs",
+      "scripts/check_setup_auto_hide.mjs"
     ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -259,6 +272,10 @@
       "sha256": "c68d0acb4ec3018cf34fecd33137749baf1772cd2b7c0bd46414323c1a118561"
     },
     {
+      "path": "app/participation/page.tsx",
+      "sha256": "8b41c676dd6e71f25cc3b6bbdcc9b189ff402aca14b291da7d325f4f621c2163"
+    },
+    {
       "path": "app/personal-tuning/page.tsx",
       "sha256": "884cb52cb25f091aa4d6f686b60771186a8a2fc1587e46c6b515a4c97c10fbc6"
     },
@@ -413,6 +430,10 @@
     {
       "path": "components/results-profile.tsx",
       "sha256": "39bc2c88c00239ca20ecf4da3a3bc0bc8e96c551666d4fa3ac64e3d672f2aafb"
+    },
+    {
+      "path": "components/service-status-panel.css",
+      "sha256": "01b0c04d5e3f163b4c9fe4ad375fea7af364bc22a8acdab2c49b0cf8000b333d"
     },
     {
       "path": "components/service-status-panel.tsx",
@@ -1143,6 +1164,10 @@
       "sha256": "f3b95678095d8a53f32af701d9feb6de5a4c8771ab0b9a116fca8989e822f9ee"
     },
     {
+      "path": "lib/maintenance-options.ts",
+      "sha256": "93fc4b016c997611140a068e7a9fb1739290390ad3b659fa7fa1f1d56a079aa1"
+    },
+    {
       "path": "lib/maintenance.ts",
       "sha256": "6125884458d2a2f967c2e80489f5350b2c7e54a330bb971bd9921f438a5c088f"
     },
@@ -1441,6 +1466,10 @@
     {
       "path": "scripts/check_notice_duration.mjs",
       "sha256": "4642b103d3e1f4472de03c0969372f6a0bd55ef0b58d0bf10cf97dce7a491503"
+    },
+    {
+      "path": "scripts/check_participation_entry.mjs",
+      "sha256": "6c72e98ed0396a6c3f301dc426b43317aefa8a3513c077c529c3ed042f0c2edd"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
