@@ -346,3 +346,9 @@ export const browserPairings = sqliteTable("browser_pairings", {
   createdAt: integer("created_at").notNull(),
   expiresAt: integer("expires_at").notNull(),
 }, table => [index("browser_pairings_invite_idx").on(table.inviteId)]);
+
+// Site-wide admission mode; existing ownership, consent and private media stay intact.
+export const siteAccessSettings = sqliteTable("site_access_settings", {
+  id: integer("id").primaryKey(),
+  invitesEnabled: integer("invites_enabled").notNull().default(0),
+});

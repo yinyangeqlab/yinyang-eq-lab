@@ -22,6 +22,7 @@ class Statement {
 }
 let beforeBatch;
 const DB={prepare:q=>new Statement(q),batch:async statements=>{if(beforeBatch){const hook=beforeBatch;beforeBatch=null;hook();}sql.exec('BEGIN');try {const out=[];for(const s of statements)out.push(await s.run());sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
+sql.exec('INSERT INTO site_access_settings(id,invites_enabled) VALUES(1,1)');
 const env={DB,PRIVATE_ACCESS_PASSWORD:crypto.randomUUID()+crypto.randomUUID(),ABUSE_RATE_SECRET:crypto.randomUUID()+crypto.randomUUID()};
 for(const binding of abuseBindings)env[binding.name]={limit:async()=>({success:true})};
 const origin='https://fixture.test', now=Math.floor(Date.now()/1000), original='A'.repeat(43);
@@ -60,6 +61,7 @@ assert.equal(sql.prepare('SELECT subject_id FROM privacy_sessions WHERE token_ha
 // renderer/media implementation is stubbed; no gate auth logic is replaced.
 const gateSource=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.meta.url),'utf8')
   .replace(/import\s*\{readServiceStatus\}\s*from ["']\.\/service-status\.mjs["'];/,'const readServiceStatus=async()=>({active:false});')
+  .replace('import { invitesEnabled, testerSubject } from "./invite-settings.mjs";',`import {invitesEnabled,testerSubject} from ${JSON.stringify(new URL('../lib/invite-settings.mjs',import.meta.url).href)};`)
   .replace('import { browserPairing, linkedTester } from "./browser-pairing.mjs";',`import {browserPairing,linkedTester} from ${JSON.stringify(new URL('../lib/browser-pairing.mjs',import.meta.url).href)};`)
   .replace('import { isPublicAsset } from "./public-assets.mjs";',`import {isPublicAsset} from ${JSON.stringify(new URL('../infra/pulumi/public-assets.mjs',import.meta.url).href)};`)
   .replace('import { withMediaLength } from "./media-response.mjs";',`import {withMediaLength} from ${JSON.stringify(new URL('../lib/worker-media-response.mjs',import.meta.url).href)};`)
@@ -137,5 +139,67 @@ await context.exports.eraseData('invite:'+tester.id);
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().n,0,'Account erasure removes every browser link');
 assert.equal(sql.prepare('SELECT count(*) n FROM browser_pairings').get().n,0,'Account erasure removes pending handshakes');
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_invites').get().n,0,'Account erasure removes invitation access');
+// Open mode defaults off with no setting row and preserves all consent/owner guards.
+sql.exec('DELETE FROM site_access_settings; DELETE FROM public_write_limits');
+assert.deepEqual(await (await gated('/api/invite-system')).json(),{enabled:false});
+assert.equal((await gated('/__private/admin/invite-system')).status,403);
+const ownerLogin=await gate.fetch(request('/admin-login',{password:env.PRIVATE_ACCESS_PASSWORD}),env,{});
+assert.equal(ownerLogin.status,303);
+const ownerJar=cookies(ownerLogin);
+async function mode(enabled,jar=ownerJar,originHeader=origin){return gate.fetch(new Request(origin+'/__private/admin/invite-system',{method:'PATCH',headers:{Cookie:jar,Origin:originHeader,'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.50'},body:JSON.stringify({enabled})}),env,{});}
+assert.equal((await mode(true,'')).status,403,'Only admin can toggle');
+assert.equal((await mode(true,ownerJar,'https://attacker.test')).status,403,'Toggle rejects CSRF');
+assert.equal((await mode('yes')).status,400,'Toggle requires a boolean');
+assert.equal((await gated('/access')).headers.get('Location'),'/shootout');
+assert.equal((await gated('/__private/admin/invites',ownerJar)).status,404,'Invite functions unavailable while off');
+const open=await gated('/shootout','',{'oai-authenticated-user-id':'owner'});
+assert.equal(open.status,200,'No invite needed to open Shootout');
+const openIdentity=await open.json(),openJar=cookies(open);
+assert.match(openIdentity.subject,/^browser:/,'Open browsers cannot impersonate verified invitation accounts');
+assert.ok(openIdentity.session);
+assert.equal((await gated('/api/trials',openJar)).status,403,'Open access still requires consent');
+assert.equal((await gated('/api/owner-research',openJar)).status,403,'Open access never grants admin');
+assert.equal((await gated('/api/trials')).status,401,'Unauthenticated API cannot mint accounts');
+assert.equal((await gated('/music/shantae/test.flac')).status,401,'Media cannot mint accounts');
+sql.prepare('UPDATE privacy_accounts SET submissions_enabled=1,agreement_version=? WHERE subject_id=?').run(VOTE_DATA_NOTICE_VERSION,openIdentity.subject);
+assert.equal((await gated('/api/trials',openJar)).status,200,'Consenting open browsers can use tools');
+assert.equal((await (await gated('/my-data',openJar)).json()).subject,openIdentity.subject,'Returning browser retains ownership');
+const openSync=await gated('/sync',openJar);
+assert.equal(openSync.status,200);
+assert.doesNotMatch(await openSync.text(),/invitation|href="\/access"/i,'No invite references in open sync');
+assert.doesNotMatch(await (await gated('/admin-login')).text(),/href="\/access"/,'Admin login hides listener invitation link');
+// The existing two-sided sync works for automatic browser identities too.
+const openId='open-'+openIdentity.subject.slice(8);
+const openTester={id:openId,label:'Listener'};
+const openPairing=await browserPairing(request('/devices/create',{},openJar),env,openTester,false,false);
+const openCode=(await openPairing.text()).match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/).slice(1).join('');
+const openClaim=await browserPairing(request('/pair',{code:openCode}),env,null,false,false);
+const openClaimJar=cookies(openClaim),openPair=state(await pairingHash(openCode));
+assert.equal((await browserPairing(request('/devices/approve',{pairing:openPair.code_hash,confirmation:openPair.confirmation},openJar),env,openTester,false,false)).status,303);
+const openLinked=await browserPairing(request('/pair',undefined,openClaimJar),env,null,false,false);
+assert.equal(openLinked.status,303);
+const openLinkedJar=cookies(openLinked);
+assert.equal((await (await gated('/my-data',openLinkedJar)).json()).subject,openIdentity.subject,'Open sync retains original browser ownership');
+assert.equal((await mode(true)).status,200);
+assert.equal((await gated('/api/trials',openJar)).status,401,'Re-enabling rejects open credentials');
+assert.equal((await gated('/api/trials',openLinkedJar)).status,401,'Re-enabling also rejects linked open credentials');
+assert.equal((await gated('/access')).status,200,'Original redemption form restored');
+assert.equal((await gated('/__private/admin/invites',ownerJar)).status,200);
+assert.equal((await (await gated('/my-data',openJar)).json()).session,openIdentity.session,'Data management remains reachable after re-enabling');
+const createInvite=await gate.fetch(new Request(origin+'/__private/admin/invites',{method:'POST',headers:{Cookie:ownerJar,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({label:'Restored invitation process'})}),env,{});
+assert.equal(createInvite.status,201);
+const restoredInvite=await createInvite.json();
+const redemption=await gate.fetch(request('/access',{code:restoredInvite.code}),env,{});
+assert.equal(redemption.status,303,'Existing one-time redemption works when enabled');
+assert.equal((await gate.fetch(request('/access',{code:restoredInvite.code}),env,{})).status,403,'Codes remain single use');
+const beforeToggle=sql.prepare('SELECT * FROM private_tester_invites WHERE id=?').get(restoredInvite.id);
+assert.equal((await mode(false)).status,200);
+assert.deepEqual(sql.prepare('SELECT * FROM private_tester_invites WHERE id=?').get(restoredInvite.id),beforeToggle,'Toggling preserves original invitation and expiry');
+assert.equal((await gated('/api/trials',openJar)).status,200,'Disabling again restores existing open browser');
+await context.exports.eraseData(openIdentity.subject);
+assert.equal(sql.prepare("SELECT count(*) n FROM private_tester_invites WHERE id LIKE 'open-%'").get().n,0,'Open account erasure removes access');
+assert.equal(sql.prepare('SELECT count(*) n FROM privacy_sessions WHERE subject_id=?').get(openIdentity.subject).n,0);
+assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices WHERE invite_id=?').get(openId).n,0,'Open account erasure removes linked devices');
+assert.equal(sql.prepare('SELECT count(*) n FROM browser_pairings WHERE invite_id=?').get(openId).n,0,'Open account erasure removes handshakes');
 sql.close();
-console.log('Browser pairing passed: two-sided confirmation, real private gate, account identity, source binding, single use, expiry, safe retry, atomic device cap, cancellation, revocation and renewal race, data-session removal, account erasure, CSRF, request bounds and throttling. Synthetic SQLite only.');
+console.log('Invite modes and browser pairing passed: admin-only persistent toggle, default open access, restored redemption, open-account consent, ownership, sync and erasure; two-sided confirmation, real private gate, account identity, source binding, single use, expiry, safe retry, atomic device cap, cancellation, revocation and renewal race, data-session removal, account erasure, CSRF, request bounds and throttling. Synthetic SQLite only.');
