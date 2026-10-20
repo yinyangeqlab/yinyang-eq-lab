@@ -1,0 +1,11 @@
+export const PART_CHARACTERS:number;
+export const PACKET_BYTES:number;
+export const PACKET_PARTS:number;
+export type Section={kind:'array'|'value';count:number;digest:string;version?:string;reuse?:boolean};
+export type Part={key:string;entry:number;part:number;total:number;text:string;hash?:string};
+export function describeValues(values:Record<string,string>):Promise<Record<string,Section>>;
+export function valueParts(values:Record<string,string>,manifest:Record<string,Section>):Generator<Part>;
+export function partPackets(values:Record<string,string>,manifest:Record<string,Section>):Generator<Part[]>;
+export function assembleValues(manifest:Record<string,Section>,parts:Part[]):Promise<Record<string,string>>;
+export function readAccountState(endpoint?:string,fetcher?:typeof fetch):Promise<any>;
+export function writeAccountState(state:any,values:Record<string,string>,fetcher?:typeof fetch,progress?:(message:string)=>void,storage?:Pick<Storage,'getItem'|'setItem'|'removeItem'>|null):Promise<any>;

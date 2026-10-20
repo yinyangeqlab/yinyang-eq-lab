@@ -1,3 +1,4 @@
+import {clearSyncBase} from '@/lib/account-sync-cache.mjs';
 import type { Trial } from "@/components/results-profile";
 // A tie/check has a server trial ID but no vote: review its listening-run ID.
 export function comparisonLookup(row: Pick<Trial,"id"|"serverTrialId"|"recorded"|"mode">) {
@@ -12,6 +13,7 @@ export function deleteBrowserTrial(id: string) {
   localStorage.setItem("target-lab-browser-reviews", JSON.stringify(reviews.filter(row => row.recordId !== id)));
 }
 export function clearSiteBrowserData() {
+  void clearSyncBase(localStorage).catch(()=>{/* Existing saved data was explicitly cleared; a fresh account identity still isolates any inaccessible cache. */});
   for (const storage of [localStorage, sessionStorage]) {
     const keys = Array.from({ length:storage.length }, (_,i) => storage.key(i)).filter((key): key is string => Boolean(key));
     for (const key of keys) if (/^(target-lab-|personal-tuning-|preference-tuning-|yinyang-)/.test(key)) storage.removeItem(key);

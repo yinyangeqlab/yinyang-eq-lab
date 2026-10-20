@@ -1,6 +1,7 @@
 export const DEVICE_FRESH_MS:number;
 export function canonical(value:unknown):unknown;
 export function digest(value:unknown):Promise<string>;
+export function sectionDigest(value:unknown):Promise<string>;
 export function accountDataDigest(values:Record<string,string>):Promise<string>;
 export type DeviceStatus='synced'|'unconfirmed'|'expired'|'paused'|'conflict'|'pending'|'behind'|'consent-changed'|'stale';
 export type SyncConfirmation={epoch:string;revision:number;dataDigest:string;consentStamp:string};

@@ -1,4 +1,5 @@
 "use client";
+import {clearSyncBase} from '@/lib/account-sync-cache.mjs';
 import AccountDeviceStatus from "@/components/account-device-status";
 import {personalSharingLabel} from "@/lib/personal-sharing-notice";
 import HistoryCapture from "@/components/yinyangeq-history-capture";
@@ -32,7 +33,7 @@ export default function MyDataPage() {
   async function erase() {
     if (!pending || busy) return; setBusy(true);setError("");
     try {
-      if (pending === "browser") { clearSiteBrowserData(); if(data?.syncEnabled)localStorage.setItem("yinyang-account-sync-paused","true"); loadLocal(); setMessage(data?.syncEnabled?"This browser’s saved site data was cleared. Automatic sync is paused here; the account copy and server submissions are retained.":"This browser’s saved site data was cleared. Server submissions were not changed."); }
+      if (pending === "browser") { if(data?.syncEnabled)localStorage.setItem("yinyang-account-sync-paused","true"); await clearSyncBase(localStorage); clearSiteBrowserData(); if(data?.syncEnabled)localStorage.setItem("yinyang-account-sync-paused","true"); loadLocal(); setMessage(data?.syncEnabled?"This browser’s saved site data was cleared. Automatic sync is paused here; the account copy and server submissions are retained.":"This browser’s saved site data was cleared. Server submissions were not changed."); }
       else {
         const all = pending === "all";
         const response = await fetch("/api/my-data", { method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({... (all?{scope:"all",confirmation}:{scope:"one",kind:pending.kind,id:pending.id,confirmation}),includeOwnerAccount:data?.protectedAccount===true,ownerAccountConfirmation:ownerConfirmation}) });
