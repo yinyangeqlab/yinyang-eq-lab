@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict');
 const m={exports:{}};
-vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/listening-audio.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:m,exports:m.exports,Request,Response,Headers,ReadableStream,URL});
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/listening-audio.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:m,exports:m.exports,Request,Response,Headers,ReadableStream,TransformStream,URL});
 const {serveListeningAudio}=m.exports;
 const bytes=Buffer.from(Array.from({length:103},(_,i)=>i)),sizes=[30,40,33];let offset=0;
 const parts=new Map(sizes.map((size,i)=>{const data=bytes.subarray(offset,offset+size);offset+=size;return ['/part'+i,data]}));
