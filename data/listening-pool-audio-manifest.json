@@ -1,0 +1,2342 @@
+{
+  "library-001": {
+    "bytes": 29619404,
+    "sha256": "d12668a5c7ce03e4d5b11c049ce1d982a3ac97e4f5313af4182bccb741c9914d",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-001/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-001/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-001/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-001/003.bin",
+        "bytes": 4453580
+      }
+    ]
+  },
+  "library-002": {
+    "bytes": 34465151,
+    "sha256": "96ce9b7a36cc7638515078c083d23354274b00291342256d10004cb57875698e",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-002/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-002/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-002/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-002/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-002/004.bin",
+        "bytes": 910719
+      }
+    ]
+  },
+  "library-003": {
+    "bytes": 3291890,
+    "sha256": "feaf45d70336b3436fd6d03ef79d3f8f7765962620a02c3e14048e5c43830e82",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-003/000.bin",
+        "bytes": 3291890
+      }
+    ]
+  },
+  "library-004": {
+    "bytes": 7094774,
+    "sha256": "74e27a95a5849101cec9bb70ed90ca33cf1dc6240fc2ae9877aa44ebaa4e1037",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-004/000.bin",
+        "bytes": 7094774
+      }
+    ]
+  },
+  "library-005": {
+    "bytes": 8122949,
+    "sha256": "e656d40da96589995dc0b67a73991537131f20aabe71ab123ca01ae7c468ddfe",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-005/000.bin",
+        "bytes": 8122949
+      }
+    ]
+  },
+  "library-006": {
+    "bytes": 8569170,
+    "sha256": "8c09d0e497a320c2ca3a62d330878a2d89d81f9711e0d63dbe97adae76c8b9a2",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-006/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-006/001.bin",
+        "bytes": 180562
+      }
+    ]
+  },
+  "library-007": {
+    "bytes": 11374658,
+    "sha256": "a2188d5999028217eeeed38ea59e131ffd5aa15b26ae6ecc91659308eca757db",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-007/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-007/001.bin",
+        "bytes": 2986050
+      }
+    ]
+  },
+  "library-008": {
+    "bytes": 16726080,
+    "sha256": "c895603e0f32f7218d9f9afa0a917ff7ffcf92c3167eede828c45f659dc344b4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-008/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-008/001.bin",
+        "bytes": 8337472
+      }
+    ]
+  },
+  "library-009": {
+    "bytes": 7504374,
+    "sha256": "e8274291df5bad99658f338835979bb3c2b8f42a087476ab25e7dbfda52ba655",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-009/000.bin",
+        "bytes": 7504374
+      }
+    ]
+  },
+  "library-010": {
+    "bytes": 4244412,
+    "sha256": "62a645677acacf3f83eb57e9abe9347a2bacee03886e3bd48ed0d55a391b6ed6",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-010/000.bin",
+        "bytes": 4244412
+      }
+    ]
+  },
+  "library-011": {
+    "bytes": 19775767,
+    "sha256": "e4eb45283ad974865f54b7f8d70c7942df0026af391a287327fe71bff118916b",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-011/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-011/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-011/002.bin",
+        "bytes": 2998551
+      }
+    ]
+  },
+  "library-012": {
+    "bytes": 3611234,
+    "sha256": "e9f7385ca28b26e2aafbd05d573b7444bc315b75bc27eee29512619aec6177ff",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-012/000.bin",
+        "bytes": 3611234
+      }
+    ]
+  },
+  "library-013": {
+    "bytes": 6571280,
+    "sha256": "833fcf4ae0875c1d9ab40edefa63bcdd19b342963401300558cec930e3781909",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-013/000.bin",
+        "bytes": 6571280
+      }
+    ]
+  },
+  "library-014": {
+    "bytes": 2961160,
+    "sha256": "053fa0e9dbb9a9ad8461b76738e021f459ca19f9271c788d5ae8e7d30380441d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-014/000.bin",
+        "bytes": 2961160
+      }
+    ]
+  },
+  "library-015": {
+    "bytes": 5194989,
+    "sha256": "75a0dfba02144f32fe90e9b49e62957e0c14d5d8cb243ecbcb5d3cf6b85dcc40",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-015/000.bin",
+        "bytes": 5194989
+      }
+    ]
+  },
+  "library-016": {
+    "bytes": 8260948,
+    "sha256": "8fb7c202ea084ea7b6ac647f7bfb721070bbab7833328f3bd223593f8e5d6c43",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-016/000.bin",
+        "bytes": 8260948
+      }
+    ]
+  },
+  "library-017": {
+    "bytes": 13762433,
+    "sha256": "83309bb149d5df08443ea3f9def1724f3600e0d1d3667762a5189c45310ed324",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-017/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-017/001.bin",
+        "bytes": 5373825
+      }
+    ]
+  },
+  "library-018": {
+    "bytes": 10537220,
+    "sha256": "32066025785d61200fdd3433aade4a10a2bd98cdc8259e8a1257336afcbbc4f5",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-018/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-018/001.bin",
+        "bytes": 2148612
+      }
+    ]
+  },
+  "library-019": {
+    "bytes": 7185860,
+    "sha256": "57ec5fdd4d82e9e662e44232702dd3e4e2cc4961d5cfe2f3497e8a1f08a54490",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-019/000.bin",
+        "bytes": 7185860
+      }
+    ]
+  },
+  "library-020": {
+    "bytes": 3457197,
+    "sha256": "a56d7b2502a74cf3d164c64c20850fc70d39f09c133f445ec8d5ef08de5781c4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-020/000.bin",
+        "bytes": 3457197
+      }
+    ]
+  },
+  "library-021": {
+    "bytes": 28933257,
+    "sha256": "b4fdcd7c41c18ce7b4d876cb88e1fd59d66a0ae34bd1cbb6e4e856281b70cbbc",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-021/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-021/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-021/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-021/003.bin",
+        "bytes": 3767433
+      }
+    ]
+  },
+  "library-022": {
+    "bytes": 4968915,
+    "sha256": "351f5b61a2968a3d79d79bec991b627baf3d83a1329ea1e20d9de72dc5ec6f31",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-022/000.bin",
+        "bytes": 4968915
+      }
+    ]
+  },
+  "library-023": {
+    "bytes": 8398953,
+    "sha256": "b013321cfc14d603aabd4fdf2df93fa271fe7b33d38d997086beb0a45ca42dbc",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-023/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-023/001.bin",
+        "bytes": 10345
+      }
+    ]
+  },
+  "library-024": {
+    "bytes": 2740490,
+    "sha256": "66aaae6ecf59296bfe0833dfcf826fc10c51bcbda1867d79cafec2093000d105",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-024/000.bin",
+        "bytes": 2740490
+      }
+    ]
+  },
+  "library-025": {
+    "bytes": 7116174,
+    "sha256": "f57e655fb82b1152d563da97634490ca645a1f0f7924bbe45d27e476c84fda9c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-025/000.bin",
+        "bytes": 7116174
+      }
+    ]
+  },
+  "library-026": {
+    "bytes": 5739251,
+    "sha256": "81806f20f485a927f99b4c5733c3a5c353f27d84cce7cba7891ece6080fb6d77",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-026/000.bin",
+        "bytes": 5739251
+      }
+    ]
+  },
+  "library-027": {
+    "bytes": 12312918,
+    "sha256": "499fb806cd6c1e6fa4ed3339df51625f7af4520dbf8e95d7f47b714a869960e1",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-027/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-027/001.bin",
+        "bytes": 3924310
+      }
+    ]
+  },
+  "library-028": {
+    "bytes": 3546947,
+    "sha256": "9dbc33a601e7d1c2129b8a477dc55c4d59e24425d7274db1967e8102446f65a9",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-028/000.bin",
+        "bytes": 3546947
+      }
+    ]
+  },
+  "library-029": {
+    "bytes": 12180301,
+    "sha256": "05304f63d740b2ba4d220e28b400bac097b1968d4d541eb7780e78718db3f572",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-029/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-029/001.bin",
+        "bytes": 3791693
+      }
+    ]
+  },
+  "library-030": {
+    "bytes": 9083223,
+    "sha256": "c9d1335ef54ff3ab79f0c191388ddf54bb107821b00a43ce9cd70d130ddde854",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-030/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-030/001.bin",
+        "bytes": 694615
+      }
+    ]
+  },
+  "library-031": {
+    "bytes": 13090481,
+    "sha256": "9e4106131dabaa55fa3e4917b6318db6724c130d4a8b97a6048ea1bb445eb1a4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-031/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-031/001.bin",
+        "bytes": 4701873
+      }
+    ]
+  },
+  "library-032": {
+    "bytes": 10033154,
+    "sha256": "5a5378c7454b54d6b43e88ae5e3e91feb217e1a3a86360cbb7e47f494ec2f25c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-032/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-032/001.bin",
+        "bytes": 1644546
+      }
+    ]
+  },
+  "library-033": {
+    "bytes": 7359216,
+    "sha256": "556d090ba99ac62149756e084d9c7f1ddf0bfe0d19300b950fef2c6f8e23552d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-033/000.bin",
+        "bytes": 7359216
+      }
+    ]
+  },
+  "library-034": {
+    "bytes": 7049971,
+    "sha256": "d46bbce4a0de6fea9c94de8b56a5033a44539914c20d7bdf860b8b6c6d787ade",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-034/000.bin",
+        "bytes": 7049971
+      }
+    ]
+  },
+  "library-035": {
+    "bytes": 6955885,
+    "sha256": "445ec3183ccdc364777448c5fa00bcd4730e7db2e7d63dddfb0936c23207fab3",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-035/000.bin",
+        "bytes": 6955885
+      }
+    ]
+  },
+  "library-036": {
+    "bytes": 11332963,
+    "sha256": "5940eaaab87ea04ae2f6db969051e4943e25fed346fda0ff9bfda5fbc5a3db16",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-036/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-036/001.bin",
+        "bytes": 2944355
+      }
+    ]
+  },
+  "library-037": {
+    "bytes": 3686317,
+    "sha256": "e168c0732cd4be8986640250adf4a8e65070449fe90c951ac3d99dcdf026e6e8",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-037/000.bin",
+        "bytes": 3686317
+      }
+    ]
+  },
+  "library-038": {
+    "bytes": 3253736,
+    "sha256": "b929f726fff999203f0caf81ef1222aaf3b23a943aac536a2888aac96f13dab7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-038/000.bin",
+        "bytes": 3253736
+      }
+    ]
+  },
+  "library-039": {
+    "bytes": 7839757,
+    "sha256": "c59613c6681b876b5791fab5a06785951848f0de6d1153ababd7f373ff352f4c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-039/000.bin",
+        "bytes": 7839757
+      }
+    ]
+  },
+  "library-040": {
+    "bytes": 5819998,
+    "sha256": "17819a497828105b74b2d73d88694a88c6b90781bb16a748fdcf13ad52567648",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-040/000.bin",
+        "bytes": 5819998
+      }
+    ]
+  },
+  "library-041": {
+    "bytes": 4713451,
+    "sha256": "481b6b4d5b19e3f25f22033e9a1835bd2f5a820f27b2db56da0b75d8ec0590d4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-041/000.bin",
+        "bytes": 4713451
+      }
+    ]
+  },
+  "library-042": {
+    "bytes": 2528338,
+    "sha256": "2fc33b27b9963608a2bad2da111d2a0604ed46c7cd2b84397ba6bdb87e8d98c7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-042/000.bin",
+        "bytes": 2528338
+      }
+    ]
+  },
+  "library-043": {
+    "bytes": 13824205,
+    "sha256": "18515a5ebe7655d921675d1a838afc20568099706a1b3b736bf81e56056cd1f2",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-043/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-043/001.bin",
+        "bytes": 5435597
+      }
+    ]
+  },
+  "library-044": {
+    "bytes": 8875405,
+    "sha256": "65bbdc7bc6fb5fd65e0b0e1c37711104273b25aca0b27d23852a243ec817bc09",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-044/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-044/001.bin",
+        "bytes": 486797
+      }
+    ]
+  },
+  "library-045": {
+    "bytes": 14719885,
+    "sha256": "a2e43294365bf32216a6cec1da4c50e5321e16e479650dc96011422ce9280f49",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-045/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-045/001.bin",
+        "bytes": 6331277
+      }
+    ]
+  },
+  "library-046": {
+    "bytes": 9381138,
+    "sha256": "f43aee72da27b32401c7b4a29662ceb042832c9fc730b0ae2a5720dd1b38a211",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-046/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-046/001.bin",
+        "bytes": 992530
+      }
+    ]
+  },
+  "library-047": {
+    "bytes": 9330983,
+    "sha256": "932d4fc09d3b028032026fb0089e54668fd2939777f0c43c45291e09ef75b0aa",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-047/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-047/001.bin",
+        "bytes": 942375
+      }
+    ]
+  },
+  "library-048": {
+    "bytes": 1928757,
+    "sha256": "f4e702aaf150dd072594a2ea99725bd456716a778e7430699fee593a768d2de7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-048/000.bin",
+        "bytes": 1928757
+      }
+    ]
+  },
+  "library-049": {
+    "bytes": 2283597,
+    "sha256": "a7ee9a14bfba8776f18f19c0e396048c044c0ae5ba67434a50be11702ed86a4d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-049/000.bin",
+        "bytes": 2283597
+      }
+    ]
+  },
+  "library-050": {
+    "bytes": 3438982,
+    "sha256": "42452cc953661fbbd27f61549b4778cb64b6fe2318a336867e9d37db0042223a",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-050/000.bin",
+        "bytes": 3438982
+      }
+    ]
+  },
+  "library-051": {
+    "bytes": 2898265,
+    "sha256": "30e655e248bf5f01819f0865fb4d0f57c3ff8ab41a8906cdc0e58bfcf9c13d41",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-051/000.bin",
+        "bytes": 2898265
+      }
+    ]
+  },
+  "library-052": {
+    "bytes": 3372833,
+    "sha256": "5935c09e07484ac00e47eca1479c5d8c6b34c3f9bdb4b11bf32780e31cd80c78",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-052/000.bin",
+        "bytes": 3372833
+      }
+    ]
+  },
+  "library-053": {
+    "bytes": 6988662,
+    "sha256": "dde51ebfd627618eedaf564582790707bfc006cf1f6f930211ed519c0fd8e863",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-053/000.bin",
+        "bytes": 6988662
+      }
+    ]
+  },
+  "library-054": {
+    "bytes": 5428630,
+    "sha256": "5011eef7a1127e2b7bf4a6aadf1c887c6f24849ec2a469df1841c713bb15b90e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-054/000.bin",
+        "bytes": 5428630
+      }
+    ]
+  },
+  "library-055": {
+    "bytes": 5282831,
+    "sha256": "d8e4e4b40ddf7c91af4daf6831895932a06a7f8197c927b550b6730764f2b444",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-055/000.bin",
+        "bytes": 5282831
+      }
+    ]
+  },
+  "library-056": {
+    "bytes": 4825766,
+    "sha256": "881297b5f93ddd30461cd2657c08e7f947fcedb29d12b1571e9114d6aa0e4eb5",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-056/000.bin",
+        "bytes": 4825766
+      }
+    ]
+  },
+  "library-057": {
+    "bytes": 10099757,
+    "sha256": "cdb4ac6a417e15c84ee88c1524648995974ae23fade2c61a6e523663f3c10db5",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-057/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-057/001.bin",
+        "bytes": 1711149
+      }
+    ]
+  },
+  "library-058": {
+    "bytes": 3803392,
+    "sha256": "18bc9d7a751b5a9515f6333193ab9e8e7d18a4451ac9db04bc37307044ee83fd",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-058/000.bin",
+        "bytes": 3803392
+      }
+    ]
+  },
+  "library-059": {
+    "bytes": 2396272,
+    "sha256": "ca9d6e956fb85874b6bc5b8789ffd189112d5c520445376c535ad6e231da3eb3",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-059/000.bin",
+        "bytes": 2396272
+      }
+    ]
+  },
+  "library-060": {
+    "bytes": 6251886,
+    "sha256": "70cd72b76e53e1bd590e8aae88782b5293b8af21ee828d7305964b0319410790",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-060/000.bin",
+        "bytes": 6251886
+      }
+    ]
+  },
+  "library-061": {
+    "bytes": 44098215,
+    "sha256": "484cb77a1a5ba764c17128e385058baefc0cf2076c542bc07cb91b05450d121d",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-061/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-061/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-061/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-061/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-061/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-061/005.bin",
+        "bytes": 2155175
+      }
+    ]
+  },
+  "library-062": {
+    "bytes": 52487841,
+    "sha256": "41c293db57f1a9f62836d87c6eddf04854057a4ba1b467f8e91b50d7cdcdf1d8",
+    "mime": "audio/flac",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/library-062/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/005.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/library-062/006.bin",
+        "bytes": 2156193
+      }
+    ]
+  },
+  "fma-f81fbc6ed159": {
+    "bytes": 8720884,
+    "sha256": "8caf66f14790674ef3748fd4b7a13babfc749e058248e0a7b86b894bb4ec38dc",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-f81fbc6ed159/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-f81fbc6ed159/001.bin",
+        "bytes": 332276
+      }
+    ]
+  },
+  "fma-fed3d92e511c": {
+    "bytes": 10448099,
+    "sha256": "3c074d67fce88f623b11e592a09938336a089bd749a49727bc03e2bd6119d5f1",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-fed3d92e511c/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-fed3d92e511c/001.bin",
+        "bytes": 2059491
+      }
+    ]
+  },
+  "fma-09f70bdc3295": {
+    "bytes": 860054,
+    "sha256": "59d12144fe805ec9bbed6bc2225fa8de0379c5236ffa039baef62d633ebb7e8e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-09f70bdc3295/000.bin",
+        "bytes": 860054
+      }
+    ]
+  },
+  "fma-842e35ccae3a": {
+    "bytes": 6196846,
+    "sha256": "81946fbea692502523ef719b76600ca5ebcf98c4698920a380013d2014aa243b",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-842e35ccae3a/000.bin",
+        "bytes": 6196846
+      }
+    ]
+  },
+  "fma-ca5da602be60": {
+    "bytes": 3656268,
+    "sha256": "c14d2f6103f4706ecb6c383e53cc2a1b8910de7778ac1aa01647a8febf5facf2",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-ca5da602be60/000.bin",
+        "bytes": 3656268
+      }
+    ]
+  },
+  "fma-fb54e39f8222": {
+    "bytes": 10336321,
+    "sha256": "7e31326f1186fa77199343dba04cdddeb5b05f251037b32ef9a9597e3783a408",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-fb54e39f8222/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-fb54e39f8222/001.bin",
+        "bytes": 1947713
+      }
+    ]
+  },
+  "fma-8f38b160217c": {
+    "bytes": 8145153,
+    "sha256": "df674f19ac51bf95d3b8b87edbeda7b22d65c9cc6b743f51ed15c8fc7471c726",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-8f38b160217c/000.bin",
+        "bytes": 8145153
+      }
+    ]
+  },
+  "fma-4d249a142760": {
+    "bytes": 8649665,
+    "sha256": "64ccc321c8ac0a2d96c119ce15b42582b8b350e7f323663c06acc283ba84fb9e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-4d249a142760/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-4d249a142760/001.bin",
+        "bytes": 261057
+      }
+    ]
+  },
+  "fma-e3dcbee2153a": {
+    "bytes": 608965,
+    "sha256": "e0571de6dbe3f0d634e23283196125b6a60260f3942286d44e0a3c5477c3b688",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-e3dcbee2153a/000.bin",
+        "bytes": 608965
+      }
+    ]
+  },
+  "fma-eb7cc008e243": {
+    "bytes": 12398963,
+    "sha256": "9e93cdc4220411442439aa11082788a3a96fcc6352eed231f45c45fa73d6384a",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-eb7cc008e243/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-eb7cc008e243/001.bin",
+        "bytes": 4010355
+      }
+    ]
+  },
+  "fma-7f28dee11615": {
+    "bytes": 3506593,
+    "sha256": "23187cd3bbf14d94c3d2133a0cc9e7a677ad68d4f76ec5de1fc9230dad6aebf2",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-7f28dee11615/000.bin",
+        "bytes": 3506593
+      }
+    ]
+  },
+  "fma-9eb5d69ae1fe": {
+    "bytes": 3388519,
+    "sha256": "00f4925f2acf0e6d8b08c0d40e779bf9f3d3b8388334b24262b5fd83a901f6bb",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-9eb5d69ae1fe/000.bin",
+        "bytes": 3388519
+      }
+    ]
+  },
+  "fma-004b34f1febd": {
+    "bytes": 7202524,
+    "sha256": "1e0202f1f138f2341e0da68c3c8ce09b22ad4fae2e4a142e1d9b3ddc713e3d09",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-004b34f1febd/000.bin",
+        "bytes": 7202524
+      }
+    ]
+  },
+  "fma-416f3f39e7e3": {
+    "bytes": 7556160,
+    "sha256": "af82356e6b551b244e34c2250e0d155edb5ee66f4c208ac1aadb951b52f32835",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-416f3f39e7e3/000.bin",
+        "bytes": 7556160
+      }
+    ]
+  },
+  "fma-d679cd1e3800": {
+    "bytes": 5602786,
+    "sha256": "02ce8ec72cb9823b1843b53a56e7e06700d53fa49e0c4743710a370367d773f3",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-d679cd1e3800/000.bin",
+        "bytes": 5602786
+      }
+    ]
+  },
+  "fma-4ec41a9db033": {
+    "bytes": 7272000,
+    "sha256": "2201b0e64c8ec7cabf4c38e5ac56521f5f2a4b0e182817bb3e750cb924be6af1",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-4ec41a9db033/000.bin",
+        "bytes": 7272000
+      }
+    ]
+  },
+  "fma-a5b3a4200ff7": {
+    "bytes": 7131427,
+    "sha256": "cc6b4aa11bbfbcdbb063aaf533bb5c31a8266b00364ad366d73384d6815acd67",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-a5b3a4200ff7/000.bin",
+        "bytes": 7131427
+      }
+    ]
+  },
+  "fma-14f801d17664": {
+    "bytes": 8027660,
+    "sha256": "dc5d6777d1d1027380432683a4da0aa9b4db093fe44bae02d5c48559092964bb",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-14f801d17664/000.bin",
+        "bytes": 8027660
+      }
+    ]
+  },
+  "fma-7142202ec8ec": {
+    "bytes": 10546155,
+    "sha256": "3cba56dcf91bb996792b0b80999bf61dcf78fc7f4d575859b1df12928039f20a",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-7142202ec8ec/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-7142202ec8ec/001.bin",
+        "bytes": 2157547
+      }
+    ]
+  },
+  "fma-4c9c1adee72e": {
+    "bytes": 5397860,
+    "sha256": "480b74b02dd76fc8e890e9e7fabb8b5996a3112ad4ed9f65768026e17c5da9fa",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-4c9c1adee72e/000.bin",
+        "bytes": 5397860
+      }
+    ]
+  },
+  "fma-c91938c3fa07": {
+    "bytes": 12762588,
+    "sha256": "e2697860573f2afe6744e8a6470f5a78cf6535f5b02f28996b0c3cdc806471fa",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-c91938c3fa07/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-c91938c3fa07/001.bin",
+        "bytes": 4373980
+      }
+    ]
+  },
+  "fma-c0b58a587e0d": {
+    "bytes": 12881852,
+    "sha256": "6fd3db6ff069b60a4b174540abd654aa59590655f720051e3b5fbbaee97de77b",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-c0b58a587e0d/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-c0b58a587e0d/001.bin",
+        "bytes": 4493244
+      }
+    ]
+  },
+  "fma-e832d716949f": {
+    "bytes": 12428931,
+    "sha256": "b16a74046e602d474b9f09fb520a63141f3dd624c5e3ec6e493df880509466f9",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-e832d716949f/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-e832d716949f/001.bin",
+        "bytes": 4040323
+      }
+    ]
+  },
+  "fma-657556242c9c": {
+    "bytes": 3169938,
+    "sha256": "5d595d13bfd22d5d102bdc9a4c35b74b73546125bb0ff3520a8c900dbd3b79e1",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-657556242c9c/000.bin",
+        "bytes": 3169938
+      }
+    ]
+  },
+  "fma-6477550ec954": {
+    "bytes": 8571728,
+    "sha256": "253a45322a286e22462e61cac7e8fe7abb45780f2b449ec593bba6fbb1d160b9",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-6477550ec954/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-6477550ec954/001.bin",
+        "bytes": 183120
+      }
+    ]
+  },
+  "fma-42f7d650c5be": {
+    "bytes": 4377676,
+    "sha256": "7d452bf68aa139370c740cb9c339534031ec3fad5a537a064acfff4cfc49f968",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-42f7d650c5be/000.bin",
+        "bytes": 4377676
+      }
+    ]
+  },
+  "fma-9343c09a6f6b": {
+    "bytes": 4821241,
+    "sha256": "7677269d0e3f69151b95ae505e7b2ffbbbe2654c97238f8bfe61a28be6705c30",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-9343c09a6f6b/000.bin",
+        "bytes": 4821241
+      }
+    ]
+  },
+  "fma-f69afaa9256f": {
+    "bytes": 4465972,
+    "sha256": "e751090871e49966fb07d704bb41c7d8b76206b72512cfe6d51163ddc288f3a0",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-f69afaa9256f/000.bin",
+        "bytes": 4465972
+      }
+    ]
+  },
+  "fma-a46c5df98e96": {
+    "bytes": 13751040,
+    "sha256": "b4d8ee11a48977278caddc9547e02eb168a6eaa26f1092230bb85c7454d55d13",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-a46c5df98e96/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a46c5df98e96/001.bin",
+        "bytes": 5362432
+      }
+    ]
+  },
+  "fma-300f113b0d3c": {
+    "bytes": 102207739,
+    "sha256": "13920756e1658a092a72d9e6ac8ff217f7d7283c1daad8ca9615b7566d6a9db1",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/005.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/006.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/007.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/008.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/009.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/010.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/011.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-300f113b0d3c/012.bin",
+        "bytes": 1544443
+      }
+    ]
+  },
+  "fma-c0688c6992c8": {
+    "bytes": 8962088,
+    "sha256": "6a0d58e4fd4045b589d5abb598fb46b1dcb420daf4d693d16221634963e1d478",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-c0688c6992c8/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-c0688c6992c8/001.bin",
+        "bytes": 573480
+      }
+    ]
+  },
+  "fma-60349994df7a": {
+    "bytes": 10613027,
+    "sha256": "e37b84d5f88bbd7b6319ea7d4d765d457472df1ceba71b3df0ac9e376558f049",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-60349994df7a/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-60349994df7a/001.bin",
+        "bytes": 2224419
+      }
+    ]
+  },
+  "fma-03c6f4ce3459": {
+    "bytes": 11465664,
+    "sha256": "a263c5b48f2a197b38bf034ead1c7cc09835b5dc81aace308097e212652f052c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-03c6f4ce3459/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-03c6f4ce3459/001.bin",
+        "bytes": 3077056
+      }
+    ]
+  },
+  "fma-bc4af7611d6e": {
+    "bytes": 3384494,
+    "sha256": "37cf29b6568f9a053c1eb8f653b5bbf5452109b7cb21c867a8a13764ace55d3d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-bc4af7611d6e/000.bin",
+        "bytes": 3384494
+      }
+    ]
+  },
+  "fma-16fd30842eea": {
+    "bytes": 3275296,
+    "sha256": "9c6169fc5daefcb3c893988ec2781dbed33ac7acd38c43d932126f6d95662b6d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-16fd30842eea/000.bin",
+        "bytes": 3275296
+      }
+    ]
+  },
+  "fma-b239fa269c98": {
+    "bytes": 3965056,
+    "sha256": "52e21f9fb77bb1373f1959779f55a05c166da55c28ff47b3790b5efca6546ba4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-b239fa269c98/000.bin",
+        "bytes": 3965056
+      }
+    ]
+  },
+  "fma-45b5f608b8f5": {
+    "bytes": 4996921,
+    "sha256": "1b51cddaf6614bb8d2a68a53ab1ddb33f351659a6bb46c8f64456e4add83ef89",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-45b5f608b8f5/000.bin",
+        "bytes": 4996921
+      }
+    ]
+  },
+  "fma-ff7439fdf46c": {
+    "bytes": 5384367,
+    "sha256": "745c35873d5f6973c5b985444167ec5c83dcd587068706a47e8bf4ec3690a310",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-ff7439fdf46c/000.bin",
+        "bytes": 5384367
+      }
+    ]
+  },
+  "fma-58d90d32fd32": {
+    "bytes": 3396974,
+    "sha256": "f13b74610d50abd2968ab7060daabcc5c21bd969f5d49ae4e0701b62a721ff84",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-58d90d32fd32/000.bin",
+        "bytes": 3396974
+      }
+    ]
+  },
+  "fma-16081eb465b2": {
+    "bytes": 5914132,
+    "sha256": "13d48c7e4c4326807886e1f5c8721a30c9673ee07640426247ac9eac06854495",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-16081eb465b2/000.bin",
+        "bytes": 5914132
+      }
+    ]
+  },
+  "fma-8785ffe81459": {
+    "bytes": 4730717,
+    "sha256": "38a55c60da8029a61ccc0f95bd3bedad53cc747db79824e4e44c29a27558617c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-8785ffe81459/000.bin",
+        "bytes": 4730717
+      }
+    ]
+  },
+  "fma-358f569a1fcb": {
+    "bytes": 2841286,
+    "sha256": "d20c47caa42448c128a7bc7746cbd2bcbe8401651d7553b2a029729380119eca",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-358f569a1fcb/000.bin",
+        "bytes": 2841286
+      }
+    ]
+  },
+  "fma-4423186c0223": {
+    "bytes": 4739520,
+    "sha256": "fcc53976bf3ca9afe408f40e240e3a1b4a58b232acd593efcacc166de73eb176",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-4423186c0223/000.bin",
+        "bytes": 4739520
+      }
+    ]
+  },
+  "fma-229597e5d7eb": {
+    "bytes": 5761149,
+    "sha256": "dd356fce617bc547db3b9eddff29dfd3114ef2d64030a281cd6a72f9b733da66",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-229597e5d7eb/000.bin",
+        "bytes": 5761149
+      }
+    ]
+  },
+  "fma-ceeb71158f7e": {
+    "bytes": 6237260,
+    "sha256": "3597872fc7111c6b95e3513b6b6708df84c0572ae0baad6042ce0e9310f7a6ff",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-ceeb71158f7e/000.bin",
+        "bytes": 6237260
+      }
+    ]
+  },
+  "fma-3dc8bee1358d": {
+    "bytes": 8465420,
+    "sha256": "405bc4373a362c41e663b53015a4afc307737163381d30322c07972af7098d1d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-3dc8bee1358d/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-3dc8bee1358d/001.bin",
+        "bytes": 76812
+      }
+    ]
+  },
+  "fma-a1347dc8f276": {
+    "bytes": 46615530,
+    "sha256": "6d729cc0e31ba1fedb77a144f3245ed4bfc7fd8baccfed633d38d4104e894566",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-a1347dc8f276/005.bin",
+        "bytes": 4672490
+      }
+    ]
+  },
+  "fma-ec5466cd51eb": {
+    "bytes": 21256182,
+    "sha256": "4e96ec9c215ea0981791848a1bf84494871978d2f68af5e594fb0eef43a17dd7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-ec5466cd51eb/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-ec5466cd51eb/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-ec5466cd51eb/002.bin",
+        "bytes": 4478966
+      }
+    ]
+  },
+  "fma-881997570f9f": {
+    "bytes": 57016200,
+    "sha256": "09bb74fb430675a2aa6c3c1894eeb91fa0cb62c8b008fdc444de96580641cd80",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/005.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-881997570f9f/006.bin",
+        "bytes": 6684552
+      }
+    ]
+  },
+  "fma-d3313ef1ef9f": {
+    "bytes": 11051288,
+    "sha256": "2daf47bbdb7677620a19b796feec837bff692df40ceecea57373ec5bf954fefa",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-d3313ef1ef9f/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-d3313ef1ef9f/001.bin",
+        "bytes": 2662680
+      }
+    ]
+  },
+  "fma-8c38222e7ece": {
+    "bytes": 15987080,
+    "sha256": "df8373585ad7d3e42277ab8dd58d753cbd300e6213e255f34de3c87d20f2ff11",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-8c38222e7ece/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-8c38222e7ece/001.bin",
+        "bytes": 7598472
+      }
+    ]
+  },
+  "fma-51a0010e212a": {
+    "bytes": 14534266,
+    "sha256": "f7249be2d6c5ecabb3a51d95eb51503b3b71e20006e8366bcd95633ee0343405",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-51a0010e212a/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-51a0010e212a/001.bin",
+        "bytes": 6145658
+      }
+    ]
+  },
+  "kevin-USUAN1100474": {
+    "bytes": 8199078,
+    "sha256": "6be229815d85a0b99382b944d31098b882702c04ac7ad899e44ab7f8ba89b5ad",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100474/000.bin",
+        "bytes": 8199078
+      }
+    ]
+  },
+  "kevin-USUAN1100499": {
+    "bytes": 11690312,
+    "sha256": "a7d0b772f05b99c4ac3df28cb2feaa5190781c2b87bceef5052cc45408b6fc75",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100499/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100499/001.bin",
+        "bytes": 3301704
+      }
+    ]
+  },
+  "kevin-USUAN1700074": {
+    "bytes": 10341722,
+    "sha256": "9e980a5a5ff7663d7f5ac22209190f34f1df465c5a6b588dd2c0bcbfc217e380",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1700074/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1700074/001.bin",
+        "bytes": 1953114
+      }
+    ]
+  },
+  "kevin-USUAN1300035": {
+    "bytes": 10734389,
+    "sha256": "15ee9995e01ffe91678db6ba072ec13cf0bf258f17c01677c5367009932b9c07",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1300035/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1300035/001.bin",
+        "bytes": 2345781
+      }
+    ]
+  },
+  "kevin-USUAN1700069": {
+    "bytes": 9069455,
+    "sha256": "322103dd6ac5fae4872122f91d32cccd4d964b86d300585a5a0cdfaf7048af5d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1700069/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1700069/001.bin",
+        "bytes": 680847
+      }
+    ]
+  },
+  "kevin-USUAN1300045": {
+    "bytes": 9848618,
+    "sha256": "35ecdf6df7926db57f2c397ecba70a875f47a479423af61615566d12b146e84b",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1300045/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1300045/001.bin",
+        "bytes": 1460010
+      }
+    ]
+  },
+  "kevin-USUAN1100618": {
+    "bytes": 3031166,
+    "sha256": "a85d378af027d75014be4a95b43007b19e03b06693c4b4ad72594cf392f4bc1c",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100618/000.bin",
+        "bytes": 3031166
+      }
+    ]
+  },
+  "kevin-USUAN1400039": {
+    "bytes": 5293585,
+    "sha256": "ced1148df201a6c69062a96b7ef49c49924572ca5023c2ac5a2d6c5828ecb218",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1400039/000.bin",
+        "bytes": 5293585
+      }
+    ]
+  },
+  "kevin-USUAN1100261": {
+    "bytes": 7224606,
+    "sha256": "243d5543c930bf54e95868bab9da860e67ce8835e3698881fda287bc58cc343f",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100261/000.bin",
+        "bytes": 7224606
+      }
+    ]
+  },
+  "kevin-USUAN1100564": {
+    "bytes": 3679550,
+    "sha256": "aeefb582c77059aaf5b10d1e9125d7b19adca07cd841f3654e74aed7da9a3a71",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100564/000.bin",
+        "bytes": 3679550
+      }
+    ]
+  },
+  "kevin-USUAN1100588": {
+    "bytes": 5847166,
+    "sha256": "91997574f6b18918a6e93e543c42b047ae7179d2643b2a4d706e5338ad75eef7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100588/000.bin",
+        "bytes": 5847166
+      }
+    ]
+  },
+  "kevin-USUAN1100709": {
+    "bytes": 7817475,
+    "sha256": "60d5bd3b67ac9519e79f9581c53ef3eb59f5fe586f55f135996c491113ca9b28",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100709/000.bin",
+        "bytes": 7817475
+      }
+    ]
+  },
+  "kevin-USUAN1100297": {
+    "bytes": 6446732,
+    "sha256": "25db9b02ceb9875234f323cc89d38dcdbff2f0bb232d1dd0f662aa9ca5eddd8f",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100297/000.bin",
+        "bytes": 6446732
+      }
+    ]
+  },
+  "kevin-USUAN1100341": {
+    "bytes": 11060298,
+    "sha256": "f9760f923aac20d3048774f39eefddb2d952f64ecabac4850f7c53110950e9fd",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100341/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100341/001.bin",
+        "bytes": 2671690
+      }
+    ]
+  },
+  "kevin-USUAN1100783": {
+    "bytes": 9551329,
+    "sha256": "7591bd67ba227c2a3ffd97a6751c66e0b56d543ba91a6a2699a765191c880518",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100783/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100783/001.bin",
+        "bytes": 1162721
+      }
+    ]
+  },
+  "kevin-USUAN1400011": {
+    "bytes": 5005207,
+    "sha256": "a5bb345c23849ad0786aa0bc5157a9f2d4039660fe00282e55754d475f36dc14",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1400011/000.bin",
+        "bytes": 5005207
+      }
+    ]
+  },
+  "kevin-USUAN1500026": {
+    "bytes": 11704283,
+    "sha256": "746f7b1d4dad9c949a67bc063e0ca79da34452c69cd98f4ab9c16a712e92e951",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1500026/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1500026/001.bin",
+        "bytes": 3315675
+      }
+    ]
+  },
+  "kevin-USUAN1100339": {
+    "bytes": 5090909,
+    "sha256": "5e0843d42e22b175b7975c5567c91a21d2ebec5cdbc9749bce5e5179c1eb6cf0",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/kevin-USUAN1100339/000.bin",
+        "bytes": 5090909
+      }
+    ]
+  },
+  "scott-the-long-dark": {
+    "bytes": 17595203,
+    "sha256": "fa5bfe904dd4902b9eb66d8df518a91adde41fb6d1687aefb5af1a2de7da28da",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-the-long-dark/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-the-long-dark/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-the-long-dark/002.bin",
+        "bytes": 817987
+      }
+    ]
+  },
+  "scott-undertow": {
+    "bytes": 10000906,
+    "sha256": "4652007dad67295f1f5c87c8cbc8e2df1a530e7671266a29f693a084375d3910",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-undertow/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-undertow/001.bin",
+        "bytes": 1612298
+      }
+    ]
+  },
+  "scott-chasing-daylight": {
+    "bytes": 10958088,
+    "sha256": "f8581d155e0a05ea2e0a58ca430917587d308157ac5551f441ea8745b875feee",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-chasing-daylight/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-chasing-daylight/001.bin",
+        "bytes": 2569480
+      }
+    ]
+  },
+  "scott-filaments": {
+    "bytes": 13599523,
+    "sha256": "880686f9e39b326862b084c9ae4100c9a1c9e2e91bf94a239cd5c1226acada07",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-filaments/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-filaments/001.bin",
+        "bytes": 5210915
+      }
+    ]
+  },
+  "scott-terminus": {
+    "bytes": 10540115,
+    "sha256": "33ca786940809d29171d559b9d3f0d4c62e6cd1b977fd6f92c4c8c75ac09913e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-terminus/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-terminus/001.bin",
+        "bytes": 2151507
+      }
+    ]
+  },
+  "scott-i-walk-with-ghosts": {
+    "bytes": 19369485,
+    "sha256": "312c41b1beefcf60f37ac90e4fc64635ff39303129852d7389dd57a25e09fa18",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/scott-i-walk-with-ghosts/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-i-walk-with-ghosts/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/scott-i-walk-with-ghosts/002.bin",
+        "bytes": 2592269
+      }
+    ]
+  },
+  "josh-Inertia-vocal": {
+    "bytes": 3531648,
+    "sha256": "b52bde0038c48cafcd729aa5244a01e0f9d33d3cec82fa7abb17faa186f0efca",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-Inertia-vocal/000.bin",
+        "bytes": 3531648
+      }
+    ]
+  },
+  "josh-Inertia-instrumental": {
+    "bytes": 3579786,
+    "sha256": "3141663c3d473be3497cec413c7cd5ee65470c6da28289d8da4692dbcbc57c70",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-Inertia-instrumental/000.bin",
+        "bytes": 3579786
+      }
+    ]
+  },
+  "josh-TheVagabond-vocal": {
+    "bytes": 6972915,
+    "sha256": "8f0c2cd3f2e26e478af5cc296b318018b7f0b20eb2a9f24ba9a49d89a9110026",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-TheVagabond-vocal/000.bin",
+        "bytes": 6972915
+      }
+    ]
+  },
+  "josh-TheVagabond-instrumental": {
+    "bytes": 6760460,
+    "sha256": "183a72d9cb1101c80ae7413f4ed31c201f2124e63ca3aca5924a5a98700c6cf8",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-TheVagabond-instrumental/000.bin",
+        "bytes": 6760460
+      }
+    ]
+  },
+  "josh-FightTheSea-vocal": {
+    "bytes": 5974865,
+    "sha256": "3f1f06476642e0e24797b08888a2399b98da5e2a6b78dc825b3551a4f7173831",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-FightTheSea-vocal/000.bin",
+        "bytes": 5974865
+      }
+    ]
+  },
+  "josh-FightTheSea-instrumental": {
+    "bytes": 6179117,
+    "sha256": "40fdb30c837c0078cafe6edf75ae9633fcc0def6ab4c583d43d5cec158a9e83b",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-FightTheSea-instrumental/000.bin",
+        "bytes": 6179117
+      }
+    ]
+  },
+  "josh-DizzySpells-vocal": {
+    "bytes": 4488875,
+    "sha256": "2eb1e1f5163e4cedf82b9b5fd5ea111f6a68012315f44aab1bb828620eb6ad00",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-DizzySpells-vocal/000.bin",
+        "bytes": 4488875
+      }
+    ]
+  },
+  "josh-DizzySpells-instrumental": {
+    "bytes": 4388928,
+    "sha256": "e1944787fdd15bfae3af3086a4f1236bba675d6bdd519c36dbd8ac0cbab1f087",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-DizzySpells-instrumental/000.bin",
+        "bytes": 4388928
+      }
+    ]
+  },
+  "josh-Coffee-vocal": {
+    "bytes": 4167292,
+    "sha256": "e0ece785d62530fb0f6f83544bcc1b0fbf7d9795eb1134dac5ebb594b613b729",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-Coffee-vocal/000.bin",
+        "bytes": 4167292
+      }
+    ]
+  },
+  "josh-Coffee-instrumental": {
+    "bytes": 4378086,
+    "sha256": "29d8e7b58da95de16dfffd23177021adf6979e2aec35409fa3157f44dd62afeb",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-Coffee-instrumental/000.bin",
+        "bytes": 4378086
+      }
+    ]
+  },
+  "josh-CrazyGlue-vocal": {
+    "bytes": 4769883,
+    "sha256": "1c86333f05cbe488160cf6cf73231be3aa805b627e064e11cb9b7213165deafb",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-CrazyGlue-vocal/000.bin",
+        "bytes": 4769883
+      }
+    ]
+  },
+  "josh-CrazyGlue-instrumental": {
+    "bytes": 4716447,
+    "sha256": "5d0a8f78ff77d90e39343b7c62652b819bead09c976619729ffb43beff158b85",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/josh-CrazyGlue-instrumental/000.bin",
+        "bytes": 4716447
+      }
+    ]
+  },
+  "dreams-unmastered": {
+    "bytes": 62813708,
+    "sha256": "48434c9d308d249196b60ed44011f5599ef4054aca560217c4d2a7eb1986b31f",
+    "mime": "audio/wav",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/005.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/006.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-unmastered/007.bin",
+        "bytes": 4093452
+      }
+    ]
+  },
+  "dreams-mastered": {
+    "bytes": 62813708,
+    "sha256": "89e157117fbdd184f4b27a8e7f80629cce921ff557a4a4dc6d4365ae3a928971",
+    "mime": "audio/wav",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/001.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/002.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/003.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/004.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/005.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/006.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/dreams-mastered/007.bin",
+        "bytes": 4093452
+      }
+    ]
+  },
+  "fma-6ae23e9bfa85": {
+    "bytes": 7847216,
+    "sha256": "6412a52127ef4c16b6cf7e4abc134ba3fbdb7419e542690135d5def80c09cfb4",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-6ae23e9bfa85/000.bin",
+        "bytes": 7847216
+      }
+    ]
+  },
+  "fma-b6bc1d1fa65d": {
+    "bytes": 2667831,
+    "sha256": "bc9570830770336441ad942a37478fcede987c1b84dfaf7ba78edc789857f757",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-b6bc1d1fa65d/000.bin",
+        "bytes": 2667831
+      }
+    ]
+  },
+  "fma-dffcad79b03f": {
+    "bytes": 2889335,
+    "sha256": "ae0fe5acca9d687cf5bf8d9b5a9e45d842e6f149d8189257a785c16035c17d8a",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-dffcad79b03f/000.bin",
+        "bytes": 2889335
+      }
+    ]
+  },
+  "fma-fb1d0363d84f": {
+    "bytes": 7106928,
+    "sha256": "432bd638efb80163728a39ca2a5daf689fd90e3664e75392ca63b924788067a7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-fb1d0363d84f/000.bin",
+        "bytes": 7106928
+      }
+    ]
+  },
+  "fma-4bfe75e4de15": {
+    "bytes": 3515661,
+    "sha256": "a9521aa56e83661a58ff80e94e296cc777c884a96c60854cf244f2794c04b81f",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-4bfe75e4de15/000.bin",
+        "bytes": 3515661
+      }
+    ]
+  },
+  "fma-f7a3880b2315": {
+    "bytes": 14526729,
+    "sha256": "ae892d1ac50cc42db64a770d72ecdb67cd7520fa767fd84ac4a435d0d6b29921",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-f7a3880b2315/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-f7a3880b2315/001.bin",
+        "bytes": 6138121
+      }
+    ]
+  },
+  "fma-058da2d4b570": {
+    "bytes": 3133338,
+    "sha256": "94570cf8c4d3cc0f82e85b0f4fde7f810c728a0ce5edec77483d70ac2bba6eaf",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-058da2d4b570/000.bin",
+        "bytes": 3133338
+      }
+    ]
+  },
+  "fma-dafd1173d5a8": {
+    "bytes": 8489110,
+    "sha256": "386fd2702ab6e774138bc08f4d8677256e847f022767a14d3c999d16d2c69094",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-dafd1173d5a8/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-dafd1173d5a8/001.bin",
+        "bytes": 100502
+      }
+    ]
+  },
+  "fma-9b98a00bf77b": {
+    "bytes": 8463626,
+    "sha256": "2958b9e39e024e8c911b1c8f30bf9b238cb66552229fb1451cd2bbe3e34c8648",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-9b98a00bf77b/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-9b98a00bf77b/001.bin",
+        "bytes": 75018
+      }
+    ]
+  },
+  "fma-67e25b62a103": {
+    "bytes": 8671907,
+    "sha256": "c179a0d90c360f877f7de907bd63455d39888f40862698c3390a3d40abd60a4e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-67e25b62a103/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-67e25b62a103/001.bin",
+        "bytes": 283299
+      }
+    ]
+  },
+  "fma-7c920f2ef1ab": {
+    "bytes": 9054567,
+    "sha256": "162465c71e72ad67a41bd50e1c33986156b1342e52c9ec763dd4dec760dc4565",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-7c920f2ef1ab/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-7c920f2ef1ab/001.bin",
+        "bytes": 665959
+      }
+    ]
+  },
+  "fma-dfada2d45350": {
+    "bytes": 9458852,
+    "sha256": "e3ece638bebf1704ad1c8df5359e9badd8b1f1b41e1b72a29986796c8201740e",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-dfada2d45350/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-dfada2d45350/001.bin",
+        "bytes": 1070244
+      }
+    ]
+  },
+  "fma-bf3fae835dd7": {
+    "bytes": 4866138,
+    "sha256": "444da698ff0e321c5b66879c6e4fdc4a64e73459b4aaae87c5531a0ce78e66af",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-bf3fae835dd7/000.bin",
+        "bytes": 4866138
+      }
+    ]
+  },
+  "fma-00955fabe92a": {
+    "bytes": 12593964,
+    "sha256": "636f6fa89c0d093a56dfabf44878ea41a080f348eae799bfa947024add82015b",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-00955fabe92a/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-00955fabe92a/001.bin",
+        "bytes": 4205356
+      }
+    ]
+  },
+  "fma-2c9c1e829aeb": {
+    "bytes": 8580213,
+    "sha256": "9e77af465967a438a419c2e5b574f6c19373f2a6e0224372fba56f2277a1188d",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-2c9c1e829aeb/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-2c9c1e829aeb/001.bin",
+        "bytes": 191605
+      }
+    ]
+  },
+  "fma-54d7ba3e8787": {
+    "bytes": 10088369,
+    "sha256": "88191ac6fafc4f57aaaaa3b2e175ee8940c03dd2278937f3c30140dfafa73db7",
+    "mime": "audio/mpeg",
+    "parts": [
+      {
+        "path": "/music/listening-pool-chunks/fma-54d7ba3e8787/000.bin",
+        "bytes": 8388608
+      },
+      {
+        "path": "/music/listening-pool-chunks/fma-54d7ba3e8787/001.bin",
+        "bytes": 1699761
+      }
+    ]
+  }
+}

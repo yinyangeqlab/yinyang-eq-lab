@@ -59,3 +59,11 @@
   .library-eq,.library-shortlist { padding:18px; }
 }
 .library-music-rank { margin:4px 0 8px;color:#a6d9d3;font-size:11px;line-height:1.4; }
+
+.library-family{min-width:0}.library-versions{display:grid;gap:16px}.library-family-heading{padding:12px 18px;border:1px solid #3f5b66;border-radius:12px;margin-bottom:10px;background:#14232c}.library-family-heading h3{margin:0;font-size:17px}.library-family-heading p{margin:6px 0 0;color:#acc5cf;font-size:12px}.library-top-ten{padding-left:24px;display:grid;gap:10px}.library-top-ten a{color:#a8e3ef}.library-top-ten small{display:block;color:#99b2bd}.library-loudness{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:18px 0}.library-loudness label{display:flex;align-items:center;gap:8px}.library-loudness small,.library-match-status{font-size:11px;color:#a6bcc7}.library-match-status{display:block;margin:8px 0}.library-review-flag{font-size:12px;color:#f0ca87;border-left:2px solid #d1a65e;padding-left:8px}.library-version-label{font-size:12px;color:#add9df}.library-track{min-width:0;scroll-margin-top:24px}
+
+.library-shortlist{display:block}.library-shortlist>p{margin:12px 0}.library-top-ten{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px}.library-top-ten li{min-width:0;overflow-wrap:anywhere}.library-loudness small{max-width:480px}.library-player-controls{gap:8px}.library-volume{min-width:0}.library-credit{overflow-wrap:anywhere}@media(max-width:720px){.library-top-ten{grid-template-columns:1fr}}@media(max-width:360px){.library-volume input{width:40px}.library-player-controls{gap:5px}.library-player-time{font-size:10px}.library-play{width:30px;height:30px}}
+
+.library-family.has-versions{grid-column:1/-1}.library-family.has-versions .library-versions{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:720px){.library-family.has-versions .library-versions{grid-template-columns:1fr}}
+
+.library-preference-method{margin:16px 0;font-size:12px;color:var(--muted)}.library-preference-method summary{cursor:pointer;color:#a9d4ce}.library-preference-method p{margin:10px 0;line-height:1.6}

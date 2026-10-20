@@ -1,0 +1,312 @@
+[
+  {
+    "key": "library-001",
+    "local_file": "artifacts/listening-pool-original-audio/library-001.flac",
+    "sha256": "d12668a5c7ce03e4d5b11c049ce1d982a3ac97e4f5313af4182bccb741c9914d"
+  },
+  {
+    "key": "library-002",
+    "local_file": "artifacts/listening-pool-original-audio/library-002.flac",
+    "sha256": "96ce9b7a36cc7638515078c083d23354274b00291342256d10004cb57875698e"
+  },
+  {
+    "key": "library-003",
+    "local_file": "artifacts/listening-pool-original-audio/library-003.mp3",
+    "sha256": "feaf45d70336b3436fd6d03ef79d3f8f7765962620a02c3e14048e5c43830e82"
+  },
+  {
+    "key": "library-004",
+    "local_file": "artifacts/listening-pool-original-audio/library-004.mp3",
+    "sha256": "74e27a95a5849101cec9bb70ed90ca33cf1dc6240fc2ae9877aa44ebaa4e1037"
+  },
+  {
+    "key": "library-005",
+    "local_file": "artifacts/listening-pool-original-audio/library-005.mp3",
+    "sha256": "e656d40da96589995dc0b67a73991537131f20aabe71ab123ca01ae7c468ddfe"
+  },
+  {
+    "key": "library-006",
+    "local_file": "artifacts/listening-pool-original-audio/library-006.mp3",
+    "sha256": "8c09d0e497a320c2ca3a62d330878a2d89d81f9711e0d63dbe97adae76c8b9a2"
+  },
+  {
+    "key": "library-007",
+    "local_file": "artifacts/listening-pool-original-audio/library-007.mp3",
+    "sha256": "a2188d5999028217eeeed38ea59e131ffd5aa15b26ae6ecc91659308eca757db"
+  },
+  {
+    "key": "library-008",
+    "local_file": "artifacts/listening-pool-original-audio/library-008.mp3",
+    "sha256": "c895603e0f32f7218d9f9afa0a917ff7ffcf92c3167eede828c45f659dc344b4"
+  },
+  {
+    "key": "library-009",
+    "local_file": "artifacts/listening-pool-original-audio/library-009.mp3",
+    "sha256": "e8274291df5bad99658f338835979bb3c2b8f42a087476ab25e7dbfda52ba655"
+  },
+  {
+    "key": "library-010",
+    "local_file": "artifacts/listening-pool-original-audio/library-010.mp3",
+    "sha256": "62a645677acacf3f83eb57e9abe9347a2bacee03886e3bd48ed0d55a391b6ed6"
+  },
+  {
+    "key": "library-011",
+    "local_file": "artifacts/listening-pool-original-audio/library-011.flac",
+    "sha256": "e4eb45283ad974865f54b7f8d70c7942df0026af391a287327fe71bff118916b"
+  },
+  {
+    "key": "library-012",
+    "local_file": "artifacts/listening-pool-original-audio/library-012.mp3",
+    "sha256": "e9f7385ca28b26e2aafbd05d573b7444bc315b75bc27eee29512619aec6177ff"
+  },
+  {
+    "key": "library-013",
+    "local_file": "artifacts/listening-pool-original-audio/library-013.mp3",
+    "sha256": "833fcf4ae0875c1d9ab40edefa63bcdd19b342963401300558cec930e3781909"
+  },
+  {
+    "key": "library-014",
+    "local_file": "artifacts/listening-pool-original-audio/library-014.mp3",
+    "sha256": "053fa0e9dbb9a9ad8461b76738e021f459ca19f9271c788d5ae8e7d30380441d"
+  },
+  {
+    "key": "library-015",
+    "local_file": "artifacts/listening-pool-original-audio/library-015.mp3",
+    "sha256": "75a0dfba02144f32fe90e9b49e62957e0c14d5d8cb243ecbcb5d3cf6b85dcc40"
+  },
+  {
+    "key": "library-016",
+    "local_file": "artifacts/listening-pool-original-audio/library-016.mp3",
+    "sha256": "8fb7c202ea084ea7b6ac647f7bfb721070bbab7833328f3bd223593f8e5d6c43"
+  },
+  {
+    "key": "library-017",
+    "local_file": "artifacts/listening-pool-original-audio/library-017.mp3",
+    "sha256": "83309bb149d5df08443ea3f9def1724f3600e0d1d3667762a5189c45310ed324"
+  },
+  {
+    "key": "library-018",
+    "local_file": "artifacts/listening-pool-original-audio/library-018.mp3",
+    "sha256": "32066025785d61200fdd3433aade4a10a2bd98cdc8259e8a1257336afcbbc4f5"
+  },
+  {
+    "key": "library-019",
+    "local_file": "artifacts/listening-pool-original-audio/library-019.mp3",
+    "sha256": "57ec5fdd4d82e9e662e44232702dd3e4e2cc4961d5cfe2f3497e8a1f08a54490"
+  },
+  {
+    "key": "library-020",
+    "local_file": "artifacts/listening-pool-original-audio/library-020.mp3",
+    "sha256": "a56d7b2502a74cf3d164c64c20850fc70d39f09c133f445ec8d5ef08de5781c4"
+  },
+  {
+    "key": "library-021",
+    "local_file": "artifacts/listening-pool-original-audio/library-021.flac",
+    "sha256": "b4fdcd7c41c18ce7b4d876cb88e1fd59d66a0ae34bd1cbb6e4e856281b70cbbc"
+  },
+  {
+    "key": "library-022",
+    "local_file": "artifacts/listening-pool-original-audio/library-022.mp3",
+    "sha256": "351f5b61a2968a3d79d79bec991b627baf3d83a1329ea1e20d9de72dc5ec6f31"
+  },
+  {
+    "key": "library-023",
+    "local_file": "artifacts/listening-pool-original-audio/library-023.mp3",
+    "sha256": "b013321cfc14d603aabd4fdf2df93fa271fe7b33d38d997086beb0a45ca42dbc"
+  },
+  {
+    "key": "library-024",
+    "local_file": "artifacts/listening-pool-original-audio/library-024.mp3",
+    "sha256": "66aaae6ecf59296bfe0833dfcf826fc10c51bcbda1867d79cafec2093000d105"
+  },
+  {
+    "key": "library-025",
+    "local_file": "artifacts/listening-pool-original-audio/library-025.mp3",
+    "sha256": "f57e655fb82b1152d563da97634490ca645a1f0f7924bbe45d27e476c84fda9c"
+  },
+  {
+    "key": "library-026",
+    "local_file": "artifacts/listening-pool-original-audio/library-026.mp3",
+    "sha256": "81806f20f485a927f99b4c5733c3a5c353f27d84cce7cba7891ece6080fb6d77"
+  },
+  {
+    "key": "library-027",
+    "local_file": "artifacts/listening-pool-original-audio/library-027.mp3",
+    "sha256": "499fb806cd6c1e6fa4ed3339df51625f7af4520dbf8e95d7f47b714a869960e1"
+  },
+  {
+    "key": "library-028",
+    "local_file": "artifacts/listening-pool-original-audio/library-028.mp3",
+    "sha256": "9dbc33a601e7d1c2129b8a477dc55c4d59e24425d7274db1967e8102446f65a9"
+  },
+  {
+    "key": "library-029",
+    "local_file": "artifacts/listening-pool-original-audio/library-029.mp3",
+    "sha256": "05304f63d740b2ba4d220e28b400bac097b1968d4d541eb7780e78718db3f572"
+  },
+  {
+    "key": "library-030",
+    "local_file": "artifacts/listening-pool-original-audio/library-030.mp3",
+    "sha256": "c9d1335ef54ff3ab79f0c191388ddf54bb107821b00a43ce9cd70d130ddde854"
+  },
+  {
+    "key": "library-031",
+    "local_file": "artifacts/listening-pool-original-audio/library-031.mp3",
+    "sha256": "9e4106131dabaa55fa3e4917b6318db6724c130d4a8b97a6048ea1bb445eb1a4"
+  },
+  {
+    "key": "library-032",
+    "local_file": "artifacts/listening-pool-original-audio/library-032.mp3",
+    "sha256": "5a5378c7454b54d6b43e88ae5e3e91feb217e1a3a86360cbb7e47f494ec2f25c"
+  },
+  {
+    "key": "library-033",
+    "local_file": "artifacts/listening-pool-original-audio/library-033.mp3",
+    "sha256": "556d090ba99ac62149756e084d9c7f1ddf0bfe0d19300b950fef2c6f8e23552d"
+  },
+  {
+    "key": "library-034",
+    "local_file": "artifacts/listening-pool-original-audio/library-034.mp3",
+    "sha256": "d46bbce4a0de6fea9c94de8b56a5033a44539914c20d7bdf860b8b6c6d787ade"
+  },
+  {
+    "key": "library-035",
+    "local_file": "artifacts/listening-pool-original-audio/library-035.mp3",
+    "sha256": "445ec3183ccdc364777448c5fa00bcd4730e7db2e7d63dddfb0936c23207fab3"
+  },
+  {
+    "key": "library-036",
+    "local_file": "artifacts/listening-pool-original-audio/library-036.mp3",
+    "sha256": "5940eaaab87ea04ae2f6db969051e4943e25fed346fda0ff9bfda5fbc5a3db16"
+  },
+  {
+    "key": "library-037",
+    "local_file": "artifacts/listening-pool-original-audio/library-037.mp3",
+    "sha256": "e168c0732cd4be8986640250adf4a8e65070449fe90c951ac3d99dcdf026e6e8"
+  },
+  {
+    "key": "library-038",
+    "local_file": "artifacts/listening-pool-original-audio/library-038.mp3",
+    "sha256": "b929f726fff999203f0caf81ef1222aaf3b23a943aac536a2888aac96f13dab7"
+  },
+  {
+    "key": "library-039",
+    "local_file": "artifacts/listening-pool-original-audio/library-039.mp3",
+    "sha256": "c59613c6681b876b5791fab5a06785951848f0de6d1153ababd7f373ff352f4c"
+  },
+  {
+    "key": "library-040",
+    "local_file": "artifacts/listening-pool-original-audio/library-040.mp3",
+    "sha256": "17819a497828105b74b2d73d88694a88c6b90781bb16a748fdcf13ad52567648"
+  },
+  {
+    "key": "library-041",
+    "local_file": "artifacts/listening-pool-original-audio/library-041.mp3",
+    "sha256": "481b6b4d5b19e3f25f22033e9a1835bd2f5a820f27b2db56da0b75d8ec0590d4"
+  },
+  {
+    "key": "library-042",
+    "local_file": "artifacts/listening-pool-original-audio/library-042.mp3",
+    "sha256": "2fc33b27b9963608a2bad2da111d2a0604ed46c7cd2b84397ba6bdb87e8d98c7"
+  },
+  {
+    "key": "library-043",
+    "local_file": "artifacts/listening-pool-original-audio/library-043.mp3",
+    "sha256": "18515a5ebe7655d921675d1a838afc20568099706a1b3b736bf81e56056cd1f2"
+  },
+  {
+    "key": "library-044",
+    "local_file": "artifacts/listening-pool-original-audio/library-044.mp3",
+    "sha256": "65bbdc7bc6fb5fd65e0b0e1c37711104273b25aca0b27d23852a243ec817bc09"
+  },
+  {
+    "key": "library-045",
+    "local_file": "artifacts/listening-pool-original-audio/library-045.mp3",
+    "sha256": "a2e43294365bf32216a6cec1da4c50e5321e16e479650dc96011422ce9280f49"
+  },
+  {
+    "key": "library-046",
+    "local_file": "artifacts/listening-pool-original-audio/library-046.mp3",
+    "sha256": "f43aee72da27b32401c7b4a29662ceb042832c9fc730b0ae2a5720dd1b38a211"
+  },
+  {
+    "key": "library-047",
+    "local_file": "artifacts/listening-pool-original-audio/library-047.mp3",
+    "sha256": "932d4fc09d3b028032026fb0089e54668fd2939777f0c43c45291e09ef75b0aa"
+  },
+  {
+    "key": "library-048",
+    "local_file": "artifacts/listening-pool-original-audio/library-048.mp3",
+    "sha256": "f4e702aaf150dd072594a2ea99725bd456716a778e7430699fee593a768d2de7"
+  },
+  {
+    "key": "library-049",
+    "local_file": "artifacts/listening-pool-original-audio/library-049.mp3",
+    "sha256": "a7ee9a14bfba8776f18f19c0e396048c044c0ae5ba67434a50be11702ed86a4d"
+  },
+  {
+    "key": "library-050",
+    "local_file": "artifacts/listening-pool-original-audio/library-050.mp3",
+    "sha256": "42452cc953661fbbd27f61549b4778cb64b6fe2318a336867e9d37db0042223a"
+  },
+  {
+    "key": "library-051",
+    "local_file": "artifacts/listening-pool-original-audio/library-051.mp3",
+    "sha256": "30e655e248bf5f01819f0865fb4d0f57c3ff8ab41a8906cdc0e58bfcf9c13d41"
+  },
+  {
+    "key": "library-052",
+    "local_file": "artifacts/listening-pool-original-audio/library-052.mp3",
+    "sha256": "5935c09e07484ac00e47eca1479c5d8c6b34c3f9bdb4b11bf32780e31cd80c78"
+  },
+  {
+    "key": "library-053",
+    "local_file": "artifacts/listening-pool-original-audio/library-053.mp3",
+    "sha256": "dde51ebfd627618eedaf564582790707bfc006cf1f6f930211ed519c0fd8e863"
+  },
+  {
+    "key": "library-054",
+    "local_file": "artifacts/listening-pool-original-audio/library-054.mp3",
+    "sha256": "5011eef7a1127e2b7bf4a6aadf1c887c6f24849ec2a469df1841c713bb15b90e"
+  },
+  {
+    "key": "library-055",
+    "local_file": "artifacts/listening-pool-original-audio/library-055.mp3",
+    "sha256": "d8e4e4b40ddf7c91af4daf6831895932a06a7f8197c927b550b6730764f2b444"
+  },
+  {
+    "key": "library-056",
+    "local_file": "artifacts/listening-pool-original-audio/library-056.mp3",
+    "sha256": "881297b5f93ddd30461cd2657c08e7f947fcedb29d12b1571e9114d6aa0e4eb5"
+  },
+  {
+    "key": "library-057",
+    "local_file": "artifacts/listening-pool-original-audio/library-057.mp3",
+    "sha256": "cdb4ac6a417e15c84ee88c1524648995974ae23fade2c61a6e523663f3c10db5"
+  },
+  {
+    "key": "library-058",
+    "local_file": "artifacts/listening-pool-original-audio/library-058.mp3",
+    "sha256": "18bc9d7a751b5a9515f6333193ab9e8e7d18a4451ac9db04bc37307044ee83fd"
+  },
+  {
+    "key": "library-059",
+    "local_file": "artifacts/listening-pool-original-audio/library-059.mp3",
+    "sha256": "ca9d6e956fb85874b6bc5b8789ffd189112d5c520445376c535ad6e231da3eb3"
+  },
+  {
+    "key": "library-060",
+    "local_file": "artifacts/listening-pool-original-audio/library-060.mp3",
+    "sha256": "70cd72b76e53e1bd590e8aae88782b5293b8af21ee828d7305964b0319410790"
+  },
+  {
+    "key": "library-061",
+    "local_file": "artifacts/listening-pool-original-audio/library-061.flac",
+    "sha256": "484cb77a1a5ba764c17128e385058baefc0cf2076c542bc07cb91b05450d121d"
+  },
+  {
+    "key": "library-062",
+    "local_file": "artifacts/listening-pool-original-audio/library-062.flac",
+    "sha256": "41c293db57f1a9f62836d87c6eddf04854057a4ba1b467f8e91b50d7cdcdf1d8"
+  }
+]

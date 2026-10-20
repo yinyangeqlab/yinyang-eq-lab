@@ -9,7 +9,7 @@ export default function Welcome() {
       <div className="welcome-shade" aria-hidden="true" />
       <header className="welcome-nav">
         <a className="welcome-brand" href="/home" aria-label="YinYang EQ League home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
-        <nav aria-label="Welcome navigation"><a href="#how-it-works">How it works</a><a href="/music-library">Music library</a><a href="/preference-tuning">Preference Tuning</a><a href="/admin-login">Admin sign in</a><a className="welcome-nav-enter" href="/shootout">Enter with invitation <span aria-hidden="true">↗</span></a></nav>
+        <nav aria-label="Welcome navigation"><a href="#how-it-works">How it works</a><a href="/music-library">Listening pool</a><a href="/preference-tuning">Preference Tuning</a><a href="/admin-login">Admin sign in</a><a className="welcome-nav-enter" href="/shootout">Enter with invitation <span aria-hidden="true">↗</span></a></nav>
       </header>
       <div className="welcome-copy">
         <span className="welcome-kicker"><span aria-hidden="true" /> WELCOME TO YINYANG EQ LEAGUE</span>

@@ -13,8 +13,8 @@ import { curatedWaveform } from "@/lib/curated-waveforms";
 import { estimateWaveformSpread, previewDynamics } from "@/lib/dynamics-preview";
 import { matchSongSuggestion, type SongSuggestion } from "@/lib/song-match";
 import { musicCandidates } from "@/lib/music-catalog";
-import { musicRotation, type MusicChoice, type MusicCounts } from "@/lib/music-preferences";
-import curatedMusic from "@/data/music-candidates.json";
+import { musicRotation, playbackTarget, type MusicChoice, type MusicCounts } from "@/lib/music-preferences";
+import { listeningPool as curatedMusic } from "@/lib/music-catalog";
 
 export type MusicContext = { songTitle: string; songArtist: string; songAlbum: string; recordingId: string; sha256: string | null; audioFormat: string | null; sampleRate: number | null; bitrate: number | null; duration: number | null; intervals: Interval[]; heardA: number; heardB: number; overlapSeconds: number };
 export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean> };
@@ -63,20 +63,21 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const curatedFetchRef = useRef(0);
   const curatedIndexRef = useRef(-1);
   const curatedQueueRef = useRef<number[]>([]);
-  const musicCountsRef = useRef<MusicCounts>({});
   const [musicChoices, setMusicChoices] = useState<Record<string, MusicChoice>>({});
   const [musicVotesReady, setMusicVotesReady] = useState(false);
   const [musicSignedIn, setMusicSignedIn] = useState(false);
   const [musicSaving, setMusicSaving] = useState(false);
   const [musicVoteMessage, setMusicVoteMessage] = useState("");
   const [candidateUrl, setCandidateUrl] = useState<string | null>(null);
+  const selectedPoolTrack = curatedMusic.find(track => track.url === candidateUrl);
+  const requestedLoudness = testMode === "open" ? loudnessTarget : "-16";
+  const sharedPlaybackTarget = requestedLoudness === "off" ? null : playbackTarget(selectedPoolTrack ? curatedMusic.filter(track => (track.songFamily || track.url) === (selectedPoolTrack.songFamily || selectedPoolTrack.url)) : [], Number(requestedLoudness));
   const candidateUrlRef = useRef(candidateUrl);
   candidateUrlRef.current = candidateUrl;
   async function refreshMusicVotes() {
     const response = await fetch("/api/music-votes", { cache: "no-store" });
     const result = await response.json() as MusicVoteSnapshot;
     if (!response.ok) throw new Error(result.error || "Could not load music choices.");
-    musicCountsRef.current = result.byTrack ?? {};
     setMusicChoices(result.mine ?? {});
     setMusicSignedIn(Boolean(result.signedIn));
     setMusicVotesReady(true);
@@ -96,10 +97,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       const response = await fetch("/api/music-votes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ trackUrl: candidateUrl, choice }), cache: "no-store" });
       const result = await response.json() as MusicVoteSnapshot;
       if (!response.ok) throw new Error(result.error || "Could not save music choice. Try again.");
-      musicCountsRef.current = result.byTrack ?? {};
       setMusicChoices(result.mine ?? {});
-      // Rebuild the next cycle from current preferences; the current song keeps playing.
-      curatedQueueRef.current = [];
+      // Ratings never alter the current random cycle or future selection odds.
+
       if (candidateUrlRef.current === votingUrl) setMusicVoteMessage(choice ? "Music choice saved." : "Music choice cleared.");
     } catch (error) { if (candidateUrlRef.current === votingUrl) setMusicVoteMessage(error instanceof Error ? error.message : "Could not save music choice. Try again."); }
     finally { setMusicSaving(false); }
@@ -120,7 +120,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   const sourceKindRef = useRef<"curated" | "uploaded" | null>(null);
   const [samples, setSamples] = useState<File[]>([]);
   const [sampleChoice, setSampleChoice] = useState("random");
-  const [sampleStatus, setSampleStatus] = useState(`${curatedMusic.length} measured candidates · rotating top 10 dynamic + top 10 compressed, with challengers.`);
+  const [sampleStatus, setSampleStatus] = useState(`${curatedMusic.length} recordings · random Listening pool; preferences do not affect selection.`);
   const [sourceError, setSourceError] = useState("");
   const [loudnessStatus, setLoudnessStatus] = useState("Choose a track to measure loudness.");
   const [analysis, setAnalysis] = useState<TrackAnalysis | null>(null);
@@ -145,7 +145,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     if (!dynamicsAdjusted || !analysis || !duration) return 0;
     return estimateWaveformSpread(previewDynamics(analysis.waveform, dynamicRange, duration)) - estimateWaveformSpread(analysis.waveform);
   }, [analysis, duration, dynamicRange, dynamicsAdjusted]);
-  const displayedLoudness = analysis ? `Estimated ${analysis.integratedLufs.toFixed(1)} LUFS · ${loudnessTarget === "off" && testMode === "open" ? "normalization off" : `matching to ${testMode === "open" ? loudnessTarget : "−16"} LUFS`}` : loudnessStatus;
+  const displayedLoudness = analysis ? `${selectedPoolTrack && sourceKindRef.current === "curated" ? `${selectedPoolTrack.integrated_lufs.toFixed(1)} LUFS measured` : `Estimated ${analysis.integratedLufs.toFixed(1)} LUFS`} · ${loudnessTarget === "off" && testMode === "open" ? "normalization off" : `matching to ${sharedPlaybackTarget?.toFixed(1)} LUFS`}` : loudnessStatus;
   const clock = (seconds: number) => Number.isFinite(seconds) ? `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}` : "0:00";
   const pairTargets = pair?.map(id => targets.find(t => t.id === id));
 
@@ -218,7 +218,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     resetHeard();
     if (testMode === "blind" && pair) void chooseRandomSample("random");
   }, [pair, testMode]);
-  useEffect(() => { if (testMode !== "bring") return; sourceSerialRef.current++;hashSerialRef.current++; sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
+  useEffect(() => { if (testMode !== "bring") return; curatedFetchRef.current++;sourceSerialRef.current++;hashSerialRef.current++;candidateUrlRef.current=null;measuredLufsRef.current=null;setDuration(0);setPosition(0); sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard(); }, [testMode]);
   function applyFit() {
     const current = engine.current;
     if (!current || !pairTargets?.[0] || !pairTargets[1]) return;
@@ -243,12 +243,14 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       node.Q.setTargetAtTime(filter?.q ?? 1, current.context.currentTime, .03);
       node.gain.setTargetAtTime(filter?.gain ?? 0, current.context.currentTime, .03);
     }));
-    const target = loudnessTarget === "off" ? null : Number(testMode === "open" ? loudnessTarget : "-16");
+    const currentTrack = curatedMusic.find(track => track.url === candidateUrlRef.current);
+    const family = currentTrack ? curatedMusic.filter(track => (track.songFamily || track.url) === (currentTrack.songFamily || currentTrack.url)) : [];
+    const target = requestedLoudness === "off" ? null : playbackTarget(family, Number(requestedLoudness));
     const loudnessGainDb = target !== null && measuredLufsRef.current !== null ? target - measuredLufsRef.current : 0;
     current.preamp.gain.setTargetAtTime(10 ** ((Math.min(fits[0].preamp, fits[1].preamp) - current.balanceBoostDb - 1 + loudnessGainDb) / 20), current.context.currentTime, .03);
   }
-  useEffect(() => { applyFit(); }, [pair, targets, file, measurement, loudnessTarget, testMode, loudnessStatus]);
-  useEffect(() => { drawWaveforms(); return () => { if (waveFrame.current !== null) cancelAnimationFrame(waveFrame.current); if (urlRef.current) URL.revokeObjectURL(urlRef.current); void engine.current?.context.close(); }; }, []);
+  useEffect(() => { applyFit(); }, [pair, targets, file, measurement, loudnessTarget, testMode, loudnessStatus, sharedPlaybackTarget]);
+  useEffect(() => { drawWaveforms(); return () => { if (waveFrame.current !== null) cancelAnimationFrame(waveFrame.current); if (urlRef.current) URL.revokeObjectURL(urlRef.current); if (engine.current && engine.current.context.state !== "closed") void engine.current.context.close(); }; }, []);
 
   function updateLevelMeter(branch: number, analyser: AnalyserNode | undefined, active: boolean) {
     const meter = document.querySelector<HTMLElement>(`[data-meter="${branch}"]`);
@@ -421,7 +423,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     void analyzeTrack(next).then(result => {
       if (sourceSerial !== sourceSerialRef.current) return;
       setAnalysis(result);
-      measuredLufsRef.current = result.integratedLufs;
+      // Pool files already have native-source R128 measurements. Browser estimates
+      // are descriptive and must not replace those values for normalization.
+      if (sourceKindRef.current !== "curated") measuredLufsRef.current = result.integratedLufs;
       setLoudnessStatus(`Estimated ${result.integratedLufs.toFixed(1)} LUFS`);
       applyFit();
     }).catch(error => {
@@ -450,20 +454,20 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       const sourceSerial = ++sourceSerialRef.current;
       const hashSerial = ++hashSerialRef.current;
       if (!curatedQueueRef.current.length) {
-        // Refresh between cycles, never in the middle of a target comparison.
-        try { await refreshMusicVotes(); } catch { /* Retain the last available ranking. */ }
-        if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return false;
-        const queue = musicRotation(curatedMusic, musicCountsRef.current).map(track => curatedMusic.indexOf(track));
+        // The sampler receives no ratings and never waits on the voting service.
+        const queue = musicRotation(curatedMusic).map(track => curatedMusic.indexOf(track));
         if (queue.length > 1 && queue[queue.length - 1] === curatedIndexRef.current) [queue[0], queue[queue.length - 1]] = [queue[queue.length - 1], queue[0]];
         curatedQueueRef.current = queue;
       }
       const index = curatedQueueRef.current.pop()!;
       const track = curatedMusic[index];
       sourceKindRef.current = "curated";
+      candidateUrlRef.current = track.url;
       setCandidateUrl(track.url);
       setMusicVoteMessage("");
-      const format = track.filename.toLowerCase().endsWith(".flac") ? "FLAC" : "MP3";
+      const format = track.filename.split(".").pop()!.toUpperCase();
       const streamUrl = track.fileUrl;
+      const mime = ({ FLAC: "audio/flac", WAV: "audio/wav", M4A: "audio/mp4", AAC: "audio/aac", OGG: "audio/ogg", MP3: "audio/mpeg" } as Record<string,string>)[format] || "application/octet-stream";
       audioRef.current?.pause();
       if (urlRef.current) { URL.revokeObjectURL(urlRef.current); urlRef.current = null; }
       updateDynamicRange(0);
@@ -477,12 +481,12 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
       setDuration(track.duration);
       setHashing(false);
       measuredLufsRef.current = track.integrated_lufs;
-      setLoudnessStatus(`Curated track · ${track.integrated_lufs.toFixed(1)} LUFS estimated`);
-      setMeta({ songTitle: track.title, songArtist: track.artist, songAlbum: track.album, recordingId: "", sha256: null, audioFormat: format, sampleRate: null, bitrate: track.bitrate_kbps * 1000, duration: track.duration });
-      setFile(new File([], track.filename, { type: format === "FLAC" ? "audio/flac" : "audio/mpeg" }));
+      setLoudnessStatus(`Listening pool · ${track.integrated_lufs.toFixed(1)} LUFS estimated`);
+      setMeta({ songTitle: track.title, songArtist: track.artist, songAlbum: track.album, recordingId: "", sha256: null, audioFormat: format, sampleRate: null, bitrate: track.bitrate_kbps ? track.bitrate_kbps * 1000 : null, duration: track.duration });
+      setFile(new File([], track.filename, { type: mime }));
       if (audioRef.current) { audioRef.current.src = streamUrl; audioRef.current.load(); }
       curatedIndexRef.current = index;
-      setSampleStatus(`Curated track ${index + 1}/${curatedMusic.length}: ${track.title} · ${track.group === "dynamic" ? "broad range" : "compact range"}`);
+      setSampleStatus(`Listening pool ${index + 1}/${curatedMusic.length}: ${track.title} · ${track.versionLabel || "original recording"}`);
       if (autoPlay) startPlayback(true);
       // Playback uses the streaming URL. Analysis and fingerprinting can finish later.
       window.setTimeout(() => {
@@ -491,7 +495,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
           return response.blob();
         }).then(blob => {
           if (serial !== curatedFetchRef.current || testModeRef.current !== mode) return;
-          const source = new File([blob], track.filename, { type: format === "FLAC" ? "audio/flac" : "audio/mpeg" });
+          const source = new File([blob], track.filename, { type: mime });
           setFile(source);
           processFileData(source, sourceSerial, hashSerial);
         }).catch(() => {
@@ -530,7 +534,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
   }
   function chooseFile(next: File | null, knownStereo = false, sample = false, curated?: SongSuggestion, autoPlay = false) {
     if (!next || !audioRef.current) return;
+    curatedFetchRef.current++; // Cancel pending pool downloads before accepting a local file.
     sourceKindRef.current = "uploaded";
+    candidateUrlRef.current = null;
     setCandidateUrl(null);
     setMusicVoteMessage("");
     const sourceSerial = ++sourceSerialRef.current;
@@ -573,9 +579,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { pair: [string, string] | null;
     <div className="source-controls"><div className="sample-row" hidden={testMode === "bring"}><p className="music-meta">{sampleStatus}</p>{testMode === "open" && <label className="sample-choice"><span>Choose sample</span><select value={sampleChoice} onChange={e => { setSampleChoice(e.target.value); void chooseRandomSample(e.target.value); }}><option value="random">Random sample</option>{samples.map((sample,index)=><option key={`${sample.name}-${index}`} value={String(index)}>{sample.name}</option>)}</select></label>}{testMode === "open" && <label className="sample-folder" title="Choose Music folder"><input type="file" multiple ref={node => { if (node) node.setAttribute("webkitdirectory", ""); }} onChange={e => void chooseFolder(e.target.files)} /><FolderOpen size={20} aria-hidden="true" /><span className="picker-label">Choose Music folder</span></label>}</div>
     {testMode !== "blind" && <div className="music-source-row"><label className="music-upload" title={file?.name ? `Audio file: ${file.name}` : "Choose audio file"}><input type="file" accept="audio/*,.mp3,.wav,.flac,.m4a,.aac,.acc,.ogg,.oga,.opus,.webm,.aif,.aiff,.alac,.wma,.caf,.mka,.mp4" onChange={e => void chooseFile(e.target.files?.[0] ?? null)} /><FileMusic size={20} aria-hidden="true" /><span className="file-label-text">{file?.name ?? "Choose a real stereo song"}</span></label></div>}</div>{sourceError && <p className="music-meta" role="alert">{sourceError}</p>}
     <div className="shootout-music-vote" role="group" aria-label="Music selection preference">
-      <span className="music-vote-question" title={candidateUrl ? `${meta.songTitle} · Rate the music selection for future shootouts, separately from target preference.` : "Music Library votes apply to known candidate recordings."}>Like this selection?</span>
-      {file && sourceKindRef.current === "uploaded" && <select aria-label="Match uploaded recording to a Music Library candidate" title="Only select an entry if your file is the same recording. This connects its Upvote/Downvote vote to the library." value={candidateUrl ?? ""} onChange={event => { setCandidateUrl(event.target.value || null); setMusicVoteMessage(""); }}><option value="">Match library recording…</option>{musicCandidates.map(track => <option key={track.url} value={track.url}>{track.artist} · {track.title}</option>)}</select>}
-      {candidateUrl ? <><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "keep"} onClick={() => void voteForMusic("keep")}>Upvote</button><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "pass"} onClick={() => void voteForMusic("pass")}>Downvote</button>{musicChoices[candidateUrl] && <button type="button" className="music-vote-undo" disabled={musicSaving} onClick={() => void voteForMusic(null)}>Undo</button>}<span className="music-vote-state" role="status">{musicVoteMessage || (musicSaving ? "Saving…" : !musicVotesReady ? "Music votes unavailable" : !musicSignedIn ? "Sign in to vote" : musicChoices[candidateUrl] ? `Saved: ${musicChoices[candidateUrl] === "keep" ? "Upvote" : "Downvote"}` : "For future shootouts")}</span></> : <a href="/music-library">{file ? "Rate library candidates" : "Explore music candidates"}</a>}
+      <span className="music-vote-question" title={candidateUrl ? `${meta.songTitle} · Rate the music selection for future shootouts, separately from target preference.` : "Listening pool votes apply to known candidate recordings."}>Like this selection?</span>
+      {file && sourceKindRef.current === "uploaded" && <select aria-label="Match uploaded recording to a Listening pool candidate" title="Only select an entry if your file is the same recording. This connects its Upvote/Downvote vote to the library." value={candidateUrl ?? ""} onChange={event => { setCandidateUrl(event.target.value || null); setMusicVoteMessage(""); }}><option value="">Match library recording…</option>{musicCandidates.map(track => <option key={track.url} value={track.url}>{track.artist} · {track.title}{track.versionLabel ? ` · ${track.versionLabel}` : ""}</option>)}</select>}
+      {candidateUrl ? <><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "keep"} onClick={() => void voteForMusic("keep")}>Upvote</button><button type="button" disabled={!musicVotesReady || !musicSignedIn || musicSaving} aria-pressed={musicChoices[candidateUrl] === "pass"} onClick={() => void voteForMusic("pass")}>Downvote</button>{musicChoices[candidateUrl] && <button type="button" className="music-vote-undo" disabled={musicSaving} onClick={() => void voteForMusic(null)}>Undo</button>}<span className="music-vote-state" role="status">{musicVoteMessage || (musicSaving ? "Saving…" : !musicVotesReady ? "Music votes unavailable" : !musicSignedIn ? "Sign in to vote" : musicChoices[candidateUrl] ? `Saved: ${musicChoices[candidateUrl] === "keep" ? "Upvote" : "Downvote"}` : "For future shootouts")}</span></> : <a href="/music-library">{file ? "Rate library candidates" : "Explore Listening pool"}</a>}
     </div>
     <details className="music-details"><summary>Song metadata from website database</summary>{meta.songTitle ? <dl className="song-metadata"><div><dt>Title</dt><dd>{meta.songTitle}</dd></div><div><dt>Artist</dt><dd>{meta.songArtist || "—"}</dd></div><div><dt>Album</dt><dd>{meta.songAlbum || "—"}</dd></div><div><dt>Recording ID / ISRC</dt><dd>{meta.recordingId || "—"}</dd></div></dl> : <p className="metadata-match">{file ? "No matching song in the website database." : "Choose a track to look for saved song metadata."}</p>}</details>
     {testMode === "open" && <details className="audio-stats"><summary>Audio stats · original file</summary>{analysis ? <><div className="audio-stats-grid">
