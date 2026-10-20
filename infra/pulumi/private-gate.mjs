@@ -226,7 +226,7 @@ const privateGate = {
       const syncReceive = path === "/pair" || path === "/pair/reset" || path === "/sync" && (url.searchParams.get("receive") === "1" || request.method !== "GET");
       const adminPath = path === "/owner-research" || path.startsWith("/api/owner-research");
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
-      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync"].includes(path) && cookie(request, dataCookie) || communityManagement && cookie(request,dataCookie);
+      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) && cookie(request, dataCookie) || communityManagement && cookie(request,dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
         const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
         await env.DB.prepare("INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(id,"Listener",await hash(randomToken()),now,now,now,await hash(session),now+dataSeconds).run();
@@ -250,7 +250,7 @@ const privateGate = {
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync"].includes(path) || communityManagement;
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) || communityManagement;
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
         const redirect = new Response(null, { status: 303, headers: { Location: "/", "Cache-Control": "no-store" } });

@@ -1,3 +1,4 @@
+import{accountSyncFixtureDeps}from'./account-sync-fixture.mjs';
 import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
@@ -25,6 +26,7 @@ const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-1
 const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
 deps['@/lib/owner-access']=load('lib/owner-access.ts');
 deps['@/lib/consent-studies']=load('lib/consent-studies.ts');
+Object.assign(deps,accountSyncFixtureDeps(deps));
 const mine=load('app/api/my-data/route.ts'),events=load('app/api/activity/route.ts'),admin=load('app/api/owner-research/activity/route.ts');
 const req=(path,body,extra={})=>new Request(origin+path,{method:body?'POST':'GET',headers:{Origin:origin,'Content-Type':'application/json',...extra},...(body?{body:JSON.stringify(body)}:{})});
 const event=(extra={})=>events.POST(req('/api/activity',{sessionId:session,eventType:'heartbeat',route:'/shootout',shootoutTab:'shootout',testMode:'blind',testActive:true,...extra}));

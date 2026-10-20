@@ -10,7 +10,7 @@ export async function POST(request:Request){try{
  }
  if(body.action!=="complete")throw new RequestInputError("Invalid sign-in action.",400);
  const result=await completeProfileGrant(env.DB!,profileCookie(request,PROFILE_CLAIM_COOKIE),body.replacementApplied===true,typeof body.snapshotDigest==="string"?body.snapshotDigest:undefined);
- const response=Response.json({ok:true,redirect:"/my-profile"},{headers:profileHeaders});
+ const response=Response.json({ok:true,redirect:"/account-sync?setup=1"},{headers:profileHeaders});
  response.headers.append("Set-Cookie",profileSetCookie("__Host-yinyangeq_tester",result.access,result.seconds));
  response.headers.append("Set-Cookie",profileSetCookie("__Host-yinyangeq_data",result.data,result.seconds));
  response.headers.append("Set-Cookie",profileSetCookie("__Host-yinyangeq_owner","",0));

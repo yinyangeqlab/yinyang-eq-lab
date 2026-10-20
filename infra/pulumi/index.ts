@@ -56,6 +56,8 @@ function moduleSource(bytes: Buffer): string {
 const modules: Record<string, cloudflare.types.input.WorkersScriptFiles> = {};
 modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/invite-settings.mjs"))};
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
+modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-sync-notice.mjs"))};
+modules["account-preferences.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-preferences.mjs"))};
 modules["browser-sync.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-sync.mjs")) };
 
 modules["service-status.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/service-status.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replaceAll("@/lib/maintenance-options","./maintenance-options.mjs")))};

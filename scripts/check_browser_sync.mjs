@@ -1,8 +1,10 @@
+import{ACCOUNT_SYNC_NOTICE_VERSION}from'../lib/account-sync-notice.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import {browserPairing,pairingHash,linkedTester} from '../lib/browser-pairing.mjs';
-import {captureSyncPayload,replaceSyncStorage,validateSyncPayload} from '../lib/browser-sync.mjs';
+import vm from 'node:vm';
+import {browserSyncScript,captureSyncPayload,replaceSyncStorage,validateSyncPayload} from '../lib/browser-sync.mjs';
 const sql=new DatabaseSync(':memory:');
 for(const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
 class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async first(){return sql.prepare(this.query).get(...this.args)||null;}async all(){return{results:sql.prepare(this.query).all(...this.args)};}async run(){return{meta:{changes:Number(sql.prepare(this.query).run(...this.args).changes)}};}}
@@ -37,32 +39,25 @@ const request=(body,jar='',path='/sync')=>new Request(origin+path,{method:body?'
 const source=(body,path='/sync')=>browserPairing(request(body,'__Host-yinyangeq_tester='+original,path),env,tester);
 const target=(body,jar='',path='/sync')=>browserPairing(request(body,jar,path),env,null);
 const cookie=response=>response.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
-const entry=await (await target()).text();assert.ok(entry.includes('This browser’s site data will be replaced'));assert.ok(entry.includes('name="replace" value="yes" required'));assert.ok(entry.includes('action="/sync"'));
-assert.ok((await (await source()).text()).includes('Create code to sync this browser'));
-assert.equal((await target({action:'create',payload:JSON.stringify(payload)})).status,403);
-assert.equal((await source({action:'create'})).status,400,'Canonical sync requires an explicit snapshot');
+
+const entry=await (await target()).text();assert.ok(entry.includes('Existing')||entry.includes('existing'));assert.ok(entry.includes('name="replace" value="yes" required'));assert.ok(entry.includes('name="deviceName"'));assert.ok(entry.includes('name="browserName"'));
+assert.equal((await source({action:'create'})).status,403,'Account sync consent is required before creating an automatic link');
+sql.prepare("INSERT INTO account_sync_permissions(subject_id,enabled,notice_version,consent_source,updated_at) VALUES(?,1,?,'synthetic',0)").run('invite:'+tester.id,ACCOUNT_SYNC_NOTICE_VERSION);
 const created=await source({action:'create',payload:JSON.stringify(payload)});assert.equal(created.status,200);
-const code=(await created.text()).match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/).slice(1).join('');const hash=await pairingHash(code);
-assert.equal((await target({action:'claim',code})).status,409,'Replacement warning must be accepted');
-assert.equal(sql.prepare('SELECT state FROM browser_pairings WHERE code_hash=?').get(hash).state,'waiting','Rejected consent never consumes code');
-const claimed=await target({action:'claim',code,replace:'yes'});assert.equal(claimed.status,303);const jar=cookie(claimed);
-assert.equal(claimed.headers.get('Location'),'/sync?receive=1');
-assert.equal((await target({action:'download'})).status,401);
-assert.equal((await target({action:'download'},jar)).status,403,'No transfer before source approval');
-const row=()=>sql.prepare('SELECT * FROM browser_pairings WHERE code_hash=?').get(hash);
+const code=(await created.text()).match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/).slice(1).join('');const hash=await pairingHash(code),row=()=>sql.prepare('SELECT * FROM browser_pairings WHERE code_hash=?').get(hash);
+assert.equal(row().sync_mode,'automatic');assert.equal(row().transfer_payload,null,'No source data is copied through the access handshake');
+assert.equal((await target({action:'claim',code})).status,403,'Receiver explicitly approves account access');assert.equal(row().state,'waiting');
+assert.equal((await target({action:'claim',code,replace:'yes',syncNoticeVersion:'old'})).status,403);
+const claimed=await target({action:'claim',code,replace:'yes',syncNoticeVersion:ACCOUNT_SYNC_NOTICE_VERSION,deviceName:'My phone',browserName:'Brave'});assert.equal(claimed.status,303);const jar=cookie(claimed);assert.equal(await linkedTester(request(null,jar),DB),null,'Claim alone gives no account access');
+assert.equal((await target({action:'complete'},jar)).status,403,'Source approval is required');
+assert.equal((await source({action:'approve',pairing:hash,confirmation:'wrong'})).status,409);
 await source({action:'approve',pairing:hash,confirmation:row().confirmation});
-const ready=await target(null,jar);assert.equal(ready.headers.getSetCookie().length,0,'Ready screen never changes identity');assert.ok((await ready.text()).includes('Replace saved data and finish sync'));
-const download=await target({action:'download'},jar);assert.deepEqual((await download.json()).payload,payload);
-assert.equal((await target({action:'complete',replacementApplied:true,payloadHash:'wrong'},jar)).status,400);
-const finished=await target({action:'complete',replacementApplied:true,payloadHash:row().payload_hash},jar);assert.equal(finished.status,200);
-const linked=await linkedTester(request(null,cookie(finished)),DB);assert.equal(linked.id,tester.id,'Server account identity also matches source');
-assert.equal(sql.prepare('SELECT nickname FROM listener_nicknames WHERE subject_id=?').get('invite:'+linked.id).nickname,'Synced Owl','Completed sync resolves the original account nickname without trusting the transfer payload');
-assert.equal(row().transfer_payload,null,'Payload erased after completed transfer');
-assert.equal((await target({action:'complete',replacementApplied:true,payloadHash:row().payload_hash},jar)).status,200,'Lost completion can retry');
-assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().n,1);
-assert.equal((await target({action:'download'},jar)).status,409,'Used payload cannot be downloaded again');
+const ready=await target(null,jar);assert.equal(ready.headers.getSetCookie().length,0);assert.ok((await ready.text()).includes('Connect and open Sync settings'));assert.equal((await target({action:'download'},jar)).status,400,'Automatic linking never replaces browser data from a downloaded snapshot');
+sql.prepare('UPDATE account_sync_permissions SET enabled=0 WHERE subject_id=?').run('invite:'+tester.id);assert.equal((await target({action:'complete'},jar)).status,403,'Consent withdrawal also stops a pending link');sql.prepare('UPDATE account_sync_permissions SET enabled=1 WHERE subject_id=?').run('invite:'+tester.id);
+const finished=await target({action:'complete'},jar);assert.equal(finished.status,200);const linked=await linkedTester(request(null,cookie(finished)),DB);assert.equal(linked.id,tester.id);assert.equal((await finished.json()).redirect,'/account-sync?setup=1');
+assert.equal(sql.prepare('SELECT nickname FROM listener_nicknames WHERE subject_id=?').get('invite:'+linked.id).nickname,'Synced Owl');assert.equal(row().transfer_payload,null);assert.equal((await target({action:'complete'},jar)).status,200,'Completion retries do not create extra devices');assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices').get().n,1);assert.equal(sql.prepare('SELECT label FROM account_device_status').get().label,'My phone');assert.equal(sql.prepare('SELECT browser_name FROM account_device_status').get().browser_name,'Brave');
 assert.equal((await browserPairing(request(null),env,null,true)).status,403,'Admin credentials cannot sync');
-console.log('Browser sync passed: single /sync page, explicit replacement acknowledgement, approved snapshot transfer, same voter/account identity, no credential change before replacement, one-time payload erasure, retry, size/key restrictions, unrelated-storage preservation and quota rollback. Synthetic SQLite only.');sql.close();
+console.log('PASS automatic device linking: explicit current account sync consent, named receiving browser, two-sided approval, no preapproval access, no replacement/downloaded payload, withdrawal race, retry and shared account/nickname. Synthetic SQLite only.');sql.close();
 // Local admin provenance must never become participant history through Sync.
 const adminStorage=new Storage({'target-lab-voter':'11111111-1111-4111-8111-111111111111','target-lab-trials':JSON.stringify([{id:'real'},{id:'test',adminTestOnly:true}]),'target-lab-personal-shootouts-v1':JSON.stringify([{context:'real'},{context:'admin',adminTestOnly:true}]),'yinyang-admin-tests-v1':'private test history','yinyang-admin-music-tests-v1':'private test ratings'});
 const participantPayload=captureSyncPayload(adminStorage);
@@ -74,3 +69,7 @@ replaceSyncStorage(adminStorage,participantPayload);
 assert.equal(adminStorage.getItem('yinyang-admin-tests-v1'),'private test history');
 assert.equal(adminStorage.getItem('yinyang-admin-music-tests-v1'),'private test ratings');
 console.log('PASS participant Sync excludes tagged admin trials/runs and private admin storage; forged flagged imports fail closed and local admin history survives replacement.');
+
+// Execute the actual serialized gate client, including preference validation and automatic completion.
+{let click,redirect;const requests=[],error={hidden:true,textContent:''},finish={disabled:false,addEventListener:(_event,fn)=>click=fn};const context=vm.createContext({document:{getElementById:id=>id==='sync-error'?error:id==='finish-auto-sync'?finish:null,querySelectorAll:()=>[]},window:{location:{replace:value=>redirect=value}},localStorage:{setItem(){throw Error('Automatic linking must not replace local data');}},fetch:async(url,options)=>{requests.push(JSON.parse(options.body));return Response.json({redirect:'/account-sync?setup=1'});},Response,TextEncoder,crypto});vm.runInContext(browserSyncScript(),context);vm.runInContext('validateSyncPayload('+JSON.stringify({version:1,values:{'target-lab-voter':'11111111-1111-4111-8111-111111111111','target-lab-synced-preferences-v1':JSON.stringify({podiumTheme:'grove'})}})+')',context);await click();assert.deepEqual(requests,[{action:'complete'}]);assert.equal(redirect,'/account-sync?setup=1');assert.equal(error.hidden,true);}
+console.log('PASS serialized automatic-link client: full validation dependencies, explicit completion and no local replacement.');

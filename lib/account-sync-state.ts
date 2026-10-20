@@ -1,0 +1,4 @@
+export type SyncAccount={subject_id:string;slug:string;protectedAccount:boolean};
+export type SyncState={epoch:string;revision:number;initialized:number;payload:string;updated_at?:number};
+export function syncLocation(account:SyncAccount){return account.protectedAccount?{table:'owner_account_sync',column:'profile_slug',id:account.slug}:{table:'account_browser_sync',column:'subject_id',id:account.subject_id};}
+export async function readAccountSync(db:D1Database,account:SyncAccount,create=false){const at=syncLocation(account),read=()=>db.prepare(`SELECT epoch,revision,initialized,payload,updated_at FROM ${at.table} WHERE ${at.column}=?`).bind(at.id).first<SyncState>();let state=await read();if(!state&&create){await db.prepare(`INSERT OR IGNORE INTO ${at.table}(${at.column},epoch,updated_at) VALUES(?,?,?)`).bind(at.id,crypto.randomUUID(),Date.now()).run();state=await read();}return state;}
