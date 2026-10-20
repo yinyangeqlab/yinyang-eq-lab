@@ -1,3 +1,7 @@
+Current live baseline is update86. Approved nickname and audit corrections are deployed. Verified source/build: work/site-audit-fixes-release-20261018; infrastructure: work/site-audit-fixes-infra-20261018; implementation fb30ec5dc40d813a4a031d3e2e60150892d68a5e. Only additive migration0032_listener_nicknames.sql was applied to the existing database. New databases need all33 migrations. No pending preview or deployment approval. See LIVE_RELEASE.json and HANDOFF.md.
+
+## Historical rebuild notes
+
 Current live baseline is update85. Updates83–85 contain approved display, notice-duration and cited ranking-view changes. The canonical optional nickname preview atae7c196 is not deployed and requires owner approval before migration0032 or its code is published live. Use the immutable matched-ranking release for the verified live source; see LIVE_RELEASE.json.
 
 # Rebuild the current application — live update82
