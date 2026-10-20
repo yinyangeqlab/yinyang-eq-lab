@@ -1,0 +1,8 @@
+{
+  "canonicalOrigin": "https://your-authorized-domain.example",
+  "scriptName": "your-application-worker",
+  "maintenanceMode": true,
+  "requiredExternalBindings": ["cloudflareAccountId", "DB", "ASSETS", "ABUSE_RATE_SECRET", "OWNER_ANALYTICS_TOKEN", "PRIVATE_ACCESS_PASSWORD"],
+  "requiredGuardBindings": ["ACCOUNT_ID", "ZONE_ID", "APP_SCRIPT", "DATABASE_ID", "BILLING_CYCLE_DAY", "RULESET_ID", "RULE_ID", "COST_GUARD_API_TOKEN", "BUDGET_EXPRESSION"],
+  "note": "Template only. Put actual account/resource values in private config. New production provisioning and external routes/WAF/guard need a separately authorized reviewed operation."
+}

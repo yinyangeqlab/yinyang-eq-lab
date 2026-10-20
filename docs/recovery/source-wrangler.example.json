@@ -1,0 +1,6 @@
+{
+  "name": "recovery-readonly",
+  "account_id": "REPLACE_IN_PRIVATE_COPY",
+  "compatibility_date": "2026-05-15",
+  "d1_databases": [{"binding": "DB", "database_name": "existing-authorized-database", "database_id": "REPLACE_IN_PRIVATE_COPY"}]
+}

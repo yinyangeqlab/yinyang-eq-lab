@@ -68,6 +68,11 @@ const gateSource=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.
   .replace(/from ["'](\.\/[^"']+)["']/g,(_,relative)=>'from '+JSON.stringify(new URL('../infra/pulumi/'+relative.slice(2),import.meta.url).href));
 const gate=(await import('data:text/javascript;base64,'+Buffer.from(gateSource).toString('base64'))).default;
 const gated=(path,jar='',extra={})=>gate.fetch(request(path,undefined,jar,extra),env,{});
+const customOrigin='https://recovery.invalid';
+const canonicalResponse=await gate.fetch(new Request('https://www.recovery.invalid/shootout',{headers:{'CF-Connecting-IP':'192.0.2.50'}}),{...env,CANONICAL_ORIGIN:customOrigin},{});
+assert.equal(canonicalResponse.status,307,'Recovered origin redirects its own alias');
+assert.equal(canonicalResponse.headers.get('Location'),customOrigin+'/shootout');
+assert.equal((await gate.fetch(new Request('https://www.recovery.invalid/shootout',{headers:{'CF-Connecting-IP':'192.0.2.50'}}),{...env,CANONICAL_ORIGIN:'http://invalid.test'},{})).status,503,'Invalid recovered origin fails closed');
 const gatedIdentity=await (await gated('/my-data',linkedJar,{'oai-authenticated-user-id':'spoofed-owner'})).json();
 assert.equal(gatedIdentity.subject,'invite:'+tester.id,'Real gate overwrites spoofed identity and uses original tester');
 assert.equal(gatedIdentity.session,device.data_token_hash);

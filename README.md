@@ -1,3 +1,5 @@
+> Active owner development checkout: workspace/. Start with [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/RECOVERY.md](docs/RECOVERY.md). External data and archives stay outside Git.
+
 <div align="center">
 
 # YinYang EQ League

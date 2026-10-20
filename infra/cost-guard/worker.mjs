@@ -52,15 +52,15 @@ export async function readMetrics(env, now = new Date(), fetcher = fetch) {
   };
 }
 
-export function assertRule(rule) {
-  if (rule?.action !== 'block' || rule?.expression !== EXPRESSION || !rule?.description?.startsWith(DESCRIPTION)) throw new Error('Budget rule identity changed; refusing to edit another rule');
+export function assertRule(rule, expression = EXPRESSION) {
+  if (rule?.action !== 'block' || rule?.expression !== expression || !rule?.description?.startsWith(DESCRIPTION)) throw new Error('Budget rule identity changed; refusing to edit another rule');
 }
 
 export async function runGuard(env, {now = new Date(), fetcher = fetch, dryRun = false} = {}) {
   const base = `/zones/${env.ZONE_ID}/rulesets/${env.RULESET_ID}`;
   const ruleset = (await api(env, base, {}, fetcher)).result;
   const rule = ruleset?.rules?.find(r => r.id === env.RULE_ID);
-  assertRule(rule);
+  assertRule(rule, env.BUDGET_EXPRESSION || EXPRESSION);
   if (rule.enabled === true) return {status: 'latched', changed: false};
   let metrics, decision;
   try {
@@ -73,10 +73,10 @@ export async function runGuard(env, {now = new Date(), fetcher = fetch, dryRun =
   }
   if (!decision.trip || dryRun) return {status: decision.trip ? 'would-trip' : 'healthy', changed: false, metrics, reasons: decision.reasons};
   const updated = (await api(env, base + `/rules/${env.RULE_ID}`, {
-    method: 'PATCH', body: JSON.stringify({action: 'block', expression: EXPRESSION, description: DESCRIPTION, enabled: true, position: {index: 1}}),
+    method: 'PATCH', body: JSON.stringify({action: 'block', expression: env.BUDGET_EXPRESSION || EXPRESSION, description: DESCRIPTION, enabled: true, position: {index: 1}}),
   }, fetcher)).result;
   const confirmed = updated?.rules?.find(r => r.id === env.RULE_ID);
-  assertRule(confirmed);
+  assertRule(confirmed, env.BUDGET_EXPRESSION || EXPRESSION);
   if (confirmed.enabled !== true) throw new Error('Budget shutdown was not confirmed');
   return {status: 'tripped', changed: true, metrics, reasons: decision.reasons};
 }

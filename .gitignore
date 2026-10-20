@@ -70,3 +70,9 @@ work/
 !/infra/pulumi/Pulumi.yaml
 !/infra/cost-guard/worker.mjs
 !/infra/cost-guard/policy.mjs
+
+# External recovery inputs and generated local restore state never belong in Git.
+/private/
+/recovery-inputs/
+/.recovery-local/
+/archive/

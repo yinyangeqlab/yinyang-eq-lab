@@ -13,7 +13,10 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
     "check:release": "python3 scripts/check-release.py",
-    "setup:local": "node scripts/init-local.mjs"
+    "setup:local": "node scripts/init-local.mjs",
+    "recovery:environment": "node scripts/recovery/check-environment.mjs",
+    "recovery": "node scripts/recovery/recovery.mjs",
+    "test:recovery": "node scripts/recovery/test-recovery.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -70,5 +73,6 @@
     }
   },
   "license": "Apache-2.0",
-  "author": "Yin Yang EQ Lab (@yinyangeqlab)"
+  "author": "Yin Yang EQ Lab (@yinyangeqlab)",
+  "packageManager": "npm@12.2.1"
 }
