@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 96,
-  "implementationCommit": "89dc69e1bfc1e00bdb17e72fc711ebe2fea783b8",
-  "runtimeParity": "Recorded runtime matches verified update96; unrelated backup/recovery development excluded.",
+  "liveUpdate": 97,
+  "implementationCommit": "4d09994a48dc4a49fac288786f1315f52c383ef1",
+  "runtimeParity": "Recorded runtime matches verified update97; separate UI/recovery WIP excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -101,6 +101,10 @@
       "sha256": "9013160b26273135f7505224599ecdb8bbff3fba1d50b9aec03c7443215d517a"
     },
     {
+      "path": "app/api/my-profile/sync/route.ts",
+      "sha256": "5f4ab89a63f3b67c2b1ced48f85f6cc48bb6aa946bbc9502710815550daa7009"
+    },
+    {
       "path": "app/api/owner-research-measurement/route.ts",
       "sha256": "51a69982e270c2fdee0c09ac08ae5714fcb46f6b65db7b74ffc683b42974729a"
     },
@@ -143,6 +147,10 @@
     {
       "path": "app/api/owner-research/yinyangeq/route.ts",
       "sha256": "f44dad060f915639c028cc35e5e51efbbdda37f859b28140eae86339a5a96d82"
+    },
+    {
+      "path": "app/api/owner-research/yinyangeq/sync/route.ts",
+      "sha256": "cc59f29bf52dcf73ac3eff1b82c757c71fa564712b290da26c6553fe9af54711"
     },
     {
       "path": "app/api/personal-research/route.ts",
@@ -365,6 +373,14 @@
       "sha256": "31f4ca67a4a62572571003d3d5aac85ee6fbfca67a192924bac6b168d95e98fd"
     },
     {
+      "path": "components/account-auto-sync.tsx",
+      "sha256": "eba5c894ad370c7f6267972c73950f6791dfd2b359968f7e91ff1328b678ba3f"
+    },
+    {
+      "path": "components/account-sync-manager.tsx",
+      "sha256": "b6f2c574f3bfaa04b65834b7a10933bf5b18afa11e3334cfe1a09760f818e15a"
+    },
+    {
       "path": "components/action-hover.css",
       "sha256": "6ef242563e3e76b39a7c68a29d3977ec379932823308250ef474d4a76c0bb75a"
     },
@@ -507,6 +523,10 @@
     {
       "path": "components/privacy-events.tsx",
       "sha256": "665022ea2c36480a461b572328c9150e214fd005a5380f51f1b93405226be861"
+    },
+    {
+      "path": "components/profile-device-signin.tsx",
+      "sha256": "434021f22f7eda4dae46dd3d99c5d2e7ff03a36d4bcd085923aa9178dc928842"
     },
     {
       "path": "components/profile-entry.tsx",
@@ -1077,6 +1097,10 @@
       "sha256": "9817f67b86081442a5833fbefabea1b729c633b1fede713fa3bb79d4cf449687"
     },
     {
+      "path": "drizzle/0037_owner_account_sync.sql",
+      "sha256": "a4bff8c3657f87213b4017117d5dce9d7c4c98652fbe4c3dd7f5bac599b7bbf6"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -1165,6 +1189,10 @@
       "sha256": "98b0f452ec5bda9beebd0b08638cc7f62fb04aac74eaee435480614d4981d5c9"
     },
     {
+      "path": "drizzle/meta/0037_snapshot.json",
+      "sha256": "66dd5eb9572dcc33d57312b429255b9f244c160d83887d99471c29767adfcf9d"
+    },
+    {
       "path": "drizzle/meta/_journal.json",
       "sha256": "0edf175e438270097db80f67c4bff54933667b5f2ab51d221ea541ef39b331cf"
     },
@@ -1223,6 +1251,18 @@
     {
       "path": "infra/pulumi/tsconfig.json",
       "sha256": "7f6d047b21f307f4648136e72a1e94198f74cc8fc9d01f3356bb64cf7d5b63bc"
+    },
+    {
+      "path": "lib/account-sync-server.ts",
+      "sha256": "8cdaf4358900e9cf5f0008eadf487d61ee0a65a4765c7c91cc9ef7f9e22c865a"
+    },
+    {
+      "path": "lib/account-sync.d.mts",
+      "sha256": "531690ac55dd82da986b881e3428e582b25fd39e7519e7da6fd81779cf183dbf"
+    },
+    {
+      "path": "lib/account-sync.mjs",
+      "sha256": "229c454bef396c47135fc6387ff2d8cb666c6485ea20f882adeca44b47e49c85"
     },
     {
       "path": "lib/active-submissions.ts",
@@ -1683,6 +1723,10 @@
     {
       "path": "scripts/check-release.py",
       "sha256": "5855218b613c94ef01f4db585532fb1067e915da4867d934603f96fbe5ae9245"
+    },
+    {
+      "path": "scripts/check_account_auto_sync.mjs",
+      "sha256": "fec328a044ca4be42c5db1fb7d88e03b1472782809df808f82fbbc4840bc75ee"
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",

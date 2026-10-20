@@ -4,7 +4,7 @@ This checkout is the active source. In the owner container it is workspace/. Do 
 
 # Current release and rebuild instructions
 
-Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update96. Per-feature timed maintenance, independent consent entry and Tuning fixes are deployed; read the active notice and audit limits in HANDOFF.md. Preserve and exclude separate uncommitted personal-shootout work when selecting a baseline. Historical handoffs are not deployment instructions.
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update97. Per-feature timed maintenance, independent consent entry and Tuning fixes are deployed; read the active notice and audit limits in HANDOFF.md. Preserve and exclude separate uncommitted personal-shootout work when selecting a baseline. Historical handoffs are not deployment instructions.
 
 In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
 
@@ -25,3 +25,8 @@ Latest feature review (deployed as update94 with explicit owner authorization; a
 # Dropdown review
 
 For UI changes, check both closed native selects and their expanded option menus. Preserve dark, readable surfaces with explicit option/optgroup backgrounds and an appropriate color-scheme; a gradient on the closed control alone does not style its popup. Include desktop and narrow viewport checks, keyboard focus, and selected/disabled readability.
+
+## Deployment backup scope — owner preference, October 19, 2026
+
+Commits and local previews do not trigger production backup exports. Distinguish source/build baseline maintenance from a fresh data export, and explain actual additional quota use before requesting approval. Prefer the existing verified recovery point and regular daily coverage for low-risk UI-only releases; avoid redundant exports and duplicate immutable media. Database/schema changes, destructive operations and risky imports require an explicit backup decision. One necessary matching release point should serve the release, rather than a point for every commit. Never relabel incompatible source/schema as a valid baseline or claim a declined/unverified export succeeded. If the owner declines an export, preserve existing recovery points, document the precise coverage gap and the scheduled runner's refusal on mismatched baselines. Any future work to separate metadata-only baseline handover from data exports must retain immutable provenance and verification safeguards.
+

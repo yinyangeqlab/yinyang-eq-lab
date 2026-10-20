@@ -1,5 +1,9 @@
 # Encrypted off-device recovery
 
+## Deployment backup scope — owner preference, October 19, 2026
+
+Commits and local previews do not trigger production backup exports. Distinguish source/build baseline maintenance from a fresh data export, and explain actual additional quota use before requesting approval. Prefer the existing verified recovery point and regular daily coverage for low-risk UI-only releases; avoid redundant exports and duplicate immutable media. Database/schema changes, destructive operations and risky imports require an explicit backup decision. One necessary matching release point should serve the release, rather than a point for every commit. Never relabel incompatible source/schema as a valid baseline or claim a declined/unverified export succeeded. If the owner declines an export, preserve existing recovery points, document the precise coverage gap and the scheduled runner's refusal on mismatched baselines. Any future work to separate metadata-only baseline handover from data exports must retain immutable provenance and verification safeguards.
+
 ## What is backed up
 
 The recovery bundle contains the verified external media, sanitized application database and a manifest of file sizes, checksums and matching source/migration fingerprints. Git supplies the application and recovery tooling; the private bundle supplies the external inputs. Existing credentials and provider resource identifiers are not recreated. See [RECOVERY.md](RECOVERY.md) for deletion review, fresh credentials, browser-only data and provisioning limits.
