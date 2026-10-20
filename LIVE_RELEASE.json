@@ -5344,6 +5344,7 @@
     "freshInstallBuildVerified": true,
     "deploymentPerformed": false,
     "privateInputsExcluded": true,
-    "status": "verified; publication pending"
+    "status": "verified and published",
+    "publishedCommit": "8f730771acdf397f2a4eea113dadd6cd715dc90a"
   }
 }
