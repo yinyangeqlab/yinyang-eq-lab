@@ -1,3 +1,13 @@
+# Current live release — update98, October 19, 2026
+
+The owner-authorized account-link follow-up fixes historical review reads that exceeded D1's compound SELECT limit. Queries now read each fixed source separately and merge bounded results; legacy review includes up to100 candidates rather than silently truncating at25. Ownership verification, consent, complete graph transfer, erased-record protection and private publication remain enforced. This release performs no migration, enrollment or historical transfer.
+
+Implementation `aca250b79a5b449245f22332f257754c4b700872` is pushed. Source/build `work/account-link-release-20261019`; infrastructure `work/account-link-infra-20261019`. Schema206 definitions are unchanged from update97. One existing Worker updated; three resources unchanged. Production build, TypeScript, full340-asset/200-recording packaging, history/API regressions and341 exact live JS/CSS checks passed;269 prior client assets retained. CPU5000ms, six abuse bindings, private access/media, disabled public Worker URLs and existing edge/cost controls remain. Tests stayed open; the informational deployment notice ended after verification.
+
+Automatic reserved-account sync and protected indefinite retention from update97 remain deployed. Original browser linking remains a separate follow-up with current data preserved. The owner declined a new backup export; verified encrypted off-device update96 recovery remains retained, with matching current-release hosted baseline refresh pending. No current-release data backup is claimed. Commit/preview backups are unnecessary; distinguish metadata baseline work from fresh data exports and actual quota use. Unrelated Shootout UI and recovery WIP remain excluded. Evidence: workspace/artifacts/account-link-release-20261019/.
+
+## Historical release notes
+
 # Current live release — update97, October 19, 2026
 
 The owner authorized publishing and deploying automatic YinYangEQ participant sync and protected indefinite retention. Approved devices share saved browser results/settings with offline retry, conditional writes, three-way merging and explicit conflict review. The participant and admin have separate private data/activity viewers. Routine monitoring cleanup/opt-out does not erase reserved account history; permanent archives exclude it. General erasure requires separate account-specific confirmation. Existing source ownership, consent, private publication and deleted-record protections remain enforced. Music bytes, credentials, consent choices, active playback and admin test data do not enter automatic browser sync. Incoming changes wait for safe pages.

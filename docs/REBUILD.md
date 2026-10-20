@@ -1,3 +1,5 @@
+Current live baseline is update98, implementation aca250b79a5b. Historical review uses bounded D1-compatible queries. Schema is unchanged from update97; existing encrypted update96 recovery is retained and matching hosted baseline refresh remains pending. Read LIVE_RELEASE.json and the current handoff.
+
 Current live baseline is update97, implementation4d09994a48dc. Automatic reserved-account sync and protected indefinite retention are deployed; migration0037 is additive. A fresh database uses all38 migrations plus operational db/service-status.sql. Existing update96 encrypted recovery is retained; no update97 backup export was authorized and the hosted baseline refresh remains pending. Read LIVE_RELEASE.json and the current handoff.
 
 ## Historical rebuild notes
