@@ -3,9 +3,7 @@ export class RequestInputError extends Error {
   constructor(message: string, status: number) { super(message); this.status = status; }
 }
 
-export async function readJsonObject(request: Request, maxBytes: number): Promise<Record<string, unknown>> {
-  if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json")
-    throw new RequestInputError("Expected JSON.", 415);
+export async function readRequestBytes(request: Request, maxBytes: number): Promise<Uint8Array> {
   const length = Number(request.headers.get("content-length"));
   if (Number.isFinite(length) && length > maxBytes) throw new RequestInputError("Request is too large.", 413);
   const reader = request.body?.getReader();
@@ -26,6 +24,13 @@ export async function readJsonObject(request: Request, maxBytes: number): Promis
   const bytes = new Uint8Array(size);
   let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return bytes;
+}
+
+export async function readJsonObject(request: Request, maxBytes: number): Promise<Record<string, unknown>> {
+  if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json")
+    throw new RequestInputError("Expected JSON.", 415);
+  const bytes = await readRequestBytes(request, maxBytes);
   let parsed: unknown;
   try { parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
   catch { throw new RequestInputError("Invalid JSON.", 400); }

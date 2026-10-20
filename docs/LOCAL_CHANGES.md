@@ -36,7 +36,7 @@ The public checkout keeps its existing README, licensing, demo files, sanitized 
 
 ## Verification
 
-The prepared public checkout passed TypeScript (`tsc --noEmit`), the production build (`npm run build`), and the blind-completion, vote-limit, preference-ranking, service-warning, bounded-JSON, cooldown-SQL and public-write-counter checks in `scripts/`. These cover failed writes retaining personal results, repeated and reversed preferences, replay rejection, frozen check weights, sparse ranking uncertainty, cooldown escalation, and the additive migration preserving historical rows. Dependencies were reused from the parent working project's installation for local validation; they are not committed. The sync helper was applied and a subsequent dry run reported zero eligible differences. The release check scans the Git index before commit. No production database writes, deployment, or live browser playback tests were performed for this checkpoint.
+The prepared public checkout passed TypeScript (`tsc --noEmit`), the production build (`npm run build`), and the blind-completion, vote-limit, preference-ranking, service-warning, bounded-JSON, cooldown-SQL and public-write-counter checks in `scripts/`. These cover failed writes retaining personal results, repeated and reversed preferences, replay rejection, frozen check weights, sparse ranking uncertainty, cooldown escalation, and the additive migration preserving historical rows. Dependencies were reused from the parent working project's installation for local validation; they are not committed. The sync helper was applied and a subsequent dry run reported zero eligible differences at that checkpoint. Later working-folder changes require a fresh comparison. The release check scans the Git index before commit. No production database writes, deployment, or live browser playback tests were performed for this checkpoint.
 
 ## Keeping future edits traceable
 
@@ -57,3 +57,9 @@ git status --short
 The helper never stages, commits, deletes or pushes files. New files appear in `git status`; review them along with the diff. It preserves release-owned material and reports missing source paths for manual deletion review. Package/lockfile, assets, data, and files outside its supported source directories require separate review.
 
 Run the relevant regression checks and TypeScript/build checks, stage the reviewed files, then run `npm run check:release` before committing. A local commit records the checkpoint; pushing it to GitHub is a separate step.
+
+## Accuracy correction — October 17, 2026
+
+See [HANDOFF.md](HANDOFF.md#readme-and-source-accuracy-correction--october-17-2026) for the README, music-page, research-protocol, measurement-route and migration-metadata corrections. A fresh checkout now has [explicit local setup](LOCAL_SETUP.md). The original-file archive requires migration `0016`; ordinary local measurement saves survive failed archive submissions. This GitHub update is separate from website deployment and live database migration.
+
+Independently edited working-folder pages and styles, including `app/curve-credits/`, are outside this correction. Do not overwrite the corrected public application files with an older working copy; compare the exact diff before using the sync helper. Dated zero-difference statements are historical verification results.
