@@ -1,3 +1,4 @@
+import {PROFILE_CATEGORIES,PROFILE_SHARE_BATCH} from "@/lib/profile-sharing";
 import { RequestInputError } from "@/lib/request-json";
 import { musicCandidates } from "@/lib/music-catalog";
 import { musicDisplayTitle } from "@/lib/music-display";
@@ -133,4 +134,36 @@ export async function savePersonalProfileEvent(db:D1Database,subject:string,data
  const safe:Row={target_a_id:a,target_b_id:b,result,device:text(data.device,120),rig:text(data.rig,120),phase:data.phase==="confirm"?"confirm":"explore"};
  for(const key of ["heard_a","heard_b","overlap_seconds"])safe[key]=typeof data[key]==="number"&&Number.isFinite(data[key])?Math.max(0,Math.min(86_400,Number(data[key]))):0;
  const id=(await profileHash(`personal-journal:${data.choiceKey}`)).slice(0,32);await db.prepare("INSERT OR IGNORE INTO owner_profile_events(id,profile_slug,record_kind,record_id,action,payload,created_at) VALUES(?,?,'browser-result',?,'personal-choice',?,?)").bind(id,PROFILE_SLUG,data.choiceKey,JSON.stringify(safe),Date.now()).run();return {ok:true};
+}
+
+// Category choices select existing records only; they never create a future-sharing rule.
+const sharingRefs = "SELECT record_kind,record_id FROM submission_owners WHERE subject_id=? AND record_kind IN ('vote','run','open','feedback','measurement','export','target','suggestion','personal') UNION ALL SELECT 'music' record_kind,track_url record_id FROM music_votes WHERE user_id=? UNION ALL SELECT 'history' record_kind,id record_id FROM owner_profile_events WHERE profile_slug=? AND record_kind IN ('music','browser-result')";
+export async function profileCategoryCounts(db:D1Database,subject:string){
+ const profile=await requireProfileAccount(db);if(profile.subject_id!==subject)throw new RequestInputError("Use the YinYangEQ participant account to manage sharing.",403);
+ const rows=(await db.prepare(`SELECT record_kind,COUNT(*) total FROM (${sharingRefs}) GROUP BY record_kind`).bind(subject,subject,PROFILE_SLUG).all<{record_kind:string;total:number}>()).results;
+ return {categories:PROFILE_CATEGORIES.map(category=>({...category,total:rows.filter(row=>(category.kinds as readonly string[]).includes(row.record_kind)).reduce((sum,row)=>sum+row.total,0)}))};
+}
+export async function previewProfileCategories(db:D1Database,subject:string,categories:unknown,cursor:unknown,includeFiles=false){
+ const profile=await requireProfileAccount(db);if(profile.subject_id!==subject)throw new RequestInputError("Use the YinYangEQ participant account to review sharing.",403);
+ if(!Array.isArray(categories)||!categories.length||categories.length>PROFILE_CATEGORIES.length||new Set(categories).size!==categories.length||categories.some(id=>!PROFILE_CATEGORIES.some(category=>category.id===id)))throw new RequestInputError("Choose one or more sharing categories.",400);
+ let after={kind:'',id:''};if(cursor!==undefined&&cursor!==null){if(typeof cursor!=='object'||typeof (cursor as typeof after).kind!=='string'||typeof (cursor as typeof after).id!=='string'||(cursor as typeof after).id.length>1200)throw new RequestInputError("Invalid category page.",400);after=cursor as typeof after;}
+ const kinds=PROFILE_CATEGORIES.filter(category=>categories.includes(category.id)).flatMap(category=>[...category.kinds]);
+ const rows=(await db.prepare(`SELECT record_kind,record_id FROM (${sharingRefs}) WHERE record_kind IN (${kinds.map(()=>'?').join(',')}) AND (record_kind>? OR (record_kind=? AND record_id>?)) ORDER BY record_kind,record_id LIMIT ?`).bind(subject,subject,PROFILE_SLUG,...kinds,after.kind,after.kind,after.id,PROFILE_SHARE_BATCH+1).all<{record_kind:ProfileKind;record_id:string}>()).results;
+ const context=await projectionContext(db,profile),entries=[];let unavailable=0;
+ for(const ref of rows.slice(0,PROFILE_SHARE_BATCH)){const row=await profileSource(db,profile,ref.record_kind,ref.record_id);if(!row||sourceRemoved(context,ref.record_kind,ref.record_id,row)){unavailable++;continue;}const payload=profileProjection(ref.record_kind,row,context,includeFiles);entries.push({kind:ref.record_kind,sourceId:ref.record_id,payload,hash:await sourceSignature(row,payload)});}
+ const last=rows.slice(0,PROFILE_SHARE_BATCH).at(-1);return {entries,unavailable,hasMore:rows.length>PROFILE_SHARE_BATCH,next:last?{kind:last.record_kind,id:last.record_id}:null,includeFiles};
+}
+export async function setProfileSelection(db:D1Database,subject:string,raw:unknown,state:unknown,includeFiles=false){
+ const profile=await requireProfileAccount(db);if(profile.subject_id!==subject)throw new RequestInputError("Use the YinYangEQ participant account to manage sharing.",403);
+ if((state!=='published'&&state!=='hidden')||!Array.isArray(raw)||!raw.length||raw.length>PROFILE_SHARE_BATCH)throw new RequestInputError("Review 1–25 entries before changing sharing.",400);
+ const refs=raw.map(item=>{if(!item||typeof item!=='object'||typeof item.sourceId!=='string'||!item.sourceId||item.sourceId.length>1200||typeof item.hash!=='string'||!/^[a-f0-9]{64}$/.test(item.hash))throw new RequestInputError("Invalid reviewed entry.",400);return {kind:profileKind(item.kind),id:item.sourceId,hash:item.hash};});
+ if(new Set(refs.map(ref=>JSON.stringify([ref.kind,ref.id]))).size!==refs.length)throw new RequestInputError("An entry was selected more than once.",400);
+ const statements=[],context=await projectionContext(db,profile),now=Date.now();
+ for(const ref of refs){
+  if(state==='hidden'){statements.push(db.prepare("UPDATE owner_profile_entries SET state='hidden',published_at=NULL WHERE profile_slug=? AND record_kind=? AND record_id=?").bind(PROFILE_SLUG,ref.kind,ref.id));continue;}
+  const row=await profileSource(db,profile,ref.kind,ref.id);if(!row||sourceRemoved(context,ref.kind,ref.id,row))throw new RequestInputError("A selected entry is missing or unavailable. Nothing was published; review the group again.",409);
+  const payload=profileProjection(ref.kind,row,context,includeFiles),hash=await sourceSignature(row,payload);if(hash!==ref.hash)throw new RequestInputError("A selected entry changed. Nothing was published; review the group again.",409);
+  statements.push(db.prepare("INSERT INTO owner_profile_entries(id,profile_slug,record_kind,record_id,state,payload,source_hash,created_at,published_at) VALUES(?,?,?,?,'published',?,?,?,?) ON CONFLICT(profile_slug,record_kind,record_id) DO UPDATE SET state=excluded.state,payload=excluded.payload,source_hash=excluded.source_hash,published_at=excluded.published_at").bind(crypto.randomUUID(),PROFILE_SLUG,ref.kind,ref.id,JSON.stringify(payload),hash,now,now));
+ }
+ await db.batch(statements);return {ok:true,updated:refs.length,state};
 }

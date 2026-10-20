@@ -12,7 +12,7 @@ function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModu
 const input=load('lib/request-json.ts'),account=load('lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
 
 const curveTools=load('lib/curves.ts'),fileTools=load('lib/research-measurement-files.ts');
-const records=load('lib/yinyangeq-records.ts',{'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':curveTools,'@/lib/research-measurement-files':fileTools});
+const records=load('lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':curveTools,'@/lib/research-measurement-files':fileTools});
 
 
 const profile=await account.createProfileAccount(db),session='d'.repeat(64),id=crypto.randomUUID(),target=crypto.randomUUID();sqlite.prepare("UPDATE privacy_accounts SET submissions_enabled=1,agreement_version='2026-10-18-v7' WHERE subject_id=?").run(profile.subject_id);sqlite.prepare('INSERT INTO privacy_sessions VALUES(?,?,?)').run(session,profile.subject_id,Date.now()+1000000);
