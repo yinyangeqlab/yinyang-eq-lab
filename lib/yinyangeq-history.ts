@@ -35,13 +35,15 @@ async function getClaim(db:D1Database,id:string){const claim=await db.prepare("S
 export async function historyPreview(db:D1Database,claimId:string){
  const profile=await requireProfileAccount(db),claim=await getClaim(db,claimId),evidence=JSON.parse(claim.evidence) as Evidence;
  const known=new Set(evidence.refs.map(refKey));const cutoff=claim.source_subject==="owner"?profile.policy_at:evidence.capturedAt;
- const ownedSql=Object.entries(tableFor).map(([kind,table])=>`SELECT '${kind}' kind,t.id FROM ${table} t JOIN submission_owners o ON o.record_kind='${kind}' AND o.record_id=t.id WHERE o.subject_id=? AND t.${kind==="trial"?"issued_at":"created_at"}<=?`).join(" UNION ALL ");
- const args=Object.keys(tableFor).flatMap(()=>[claim.source_subject,cutoff]);
- const refs=(await db.prepare(ownedSql+" ORDER BY kind,id LIMIT 100").bind(...args).all<Ref>()).results;
+ // D1's compound-SELECT bound is lower than the local SQLite default.
+ // Keep each owned source query independent and retain the same global bound.
+ const ordered=(rows:Ref[])=>rows.sort((a,b)=>a.kind.localeCompare(b.kind)||a.id.localeCompare(b.id));
+ const owned=await Promise.all(Object.entries(tableFor).map(async([kind,table])=>(await db.prepare(`SELECT '${kind}' kind,t.id AS id FROM ${table} t JOIN submission_owners o ON o.record_kind='${kind}' AND o.record_id=t.id WHERE o.subject_id=? AND t.${kind==="trial"?"issued_at":"created_at"}<=? ORDER BY t.id LIMIT 100`).bind(claim.source_subject,cutoff).all<Ref>()).results));
+ const refs=ordered(owned.flat()).slice(0,100);
  const music=(await db.prepare("SELECT track_url id FROM music_votes WHERE user_id=? AND updated_at<=? LIMIT 25").bind(claim.source_subject,cutoff).all<{id:string}>()).results;refs.push(...music.map(row=>({kind:"music" as const,id:row.id})));
  // Anonymous-era rows are candidates for specific independent legacy review, never automatic claims.
- const legacy=await db.prepare("SELECT 'vote' kind,id FROM votes WHERE voter_id=? AND created_at<? AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='vote' AND o.record_id=votes.id) UNION SELECT 'open',id FROM comparison_choices WHERE participant_id=? AND created_at<? AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='open' AND o.record_id=comparison_choices.id) UNION SELECT 'run',id FROM listening_runs WHERE voter_id=? AND created_at<? AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='run' AND o.record_id=listening_runs.id) LIMIT 25").bind(evidence.browserVoterId,LEGACY_CUTOFF,evidence.browserVoterId,LEGACY_CUTOFF,evidence.browserVoterId,LEGACY_CUTOFF).all<Ref>();
- refs.push(...legacy.results);const unique=[...new Map(refs.map(ref=>[refKey(ref),ref])).values()];
+ const legacy=await Promise.all(([['vote','votes','voter_id'],['open','comparison_choices','participant_id'],['run','listening_runs','voter_id']] as const).map(async([kind,table,voter])=>(await db.prepare(`SELECT '${kind}' kind,id FROM ${table} WHERE ${voter}=? AND created_at<? AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='${kind}' AND o.record_id=${table}.id) ORDER BY id LIMIT 100`).bind(evidence.browserVoterId,LEGACY_CUTOFF).all<Ref>()).results));
+ refs.push(...ordered(legacy.flat()).slice(0,100));const unique=[...new Map(refs.map(ref=>[refKey(ref),ref])).values()];
  const context=await projectionContext(db,{...profile,subject_id:claim.source_subject}),rows=[];
  for(const ref of unique){
   const row=await source(db,claim.source_subject,ref);if(!row)continue;const at=time(ref.kind,row);if(at>(claim.source_subject==="owner"?profile.policy_at:evidence.capturedAt))continue;
@@ -61,8 +63,15 @@ async function comparisonGraph(db:D1Database,root:Ref,row:Record<string,unknown>
  const comparison=linked?.comparison_id||String(root.kind==="run"?row.trial_id||root.id:root.kind==="feedback"?row.comparison_id:root.id);
  const refs=(await db.prepare("SELECT record_kind kind,record_id id FROM comparison_records WHERE comparison_id=?").bind(comparison).all<Ref>()).results;
  const voter=String(row.voter_id??row.participant_id??"");
- const legacy=await db.prepare("SELECT 'vote' kind,id FROM votes WHERE id=? AND voter_id=? UNION SELECT 'trial',id FROM ranked_trials WHERE id=? AND voter_id=? UNION SELECT 'open',id FROM comparison_choices WHERE id=? AND participant_id=? UNION SELECT 'run',id FROM listening_runs WHERE (trial_id=? OR id=?) AND voter_id=? UNION SELECT 'feedback',id FROM feedback_submissions WHERE comparison_id=? AND participant_id=?").bind(comparison,voter,comparison,voter,comparison,voter,comparison,comparison,voter,comparison,voter).all<Ref>();
- return [...new Map([root,...refs,...legacy.results].map(ref=>[refKey(ref),ref])).values()];
+ const queries:[string,(string|number)[]][]=[
+  ["SELECT 'vote' kind,id FROM votes WHERE id=? AND voter_id=?",[comparison,voter]],
+  ["SELECT 'trial' kind,id FROM ranked_trials WHERE id=? AND voter_id=?",[comparison,voter]],
+  ["SELECT 'open' kind,id FROM comparison_choices WHERE id=? AND participant_id=?",[comparison,voter]],
+  ["SELECT 'run' kind,id FROM listening_runs WHERE (trial_id=? OR id=?) AND voter_id=?",[comparison,comparison,voter]],
+  ["SELECT 'feedback' kind,id FROM feedback_submissions WHERE comparison_id=? AND participant_id=?",[comparison,voter]],
+ ];
+ const legacy=(await Promise.all(queries.map(async([sql,args])=>(await db.prepare(sql).bind(...args).all<Ref>()).results))).flat();
+ return [...new Map([root,...refs,...legacy].map(ref=>[refKey(ref),ref])).values()];
 }
 export async function migrateHistoryBatch(db:D1Database,claimId:string,selected:unknown,expectedDigest:unknown,verified:boolean,reason:unknown,confirmation:unknown,saveSnapshot=false){
  if(confirmation!=="MOVE VERIFIED HISTORICAL RECORDS"||!Array.isArray(selected)||!selected.length||selected.length>10||!selected.every(validRef))throw new RequestInputError("Review and select 1–10 records per atomic batch, then confirm the historical move.",400);
