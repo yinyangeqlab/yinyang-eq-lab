@@ -1,3 +1,17 @@
+# Current live release — update81, October 18, 2026
+
+Site: https://yinyangeq.com. Verified application source/build: `work/tagline-release-20261018`. Infrastructure snapshot: `work/tagline-infra-20261018`. These pointers supersede historical current-release statements below.
+
+## Two curves. Your choice.
+
+Replaced “THE SOUND BETWEEN” with “Two curves. Your choice.” Larger14–17px bright text, tighter letter spacing and dark text shadows improve readability. No colored box, background or border. Phone layout shows the tagline on its own row instead of hiding it. Only app/page.tsx and app/welcome.css differ from exact live update80; current Shootout/Continue, credits, sync, consent, private/media and cost protections are preserved.
+
+Build and packaging passed with340 assets and200 protected recordings; client dependency/preload packaging checks passed. Live Welcome and /sync returned200; all13 referenced JS/CSS assets matched the intended build. Browser screenshot verifies the shadow-only tagline. One existing Worker updated, three resources unchanged; final preview four unchanged. No migrations or participant-data writes. Evidence: artifacts/tagline-release/{source-scope.json,build.log,assets.log,preview.log,deployment.log,no-drift.log,live-verification.json,live-tagline.png}.
+
+Implementation commit `08f166f1a542a0ed6aeadd1a37c489d08ae9a8c6` is on main in work/github-live-sync-20261018. A following documentation commit records the verified release. This release is committed locally; no GitHub push was requested. The earlier update80 publication remains separate. Root tooling/license differences remain preserved; build uses the exact snapshot configuration. Never restore erased user records.
+
+## Prior releases and retained work notes (historical)
+
 # Current live release — update80, October 18, 2026
 
 Site: https://yinyangeq.com. Verified application source/build: `work/continue-button-release-20261018`. Infrastructure remains `work/welcome-header-infra-20261018`.
