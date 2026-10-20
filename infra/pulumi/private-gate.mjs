@@ -4,6 +4,7 @@ import app from "./index.js";
 import {readServiceStatus} from "./service-status.mjs";
 import { preDatabaseGuard, listenerGuard, boundedBody } from "./abuse-controls.mjs";
 import { isPublicAsset } from "./public-assets.mjs";
+import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
 import { browserPairing, linkedTester } from "./browser-pairing.mjs";
 
 const encoder = new TextEncoder();
@@ -33,10 +34,11 @@ async function validOwnerSession(request, password) {
   try { return await crypto.subtle.verify("HMAC", await ownerKey(password), unb64(match[3]), encoder.encode(`${match[1]}.${match[2]}`)); }
   catch { return false; }
 }
-async function validTester(request, db) {
+async function validTester(request, db, enabled) {
   const value = cookie(request, testerCookie);
   if (!/^[A-Za-z0-9_-]{43}$/.test(value)) return null;
-  return await db.prepare("SELECT id, label FROM private_tester_invites WHERE session_hash = ? AND redeemed_at IS NOT NULL AND revoked_at IS NULL AND session_expires_at > ? LIMIT 1").bind(await hash(value), Math.floor(Date.now() / 1000)).first() || await linkedTester(request, db);
+  const tester = await db.prepare("SELECT id, label FROM private_tester_invites WHERE session_hash = ? AND redeemed_at IS NOT NULL AND revoked_at IS NULL AND session_expires_at > ? LIMIT 1").bind(await hash(value), Math.floor(Date.now() / 1000)).first() || await linkedTester(request, db);
+  return enabled && tester?.id.startsWith("open-") ? null : tester;
 }
 // Separate, narrowly scoped cookie keeps deletion available after tester access expires.
 const dataCookie = "__Host-yinyangeq_data";
@@ -75,18 +77,19 @@ function safeReturnTo(value, fallback = "/") {
 function decodedReturnTo(value) { try { return safeReturnTo(decodeURIComponent(String(value || "/"))); } catch { return "/"; } }
 const pageStyle = 'html{color-scheme:dark}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#e9f1f2;font:16px/1.6 system-ui,sans-serif}main{box-sizing:border-box;max-width:550px;margin:24px;padding:34px;border:1px solid #34434a;border-radius:16px;background:#101a20}h1{margin:0 0 16px;font-size:28px}p{color:#bdccd1}a{color:#79ddd1}form{display:grid;gap:12px;margin-top:24px}label{font-weight:600}input,button{font:inherit;padding:12px;border-radius:8px}input{background:#061016;border:1px solid #56727c;color:#fff}button{border:0;background:#58cbbb;color:#071115;font-weight:700;cursor:pointer}';
 function htmlResponse(body, status = 200) { return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>YinYang EQ access</title><style>${pageStyle}</style></head><body><main>${body}</main></body></html>`, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" } }); }
-function ownerLoginPage(error = "", status = error ? 401 : 200) { return htmlResponse(`<h1>Admin sign in</h1><p>Enter your admin password to open the private admin view.</p>${error ? `<p role="alert">${error}</p>` : ""}<form method="post" action="/admin-login"><label for="password">Admin password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256"><button type="submit">Sign in</button></form><p><a href="/access">Approved listener sign in</a></p>`, status); }
-async function ownerFormLogin(request, env) {
-  if (!(request.headers.get("Content-Type") || "").startsWith("application/x-www-form-urlencoded")) return ownerLoginPage("Use the sign-in form.");
-  if (Number(request.headers.get("Content-Length") || 0) > 2048) return ownerLoginPage("The request is too large.");
+function ownerLoginPage(error = "", status = error ? 401 : 200, enabled = false) { return htmlResponse(`<h1>Admin sign in</h1><p>Enter your admin password to open the private admin view.</p>${error ? `<p role="alert">${error}</p>` : ""}<form method="post" action="/admin-login"><label for="password">Admin password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256"><button type="submit">Sign in</button></form>${enabled ? '<p><a href="/access">Approved listener sign in</a></p>' : '<p><a href="/">Welcome</a></p>'}`, status); }
+async function ownerFormLogin(request, env, enabled) {
+  const loginPage = (error, status) => ownerLoginPage(error, status, enabled);
+  if (!(request.headers.get("Content-Type") || "").startsWith("application/x-www-form-urlencoded")) return loginPage("Use the sign-in form.");
+  if (Number(request.headers.get("Content-Length") || 0) > 2048) return loginPage("The request is too large.");
   const now = Date.now(), windowMs = 15 * 60_000;
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   const key = `owner-login:${await hash(`${env.PRIVATE_ACCESS_PASSWORD}:${ip}`)}`;
   const bucket = Math.floor(now / windowMs);
   const rate = await env.DB.prepare("INSERT INTO public_write_limits (key, window_start, count, expires_at) VALUES (?, ?, 1, ?) ON CONFLICT(key) DO UPDATE SET count = CASE WHEN window_start = excluded.window_start THEN count + 1 ELSE 1 END, window_start = excluded.window_start, expires_at = excluded.expires_at RETURNING count").bind(key, bucket, (bucket + 2) * windowMs).first();
-  if (!rate || rate.count > 10) return ownerLoginPage("Too many sign-in attempts. Try again in 15 minutes.", 429);
+  if (!rate || rate.count > 10) return loginPage("Too many sign-in attempts. Try again in 15 minutes.", 429);
   const submitted = String((await request.formData()).get("password") || "");
-  if (!(await equal(submitted, env.PRIVATE_ACCESS_PASSWORD))) return ownerLoginPage("That password was not recognized.");
+  if (!(await equal(submitted, env.PRIVATE_ACCESS_PASSWORD))) return loginPage("That password was not recognized.");
   return new Response(null, { status: 303, headers: { Location: "/owner-research", "Cache-Control": "no-store", "Set-Cookie": `${ownerCookie}=${await makeOwnerSession(env.PRIVATE_ACCESS_PASSWORD)}; Max-Age=${ownerSeconds}; Path=/; Secure; HttpOnly; SameSite=Strict` } });
 }
 function page(detail, form = false, returnTo = "/") {
@@ -114,9 +117,19 @@ async function redeem(request, db) {
   return new Response(null, { status: 303, headers: { Location: decodedReturnTo(form.get("return_to")), "Cache-Control": "no-store", "Set-Cookie": `${testerCookie}=${session}; Max-Age=${testerSeconds}; Path=/; Secure; HttpOnly; SameSite=Strict` } });
 }
 async function admin(request, env, path) {
+  if (path === "/__private/admin/invite-system") {
+    if (request.method === "GET") return json({enabled: await invitesEnabled(env.DB)});
+    if (request.method !== "PATCH") return json({error: "Method not allowed."}, 405);
+    if (!sameOrigin(request)) return json({error: "Invalid origin."}, 403);
+    const body = await request.json().catch(() => null);
+    if (typeof body?.enabled !== "boolean") return json({error: "Choose whether invitations are enabled."}, 400);
+    await env.DB.prepare("INSERT INTO site_access_settings(id,invites_enabled) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET invites_enabled=excluded.invites_enabled").bind(body.enabled ? 1 : 0).run();
+    return json({enabled: body.enabled});
+  }
+  if (!await invitesEnabled(env.DB)) return json({error: "Not found."}, 404);
   const db = env.DB;
   if (request.method === "GET" && path === "/__private/admin/invites") {
-    const result = await db.prepare("SELECT id, label, created_at, code_expires_at, redeemed_at, session_expires_at, revoked_at FROM private_tester_invites ORDER BY created_at DESC LIMIT 200").all();
+    const result = await db.prepare("SELECT id, label, created_at, code_expires_at, redeemed_at, session_expires_at, revoked_at FROM private_tester_invites WHERE id NOT LIKE 'open-%' ORDER BY created_at DESC LIMIT 200").all();
     return json({ invites: result.results });
   }
   if (request.method === "POST" && path === "/__private/admin/invites") {
@@ -161,8 +174,10 @@ const privateGate = {
       if(request.method !== "GET" && request.method !== "HEAD" && (hasOwnerSession || ["/access","/admin-login","/owner-login"].includes(path))) {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
-      if ((path === "/owner-login" || path === "/admin-login") && request.method === "POST") return await ownerFormLogin(request, env);
-      if ((path === "/owner-login" || path === "/admin-login") && !hasOwnerSession) return request.method === "GET" ? ownerLoginPage() : new Response(null, { status: 405 });
+      const enabled = await invitesEnabled(env.DB);
+      if (path === "/api/invite-system" && request.method === "GET") return json({enabled});
+      if ((path === "/owner-login" || path === "/admin-login") && request.method === "POST") return await ownerFormLogin(request, env, enabled);
+      if ((path === "/owner-login" || path === "/admin-login") && !hasOwnerSession) return request.method === "GET" ? ownerLoginPage("", 200, enabled) : new Response(null, { status: 405 });
       if ((path === "/owner-login" || path === "/admin-login")) return new Response(null, { status: 303, headers: { Location: "/owner-research", "Cache-Control": "no-store" } });
       // The tester session is host-only. Redirect www to the canonical apex before invite redemption.
       const canonical = new URL(env.CANONICAL_ORIGIN || "https://yinyangeq.com");
@@ -170,29 +185,53 @@ const privateGate = {
       if (url.hostname === `www.${canonical.hostname}` && !hasOwnerSession) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 307);
       const owner = hasOwnerSession;
       if (path.startsWith("/__private/admin/")) return owner ? await admin(request, env, path) : json({ error: denied }, 403);
+      if (path === "/access" && !enabled) return new Response(null, {status: 303, headers: {Location: "/shootout", "Cache-Control": "no-store"}});
       if (path === "/access") {
         if (request.method === "POST") return await redeem(request, env.DB);
         return request.method === "GET" ? privateResponse(200, "Enter your approved invitation code to submit votes and other contributions. Your browser stays signed in for 48 hours.", true, safeReturnTo(url.searchParams.get("return_to"))) : privateResponse(405);
       }
-      const tester = owner ? null : await validTester(request, env.DB);
-      if (path === "/sync" || path === "/pair" || path === "/pair/reset" || path === "/devices" || path.startsWith("/devices/")) return await browserPairing(request, env, tester, owner);
+      let tester = owner ? null : await validTester(request, env.DB, enabled);
+      // Open access still uses host-only credentials and the existing ownership,
+      // consent, erasure and sync tables. No usable invitation code is created.
+      let accessCookie = null;
+      const syncReceive = path === "/pair" || path === "/pair/reset" || path === "/sync" && (url.searchParams.get("receive") === "1" || request.method !== "GET");
+      const adminPath = path === "/owner-research" || path.startsWith("/api/owner-research");
+      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective"].includes(path) && cookie(request, dataCookie);
+      if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
+        const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
+        await env.DB.prepare("INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(id,"Listener",await hash(randomToken()),now,now,now,await hash(session),now+dataSeconds).run();
+        tester = {id, label: "Listener"};
+        accessCookie = `${testerCookie}=${session}; Max-Age=${dataSeconds}; Path=/; Secure; HttpOnly; SameSite=Strict`;
+        const headers = new Headers(request.headers);
+        headers.set("Cookie", [...(request.headers.get("Cookie") || "").split(";").filter(part => !part.trim().startsWith(testerCookie + "=")), `${testerCookie}=${session}`].filter(Boolean).join("; "));
+        request = new Request(request, {headers});
+      }
+      // Carry a newly issued access cookie through every response, including
+      // consent redirects and sync. Only this synthetic cookie is captured.
+      const finish = response => {
+        if (!accessCookie) return response;
+        const result = new Response(response.body, response);
+        result.headers.append("Set-Cookie", accessCookie);
+        return result;
+      };
+      if (path === "/sync" || path === "/pair" || path === "/pair/reset" || path === "/devices" || path.startsWith("/devices/")) return finish(await browserPairing(request, env, tester, owner, enabled));
 
-      if(tester){const limited=await listenerGuard(request,env,`invite:${tester.id}`);if(limited)return limited;}
+      if(tester){const limited=await listenerGuard(request,env,testerSubject(tester.id));if(limited)return limited;}
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
       const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective"].includes(path);
-      const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? `invite:${tester.id}` : null, tester?.linkedSessionHash) : null;
+      const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
         const redirect = new Response(null, { status: 303, headers: { Location: owner || tester ? "/shootout" : "/", "Cache-Control": "no-store" } });
         if(data?.setCookie) redirect.headers.append("Set-Cookie",data.setCookie);
-        return redirect;
+        return finish(redirect);
       }
       if (!owner && path === "/owner-research") return Response.redirect(new URL("/admin-login", request.url), 303);
       if (!owner && path.startsWith("/api/owner-research")) return json({ error: "Admin access denied." }, 403);
       if (!owner && !tester && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
-        if (path.startsWith("/api/") || request.method !== "GET" && request.method !== "HEAD") return json({ error: "Sign in with an approved invitation to use this site." }, 401);
-        const signIn = new URL("/access", request.url);
+        if (path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD") return json({ error: enabled ? "Sign in with an approved invitation to use this site." : "Open Shootout to start this browser session." }, 401);
+        const signIn = new URL(enabled ? "/access" : "/shootout", request.url);
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
@@ -202,7 +241,7 @@ const privateGate = {
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice on Shootout; My data remains available for withdrawal and deletion." },403)
           : new Response(null,{status:303,headers:{Location:"/shootout","Cache-Control":"no-store"}});
         if(data?.setCookie) blocked.headers.append("Set-Cookie",data.setCookie);
-        return blocked;
+        return finish(blocked);
       }
       if(!owner && !["GET","HEAD","OPTIONS"].includes(request.method) && !dataRoute) {
         const status=await readServiceStatus();
@@ -211,7 +250,7 @@ const privateGate = {
       const headersForApp = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headersForApp.delete(name);
       if (owner || tester) {
-        headersForApp.set("oai-authenticated-user-id", owner ? "owner" : `invite:${tester.id}`);
+        headersForApp.set("oai-authenticated-user-id", owner ? "owner" : testerSubject(tester.id));
         headersForApp.set("oai-authenticated-user-full-name", encodeURIComponent(owner ? "Owner" : tester.label));
         headersForApp.set("oai-authenticated-user-full-name-encoding", "percent-encoded-utf-8");
       }
@@ -246,8 +285,8 @@ const privateGate = {
       if (rankingCache && response.ok && request.method === "DELETE" && path === "/api/my-data") {
         try { await rankingCache.delete(rankingKey); } catch { console.warn("ranking_cache_invalidation_failed"); }
       }
-      if (data?.setCookie) { const result = new Response(response.body, response); result.headers.append("Set-Cookie", data.setCookie); return result; }
-      return response;
+      if (data?.setCookie) { const result = new Response(response.body, response); result.headers.append("Set-Cookie", data.setCookie); return finish(result); }
+      return finish(response);
     } catch {
       // Keep credentials, invitation codes, cookies and request bodies out of logs.
       console.error("private_gate_request_failed");

@@ -218,6 +218,13 @@
       "when": 1792334910448,
       "tag": "0030_browser_sync_transfer",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "6",
+      "when": 1792366186915,
+      "tag": "0031_site_access_settings",
+      "breakpoints": true
     }
   ]
 }
