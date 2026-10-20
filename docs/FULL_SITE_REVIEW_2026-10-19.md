@@ -1,3 +1,7 @@
+# Local consent follow-up — not deployed
+
+After update95 deployment, the owner reported a hidden third music opt-in. The local follow-up shows three numbered sections outside disclosures, with draft-only all/required-only controls. Actual component, consent/monitoring/nickname checks, typecheck, build and six finite viewport checks pass; no browser consent was saved. Six new screenshots bring the local gallery to510 images, with72 follow-up images including this separate local draft. A pre-existing style-cleanup check reports27 superseded declarations on both baseline and draft. See [CONSENT_UI_REVIEW_2026-10-19.md](CONSENT_UI_REVIEW_2026-10-19.md).
+
 # Deployed with owner authorization — update95
 
 The owner subsequently authorized push and deployment. Implementation0ef217b90019 is live with migrations0035/0036, preserved tests/assets/guards and a verified matching encrypted off-device backup. Independent hosted validation passed and the daily schedule resumed. Numerical Community output remains withheld; listener validation/privacy review and the unpatched build-tool advisory remain explicitly tracked. Earlier local-only statements below describe the completed review stage. See LIVE_STATE.md and artifacts/community-release-20261019/.

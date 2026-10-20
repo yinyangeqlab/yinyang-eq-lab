@@ -1,7 +1,7 @@
 {
   "liveUpdate": 95,
   "implementationCommit": "0ef217b900198760f7f81adb447a0fbd1e5ef731",
-  "runtimeParity": "Recorded runtime matches verified update95; unrelated backup/recovery development excluded.",
+  "runtimeParity": "Local consent UI differs from verified update95; this follow-up is not deployed.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -15,7 +15,8 @@
     "recovery": "External checksum bundle, fresh credential generation, strict local restore and deletion review. No live deployment.",
     "pendingUnrelatedDevelopment": [
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
-    ]
+    ],
+    "pendingLocalReview": "Three visible consent sections and draft-only all/required presets."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -425,11 +426,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "d91d3fb6f108b6b40310eef146310dc3ec6ec8b42253eb0ac1fe905e72e9edcc"
+      "sha256": "679a170902fa04b5ff7ef8c9f4a2a339b58d07b092bea76a0857f3c5becbd833"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "a937dd2ee63041a063464088178c03709e430b6b78a037713a1caa7cc6fe83ec"
+      "sha256": "365cdb7509fbb4f6ab0ff29d7b5e1e07b183d0e24bf6ebd447af404fba71b8de"
     },
     {
       "path": "components/connector-error.tsx",
@@ -918,6 +919,10 @@
     {
       "path": "db/service-status.sql",
       "sha256": "7a9c347a5000316ff6a287c4ea3d5c4ef3cc31e100f313aab1449819ac06ce29"
+    },
+    {
+      "path": "docs/CONSENT_UI_REVIEW_2026-10-19.md",
+      "sha256": "7eae3ec17a7573c6503df30c6e9cf90d87e3793b30fed0add51c92ae32e6f21e"
     },
     {
       "path": "drizzle.config.ts",
@@ -1732,6 +1737,10 @@
       "sha256": "7ea4a888688e73a1b6179964012a707319e953e2592fd5a83241ab9423e45b07"
     },
     {
+      "path": "scripts/check_consent_choices.mjs",
+      "sha256": "83b17645ef0893c5524dcf3960499291d7076072509fb6cf4fa155b7b3559fea"
+    },
+    {
       "path": "scripts/check_file_matching.mjs",
       "sha256": "01e27510752428629db2513288c18ed824260497556df7d129b72f0c68a7704a"
     },
@@ -2069,5 +2078,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": false
+  "pendingDeploymentApproval": true
 }
