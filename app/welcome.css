@@ -254,6 +254,15 @@
 
 /* A shallow full-width shade unifies the header without hiding the artwork. */
 .welcome-nav { width:100%; background:linear-gradient(180deg,#031014b8,#03101470); border-bottom:1px solid #b5ebe51c; box-shadow:0 3px 16px #0002; }
+
+/* Preserve full-bleed artwork while keeping wide-screen content within reach. */
+@media (min-width:1800px) {
+ .welcome-nav,.welcome-how,.welcome-footer {
+   padding-inline:max(28px,calc((100% - 1600px)/2 + 28px));
+ }
+ .welcome-copy { margin-left:max(110px,calc((100% - 1600px)/2 + 28px)); }
+ .welcome-steps,.welcome-last-call { max-width:none; }
+}
 @media(max-width:799px) { .welcome-nav { padding-top:10px; padding-bottom:6px; row-gap:2px; } }
 
 /* Keep the tagline legible against the hero artwork, including on phones. */

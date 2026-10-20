@@ -189,3 +189,9 @@
 .pt-setup .pt-selects { max-width:100%; }
 .pt-setup .pt-selects > label:first-child { width:100%; }
 .pt-setup .pt-selects select { max-width:100%; }
+
+/* Align the header with the existing bounded workbench on large displays. */
+@media (min-width:1800px) {
+ .pt-content { padding-inline:28px; }
+ .pt-top { padding-inline:max(28px,calc((100% - 1600px)/2 + 28px)); }
+}

@@ -146,11 +146,11 @@
     },
     {
       "path": "app/curve-credits/style.css",
-      "sha256": "6181f8c0f62856c6d09dd7c3162e080d209885b0b669fc1bddc30cdc99feaba3"
+      "sha256": "5b00d2bc4a1d363d22e6a24f426fb0311c64a48d8b23e3df484879357da4b0ae"
     },
     {
       "path": "app/globals.css",
-      "sha256": "87e3616b4836d7c4e7887022551be331abc52d22b137fa5d89439ea14cee49c1"
+      "sha256": "1d1a8bb899c13b79792fe7e6d2ec6f30a6e1d05a837b29df1019624bd0339df3"
     },
     {
       "path": "app/home/route.ts",
@@ -166,7 +166,7 @@
     },
     {
       "path": "app/music-library/style.css",
-      "sha256": "57366cae04e7c01eddf96a467114e6c5df3e62b330e1c994f178f18039d5d7b6"
+      "sha256": "7466bbd3fce7112b432e96bf62dc7fbd1b9e12533ea7ba30e84ca1bfc6b6aa11"
     },
     {
       "path": "app/my-data/page.tsx",
@@ -202,7 +202,7 @@
     },
     {
       "path": "app/preference-tuning/style.css",
-      "sha256": "7083e800dbb152d4507729576ce2d33f29ca26a9c6f656b124fa47a522aa0015"
+      "sha256": "5d9a35a53eba9f8db24c89c4253d17dc0815d6b9ea26fc315d0da3d40535cc93"
     },
     {
       "path": "app/privacy/page.tsx",
@@ -214,7 +214,7 @@
     },
     {
       "path": "app/welcome.css",
-      "sha256": "e6ce1d3e5ddec14216f6dd35fec8ef8c3db79c1a81288789545bb53150d13687"
+      "sha256": "8c0f1f1f902e67735c49629f24b76c8f9f366a9a25b87b6a0b5ee9fb72f370ed"
     },
     {
       "path": "build/connector-preview-plugin.mjs",
@@ -914,7 +914,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "bbbf2d8dfa31d5d9a2288aa77eb618e438f103bc0ee383747544c4b2fba5d270"
+      "sha256": "7a22ecbd78e210289aed84109e13d1d03f4ef888f1674b66a2b866f0e9bd8336"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -954,7 +954,7 @@
     },
     {
       "path": "lib/browser-pairing.mjs",
-      "sha256": "c67c94695af956fef69a7b04e931641127891d70df2010c6d0450f784a2b14a8"
+      "sha256": "0ddcd772087ebf26513aea6be82ec969fbbe6c70d20bad9a01c58f5334e6ac57"
     },
     {
       "path": "lib/browser-sync.mjs",
