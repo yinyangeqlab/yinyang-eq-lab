@@ -67,10 +67,6 @@ modules["public-assets.mjs"] = {
   contentType: "application/javascript+module",
   contentFile: moduleFile(join(here, "public-assets.mjs")),
 };
-modules["public-demos.mjs"] = {
-  contentType: "application/javascript+module",
-  contentFile: moduleFile(join(here, "public-demos.mjs")),
-};
 modules["media-response.mjs"] = {
   contentType: "application/javascript+module",
   contentFile: moduleFile(join(buildRoot, "lib/worker-media-response.mjs")),

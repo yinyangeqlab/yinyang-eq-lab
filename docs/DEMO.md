@@ -2,7 +2,7 @@
 
 https://github.com/user-attachments/assets/a2e7a979-1a78-453f-836a-da6df3ad8a12
 
-[Copy a direct link for Discord](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
+**Short link for Discord: https://yinyangeqlab.github.io/t.mp4** · [Sharing guide](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
 
 [Watch or download the trailer](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/demo-2026-10-17/yinyang-eq-league-cinematic-trailer-v3.mp4) · [Demo release](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17)
 
