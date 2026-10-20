@@ -1,3 +1,7 @@
+Current live baseline is update97, implementation4d09994a48dc. Automatic reserved-account sync and protected indefinite retention are deployed; migration0037 is additive. A fresh database uses all38 migrations plus operational db/service-status.sql. Existing update96 encrypted recovery is retained; no update97 backup export was authorized and the hosted baseline refresh remains pending. Read LIVE_RELEASE.json and the current handoff.
+
+## Historical rebuild notes
+
 Current live baseline is update96, implementation89dc69e1bfc1. Immutable source/build: work/consent-release-20261019; infra: work/consent-infra-20261019. Consent dialog shows three choices and draft-only all/required presets. No policy/backend/schema change; all37 migrations plus operational db/service-status.sql remain required for a fresh database. See LIVE_STATE.md and docs/CONSENT_UI_REVIEW_2026-10-19.md.
 
 ## Historical rebuild notes
