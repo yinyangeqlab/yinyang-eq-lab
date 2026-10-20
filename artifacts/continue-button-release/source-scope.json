@@ -1,0 +1,9 @@
+{
+  "baseUpdate": 79,
+  "changedFiles": [
+    "app/globals.css",
+    "app/shootout/page.tsx"
+  ],
+  "excluded": "Unrelated root Welcome draft and root tooling/license differences",
+  "infrastructure": "unchanged"
+}

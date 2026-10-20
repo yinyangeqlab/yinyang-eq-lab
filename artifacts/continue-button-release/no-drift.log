@@ -1,0 +1,20 @@
+Previewing update (staging)
+
+View Live: https://app.pulumi.com/yinyangeqlab-gmail-com-org/yinyangeq-cloudflare/staging/previews/9425614c-bd72-4835-aea1-22922cd09eeb
+
+
+@ Previewing update....
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+@ Previewing update......
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging  3 warnings
+Diagnostics:
+  pulumi:pulumi:Stack (yinyangeq-cloudflare-staging):
+    warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+
+Resources:
+    4 unchanged
+

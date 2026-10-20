@@ -1,0 +1,55 @@
+Previewing update (staging)
+
+View Live: https://app.pulumi.com/yinyangeqlab-gmail-com-org/yinyangeq-cloudflare/staging/previews/35e66181-7e86-46b1-9d14-ccb2377cf732
+
+
+@ Previewing update....
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+@ Previewing update......
+ ~  cloudflare:index:WorkersScript target-shootout-worker update [diff: ~assets,files]
+@ Previewing update.....
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging  3 warnings
+Diagnostics:
+  pulumi:pulumi:Stack (yinyangeq-cloudflare-staging):
+    warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+
+Resources:
+    ~ 1 to update
+    3 unchanged
+
+Updating (staging)
+
+View Live: https://app.pulumi.com/yinyangeqlab-gmail-com-org/yinyangeq-cloudflare/staging/updates/80
+
+
+@ Updating....
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging running warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+@ Updating.....
+ ~  cloudflare:index:WorkersScript target-shootout-worker updating (0s) [diff: ~assets,files]
+@ Updating..................
+ ~  cloudflare:index:WorkersScript target-shootout-worker updated (14s) [diff: ~assets,files]
+@ Updating....
+    pulumi:pulumi:Stack yinyangeq-cloudflare-staging  3 warnings
+Diagnostics:
+  pulumi:pulumi:Stack (yinyangeq-cloudflare-staging):
+    warning: Static asset approaching the 25 MiB limit: music/shantae/1444465789.flac (23.77 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/2316484827.flac (23.78 MiB)
+    warning: Static asset approaching the 25 MiB limit: music/shantae/3734653195.flac (23.29 MiB)
+
+Outputs:
+    databaseId       : "3282ee80-8aab-4e0d-8390-321b5b532912"
+    serverModuleCount: 131
+    workerName       : "yinyangeq-staging"
+
+Resources:
+    ~ 1 updated
+    3 unchanged
+
+Duration: 20s
+

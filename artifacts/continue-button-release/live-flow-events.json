@@ -1,0 +1,256 @@
+[
+  {
+    "device": "desktop",
+    "path": "/api/maintenance",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/music-votes",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/targets",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/my-data",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/suggestions",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/research",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/trials",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "testMode": "bring"
+    }
+  },
+  {
+    "device": "desktop",
+    "path": "/api/listening-runs",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "id": "6778c556-e3f6-4fb7-b330-16aff5325b87",
+      "trialId": "05a2edca-3ef2-4aaa-bc26-c26182ecc28e",
+      "testMode": "bring",
+      "result": "a",
+      "intervals": [
+        {
+          "side": 0,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        },
+        {
+          "side": 1,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        }
+      ]
+    }
+  },
+  {
+    "device": "desktop",
+    "path": "/api/votes",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "trialId": "05a2edca-3ef2-4aaa-bc26-c26182ecc28e",
+      "testMode": "bring",
+      "heardA": 5,
+      "heardB": 5,
+      "intervals": [
+        {
+          "side": 0,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        },
+        {
+          "side": 1,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        }
+      ]
+    }
+  },
+  {
+    "device": "desktop",
+    "path": "/api/targets",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/suggestions",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/research",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/maintenance",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "desktop",
+    "path": "/api/trials",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "testMode": "bring"
+    }
+  },
+  {
+    "device": "mobile",
+    "path": "/api/maintenance",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/music-votes",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/my-data",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/targets",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/suggestions",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/research",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/trials",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "testMode": "bring"
+    }
+  },
+  {
+    "device": "mobile",
+    "path": "/api/listening-runs",
+    "method": "POST",
+    "status": 201,
+    "request": {
+      "id": "e1a84e80-8746-44c2-8b3f-65246b404389",
+      "trialId": "50554eb1-c8d3-49d6-9d02-cfe2066e4cd8",
+      "testMode": "bring",
+      "result": "b",
+      "intervals": [
+        {
+          "side": 1,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        },
+        {
+          "side": 0,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        }
+      ]
+    }
+  },
+  {
+    "device": "mobile",
+    "path": "/api/votes",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "trialId": "50554eb1-c8d3-49d6-9d02-cfe2066e4cd8",
+      "testMode": "bring",
+      "heardA": 5,
+      "heardB": 5,
+      "intervals": [
+        {
+          "side": 1,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        },
+        {
+          "side": 0,
+          "start": 7.69,
+          "rate": 1,
+          "end": 12.690000000000001
+        }
+      ]
+    }
+  },
+  {
+    "device": "mobile",
+    "path": "/api/targets",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/suggestions",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/research",
+    "method": "GET",
+    "status": 200
+  },
+  {
+    "device": "mobile",
+    "path": "/api/trials",
+    "method": "POST",
+    "status": 200,
+    "request": {
+      "testMode": "bring"
+    }
+  }
+]
