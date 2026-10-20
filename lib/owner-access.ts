@@ -4,7 +4,7 @@ export async function ownerAccessResponse(request: Request): Promise<Response | 
   const secret = (env as unknown as Record<string, unknown>).OWNER_ANALYTICS_TOKEN;
   const headers = { "Cache-Control": "private, no-store" };
   if (typeof secret !== "string" || secret.length < 32)
-    return Response.json({ error: "Owner access is not configured." }, { status: 503, headers });
+    return Response.json({ error: "Admin access is not configured." }, { status: 503, headers });
   const bearer = request.headers.get("authorization") || "";
   const candidate = bearer.startsWith("Bearer ") ? bearer.slice(7) : "";
   const digest = async (value: string) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
@@ -12,6 +12,6 @@ export async function ownerAccessResponse(request: Request): Promise<Response | 
   let difference = 0;
   for (let i = 0; i < a.length; i++) difference |= a[i] ^ b[i];
   return difference || !candidate
-    ? Response.json({ error: "Owner access denied." }, { status: 403, headers })
+    ? Response.json({ error: "Admin access denied." }, { status: 403, headers })
     : null;
 }

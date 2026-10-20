@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import ComparisonDataActions from "@/components/comparison-data-actions";
 import { checkReliability } from "@/lib/preference-ranking";
 
 export type Trial = {
-  id: string; sessionId?: string; result?: "a" | "b" | "tie"; catchTrial?: boolean; createdAt: number; pair: [string, string]; pairNames: [string, string]; winnerId: string;
+  id: string; serverTrialId?: string; sessionId?: string; result?: "a" | "b" | "tie"; catchTrial?: boolean; createdAt: number; pair: [string, string]; pairNames: [string, string]; winnerId: string;
   winnerName: string; loserName: string; recorded: boolean; mode?: "blind" | "bring" | "open"; type: string;
   reasonSide?: "a" | "b"; reasonTags?: string[]; otherReason?: string;
   measurementName: string | null; device: string | null; rig: string | null;
@@ -12,7 +13,7 @@ export type Trial = {
   eqFits?: { bands: number; rms: number; preamp: number }[];
 };
 
-export default function ResultsProfile({ trials }: { trials: Trial[] }) {
+export default function ResultsProfile({ trials, onDeleteBrowser }: { trials: Trial[]; onDeleteBrowser?: (id:string)=>void }) {
   const [selectedModel, setSelectedModel] = useState("");
   const rows = [...trials].reverse(), recorded = rows.filter(row => row.recorded);
   const models = [...new Map(rows.filter(row => row.device?.trim()).map(row => [row.device!.trim().toLowerCase(), row.device!.trim()])).values()].sort((a,b)=>a.localeCompare(b));
@@ -50,11 +51,13 @@ export default function ResultsProfile({ trials }: { trials: Trial[] }) {
     <p className="footnote">Identical-target check reliability: {calibrationChecks.length ? `${Math.round(calibration.mean * 100)}% ± ${Math.round(calibration.sd * 100)} percentage points SD` : "Not calibrated yet"} ({calibrationChecks.length} checks; Beta(2, 2) prior). This estimates check performance, not whether your preferences are correct. New check results change the influence of future decisive ranked answers.</p>
     <p className="footnote">Repeated pair agreement is the average majority choice rate for pairs tried more than once.</p>
     <section className="private-list personal-model-ranking"><h2>Your target preferences by headphone model</h2><p className="footnote">Private to this browser. These are your answered trials with that model, across blind and Open modes. Each tie counts as half a preference for each target; repeated choices are included. This is your tally, not a public rating.</p>{models.length ? <><label>Headphone model <select value={activeModel} onChange={event=>setSelectedModel(event.target.value)}>{models.map(model=><option key={model} value={model}>{model}</option>)}</select></label><p className="footnote">{modelTrials.length} comparisons for {activeModel}. Scores with fewer than 10 comparisons are provisional.</p><div className="personal-model-head"><span>Target</span><span>Wins / losses / ties</span><span>Preference</span></div>{modelRanking.map((target,index)=>{const total=target.wins+target.losses+target.ties;return <div className="personal-model-row" key={target.id}><span><b>{index+1}. {target.name}</b>{total<10&&<small>Provisional</small>}</span><span>{target.wins} / {target.losses} / {target.ties}</span><strong>{total?`${Math.round((target.wins+target.ties*.5)/total*100)}%`:"—"}</strong></div>;})}</> : <p className="footnote">No answered trials have a saved headphone model yet.</p>}</section>
-    <div className="private-list"><h2>Trials and results</h2>{rows.length ? rows.map(row => {
+    <div className="private-list"><h2>Trials and results</h2><p className="footnote"><a href="/my-data">Manage or permanently delete your submitted data</a>. Browser copies and submitted records are managed separately.</p>{rows.length ? rows.map(row => {
       const group = groups.get(`${row.mode || "open"}|${[...row.pair].sort().join("|")}`)!;
       const scores=group.map(x=>x.result==="tie"?.5:x.winnerId===row.pair[0]?1:0),rate=scores.reduce<number>((n,x)=>n+x,0)/scores.length;
       const sd=group.length>1?Math.sqrt(scores.reduce<number>((n,x)=>n+(x-rate)**2,0)/(scores.length-1)):0;
       return <details className="trial-row" key={row.id}><summary><strong>{new Date(row.createdAt).toLocaleString()}</strong> · {row.result === "tie" ? "Unsure / tie" : `${row.winnerName} preferred over ${row.loserName}`} <span>{row.mode === "blind" ? "Random blind" : row.mode === "bring" ? "Own music blind" : "Open"} · {row.catchTrial ? "Same-filter check" : row.recorded ? "Ranked" : "Private"} · {row.type === "ie" ? "In ear" : row.type === "oe" ? "Over ear" : "Unclassified"}</span></summary><div className="trial-detail">
+        <ComparisonDataActions row={row} onDeleted={onDeleteBrowser} />
+        {onDeleteBrowser && <button type="button" onClick={()=>{if(window.confirm("Remove this browser copy only? This will change your local headphone tally, but will NOT delete server submissions or update shared rankings."))onDeleteBrowser(row.id);}}>Remove browser copy only (keeps server data)</button>}
         <p><b>Trial:</b> {row.pairNames[0]} (A) vs {row.pairNames[1]} (B). Answer: {row.result === "tie" ? "Unsure / tie" : row.winnerId === row.pair[0] ? "A" : "B"}. {row.catchTrial ? "Both sides used the same EQ filters; tie is the accuracy answer." : ""}</p>
         <p><b>Reasons for {row.reasonSide?.toUpperCase() || "selected side"}:</b> {row.reasonTags?.length ? row.reasonTags.join(", ") : "None selected"}{row.otherReason ? ` · ${row.otherReason}` : ""}</p>
         <p><b>Measurement:</b> {row.measurementName || "None"} · {row.device || "Unknown headphone"} · {row.rig || "Unknown rig"}</p>

@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { comparisonChoices, targets } from "@/db/schema";
@@ -8,6 +9,7 @@ import { publicWriteGate } from "@/lib/public-write-gate";
 const uuid = /^[a-f0-9-]{36}$/i;
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("open");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 4096);
@@ -22,8 +24,8 @@ export async function POST(request: Request) {
     const bType = targetHeadphoneType({ name: b.name, measurement: b.measurement });
     if ((aType && aType !== data.headphoneType) || (bType && bType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
     const now = Date.now();
-    const shareSong = data.shareSong === true;
-    await db.insert(comparisonChoices).values({ id, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now });
+    const shareSong = data.shareSong === true && ownership.shareMusic;
+    await db.batch([db.insert(comparisonChoices).values({ id, participantId, testMode:"open", headphoneType:String(data.headphoneType),targetAId:aId,targetBId:bId,result:String(data.result),songTitle:shareSong?String(data.songTitle||"").trim().slice(0,120)||null:null,songArtist:shareSong?String(data.songArtist||"").trim().slice(0,120)||null:null,songAlbum:shareSong?String(data.songAlbum||"").trim().slice(0,120)||null:null,createdAt:now }), ownership.record(id)]);
     return Response.json({ ok:true }, { status:201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

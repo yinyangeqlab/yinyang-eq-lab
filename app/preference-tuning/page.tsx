@@ -209,8 +209,6 @@ export default function PreferenceTuning() {
   const [measurementAttention, setMeasurementAttention] = useState(0);
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
-  const [nirvanaNoticeOpen, setNirvanaNoticeOpen] = useState(false);
-  const nirvanaNoticeClose = useRef<HTMLButtonElement>(null);
   const finalizeButton = useRef<HTMLButtonElement>(null);
   const resetButton = useRef<HTMLButtonElement>(null);
   const resetNoButton = useRef<HTMLButtonElement>(null);
@@ -284,7 +282,6 @@ export default function PreferenceTuning() {
   useEffect(() => { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); }, [settings, selected, expanded]);
   useEffect(() => { if (axisLoaded) localStorage.setItem("preference-tuning-axis-v1", JSON.stringify(axis)); }, [axis, axisLoaded]);
   const target = targets.find(t => t.id === selected) || fallback;
-  const nirvanaRestricted = target.name.trim().toLowerCase() === "peqdb nirvana" || (target.name.trim().toLowerCase() === "nirvana" && target.creator.trim().toLowerCase() === "peqdb");
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
   const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
   const selectedCuratedRank = curatedRanks.get(selected);
@@ -299,7 +296,6 @@ export default function PreferenceTuning() {
   const finalizeKey = JSON.stringify({ selected, settings, measurementId });
   const finalIsCurrent = finalized?.key === finalizeKey;
   async function finalizeCurve() {
-    if (nirvanaRestricted) { setNirvanaNoticeOpen(true); return; }
     if (!measurement?.points?.length || finalizing) return;
     setFinalizing(true); setFinalProgress(0); setFinalized(null);
     const curve = preferenceCurve;
@@ -315,7 +311,6 @@ export default function PreferenceTuning() {
     finally { setFinalizing(false); }
   }
   async function downloadText(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) {
-    if (nirvanaRestricted) { setNirvanaNoticeOpen(true); return; }
     const exportKind = variant ? "eq" : filename === "original-target.csv" ? "original-target" : "preference-target";
     const format = filename.endsWith("-equalizerapo.txt") ? "equalizerapo" : filename.endsWith("-easyeffects.txt") ? "easyeffects" : filename.endsWith("-qudelix5k.txt") ? "qudelix5k" : variant ? "txt" : "csv";
     try {
@@ -469,7 +464,7 @@ export default function PreferenceTuning() {
   }
   useEffect(() => { const keydown = (event: KeyboardEvent) => { if (resetOpen || instructionsOpen) return; if (!(event.ctrlKey || event.metaKey) || event.altKey) return; const target = event.target; if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement && ["text", "search", "url"].includes(target.type)) return; if (event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) redo(); else undo(); } else if (event.key.toLowerCase() === "y") { event.preventDefault(); redo(); } }; window.addEventListener("keydown", keydown); return () => window.removeEventListener("keydown", keydown); }, [past, future, resetOpen, instructionsOpen]);
   useEffect(() => {
-    if (!audioUrl || resetOpen || instructionsOpen || nirvanaNoticeOpen) return;
+    if (!audioUrl || resetOpen || instructionsOpen) return;
     const toggleWithSpace = (event: KeyboardEvent) => {
       if (event.code !== "Space" || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.target instanceof Element && event.target.closest("input, textarea, select, button, [contenteditable], [role='textbox'], [role='dialog']")) return;
@@ -478,7 +473,7 @@ export default function PreferenceTuning() {
     };
     window.addEventListener("keydown", toggleWithSpace, true);
     return () => window.removeEventListener("keydown", toggleWithSpace, true);
-  }, [audioUrl, resetOpen, instructionsOpen, nirvanaNoticeOpen, settings, bypass, fit]);
+  }, [audioUrl, resetOpen, instructionsOpen, settings, bypass, fit]);
   useEffect(() => {
     if (!resetOpen) return;
     resetNoButton.current?.focus();
@@ -486,13 +481,6 @@ export default function PreferenceTuning() {
     window.addEventListener("keydown", escape);
     return () => window.removeEventListener("keydown", escape);
   }, [resetOpen]);
-  useEffect(() => {
-    if (!nirvanaNoticeOpen) return;
-    nirvanaNoticeClose.current?.focus();
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setNirvanaNoticeOpen(false); finalizeButton.current?.focus(); } };
-    window.addEventListener("keydown", escape);
-    return () => window.removeEventListener("keydown", escape);
-  }, [nirvanaNoticeOpen]);
   useEffect(() => {
     if (!instructionsOpen) return;
     instructionsClose.current?.focus();
@@ -509,7 +497,7 @@ export default function PreferenceTuning() {
   const slider = (key: keyof Settings, title: string, detail: string, min: number, max: number, step = .5, unit = "dB", color?: string) =>
     <label className="pt-control" key={key} title={detail}><span><strong>{title}</strong><small>{detail}</small></span><input type="range" min={min} max={max} step={step} value={settings[key]} style={color ? { accentColor: color } : undefined} onPointerDown={beginGesture} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={e => set(key, Number(e.target.value))} aria-label={title} /><output style={color ? { color } : undefined}>{settings[key] > 0 && unit === "dB" ? "+" : ""}{settings[key]} {unit}</output></label>;
   return <main className="pt-shell">
-    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ League home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ League</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Shootout</a><a href="/music-library">Music library</a><span aria-current="page">Preference Tuning</span></nav></header>
+    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ League home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ League</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Shootout</a><a href="/music-library">Listening pool</a><span aria-current="page">Preference Tuning</span></nav></header>
     <div className="pt-content">
       <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>
       <div className="pt-workbench">
@@ -538,12 +526,11 @@ export default function PreferenceTuning() {
       </div>
       <audio ref={media} crossOrigin="anonymous" preload="metadata" onLoadedMetadata={() => { setDuration(media.current?.duration || 0); if (media.current) media.current.volume = volume; }} onTimeUpdate={() => setPosition(media.current?.currentTime || 0)} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} onError={() => setMessage("This track could not be played in your browser. Try another format or file.")}/></section>
         <section className="pt-finalize" aria-label="Finalize preference curve">
-          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Finalize preference curve</h2><p>Generate 10, 15, and 20 band EQs with Standard and Precise fits, each tuned for a smoother shape or a closer match.</p></div><div className="pt-finalize-action">{!nirvanaRestricted && !measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!nirvanaRestricted && !measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Generating ${finalProgress} / 12…` : nirvanaRestricted ? "Read Nirvana export notice" : !measurement?.points?.length ? "Choose headphone to finalize" : finalIsCurrent ? "Regenerate 12 EQs" : "Finalize preference curve"}</button></div></div>
-          {nirvanaRestricted && <p className="pt-nirvana-notice" role="note"><strong>PEQdB Nirvana is unreleased.</strong> Comparison and listening are available here. Downloading this target or an EQ derived from it requires approval from PEQdB owner Saurav Chala (@Sharur). Export is unavailable until Sharur officially releases the target or an approval process is in place.</p>}
+          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Finalize preference curve</h2><p>Generate 10, 15, and 20 band EQs with Standard and Precise fits, each tuned for a smoother shape or a closer match.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Generating ${finalProgress} / 12…` : !measurement?.points?.length ? "Choose headphone to finalize" : finalIsCurrent ? "Regenerate 12 EQs" : "Finalize preference curve"}</button></div></div>
           <div className="pt-export-downloads" role="group" aria-label="Target curve downloads"><button type="button" onClick={() => void downloadText("original-target.csv", `frequency_hz,level_db\n${normalized.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Original Target</button><button type="button" onClick={() => void downloadText("preference-target.csv", `frequency_hz,level_db\n${preferenceCurve.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Preference Target</button></div>
           <p className="pt-export-disclosure">Downloads are recorded in private owner research with the selected target, adjusted curve, settings, and exported file. Music files and raw headphone measurements are not collected here.</p>
           {finalized && !finalIsCurrent && <p className="pt-finalize-hint">The curve or headphone changed. Finalize again for current settings.</p>}
-          {finalized && finalIsCurrent && !nirvanaRestricted && <>
+          {finalized && finalIsCurrent && <>
             <div className="pt-finalize-results-heading"><div><strong>12 EQ options for {measurement?.name}</strong><span>Choose a band count, then compare Standard / Precise and Smooth / Close.</span></div></div>
             <div className="pt-export-band-tabs" role="group" aria-label="EQ band count">{([10, 15, 20] as const).map(bands => <button type="button" key={bands} aria-pressed={exportBand === bands} onClick={() => setExportBand(bands)}><b>{bands} bands</b><small>4 options</small></button>)}</div>
             <div className="pt-finalize-grid">{finalized.variants.filter(variant => variant.bands === exportBand).map(variant => { const base = `preference-${variant.bands}band-${variant.method}-${variant.priority}`; return <div className="pt-finalize-option" key={base}><div className="pt-option-top"><strong>{variant.method === "standard" ? "Standard" : "Precise"}</strong><span className={`pt-priority pt-${variant.priority}`}>{variant.priority === "smooth" ? "Smooth" : "Close"}</span></div><p>Fit error <b>{variant.rms.toFixed(2)} dB</b><span aria-hidden="true">·</span> Preamp <b>{variant.preamp.toFixed(1)} dB</b></p><details><summary>View {variant.bands} filters</summary><div className="pt-filter-list">{variant.filters.map((filter, index) => <span key={index}>{index + 1}. {filter.hz} Hz · {filter.gain > 0 ? "+" : ""}{filter.gain.toFixed(2)} dB · Q {filter.q.toFixed(2)}</span>)}</div></details><div className="pt-export-actions" aria-label="Download EQ formats"><button type="button" onClick={() => void downloadText(`${base}.txt`, exportPeq(variant), "text/plain", variant)}>TXT</button><button type="button" onClick={() => void downloadText(`${base}-equalizerapo.txt`, exportEqualizerApo(variant), "text/plain", variant)}>Equalizer APO</button><button type="button" onClick={() => void downloadText(`${base}-easyeffects.txt`, exportEasyEffects(variant), "text/plain", variant)}>EasyEffects</button><button type="button" onClick={() => void downloadText(`${base}-qudelix5k.txt`, exportQudelixGuide(variant), "text/plain", variant)}>Qudelix 5K</button><button type="button" onClick={() => { saveLibraryEq({ id: crypto.randomUUID(), name: `${measurement?.device || measurement?.name} → ${target.name}`, source: `Preference Tuning · ${variant.bands} bands · ${variant.method} · ${variant.priority}`, filters: variant.filters, preamp: variant.preamp }); setMessage("EQ saved to Music Library in this browser."); }}>Save to Music Library</button></div></div>; })}</div>
@@ -561,12 +548,6 @@ export default function PreferenceTuning() {
         <div className="pt-reset-actions"><button ref={resetNoButton} type="button" onClick={closeReset}>No</button><button ref={resetYesButton} type="button" className="pt-reset-confirm" onClick={confirmReset}>Yes</button></div>
       </section>
     </div>}
-    {nirvanaNoticeOpen && <div className="pt-reset-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) { setNirvanaNoticeOpen(false); finalizeButton.current?.focus(); } }}>
-      <section className="pt-reset-dialog pt-nirvana-dialog" role="dialog" aria-modal="true" aria-labelledby="pt-nirvana-title" aria-describedby="pt-nirvana-description">
-        <span className="pt-reset-kicker">PEQDB NIRVANA · UNRELEASED</span><h2 id="pt-nirvana-title">Approval required before export</h2><p id="pt-nirvana-description">PEQdB owner Saurav Chala (@Sharur) must approve anyone who wants to download the Nirvana target or an EQ derived from it. This site has permission to use Nirvana for comparisons and listening only, so finalizing and downloads are unavailable here. This restriction will change once Sharur officially releases the target.</p>
-        <div className="pt-reset-actions"><button ref={nirvanaNoticeClose} type="button" onClick={() => { setNirvanaNoticeOpen(false); finalizeButton.current?.focus(); }}>Back to tuning</button></div>
-      </section>
-    </div>}
     {instructionsOpen && <div className="pt-instructions-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) { setInstructionsOpen(false); instructionsButton.current?.focus(); } }}>
       <section className="pt-instructions-dialog" role="dialog" aria-modal="true" aria-labelledby="pt-instructions-title" onKeyDown={event => { if (event.key === "Tab") { event.preventDefault(); instructionsClose.current?.focus(); } }}>
         <div className="pt-instructions-header"><div><span className="pt-step">PREFERENCE TUNING LAB</span><h2 id="pt-instructions-title">How to use the lab</h2><p>Four quick moves, with examples of what to click and what changes.</p></div><button ref={instructionsClose} type="button" aria-label="Close instructions" onClick={() => { setInstructionsOpen(false); instructionsButton.current?.focus(); }}><X size={18}/></button></div>
@@ -576,7 +557,7 @@ export default function PreferenceTuning() {
           <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>3</span> Listen to the difference</h3><p>Play a curated track or choose audio from your device. Turn <b>Bypass adjustments</b> on and off to compare your edited sound with the starting target. Keep the volume comfortable.</p><p><b>Example:</b> Listen to a vocal section, bypass your change, then turn it back on. Click the waveform to replay the same moment.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">PLAYBACK</span><div className="pt-preview-row"><span className="pt-preview-play"><Play size={12}/> Play</span><span className="pt-preview-pill">□ Bypass adjustments</span></div><div className="pt-preview-wave">▁▃▇▄▂▅▇▃▁▆▂▅▇▄▁</div><span className="pt-preview-label">COMPARE THE SAME MOMENT</span></div></section>
           <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>4</span> Finalize and download</h3><p>Press <b>Finalize preference curve</b> after choosing a headphone measurement. Compare the filter options, check fit error and preamp, then download the EQ format for your device.</p><p>You can also download the original target or your adjusted preference curve as data.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">EXPORT</span><span className="pt-preview-finalize">Finalize preference curve</span><div className="pt-preview-row"><span className="pt-preview-pill">10 bands</span><span className="pt-preview-pill">15 bands</span><span className="pt-preview-pill">20 bands</span></div><span className="pt-preview-label">CHECK FIT · DOWNLOAD EQ</span></div></section>
         </div>
-        <details className="pt-instructions-more"><summary>More controls and shortcuts</summary><div><p><b>Fine tuning:</b> Use Axis &amp; size for chart limits. Advanced frequency placement moves the BT, EGC, and TT points. The ±20 dB range expands the sliders. Tap colored frequency labels for sound examples.</p><p><b>Playback:</b> Space pauses or resumes when a form field is not focused. Shuffle folder picks another local track. Files from your device stay in the browser.</p><p><b>Export:</b> Standard spaces filters evenly; Precise fits more closely. Smooth favors a gentler curve; Close follows it more tightly. Leave device headroom when applying EQ. PEQdB Nirvana is for comparison and listening only until its owner approves downloads or releases it.</p></div></details>
+        <details className="pt-instructions-more"><summary>More controls and shortcuts</summary><div><p><b>Fine tuning:</b> Use Axis &amp; size for chart limits. Advanced frequency placement moves the BT, EGC, and TT points. The ±20 dB range expands the sliders. Tap colored frequency labels for sound examples.</p><p><b>Playback:</b> Space pauses or resumes when a form field is not focused. Shuffle folder picks another local track. Files from your device stay in the browser.</p><p><b>Export:</b> Standard spaces filters evenly; Precise fits more closely. Smooth favors a gentler curve; Close follows it more tightly. Leave device headroom when applying EQ.</p></div></details>
       </section>
     </div>}
   </main>;

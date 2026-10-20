@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb } from "@/db";
 import { feedbackSubmissions, rankedTrials, targets } from "@/db/schema";
@@ -9,6 +10,7 @@ const uuid = /^[a-f0-9-]{36}$/i;
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("feedback");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 8192);
@@ -24,6 +26,7 @@ export async function POST(request: Request) {
     if (!reasonTags.length && !otherReason) return Response.json({ error: "Choose a description or enter feedback before submitting." }, { status: 400 });
     const db = getDb();
     if (testMode !== "open") {
+      await ownership.requireTrial(comparisonId);
       const [trial] = await db.select().from(rankedTrials).where(eq(rankedTrials.id, comparisonId)).limit(1);
       if (!trial || trial.voterId !== participantId || trial.testMode !== testMode || trial.sideA !== targetAId || trial.sideB !== targetBId || Date.now() - trial.issuedAt > 7200000) {
         return Response.json({ error: "This feedback does not match an active trial." }, { status: 403 });
@@ -44,15 +47,16 @@ export async function POST(request: Request) {
     }
     const existing = await db.select({ id: feedbackSubmissions.id }).from(feedbackSubmissions).where(and(eq(feedbackSubmissions.participantId, participantId), eq(feedbackSubmissions.comparisonId, comparisonId), eq(feedbackSubmissions.side, reasonSide))).limit(1);
     if (existing.length) return Response.json({ error: "Feedback for this sample was already submitted." }, { status: 409 });
-    const shareSong = data.shareSong === true;
-    await db.insert(feedbackSubmissions).values({
-      id: crypto.randomUUID(), participantId, comparisonId, testMode, headphoneType: String(data.headphoneType), side: reasonSide,
+    const shareSong = data.shareSong === true && (testMode === "blind" || ownership.shareMusic);
+    const id = crypto.randomUUID();
+    await db.batch([db.insert(feedbackSubmissions).values({
+      id, participantId, comparisonId, testMode, headphoneType: String(data.headphoneType), side: reasonSide,
       targetAId, targetBId, reasonTags: JSON.stringify(reasonTags), otherReason: otherReason || null,
       songTitle: shareSong ? String(data.songTitle || "").trim().slice(0, 120) || null : null,
       songArtist: shareSong ? String(data.songArtist || "").trim().slice(0, 120) || null : null,
       songAlbum: shareSong ? String(data.songAlbum || "").trim().slice(0, 120) || null : null,
       createdAt: now, reviewStatus: "pending",
-    });
+    }), ownership.record(id)]);
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

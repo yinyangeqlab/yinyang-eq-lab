@@ -33,10 +33,10 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure } 
     selectedMeasurement: { points: [[20, 0], [20000, 0]] },
     allTargets: [{ id: "a", name: "Alpha", status: "approved", points: [[20, 1]] }, { id: "b", name: "Beta", status: "approved", points: [[20, 2]] }],
     requireMeasurement: () => true, touchBlind() {}, browserVoterId: () => "voter", openFeedbackId: () => "feedback",
-    VOTE_DATA_NOTICE_VERSION: "test", crypto: webcrypto,
+    voteDataAccepted:true, setReviewVoteData:value=>{state.reviewVoteData=value;}, submissionsEnabled: true, openFeedbackId: () => "local-open-id", VOTE_DATA_NOTICE_VERSION: "test", crypto: webcrypto,
     fitAutoEq: (_measurement, points) => ({ filters: [{ hz: 100, q: 1, gain: points[0][1] }], rms: 1, preamp: -1 }),
     musicPanelRef: { current: { heard: () => [6, 6], isHashing: () => false, finish: () => ({ heardA: 6, heardB: 6, intervals: [] }), stop() {} } },
-    localStorage: { setItem: (key, value) => stored.set(key, value) },
+    localStorage: { getItem: key => stored.get(key) ?? null, setItem: (key, value) => stored.set(key, value) },
     setTrials: update => { state.trials = typeof update === "function" ? update(state.trials) : update; },
     setRevealed: value => { state.revealed = value; }, setBusy: value => { state.busy = value; },
     setMessage: value => { state.message = value; }, setSessionFinished: value => { state.sessionFinished = value; },
@@ -108,3 +108,15 @@ await vm.runInContext("vote(0)", locked.context);
 assert.equal(locked.state.revealed, false, "Listening requirement remains enforced");
 assert.equal(locked.state.trials.length, 0);
 console.log("Blind completion verified: seventh-vote rate limit, failed writes, A/B/tie reveals, single saved answer, listening gate, and results on the next pairing.");
+
+const archived = harness();
+archived.stored.set("target-lab-trials", JSON.stringify([{id:"archived",recorded:false}]));
+vm.runInContext('saveTrial({id:"new",recorded:false})', archived.context);
+assert.deepEqual(JSON.parse(archived.stored.get("target-lab-trials")).map(row=>row.id), ["archived","new"]);
+console.log("New trial saves preserve archived browser records for restoration.");
+
+const practice = harness({mode:"open"}); practice.state.submissionsEnabled = false;
+await vm.runInContext('vote(0)',practice.context);
+assert.equal(practice.calls.length,0,"Paused local comparisons must not make server submissions");
+assert.equal(practice.state.trials.length,0,"Unagreed users cannot use local-only comparison");
+assert.equal(practice.state.reviewVoteData,true);

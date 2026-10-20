@@ -1,0 +1,660 @@
+{
+  "https://upload.wikimedia.org/wikipedia/commons/a/a0/Omri_Lahav_0_A.D._OST_-_Honor_Bound.flac": {
+    "integrated_lufs": -13.4,
+    "true_peak_dbtp": 0.1,
+    "lra": 13.2,
+    "crest_db": 16.627,
+    "sha256": "d12668a5c7ce03e4d5b11c049ce1d982a3ac97e4f5313af4182bccb741c9914d"
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/f/f8/Omri_Lahav_0_A.D._OST_-_Elusive_Predator.flac": {
+    "integrated_lufs": -11.6,
+    "true_peak_dbtp": 1.2,
+    "lra": 11.3,
+    "crest_db": 13.046,
+    "sha256": "96ce9b7a36cc7638515078c083d23354274b00291342256d10004cb57875698e"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/WTcMlFm4nsVYqeGyGJWuzS4rrxHRZP0kKDZNIqel.mp3": {
+    "integrated_lufs": -14.9,
+    "true_peak_dbtp": -3.9,
+    "lra": 14.5,
+    "crest_db": 12.984,
+    "sha256": "feaf45d70336b3436fd6d03ef79d3f8f7765962620a02c3e14048e5c43830e82"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/LjWLBPoGaKpiIYUkXjTgAv5chZzy6NcrufkfVtOB.mp3": {
+    "integrated_lufs": -14.4,
+    "true_peak_dbtp": 0.3,
+    "lra": 14.3,
+    "crest_db": 17.686,
+    "sha256": "74e27a95a5849101cec9bb70ed90ca33cf1dc6240fc2ae9877aa44ebaa4e1037"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/fiEQhwjzjZGabZ6NGHiGCc5pI8WxpTPKpKsJB1rZ.mp3": {
+    "integrated_lufs": -12.6,
+    "true_peak_dbtp": 0.6,
+    "lra": 11.1,
+    "crest_db": 17.257,
+    "sha256": "e656d40da96589995dc0b67a73991537131f20aabe71ab123ca01ae7c468ddfe"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/wHcBLDaS1aXfUiJyXz66xoY5LNnRUXyVSnaGCcaJ.mp3": {
+    "integrated_lufs": -14.7,
+    "true_peak_dbtp": -0.4,
+    "lra": 17.2,
+    "crest_db": 18.282,
+    "sha256": "8c09d0e497a320c2ca3a62d330878a2d89d81f9711e0d63dbe97adae76c8b9a2"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Oddio_Overplay/Advent_Chamber_Orchestra/Selections_from_the_2005-2006_Season/Advent_Chamber_Orchestra_-_04_-_Mozart_-_Eine_Kleine_Nachtmusik_allegro.mp3": {
+    "integrated_lufs": -20.0,
+    "true_peak_dbtp": -2.8,
+    "lra": 11.7,
+    "crest_db": 20.106,
+    "sha256": "a2188d5999028217eeeed38ea59e131ffd5aa15b26ae6ecc91659308eca757db"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/0U7BJxaClVGqFvmIwjwuafgbrtTZpdrokssRJiCB.mp3": {
+    "integrated_lufs": -15.9,
+    "true_peak_dbtp": -0.1,
+    "lra": 10.9,
+    "crest_db": 18.227,
+    "sha256": "c895603e0f32f7218d9f9afa0a917ff7ffcf92c3167eede828c45f659dc344b4"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/pEjHKs0zkFj1XhgDmUtayVwMDU7sdIEBUli8t1O8.mp3": {
+    "integrated_lufs": -8.4,
+    "true_peak_dbtp": 3.5,
+    "lra": 7.6,
+    "crest_db": 11.438,
+    "sha256": "e8274291df5bad99658f338835979bb3c2b8f42a087476ab25e7dbfda52ba655"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/45Tl14trLcx7VKeae0M5o1XIPzzZwLEWGMPxevS7.mp3": {
+    "integrated_lufs": -11.3,
+    "true_peak_dbtp": 1.0,
+    "lra": 8.9,
+    "crest_db": 13.964,
+    "sha256": "62a645677acacf3f83eb57e9abe9347a2bacee03886e3bd48ed0d55a391b6ed6"
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/2/2b/Omri_Lahav_0_A.D._OST_-_08Bit_Bonus_Track.flac": {
+    "integrated_lufs": -12.2,
+    "true_peak_dbtp": 0.1,
+    "lra": 6.1,
+    "crest_db": 14.197,
+    "sha256": "e4eb45283ad974865f54b7f8d70c7942df0026af391a287327fe71bff118916b"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/dfiTSMYyUBfzNlAIfFkixheZEBBiozA19IYODnHv.mp3": {
+    "integrated_lufs": -12.5,
+    "true_peak_dbtp": -1.2,
+    "lra": 2.4,
+    "crest_db": 14.654,
+    "sha256": "e9f7385ca28b26e2aafbd05d573b7444bc315b75bc27eee29512619aec6177ff"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/glHr5ieSYnmLSSe2ESQUeoqGQ5CzxDhD3QTSU6oS.mp3": {
+    "integrated_lufs": -10.8,
+    "true_peak_dbtp": 0.7,
+    "lra": 2.2,
+    "crest_db": 13.279,
+    "sha256": "833fcf4ae0875c1d9ab40edefa63bcdd19b342963401300558cec930e3781909"
+  },
+  "https://ericskiff.com/music/Resistor%20Anthems/03%20Chibi%20Ninja.mp3": {
+    "integrated_lufs": -14.7,
+    "true_peak_dbtp": -1.3,
+    "lra": 4.1,
+    "crest_db": 16.528,
+    "sha256": "053fa0e9dbb9a9ad8461b76738e021f459ca19f9271c788d5ae8e7d30380441d"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/c41gBeCJZzjSWdXDxfgOT7cA7UnT1IfHPRXAnjRz.mp3": {
+    "integrated_lufs": -13.1,
+    "true_peak_dbtp": -2.8,
+    "lra": 2.9,
+    "crest_db": 12.551,
+    "sha256": "75a0dfba02144f32fe90e9b49e62957e0c14d5d8cb243ecbcb5d3cf6b85dcc40"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/Cullah/Cullahsus/Cullah_-_01_-_Moonlove_Funk.mp3": {
+    "integrated_lufs": -11.0,
+    "true_peak_dbtp": -0.4,
+    "lra": 4.2,
+    "crest_db": 13.19,
+    "sha256": "8fb7c202ea084ea7b6ac647f7bfb721070bbab7833328f3bd223593f8e5d6c43"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/zQZU5G6G55093g2hXlVJC2y05AfR61F172Rf51DM.mp3": {
+    "integrated_lufs": -11.8,
+    "true_peak_dbtp": -0.9,
+    "lra": 1.5,
+    "crest_db": 12.357,
+    "sha256": "83309bb149d5df08443ea3f9def1724f3600e0d1d3667762a5189c45310ed324"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/6b5a3p5nBPVG4MmLaQzMxqRTPZY0nVzVh3SE0mtr.mp3": {
+    "integrated_lufs": -10.3,
+    "true_peak_dbtp": 0.9,
+    "lra": 3.4,
+    "crest_db": 13.264,
+    "sha256": "32066025785d61200fdd3433aade4a10a2bd98cdc8259e8a1257336afcbbc4f5"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Computer_Music_All-stars/May_the_Chords_Be_with_You/Computer_Music_All-stars_-_May_the_Chords_Be_with_You.mp3": {
+    "integrated_lufs": -7.6,
+    "true_peak_dbtp": 1.6,
+    "lra": 3.1,
+    "crest_db": 11.925,
+    "sha256": "57ec5fdd4d82e9e662e44232702dd3e4e2cc4961d5cfe2f3497e8a1f08a54490"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/FBZUGhWOnWChmLQdrtB9OdkoxN4kMHtSwDjhiU5U.mp3": {
+    "integrated_lufs": -15.3,
+    "true_peak_dbtp": -4.6,
+    "lra": 3.8,
+    "crest_db": 11.567,
+    "sha256": "a56d7b2502a74cf3d164c64c20850fc70d39f09c133f445ec8d5ef08de5781c4"
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/e/e1/Omri_Lahav_0_A.D._OST_-_Cisalpine_Gaul.flac": {
+    "integrated_lufs": -15.6,
+    "true_peak_dbtp": -0.4,
+    "lra": 10.8,
+    "crest_db": 18.256,
+    "sha256": "b4fdcd7c41c18ce7b4d876cb88e1fd59d66a0ae34bd1cbb6e4e856281b70cbbc"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/18svBPBEI0EuKyVnFamLjMmvFcTJdGvA1NmghGdZ.mp3": {
+    "integrated_lufs": -15.0,
+    "true_peak_dbtp": -0.7,
+    "lra": 14.1,
+    "crest_db": 18.428,
+    "sha256": "351f5b61a2968a3d79d79bec991b627baf3d83a1329ea1e20d9de72dc5ec6f31"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/mBpYkgPfOsK1QBkfSVJsjO09oL2sbwU83mVXyURu.mp3": {
+    "integrated_lufs": -12.8,
+    "true_peak_dbtp": -0.8,
+    "lra": 1.7,
+    "crest_db": 14.293,
+    "sha256": "b013321cfc14d603aabd4fdf2df93fa271fe7b33d38d997086beb0a45ca42dbc"
+  },
+  "https://ericskiff.com/music/Resistor%20Anthems/01%20A%20Night%20Of%20Dizzy%20Spells.mp3": {
+    "integrated_lufs": -12.2,
+    "true_peak_dbtp": 0.5,
+    "lra": 2.1,
+    "crest_db": 15.398,
+    "sha256": "66aaae6ecf59296bfe0833dfcf826fc10c51bcbda1867d79cafec2093000d105"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/pvOs2YmpMqDfDeNkCfQp86tY7e6El5JXLM0sOA6t.mp3": {
+    "integrated_lufs": -12.0,
+    "true_peak_dbtp": 1.0,
+    "lra": 5.1,
+    "crest_db": 15.456,
+    "sha256": "f57e655fb82b1152d563da97634490ca645a1f0f7924bbe45d27e476c84fda9c"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/Wl5QbejynY4iSJIA8T6nfWAkNIebWqwPh0lFcpZU.mp3": {
+    "integrated_lufs": -14.0,
+    "true_peak_dbtp": -0.7,
+    "lra": 6.2,
+    "crest_db": 15.35,
+    "sha256": "81806f20f485a927f99b4c5733c3a5c353f27d84cce7cba7891ece6080fb6d77"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/pFA1FWPBIFnOj4twdOFUvK9jyOREI6JBgT3x1Lm1.mp3": {
+    "integrated_lufs": -10.1,
+    "true_peak_dbtp": -0.0,
+    "lra": 5.0,
+    "crest_db": 12.535,
+    "sha256": "499fb806cd6c1e6fa4ed3339df51625f7af4520dbf8e95d7f47b714a869960e1"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/OwbKrFsXBIBOKbk7XpZDDqL1FTsjaxOlNrZpfQTB.mp3": {
+    "integrated_lufs": -10.1,
+    "true_peak_dbtp": 1.3,
+    "lra": 1.9,
+    "crest_db": 13.196,
+    "sha256": "9dbc33a601e7d1c2129b8a477dc55c4d59e24425d7274db1967e8102446f65a9"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Airglow/Memory_Bank/Airglow_-_01_-_Memory_Bank.mp3": {
+    "integrated_lufs": -13.3,
+    "true_peak_dbtp": -2.1,
+    "lra": 2.2,
+    "crest_db": 13.336,
+    "sha256": "05304f63d740b2ba4d220e28b400bac097b1968d4d541eb7780e78718db3f572"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Steve_Combs/Steve_Combs/Steve_Combs_-_15_-_New_Rock.mp3": {
+    "integrated_lufs": -11.8,
+    "true_peak_dbtp": 0.2,
+    "lra": 4.4,
+    "crest_db": 13.845,
+    "sha256": "c9d1335ef54ff3ab79f0c191388ddf54bb107821b00a43ce9cd70d130ddde854"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/uEoptgkBrtSfq5lt5npQd6Jydqmi6oEN0ZZne1oC.mp3": {
+    "integrated_lufs": -9.3,
+    "true_peak_dbtp": 1.2,
+    "lra": 5.4,
+    "crest_db": 12.285,
+    "sha256": "9e4106131dabaa55fa3e4917b6318db6724c130d4a8b97a6048ea1bb445eb1a4"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/lKe8HZ0FdwhvzzOA9qkaUSMgzVIjTKFLpjtqGrjk.mp3": {
+    "integrated_lufs": -9.2,
+    "true_peak_dbtp": 1.6,
+    "lra": 5.6,
+    "crest_db": 12.105,
+    "sha256": "5a5378c7454b54d6b43e88ae5e3e91feb217e1a3a86360cbb7e47f494ec2f25c"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/rRRZr1OwRBnpuVsCxdthHddc70r0YSblgNNc3Huh.mp3": {
+    "integrated_lufs": -9.3,
+    "true_peak_dbtp": 1.3,
+    "lra": 3.6,
+    "crest_db": 12.461,
+    "sha256": "556d090ba99ac62149756e084d9c7f1ddf0bfe0d19300b950fef2c6f8e23552d"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/s7pQEDCH62UTJ6UxPnobhlJifntHtjEm7SzRdaI2.mp3": {
+    "integrated_lufs": -9.4,
+    "true_peak_dbtp": 1.2,
+    "lra": 3.6,
+    "crest_db": 12.502,
+    "sha256": "d46bbce4a0de6fea9c94de8b56a5033a44539914c20d7bdf860b8b6c6d787ade"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/syvXFtw7D1EVJCyB4bVY7M9cr7uAN8GK4DXSeLty.mp3": {
+    "integrated_lufs": -9.3,
+    "true_peak_dbtp": 1.2,
+    "lra": 5.8,
+    "crest_db": 12.787,
+    "sha256": "445ec3183ccdc364777448c5fa00bcd4730e7db2e7d63dddfb0936c23207fab3"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/B5pSC91iNdFIeSxVxqVytTLW0kJGmmRodRHcEoD5.mp3": {
+    "integrated_lufs": -9.6,
+    "true_peak_dbtp": 1.4,
+    "lra": 4.8,
+    "crest_db": 12.221,
+    "sha256": "5940eaaab87ea04ae2f6db969051e4943e25fed346fda0ff9bfda5fbc5a3db16"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/8gTrj8UZ9XwnXBArqXUMGjcaQqSAr2ca17hU7nhp.mp3": {
+    "integrated_lufs": -7.9,
+    "true_peak_dbtp": 0.4,
+    "lra": 1.7,
+    "crest_db": 9.826,
+    "sha256": "e168c0732cd4be8986640250adf4a8e65070449fe90c951ac3d99dcdf026e6e8"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/vw48o8LHyuEpFjkiFAgmKwOQzpAovxGMVGLLUJYj.mp3": {
+    "integrated_lufs": -10.6,
+    "true_peak_dbtp": -1.6,
+    "lra": 10.5,
+    "crest_db": 13.007,
+    "sha256": "b929f726fff999203f0caf81ef1222aaf3b23a943aac536a2888aac96f13dab7"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Oddio_Overplay/Advent_Chamber_Orchestra/Selections_from_the_December_2006_Concert/Advent_Chamber_Orchestra_-_11_-_Mozart_-_Laudate_Dominum.mp3": {
+    "integrated_lufs": -21.6,
+    "true_peak_dbtp": -3.0,
+    "lra": 14.0,
+    "crest_db": 22.162,
+    "sha256": "c59613c6681b876b5791fab5a06785951848f0de6d1153ababd7f373ff352f4c"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/X72P23B7bX5yttSo9KH1AP9MHPp4xJ3xFhxe2ALq.mp3": {
+    "integrated_lufs": -7.7,
+    "true_peak_dbtp": 1.3,
+    "lra": 2.9,
+    "crest_db": 10.412,
+    "sha256": "17819a497828105b74b2d73d88694a88c6b90781bb16a748fdcf13ad52567648"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/u0YSinhACYlke7i4OEp51NoxFnl0OpslUHb8284n.mp3": {
+    "integrated_lufs": -11.2,
+    "true_peak_dbtp": 0.4,
+    "lra": 3.1,
+    "crest_db": 13.449,
+    "sha256": "481b6b4d5b19e3f25f22033e9a1835bd2f5a820f27b2db56da0b75d8ec0590d4"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/vySQtyIjtQjypUXQdUY0EkHDf4pwdp1wdLp5yoJS.mp3": {
+    "integrated_lufs": -13.6,
+    "true_peak_dbtp": 0.1,
+    "lra": 5.8,
+    "crest_db": 15.301,
+    "sha256": "2fc33b27b9963608a2bad2da111d2a0604ed46c7cd2b84397ba6bdb87e8d98c7"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/kQ3qDA0qADr19BJzyl5wMMrdy51wiBL7U0HIQtW6.mp3": {
+    "integrated_lufs": -16.9,
+    "true_peak_dbtp": 0.1,
+    "lra": 1.5,
+    "crest_db": 17.969,
+    "sha256": "18515a5ebe7655d921675d1a838afc20568099706a1b3b736bf81e56056cd1f2"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/jdM1QIY8TIhsh4lVyzT5sp00BnDG5alcdNb4pqKI.mp3": {
+    "integrated_lufs": -12.5,
+    "true_peak_dbtp": 0.2,
+    "lra": 4.1,
+    "crest_db": 14.551,
+    "sha256": "65bbdc7bc6fb5fd65e0b0e1c37711104273b25aca0b27d23852a243ec817bc09"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/oU22bnSqimStpOaGrtFWDJ3C78zHgbs5Qnak3b0R.mp3": {
+    "integrated_lufs": -16.0,
+    "true_peak_dbtp": -1.4,
+    "lra": 4.3,
+    "crest_db": 16.936,
+    "sha256": "a2e43294365bf32216a6cec1da4c50e5321e16e479650dc96011422ce9280f49"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/DHY2bgLp3F5C6w0gkwWOXfEVo1P0B7fmsdf6eUW9.mp3": {
+    "integrated_lufs": -9.6,
+    "true_peak_dbtp": 1.5,
+    "lra": 10.7,
+    "crest_db": 12.864,
+    "sha256": "f43aee72da27b32401c7b4a29662ceb042832c9fc730b0ae2a5720dd1b38a211"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/sLIY0E7BVl10XpBcMsT8RZOYbGX9z8BCgahnCH9E.mp3": {
+    "integrated_lufs": -9.4,
+    "true_peak_dbtp": 1.0,
+    "lra": 8.7,
+    "crest_db": 12.168,
+    "sha256": "932d4fc09d3b028032026fb0089e54668fd2939777f0c43c45291e09ef75b0aa"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/jxKbScPtDYN8zmKhefOD3mtIwoQ9e08HGdISKWZf.mp3": {
+    "integrated_lufs": -15.0,
+    "true_peak_dbtp": -0.7,
+    "lra": 3.9,
+    "crest_db": 16.314,
+    "sha256": "f4e702aaf150dd072594a2ea99725bd456716a778e7430699fee593a768d2de7"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/NhsLDCAWfNguzJXyFUOZWvatPmX1klP59Yw7V7tm.mp3": {
+    "integrated_lufs": -14.7,
+    "true_peak_dbtp": -0.8,
+    "lra": 3.2,
+    "crest_db": 16.42,
+    "sha256": "a7ee9a14bfba8776f18f19c0e396048c044c0ae5ba67434a50be11702ed86a4d"
+  },
+  "https://cdn.freesound.org/previews/177/177304_1441734-hq.mp3": {
+    "integrated_lufs": -8.0,
+    "true_peak_dbtp": 1.4,
+    "lra": 10.9,
+    "crest_db": 13.471,
+    "sha256": "42452cc953661fbbd27f61549b4778cb64b6fe2318a336867e9d37db0042223a"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Juanitos/Soul_Africa/Juanitos_-_01_-_Soul_Africa.mp3": {
+    "integrated_lufs": -5.8,
+    "true_peak_dbtp": 2.4,
+    "lra": 1.3,
+    "crest_db": 10.481,
+    "sha256": "30e655e248bf5f01819f0865fb4d0f57c3ff8ab41a8906cdc0e58bfcf9c13d41"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/WFMU/Juanitos/Soul_Africa/Juanitos_-_03_-_Black_Samba.mp3": {
+    "integrated_lufs": -6.9,
+    "true_peak_dbtp": 1.4,
+    "lra": 1.4,
+    "crest_db": 11.193,
+    "sha256": "5935c09e07484ac00e47eca1479c5d8c6b34c3f9bdb4b11bf32780e31cd80c78"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Decktonic/Stars/Decktonic_-_02_-_B_J.mp3": {
+    "integrated_lufs": -8.9,
+    "true_peak_dbtp": 0.9,
+    "lra": 1.6,
+    "crest_db": 11.544,
+    "sha256": "dde51ebfd627618eedaf564582790707bfc006cf1f6f930211ed519c0fd8e863"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Decktonic/Stars/Decktonic_-_07_-_Z-Saber_feat_Jake_Allison.mp3": {
+    "integrated_lufs": -3.9,
+    "true_peak_dbtp": 1.5,
+    "lra": 3.7,
+    "crest_db": 6.66,
+    "sha256": "5011eef7a1127e2b7bf4a6aadf1c887c6f24849ec2a469df1841c713bb15b90e"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/dwyip0nc9AKy9LCYwi7Jur29y9Oqt2XAcpXyT1Rk.mp3": {
+    "integrated_lufs": -16.8,
+    "true_peak_dbtp": -0.0,
+    "lra": 5.9,
+    "crest_db": 20.859,
+    "sha256": "d8e4e4b40ddf7c91af4daf6831895932a06a7f8197c927b550b6730764f2b444"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/9AezUI2VAW0uduoEyEjNKdBTUViSxucd1XqOC7mK.mp3": {
+    "integrated_lufs": -15.7,
+    "true_peak_dbtp": -0.2,
+    "lra": 4.4,
+    "crest_db": 18.269,
+    "sha256": "881297b5f93ddd30461cd2657c08e7f947fcedb29d12b1571e9114d6aa0e4eb5"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Quantum_Jazz/End_of_Line/Quantum_Jazz_-_05_-_Passing_Fields.mp3": {
+    "integrated_lufs": -19.6,
+    "true_peak_dbtp": 0.2,
+    "lra": 14.8,
+    "crest_db": 22.187,
+    "sha256": "cdb4ac6a417e15c84ee88c1524648995974ae23fade2c61a6e523663f3c10db5"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/LNg2nnbIEJMtceZNFslyk8EHO6iDL4Nb0ZeJrOia.mp3": {
+    "integrated_lufs": -13.9,
+    "true_peak_dbtp": 0.1,
+    "lra": 4.9,
+    "crest_db": 15.39,
+    "sha256": "18bc9d7a751b5a9515f6333193ab9e8e7d18a4451ac9db04bc37307044ee83fd"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/tSYvfW5Ni7G8j52dyGl6Qset2ZvRLlBR81YrGNCT.mp3": {
+    "integrated_lufs": -8.8,
+    "true_peak_dbtp": -0.1,
+    "lra": 3.1,
+    "crest_db": 10.958,
+    "sha256": "ca9d6e956fb85874b6bc5b8789ffd189112d5c520445376c535ad6e231da3eb3"
+  },
+  "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/ap5cNcGWD3EqAnK36cko40zxVbqsGq9vXshce34c.mp3": {
+    "integrated_lufs": -14.0,
+    "true_peak_dbtp": -1.5,
+    "lra": 7.6,
+    "crest_db": 15.4,
+    "sha256": "70cd72b76e53e1bd590e8aae88782b5293b8af21ee828d7305964b0319410790"
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/d/d2/Mozart_-_Le_nozze_di_Figaro%2C_K492_-_Overture_%28Musopen_Symphony%29.flac": {
+    "integrated_lufs": -16.0,
+    "true_peak_dbtp": -1.0,
+    "lra": 14.4,
+    "crest_db": 18.97,
+    "sha256": "484cb77a1a5ba764c17128e385058baefc0cf2076c542bc07cb91b05450d121d"
+  },
+  "https://upload.wikimedia.org/wikipedia/commons/3/3e/Mozart_-_Symphony_No._40_in_G_minor%2C_K550_-_IV._Finale._Allegro_assai_%28Musopen_Symphony%29.flac": {
+    "integrated_lufs": -17.0,
+    "true_peak_dbtp": -1.5,
+    "lra": 13.8,
+    "crest_db": 19.61,
+    "sha256": "41c293db57f1a9f62836d87c6eddf04854057a4ba1b467f8e91b50d7cdcdf1d8"
+  },
+  "/music/shantae/710316358.m4a": {
+    "integrated_lufs": -6.2,
+    "true_peak_dbtp": 1.5,
+    "lra": 1.7,
+    "crest_db": 9.756,
+    "sha256": "7e934fcdc86dca465449ec86e6c6754c1c348e6e09bfcabc1955d572508fc6b6"
+  },
+  "/music/shantae/621974989.flac": {
+    "integrated_lufs": -10.6,
+    "true_peak_dbtp": 1.0,
+    "lra": 4.6,
+    "crest_db": 11.373,
+    "sha256": "dd5abb129675827f12c7e4ade2f70dcf5e7330d8d99cdecdd7a815be7829f688"
+  },
+  "/music/shantae/2934479088.flac": {
+    "integrated_lufs": -11.1,
+    "true_peak_dbtp": -0.7,
+    "lra": 6.1,
+    "crest_db": 13.095,
+    "sha256": "ae4502ebb692d08de06276bd04a463caee19e133a2379708c9503a008f7c80e0"
+  },
+  "/music/shantae/37504200.flac": {
+    "integrated_lufs": -7.6,
+    "true_peak_dbtp": -0.5,
+    "lra": 3.7,
+    "crest_db": 10.131,
+    "sha256": "6708cb9bbceea7d26d04ba6af0773530dbea19085894e9b4f608f8a66a98e36c"
+  },
+  "/music/shantae/2088258421.m4a": {
+    "integrated_lufs": -5.5,
+    "true_peak_dbtp": 2.4,
+    "lra": 3.0,
+    "crest_db": 10.756,
+    "sha256": "35c15c43cb2ff27502810e4f819f4c13d8febdd4fc151fb1002fe6b9a1150150"
+  },
+  "/music/shantae/1551538353.flac": {
+    "integrated_lufs": -7.3,
+    "true_peak_dbtp": 1.3,
+    "lra": 6.5,
+    "crest_db": 9.797,
+    "sha256": "455f8afb51597d855a6ce290cac8fe832fd5d6de9199912d97a4d15837a214ce"
+  },
+  "/music/shantae/1495918473.flac": {
+    "integrated_lufs": -3.9,
+    "true_peak_dbtp": -0.1,
+    "lra": 1.4,
+    "crest_db": 6.465,
+    "sha256": "2676c8115d270be456ab11189f2bb3bcea230b0d06cdfba418990f551a0ff4ad"
+  },
+  "/music/shantae/1603113498.flac": {
+    "integrated_lufs": -8.0,
+    "true_peak_dbtp": -0.1,
+    "lra": 1.5,
+    "crest_db": 9.964,
+    "sha256": "67e337067a2922463a715a746edb849fda56d3a9d84b44cd7e0885aa7b67e11c"
+  },
+  "/music/shantae/1711665663.flac": {
+    "integrated_lufs": -11.1,
+    "true_peak_dbtp": 0.0,
+    "lra": 8.2,
+    "crest_db": 14.334,
+    "sha256": "a83913fe83b0838d65752a82c48826852ad0ff845111edcb64e44793a1244e61"
+  },
+  "/music/shantae/2985610583.flac": {
+    "integrated_lufs": -6.3,
+    "true_peak_dbtp": 1.4,
+    "lra": 5.9,
+    "crest_db": 9.032,
+    "sha256": "a18b8423c19fd74882d7af22b0224e58bde1b2d21092361a6ebd707ea2dc992e"
+  },
+  "/music/shantae/1283568002.flac": {
+    "integrated_lufs": -9.7,
+    "true_peak_dbtp": 1.2,
+    "lra": 2.9,
+    "crest_db": 12.172,
+    "sha256": "7c3fb0b4c06c72f4335d6113f6bb845719ded1bf9bff9855254812a63bea8738"
+  },
+  "/music/shantae/2316484827.flac": {
+    "integrated_lufs": -6.7,
+    "true_peak_dbtp": -0.1,
+    "lra": 2.8,
+    "crest_db": 9.34,
+    "sha256": "5b84182078f7e8fc0bf7cefd3e98790b304cbfa29d521c18fc54e8200c6dc27b"
+  },
+  "/music/shantae/2209076488.m4a": {
+    "integrated_lufs": -6.9,
+    "true_peak_dbtp": 2.0,
+    "lra": 3.0,
+    "crest_db": 11.178,
+    "sha256": "d36b43aa8e26c36a2c2b8cc947a5fc3d0649171d059f734052f207ba72c05f33"
+  },
+  "/music/shantae/309923247.m4a": {
+    "integrated_lufs": -7.1,
+    "true_peak_dbtp": 1.6,
+    "lra": 2.2,
+    "crest_db": 11.205,
+    "sha256": "59584366d597f500095d0c8a059ba2483f8004fa4d556fc27d0958ca301a6ad0"
+  },
+  "/music/shantae/1626493422.flac": {
+    "integrated_lufs": -6.4,
+    "true_peak_dbtp": 1.0,
+    "lra": 4.1,
+    "crest_db": 8.906,
+    "sha256": "528d51b505bcb0db3f000d76629b6d590efca490b781b4111c90f6a1ebff7ae1"
+  },
+  "/music/shantae/1444465789.flac": {
+    "integrated_lufs": -5.9,
+    "true_peak_dbtp": 1.5,
+    "lra": 4.2,
+    "crest_db": 7.636,
+    "sha256": "d489adc4250793e84c0f26b767a0986c4a511a922af1d9a61c08d5d5476b8905"
+  },
+  "/music/shantae/2653053116.flac": {
+    "integrated_lufs": -9.1,
+    "true_peak_dbtp": 0.3,
+    "lra": 5.3,
+    "crest_db": 10.742,
+    "sha256": "debdd83f484c09a74e6e744dadb4db47acb97ccc57acafe874e1c16b812bfb36"
+  },
+  "/music/shantae/283037815.m4a": {
+    "integrated_lufs": -6.0,
+    "true_peak_dbtp": 3.2,
+    "lra": 2.6,
+    "crest_db": 11.121,
+    "sha256": "876b5a5bb72878fe1a6f0fa89cc0ccf0c325c2a3212957a1fdf7b4b90ed7c33a"
+  },
+  "/music/shantae/1948514459.flac": {
+    "integrated_lufs": -9.8,
+    "true_peak_dbtp": 0.3,
+    "lra": 7.1,
+    "crest_db": 12.658,
+    "sha256": "4f9458b59fb6f5a4491235c27947186f04f3348b86c7683ceba4093880c3fd4c"
+  },
+  "/music/shantae/1746654300.flac": {
+    "integrated_lufs": -11.1,
+    "true_peak_dbtp": -0.4,
+    "lra": 8.2,
+    "crest_db": 11.453,
+    "sha256": "8b1f4d8b446e31831eb3652af093298027e7245f3f11a7702187b0cced463126"
+  },
+  "/music/shantae/3746332157.m4a": {
+    "integrated_lufs": -7.4,
+    "true_peak_dbtp": 2.2,
+    "lra": 3.6,
+    "crest_db": 12.45,
+    "sha256": "4800f65b89cb0c703a1a4a6da42573a8162fb2ddcd2da0079d1caaa2aa04c886"
+  },
+  "/music/shantae/3734653195.flac": {
+    "integrated_lufs": -7.6,
+    "true_peak_dbtp": 1.3,
+    "lra": 5.1,
+    "crest_db": 9.255,
+    "sha256": "c53389a61b198ca335d2ef024be6d0693654ad964744ff61cd586a03ae36aec5"
+  },
+  "/music/shantae/877289860.flac": {
+    "integrated_lufs": -11.7,
+    "true_peak_dbtp": -0.1,
+    "lra": 12.4,
+    "crest_db": 15.683,
+    "sha256": "4b05e027f961cefea9bfcd026527bbb28eb995fdbe53e631403731d940f652ef"
+  },
+  "/music/shantae/1338319245.flac": {
+    "integrated_lufs": -2.6,
+    "true_peak_dbtp": 1.2,
+    "lra": 1.2,
+    "crest_db": 5.3,
+    "sha256": "5b984127b969c7890d1b0a9c4b4ce2f23cf553bd772bc71f775e80444a3f3dba"
+  },
+  "/music/shantae/4223890606.flac": {
+    "integrated_lufs": -7.5,
+    "true_peak_dbtp": 1.0,
+    "lra": 1.9,
+    "crest_db": 9.225,
+    "sha256": "61f22cf180d63c14837dff50908d4cee4888b63d343e8fc7260a68ecf091d54d"
+  },
+  "/music/shantae/1398160173.flac": {
+    "integrated_lufs": -7.4,
+    "true_peak_dbtp": 0.5,
+    "lra": 2.7,
+    "crest_db": 8.33,
+    "sha256": "cd7d34d3de1a962e33a09c609d2cd7a7a399902f32d8887b8381da1ac4755cce"
+  },
+  "/music/shantae/4021865688.flac": {
+    "integrated_lufs": -12.8,
+    "true_peak_dbtp": 0.1,
+    "lra": 9.4,
+    "crest_db": 14.91,
+    "sha256": "cb2fbf868d51436a439e17dc568b55d0fc6301a1bc26dfce156e2152ff44b299"
+  },
+  "/music/shantae/2475604501.flac": {
+    "integrated_lufs": -10.5,
+    "true_peak_dbtp": -0.0,
+    "lra": 6.2,
+    "crest_db": 12.646,
+    "sha256": "e140ef5898de345b21ddea68def41ac5d5ced08d3251f78443c5eaa500a24c1a"
+  },
+  "/music/shantae/2120905335.flac": {
+    "integrated_lufs": -8.0,
+    "true_peak_dbtp": 0.7,
+    "lra": 12.1,
+    "crest_db": 12.669,
+    "sha256": "dab46234996ab246d88f3c21f0d88c9f3283840e6f70473a53eca0471c5f18a7"
+  },
+  "/music/shantae/864237473.flac": {
+    "integrated_lufs": -8.5,
+    "true_peak_dbtp": 0.2,
+    "lra": 16.0,
+    "crest_db": 15.704,
+    "sha256": "f94803fcb8d3c761be53900e85d71f0ef4f6bb9ecc75eb87ca24461cdead7101"
+  },
+  "/music/shantae/1437399930.flac": {
+    "integrated_lufs": -10.4,
+    "true_peak_dbtp": -0.0,
+    "lra": 10.4,
+    "crest_db": 16.731,
+    "sha256": "24f7513528283234b47f64914c2c01011fb7164d756ac371bf9b6670c954eb40"
+  },
+  "/music/shantae/891985031.flac": {
+    "integrated_lufs": -8.1,
+    "true_peak_dbtp": 0.8,
+    "lra": 9.0,
+    "crest_db": 12.422,
+    "sha256": "e63cff8e470b71bca7797c336cc8ce12f35225705a74e97f83b0e5cae23717b1"
+  }
+}

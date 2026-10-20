@@ -1,3 +1,4 @@
+import localWaveforms from "@/data/listening-pool-waveforms.json";
 import encodedWaveforms from "@/data/music-waveforms.json";
 import type { TrackAnalysis } from "@/lib/loudness";
 
@@ -7,7 +8,7 @@ const cache = new Map<string, Waveform>();
 export function curatedWaveform(fileUrl: string): Waveform | null {
   const cached = cache.get(fileUrl);
   if (cached) return cached;
-  const encoded = (encodedWaveforms as Record<string, string>)[fileUrl];
+  const encoded = (encodedWaveforms as Record<string, string>)[fileUrl] ?? (localWaveforms as Record<string,string>)[fileUrl.replace("/api/listening-audio/", "/__local-listening-pool/")];
   if (!encoded) return null;
   const bytes = atob(encoded);
   const bins = bytes.length / 4;

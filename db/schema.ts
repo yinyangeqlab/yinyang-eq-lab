@@ -1,4 +1,5 @@
-import { uniqueIndex, index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { check, uniqueIndex, index, integer, primaryKey, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const targets = sqliteTable("targets", {
   id: text("id").primaryKey(),
@@ -214,3 +215,79 @@ export const privateTesterInvites = sqliteTable("private_tester_invites", {
   sessionExpiresAt: integer("session_expires_at"),
   revokedAt: integer("revoked_at"),
 }, table => [index("private_tester_invites_session_idx").on(table.sessionHash)]);
+
+// Append-only review history. Original submissions and one-use trial IDs remain intact.
+export const moderationEvents = sqliteTable("moderation_events", {
+  sequence: integer("sequence").primaryKey({ autoIncrement: true }),
+  recordKind: text("record_kind").notNull(),
+  recordId: text("record_id").notNull(),
+  action: text("action").notNull(),
+  reason: text("reason").notNull(),
+  actor: text("actor").notNull(),
+  createdAt: integer("created_at").notNull(),
+}, table => [index("moderation_record_idx").on(table.recordKind, table.recordId, table.sequence)]);
+
+export const privacyAccounts = sqliteTable("privacy_accounts", {
+  subjectId: text("subject_id").primaryKey(),
+  submissionsEnabled: integer("submissions_enabled").notNull().default(0),
+  shareMusic: integer("share_music").notNull().default(0),
+  agreementVersion: text("agreement_version"),
+  agreedAt: integer("agreed_at"),
+  withdrawnAt: integer("withdrawn_at"),
+});
+export const privacySessions = sqliteTable("privacy_sessions", {
+  tokenHash: text("token_hash").primaryKey(),
+  subjectId: text("subject_id").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+});
+export const submissionOwners = sqliteTable("submission_owners", {
+  recordKind: text("record_kind").notNull(), recordId: text("record_id").notNull(),
+  subjectId: text("subject_id").notNull(), sessionHash: text("session_hash").notNull(),
+}, table => [primaryKey({ columns: [table.recordKind, table.recordId] }), index("submission_owner_subject_idx").on(table.subjectId)]);
+export const privacyErasureScope = sqliteTable("privacy_erasure_scope", {
+  recordKind: text("record_kind").notNull(), recordId: text("record_id").notNull(),
+}, table => [primaryKey({ columns: [table.recordKind, table.recordId] })]);
+
+// Admin-only date/category totals; never store identity or erased-record linkage.
+export const deletionDailyTotals = sqliteTable("deletion_daily_totals", {
+  day: text("day").notNull(), recordKind: text("record_kind").notNull(),
+  deletedCount: integer("deleted_count").notNull(),
+}, table => [primaryKey({ columns: [table.day, table.recordKind] }),
+  check("deletion_totals_positive", sql`${table.deletedCount} > 0`),
+  check("deletion_totals_kind", sql`${table.recordKind} IN ('vote','open','run','feedback','measurement','export','target','suggestion','trial','music','measurement_file_chunk','admin_note')`),
+]);
+
+// No participant IDs, vote IDs, fingerprints, per-user hashes or source membership lists.
+export const statisticsArchive = sqliteTable("statistics_archive", {
+  year: integer("year").primaryKey().notNull(), methodology: text("methodology").notNull(), payload: text("payload").notNull(),
+}, table=>[
+  check("archive_supported_year",sql`${table.year} IN (2026,2027,2028)`),
+  check("archive_method",sql`${table.methodology}='bounded-geometric-v1'`),
+  check("archive_payload_json",sql`json_valid(${table.payload})`),
+]);
+export const archiveSourceRevision = sqliteTable("archive_source_revision", {
+  id: integer("id").primaryKey().notNull(), revision: integer("revision").notNull(),
+}, table=>[check("archive_revision_singleton",sql`${table.id}=1`)]);
+
+export const archiveStudies = sqliteTable("archive_studies", {
+ id:text("id").primaryKey().notNull(), targetA:text("target_a").notNull(), targetB:text("target_b").notNull(),
+ mode:text("mode").notNull(), headphoneType:text("headphone_type").notNull(), startAt:integer("start_at").notNull(), endAt:integer("end_at").notNull(),
+ noticeVersion:text("notice_version").notNull(),methodology:text("methodology").notNull(),
+ sourceMode:text("source_mode").notNull().default("prospective"),sealAfter:integer("seal_after"),
+},table=>[uniqueIndex("archive_studies_query_unique").on(table.targetA,table.targetB,table.mode,table.headphoneType,table.startAt,table.endAt),
+check("archive_study_mode",sql`${table.mode} IN ('blind','bring')`),check("archive_study_headphone",sql`${table.headphoneType} IN ('ie','oe')`),check("archive_study_window",sql`${table.endAt}>${table.startAt}`)]);
+export const archiveReleases = sqliteTable("archive_releases", {
+ sequence:integer("sequence").primaryKey().notNull(), studyId:text("study_id").notNull().unique("archive_releases_study_id_unique").references(()=>archiveStudies.id),payload:text("payload").notNull(),
+},table=>[check("archive_release_nonnegative",sql`${table.sequence}>=0`),check("archive_release_json",sql`json_valid(${table.payload})`)]);
+
+// Private verification/permission records: erased with their linked source/account.
+export const legacyReviewRequests = sqliteTable("legacy_review_requests", {
+ id:text("id").primaryKey().notNull(),subjectId:text("subject_id").notNull(),recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),
+ message:text("message").notNull(),status:text("status").notNull().default("pending"),adminReason:text("admin_reason"),createdAt:integer("created_at").notNull(),reviewedAt:integer("reviewed_at"),
+},t=>[index("legacy_requests_subject_idx").on(t.subjectId),check("legacy_request_status",sql`${t.status} IN ('pending','approved','rejected')`),check("legacy_request_kind",sql`${t.recordKind} IN ('vote','open','run')`)]);
+export const legacyRecordVerifications = sqliteTable("legacy_record_verifications", {
+ recordKind:text("record_kind").notNull(),recordId:text("record_id").notNull(),subjectId:text("subject_id").notNull(),requestId:text("request_id").notNull().references(()=>legacyReviewRequests.id,{onDelete:"cascade"}),
+},t=>[primaryKey({columns:[t.recordKind,t.recordId]}),index("legacy_verified_subject_idx").on(t.subjectId)]);
+export const retrospectivePermissions = sqliteTable("retrospective_permissions", {
+ studyId:text("study_id").notNull().references(()=>archiveStudies.id),subjectId:text("subject_id").notNull(),enabled:integer("enabled").notNull().default(0),noticeVersion:text("notice_version").notNull(),agreedAt:integer("agreed_at").notNull(),withdrawnAt:integer("withdrawn_at"),
+},t=>[primaryKey({columns:[t.studyId,t.subjectId]}),check("retrospective_permission_enabled",sql`${t.enabled} IN (0,1)`)]);

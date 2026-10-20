@@ -1,3 +1,5 @@
+import { submissionContext } from "@/lib/submission-ownership";
+import { activeSubmissions } from "@/lib/active-submissions";
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb } from "@/db";
 import { listeningRuns, rankedTrials, targets, votes } from "@/db/schema";
@@ -10,9 +12,11 @@ import { publicWriteGate } from "@/lib/public-write-gate";
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("vote");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 32768);
+    if (data.testMode !== "blind" && !ownership.shareMusic) for (const key of ["songTitle","songArtist","songAlbum","recordingId","sha256"]) delete data[key];
     const { winnerId, loserId, voterId, trialId } = data as Record<string, string>;
     if (!winnerId || !loserId || winnerId === loserId || !/^[a-f0-9-]{36}$/.test(voterId ?? "") || !/^[a-f0-9-]{36}$/.test(trialId ?? "")) {
       return Response.json({ error: "Invalid vote." }, { status: 400 });
@@ -30,6 +34,7 @@ export async function POST(request: Request) {
         !((trial.sideA === winnerId && trial.sideB === loserId) || (trial.sideA === loserId && trial.sideB === winnerId))) {
       return Response.json({ error: "This vote does not match a server-assigned trial." }, { status: 403 });
     }
+    await ownership.requireTrial(trialId);
     const trialAge = Date.now() - trial.issuedAt;
     if (trialAge < 10000) return Response.json({ error: "The trial has not been open long enough to listen to both sides." }, { status: 403 });
     if (trialAge > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
@@ -61,7 +66,8 @@ export async function POST(request: Request) {
     const sha256 = String(data.sha256 ?? "");
     if (sha256 && !/^[a-f0-9]{64}$/.test(sha256)) return Response.json({ error: "Invalid file hash." }, { status: 400 });
     const completedChecks = await db.select().from(listeningRuns).where(and(eq(listeningRuns.voterId, voterId), eq(listeningRuns.targetAId, listeningRuns.targetBId)));
-    const checks = completedChecks.filter(run => run.trialId && (run.testMode === "blind" || run.testMode === "bring") && run.heardA >= 5 && run.heardB >= 5);
+    const active = await activeSubmissions();
+    const checks = completedChecks.filter(run => active("run", run.id) && run.trialId && (run.testMode === "blind" || run.testMode === "bring") && run.heardA >= 5 && run.heardB >= 5);
     // Freeze calibration at submission. A later tie/check cannot move existing
     // target ratings; it changes only the influence of future decisive answers.
     const reliabilityWeight = checkReliability(checks.filter(run => run.result === "tie").length, checks.length).mean;
@@ -81,6 +87,7 @@ export async function POST(request: Request) {
         bitrate: safeNumber(data.bitrate),
         duration: safeNumber(data.duration),
       }),
+      ownership.record(trialId),
       db.update(targets).set({ rating: pair[0].rating + delta, wins: pair[0].wins + 1 }).where(eq(targets.id, winnerId)),
       db.update(targets).set({ rating: other[0].rating - delta, losses: other[0].losses + 1 }).where(eq(targets.id, loserId)),
     ]);

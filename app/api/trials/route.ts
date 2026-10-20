@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { rankedTrials, targets, votes } from "@/db/schema";
@@ -10,6 +11,7 @@ const validVoter = (value: unknown): value is string =>
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("trial");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 1024);
@@ -51,7 +53,7 @@ export async function POST(request: Request) {
       if (random(2)) pair = [pair[1], pair[0]];
     }
     const id = crypto.randomUUID();
-    await db.insert(rankedTrials).values({ id, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now });
+    await db.batch([db.insert(rankedTrials).values({ id, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id)]);
     return Response.json({ trialId: id, pair }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const inputError = requestInputResponse(error);
