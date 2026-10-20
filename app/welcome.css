@@ -255,3 +255,17 @@
 /* A shallow full-width shade unifies the header without hiding the artwork. */
 .welcome-nav { width:100%; background:linear-gradient(180deg,#031014b8,#03101470); border-bottom:1px solid #b5ebe51c; box-shadow:0 3px 16px #0002; }
 @media(max-width:799px) { .welcome-nav { padding-top:10px; padding-bottom:6px; row-gap:2px; } }
+
+/* Keep the tagline legible against the hero artwork, including on phones. */
+.welcome-hero-foot .welcome-tagline {
+ display:inline-block; padding:0; border:0;
+ background:none; color:#f2fffb;
+ font-size:clamp(14px,1.2vw,17px); font-weight:700; line-height:1.4;
+ letter-spacing:.015em; text-shadow:-1px 0 1px #000,1px 0 1px #000,0 -1px 1px #000,0 1px 2px #000,0 2px 6px #000;
+}
+@media(max-width:599px) {
+ .welcome-hero-foot { flex-wrap:wrap; gap:10px 18px; }
+ .welcome-hero-foot .welcome-tagline { display:block; order:-1; flex-basis:100%; text-align:center; }
+ .welcome-hero-foot .welcome-foot-line { display:none; }
+ .welcome-hero-foot span:nth-child(3) { display:block; }
+}
