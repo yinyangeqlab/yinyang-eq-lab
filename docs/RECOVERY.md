@@ -8,6 +8,10 @@ The owner container has one active development checkout: `workspace/`. Fetch, ed
 
 The parent folder retains a verified update81 source mirror and `work/` release snapshots for provenance. Existing Git worktree paths stay in place to preserve Git metadata. `archive/legacy-workspaces-20261018` holds inactive old previews, independent checkouts and generated output. `private/` contains external recovery inputs. These areas are outside the canonical Git checkout and must never be committed. The parent README and AGENTS.md direct new sessions here.
 
+## Current recovery snapshot
+
+The verified encrypted snapshot is update81, bound to Git revision `33f80d6bb04d9fa1b66de47368d733c5f41c5eac` and its migration/source fingerprints. A separate session released update82 while this backup was uploading. This is not an update82 database backup. Restore/verify this bundle using the recorded matching revision; do not rewrite its manifest to bypass compatibility checks. Future current-release snapshots require a fresh current export and matching source.
+
 ## What recovery reproduces
 
 Git provides the application, schema/migrations, public assets, dependency locks, gate/deployment code, safety policies and restore tooling. The external bundle supplies the exact authorized media and a sanitized current application database. Together they reproduce content, target relationships, saved server-side records and ranking inputs in a fresh local database. Generated source/build hashes are checked; byte-identical compiled output across operating systems is not promised.
@@ -75,7 +79,7 @@ npm run recovery -- pack \
 npm run recovery -- verify --bundle /absolute/private/bundle-update81
 ```
 
-The bundle has a versioned manifest, source/migration fingerprint, file sizes and SHA-256 checksums. No symlinks, path traversal, missing media, unexpected asset paths or output overwrites are accepted. Bundles are private data, not Git artifacts. Copies are independent of release-source media (no mutable hardlink sharing). Off-device encrypted storage and a periodic fresh-snapshot/deletion-review policy are owner operations; no external backup destination or recurring automation was configured by this task.
+The bundle has a versioned manifest, source/migration fingerprint, file sizes and SHA-256 checksums. No symlinks, path traversal, missing media, unexpected asset paths or output overwrites are accepted. Bundles are private data, not Git artifacts. Copies are independent of release-source media (no mutable hardlink sharing). See [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md) for encrypted off-device storage and retrieval. Destination records and recovery keys stay private. No recurring backup or retention automation is configured; future snapshots require current data and deletion review.
 
 ## 3. Restore into a fresh local checkout
 
@@ -112,4 +116,4 @@ Copy docs/recovery/new-environment.example.json outside Git and fill it with new
 
 ## Current status
 
-Live remains update81. Recovery/cleanup changes are Git source for future use and are **not deployed**. See RECOVERY_TESTS.md for the actual rehearsal and limits. See REBUILD.md for the existing-stack deployment boundary and REBUILD_AUDIT.md for prior clone verification.
+Live is now update82 following a separate release. The encrypted recovery snapshot remains update81. This backup task did not deploy or change production data. See RECOVERY_TESTS.md for the actual rehearsal and limits. See REBUILD.md for the existing-stack deployment boundary and REBUILD_AUDIT.md for prior clone verification.

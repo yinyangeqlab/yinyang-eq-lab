@@ -1,6 +1,6 @@
 # Recovery verification — October 18, 2026
 
-Live remained update81 throughout this task. No deployment or production data mutation occurred. The one remote operation was an authorized read-only current D1 export; raw export SQL/database files were removed after sanitizing the private copy.
+The original recovery rehearsal targeted update81. A separate session later deployed update82 during the backup transfer. This recovery/backup task performed no deployment or production data mutation. Its production access was an authorized read-only current D1 export; raw export SQL/database files were removed after sanitizing the private copy.
 
 ## Completed rehearsal
 
@@ -20,6 +20,19 @@ The default preview port was already occupied, so testing used dedicated loopbac
 
 ## Recovery limits
 
-This is verified local application/media/data recovery, not a production disaster-redeployment exercise or a claim of bit-identical compiled output across operating systems. Existing participants' access must be reissued/relinked through authorized identity handling; old credentials remain invalid. Browser-only state needs an owner-provided export/authorized browser sync. External provider domain/WAF/guard provisioning is documented but was not executed. The current bundle is local private storage, not an off-device/encrypted backup service. Before any later participant-data restore, a fresh owner review must reconcile subsequent deletions; if authoritative deletion status is unavailable, participant history must not be restored.
+This is verified local application/media/data recovery, not a production disaster-redeployment exercise or a claim of bit-identical compiled output across operating systems. Existing participants' access must be reissued/relinked through authorized identity handling; old credentials remain invalid. Browser-only state needs an owner-provided export/authorized browser sync. External provider domain/WAF/guard provisioning is documented but was not executed. The update81 bundle now has a verified encrypted off-device copy; it is not an update82 database snapshot and no recurring backup service was configured. Before any later participant-data restore, a fresh owner review must reconcile subsequent deletions; if authoritative deletion status is unavailable, participant history must not be restored.
 
 Owner-private bundle: ../private/recovery/final-bundle-update81 relative to the canonical workspace. Owner-local logs are in ../artifacts/recovery-*. No private payloads are included in this report.
+
+## Encrypted off-device verification
+
+- Encrypted the verified update81 private bundle locally using GPG symmetric AES-256 with a separate random key. No key was uploaded or committed.
+- Local decryption and all341 bundle-file checks passed before upload.
+- An initial single-file transfer was interrupted and left no complete remote archive. Retried as encrypted pieces; remote sizes/checksums and owner-only file/folder permissions passed. No public sharing was created.
+- Downloaded every piece independently, verified part checksums, reassembled the original ciphertext and matched its full SHA-256. Decryption succeeded.
+- The verifier correctly rejected concurrent update82 source/migrations. Exported the exact recorded Git revision33f80d6 into a disposable verification directory; all341 downloaded/decrypted bundle files then passed source/migration/asset verification. No fingerprint was changed to bypass checks. This establishes an update81 snapshot only.
+- Owner confirmed saving the key in a password manager. An independent-device copy has not been confirmed. Private receipt retains destination, matching Git revision and results.
+- Removed the disposable restore rehearsal, temporary matching-source export, split-transfer fixtures and downloaded/extracted verification copies after success. Retained canonical workspace/, original private bundle, encrypted local archive, small private receipt/part manifest and release snapshots.
+- All18 synthetic recovery safety checks passed again. The separate update82 session also recorded its own current-source checks; this backup does not claim a new update82 restore rehearsal.
+
+See ENCRYPTED_BACKUP.md for retrieval and limitations. No recurring snapshot schedule, retention policy or production failover was configured.

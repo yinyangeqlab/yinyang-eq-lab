@@ -14,6 +14,12 @@ Build, app/infra TypeScript, 340-asset/200-recording packaging,32-migration chec
 
 The previously tested update81 recovery bundle remains bound to its recorded source/migration fingerprint. This release did not create a new participant-data backup. Use the matching source revision and a fresh deletion review for any recovery. Unrelated local backup-documentation edits remain outside this release's commits.
 
+## Encrypted recovery snapshot — backup task completion
+
+The update81 recovery bundle passed encrypted off-device verification: remote sizes/checksums and owner-only permissions, independent download, whole-archive SHA-256, decryption and all341 bundle-file checks. Its matching Git revision is `33f80d6bb04d9fa1b66de47368d733c5f41c5eac`. A concurrent session released update82 during transfer; this is an update81 point-in-time snapshot, **not an update82 database backup**. Use matching source/migrations and a fresh deletion review for recovery. The verifier correctly refused the newer source before passing against the recorded revision.
+
+Read docs/ENCRYPTED_BACKUP.md. Storage service/account, destination, receipt and key stay private. The owner confirmed saving the separate key in a password manager; an independent-device key copy has not been confirmed. No recurring backup schedule is configured. The disposable restore rehearsal and transfer/decryption fixtures were removed after verification; canonical workspace/, original private bundle, encrypted local archive and release snapshots remain. This backup task performed no deployment or production data mutation; the separate update82 release is preserved.
+
 ## Historical release notes
 
 # Current live release — update81, October 18, 2026

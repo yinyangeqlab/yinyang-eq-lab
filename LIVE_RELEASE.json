@@ -1417,19 +1417,19 @@
   "documentationFiles": [
     {
       "path": "AGENTS.md",
-      "sha256": "b96be1d17a06ff4534b455e2b870fbae064cd35e06795343f8cc9713309a683b"
+      "sha256": "47e1e33fb081d70290249fd005d27abc1e36f359d29cc28cd29f4e8745488ba0"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "1ad2876e51c408f8fca69210ff977cc738e1bd78cdf1aaaefdf8bd2f629e5bdc"
+      "sha256": "eb19ba2826329c5ccc807109c4958f5229fc89803fb81fb5dad727af85154dbf"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "af5564c5dc9b28de90edd46790678b242463432a2db7e85354695debe40da358"
+      "sha256": "9202675e9fc86e43ed5e2572c03ce6c8831d761bdd086127a6846f6c0c9559ed"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "57093a5c6f0f256c882062e56539541343515ab8f54442d163ba7d280d2a3350"
+      "sha256": "f4b9483bdb57a489de86e33803db61aeeac93d9a2e2f6c69b92d575bebc34822"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -1437,7 +1437,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "2e2f47cf1575e48d8de1c66523103da54a01aaaa286ea55dfa8b7be79f7e59f3"
+      "sha256": "d2ff33be8b5a73a09575e25070f216f216c69dbbe2554b32b8687f5e7b760bcb"
     },
     {
       "path": "RESEARCH_PROTOCOL.md",
@@ -1445,7 +1445,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "08aaefd5d91149aeff62e9304212e7990c94a8b23a0a8dc169ebfc6a18cf2e5b"
+      "sha256": "fe4a2fde29e6f4820a58127d1e0467aa447c20e5c1034284a751cdd5d950f384"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -1453,7 +1453,7 @@
     },
     {
       "path": "docs/LOCAL_CHANGES.md",
-      "sha256": "524dd5dd81d199b966560ff3653cee2c6d8ff8e0b681c0de45329f136139ee6b"
+      "sha256": "1ca2f2daf75f3b4718f3f8d7f402d275d57ac48c4569246a1b9564e51dca8206"
     },
     {
       "path": "local/README.md",
@@ -1461,7 +1461,7 @@
     },
     {
       "path": "scripts/check-live-source.mjs",
-      "sha256": "382d8dfd1d6ed70b1cfc58ae74ecbacd6749789b8ed8357a6085560c8c8fe085"
+      "sha256": "eaf2239fafbee40505d5bbf71a9e9b10926ea04eff96fb82755faa71aed55346"
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
@@ -1474,6 +1474,10 @@
     {
       "path": "infra/pulumi/SERVICE_NOTICES.md",
       "sha256": "08b7d8607a9433a35afb3176bb153a958f44ced6bf2d1bf9a6b5dbab0b31a511"
+    },
+    {
+      "path": "docs/ENCRYPTED_BACKUP.md",
+      "sha256": "e14db668904b4c3c5bb4ab7045b8fdd47ebecbbf1c10a55843496f250dad625e"
     }
   ],
   "localConfigurationFiles": [
@@ -5391,10 +5395,20 @@
     "deploymentPerformed": false,
     "oldCredentialsRestored": false,
     "freshDeletionReviewRequired": true,
-    "offDeviceBackupConfigured": false,
+    "offDeviceBackupConfigured": true,
     "safetyTestsPassed": 18,
     "publishedCommit": "6c3f0524586f1c377bbb3285cd33a269ed4982b5",
-    "pushVerifiedAt": "2026-10-18T23:02:25.036326+00:00"
+    "pushVerifiedAt": "2026-10-18T23:02:25.036326+00:00",
+    "offDeviceEncrypted": true,
+    "remoteOwnerOnlyVerified": true,
+    "downloadRoundtripVerified": true,
+    "backupGuide": "docs/ENCRYPTED_BACKUP.md",
+    "backupSnapshotUpdate": 81,
+    "backupMatchingGitRevision": "33f80d6bb04d9fa1b66de47368d733c5f41c5eac",
+    "currentReleaseDataBackup": false,
+    "keyCustody": "owner confirmed saved in password manager; independent-device copy not confirmed",
+    "recurringBackupConfigured": false,
+    "disposableRehearsalRemoved": true
   },
   "inviteSystem": {
     "adminPath": "/owner-research#tester-access",
