@@ -1,3 +1,7 @@
+Current live baseline is update87, implementation 158e059965976b49d1763124d72081fd9f940477. Source/build: work/consent-release-20261018; infra: work/consent-infra-20261018. No migration for this update. A fresh database still uses all33 migrations. Separate uncommitted personal-shootout changes are not deployed. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update86. Approved nickname and audit corrections are deployed. Verified source/build: work/site-audit-fixes-release-20261018; infrastructure: work/site-audit-fixes-infra-20261018; implementation fb30ec5dc40d813a4a031d3e2e60150892d68a5e. Only additive migration0032_listener_nicknames.sql was applied to the existing database. New databases need all33 migrations. No pending preview or deployment approval. See LIVE_RELEASE.json and HANDOFF.md.
 
 ## Historical rebuild notes

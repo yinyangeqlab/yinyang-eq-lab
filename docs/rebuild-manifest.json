@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 86,
-  "implementationCommit": "fb30ec5dc40d813a4a031d3e2e60150892d68a5e",
-  "runtimeParity": "All recorded runtime application files match verified live update86.",
+  "liveUpdate": 87,
+  "implementationCommit": "158e059965976b49d1763124d72081fd9f940477",
+  "runtimeParity": "Recorded runtime inputs match verified update87; separate uncommitted personal-shootout development is intentionally outside this baseline.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -12,7 +12,25 @@
     "publicationCheck": "Narrow path allowlist for audited infrastructure source and existing sanitized evidence; credential scans retained.",
     "infrastructure": "Verified live canonical-origin and guard bindings; private media, CPU5000ms, six abuse bindings and public-package refusal preserved.",
     "typecheck": "Canonical checkout excludes separately managed infra; parent legacy previews archived.",
-    "recovery": "External checksum bundle, fresh credential generation, strict local restore and deletion review. No live deployment."
+    "recovery": "External checksum bundle, fresh credential generation, strict local restore and deletion review. No live deployment.",
+    "pendingUnrelatedDevelopment": [
+      "app/globals.css",
+      "app/my-data/page.tsx",
+      "app/page.tsx",
+      "app/privacy/page.tsx",
+      "app/shootout/page.tsx",
+      "app/welcome.css",
+      "components/music-panel.tsx",
+      "lib/browser-sync.mjs",
+      "app/shootout/personal/layout.tsx",
+      "app/shootout/personal/page.tsx",
+      "app/shootout/personal/personal.css",
+      "components/personal-podium.css",
+      "components/personal-podium.tsx",
+      "docs/PERSONAL_SHOOTOUT.md",
+      "lib/personal-shootout.ts",
+      "scripts/check_personal_shootout.mjs"
+    ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
