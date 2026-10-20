@@ -1,5 +1,9 @@
 # Cinematic demo and screenshot credits
 
+https://github.com/user-attachments/assets/a2e7a979-1a78-453f-836a-da6df3ad8a12
+
+[Copy a direct link for Discord](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
+
 [Watch or download the trailer](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/demo-2026-10-17/yinyang-eq-league-cinematic-trailer-v3.mp4) · [Demo release](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17)
 
 The 54.6-second, 1080p trailer presents recorded interaction with the local site preview on October 17, 2026. It covers listening comparisons, headphone measurements, rankings, the music library, and preference tuning, including curve dragging, sliders, undo/redo, playback, bypass, and EQ generation. The owner view was excluded. Demo state was isolated; no public shootout vote, target upload, song suggestion, or music vote was submitted for the recording.

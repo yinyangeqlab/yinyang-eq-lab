@@ -1,3 +1,7 @@
+# GitHub demo video sharing — October 20, 2026
+
+The README and demo credit pages now embed public GitHub-hosted streaming copies of the existing October 17 cinematic trailer and mobile walkthrough. docs/VIDEOS.md provides permanent direct links for Discord and music attribution. Original release assets and historical tags are preserved. Both streaming copies are H.264/AAC fast-start MP4 files, approximately 4 MB, made only from hash-verified existing public release videos. The lab-owned media gallery is issue #2. Anonymous downloads returned video/mp4 and matched the uploaded bytes; Discord in-channel playback remains unverified. This documentation/media publication does not deploy the application or change release fingerprints, participant data or backup coverage. Unrelated canonical working changes remain preserved.
+
 # Current live release — update101, October 19, 2026
 
 Automatic account sync now transfers all permitted saved results and measurements without the former 512 KB whole-account cap. Verified entry pieces, paged downloads pinned to a revision, resumable uploads and atomic publication preserve the current copy through incomplete transfers. Unchanged sections reuse committed pieces. The merge cache uses IndexedDB; browser and service capacity remain finite, with explicit quota failures and managed-write rollback. Actual music/audio bytes, embedded media and browser file handles remain excluded. Saved fingerprints, metadata and segment data retain their existing permitted scope.

@@ -11,7 +11,11 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
 [![Vibe coded with GPT Codex](https://img.shields.io/badge/vibe_coded_with-GPT_Codex-aea1ff?style=flat-square)](#made-with-gpt-codex)
 
-[![Watch the YinYang EQ League cinematic demo: Shape it. Hear it.](docs/images/demo-poster.jpg)](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17)
+</div>
+
+https://github.com/user-attachments/assets/a2e7a979-1a78-453f-836a-da6df3ad8a12
+
+<div align="center">
 
 **54.6 seconds · 1080p · real browser interaction**  
 [Watch or download the cinematic trailer →](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/demo-2026-10-17/yinyang-eq-league-cinematic-trailer-v3.mp4)
@@ -22,11 +26,13 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 
 Take a quick, casual tour of the phone layout: **45 seconds · vertical 9:16 · actual browser interactions**.
 
-<a href="https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/mobile-layouts-2026-10-17"><img src="docs/images/mobile-demo-poster.jpg" alt="Watch the mobile walkthrough, including hands-on curve adjustments in Preference Tuning" width="270"></a>
+https://github.com/user-attachments/assets/3502a781-9a84-45a2-8352-ff9a57ba0e49
 
 **[Watch or download the mobile walkthrough →](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/mobile-layouts-2026-10-17/yinyang-eq-league-mobile-walkthrough.mp4)**
 
 A historical look at the October 17 interface, including comparisons, measurements, the music library, and Preference Tuning. The current site also includes Personal Tournament, Research Rankings, Community Preferences, and optional account sync. [Video and music credits](docs/MOBILE_DEMO.md).
+
+**[Copy video links for Discord →](docs/VIDEOS.md)** · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
 
 ## Hear the difference
 
