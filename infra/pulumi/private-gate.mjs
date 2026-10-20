@@ -5,6 +5,7 @@ import {readServiceStatus} from "./service-status.mjs";
 import {featureMaintenanceResponse} from "./maintenance-options.mjs";
 import { preDatabaseGuard, listenerGuard, boundedBody } from "./abuse-controls.mjs";
 import { isPublicAsset } from "./public-assets.mjs";
+import { isPublicDemo, publicDemoResponse } from "./public-demos.mjs";
 import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
 import { browserPairing, linkedTester } from "./browser-pairing.mjs";
 
@@ -169,6 +170,10 @@ async function admin(request, env, path) {
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
+    if (isPublicDemo(path)) {
+      const admission = await preDatabaseGuard(request, env, false);
+      return admission || publicDemoResponse(request);
+    }
     const publicLandingAsset = isPublicAsset(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
