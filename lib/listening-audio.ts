@@ -19,42 +19,50 @@ export async function serveListeningAudio(request: Request, asset: AudioAsset, a
   headers.set("Content-Length", String(end-start+1));
   headers.set("X-Listening-Content-Length", String(end-start+1));
   if (request.method === "HEAD") return new Response(null, { status: partial ? 206 : 200, headers });
-  async function* streamParts() {
+  // Pipe range-capable asset bodies natively. Reading every network chunk in
+  // JavaScript can exhaust the Free Worker's CPU budget on a large FLAC seek.
+  const output = typeof FixedLengthStream !== "undefined"
+    ? new FixedLengthStream(end-start+1)
+    : new TransformStream<Uint8Array, Uint8Array>();
+  async function pipeParts() {
     let offset = 0;
-    for (const part of asset.parts) {
-      const first = offset, last = offset + part.bytes - 1; offset += part.bytes;
-      if (last < start || first > end) continue;
-      const localStart = Math.max(0, start-first), localEnd = Math.min(part.bytes-1, end-first);
-      const response = await assets.fetch(new Request(new URL(part.path, request.url), { headers: { Range: `bytes=${localStart}-${localEnd}` } }));
-      if (!response.ok || !response.body) throw new Error("Audio asset unavailable");
-      const reader = response.body.getReader();
-      if (response.status === 206 && response.headers.get("Content-Range") !== `bytes ${localStart}-${localEnd}/${part.bytes}`) throw new Error("Audio asset range mismatch");
-      let position = first + (response.status === 206 ? localStart : 0);
-      try {
-        while (true) {
-          const {value, done} = await reader.read();
-          if (done) break;
-          const low = Math.max(0, start-position), high = Math.min(value.length, end-position+1);
-          position += value.length;
-          if (high > low) yield value.subarray(low, high);
-          if (position > end) break;
+    try {
+      for (const part of asset.parts) {
+        const first = offset, last = offset + part.bytes - 1; offset += part.bytes;
+        if (last < start || first > end) continue;
+        const localStart = Math.max(0, start-first), localEnd = Math.min(part.bytes-1, end-first);
+        const response = await assets.fetch(new Request(new URL(part.path, request.url), { headers: { Range: `bytes=${localStart}-${localEnd}` } }));
+        if (!response.ok || !response.body) throw new Error("Audio asset unavailable");
+        if (response.status === 206) {
+          if (response.headers.get("Content-Range") !== `bytes ${localStart}-${localEnd}/${part.bytes}`) {
+            await response.body.cancel(); throw new Error("Audio asset range mismatch");
+          }
+          await response.body.pipeTo(output.writable, { preventClose: true });
+        } else {
+          // Compatibility fallback for asset stores that ignore Range. The live
+          // Cloudflare binding honors it and uses the native path above.
+          const reader = response.body.getReader(), writer = output.writable.getWriter();
+          let position = first;
+          try {
+            while (true) {
+              const { value, done } = await reader.read();
+              if (done) break;
+              const low = Math.max(0, start-position), high = Math.min(value.length, end-position+1);
+              position += value.length;
+              if (high > low) await writer.write(value.subarray(low, high));
+              if (position > end) break;
+            }
+          } finally { await reader.cancel(); writer.releaseLock(); }
         }
-      } finally { await reader.cancel(); }
+      }
+      const writer = output.writable.getWriter();
+      try { await writer.close(); } finally { writer.releaseLock(); }
+    } catch (error) {
+      const writer = output.writable.getWriter();
+      try { await writer.abort(error); } finally { writer.releaseLock(); }
     }
   }
-  const iterator = streamParts();
-  const body = new ReadableStream<Uint8Array>({
-    async pull(controller) { try { const item = await iterator.next(); if (item.done) controller.close(); else controller.enqueue(item.value); } catch (error) { controller.error(error); } },
-    async cancel() { await iterator.return(undefined); },
-  });
-  // Workers derive Content-Length from the body; a plain stream loses it.
-  // The fixed-length identity stream preserves exact lengths without buffering.
-  let responseBody: ReadableStream = body;
-  if (typeof FixedLengthStream !== "undefined") {
-    const fixed = new FixedLengthStream(end-start+1);
-    void body.pipeTo(fixed.writable).catch(() => {});
-    responseBody = fixed.readable;
-  }
-  return new Response(responseBody, { status: partial ? 206 : 200, headers });
+  void pipeParts().catch(() => {});
+  return new Response(output.readable, { status: partial ? 206 : 200, headers });
   function invalidRange() { headers.set("Content-Range", `bytes */${asset.bytes}`); return new Response(null,{status:416,headers}); }
 }
