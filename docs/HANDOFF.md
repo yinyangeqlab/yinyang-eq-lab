@@ -1,5 +1,13 @@
 # Source handoff — October 17, 2026
 
+## Approved navigation treatment — October 17, 2026
+
+Welcome, Preference Tuning, and Music Library now have distinct icons, soft hover glows, floating musical notes, sound ripples, and small animated equalizer bars in the Shootout header. Owner view is a separate, smaller utility button on the far right, with a muted shield icon and no glow or animation. Keyboard focus is supported, and reduced-motion preferences suppress the moving decorations.
+
+The owner approved this design after reviewing its local preview and specifically requested the separate static Owner view treatment. Changes are limited to the Shootout header, a reusable navigation component, and its stylesheet. Existing spacing, routing, data collection, and vote calculations are preserved. The unpublished credits draft remains excluded.
+
+Deployed to yinyangeq.com in Cloudflare release 38. Only the existing Worker changed; three other infrastructure resources were unchanged, and no database migration or test votes were submitted. Both the isolated production build and public-source build passed, and public TypeScript passed. Authenticated live checks covered the four top-level pages and six Shootout tabs at five widths (320, 390, 768, 1440, and 1920 px): 50 checks passed without page-level horizontal overflow. All five live stylesheets matched the release build. Live checks also confirmed the hover animations, reduced-motion behavior, smaller right-aligned static Owner control, and existing private-access protection. The credits draft still returns authenticated 404. The staged public release-file scan passed before commit.
+
 ## Responsive spacing fixes — October 17, 2026
 
 The site uses tighter spacing above page headings and between sections. Ranking filters sit side by side when they fit, and the shared navigation wraps within the viewport. Music Library has a compact introduction so listening controls appear sooner; the welcome page has smaller gaps between sections. Long catalog names in Preference Tuning and long song-filter options in Owner view now shrink inside their containers instead of widening the page.
