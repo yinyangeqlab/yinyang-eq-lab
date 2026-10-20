@@ -1,3 +1,4 @@
+import * as fingerprints from "../lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
@@ -6,11 +7,11 @@ import { rankPreferences } from '../lib/preference-ranking.ts';
 import {intervalStats,parseIntervals} from '../lib/listening.ts';
 const code=ts.transpileModule(readFileSync(new URL('../app/api/research/route.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const targets=[{id:'a',name:'Alpha',creator:'Test',status:'approved',measurement:'must-not-leak'},{id:'b',name:'Beta',creator:'Test',status:'approved'},{id:'pending',name:'Pending',creator:'Test',status:'pending'}];
-const base={protocolVersion:'legacy-v1',testMode:'blind',eligible:1,heardA:6,heardB:6,headphoneType:'ie',songTitle:'private-title',songArtist:'private-artist',songAlbum:'private-album',recordingId:'private-recording',sha256:'private-file-hash',otherReason:'private-comment',reasonTags:'[]',createdAt:1000,reliabilityWeight:.5};
+const base={protocolVersion:'legacy-v1',testMode:'blind',eligible:1,heardA:6,heardB:6,headphoneType:'ie',songTitle:'private-title',songArtist:'private-artist',songAlbum:'private-album',recordingId:'private-recording',sha256:'a'.repeat(64),otherReason:'private-comment',reasonTags:'[]',createdAt:1000,reliabilityWeight:.5};
 const votes=[{...base,id:'one',winnerId:'a',loserId:'b',voterId:'private-browser-one'},{...base,id:'two',winnerId:'b',loserId:'a',voterId:'private-browser-one'},{...base,id:'three',winnerId:'a',loserId:'b',voterId:'private-browser-two'},{...base,id:'short',winnerId:'a',loserId:'b',voterId:'private-browser-one',heardA:4}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let removed = new Set();let owners=[];let runs=[];
-const deps={'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
+const deps={'@/lib/file-fingerprint':fingerprints,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
 deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2',MIN_SIDE_SECONDS:5,MIN_COMMON_SECONDS:5};
 deps['@/lib/listening']={intervalStats,parseIntervals};
 const evidenceCode=ts.transpileModule(readFileSync(new URL('../lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
@@ -26,7 +27,7 @@ for(const mode of ['all','random','curated','verified']) {
 }
 assert.equal(data.bring.voteCount,0);
 const json=JSON.stringify(data);
-for(const privateValue of ['private-browser','private-title','private-file-hash','private-comment','must-not-leak']) assert.ok(!json.includes(privateValue),privateValue);
+for(const privateValue of ['private-browser','private-title',base.sha256,'private-comment','must-not-leak']) assert.ok(!json.includes(privateValue),privateValue);
 console.log('Ranking API: accepted repeats/reversals counted, all filters include deviations, short listens excluded, and private listener/song/measurement details withheld.');
 
 removed = new Set(['vote:one']);

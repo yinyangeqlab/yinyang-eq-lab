@@ -1,4 +1,5 @@
 import { getDb } from "@/db";
+import { runFileFingerprint } from "@/lib/file-fingerprint";
 import { targets, votes, listeningRuns, submissionOwners } from "@/db/schema";
 import { activeSubmissions } from "@/lib/active-submissions";
 import type { RankingVote } from "@/lib/preference-ranking";
@@ -23,7 +24,7 @@ export async function rankingEvidence() {
  };
  const excludedTrials=new Set(runs.filter(run=>run.trialId&&!active("run",run.id)).map(run=>run.trialId));
  const decisive=allVotes.filter(v=>active("vote",v.id)&&!excludedTrials.has(v.id)&&v.eligible===1&&valid(v.testMode,v.winnerId,v.loserId,v.heardA,v.heardB,v.protocolVersion,v.intervals)).map(v=>({...v,voterId:participant("vote",v.id,v.voterId),result:"preference"}));
- const ties=runs.filter(run=>run.result==="tie"&&active("run",run.id)&&(!run.trialId||active("vote",run.trialId))&&valid(run.testMode,run.targetAId,run.targetBId,run.heardA,run.heardB,run.protocolVersion,run.intervals)).map(run=>({...run,id:`tie:${run.id}`,voterId:participant("run",run.id,run.voterId),winnerId:run.targetAId,loserId:run.targetBId,sha256:null,audioFormat:null,sampleRate:null,bitrate:null,duration:null,reasonTags:"[]",result:"tie"}));
+ const ties=runs.filter(run=>run.result==="tie"&&active("run",run.id)&&(!run.trialId||active("vote",run.trialId))&&valid(run.testMode,run.targetAId,run.targetBId,run.heardA,run.heardB,run.protocolVersion,run.intervals)).map(run=>({...run,id:`tie:${run.id}`,voterId:participant("run",run.id,run.voterId),winnerId:run.targetAId,loserId:run.targetBId,sha256:runFileFingerprint(run.researchContext),audioFormat:null,sampleRate:null,bitrate:null,duration:null,reasonTags:"[]",result:"tie"}));
  return {targets:allTargets.filter(t=>t.status==="approved"),votes:[...decisive,...ties]};
 }
 export type EvidenceVote=RankingVote & {testMode:string;headphoneType:string|null;protocolVersion:string;songTitle:string|null;songArtist:string|null;songAlbum:string|null;recordingId:string|null;sha256:string|null;reasonTags:string|null};
