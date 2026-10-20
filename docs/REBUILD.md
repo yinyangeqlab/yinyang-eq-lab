@@ -1,3 +1,7 @@
+Current live baseline is update96, implementation89dc69e1bfc1. Immutable source/build: work/consent-release-20261019; infra: work/consent-infra-20261019. Consent dialog shows three choices and draft-only all/required presets. No policy/backend/schema change; all37 migrations plus operational db/service-status.sql remain required for a fresh database. See LIVE_STATE.md and docs/CONSENT_UI_REVIEW_2026-10-19.md.
+
+## Historical rebuild notes
+
 Current live baseline is update95, implementation0ef217b90019. Immutable source/build: work/community-release-20261019; infra: work/community-infra-20261019. Community consent/reference pilot and reviewed audit fixes are deployed; public Community numbers remain withheld. Existing production received0035/0036; a fresh database requires all37 migrations plus operational db/service-status.sql. Read LIVE_STATE.md and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md.
 
 Current live baseline is update94, implementation3762ff728bd545f92530eccbe7a40dcf56658251. Source/build: work/tournament-release-20261019; infra: work/tournament-infra-20261019. Reviewed Personal Tournament/shared controls and contribution isolation;0033/0034 applied. A fresh database uses all35 migrations. See LIVE_RELEASE.json and docs/TOURNAMENT_REVIEW_2026-10-19.md.
