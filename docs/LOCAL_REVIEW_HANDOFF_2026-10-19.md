@@ -26,3 +26,11 @@ Local evidence: artifacts/full-review-20261019/ and artifacts/{passage-label,vol
 6. Re-run affected checks and final integrated checks, refresh the local preview and update both written and visual audit with the latest fixes, screenshots, remaining limitations and exact source/build evidence.
 
 Independent held-out listener validation and public disclosure/privacy review remain genuine external prerequisites for numerical Community rankings; do not fabricate them. Final owner review precedes any production or GitHub operation.
+
+## Completed follow-up / resume here
+
+The checkpoint is `5a53a63`. Subsequent local remediation completed the compatible React/RSC/vinext/Cloudflare cohort upgrade, scoped Sharp/esbuild/fflate patches, shared Community header/technical help, compact mobile utilities/modes, sharing-first My data with account/retention disclosures, paginated continuous Listening Pool playback and final loading/title fixes. Exact validation, package versions and limitations are in FULL_SITE_REVIEW_2026-10-19.md and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md.
+
+The local preview now serves `artifacts/review-remediation-20261019/ready-input` through the ignored `.recovery-local/personal-preview` gate; keep its existing private test configuration. Artifacts include63 passing effective suites, final typecheck/build/media/Drizzle logs,48 affected viewport cases,66 follow-up gallery images, actual playback/permission UI checks and source/runtime boundary evidence. The updated gallery is at http://localhost:5175/__audit/review#latest. No production or account/history execution occurred. Unrelated recovery/backup work remains unstaged.
+
+Remaining external findings: one unpatched braces advisory (8 full-tree affected-package flags; absent from inspected Worker), independent held-out listening validation, reference-system curation and privacy review. Public numerical Community output remains withheld. Final owner review is required before any push/deploy; do not publish a maintenance notice until an actual authorized deployment begins.

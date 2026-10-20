@@ -140,3 +140,7 @@ Personal is paused on its saved sample results: gold/silver/bronze and 12 target
 See FULL_SITE_REVIEW_2026-10-19.md for the completed bounded local review: 383 viewport cases, 438 screenshots, actual playback/overlap/local-choice/Undo/upload/download checks and 63 passing regression suites. Local fixes include exact Community shared-audio meters, response/access-state guards, tiny-screen layout fixes, reversible local-curve removal, current research explanations, response headers and targeted dependency security patches. The localhost-only filterable gallery is /__audit/review. Production remains update94.
 
 Release review remains open: full npm toolchain audit has 15 high and 4 moderate flags despite a zero-flag production-only scan. Coordinated framework/Cloudflare tooling upgrades and reachability review are explicitly flagged rather than force-applied or dismissed. Independent Community listener/privacy validation and real YinYangEQ/history execution remain outstanding. No push, deployment or production mutation.
+
+## Local remediation review
+
+The October19 follow-up completes the compatible security-update cohort and remaining local UI proposals. See FULL_SITE_REVIEW_2026-10-19.md for the current48-case/66-image follow-up and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md for the remaining single upstream advisory. Checkpoint5a53a63 and subsequent local source remain unpushed/undeployed. Human validation and real account/history/publication operations remain separate.

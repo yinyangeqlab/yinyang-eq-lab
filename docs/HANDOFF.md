@@ -1,3 +1,7 @@
+# Local remediation ready for review — October 19, 2026
+
+Checkpoint `5a53a63` and the follow-up are local only. Shared Community shell, compact mobile navigation, sharing-first My data and continuous paginated music playback are implemented;63 suites and the final build/typecheck pass. The updated local visual audit is http://localhost:5175/__audit/review#latest. See LOCAL_REVIEW_HANDOFF_2026-10-19.md and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md for exact evidence and the one unpatched build-tool advisory. No push, deployment, production/account/history execution or backup change. Live remains update94.
+
 # Local review checkpoint — October 19, 2026
 
 Owner authorized a local checkpoint commit and handoff, then remaining security/UI remediation. No push or deployment. Live remains update94; canonical local candidate includes migrations0035/0036, which are applied only to the ignored local database. Start with [LOCAL_REVIEW_HANDOFF_2026-10-19.md](LOCAL_REVIEW_HANDOFF_2026-10-19.md) for the candidate, evidence, next work and execution boundaries.

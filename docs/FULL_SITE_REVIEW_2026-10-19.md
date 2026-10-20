@@ -2,6 +2,22 @@
 
 Completed local review candidate; findings and limits follow. No push, deployment, real account activation/history transfer, or production mutation. Browser reviews use only the hidden noncontributing test account. Admin and ordinary-participant write paths are exercised using isolated synthetic route/database fixtures, not a privileged browser session.
 
+## Latest local follow-up
+
+The owner authorized the next stage in order. Local checkpoint commit `5a53a63` records the prior candidate and handoff. The follow-up remains local and unpushed; production is still update94.
+
+- Implemented the shared Community/Personal Tournament header, compact expandable mobile site links and smaller mode strip; technical reference-check rules remain in accessible help. Actual Personal first playback hides options, while manually reopening keeps them visible on replay.
+- My data now leads with current participation/sharing controls and section links. Retention details and optional nickname/account/history tools are below those actions in labeled disclosures. Permission and erasure behavior are unchanged.
+- Listening Pool now displays12 song families per page, keeping alternate versions together. Actual playback continued across page/search/filter changes; Show track restored its existing position. Private Upvote/filter/undo and last-page controls worked. The active off-page player is retained instead of remounted. There are17 pages for the193-family/200-recording fixture.
+- The follow-up includes the recent regular-font empty segment label, stable centered transport/right-side volume overlay, click-to-seek through overlapping segment handles, focused0.25-second/Shift1-second seeking with held repeat/release cancellation, and explicit Community navigation button on Research Rankings.
+- Corrected browser tab titles and Personal's transient pool text: it says Loading targets while fetching instead of claiming there are zero targets.
+- Compatible framework/Cloudflare upgrades and scoped transitive patches reduced the full npm scan from19 flags to8 high/0 moderate. All8 are one upstream unpatched braces advisory propagated through build/lint dependencies. The production-only scan is clear; the final224-module Worker and215 source maps exclude the flagged packages. This remains an open dependency finding, not a clean full-tree scan or security certification. Exact versions, references and exposure limits: DEPENDENCY_SECURITY_REVIEW_2026-10-19.md.
+- All63 suites pass under the upgraded cohort. Native media fixtures use Cloudflare's official Miniflare5 options converter and host-loopback retries. Source typecheck, Drizzle migration check, isolated build and340 asset/200 protected-recording packaging pass;306 selected runtime/style/data/config/lock files were compared with the final build input; the only later source change removes whitespace from an empty My data line. The final local build is `artifacts/review-remediation-20261019/ready-input`.
+- Added48 affected-view viewport cases at280,320,390,768,1024,1366,1920 and3840 CSS pixels, with no horizontal page overflow. Expanded utilities/native dropdowns, keyboard controls and a320×240 listening reminder were checked. A real noncontributing Community preview completed exactly5.0 common seconds, paused and enabled its choices; no answer was sent. Tests use only the hidden noncontributing identity. One intentional local admission-limit response interrupted rapid navigation; the sweep resumed after cooldown without bypassing guards.
+- The updated visual gallery contains the original438 images plus66 follow-up images (504 total). Initial loading and intermediate My data captures are retained separately in ignored evidence. Personal captures wait for the saved44-comparison session and acknowledge the reminder before showing the actual page. This is finite browser/emulated-viewport evidence, not physical-device certification.
+
+Independent held-out listener validation, curated reference-system metadata and public privacy review remain prerequisites for numerical Community results. No account activation, real historical transfer, publication, erased-record restoration, backup workflow change, production mutation, push or deployment occurred. Local checkpoint and follow-up commits do not authorize release.
+
 ## Scope and evidence standard
 
 - Inventory every application page, Tournament tab, main workflow, API contribution/read boundary and existing verification suite.
@@ -41,20 +57,20 @@ Fixed stale Welcome copy that incorrectly called Community merely planned/privat
 
 ## Security advisories and release boundary
 
-Updated Next 16.3.4→16.4.2, React/React DOM/RSC 19.2.6→19.2.8 and Vite 8.0.13→8.0.16, plus semver-compatible transitive fixes, without npm audit --force. Production-only npm audit reports 0 flags. The full dependency tree still reports **15 high and 4 moderate advisory flags** in framework/build/tool chains. A devDependency may contribute code to the bundled server; these flags are not dismissed as harmless. This is not a security sign-off for deployment.
+Updated Next 16.3.4→16.4.2, React/React DOM/RSC 19.2.6→19.2.8 and Vite 8.0.13→8.0.16, plus semver-compatible transitive fixes, without npm audit --force. Production-only npm audit reports 0 flags. At the original audit checkpoint, the full dependency tree reported **15 high and 4 moderate advisory flags** (superseded by the follow-up above) in framework/build/tool chains. A devDependency may contribute code to the bundled server; these flags are not dismissed as harmless. This is not a security sign-off for deployment.
 
-Remaining chains include the Cloudflare plugin/Wrangler/Miniflare cohort, vinext, eslint-config-next and drizzle-kit. Registry metadata for the proposed vinext fix requires coordinated React/RSC 19.3.1 and plugin-rsc updates; the current Cloudflare fix pulls a new Miniflare major/beta cohort. Npm’s suggested force downgrades for drizzle-kit/eslint-config-next were not applied. A coordinated compatible-toolchain upgrade and reachability review is the next security recommendation. Exact scans, dependency chains, proposed fixes and decisions are in artifacts/full-review-20261019/dependency-review.json and the audit JSONs.
+Remaining chains include the Cloudflare plugin/Wrangler/Miniflare cohort, vinext, eslint-config-next and drizzle-kit. Registry metadata for the proposed vinext fix requires coordinated React/RSC 19.3.1 and plugin-rsc updates; the current Cloudflare fix pulls a new Miniflare major/beta cohort. Npm’s suggested force downgrades for drizzle-kit/eslint-config-next were not applied. The coordinated upgrade and build-specific exposure review are completed in the follow-up above; the unpatched braces advisory remains tracked. Exact scans, dependency chains, proposed fixes and decisions are in artifacts/full-review-20261019/dependency-review.json and the audit JSONs.
 
 Primary advisories reviewed: https://github.com/advisories/GHSA-vcvr-r3jv-pc5j (conditional Next image-generation path), https://github.com/advisories/GHSA-wx67-qw84-cm4g (RSC server-function DoS), and Vite advisories GHSA-v6wh-96g9-6wx3 / GHSA-fx2h-pf6j-xcff. Installed-package flags alone are not proof that this particular Worker is exploitable; absence from a scan is not proof of safety. No exploit was run against production.
 
-## Recommendations for owner review
+## Follow-up recommendation status
 
-1. Resolve the remaining coordinated framework/Cloudflare/toolchain advisory chains before a release sign-off.
-2. Use the shared Tournament shell for Community; shorten its initial explanation and place measurement-system/method/dropout details under accessible help.
-3. Reduce the mobile header/setup stack while preserving the first-play and manual-reopen behavior.
-4. Move sharing status/actions ahead of lengthy My data retention/archive prose, keeping the full notice accessible without changing permission scope.
-5. Add pagination or windowing to the 200 recording Listening Pool page; keep search/filter/rating semantics. One enormous full-page bitmap exceeded screenshot limits; viewport evidence is intact.
-6. Curate reference-system metadata and perform the independent held-out listener/privacy validation before any numerical Community leaderboard. Matching rig labels does not establish calibration; browser timing does not prove attention or headphone use.
+1. Compatible dependency upgrades and emitted-runtime assessment completed. The one unpatched braces advisory remains open as8 affected-package flags; do not call the full scan clean.
+2. Shared Community shell and shorter initial explanation implemented locally; full research/reference-system/dropout rules remain available in help.
+3. Compact mobile utility navigation/setup implemented; first-play/manual-reopen behavior rechecked.
+4. Sharing controls moved ahead of retention/account prose, with quick navigation and no permission changes.
+5. Listening Pool pagination implemented with grouped versions, search/filter/rating behavior and continuous active playback verified.
+6. Still external: curate reference metadata and complete independent held-out listener/privacy validation before numerical Community rankings. Browser timing does not prove attention or headphone use.
 
 ## Review artifacts and deliberate limits
 

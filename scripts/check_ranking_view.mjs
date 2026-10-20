@@ -15,7 +15,7 @@ const expression=page.slice(start,end).trim().slice('{tab === "rankings" && '.le
 const source=`export function ranking({research,rankProtocol,rankMode,rankType}) { const setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{}; return (${expression}); }`;
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
-const context=vm.createContext({exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default});
+const context=vm.createContext({exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default,ArrowRight:createRequire(import.meta.url)("lucide-react").ArrowRight});
 vm.runInContext(compiled,context);
 const modes=['all','random','bring','verified'];
 function rows(preferences,ties){
