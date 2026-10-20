@@ -28,7 +28,7 @@ export default function ServiceWarningPopup() {
         if(stopped)return;
         if(!status.active||!status.id){setNotice(null);currentNotice.current="";dismissed.current="";return;}
         currentNotice.current=status.id;
-        if(dismissed.current!==status.id)setNotice({kind:"maintenance",title:status.pauseSubmissions?"Maintenance in progress":"A note from YinYang EQ",detail:status.message||"We’re doing maintenance. Thanks for your patience!",retry:status.pauseSubmissions?"New submissions are paused. Music playback and seeking remain available.":null});
+        if(dismissed.current!==status.id)setNotice({kind:"maintenance",title:status.pauseSubmissions?"Maintenance in progress":"A note from YinYang EQ",detail:status.message||"We’re doing maintenance. Thanks for your patience!",retry:status.pauseSubmissions?"Shootouts are paused. Listening Pool and Preference Tuning remain available.":null});
       }catch{}finally{busy=false;}
     };
     const wake=()=>void check();void check();

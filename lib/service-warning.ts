@@ -15,7 +15,7 @@ export function warningFor(response: Response, path = ""): ServiceWarning | null
     const reason=audio?'Audio requests are temporarily rate limited. Please pause seeking and wait before pressing Play again.':signIn?'Sign-in attempts are temporarily rate limited. Please wait before trying again.':'Requests are temporarily rate limited to protect the site. This request wasn’t accepted.';
     return { kind:"rate-limit", title: "Thanks for listening!", detail: reason+" Your earlier saved results are still available.", retry };
   }
-  if(response.status===503&&response.headers.get("X-YinYang-Service")==="maintenance")return {kind:"maintenance",title:"Maintenance in progress",detail:"We’re temporarily pausing new submissions. Thanks for your patience! Music playback and seeking remain available.",retry:"Please try saving again shortly."};
+  if(response.status===503&&response.headers.get("X-YinYang-Service")==="maintenance")return {kind:"maintenance",title:"Maintenance in progress",detail:"Shootouts are temporarily paused for maintenance. Listening Pool and Preference Tuning remain available. Thanks for your patience!",retry:"Please return to Shootouts after the maintenance notice clears."};
   if (response.status >= 500 && response.status <= 599) {
     return { kind:"unavailable", title: "Service temporarily unavailable", detail: "Your request could not be completed. Please try again shortly.", retry: null };
   }

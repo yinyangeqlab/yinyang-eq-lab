@@ -155,6 +155,21 @@ async function admin(request, env, path) {
   }
   return json({ error: "Not found." }, 404);
 }
+function shootoutPauseResponse(request, status) {
+  if (!status.active || !status.pauseSubmissions) return null;
+  const path = new URL(request.url).pathname;
+  const headers = {"Cache-Control":"private, no-store","Retry-After":"60","X-YinYang-Service":"maintenance"};
+  if ((path === "/shootout" || path.startsWith("/shootout/")) && ["GET","HEAD"].includes(request.method)) {
+    const message = String(status.message || "Major updates are underway. Shootouts are temporarily unavailable.").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+    const html = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shootouts paused | YinYang EQ League</title><style>html{color-scheme:dark}body{margin:0;background:#081411;color:#e2f5ed;font:16px/1.6 system-ui}main{box-sizing:border-box;max-width:760px;margin:8vh auto;padding:28px}section{border:1px solid #355b4c;border-radius:16px;padding:clamp(18px,4vw,36px);background:#10251d}h1{font-size:clamp(26px,5vw,40px);line-height:1.2}a{color:#a5e9ce}nav{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1px solid #4e806a;border-radius:8px;background:#173f2e;text-decoration:none}small{color:#bbd0c5}</style><main><section><small>YINYANG EQ LEAGUE · MAINTENANCE</small><h1>Shootouts are temporarily paused</h1><p>${message}</p><p>Your saved comparisons are preserved. This pause clears automatically when the notice expires.</p><nav><a href="/music-library">Open Listening Pool</a><a href="/preference-tuning">Open Preference Tuning</a></nav><p><a href="/my-data">My data &amp; privacy choices</a> · <a href="/">Welcome</a></p></section></main></html>`;
+    return new Response(request.method === "HEAD" ? null : html, {status:503,headers:{...headers,"Content-Type":"text/html; charset=utf-8"}});
+  }
+  if (["/api/trials","/api/votes","/api/listening-runs","/api/comparison-choices","/api/feedback"].includes(path) && !["GET","HEAD","OPTIONS"].includes(request.method)) {
+    return Response.json({error:status.message},{status:503,headers});
+  }
+  return null;
+}
+
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
@@ -243,9 +258,9 @@ const privateGate = {
         if(data?.setCookie) blocked.headers.append("Set-Cookie",data.setCookie);
         return finish(blocked);
       }
-      if(!owner && !["GET","HEAD","OPTIONS"].includes(request.method) && !dataRoute) {
-        const status=await readServiceStatus();
-        if(status.active && status.pauseSubmissions)return Response.json({error:status.message},{status:503,headers:{"Cache-Control":"private, no-store","Retry-After":"60","X-YinYang-Service":"maintenance"}});
+      if (!owner && (path === "/shootout" || path.startsWith("/shootout/") || !["GET","HEAD","OPTIONS"].includes(request.method) && !dataRoute)) {
+        const paused = shootoutPauseResponse(request, await readServiceStatus());
+        if (paused) { if(data?.setCookie)paused.headers.append("Set-Cookie",data.setCookie); return finish(paused); }
       }
       const headersForApp = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headersForApp.delete(name);
