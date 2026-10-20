@@ -1,3 +1,7 @@
+Current live baseline is update93, implementation 4dbba07333b0755a1ffbd5dc2ce0416b936c6249. Source/build: work/maintenance-ui-release-20261018; infra: work/maintenance-ui-infra-20261018. Reviewed maintenance-control UI only; no backend or schema change. A fresh database uses all33 migrations. Pending personal-shootout work excluded. See LIVE_RELEASE.json.
+
+## Historical rebuild notes
+
 Current live baseline is update92, implementation 8eb2789dd805fd5d1534659c147cc10ec61a6c06. Source/build: work/maintenance-controls-consent-release-20261018; infra: work/maintenance-controls-consent-infra-20261018. Per-feature maintenance, independent participation entry and Tuning layout/ranking fixes; no migration. A fresh database uses all33 migrations. Pending personal-shootout work excluded. See LIVE_RELEASE.json.
 
 ## Historical rebuild notes

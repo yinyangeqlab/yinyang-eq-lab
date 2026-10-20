@@ -1,3 +1,15 @@
+# Current live release — update93, October 18, 2026
+
+Live: https://yinyangeq.com. The owner approved the redesigned maintenance UI shown in the local preview. Feature availability now uses labelled Paused/Available cards; duration uses quick choices and a custom combined-unit form with a readable total. Current live expiry and next-publication duration are clearly separated. Selections take effect only when published. Dark green styling, keyboard controls and mobile layout are retained.
+
+Only components/service-status-panel.tsx and components/service-status-panel.css changed. Implementation `4dbba07333b0755a1ffbd5dc2ce0416b936c6249`. Source/build `work/maintenance-ui-release-20261018`; infrastructure `work/maintenance-ui-infra-20261018`. Pending personal-shootout and backup/recovery changes remain preserved and excluded. No backend policy, schema, scoring, listening-protocol or participant-choice changes. One Worker updated; three resources unchanged. All145 earlier client assets retained. CPU5000ms, six abuse bindings, private media/admission, disabled public Worker URLs and edge/cost guards remain unchanged. No forced refresh or audio stop. GitHub publication remains separate and unrequested.
+
+The entire stored maintenance row was read before and after deployment and is identical, including notice ID, text, pause setting and expiry. No notice was published, cleared or extended. Original automatic expiry remains October18,10:58:44PM Pacific (`1792389524011`). The effective state at verification is recorded in workspace/artifacts/maintenance-ui-release-20261018/live-notice-check.json; natural expiry must not be mistaken for a deployment change or manually reactivated.
+
+Isolated production build/TypeScript,340staticassets/200recordings,448maintenance route/method cases, duration validation/expiry and local UI interactions passed. Preview verified360/390/768/1280/1920/3440/3840 widths, no horizontal overflow, correct1590-minute combined duration, invalid-field publication protection and keyboard toggles. Live deployed admin layout and retained asset hashes verified read-only. No live form save or participant comparison submitted. Evidence: workspace/artifacts/maintenance-ui-release-20261018/. Design review remains workspace/artifacts/maintenance-ui-review-20261018/review.html, now superseded by this verified deployment.
+
+## Historical release notes
+
 # Current live release — update92, October 18, 2026
 
 Live: https://yinyangeq.com. The owner explicitly approved and this session deployed the final reviewed maintenance-controls release. Admin now selects locks for Shootouts, Listening Pool, Preference Tuning, and shared uploads/suggestions; privacy/data/admin access remains available. Contribution forms also need the Shootout page unlocked. The existing notice remains Shootout-only and its original automatic expiry is unchanged: October18,10:58:44PM Pacific (`1792389524011`). Do not republish or extend it just to test controls.

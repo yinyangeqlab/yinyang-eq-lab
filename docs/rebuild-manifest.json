@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 92,
-  "implementationCommit": "8eb2789dd805fd5d1534659c147cc10ec61a6c06",
-  "runtimeParity": "Recorded runtime matches verified update92; concurrent personal-shootout development excluded.",
+  "liveUpdate": 93,
+  "implementationCommit": "4dbba07333b0755a1ffbd5dc2ce0416b936c6249",
+  "runtimeParity": "Recorded runtime matches verified update93; concurrent personal-shootout development excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -37,6 +37,8 @@
       "components/results-profile.tsx",
       "components/track-waveform.tsx",
       "db/schema.ts",
+      "docs/ENCRYPTED_BACKUP.md",
+      "docs/RECOVERY.md",
       "drizzle/meta/_journal.json",
       "lib/browser-pairing.mjs",
       "lib/browser-sync.mjs",
@@ -78,7 +80,10 @@
       "scripts/check_personal_research.mjs",
       "scripts/check_personal_shootout.mjs",
       "scripts/check_research_source.mjs",
-      "scripts/check_setup_auto_hide.mjs"
+      "scripts/check_setup_auto_hide.mjs",
+      "scripts/recovery/backup.py",
+      "scripts/recovery/export-backup.mjs",
+      "scripts/recovery/test_backup.py"
     ]
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
