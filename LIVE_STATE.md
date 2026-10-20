@@ -1,8 +1,16 @@
-# Current live release — update74, October 18, 2026
+# Current live release — update75, October 18, 2026
 
-Site: https://yinyangeq.com. Verified source/build: `work/welcome-sync-release-20261018`. Infrastructure: `work/welcome-sync-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede all older release statements. `LIVE_RELEASE.json` records the exact source, build, assets and configuration hashes.
+Site: https://yinyangeq.com. Verified source/build: `work/welcome-header-release-20261018`. Infrastructure: `work/welcome-header-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede all older release statements. `LIVE_RELEASE.json` records the exact source, build, assets and configuration hashes.
 
-## Welcome controls — update74
+## Responsive animated header — update75
+
+Welcome now has a shallow full-width shaded header at the top edge. Brand, compact tool group and Your data control align in one row at800px and wider; smaller screens retain a compact second tool row. The tools are Shootout, Track Library and Preference Tuning, with related icons, subtle underlines and staggered decorative waves, notes or sliders scattering in varied directions on hover/keyboard focus. Reduced-motion preferences disable the particles. Thin dark shadows improve descriptive text over the artwork. The duplicate invitation/how-it-works header links were removed; their main hero controls remain. Admin sign in is a quiet bottom-right footer button using Shootout's ShieldCheck icon and utility styling. The amber sync callout and all sync/consent behavior remain unchanged.
+
+Built from exact update74 source with only app/page.tsx and app/welcome.css changed. Production build and packaging passed:340 assets,200 protected recordings. Final layout checks at320,390,768,800,820,1024 and1440px showed no control overlaps or page overflow. Live Welcome and /sync returned200 and all referenced13 JS/CSS assets matched the release build. Live screenshot verifies the header and Track Library capitalization. One Worker updated, three other resources unchanged; final preview four unchanged. No migrations, participant-data writes, access/media changes or cost-guard changes. Evidence: artifacts/welcome-header-{build,assets,preview,deployment,no-drift}.log, welcome-header-responsive.json, welcome-header-source-scope.json, welcome-header-live-verification.json and welcome-header-live.png.
+
+Earlier release descriptions below are historical context. Separate passage/upload/playback/ranking and locked-button design drafts remain unpublished and preserved.
+
+## Previous welcome controls — update74
 
 The top-right disclosure is now “Your data control,” with a centered three-line menu icon and label. It still contains Sync browsers, My data & sharing and Privacy notice. The existing “Already using another browser?” prompt now has bold light text on a dark panel beside a prominent amber Sync browsers button with circular arrows. The button gently scales/glows twice on page load, then settles; reduced-motion preferences disable animation. The welcome callout is visible to all visitors, including unsynced browsers; no new identity detection or monitoring was added.
 

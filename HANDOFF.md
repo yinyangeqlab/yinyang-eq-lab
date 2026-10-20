@@ -1,9 +1,17 @@
-# Current handoff — welcome controls, live update74
+# Current handoff — responsive welcome header, live update75
 
 
-Site: https://yinyangeq.com. Verified source/build: `work/welcome-sync-release-20261018`. Infrastructure: `work/welcome-sync-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede all older release statements. `LIVE_RELEASE.json` records the exact source, build, assets and configuration hashes.
+Site: https://yinyangeq.com. Verified source/build: `work/welcome-header-release-20261018`. Infrastructure: `work/welcome-header-infra-20261018`. Pulumi stack `staging` serves the live domain. These pointers supersede all older release statements. `LIVE_RELEASE.json` records the exact source, build, assets and configuration hashes.
 
-## Welcome controls — update74
+## Responsive animated header — update75
+
+Welcome now has a shallow full-width shaded header at the top edge. Brand, compact tool group and Your data control align in one row at800px and wider; smaller screens retain a compact second tool row. The tools are Shootout, Track Library and Preference Tuning, with related icons, subtle underlines and staggered decorative waves, notes or sliders scattering in varied directions on hover/keyboard focus. Reduced-motion preferences disable the particles. Thin dark shadows improve descriptive text over the artwork. The duplicate invitation/how-it-works header links were removed; their main hero controls remain. Admin sign in is a quiet bottom-right footer button using Shootout's ShieldCheck icon and utility styling. The amber sync callout and all sync/consent behavior remain unchanged.
+
+Built from exact update74 source with only app/page.tsx and app/welcome.css changed. Production build and packaging passed:340 assets,200 protected recordings. Final layout checks at320,390,768,800,820,1024 and1440px showed no control overlaps or page overflow. Live Welcome and /sync returned200 and all referenced13 JS/CSS assets matched the release build. Live screenshot verifies the header and Track Library capitalization. One Worker updated, three other resources unchanged; final preview four unchanged. No migrations, participant-data writes, access/media changes or cost-guard changes. Evidence: artifacts/welcome-header-{build,assets,preview,deployment,no-drift}.log, welcome-header-responsive.json, welcome-header-source-scope.json, welcome-header-live-verification.json and welcome-header-live.png.
+
+Earlier release descriptions below are historical context. Separate passage/upload/playback/ranking and locked-button design drafts remain unpublished and preserved.
+
+## Previous welcome controls — update74
 
 The top-right disclosure is now “Your data control,” with a centered three-line menu icon and label. It still contains Sync browsers, My data & sharing and Privacy notice. The existing “Already using another browser?” prompt now has bold light text on a dark panel beside a prominent amber Sync browsers button with circular arrows. The button gently scales/glows twice on page load, then settles; reduced-motion preferences disable animation. The welcome callout is visible to all visitors, including unsynced browsers; no new identity detection or monitoring was added.
 
@@ -33,7 +41,7 @@ This isolated release excludes separate root passage/playback/upload and ranking
 
 ## Source commit
 
-UI implementation commit `76fabe5c98cd425d70806bdd5dc5ac044b6c7afe` is in `work/github-live-sync-20261018` on main. No push was requested. This release preserves the existing generic sync/monitoring implementation and excludes private configuration, media, credentials and production records. A subsequent documentation commit records this verified release.
+Header implementation commit `89c2cf4` and capitalization commit `62818576046ce3645a8be5bfa1f5f4fdad3ea89b` are in `work/github-live-sync-20261018` on main. No push was requested. A following documentation commit records this verified release; deployment and GitHub publication are separate. Private credentials/configuration, media and production data remain excluded from the source checkout.
 
 ## Continue work
 
@@ -50,3 +58,15 @@ Before this revision re-read release docs/check: live is now update73 (browser-s
 ### Texture/shadow for locked buttons, padlocks and chains — local review
 
 User requested texture/shadow for buttons and realistic varied shades/textures for locks, then clarified chains too. Added only staged v3 globals CSS: fine brushed plate grain, edge bevels/inset shadows and soft external shadow; warm/neutral/cool metal lock SVGs with gradient shackle/body, brushed face, bevel highlights and recessed keyhole. Chains use stronger round-tube metallic shading, darker inner edges, small wear highlights and contact shadows while retaining entire-button top/bottom X and center crossing. Full-button geometry, readable vote labels and right-edge passage action preserved. Styling only applies to locked state; no playback, eligibility or ranking changes. Source artifacts: textured-controls.css, textured-lock-{a,tie,b}.svg, textured-full-button-chains.svg. Actual app preview at8898 loaded queryreview8/layout8, visually verified; screenshot textured-buttons-full.png. No tests run for this visual-only revision, no production writes/deployment. Await design approval. Live source remains update73.
+
+### Bolder red/gray/blue button color study — local only
+
+User requests gray instead of purple Tie and more character in all3 backgrounds. Staged v3 CSS now uses crimson/red, graphite/gray and cobalt/blue layered same-color gradients, stronger edge highlights and shaded bevels, while retaining textured metal locks/chains. Middle text is white; unlocked Tie also uses neutral gray, with a brighter gray hover. Unlocked A/B get matching gradients. Discovered prior per-side background shorthands overrode generic texture/gradient rules; corrected locked gradient selector with button:is(.choice-a,.choice-tie,.choice-b) to take precedence. Actual computed backgrounds verified: all3 background-image gradients active; bases rgb40,14,25 /28,34,42 /11,34,60. No logic changes/tests/deploy. Export bold-button-gradients.css, screenshot bold-gradients-full.png. Fixture expired during design gap; started fresh synthetic test through actual UI and soundcheck, then collapsed options. Server8898 restarted, review10/layout10 query. Live release now74 (Welcome controls); staged Shootout preview remains reconciled update73 plus local design changes. Main application files unchanged. Await design approval.
+
+### Passage actions integrated into gold listening guide — local design alternative
+
+User proposed moving passage playback/randomizer near or inside gold5-second box with matching colors. Implemented in isolated v3 source: MusicPanel owns the same playback/selection state and portals its passage-controls into a dedicated #ranked-passage-actions slot inside listening guide when ranked Shootout is active; Open/other contexts retain playback bar fallback. Optional passageControlsHostId prop, effect-resolved DOM host, createPortal; no mirrored passage state. Labels now Play both targets and Shuffle passage. Gold shaded primary and secondary buttons sit below progress/copy with selected time at right. Existing source selection still green/editable below. Desktop playback transport remains centered when actions are in guide. Main root source untouched; not deployed or approved.
+
+Preview server-gold-final.mjs port8900 (fresh cache); actual component preview queryreview12/layout12. TypeScript passed. Browser: shuffle changed green selection6.14→2.3s; Play both targets triggered existing sound-check then B first and A second automatically from the portal button. Phone390px shows no horizontal overflow. Screenshot gold-actions-desktop.png, with further mobile/ready evidence to follow. The gold design supersedes the requested right-edge placement only as this new user-requested alternative, awaiting approval.
+
+Gold guide browser completion confirmed: READY TO VOTE with7.8sA /7.9sB after shuffled excerpt played under both targets. Mobile screenshot gold-actions-mobile.png; temporary viewport override reset. Desktop screenshot actual fullapp reviewed. No production reads/writes or deployment.
