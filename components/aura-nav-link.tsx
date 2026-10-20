@@ -6,7 +6,7 @@ const icons = { welcome: House, tuning: SlidersHorizontal, library: LibraryBig }
 export function OwnerUtilityLink() {
   return <a className="owner-utility-link" href="/owner-research">
     <ShieldCheck aria-hidden="true" />
-    <span>Owner view</span>
+    <span>Admin view</span>
   </a>;
 }
 

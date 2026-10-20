@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import PrivacyEvents from "@/components/privacy-events";
 import ServiceWarningPopup from "@/components/service-warning";
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased"><ServiceWarningPopup />{children}</body>
+      <body className="antialiased"><ServiceWarningPopup /><PrivacyEvents />{children}<footer style={{textAlign:"center",padding:"16px",fontSize:"13px"}}><a href="/my-data" style={{color:"#9dbcc5"}}>My data · sharing &amp; deletion</a></footer></body>
     </html>
   );
 }

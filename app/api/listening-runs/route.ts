@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { listeningRuns, rankedTrials } from "@/db/schema";
@@ -10,6 +11,7 @@ const uuid = /^[a-f0-9-]{36}$/i;
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("run");
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 32_768);
@@ -21,25 +23,26 @@ export async function POST(request: Request) {
     if (![id, voterId, targetAId, targetBId].every(value => uuid.test(value)) || (measurementId && !uuid.test(measurementId)) || !["blind", "bring", "open"].includes(testMode) || !["ie", "oe"].includes(headphoneType) || !["a", "b", "tie"].includes(result)) return Response.json({ error: "Invalid comparison." }, { status: 400 });
     const intervals = parseIntervals(data.intervals);
     const stats = intervalStats(intervals);
-    const shareSong = testMode === "blind" || data.shareSong === true;
+    const shareSong = testMode === "blind" || data.shareSong === true && ownership.shareMusic;
     const song = (key: string, max = 120) => shareSong ? String(data[key] ?? "").trim().slice(0, max) || null : null;
     const db = getDb();
     const trialId = testMode === "open" ? null : String(data.trialId ?? "");
     if (trialId !== null) {
       if (!uuid.test(trialId)) return Response.json({ error: "Invalid ranked trial." }, { status: 400 });
+      await ownership.requireTrial(trialId);
       const issued = await db.select().from(rankedTrials).where(eq(rankedTrials.id, trialId)).get();
       if (!issued || issued.voterId !== voterId || issued.testMode !== testMode || issued.sideA !== targetAId || issued.sideB !== targetBId) return Response.json({ error: "Ranked trial does not match this comparison." }, { status: 409 });
       if (Date.now() - issued.issuedAt < 10000 || stats.heardA < 5 || stats.heardB < 5) return Response.json({ error: "Blind comparisons require at least 5 seconds of playback per side." }, { status: 400 });
       if (Date.now() - issued.issuedAt > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
     }
-    await db.insert(listeningRuns).values({
+    await db.batch([db.insert(listeningRuns).values({
       id, voterId, testMode, headphoneType, targetAId, targetBId, trialId,
       targetAName: String(data.targetAName ?? "").trim().slice(0, 80),
       targetBName: String(data.targetBName ?? "").trim().slice(0, 80),
       measurementId, result, intervals: JSON.stringify(intervals), ...stats,
       songTitle: song("songTitle"), songArtist: song("songArtist"), songAlbum: song("songAlbum"), recordingId: song("recordingId", 80),
       createdAt: Date.now(),
-    }).onConflictDoNothing();
+    }), ownership.record(id)]);
     return Response.json({ ok: true }, { status: 201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

@@ -1,3 +1,4 @@
+import { submissionContext } from "@/lib/submission-ownership";
 import { getDb } from "@/db";
 import { researchMeasurements, researchMeasurementChunks } from "@/db/schema";
 import { parseCurve } from "@/lib/curves";
@@ -11,6 +12,7 @@ const privateHeaders = { "Cache-Control": "private, no-store" };
 
 export async function POST(request: Request) {
   try {
+    const ownership = await submissionContext("measurement");
     if (request.headers.get("origin") !== new URL(request.url).origin)
       throw new RequestInputError("Invalid origin.", 403);
     const limited = await publicWriteGate(request);
@@ -65,6 +67,7 @@ export async function POST(request: Request) {
     const id = crypto.randomUUID(), db = getDb();
     // Atomic metadata + at most 24 chunk rows, retaining the exact uploaded bytes.
     await db.batch([
+      ownership.record(id),
       db.insert(researchMeasurements).values({ id, ...metadata, files: JSON.stringify(files), createdAt: Date.now() }),
       ...chunks.map(chunk => db.insert(researchMeasurementChunks).values({ measurementId: id, ...chunk })),
     ]);

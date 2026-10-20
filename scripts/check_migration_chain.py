@@ -11,11 +11,20 @@ assert [e["tag"] for e in journal["entries"]] == [p.stem for p in paths]
 assert [e["idx"] for e in journal["entries"]] == list(range(len(paths)))
 db = sqlite3.connect(":memory:")
 db.execute("PRAGMA foreign_keys = ON")
+legacy_payload = json.dumps({"year": 2026, "methodology": "bounded-geometric-v1", "pairs": []})
 for path in paths:
+    if path.name == "0022_small_study_retention.sql":
+        db.execute("INSERT INTO statistics_archive VALUES (?,?,?)", (2026,"bounded-geometric-v1",legacy_payload))
     db.executescript(path.read_text())
-snapshot = json.loads((root / "drizzle/meta/0017_snapshot.json").read_text())
+assert db.execute("SELECT payload FROM statistics_archive WHERE year=2026").fetchone()[0] == legacy_payload
+try:
+    db.execute("INSERT INTO statistics_archive VALUES (2027,'bounded-geometric-v1','{}')")
+    raise AssertionError("Retired generator must not create new archive releases")
+except sqlite3.IntegrityError:
+    pass
+snapshot = json.loads((root / "drizzle/meta/0024_snapshot.json").read_text())
 tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
-assert tables == set(snapshot["tables"]), (tables, set(snapshot["tables"]))
+assert tables - {"sqlite_sequence"} == set(snapshot["tables"]), (tables, set(snapshot["tables"]))
 for name, table in snapshot["tables"].items():
     assert {r[1] for r in db.execute(f'PRAGMA table_info("{name}")')} == set(table["columns"]), name
 db.execute("INSERT INTO research_measurements (id,contributor_id,local_id,name,device,type,rig,files,created_at) VALUES (?,?,?,?,?,?,?,?,?)",

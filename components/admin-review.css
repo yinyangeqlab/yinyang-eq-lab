@@ -1,0 +1,12 @@
+.admin-review pre { max-width: min(65vw, 650px); max-height: 360px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }
+.admin-review code { overflow-wrap: anywhere; }
+.admin-review-form { padding: 20px; border: 1px solid #517a80; border-radius: 12px; margin: 16px 0; }
+.admin-review-form label { display: grid; gap: 8px; margin: 16px 0; }
+.admin-review-form textarea { box-sizing: border-box; width: 100%; min-height: 100px; padding: 12px; background: #10191d; color: #e9f1f2; border: 1px solid #517a80; border-radius: 8px; }
+.admin-review > details { margin-top: 20px; }
+.admin-browser-row { display: flex; align-items: center; gap: 16px; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #34434a; }
+@media(max-width:600px) { .admin-browser-row { align-items: flex-start; flex-direction: column; } }
+
+.admin-review button { min-height: 40px; padding: 8px 14px; border: 1px solid #79d8d2; border-radius: 7px; background: #16312f; color: #b8fff8; cursor: pointer; }
+.admin-review button:disabled { cursor: default; opacity: .5; }
+.admin-review summary { cursor: pointer; }

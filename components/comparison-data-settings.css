@@ -1,0 +1,15 @@
+.comparison-data-settings .data-choice { display:flex; gap:12px; align-items:flex-start; margin:16px 0; padding:14px; border:1px solid #3c5964; border-radius:10px; }
+.comparison-data-settings .data-choice input { flex:none; width:20px; height:20px; margin-top:3px; accent-color:#79d8cd; }
+.comparison-data-settings .data-choice strong { display:block; color:#e3edef; }
+.comparison-data-settings .data-choice small { display:block; margin-top:6px; line-height:1.55; color:#a4bac4; }
+.comparison-data-settings a { color:#9fe2db; text-decoration:underline; }
+.comparison-data-settings .vote-data-continue { min-height:44px; }
+
+.music-data-settings { display:block; width:auto; background:transparent; color:#a2c4cc; border:0; padding:5px 0; font-size:12px; text-align:left; text-decoration:underline; cursor:pointer; }
+.trial-data-actions { display:flex; flex-wrap:wrap; gap:14px; align-items:center; margin:12px 0; }
+.trial-data-actions a { color:#91dcd2; text-decoration:underline; }
+.trial-data-actions button { min-height:40px; padding:8px 12px; border:1px solid #8d6170; border-radius:7px; background:#2d1c25; color:#eedbe1; cursor:pointer; }
+
+.comparison-data-settings { display:flex; flex-direction:column; overflow:hidden; }
+.comparison-data-settings .agreement-copy { min-height:0; overflow:auto; }
+.comparison-data-settings .vote-data-actions { display:flex; flex-wrap:wrap; gap:14px; align-items:center; flex:none; padding-top:14px; margin-top:14px; border-top:1px solid #354c55; }
