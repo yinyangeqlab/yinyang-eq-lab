@@ -16,7 +16,7 @@ const source=`export function ranking({research,rankProtocol,rankMode,rankType})
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 const context=vm.createContext({exports:{},require:createRequire(import.meta.url)});
 vm.runInContext(compiled,context);
-const modes=['all','random','bring','curated','verified'];
+const modes=['all','random','bring','verified'];
 function rows(preferences,ties){
  const total=preferences+ties;
  return [
@@ -38,20 +38,26 @@ for(const protocol of ['all','current','legacy'])for(const type of ['ie','oe'])f
  const countPill=plain(markup.match(/<span class="count-pill">(.*?)<\/span>/s)?.[1]??'');
  assert.equal(countPill,`${expected(mode)} QUALIFIED COMPARISONS`,`${protocol}/${type}/${mode} main count includes ties`);
  const buttons=[...markup.matchAll(/<button[^>]*>(.*?)<\/button>/gs)].map(m=>plain(m[1]));
- assert.ok(buttons.includes(`Original 20 selected songs · ${expected('curated')} comparisons`),`${protocol}/${type}/${mode} selected-song count`);
+ assert.ok(!buttons.some(text=>/curated|original.*songs|selected songs/i.test(text)),'Historical 20-song filter is absent');
  assert.ok(buttons.includes(`Same file across listeners · ${expected('verified')} comparisons`),`${protocol}/${type}/${mode} same-file count`);
  assert.ok(!markup.includes('owner-curated tracks configured')&&!markup.includes('after 5 seconds per side count'));
- if(mode==='curated')assert.ok(markup.includes('Matching tags alone does not verify identical audio files'));
  if(mode==='verified')assert.ok(markup.includes('re-encoding or changing embedded tags can change the hash'));
  cases++;
 }
 // A tie-only cohort must show one comparison, not zero wins or two target rows.
-const one=cohort(0);one.categories.curated.ie=rows(0,1);one.categories.verified.ie=rows(0,1);
-const singular=renderToStaticMarkup(context.exports.ranking({research:{...research,protocols:{...research.protocols,current:one}},rankProtocol:'current',rankMode:'curated',rankType:'ie'}));
+const one=cohort(0);one.categories.verified.ie=rows(0,1);
+const singular=renderToStaticMarkup(context.exports.ranking({research:{...research,protocols:{...research.protocols,current:one}},rankProtocol:'current',rankMode:'verified',rankType:'ie'}));
 assert.ok(singular.includes('1 QUALIFIED COMPARISON</span>'));
-assert.ok(singular.includes('selected songs · 1 comparison</button>'));
 assert.ok(singular.includes('Same file across listeners · 1 comparison</button>'));
 const loading=renderToStaticMarkup(context.exports.ranking({research:null,rankProtocol:'current',rankMode:'all',rankType:'oe'}));
 assert.ok(loading.includes('0 QUALIFIED COMPARISONS'));
 assert.ok(loading.includes('No votes meet this ranking'));
-console.log(`Ranking view: ${cases} actual page renders verify protocol/headphone filters, main and both subset counters including ties; tie-only singular and loading states passed.`);
+console.log(`Ranking view: ${cases} actual page renders verify protocol/headphone filters, main and same-file counters including ties; tie-only singular and loading states passed.`);
+
+// Exercise the actual saved-view restoration branch for old curated selections.
+const restore=page.match(/if \(localStorage\.getItem\("target-lab-ranking-layout-v2"\).*?setRankMode\(saved\.rankMode\); else setRankMode\("all"\);/s)?.[0];
+assert.ok(restore);
+for(const [savedMode,expected] of [['curated','all'],['verified','verified'],['random','random'],['bring','bring'],['all','all'],['unknown','all']]) {
+ let restored;vm.runInNewContext(restore,{saved:{rankMode:savedMode},localStorage:{getItem:()=> 'true'},setRankMode:value=>{restored=value;}});assert.equal(restored,expected);
+}
+console.log('Removed historical view safely restores to All blind votes; valid saved views remain available.');
