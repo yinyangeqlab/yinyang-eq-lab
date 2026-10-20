@@ -58,28 +58,35 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       createdAt: editing?.createdAt ?? Date.now(),
     };
     if (!row.name || !row.device || !row.rig) throw new Error("Name, headphone model, and measuring device are required.");
-    const contributed = contribute;
-    if (contributed) {
-      if (![file, leftFile, rightFile].some(value => value instanceof File && value.size > 0)) throw new Error("Reattach the original CSV or TXT file to contribute it to research.");
-      if (data.get("rights") !== "yes") throw new Error("Confirm you may contribute these files.");
-      let contributorId = localStorage.getItem("target-lab-voter");
-      if (!contributorId) { contributorId = crypto.randomUUID(); localStorage.setItem("target-lab-voter", contributorId); }
-      const contribution = new FormData();
-      for (const key of ["name", "device", "type", "rig", "fit", "notes", "source", "driverType", "nozzleDiameterMm", "rights", "file", "leftFile", "rightFile"]) {
-        const value = data.get(key);
-        if (value !== null) contribution.set(key, value);
+    let contributed = false;
+    let contributionError = "";
+    if (contribute) {
+      try {
+        if (![file, leftFile, rightFile].some(value => value instanceof File && value.size > 0)) throw new Error("Reattach the original CSV or TXT file to contribute it to research.");
+        if (data.get("rights") !== "yes") throw new Error("Confirm you may contribute these files.");
+        let contributorId = localStorage.getItem("target-lab-voter");
+        if (!contributorId) { contributorId = crypto.randomUUID(); localStorage.setItem("target-lab-voter", contributorId); }
+        const contribution = new FormData();
+        for (const key of ["name", "device", "type", "rig", "fit", "notes", "source", "driverType", "nozzleDiameterMm", "rights", "file", "leftFile", "rightFile"]) {
+          const value = data.get(key);
+          if (value !== null) contribution.set(key, value);
+        }
+        contribution.set("contributorId", contributorId);
+        contribution.set("localId", row.id);
+        contribution.set("voteDataNoticeVersion", VOTE_DATA_NOTICE_VERSION);
+        const response = await fetch("/api/research-measurements", { method: "POST", body: contribution });
+        const result = await response.json() as { id?: string; error?: string };
+        if (!response.ok || !result.id) throw new Error(result.error || "Measurement contribution failed.");
+        row.researchContributionId = result.id;
+        contributed = true;
+      } catch (cause) {
+        contributionError = cause instanceof Error ? cause.message : "Research contribution failed.";
       }
-      contribution.set("contributorId", contributorId);
-      contribution.set("localId", row.id);
-      contribution.set("voteDataNoticeVersion", VOTE_DATA_NOTICE_VERSION);
-      const response = await fetch("/api/research-measurements", { method: "POST", body: contribution });
-      const result = await response.json() as { id?: string; error?: string };
-      if (!response.ok || !result.id) throw new Error(result.error || "Measurement contribution failed.");
-      row.researchContributionId = result.id;
     }
     if (editing) onUpdate(row); else onAdd(row);
     beginEdit(null); form.reset();
     if (contributed) setContributionStatus("Original measurement files saved for research.");
+    if (contributionError) setContributionStatus(`Saved in this browser. Research copy was not saved: ${contributionError} Edit this measurement and reattach the original files to try again.`);
   }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(""); setContributionStatus("");

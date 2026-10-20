@@ -34,6 +34,14 @@ export const researchMeasurements = sqliteTable("research_measurements", {
   createdAt: integer("created_at").notNull(),
 }, table => [index("research_measurements_contributor_idx").on(table.contributorId)]);
 
+// Original bytes are split so each row remains below D1's 2 MB row limit.
+export const researchMeasurementChunks = sqliteTable("research_measurement_chunks", {
+  measurementId: text("measurement_id").notNull().references(() => researchMeasurements.id, { onDelete: "cascade" }),
+  kind: text("kind").notNull(),
+  chunkIndex: integer("chunk_index").notNull(),
+  base64: text("base64").notNull(),
+}, table => [primaryKey({ columns: [table.measurementId, table.kind, table.chunkIndex] })]);
+
 export const preferenceExports = sqliteTable("preference_exports", {
   id: text("id").primaryKey(),
   targetId: text("target_id").notNull(),
@@ -176,3 +184,33 @@ export const musicVotes = sqliteTable("music_votes", {
   userName: text("user_name").notNull(),
   updatedAt: integer("updated_at").notNull(),
 }, table => [primaryKey({ columns: [table.userId, table.trackUrl] }), index("music_votes_track_idx").on(table.trackUrl)]);
+
+// These tables are also used by raw SQL in the edge and write gate. Keep them
+// in the schema so future generated migrations do not propose dropping them.
+export const publicWriteLimits = sqliteTable("public_write_limits", {
+  key: text("key").primaryKey().notNull(),
+  windowStart: integer("window_start").notNull(),
+  count: integer("count").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("public_write_limits_expiry_idx").on(table.expiresAt)]);
+
+export const publicWritePenalties = sqliteTable("public_write_penalties", {
+  key: text("key").primaryKey().notNull(),
+  level: integer("level").notNull(),
+  hits: integer("hits").notNull(),
+  blockedUntil: integer("blocked_until").notNull(),
+  lastEscalatedAt: integer("last_escalated_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+});
+
+export const privateTesterInvites = sqliteTable("private_tester_invites", {
+  id: text("id").primaryKey().notNull(),
+  label: text("label").notNull(),
+  codeHash: text("code_hash").notNull().unique(),
+  createdAt: integer("created_at").notNull(),
+  codeExpiresAt: integer("code_expires_at").notNull(),
+  redeemedAt: integer("redeemed_at"),
+  sessionHash: text("session_hash").unique(),
+  sessionExpiresAt: integer("session_expires_at"),
+  revokedAt: integer("revoked_at"),
+}, table => [index("private_tester_invites_session_idx").on(table.sessionHash)]);
