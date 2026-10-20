@@ -35,3 +35,17 @@
 .archive-method { margin:14px 0; padding:12px; border:1px solid #3b5356; border-radius:7px; }
 .archive-method summary { cursor:pointer; color:#c3e8e2; font-weight:600; }
 .archive-method p { line-height:1.65; margin-top:12px; }
+
+/* Match notice duration controls to the admin's dark green forms. */
+.owner-research .service-status-panel select,.owner-research .notice-duration input {
+ width:100%; max-width:260px; min-height:44px; padding:10px 12px; border:1px solid #578b87;
+ border-radius:7px; background:#081c18; color:#d5fff1; color-scheme:dark; font:inherit;
+}
+.owner-research .service-status-panel select option { background:#081c18; color:#d5fff1; }
+.owner-research .service-status-panel :is(select,input):focus-visible { outline:2px solid #91e7d5; outline-offset:3px; }
+.notice-duration { max-width:720px; padding:16px; margin:16px 0; border:1px solid #42645b; border-radius:10px; background:#0b1e1a; }
+.notice-duration legend { padding:0 6px; color:#b8f1dc; font-weight:700; }
+.notice-duration-fields { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; }
+.service-status-panel .notice-duration-fields label { min-width:0; margin:0; }
+.notice-duration p,.notice-duration-summary { font-size:13px; line-height:1.6; }
+@media(max-width:650px) { .notice-duration-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }

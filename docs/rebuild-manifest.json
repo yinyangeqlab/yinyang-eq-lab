@@ -106,7 +106,7 @@
     },
     {
       "path": "app/api/owner-research/service-status/route.ts",
-      "sha256": "ccf8aa9dde69a9af9d3585ea1f17bb01fa349d71260eac6a39b491dd9958e029"
+      "sha256": "428e4c9ebfd63285964f5a481dba97b5909d5afffa6cd4c645c25b353c4ae4b6"
     },
     {
       "path": "app/api/preference-exports/route.ts",
@@ -178,7 +178,7 @@
     },
     {
       "path": "app/owner-research/admin-layout.css",
-      "sha256": "c0985bdba9e35e3601d2943c032d0fedf794ffa3b04a2754ec4f71007c5c4086"
+      "sha256": "4b39024239773b2348107c3221a1737952b9bf80dae6819b5e267018ff9b0d90"
     },
     {
       "path": "app/owner-research/page.tsx",
@@ -334,7 +334,7 @@
     },
     {
       "path": "components/service-status-panel.tsx",
-      "sha256": "5620471061e91482a6df2a406047a4f1863017b69c3b87e8c61e13a3f364de08"
+      "sha256": "60a7cb385fc4cb85ecbdeecf34c1a6bcdd1a3b038c251c432d6399bcdf96fce3"
     },
     {
       "path": "components/service-warning.tsx",
@@ -1122,7 +1122,7 @@
     },
     {
       "path": "lib/service-status.ts",
-      "sha256": "e806177429046c258d9be807dd7d8b01222c0a9296217829130c234349b9771f"
+      "sha256": "7401d870c893472a645b6c04ceaa1dcab3d30c8fa5eaf43f46c5357f0c19878c"
     },
     {
       "path": "lib/service-warning.ts",

@@ -17,9 +17,9 @@ export async function readServiceStatus(fresh=false):Promise<ServiceStatus>{
  if(row.expiresAt!==null&&row.expiresAt<=Date.now())row={...inactive};
  return forced?{...row,id:row.id||'deployment-maintenance',active:true,message:row.message||DEFAULT_MAINTENANCE_MESSAGE,pauseSubmissions:true,enabled:true}:row;
 }
-export async function publishServiceStatus(input:{active:boolean;message:string;pauseSubmissions:boolean;hours:number}){
+export async function publishServiceStatus(input:{active:boolean;message:string;pauseSubmissions:boolean;hours?:number;durationMinutes?:number}){
  const revision=crypto.randomUUID();
- if(input.active)await database().prepare('INSERT INTO site_service_status(id,revision,message,pause_submissions,expires_at) VALUES(1,?,?,?,?) ON CONFLICT(id) DO UPDATE SET revision=excluded.revision,message=excluded.message,pause_submissions=excluded.pause_submissions,expires_at=excluded.expires_at').bind(revision,input.message,input.pauseSubmissions?1:0,Date.now()+input.hours*3600000).run();
+ if(input.active)await database().prepare('INSERT INTO site_service_status(id,revision,message,pause_submissions,expires_at) VALUES(1,?,?,?,?) ON CONFLICT(id) DO UPDATE SET revision=excluded.revision,message=excluded.message,pause_submissions=excluded.pause_submissions,expires_at=excluded.expires_at').bind(revision,input.message,input.pauseSubmissions?1:0,Date.now()+(input.durationMinutes??input.hours!*60)*60000).run();
  else await database().prepare('DELETE FROM site_service_status WHERE id=1').run();
  return readServiceStatus(true);
 }
