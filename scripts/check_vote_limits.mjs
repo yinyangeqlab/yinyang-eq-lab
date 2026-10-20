@@ -34,7 +34,7 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     update() { return { set: () => ({ where() {} }) }; },
     async batch() { batches++; },
   };
-  const imports = {
+  const imports = {"@/lib/public-targets":{publicTargetPredicate:{}},
     "@/lib/listening-protocol":{LISTENING_PROTOCOL:"matched-passage-v2"},
     "cloudflare:workers":{env:{DB:{prepare:()=>({bind:()=>({first:async()=>({subject_id:"test-account"})})})}}},
     "@/lib/submission-ownership": { submissionContext: async () => ({subjectId:"test-account",shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },

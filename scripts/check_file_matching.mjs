@@ -1,3 +1,4 @@
+import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
@@ -15,7 +16,7 @@ assert.equal(fingerprints.runFileFingerprint(JSON.stringify({sha256:hash})),hash
 const targets=[{id:'a',name:'Alpha',creator:'Fixture',status:'approved'},{id:'b',name:'Beta',creator:'Fixture',status:'approved'}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[],removed=new Set();
-const deps={'@/lib/file-fingerprint':fingerprints,'@/lib/listening-protocol':protocol,'@/lib/listening':{intervalStats,parseIntervals},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[]},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!removed.has(kind+':'+id)},'@/db/schema':schema,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})}};
+const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/file-fingerprint':fingerprints,'@/lib/listening-protocol':protocol,'@/lib/listening':{intervalStats,parseIntervals},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[]},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!removed.has(kind+':'+id)},'@/db/schema':schema,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})}};
 function load(relative){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+relative,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},Response});return exports;}
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
 const api=load('app/api/research/route.ts');

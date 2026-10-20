@@ -1,6 +1,6 @@
 # Tournament work checkpoint — October 19, 2026
 
-**Owner requested a pause. Feature implementation is paused. This is a local WIP checkpoint, not an approved release. Do not push or deploy.** Read this document before older chronological notes in PERSONAL_SHOOTOUT.md and ADMIN_TEST_ISOLATION.md; some older statements describe superseded behavior.
+**Historical WIP checkpoint. The owner resumed work later on October 19; see TOURNAMENT_REVIEW_2026-10-19.md for the current local implementation and verification. No push or deployment is authorized.** Read this document before older chronological notes in PERSONAL_SHOOTOUT.md and ADMIN_TEST_ISOLATION.md; some older statements describe superseded behavior.
 
 ## Baseline, scope and instructions
 

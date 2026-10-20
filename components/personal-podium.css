@@ -73,3 +73,10 @@
 @keyframes tune-slider-drift{0%,100%{transform:translateX(-80%)}50%{transform:translateX(55%)}}
 @media(hover:none),(max-width:600px){.personal-tune-hologram{display:none}}
 @media(prefers-reduced-motion:reduce){.personal-tune-hologram,.personal-tune-hologram *{animation:none!important;transition:none!important;transform:none!important}.personal-tune-hologram .tune-demo-slider b{transform:translateX(-50%)!important}}
+
+/* Keep standings readable rather than squeezing headers into single letters. */
+.personal-full-standings table{min-width:570px;table-layout:auto;}
+.personal-full-standings thead th,.personal-full-standings td:nth-child(3){white-space:nowrap;overflow-wrap:normal;}
+.personal-full-standings .podium-history-table:focus-visible{outline:2px solid var(--podium-accent);outline-offset:3px;}
+.standings-scroll-hint{display:none;}
+@media(max-width:700px){.personal-full-standings .standings-scroll-hint{display:block;font-size:11px;color:var(--podium-accent);margin:4px 0 8px;}}

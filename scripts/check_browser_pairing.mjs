@@ -59,8 +59,11 @@ const device=sql.prepare('SELECT * FROM private_tester_devices').get();assert.eq
 assert.equal(sql.prepare('SELECT subject_id FROM privacy_sessions WHERE token_hash=?').get(device.data_token_hash).subject_id,'invite:'+tester.id);
 // Exercise actual private-gate routing and authentication. Only the application
 // renderer/media implementation is stubbed; no gate auth logic is replaced.
+const maintenanceSource=ts.transpileModule(readFileSync('lib/maintenance-options.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+const maintenanceUrl='data:text/javascript;base64,'+Buffer.from(maintenanceSource).toString('base64');
 const gateSource=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.meta.url),'utf8')
   .replace(/import\s*\{readServiceStatus\}\s*from ["']\.\/service-status\.mjs["'];/,'const readServiceStatus=async()=>({active:false});')
+  .replace(/from ["']\.\/maintenance-options\.mjs["']/g,'from '+JSON.stringify(maintenanceUrl))
   .replace('import { invitesEnabled, testerSubject } from "./invite-settings.mjs";',`import {invitesEnabled,testerSubject} from ${JSON.stringify(new URL('../lib/invite-settings.mjs',import.meta.url).href)};`)
   .replace('import { browserPairing, linkedTester } from "./browser-pairing.mjs";',`import {browserPairing,linkedTester} from ${JSON.stringify(new URL('../lib/browser-pairing.mjs',import.meta.url).href)};`)
   .replace('import { isPublicAsset } from "./public-assets.mjs";',`import {isPublicAsset} from ${JSON.stringify(new URL('../infra/pulumi/public-assets.mjs',import.meta.url).href)};`)

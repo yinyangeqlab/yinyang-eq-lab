@@ -20,4 +20,4 @@ Read docs/ENCRYPTED_BACKUP.md before backup work. Keep the storage service/accou
 
 Use only the dedicated hidden, non-contributing layout test account for browser reviews. Do not use an admin session, including for admin UI reviews, unless the owner explicitly authorizes an exception. Keep test credentials, fixture provisioning and local state out of Git. The local workflow is documented in docs/ADMIN_TEST_ISOLATION.md. Test activity must never enter research, public rankings, community song votes or participant Sync.
 
-Latest paused local feature checkpoint: read docs/TOURNAMENT_CHECKPOINT_2026-10-19.md and docs/DEPLOYMENT_STAGE_2026-10-19.md before resuming Tournament work. They identify unfinished work and failing checks; the checkpoint is not deployment approval.
+Latest local feature review: read docs/TOURNAMENT_REVIEW_2026-10-19.md and docs/DEPLOYMENT_STAGE_2026-10-19.md. The earlier WIP checkpoint is historical; its four failing suites were resolved. Owner review, live account/history execution and any push/deployment remain separate.

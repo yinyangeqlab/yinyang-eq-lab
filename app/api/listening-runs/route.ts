@@ -1,4 +1,5 @@
 import { publicTargetPredicate } from "@/lib/public-targets";
+import { targetHeadphoneType } from "@/lib/target-type";
 import { curveVersion } from "@/lib/curve-version";
 import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
@@ -25,7 +26,9 @@ export async function POST(request: Request) {
     const measurementId = data.measurementId == null ? null : String(data.measurementId);
     const testMode = String(data.testMode ?? ""), headphoneType = String(data.headphoneType ?? ""), result = String(data.result ?? "");
     if (![id, voterId, targetAId, targetBId].every(value => uuid.test(value)) || (measurementId && !uuid.test(measurementId)) || !["blind", "bring", "open"].includes(testMode) || !["ie", "oe"].includes(headphoneType) || !["a", "b", "tie"].includes(result)) return Response.json({ error: "Invalid comparison." }, { status: 400 });
+    if (data.matchedPassageRequired !== undefined && typeof data.matchedPassageRequired !== "boolean") return Response.json({error:"Invalid listening requirement."},{status:400});
     const intervals = parseIntervals(data.intervals);
+    if (!Array.isArray(data.intervals) || data.intervals.length > 200 || intervals.length !== data.intervals.length) return Response.json({error:"Invalid playback intervals."},{status:400});
     const stats = intervalStats(intervals);
     const shareSong = testMode === "blind" || data.shareSong === true && ownership.shareMusic;
     const song = (key: string, max = 120) => shareSong ? String(data[key] ?? "").trim().slice(0, max) || null : null;
@@ -58,8 +61,9 @@ export async function POST(request: Request) {
     cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return Object.fromEntries(["bands","rms","preamp"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]]));});
     const targetRows=await db.select().from(targets).where(publicTargetPredicate);
     if ((testMode === "open" || !matchedPassageRequired) && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
+    if ([targetAId,targetBId].some(id=>{const target=targetRows.find(t=>t.id===id);if(!target)return true;const type=targetHeadphoneType(target);return type!==null&&type!==headphoneType;})) return Response.json({error:"Target headphone category does not match this comparison."},{status:400});
     cleanContext.targetVersions=await Promise.all([targetAId,targetBId].map(async targetId=>{const target=targetRows.find(t=>t.id===targetId);if(!target)return null;return curveVersion(target.points);}));
-    if(trialId && (JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions))) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
+    if((trialId && JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions)) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions)) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
     await db.batch([db.insert(listeningRuns).values({
       id, voterId, testMode, headphoneType, targetAId, targetBId, trialId, protocolVersion, researchContext: JSON.stringify(cleanContext),
       targetAName: String(data.targetAName ?? "").trim().slice(0, 80),

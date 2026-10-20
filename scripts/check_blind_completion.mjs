@@ -21,14 +21,14 @@ function visit(node) {
 }
 visit(ast);
 assert.ok(finishVisibility, "Results button must exist");
-const code = ts.transpileModule(["vote", "saveTrial", "finishBlindTest"].map(name => handlers.get(name)).join("\n"), {
+const code = ts.transpileModule(["vote", "saveTrial", "finishBlindTest", "resetFeedback"].map(name => handlers.get(name)).join("\n"), {
   compilerOptions: { target: ts.ScriptTarget.ES2022 },
 }).outputText;
 function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,passageRequired=true,sharedAdmin=false } = {}) {
   const stored = new Map();
   const calls = [];
   const state = {
-    sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
+    setResearchComparisonId:value=>{state.researchComparisonId=value;},openFeedbackIdRef:{current:"old"},setFeedbackNonce(){},setDescribeOpen(){},sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
     trialId: "trial", testMode: mode, headphoneType: "ie", sessionId: "session", trials: [],
     selectedMeasurement: { points: [[20, 0], [20000, 0]] },
     allTargets: [{ id: "a", name: "Alpha", status: "approved", points: [[20, 1]] }, { id: "b", name: "Beta", status: "approved", points: [[20, 2]] }],
@@ -65,6 +65,7 @@ for (const mode of ["blind", "bring"]) {
     await vm.runInContext("vote(0)", context);
     assert.equal(state.revealed, true, JSON.stringify(scenario));
     assert.equal(state.busy, false);
+    assert.equal(state.trials[0].researchRecorded,!scenario.runStatus&&!scenario.failure?.includes("listening-runs"),"Research-save status is independent of ranked-vote success");
     assert.equal(state.trials.length, 1, "A completed answer must be saved exactly once");
     assert.equal(state.trials[0].recorded, Object.keys(scenario).length === 0);
     assert.equal(JSON.parse(stored.get("target-lab-trials")).length, 1);
@@ -129,8 +130,10 @@ assert.equal(privateOpen.calls.length,0,"Private-target Open choices never make 
 assert.match(privateOpen.state.message,/only to My results/);
 console.log("Private-target Open comparison remains local without a research API call.");
 
-for(const mode of ["blind","bring","open"]){for(const seconds of [0,6]){const free=harness({mode,passageRequired:false});free.state.musicPanelRef.current.heard=()=>[seconds,seconds];free.state.musicPanelRef.current.snapshot=()=>({overlapSeconds:seconds});free.state.musicPanelRef.current.finish=()=>({heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[]});free.state.trialId=null;await vm.runInContext("vote(0)",free.context);assert.equal(free.calls.length,0,"unchecked comparisons never submit, even with matched evidence");assert.equal(free.state.trials.length,1);assert.equal(free.state.trials[0].matchedPassageRequired,false);assert.equal(free.state.trials[0].matchedPassage,seconds>=5);assert.match(free.state.message,/saved only/);}}
-console.log("PASS all free-listening modes remain local at zero or qualifying matched seconds.");
+for(const mode of ["blind","bring","open"]){for(const seconds of [0,6]){const free=harness({mode,passageRequired:false});free.state.musicPanelRef.current.heard=()=>[seconds,seconds];free.state.musicPanelRef.current.snapshot=()=>({overlapSeconds:seconds});free.state.musicPanelRef.current.finish=()=>({heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[]});free.state.trialId=null;await vm.runInContext("vote(0)",free.context);assert.deepEqual(free.calls,["/api/listening-runs"],"consented unchecked comparisons save research without a ranked vote");assert.equal(free.state.trials.length,1);assert.equal(free.state.trials[0].matchedPassageRequired,false);assert.equal(free.state.trials[0].matchedPassage,seconds>=5);assert.equal(free.state.trials[0].researchRecorded,true);assert.equal(free.state.trials[0].recorded,false);assert.match(free.state.message,/actual timing/);}}
+console.log("PASS consented free-listening modes collect real timing separately from ranked votes.");
 
 for(const mode of ["blind","bring","open"]){const h=harness({mode,sharedAdmin:true});h.state.trialId=null;await vm.runInContext("vote(0)",h.context);assert.equal(h.calls.length,0);assert.equal(h.state.trials.length,1);assert.equal(h.state.trials[0].adminTestOnly,true);assert.equal(h.state.trials[0].recorded,false);}
 console.log("PASS admin comparisons in every mode remain private even with matched listening and no server trial.");
+
+const feedbackReset=harness();feedbackReset.state.researchComparisonId="old-run";vm.runInContext("resetFeedback()",feedbackReset.context);assert.equal(feedbackReset.state.researchComparisonId,null);assert.notEqual(feedbackReset.state.openFeedbackIdRef.current,"old");console.log("PASS a new comparison clears its prior research ID and feedback key.");

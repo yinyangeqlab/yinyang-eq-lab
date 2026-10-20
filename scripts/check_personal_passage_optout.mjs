@@ -1,17 +1,20 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import ts from 'typescript';
 const source=fs.readFileSync('app/shootout/personal/page.tsx','utf8'),ast=ts.createSourceFile('personal.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text==='advance')handler=n.getText(ast);ts.forEachChild(n,visit)}visit(ast);assert.ok(handler);const code=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-for(const required of [false,true])for(const seconds of [0,6]){
+for(const required of [false,true])for(const seconds of [0,6])for(const blocked of [null,"permission","token","test","admin","practice","skip"]){
  const state={passageRequired:required,run:{choices:[],pending:['a','b'],phase:'explore',checkpoint:20},pair:['a','b'],saving:{current:false},practice:false,music:{mode:'pool'},sharing:{enabled:true,token:'fixture-token'},measurement:{type:'oe'},emptyPair:[0,0],writes:[],network:[]};
  const snapshot={heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[],recordingId:seconds?'recording':'',sha256:null};state.player={current:{snapshot:()=>snapshot,finish(){},reset(){}}};state.safely=fn=>{try{fn()}catch(e){state.error=e.message}};state.recordingFamily=id=>id;state.recordPersonalChoice=(run,choice)=>({...run,choices:[...run.choices,choice]});state.nextPersonalPair=()=>['a','b'];state.confirmationComplete=()=>false;state.update=run=>state.writes.push(run);state.setHeard=()=>{};state.setResearchStatus=()=>{};state.setNotice=()=>{};state.fetch=url=>{state.network.push(url);return Promise.resolve({ok:true,json:async()=>({})})};state.crypto={randomUUID:()=> 'fixture-id'};state.PERSONAL_RESEARCH_NOTICE_VERSION='fixture';state.context='fixture-context';state.playback={loudnessTarget:'-16',channelMode:'auto'};
  // The matched/required positive path also needs candidate provenance.
+ if(blocked==="permission")state.sharing.enabled=false;if(blocked==="token")state.sharing.token=null;if(blocked==="test")state.sharing.testOnly=true;if(blocked==="admin")state.run.adminTestOnly=true;if(blocked==="practice")state.practice=true;state.saveAdminTestRecord=()=>{};state.setPractice=value=>state.practice=value;
  state.run.candidates=[{id:'a'},{id:'b'}];state.run.excluded=[];
- const ctx=vm.createContext(state);vm.runInContext(code,ctx);vm.runInContext('advance("a")',ctx);await new Promise(resolve=>setImmediate(resolve));
- if(!required){assert.equal(state.writes.length,1);assert.equal(state.network.length,0);assert.equal(state.writes[0].choices[0].matchedPassageRequired,false);assert.equal(state.writes[0].choices[0].matchedPassage,seconds>=5)}
+ const ctx=vm.createContext(state);vm.runInContext(code,ctx);vm.runInContext(blocked==='skip'?'advance("skip")':'advance("a")',ctx);await new Promise(resolve=>setImmediate(resolve));
+ if(blocked==="practice"&&(!required||seconds>=5)){assert.equal(state.writes.length,0);assert.equal(state.network.length,0)}
+ else if(blocked==="skip"){assert.equal(state.writes.length,1);assert.equal(state.network.length,0)}
+ else if(!required){assert.equal(state.writes.length,1);assert.equal(state.network.length,blocked?0:1);assert.equal(state.writes[0].choices[0].matchedPassageRequired,false);assert.equal(state.writes[0].choices[0].matchedPassage,seconds>=5)}
  else if(seconds===0){assert.equal(state.writes.length,0);assert.equal(state.network.length,0);assert.match(state.error,/five seconds/)}
- else{assert.equal(state.writes.length,1);assert.equal(state.network.length,1);assert.equal(state.network[0],'/api/personal-research')}
+ else{assert.equal(state.writes.length,1);assert.equal(state.network.length,blocked?0:1);if(!blocked)assert.equal(state.network[0],'/api/personal-research')}
 }
-console.log('PASS Personal: unchecked choices never share even with opt-in and qualifying playback; required choices reject inadequate listening and share only qualified new choices.');
+console.log('PASS Personal: unchecked choices share actual evidence with opt-in, separately from controlled rankings; required choices reject inadequate listening and share only qualified new choices.');
 
 const engineSource=fs.readFileSync('lib/personal-shootout.ts','utf8');const engineContext={exports:{}};vm.runInNewContext(ts.transpileModule(engineSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,engineContext);const engine=engineContext.exports;
 let run=engine.createPersonalRun('fixture','Fixture',[{id:'a',name:'A',family:'a'},{id:'b',name:'B',family:'b'}]);run.phase='confirm';run.finalists=['a','b'];run.requireMatchedPassage=false;
@@ -19,3 +22,5 @@ for(const recording of ['track1','track2']){run.pending=['a','b'];run=engine.rec
 assert.equal(engine.confirmationEvidence(run,['a','b']).size,0);assert.equal(engine.confirmationComplete(run),false);assert.equal(engine.parsePersonalRuns(JSON.stringify([run]))[0].requireMatchedPassage,false);
 run.pending=['a','b'];run=engine.recordPersonalChoice(run,{pair:['a','b'],result:'a',recording:'track3',start:0,end:6,at:2,phase:'confirm',matchedPassageRequired:false,matchedPassage:true});assert.equal(engine.confirmationEvidence(run,['a','b']).size,1);
 console.log('PASS saved optional protocol round-trips; unmatched choices cannot complete finalist checks, while genuine matched evidence can count locally.');
+
+let qualifiedExpression;function qualification(n){if(ts.isVariableDeclaration(n)&&n.name.getText(ast)==='passageQualified')qualifiedExpression=n.initializer.getText(ast);ts.forEachChild(n,qualification)}qualification(ast);assert.ok(qualifiedExpression);for(const heard of [[0,0],[0,5],[5,0],[5,5]]){const qualified=vm.runInNewContext(qualifiedExpression,{heard,liveSnapshot:{heardA:5,heardB:5,overlapSeconds:5}});assert.equal(qualified,heard[0]>=5&&heard[1]>=5);}console.log('PASS reset timers cannot inherit a previous player’s qualified display.');

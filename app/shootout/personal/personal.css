@@ -128,3 +128,9 @@
  .personal-shootout .personal-fine-tune-callout .personal-tune-cta{width:100%;white-space:normal;font-size:13px;padding:8px;line-height:1.35}
 }
 @media(max-width:600px){.personal-shootout .personal-topnav a{white-space:normal;line-height:1.25;text-align:center;justify-content:center;min-width:0;padding:8px 5px}}
+
+/* Keep vote dimensions proportional to their labels, with room for the longer tie label. */
+.personal-shootout .shootout-content .personal-votes.choice-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) minmax(0,1fr);width:min(100%,720px);margin:16px auto;gap:10px;}
+.personal-shootout .shootout-content .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b){width:100%;max-width:none;min-width:0;min-height:50px;padding:12px 14px;font-size:clamp(16px,1.12vw,18px);line-height:1.35;text-wrap:balance;}
+@media(max-width:600px){.personal-shootout .shootout-content .personal-votes.choice-controls{gap:7px;}.personal-shootout .shootout-content .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b){font-size:14px;min-height:52px;padding:9px 6px;}}
+.personal-shootout .personal-duel > .personal-actions:not(.personal-votes){justify-content:center;}
