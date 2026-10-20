@@ -433,11 +433,11 @@
     },
     {
       "path": "components/service-status-panel.css",
-      "sha256": "01b0c04d5e3f163b4c9fe4ad375fea7af364bc22a8acdab2c49b0cf8000b333d"
+      "sha256": "25462685061885d9cd906d08b2f24986a0ba10ea32dedb770cfdfbb9f1c9f2e5"
     },
     {
       "path": "components/service-status-panel.tsx",
-      "sha256": "c9f4ebf87be87d3b7467be6d995b660df1e5c582b14bb769bce8fc80654b2b43"
+      "sha256": "6ebda7391c7eb2ca2ab4cd8216d138f21e9ae3d140c9b8f14b55d5e922da8255"
     },
     {
       "path": "components/service-warning.tsx",
