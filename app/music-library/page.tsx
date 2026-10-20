@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { musicCandidates as tracks, type MusicCandidate as Track } from "@/lib/music-catalog";
 import { rankMusic, musicReview, playbackTarget, type MusicCounts } from "@/lib/music-preferences";
+import { cancelMediaRecovery } from "@/lib/media-recovery";
 import LibraryWavePlayer from "@/components/library-wave-player";
 import LibraryEqPanel from "@/components/library-eq-panel";
 import type { LibraryEq } from "@/lib/music-library-eq";
@@ -97,7 +98,7 @@ export default function MusicLibraryPage() {
   }
   function playOnly(index: number, playing: HTMLAudioElement) {
     setActive(index);
-    root.current?.querySelectorAll("audio").forEach(audio => { if (audio !== playing) audio.pause(); });
+    root.current?.querySelectorAll("audio").forEach(audio => { if (audio !== playing) { cancelMediaRecovery(audio); audio.pause(); } });
   }
   function cards(group: Track[]) {
     const term = query.trim().toLocaleLowerCase();
