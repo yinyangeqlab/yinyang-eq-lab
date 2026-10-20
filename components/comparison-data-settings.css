@@ -13,3 +13,29 @@
 .comparison-data-settings { display:flex; flex-direction:column; overflow:hidden; }
 .comparison-data-settings .agreement-copy { min-height:0; overflow:auto; }
 .comparison-data-settings .vote-data-actions { display:flex; flex-wrap:wrap; gap:14px; align-items:center; flex:none; padding-top:14px; margin-top:14px; border-top:1px solid #354c55; }
+
+.comparison-data-settings .agreement-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex:none; padding-bottom:6px; }
+.comparison-data-settings .agreement-header > div { min-width:0; }
+.comparison-data-settings .agreement-close { display:inline-flex; align-items:center; justify-content:center; flex:none; width:44px; height:44px; min-width:44px; min-height:44px; padding:0; border:0; border-radius:8px; background:transparent; color:#a4bac4; line-height:0; }
+.comparison-data-settings .agreement-close svg { display:block; width:20px; height:20px; flex:none; }
+.comparison-data-settings .agreement-close:hover:not(:disabled) { color:#edf8fa; background:#ffffff0c; }
+.comparison-data-settings button:focus-visible { outline:2px solid #9fe2db; outline-offset:3px; }
+/* Saved/pending status has its own panel, separate from the scrolling notice. */
+.comparison-data-settings .agreement-status { flex:none; margin:10px 0 20px; padding:14px 16px; border:1px solid #38565b; border-radius:9px; background:#172a2c; }
+.comparison-data-settings .agreement-status strong { display:block; color:#d9f6f0; font-size:14px; }
+.comparison-data-settings .agreement-status p { margin:7px 0 0; font-size:13px; line-height:1.5; }
+.comparison-data-settings .agreement-copy > p { margin:0 0 16px; }
+.comparison-data-settings .agreement-copy > p:last-child { margin-bottom:0; }
+.comparison-data-settings .agreement-error { flex:none; margin:14px 0 0; padding:10px 12px; border:1px solid #9a5b66; border-radius:7px; background:#301e26; color:#ffdde3; }
+@media(max-width:520px) {
+ .comparison-data-settings .agreement-status { margin:8px 0 16px; padding:12px; }
+ .comparison-data-settings .vote-data-actions { gap:10px; }
+ .comparison-data-settings .vote-data-actions button { flex:1 1 100%; }
+}
+
+.comparison-data-settings .agreement-copy > .data-choice:first-child { margin-top:0; }
+.comparison-data-settings .agreement-details { margin:18px 0 0; padding:12px 14px; border:1px solid #354c55; border-radius:8px; }
+.comparison-data-settings .agreement-details summary { color:#bddedc; font-size:13px; font-weight:700; cursor:pointer; }
+.comparison-data-settings .agreement-policy { padding-top:16px; }
+.comparison-data-settings .agreement-policy p { margin:0 0 16px; }
+.comparison-data-settings .agreement-policy p:last-child { margin-bottom:0; }

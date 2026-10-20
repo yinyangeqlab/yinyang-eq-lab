@@ -83,3 +83,9 @@
 
 /* The artwork fills the background edge to edge without an extra zoom. */
 @media(max-width:760px){.welcome-art img{object-position:center center}.welcome-copy{margin-top:auto;margin-bottom:auto;padding:40px 0 50px}.welcome-shade{background:linear-gradient(180deg,#0006 0%,#0007 38%,#0005 65%,#0003 100%)}}
+
+/* Keep the three tool destinations available in the welcome header on phones. */
+@media(max-width:760px) {
+ .welcome-nav nav { width:100%; }
+ .welcome-nav nav a.welcome-tool-link { display:inline-flex; align-items:center; min-height:40px; }
+}
