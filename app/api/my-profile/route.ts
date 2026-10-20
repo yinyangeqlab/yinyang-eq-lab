@@ -2,13 +2,15 @@ import { env } from "cloudflare:workers";
 import { dataIdentity } from "@/lib/submission-ownership";
 import { requireParticipantSubject } from "@/lib/admin-contributions";
 import { requireProfileAccount,saveProfileSnapshot,profileOrigin } from "@/lib/yinyangeq-account";
-import { profileInventory,ownedProfilePreview,profileKind,setProfileEntry,savePersonalProfileEvent } from "@/lib/yinyangeq-records";
+import { profileInventory,ownedProfilePreview,profileKind,setProfileEntry,savePersonalProfileEvent,profileCategoryCounts,previewProfileCategories,setProfileSelection } from "@/lib/yinyangeq-records";
 import { readJsonObject,RequestInputError } from "@/lib/request-json";
 import { profileHeaders,profileFailure,profilePageNumber } from "@/lib/profile-api";
 async function identity(){const identity=await dataIdentity();requireParticipantSubject(identity.subjectId);const profile=await requireProfileAccount(env.DB!);if(identity.subjectId!==profile.subject_id)throw new RequestInputError("This page belongs to the separate YinYangEQ account.",403);return identity;}
-export async function GET(request:Request){try{const user=await identity();return Response.json(await profileInventory(env.DB!,user.subjectId,profilePageNumber(request)),{headers:profileHeaders});}catch(error){return profileFailure(error);}}
+export async function GET(request:Request){try{const user=await identity();return Response.json(await (new URL(request.url).searchParams.has("categories")?profileCategoryCounts(env.DB!,user.subjectId):profileInventory(env.DB!,user.subjectId,profilePageNumber(request))),{headers:profileHeaders});}catch(error){return profileFailure(error);}}
 export async function POST(request:Request){try{
  profileOrigin(request);const user=await identity();const body=await readJsonObject(request,530000);
+ if(body.action==="preview-categories")return Response.json(await previewProfileCategories(env.DB!,user.subjectId,body.categories,body.cursor,body.includeFiles===true),{headers:profileHeaders});
+ if(body.action==="share-selection")return Response.json(await setProfileSelection(env.DB!,user.subjectId,body.entries,body.state,body.includeFiles===true),{headers:profileHeaders});
  if(body.action==="snapshot")return Response.json(await saveProfileSnapshot(env.DB!,user.subjectId,body.label,body.payload),{headers:profileHeaders});
  if(body.action==="journal")return Response.json(await savePersonalProfileEvent(env.DB!,user.subjectId,body),{headers:profileHeaders});
  const kind=profileKind(body.kind),id=String(body.sourceId||"");if(!id||id.length>1200)throw new RequestInputError("Select a contribution.",400);

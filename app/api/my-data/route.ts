@@ -1,5 +1,5 @@
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
-import { communityPermissionStatement } from "@/lib/community-server";
+import { communityPermission, communityPermissionStatement } from "@/lib/community-server";
 import { isTestSubject } from "@/lib/admin-contributions";
 import { PERSONAL_RESEARCH_NOTICE_VERSION } from "@/lib/personal-research-notice";
 import { personalPermission, personalPermissionStatement } from "@/lib/personal-research-server";
@@ -28,8 +28,9 @@ export async function GET() {
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
     const protectedAccount=!!await env.DB!.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(identity.subjectId).first();
     const activity = identity.activityMonitoringEnabled||protectedAccount ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND (created_at>=? OR subject_id IN(SELECT subject_id FROM owner_public_profiles)) ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
+    const community = await communityPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
@@ -73,7 +74,7 @@ export async function PATCH(request: Request) {
       );
     }
     if (!body.submissionsEnabled || body.personalResearchEnabled !== undefined) statements.push(personalPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled && body.personalResearchEnabled === true));
-    if(body.communityEnabled!==undefined)statements.push(communityPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled&&body.communityEnabled===true));
+    if(!body.submissionsEnabled||body.communityEnabled!==undefined)statements.push(communityPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled&&body.communityEnabled===true));
     if (nicknameProvided) statements.push(nickname
       ? env.DB!.prepare("INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?) ON CONFLICT(subject_id) DO UPDATE SET nickname=excluded.nickname").bind(identity.subjectId,nickname)
       : env.DB!.prepare("DELETE FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId));

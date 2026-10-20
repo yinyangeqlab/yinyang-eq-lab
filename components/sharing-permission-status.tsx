@@ -1,0 +1,10 @@
+"use client";
+import {useCallback,useEffect,useRef,useState} from 'react';
+import type {PersonalSharingState} from '@/lib/personal-contribution-status';
+export default function SharingPermissionStatus({endpoint,title,onChange}:{endpoint:string;title:string;onChange:(choice:PersonalSharingState)=>void}){
+ const [choice,setChoice]=useState<PersonalSharingState>({enabled:false,token:null}),[loaded,setLoaded]=useState(false),[error,setError]=useState('');const version=useRef(0);
+ const load=useCallback(async()=>{const current=++version.current;setLoaded(false);onChange({enabled:false,token:null,state:'checking'});try{const response=await fetch(endpoint,{cache:'no-store'}),result=await response.json() as PersonalSharingState&{error?:string};if(current!==version.current)return;if(!response.ok)throw Error(result.error||'Could not load your saved choice.');const confirmed={...result,state:'ready' as const};setChoice(confirmed);setLoaded(true);setError('');onChange(confirmed);}catch(cause){if(current!==version.current)return;setError((cause as Error).message);onChange({enabled:false,token:null,state:'unavailable'});}},[endpoint,onChange]);
+ useEffect(()=>{void load();const reload=()=>void load();window.addEventListener('yinyang-data-changed',reload);window.addEventListener('storage',reload);window.addEventListener('focus',reload);return()=>{version.current++;window.removeEventListener('yinyang-data-changed',reload);window.removeEventListener('storage',reload);window.removeEventListener('focus',reload);};},[load]);
+ const status=loaded?(choice.testOnly?'Test account':choice.enabled?'On':'Off'):error?'unavailable':'checking';
+ return <aside className="personal-research-settings"><p><strong>{title} · {status}</strong></p>{choice.testOnly?<p>Private Test Mode · contributions are disabled for this account.</p>:<p>Your saved choice is managed with all other permissions on the data choices page. <a href="/participation?review=1&return_to=/shootout/personal">Review all data choices →</a></p>}{error&&<p role="status">{error} <button type="button" onClick={()=>void load()}>Retry sharing status</button></p>}</aside>;
+}
