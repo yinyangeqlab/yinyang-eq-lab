@@ -1,3 +1,7 @@
+# Deployed with owner authorization — update95
+
+The owner subsequently authorized push and deployment. Implementation0ef217b90019 is live with migrations0035/0036, preserved tests/assets/guards and a verified matching encrypted off-device backup. Independent hosted validation passed and the daily schedule resumed. Numerical Community output remains withheld; listener validation/privacy review and the unpatched build-tool advisory remain explicitly tracked. Earlier local-only statements below describe the completed review stage. See LIVE_STATE.md and artifacts/community-release-20261019/.
+
 # Full local site review — October 19, 2026
 
 Completed local review candidate; findings and limits follow. No push, deployment, real account activation/history transfer, or production mutation. Browser reviews use only the hidden noncontributing test account. Admin and ordinary-participant write paths are exercised using isolated synthetic route/database fixtures, not a privileged browser session.

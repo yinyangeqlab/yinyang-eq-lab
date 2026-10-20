@@ -1,3 +1,17 @@
+> Update95 recovery verification: a matching encrypted off-device backup passed independent download/decryption, complete reconstruction with original source/schema fingerprints, and source-history/build portability checks. The private hosted baseline was refreshed, its validation run passed, and the same daily03:00 America/Los_Angeles schedule was re-enabled. Existing retention is unchanged. No storage details, keys or private receipts are published.
+
+# Current live release — update95, October 19, 2026
+
+Live: https://yinyangeq.com. The owner authorized pushing and deploying the reviewed Community Preferences and Tournament audit fixes. Community evidence uses separate prospective permission and true shared-source timing. Numerical Community results remain withheld pending independent listener validation and privacy review. The release includes clearer research/sharing text, target context, coarse ranking change logs, waveform seek/volume fixes, shared compact navigation, mobile layout fixes, sharing-first My data and continuous paginated Listening Pool playback. Compatible runtime/toolchain dependencies were upgraded; one unpatched build/lint braces advisory remains tracked and was absent from the inspected Worker output.
+
+Implementation `0ef217b900198760f7f81adb447a0fbd1e5ef731`. Immutable source/build `work/community-release-20261019`; infrastructure `work/community-infra-20261019`. One existing Worker updated; three resources unchanged. Migrations0035/0036 applied with38 reviewed statements. Existing schema matched35 migrations plus operational service status before rollout; final schema matches all37 migrations plus that configuration. No account activation, device grants, historical transfer, public profile publication or official participant test votes.
+
+An informational notice began only at deployment start. Listening tests/submissions remained open, with no feature locks, forced refresh or audio stop. All238 prior browser assets retained. CPU5000ms, six abuse bindings, protected media/admission, disabled public Worker URLs and existing edge/cost controls preserved. The notice ended after live verification. All63 effective regression suites, bounded typecheck, isolated build and340 static assets/200 protected recordings passed. Follow-up UI review covered48 affected viewport cases and66 new screenshots; physical devices and full penetration testing are not certified. Live page/asset/guard evidence is in workspace/artifacts/community-release-20261019/.
+
+GitHub implementation publication succeeded. A verified encrypted off-device backup preceded migration; the matching update95 encrypted backup and hosted baseline refresh are verified, with the daily schedule enabled. Unrelated recovery work remains excluded. Never restore erased records or change source/schema fingerprints to accept an old snapshot.
+
+## Historical release notes
+
 # Local remediation ready for review — October 19, 2026
 
 Checkpoint `5a53a63` and the follow-up are local only. Shared Community shell, compact mobile navigation, sharing-first My data and continuous paginated music playback are implemented;63 suites and the final build/typecheck pass. The updated local visual audit is http://localhost:5175/__audit/review#latest. See LOCAL_REVIEW_HANDOFF_2026-10-19.md and DEPENDENCY_SECURITY_REVIEW_2026-10-19.md for exact evidence and the one unpatched build-tool advisory. No push, deployment, production/account/history execution or backup change. Live remains update94.

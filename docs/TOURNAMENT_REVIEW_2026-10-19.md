@@ -1,3 +1,7 @@
+# Deployed with owner authorization — update95
+
+The owner subsequently authorized push and deployment. Implementation0ef217b90019 is live with migrations0035/0036, preserved tests/assets/guards and a verified matching encrypted off-device backup. Independent hosted validation passed and the daily schedule resumed. Numerical Community output remains withheld; listener validation/privacy review and the unpatched build-tool advisory remain explicitly tracked. Earlier local-only statements below describe the completed review stage. See LIVE_STATE.md and artifacts/community-release-20261019/.
+
 # Tournament local review candidate — October 19, 2026
 
 The owner resumed the paused WIP checkpoint7578d9b and requested completion of unfinished local work. This report supersedes its failing-check/UI status. No push, deployment, maintenance notice, live migration, real account activation, historical ownership transfer or public journal publication occurred. Production remains update93.
