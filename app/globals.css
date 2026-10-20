@@ -1874,3 +1874,145 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
   .topbar.compact-header > .owner-utility-link { grid-row:1; margin:0; }
 }
 @media(max-width:360px) { .compact-header .brand-name { font-size:12px; } }
+
+/* Music feedback stays beside playback, separate from the target ballot. */
+.music-panel-host .shootout-music-vote { grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;min-width:0;margin:0;color:#b9cbd1;font-size:12px;line-height:1.3; }
+.shootout-music-vote .music-vote-question { font-weight:700; }
+.music-panel-host .shootout-music-vote button { flex:none;min-height:30px;margin:0;padding:4px 10px;border:1px solid #435d66;border-radius:7px;background:#101d23;color:#dcebf0;font-size:12px;line-height:1.3;box-shadow:none;cursor:pointer; }
+.music-panel-host .shootout-music-vote button[aria-pressed=true] { border-color:#8de2d3;background:#1b4039;color:#d9fff6; }
+.music-panel-host .shootout-music-vote button[aria-pressed=true]:nth-of-type(2) { border-color:#edbda5;background:#412c24;color:#ffe4d6; }
+.music-panel-host .shootout-music-vote button:disabled { opacity:.55;cursor:default; }
+.shootout-music-vote button:focus-visible,.shootout-music-vote a:focus-visible { outline:2px solid #fff;outline-offset:2px; }
+.shootout-music-vote a { color:#a0d7df;text-decoration:underline;text-underline-offset:3px; }
+.shootout-music-vote .music-vote-state { flex:1 1 120px;min-width:0;overflow-wrap:anywhere;color:#91a9b3;font-size:11px; }
+.music-panel-host.persistent.edge-collapsed .shootout-music-vote { display:none; }
+@media(max-width:420px) {
+  .music-panel-host .shootout-music-vote { gap:4px 6px;font-size:11px; }
+  .music-panel-host .shootout-music-vote button { padding:4px 8px; }
+  .shootout-music-vote .music-vote-state { flex-basis:100%; }
+}
+.music-panel-host .shootout-music-vote select { flex:1 1 150px;min-width:0;max-width:260px;width:100%;min-height:30px;margin:0;padding:4px 6px;border:1px solid #435d66;border-radius:7px;background:#101d23;color:#dcebf0;font-size:11px; }
+
+/* Keep the title and transport in normal flow; wrap the complete controls below. */
+.music-panel-host .playback-topbar { grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;min-width:0; }
+.music-panel-host .playback-topbar .music-header { flex:1 1 360px;display:flex;flex-wrap:wrap;gap:4px;margin:0;min-width:0; }
+.shootout-content .playback-title-line { min-height:36px;padding:0;align-items:center;gap:5px 14px; }
+.shootout-content .playback-time { position:static;align-items:center; }
+.shootout-content .waveform-source-caption { white-space:normal; }
+.music-panel-host .playback-transport { display:flex;flex:0 1 auto;flex-wrap:wrap;align-items:center;gap:8px;min-width:0;max-width:100%; }
+.music-panel-host .playback-transport > button,
+.music-panel-host .playback-transport .deck-volume-toggle { position:static;display:grid;place-items:center;flex:none;width:36px;height:36px;min-height:36px;margin:0;padding:0;transform:none;border:1px solid #8fa9b7;border-radius:8px;background:#0c171d;color:#edf8ff;box-shadow:none;cursor:pointer; }
+.music-panel-host .playback-transport button:hover:not(:disabled) { border-color:#c6f0f6;background:#16313a;color:#fff; }
+.music-panel-host .playback-transport button:disabled { opacity:.45;cursor:default; }
+.music-panel-host .playback-transport button:focus-visible { outline:2px solid #c6f0f6;outline-offset:3px; }
+.music-panel-host .playback-transport .deck-play { position:relative;width:40px;height:40px;min-height:40px; }
+.music-panel-host .playback-transport .deck-play::before { content:"";width:15px;height:17px;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%);transform:translateX(2px); }
+.music-panel-host .playback-transport.is-playing .deck-play::before { width:13px;height:17px;border-left:3px solid currentColor;border-right:3px solid currentColor;box-sizing:border-box;clip-path:none;background:none;transform:none; }
+.music-panel-host .playback-transport .waveform-zoom { display:flex;align-items:center;flex:none;gap:6px;color:#e7f3f7;font-size:12px;font-weight:700; }
+.music-panel-host .playback-transport .waveform-zoom button { width:30px;height:30px;min-height:30px;margin:0;padding:0;border:1px solid #8096a2;border-radius:50%;background:transparent;color:#e7f3f7;font-size:20px;line-height:1; }
+.music-panel-host .playback-transport .volume-control { position:relative;display:flex;flex:none;align-items:center;gap:7px;width:auto;height:auto;min-width:0;margin:0;padding:0;border:0;transform:none;background:none; }
+.music-panel-host .playback-transport .deck-volume { position:absolute;z-index:12;top:calc(100% + 8px);right:0;bottom:auto;left:auto;width:160px;max-width:calc(100vw - 70px);height:28px;margin:0;padding:5px 8px;border:1px solid #668c9f;border-radius:8px;background:#102731;box-sizing:border-box; }
+.music-panel-host .playback-transport .deck-volume[hidden] { display:none; }
+.shootout-content .music-panel-host:not(.persistent) .player-row { position:relative;grid-column:1/-1;grid-row:auto;display:block;width:100%;height:auto;min-height:0;margin:0;padding:0;border:0;background:none;box-shadow:none; }
+.shootout-content .player-row audio { display:none; }
+.shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact { margin:0;overflow:hidden; }
+.shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact .waveform-head { display:none; }
+.music-panel-host .shootout-music-vote { gap:7px 10px;padding:8px 10px;border:1px solid #426e76;border-radius:9px;background:linear-gradient(100deg,#112d32aa,#0c191f88);color:#e0f3f3;font-size:14px; }
+.shootout-music-vote .music-vote-question { font-weight:750; }
+.music-panel-host .shootout-music-vote button { min-height:36px;padding:6px 14px;border-color:#648b92;color:#e4f5f7;font-size:13px; }
+.shootout-music-vote .music-vote-state { color:#b0c6cc;font-size:12px; }
+.music-panel-host.persistent .playback-topbar { display:block;padding-right:35px; }
+.music-panel-host.persistent.edge-expanded .playback-transport { justify-content:flex-start;gap:8px;margin-bottom:7px; }
+.music-panel-host.persistent.edge-expanded .player-row { display:block; }
+.music-panel-host.persistent.edge-collapsed .playback-topbar { padding:0; }
+.music-panel-host.persistent.edge-collapsed .playback-transport { display:block;position:relative;height:50px; }
+.music-panel-host.persistent.edge-collapsed .playback-transport > :not(.deck-play),
+.music-panel-host.persistent.edge-collapsed .player-row { display:none; }
+.music-panel-host.persistent.edge-collapsed .playback-transport .deck-play { position:absolute;left:7px;top:4px; }
+@media(max-width:600px) {
+  .music-panel-host .playback-topbar .music-header { flex-basis:100%; }
+  .music-panel-host .playback-transport { gap:7px; }
+  .shootout-content .playback-title-line { gap:5px 12px; }
+  .shootout-content .waveform-source-caption { flex-basis:100%; }
+  .music-panel-host .shootout-music-vote { padding:8px;font-size:13px; }
+}
+.shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact { position:relative;inset:auto;width:100%;height:auto;min-height:0;padding:8px;box-sizing:border-box; }
+.shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact .waveform-canvas-area { position:relative;inset:auto;margin-left:25px;width:calc(100% - 25px); }
+.shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact canvas { position:static;display:block;width:100%;height:96px; }
+@media(max-width:600px) { .shootout-content .music-panel-host:not(.persistent) .player-row .track-waveform.compact canvas { height:78px; } }
+@media(max-width:420px) {
+  .music-panel-host .playback-transport { gap:6px; }
+  .music-panel-host .playback-transport > button,
+  .music-panel-host .playback-transport .deck-volume-toggle { width:32px;height:32px;min-height:32px; }
+  .music-panel-host .playback-transport .deck-play { width:36px;height:36px;min-height:36px; }
+  .music-panel-host .playback-transport .waveform-zoom { gap:4px; }
+  .music-panel-host .playback-transport .waveform-zoom button { width:28px;height:28px;min-height:28px; }
+}
+@media(max-width:420px) {
+  .music-panel-host .shootout-music-vote .music-vote-question { flex-basis:100%; }
+  .music-panel-host .shootout-music-vote .music-vote-state { flex:1 1 70px;font-size:11px; }
+}
+
+/* Compact feedback; reserve real inline space for the volume slider. */
+.music-panel-host .music-panel { container:music-deck / inline-size; }
+.music-panel-host .playback-topbar { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 18px; }
+.music-panel-host .playback-topbar .music-header { grid-column:1;min-width:0; }
+.music-panel-host .playback-transport { grid-column:2;justify-content:flex-end;justify-self:end; }
+.music-panel-host .playback-transport .volume-control { display:flex;flex-direction:row;flex-wrap:nowrap;flex:0 0 143px;width:143px;gap:7px; }
+.music-panel-host .playback-transport .deck-volume { position:static;inset:auto;flex:0 0 100px;width:100px;max-width:none;height:7px;min-height:0;margin:0;padding:0;border:0;border-radius:999px;appearance:none;-webkit-appearance:none;background:linear-gradient(90deg,#466f8b 0%,#719db9 55%,#a6cddd 100%);box-shadow:0 0 7px #80b9db30; }
+.music-panel-host .playback-transport .deck-volume::-webkit-slider-runnable-track { height:7px;border-radius:999px;background:transparent; }
+.music-panel-host .playback-transport .deck-volume::-moz-range-track { height:7px;border-radius:999px;background:transparent; }
+.music-panel-host .playback-transport .deck-volume::-webkit-slider-thumb { appearance:none;-webkit-appearance:none;width:13px;height:13px;margin-top:-3px;border:1px solid #c6e2ef;border-radius:50%;background:#b7d8e8;box-shadow:0 0 5px #9acdec38; }
+.music-panel-host .playback-transport .deck-volume::-moz-range-thumb { width:12px;height:12px;border:1px solid #c6e2ef;border-radius:50%;background:#b7d8e8;box-shadow:0 0 5px #9acdec38; }
+.music-panel-host .playback-transport .deck-volume:focus-visible { outline:2px solid #c6f0f6;outline-offset:5px; }
+.music-panel-host .shootout-music-vote { gap:4px 7px;padding:0;border:0;border-radius:0;background:none;font-size:12px;color:#c5dbe0; }
+.music-panel-host .shootout-music-vote button { min-height:28px;padding:3px 9px;font-size:12px; }
+.music-panel-host .shootout-music-vote .music-vote-question { flex-basis:auto;font-weight:700; }
+.music-panel-host .shootout-music-vote .music-vote-state { flex:0 1 auto;font-size:11px; }
+.music-panel-host.persistent .playback-topbar { display:block; }
+.music-panel-host.persistent.edge-expanded .playback-transport { justify-content:center; }
+.music-panel-host .playback-transport .volume-control.open .deck-volume { display:block; }
+
+/* Small, top-aligned readout; desktop transport stays at the panel center. */
+.shootout-content .music-panel-host:not(.persistent) .music-panel { padding-top:4px;row-gap:5px; }
+.music-panel-host:not(.persistent) .playback-topbar { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:start;gap:0 12px; }
+.music-panel-host:not(.persistent) .playback-topbar .music-header { grid-column:1;align-self:start;align-items:flex-start;margin:0;padding:0; }
+.music-panel-host:not(.persistent) .playback-title-line { min-height:0;align-items:baseline;gap:2px 10px;padding:0; }
+.music-panel-host:not(.persistent) .playback-title-line h2 { margin:0;font-size:12px;line-height:1.25; }
+.music-panel-host:not(.persistent) .playback-time { font-size:12px;line-height:1.25;gap:4px; }
+.music-panel-host:not(.persistent) .waveform-source-caption { flex-basis:auto;font-size:9px;line-height:1.25; }
+.music-panel-host:not(.persistent) .playback-transport { grid-column:2;grid-row:1;justify-self:center;justify-content:center;align-self:start;margin:0; }
+.music-panel-host:not(.persistent) .playback-transport .waveform-zoom { font-size:11px; }
+.music-panel-host .shootout-music-vote { margin-top:2px;font-size:11px; }
+@media(max-width:1023px) {
+ .music-panel-host:not(.persistent) .playback-topbar { grid-template-columns:minmax(0,1fr);row-gap:5px; }
+ .music-panel-host:not(.persistent) .playback-topbar .music-header { grid-column:1;grid-row:1; }
+ .music-panel-host:not(.persistent) .playback-transport { grid-column:1;grid-row:2;width:max-content;max-width:100%;justify-self:center;margin:0; }
+}
+@media(max-width:420px) {
+ .music-panel-host:not(.persistent) .playback-transport { width:100%; }
+ .music-panel-host .playback-transport .volume-control { flex-basis:127px;width:127px; }
+ .music-panel-host .playback-transport .deck-volume { flex-basis:88px;width:88px; }
+}
+/* Anchor Play to the panel midpoint; volume never changes the grid balance. */
+.music-panel-host .playback-dynamics { display:flex;align-items:center;gap:8px; }
+.music-panel-host .playback-dynamics button { display:grid;place-items:center;flex:none;width:36px;height:36px;min-height:36px;padding:0;border:1px solid #8fa9b7;border-radius:8px;background:#0c171d;color:#edf8ff;cursor:pointer; }
+.music-panel-host:not(.persistent) .playback-topbar { grid-template-columns:minmax(0,1fr); }
+.music-panel-host:not(.persistent) .playback-topbar .music-header { grid-column:1;grid-row:1;max-width:calc(50% - 112px); }
+.music-panel-host:not(.persistent) .playback-transport { display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);gap:8px;grid-column:1;grid-row:1;width:100%;max-width:100%;margin:0; }
+.music-panel-host:not(.persistent) .playback-dynamics { grid-column:1;grid-row:1;justify-self:end; }
+.music-panel-host:not(.persistent) .playback-transport .deck-play { grid-column:2;grid-row:1; }
+.music-panel-host:not(.persistent) .playback-transport .waveform-zoom { grid-column:3;grid-row:1;justify-self:start;width:90px;justify-content:center; }
+.music-panel-host:not(.persistent) .playback-transport .volume-control { grid-column:3;grid-row:1;justify-self:start;margin-left:98px; }
+@media(max-width:1023px) {
+ .music-panel-host:not(.persistent) .playback-topbar .music-header { max-width:100%; }
+ .music-panel-host:not(.persistent) .playback-transport { grid-row:2; }
+}
+@media(max-width:600px) {
+ .music-panel-host:not(.persistent) .playback-transport .volume-control { grid-column:1/-1;grid-row:2;justify-self:center;margin-left:0; }
+}
+@media(max-width:420px) {
+ .music-panel-host .playback-dynamics { gap:6px; }
+ .music-panel-host .playback-dynamics button { width:32px;height:32px;min-height:32px; }
+ .music-panel-host:not(.persistent) .playback-transport { grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px; }
+}
