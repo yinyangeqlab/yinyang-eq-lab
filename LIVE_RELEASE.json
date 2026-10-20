@@ -1421,15 +1421,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "12ec2fe16b8b0514ea8d379150aa6b545216b405a02f92b70361b999e75e82ac"
+      "sha256": "fa1e287bf8ff4c13b70214a04f7f52a23dadb7aed027ec8449a162ecf44e1691"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "80607da532c98454b95c302560c19fd2f0032013a853fe36ea9560e4dd08f413"
+      "sha256": "39f225755265ea2462ec6cd6deed8ae11dfd83275afd55c931a017601c290cd9"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "669305593e5aee39b2393fa96fa07befaffa3e2194ac01cb972f06f5e45bc931"
+      "sha256": "26e1ad6748b0afa0f1a1e6058448f683adad80a33c9c8e1b560f85a0f5ceee27"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -5346,7 +5346,7 @@
   "canonicalDevelopmentRoot": "workspace",
   "liveMirrorRoot": ".",
   "recoveryProcess": {
-    "status": "tested; publication pending",
+    "status": "tested and published",
     "liveUpdateUnchanged": 81,
     "canonicalCheckout": "workspace",
     "archive": "archive/legacy-workspaces-20261018",
@@ -5362,6 +5362,8 @@
     "oldCredentialsRestored": false,
     "freshDeletionReviewRequired": true,
     "offDeviceBackupConfigured": false,
-    "safetyTestsPassed": 18
+    "safetyTestsPassed": 18,
+    "publishedCommit": "6c3f0524586f1c377bbb3285cd33a269ed4982b5",
+    "pushVerifiedAt": "2026-10-18T23:02:25.036326+00:00"
   }
 }

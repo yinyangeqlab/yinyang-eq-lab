@@ -2,6 +2,8 @@
 
 ## Canonical workspace and tested recovery — October 18, 2026
 
+Published recovery/source commit `6c3f0524586f1c377bbb3285cd33a269ed4982b5` on GitHub main. Canonical checkout: workspace/. Final metadata publication is separate from the unchanged live deployment.
+
 Live remains update81; no redeployment or production data mutation occurred. Develop, test, commit and push only in workspace/, the clean GitHub checkout. The parent is an owner container and verified live-source mirror. Inactive previews/generated output are archived under archive/legacy-workspaces-20261018; release snapshots and older Git worktree paths are retained for provenance, not development. Root config/license inconsistencies were reconciled after preserving the previous config.
 
 Read workspace/docs/RECOVERY.md and workspace/docs/RECOVERY_TESTS.md. A verified external media/current-database bundle exists privately under private/recovery/final-bundle-update81. A fresh tracked-files-only checkout restored it locally, generated new credentials, built and packaged340 assets/200 recordings, and passed real gate/API/audio/Sync checks.18 safety tests and app/infra TypeScript passed. Offline generation of a new-account/domain binding and protection plan also passed. No private payloads or credential values are committed.
