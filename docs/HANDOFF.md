@@ -1,3 +1,15 @@
+# Current source handoff — live update70, October 18, 2026
+
+The application source now matches the verified live update70 runtime. Commit `f9d150f` brings the previously deployed agreement controls and navigation into Git; `b3b0f9e` adds the deployed Sodium credits entry. This source sync excludes unpublished privacy/activity/browser-pairing, passage/upload, welcome and ranking drafts in the owner workspace.
+
+The target is named **Sodium** and credited to **Sodium (Discord)**. Its entry on [Curve credits](https://yinyangeq.com/curve-credits) explains pixel extraction from the supplied screenshot, interpolation, estimates where the line is obscured, normalization at 1 kHz, and approximate values. The existing target ID and all162 points are preserved. It remains available in both in-ear and over-ear comparison pools. Production curve values and the publisher remain outside this public source package; source checkout migrations do not populate the production catalog.
+
+Live update70 changed only the existing application Worker. Production build, TypeScript, complete static/media packaging, live credits inspection and final infrastructure preview passed. Packaging retained340 public assets and200 protected recordings; the final preview showed four unchanged resources. The database rename verified all other target fields and rows unchanged. Access controls, protected media, CPU/cost guard and edge protections remain in place. No votes or completed comparisons were created during verification.
+
+These commits are local until explicitly pushed. Future deployment must use the exact verified release and documented packaging process, excluding unrelated drafts. Public source excludes credentials, private deployment configuration, recordings, curve seeds and personal submissions.
+
+---
+
 ## Music voting and centered playback published — October 17, 2026
 
 Owner-approved music voting, preference-ranked rotation, Upvote/Downvote labels, compact ballot, centered responsive Play control and inline blue volume slider were published in aa2c984. Cloudflare update 48 updated only the existing Worker. Build, TypeScript, music preference regression, public source release scan, exact live playback asset hashes, authenticated pages/API, private-access smoke checks and 128 selective-routing checks passed. Existing public-asset bypass savings and private audio/access protections were preserved. No database migration, synthetic votes or category changes. Prior local desktop/tablet/mobile checks cover both volume states. Separate unpublished admin work remains outside this release.
