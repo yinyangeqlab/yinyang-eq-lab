@@ -39,10 +39,13 @@ sql.close();
 const gateSource=readFileSync('infra/pulumi/private-gate.mjs','utf8');
 const gateStart=gateSource.indexOf('      if(tester?.id==="layout-test-only" &&');
 const gateEnd=gateSource.indexOf('      // Open access still uses',gateStart);
-const gate=new Function('tester','request','json',gateSource.slice(gateStart,gateEnd)+';return null;');
+const gate=new Function('tester','request','json','htmlResponse','const path=new URL(request.url).pathname;'+gateSource.slice(gateStart,gateEnd)+';return null;');
 for(const method of ['POST','PATCH','PUT','DELETE'])for(const path of ['/api/music-votes','/api/targets','/api/listening-runs','/api/personal-research','/pair','/api/my-profile']){
  const response=gate({id:'layout-test-only'},new Request('https://fixture.invalid'+path,{method}), (value,status)=>Response.json(value,{status}));assert.equal(response.status,403);
  assert.equal(gate({id:'participant'},new Request('https://fixture.invalid'+path,{method}),()=>assert.fail('Ordinary participant blocked')),null);
 }
 for(const method of ['GET','HEAD','OPTIONS'])assert.equal(gate({id:'layout-test-only'},new Request('https://fixture.invalid/shootout',{method}),()=>assert.fail('Read blocked')),null);
 console.log('PASS private test gate: 24 mutation cases denied, participant requests unchanged and read access retained.');
+
+for(const path of ['/sync','/pair','/devices']){const response=gate({id:'layout-test-only'},new Request('https://fixture.invalid'+path),()=>assert.fail('Unexpected JSON'),(body,status)=>new Response(body,{status}));assert.equal(response.status,403);assert.ok(!(await response.text()).includes('<form'));}
+console.log('PASS hidden-test Sync reads show a clear restriction and expose no enrollment form.');

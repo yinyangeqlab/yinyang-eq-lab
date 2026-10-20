@@ -70,13 +70,22 @@ async function dataSession(request, env, subject, linkedSessionHash = null) {
   const profile = await env.DB.prepare("SELECT submissions_enabled,agreement_version FROM privacy_accounts WHERE subject_id=?").bind(subject).first();
   return { subject, tokenHash: freshHash, canParticipate:profile?.submissions_enabled===1 && profile?.agreement_version===requiredDataNoticeVersion, setCookie: `${dataCookie}=${fresh}; Max-Age=${Math.max(0,Math.floor((freshSession.expires_at-Date.now())/1000))}; Path=/; Secure; HttpOnly; SameSite=Strict` };
 }
+function adminSignOut(request) {
+  const headers = { "Cache-Control": "private, no-store", "Vary": "Cookie" };
+  if (request.method !== "POST") return new Response("Method not allowed.", { status: 405, headers: { ...headers, Allow: "POST" } });
+  if (request.headers.get("Origin") !== new URL(request.url).origin) return new Response("Invalid origin.", { status: 403, headers });
+  const response = new Response(null, { status: 303, headers: { ...headers, Location: "/" } });
+  // End this browser's admin and data-management sessions without deleting saved tests.
+  for (const name of [ownerCookie, dataCookie]) response.headers.append("Set-Cookie", `${name}=; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Strict`);
+  return response;
+}
 function safeReturnTo(value, fallback = "/") {
   if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//")) return fallback;
   try { const url = new URL(value, "https://return.invalid"); return url.origin === "https://return.invalid" ? `${url.pathname}${url.search}` : fallback; }
   catch { return fallback; }
 }
 function decodedReturnTo(value) { try { return safeReturnTo(decodeURIComponent(String(value || "/"))); } catch { return "/"; } }
-const pageStyle = 'html{color-scheme:dark}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#e9f1f2;font:16px/1.6 system-ui,sans-serif}main{box-sizing:border-box;max-width:550px;margin:24px;padding:34px;border:1px solid #34434a;border-radius:16px;background:#101a20}h1{margin:0 0 16px;font-size:28px}p{color:#bdccd1}a{color:#79ddd1}form{display:grid;gap:12px;margin-top:24px}label{font-weight:600}input,button{font:inherit;padding:12px;border-radius:8px}input{background:#061016;border:1px solid #56727c;color:#fff}button{border:0;background:#58cbbb;color:#071115;font-weight:700;cursor:pointer}@media(min-width:2400px){html{--display-scale:1.15;zoom:var(--display-scale)}body{min-height:calc(100vh / var(--display-scale))}}@media(min-width:3200px){html{--display-scale:1.25}}@media(min-width:4800px){html{--display-scale:1.5}}';
+const pageStyle = 'html{color-scheme:dark}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#000;color:#e9f1f2;font:16px/1.6 system-ui,sans-serif}main{box-sizing:border-box;min-width:0;width:calc(100% - 32px);max-width:550px;margin:16px;padding:clamp(16px,5vw,34px);border:1px solid #34434a;border-radius:16px;background:#101a20}h1{margin:0 0 16px;font-size:28px}p{color:#bdccd1}a{color:#79ddd1}form{display:grid;gap:12px;margin-top:24px}label{font-weight:600}input,button{box-sizing:border-box;min-width:0;max-width:100%;font:inherit;padding:12px;border-radius:8px}input{width:100%}input{background:#061016;border:1px solid #56727c;color:#fff}button{border:0;background:#58cbbb;color:#071115;font-weight:700;cursor:pointer}@media(min-width:2400px){html{--display-scale:1.15;zoom:var(--display-scale)}body{min-height:calc(100vh / var(--display-scale))}}@media(min-width:3200px){html{--display-scale:1.25}}@media(min-width:4800px){html{--display-scale:1.5}}';
 function htmlResponse(body, status = 200) { return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>YinYang EQ access</title><style>${pageStyle}</style></head><body><main>${body}</main></body></html>`, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Referrer-Policy": "no-referrer", "X-Content-Type-Options": "nosniff" } }); }
 function ownerLoginPage(error = "", status = error ? 401 : 200, enabled = false) { return htmlResponse(`<h1>Admin sign in</h1><p>Enter your admin password to open the private admin view.</p>${error ? `<p role="alert">${error}</p>` : ""}<form method="post" action="/admin-login"><label for="password">Admin password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="256"><button type="submit">Sign in</button></form>${enabled ? '<p><a href="/access">Approved listener sign in</a></p>' : '<p><a href="/">Welcome</a></p>'}`, status); }
 async function ownerFormLogin(request, env, enabled) {
@@ -175,6 +184,7 @@ const privateGate = {
       const hasOwnerSession = await validOwnerSession(request, password);
       const admission = await preDatabaseGuard(request, env, hasOwnerSession);
       if(admission)return admission;
+      if(path==="/admin-logout")return adminSignOut(request);
       if(path==="/api/admin-session"){
         if(!["GET","HEAD"].includes(request.method))return json({error:"Method not allowed."},405);
         // Only the validated host-only admin cookie controls this indicator.
@@ -209,12 +219,14 @@ const privateGate = {
       }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
       if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method))return json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403);
+      if(tester?.id==="layout-test-only" && (path==="/sync" || path==="/pair" || path.startsWith("/devices"))) return htmlResponse('<h1>Private test account</h1><p>Browser Sync is unavailable for this hidden test account. Its local tests stay in this browser and cannot be copied into a participant account.</p><p><a href="/test-history">Review local test history</a></p><p><a href="/shootout/personal">Return to Personal Tournament</a></p>',403);
       // Open access still uses host-only credentials and the existing ownership,
       // consent, erasure and sync tables. No usable invitation code is created.
       let accessCookie = null;
       const syncReceive = path === "/pair" || path === "/pair/reset" || path === "/sync" && (url.searchParams.get("receive") === "1" || request.method !== "GET");
       const adminPath = path === "/owner-research" || path.startsWith("/api/owner-research");
-      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path) && cookie(request, dataCookie);
+      const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
+      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path) && cookie(request, dataCookie) || communityManagement && cookie(request,dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
         const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
         await env.DB.prepare("INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(id,"Listener",await hash(randomToken()),now,now,now,await hash(session),now+dataSeconds).run();
@@ -238,7 +250,7 @@ const privateGate = {
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path);
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile"].includes(path) || communityManagement;
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
         const redirect = new Response(null, { status: 303, headers: { Location: "/", "Cache-Control": "no-store" } });
@@ -320,6 +332,11 @@ export default {
     const response = await privateGate.fetch(request, env, context);
     const headers = new Headers(response.headers);
     headers.set("X-YinYang-Worker", "1");
+    headers.set("X-Content-Type-Options", "nosniff");
+    headers.set("X-Frame-Options", "DENY");
+    if (!headers.has("Referrer-Policy")) headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    if (headers.get("Content-Type")?.includes("text/html")) headers.append("Content-Security-Policy", "frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
     return withMediaLength(request, new Response(response.body, { status: response.status, statusText: response.statusText, headers }));
   },
 };

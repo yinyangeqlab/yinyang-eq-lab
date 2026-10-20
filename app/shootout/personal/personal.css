@@ -173,3 +173,6 @@
  .personal-shootout .personal-support>details>summary{min-height:42px;padding:10px 0;}
  .personal-shootout .personal-duel>.personal-actions:not(.personal-votes) button{min-height:44px;}
 }
+.personal-shootout .personal-sharing-status{margin:6px 0 12px;color:#b7c9c5;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.personal-shootout .personal-sharing-status[data-sharing="on"]{color:#aadbc8}
+.personal-shootout .personal-sharing-status[data-sharing="unavailable"]{color:#e5c68a}

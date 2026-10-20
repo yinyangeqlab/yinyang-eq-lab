@@ -3,11 +3,13 @@ export type HeadphoneType = "ie" | "oe";
 type TargetTypeSource = {
   name?: unknown;
   type?: unknown;
+  headphoneType?: unknown;
   measurement?: { type?: unknown } | string | null;
 };
 
 /** Returns a fixed headphone type when known; unmarked targets remain valid for both. */
 export function targetHeadphoneType(target: TargetTypeSource): HeadphoneType | null {
+  if(target.headphoneType === "ie" || target.headphoneType === "oe") return target.headphoneType;
   let measurementType: unknown;
   if (typeof target.measurement === "string") {
     try { measurementType = (JSON.parse(target.measurement) as { type?: unknown }).type; } catch {}

@@ -136,6 +136,9 @@
 * { box-sizing: border-box; }
 body { margin: 0; background: #000000; color: #edf3f7; font-family: Arial, Helvetica, sans-serif; }
 button, input, textarea, select { font: inherit; }
+/* Native menus need explicit dark surfaces, not only a gradient on the closed select. */
+select { color-scheme: dark; }
+select option, select optgroup { background-color:#102329; color:#e1f4f3; }
 button { cursor: pointer; }
 .shell { min-height: 100vh; background: #000000; }
 .topbar { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #242424; padding: 0 max(28px, calc((100vw - 1200px)/2)); }
@@ -1919,6 +1922,8 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .waveform-passage .passage-edge:disabled,.waveform-passage .passage-region-move:disabled { opacity:1; cursor:default; }
 .passage-region-move:focus-visible { outline:1px dashed #b0efc4; outline-offset:-4px; }
 .passage-edge:focus-visible { outline:1px solid #c8f4d7; outline-offset:1px; }
+.track-waveform canvas[role="slider"]:focus-visible { outline:2px solid #9bd8ff; outline-offset:3px; }
+.waveform-passage .passage-edge:disabled,.waveform-passage .passage-region-move:disabled { pointer-events:none; }
 .passage-play:focus-visible,.passage-new:focus-visible { outline:2px solid #a4d7b7; outline-offset:2px; }
 @media(max-width:410px) { .shootout-content .passage-controls { gap:7px; } .shootout-content .passage-play { padding:0 8px; } .passage-copy { font-size:9px; } .passage-times { font-size:10px; } }
 
@@ -2176,3 +2181,68 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .music-panel-host .playback-secondary > .passage-focus{display:inline-flex;align-items:center;justify-content:center;min-height:36px;height:36px;margin:0;padding:0 10px;border:1px solid #8fa9b7;border-radius:8px;background:#0c171d;color:#edf8ff;font-size:12px;line-height:1.3;cursor:pointer;}
 
 .passage-shuffle-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;}
+
+/* Volume is an overlay: opening it must not resize or re-center the button row. */
+.music-panel-host .playback-transport{position:relative;}
+.music-panel-host .playback-transport .volume-control{position:static;width:auto;flex-basis:auto;}
+.music-panel-host .playback-transport .deck-volume{
+ position:absolute;z-index:30;inset:auto;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+ box-sizing:border-box;flex:none;width:180px;max-width:calc(100vw - 48px);height:44px;min-height:44px;
+ margin:0;padding:0 12px;border:1px solid #658696;border-radius:9px;background:#10212b;
+ box-shadow:0 6px 18px #0008;
+}
+.music-panel-host:not(.persistent) .playback-transport .deck-volume{width:180px;flex-basis:auto;}
+.music-panel-host .playback-transport .deck-volume::-webkit-slider-runnable-track{height:7px;border-radius:999px;background:linear-gradient(90deg,#466f8b,#a6cddd);}
+.music-panel-host .playback-transport .deck-volume::-moz-range-track{height:7px;border-radius:999px;background:linear-gradient(90deg,#466f8b,#a6cddd);}
+.music-panel-host.persistent .playback-transport .deck-volume{top:auto;bottom:calc(100% + 8px);}
+/* Use the space beside the speaker; only stack when a usable slider cannot fit. */
+.music-panel-host .playback-transport .volume-control[data-volume-placement="right"]{position:relative;}
+.music-panel-host .playback-transport .volume-control[data-volume-placement="right"] .deck-volume{
+ left:calc(100% + 8px);right:auto;top:50%;bottom:auto;transform:translateY(-50%);
+}
+
+
+/* The privacy/credits footer is one compact group, without a floating separator. */
+footer.site-data-footer { justify-content:center; align-items:center; flex-wrap:wrap; gap:8px 24px; padding:16px; font-size:13px; text-align:center; }
+.site-data-footer a { color:#9dbcc5; }
+.site-data-footer a:hover { color:#d1edf4; }
+.site-data-footer a:focus-visible { outline:2px solid #9bd8ff; outline-offset:4px; border-radius:2px; }
+
+/* The dock is a playback surface; song voting and source setup stay in the full player. */
+.music-panel-host.persistent .music-panel > :not(.playback-topbar):not(.player-row):not([role="alert"]),
+.music-panel-host.persistent .playback-topbar > :not(.playback-transport) { display:none!important; }
+.music-panel-host.persistent.edge-expanded .playback-topbar { display:flex; justify-content:center; align-items:center; width:100%; padding:0; }
+.music-panel-host.persistent.edge-expanded .playback-transport { display:flex; grid-column:auto; grid-row:auto; justify-self:center; justify-content:center; align-items:center; flex-wrap:wrap; flex:0 1 auto; width:fit-content; max-width:100%; margin:0 auto; padding:0; gap:8px; }
+.music-panel-host.persistent.edge-expanded .playback-transport .playback-secondary { display:contents; }
+.music-panel-host.persistent.edge-expanded .playback-transport .playback-dynamics { display:flex; align-items:center; gap:8px; }
+.music-panel-host.persistent.edge-expanded .playback-transport button { position:relative; inset:auto; transform:none; margin:0; }
+.music-panel-host.persistent.edge-expanded .playback-transport .volume-control { flex:0 0 auto; width:auto; margin:0; }
+
+.ranking-change-explanation{margin:14px 0;padding:12px 16px;border:1px solid #345151;border-radius:9px;background:#0b1919;color:#b9d4d0;font-size:13px;line-height:1.6}.ranking-change-explanation summary{cursor:pointer;color:#c8ece3}.ranking-change-explanation p{margin:10px 0}
+.target-context-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin-bottom:21px}.upload-form .target-context-grid label{min-width:0;margin:0}.target-context-grid label:nth-child(n+3){grid-column:1/-1}.upload-form .target-context-grid small{display:block;margin-top:6px;color:#9bb6bd;font-size:12px;line-height:1.5;font-weight:400}.upload-layout:has(.target-context-grid) .format-card{align-self:start}.private-row select{max-width:100%;min-height:40px;border:1px solid #4a6a70;border-radius:6px;background:#0c1d23;color:#dce9e8;padding:7px}@media(max-width:650px){.target-context-grid{grid-template-columns:minmax(0,1fr)}.private-row{flex-wrap:wrap}}
+
+/* Tiny and short viewports must not inherit intrinsic setup widths. */
+.shootout-content .shootout-setup-panel,.shootout-content .shootout-setup-content{min-width:0}
+@media(max-width:340px){
+  .shootout-content .shootout-heading-row{grid-template-columns:minmax(0,1fr)}
+  .shootout-content .shootout-heading-row>*{min-width:0;max-width:100%}
+  .shootout-content .shootout-heading-aside .loudness-control{min-width:0;max-width:100%;box-sizing:border-box}
+  .tournament-modes{grid-template-columns:minmax(0,1fr)}
+  .tournament-modes .mode-personal{grid-column:auto}
+}
+
+/* Related research is a navigation action, separate from ranking explanations. */
+.ranking-heading { margin:17px 0 24px; }
+.ranking-title-row { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px 24px; margin-bottom:16px; }
+.ranking-title-row h1 { margin:0; min-width:0; }
+.ranking-title-row nav { flex:0 1 auto; min-width:0; max-width:100%; }
+.ranking-related-link { display:flex; align-items:center; justify-content:space-between; gap:18px; box-sizing:border-box; max-width:100%; padding:12px 16px; border:1px solid #426570; border-radius:10px; background:linear-gradient(135deg,#10252b,#0a171d); color:#d7eeef; text-decoration:none; transition:background .12s,border-color .12s,box-shadow .12s,transform .12s; }
+.ranking-related-link strong { display:block; font-size:15px; line-height:1.4; font-weight:600; }
+.ranking-related-link small { display:block; margin-top:3px; color:#a5bec7; font-size:12px; line-height:1.5; }
+.ranking-related-link svg { flex:none; color:#8ed8d1; }
+.ranking-related-link:hover { border-color:#8bd8d1; background:#163039; color:#efffff; box-shadow:0 0 16px #5acfc524; transform:translateY(-1px); }
+.ranking-related-link:focus-visible { outline:2px solid #a2e9e2; outline-offset:4px; }
+.ranking-heading .ranking-intro { margin:0; }
+.ranking-heading .ranking-change-explanation { margin:18px 0 0; }
+@media(max-width:600px) { .ranking-title-row { align-items:flex-start; } .ranking-title-row nav { flex-basis:100%; } .ranking-related-link { width:100%; padding:11px 13px; } }
+@media(prefers-reduced-motion:reduce) { .ranking-related-link { transition:none; } .ranking-related-link:hover { transform:none; } }

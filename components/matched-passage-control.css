@@ -90,7 +90,7 @@
 .shell .shootout-content .comparison-switch .switch-to-a{border-color:#d26b83;background:#29151e;color:#ffb2c0;--action-glow:#ff718d}
 .shell .shootout-content .comparison-switch .switch-to-b{border-color:#598eb5;background:#102435;color:#aee0ff;--action-glow:#70c9ff}
 .shell .shootout-content .comparison-switch .single-listen:disabled{opacity:.45;cursor:default}
-.shell .shootout-content section.matched-passage-box .passage-times.is-empty{opacity:.7;font-style:italic}
+.shell .shootout-content section.matched-passage-box .passage-times.is-empty{opacity:.85;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:400;font-variant-numeric:normal;letter-spacing:normal;text-shadow:none}
 .shell .shootout-content section.matched-passage-box .passage-times{background:none!important;border:0!important;box-shadow:none!important}
 @media(max-width:650px){
  .shell .shootout-content .comparison-listening-footer .curve-passage-meter progress{width:max(20px,min(160px,calc(100% - 88px)))}

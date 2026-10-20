@@ -1,3 +1,5 @@
+import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
+import { communityPermissionStatement } from "@/lib/community-server";
 import { isTestSubject } from "@/lib/admin-contributions";
 import { PERSONAL_RESEARCH_NOTICE_VERSION } from "@/lib/personal-research-notice";
 import { personalPermission, personalPermissionStatement } from "@/lib/personal-research-server";
@@ -17,7 +19,7 @@ export async function GET() {
     const identity = await dataIdentity();
     await env.DB!.prepare("DELETE FROM activity_events WHERE created_at<? OR subject_id IN (SELECT subject_id FROM privacy_accounts WHERE activity_monitoring_enabled!=1 OR activity_monitoring_version!=?)").bind(Date.now()-30*86400000,ACTIVITY_MONITORING_NOTICE_VERSION).run();
     const profile = await env.DB!.prepare("SELECT nickname FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId).first<{nickname:string}>();
-    const titles: Record<string,string> = { vote:"'Preferred: ' || COALESCE((SELECT name FROM targets WHERE id=t.winner_id),t.winner_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.loser_id),t.loser_id)", open:"'Open: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)", run:"t.target_a_name || ' / ' || t.target_b_name", feedback:"t.test_mode || ' description'", measurement:"t.name", export:"t.target_name || ' · ' || t.export_kind", target:"t.name", suggestion:"t.title", personal:"'Personal: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)" };
+    const titles: Record<string,string> = {community:"'Community Personal: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id) || ' · ' || t.result", "community-reference":"'Community reference block · ' || COALESCE((SELECT period FROM community_catalogs WHERE id=t.catalog_id),'reference checks')", vote:"'Preferred: ' || COALESCE((SELECT name FROM targets WHERE id=t.winner_id),t.winner_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.loser_id),t.loser_id)", open:"'Open: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)", run:"t.target_a_name || ' / ' || t.target_b_name", feedback:"t.test_mode || ' description'", measurement:"t.name", export:"t.target_name || ' · ' || t.export_kind", target:"t.name", suggestion:"t.title", personal:"'Personal: ' || COALESCE((SELECT name FROM targets WHERE id=t.target_a_id),t.target_a_id) || ' / ' || COALESCE((SELECT name FROM targets WHERE id=t.target_b_id),t.target_b_id)" };
     const specs = Object.entries(dataTables).filter(([kind]) => kind !== "trial");
     const rows = await Promise.all(specs.map(async ([kind,table]) => {
       const result = await env.DB!.prepare(`SELECT t.id,t.created_at,${titles[kind]} AS display_title${kind === "run" ? ",t.trial_id" : ""} FROM ${table} t JOIN submission_owners o ON o.record_id=t.id AND o.record_kind=? WHERE o.subject_id=? ORDER BY t.created_at DESC`).bind(kind, identity.subjectId).all<Record<string,unknown>>();
@@ -44,6 +46,8 @@ export async function PATCH(request: Request) {
     if (body.activityMonitoringEnabled !== undefined && typeof body.activityMonitoringEnabled !== "boolean") throw new RequestInputError("Choose whether to share testing activity.", 400);
     if (body.personalResearchEnabled !== undefined && typeof body.personalResearchEnabled !== "boolean") throw new RequestInputError("Choose whether to contribute personal comparisons.",400);
     if (body.personalResearchEnabled === true && (body.personalResearchAcknowledged !== true || body.personalResearchNoticeVersion !== PERSONAL_RESEARCH_NOTICE_VERSION)) throw new RequestInputError("Review and explicitly enable the personal research notice.",400);
+    if(body.communityEnabled!==undefined&&typeof body.communityEnabled!=="boolean")throw new RequestInputError("Choose whether to contribute to Community Preferences.",400);
+    if(body.communityEnabled===true&&(body.communityAcknowledged!==true||body.communityNoticeVersion!==COMMUNITY_NOTICE_VERSION))throw new RequestInputError("Review and explicitly enable the separate Community Preferences notice.",400);
     const nicknameProvided = body.nickname !== undefined;
     const nickname = nicknameProvided ? normalizeListenerNickname(body.nickname) : undefined;
     if (nicknameProvided && (identity.subjectId === "owner" || nickname === null)) throw new RequestInputError(identity.subjectId === "owner" ? "The shared admin account does not use a listener nickname." : listenerNicknameError(body.nickname)!,400);
@@ -68,6 +72,7 @@ export async function PATCH(request: Request) {
       );
     }
     if (!body.submissionsEnabled || body.personalResearchEnabled !== undefined) statements.push(personalPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled && body.personalResearchEnabled === true));
+    if(body.communityEnabled!==undefined)statements.push(communityPermissionStatement(env.DB!,identity.subjectId,body.submissionsEnabled&&body.communityEnabled===true));
     if (nicknameProvided) statements.push(nickname
       ? env.DB!.prepare("INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?) ON CONFLICT(subject_id) DO UPDATE SET nickname=excluded.nickname").bind(identity.subjectId,nickname)
       : env.DB!.prepare("DELETE FROM listener_nicknames WHERE subject_id=?").bind(identity.subjectId));

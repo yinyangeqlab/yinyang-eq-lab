@@ -8,7 +8,7 @@ import { getDb } from "@/db";
 import { targets } from "@/db/schema";
 import { parseCurve } from "@/lib/curves";
 import { compareTargets } from "@/lib/target-review";
-import { parseMeasurement } from "@/lib/measurement";
+import { targetSubmissionContext } from "@/lib/target-submission";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     const parentTargetId = curveKind === "preference" ? String(data.parentTargetId ?? "").trim() : "";
     if (curveKind === "preference" && !parentTargetId) return Response.json({ error: "Select the target your preference curve is based on." }, { status: 400 });
     const points = parseCurve(String(data.csv ?? ""));
-    const measurement = parseMeasurement(data.measurement);
+    const {measurement,headphoneType,referenceSystem,submissionKind} = targetSubmissionContext(data);
     const db = getDb();
     const now = Date.now();
     const [hourly, daily] = await Promise.all([
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Choose an available approved parent target." }, { status: 400 });
     const matches = compareTargets(name, points, existing.map(t => ({ id:t.id,name:t.name,points:JSON.parse(t.points) })));
     const id = crypto.randomUUID();
-    await db.batch([db.insert(targets).values({ id, name, creator, description, curveKind, parentTargetId: parentTargetId || null, points: JSON.stringify(points), measurement: JSON.stringify(measurement), createdAt: now, status:"pending", reviewReason:JSON.stringify(matches) }), ownership.record(id)]);
+    await db.batch([db.insert(targets).values({ id, name, creator, description, curveKind, parentTargetId: parentTargetId || null, points: JSON.stringify(points), measurement: measurement ? JSON.stringify(measurement) : null, headphoneType, referenceSystem, submissionKind, createdAt: now, status:"pending", reviewReason:JSON.stringify(matches) }), ownership.record(id)]);
     return Response.json({ id, status:"pending", matches }, { status: 201 });
   } catch (error) {
     const inputError = requestInputResponse(error);

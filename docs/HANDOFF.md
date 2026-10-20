@@ -1,3 +1,7 @@
+# Local review checkpoint — October 19, 2026
+
+Owner authorized a local checkpoint commit and handoff, then remaining security/UI remediation. No push or deployment. Live remains update94; canonical local candidate includes migrations0035/0036, which are applied only to the ignored local database. Start with [LOCAL_REVIEW_HANDOFF_2026-10-19.md](LOCAL_REVIEW_HANDOFF_2026-10-19.md) for the candidate, evidence, next work and execution boundaries.
+
 > Update94 recovery verification: a matching encrypted off-device backup passed independent download/decryption, complete reconstruction with original source/schema fingerprints, and source-history/build portability checks. The private hosted baseline was refreshed, its validation run passed, and the same daily03:00 America/Los_Angeles schedule was re-enabled. Existing retention is unchanged. No storage details, keys or private receipts are published.
 
 # Current live release — update94, October 19, 2026
