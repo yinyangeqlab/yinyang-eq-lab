@@ -1420,7 +1420,7 @@
     },
     {
       "path": "scripts/check_maintenance_scope.mjs",
-      "sha256": "2166a97d32c8020561e006d8ec7693f07c7d512d94975b0c7ec38d18e93401d9"
+      "sha256": "dafdee18da0b1962f661004f4f444147cf186ef1694eb3d39e364572f052683a"
     },
     {
       "path": "scripts/check_measurement_research.mjs",
