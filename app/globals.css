@@ -2084,3 +2084,9 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
  .shootout-content .shootout-controls .continue-button,.shootout-content .continue-arrow { transition:none; }
  .shootout-content .shootout-controls .continue-button:hover:not(:disabled),.shootout-content .continue-button:hover:not(:disabled) .continue-arrow { transform:none; }
 }
+
+.ranking-protocol-note { margin:0 0 18px; padding:16px 18px; border:1px solid #375f58; border-radius:9px; background:#0a1c18; }
+.ranking-protocol-note h2 { margin:0 0 9px; color:#b8f2dd; font-size:17px; line-height:1.35; }
+.ranking-protocol-note p { max-width:950px; margin:8px 0; color:#b4cac5; font-size:13px; line-height:1.65; }
+.ranking-protocol-note summary { margin-top:10px; color:#94ded0; cursor:pointer; font-size:13px; }
+.ranking-protocol-note a { color:#94e5d3; }
