@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 88,
-  "implementationCommit": "a80e13a5505d7de79b374d5c15c0c0ce86016d74",
-  "runtimeParity": "Recorded runtime inputs match verified update88; separate uncommitted personal-shootout development is intentionally outside this baseline.",
+  "liveUpdate": 89,
+  "implementationCommit": "bc806a513bccee93b158199f93b5e9f29b821dc8",
+  "runtimeParity": "Recorded runtime inputs match verified update89; concurrent personal-shootout development is excluded.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -52,6 +52,7 @@
       "docs/PERSONAL_SHOOTOUT.md",
       "drizzle/0033_personal_research.sql",
       "drizzle/meta/0033_snapshot.json",
+      "lib/personal-example.ts",
       "lib/personal-music.ts",
       "lib/personal-playback.ts",
       "lib/personal-research-notice.ts",
@@ -1451,6 +1452,10 @@
     {
       "path": "scripts/check_ranking_api.mjs",
       "sha256": "bdddde093e07bbeacf952820a258b77834dc179acea1c8c2ab5075fa38547853"
+    },
+    {
+      "path": "scripts/check_ranking_view.mjs",
+      "sha256": "754e1505411c52c4fd56164122c699837a56ca39d7570f274b6364487a8d2f26"
     },
     {
       "path": "scripts/check_rate_penalties.py",
