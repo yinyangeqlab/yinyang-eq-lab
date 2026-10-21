@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 101,
-  "implementationCommit": "f9717ad698a1b889b669cd82baa25031be19f023",
-  "runtimeParity": "Recorded runtime matches verified update101; separate UI/recovery WIP excluded.",
+  "liveUpdate": 103,
+  "implementationCommit": "dae6526b753309c9837c6ff2fc8f2b2ad772b059",
+  "runtimeParity": "Public runtime source matches verified update103; independent dirty working changes excluded. Deployment source/build fingerprints remain unchanged.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -16,7 +16,7 @@
     "pendingUnrelatedDevelopment": [
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
-    "pendingLocalReview": "Three visible consent sections and draft-only all/required presets."
+    "pendingLocalReview": "Desktop/mobile isolated consent review verified; physical devices not tested."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -94,7 +94,7 @@
     },
     {
       "path": "app/api/my-data/route.ts",
-      "sha256": "0dcde23603635afd39bab4f3657e586346bb77e68e028771acbe904ada778d52"
+      "sha256": "302d0ff7a8512734f685f14cb1104d0404c64f46ca291b6081474f5cc03872f2"
     },
     {
       "path": "app/api/my-data/yinyangeq-link/route.ts",
@@ -238,7 +238,7 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "eeaaf5c6bf0084ae4abb8af78724e345708a01ae9e002ad9a9add8976ee59f3a"
+      "sha256": "2e922e599428c3cc1f9a1497e7889c864e1dc9b628650d56b3d67022f8727772"
     },
     {
       "path": "app/home/route.ts",
@@ -246,7 +246,7 @@
     },
     {
       "path": "app/layout.tsx",
-      "sha256": "2435a3b58dc3daadcf65ab3343a9be14f6e1a1738fe0033683889fbed7369046"
+      "sha256": "415a60fdb1d5938ea681ad3439bd89d268d61e1fdffd60a5ec061a3343121fc3"
     },
     {
       "path": "app/listeners/yinyangeq/page.tsx",
@@ -294,7 +294,7 @@
     },
     {
       "path": "app/page.tsx",
-      "sha256": "8c6be6bf64e3def747006a0e19221a379a77549267d362fc11549c150ac15724"
+      "sha256": "0355715d095bba62998c743c4f5b893c1c7d9b50822c990c89e966fd1796a825"
     },
     {
       "path": "app/participation/page.tsx",
@@ -310,7 +310,7 @@
     },
     {
       "path": "app/preference-tuning/page.tsx",
-      "sha256": "d6bac97d63b06b8c2e3e8c65919cf10ea6868a6dd7d73aa240b4a052f2f21d9c"
+      "sha256": "8245bd66bddcd92c9b2fa6d3b31cd5d93d31b8d03fde5903fc8165a1c2e9cc38"
     },
     {
       "path": "app/preference-tuning/style.css",
@@ -462,11 +462,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "dd6693d65c250fc8b05736755bc59afde7e1819227a58057756272e7f59b38ba"
+      "sha256": "54458faff0bbc71362a9a5b138ca41f61b2a5e56d27193cc773a7165871e5fab"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "c090e2c67e74d8d3c7ccc5f45594d36fd0ade9141673a9d28f5b1d9c81c3d627"
+      "sha256": "b86cbf617effaec92a41c153a9016ec7b357ee1f4e989fda67b917ba13dbc216"
     },
     {
       "path": "components/connector-error.tsx",
@@ -474,7 +474,7 @@
     },
     {
       "path": "components/data-choices-editor.tsx",
-      "sha256": "cbf473d588ae6b0bb2f64b49081268594dd0aec149f7379bd041e9c700700119"
+      "sha256": "091aee9ae8d009a501576a570b554bce2e49163a480544f69920a091c4c977a9"
     },
     {
       "path": "components/feedback-panel.tsx",
@@ -611,6 +611,10 @@
     {
       "path": "components/sharing-permission-status.tsx",
       "sha256": "5256175d7785945936888797468ed9f153b2cb7f60b319f33940c7e64948d989"
+    },
+    {
+      "path": "components/site-data-footer.tsx",
+      "sha256": "f035a0761b12d7801ea0d5f49ecc913869eb8fcb775513ea29731681a7396072"
     },
     {
       "path": "components/site-utility-links.tsx",
@@ -1286,7 +1290,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "e37a792d3e76afd07cbcd00090b3bed83fc8dc81c7de39e5fe48264394393424"
+      "sha256": "76641d6fe5860a74758d604ae10e9e9b7c9bccd582d9896ba5d0d14081f6ee93"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1690,7 +1694,7 @@
     },
     {
       "path": "lib/target-labels.ts",
-      "sha256": "b657d3422a93dc887465aaadb3195f8935fd3cae84131927c03a9ae5f0836319"
+      "sha256": "c03ae3d16f20d3d14fa336abc665570fec0dc0d3da8bd53f073e7ba77b1e264d"
     },
     {
       "path": "lib/target-name-policy.ts",
@@ -1846,7 +1850,7 @@
     },
     {
       "path": "scripts/check-release.py",
-      "sha256": "5855218b613c94ef01f4db585532fb1067e915da4867d934603f96fbe5ae9245"
+      "sha256": "b50765c4d4e8d11d26b3f742062996837a08763918ab385c985d8ab2e6558f64"
     },
     {
       "path": "scripts/check_account_auto_sync.mjs",
@@ -1862,7 +1866,7 @@
     },
     {
       "path": "scripts/check_admin_contributions.mjs",
-      "sha256": "e497019bfa6bb4561fc2135a235e10eb1543877724d5889e9ab30b334c268a4f"
+      "sha256": "1e7f520dd7d033f09cda9d36437cfebeb06eaf4c1a3093a5133fb1534e13a30c"
     },
     {
       "path": "scripts/check_admin_session_indicator.mjs",
@@ -1874,7 +1878,7 @@
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "f47704d97022859904ec40235acfaeba90cf864b1fcaa536f4d3f37495c76116"
+      "sha256": "400ac1b9b783e57bc83eb3b322e7be21ed5f80f95b650d3ce080be7a2ae7441d"
     },
     {
       "path": "scripts/check_audit_privacy.mjs",
@@ -1910,7 +1914,7 @@
     },
     {
       "path": "scripts/check_consent_choices.mjs",
-      "sha256": "53a65ab63b53580dc5c339d7b86aa44c097f18ce4a46f8aea9b60399865c5a46"
+      "sha256": "dfe287a7070c7dc2fd50d3e78588a3ec5ba61c1d39b6edb7e915a3cd7db608ad"
     },
     {
       "path": "scripts/check_consent_correlations.mjs",
@@ -1923,6 +1927,10 @@
     {
       "path": "scripts/check_free_listening.mjs",
       "sha256": "8d246fa8f630c410e4bf0905968ca5f4f47f8bde2bc0bbe24b9c5940a28e94ad"
+    },
+    {
+      "path": "scripts/check_isolated_consent_access.mjs",
+      "sha256": "22acf73b980e76be08d916c2f7465a0d958cb948447fd2d57660b8f7c0aef057"
     },
     {
       "path": "scripts/check_large_account_sync.mjs",
@@ -1978,7 +1986,7 @@
     },
     {
       "path": "scripts/check_nickname_brand_forms.mjs",
-      "sha256": "7041c8dfe4b735db87a2af3b69e67f3641cd3177bbe92b8f382cc90042c1ab32"
+      "sha256": "532fb3872e1996488dad1b82d56a2d694eaf9ecac064cdd5a93b68ac6fd353e5"
     },
     {
       "path": "scripts/check_notice_duration.mjs",
@@ -1994,7 +2002,7 @@
     },
     {
       "path": "scripts/check_participation_entry.mjs",
-      "sha256": "6c72e98ed0396a6c3f301dc426b43317aefa8a3513c077c529c3ed042f0c2edd"
+      "sha256": "2dc2127907d81a1f4a749d6db56850dcc658785418341b3d34ac8be9c1241ed3"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
@@ -2094,7 +2102,7 @@
     },
     {
       "path": "scripts/check_unified_consent_flow.mjs",
-      "sha256": "93eb299e7be75e4832e71fe106fa634b4cc8bb80a86eb1b81b6bc71b8e27de36"
+      "sha256": "9a5d7bb039b88373e28b24cf4f5e84e03b45615fcc4dbc3d206f1c402b30d313"
     },
     {
       "path": "scripts/check_vote_limits.mjs",
