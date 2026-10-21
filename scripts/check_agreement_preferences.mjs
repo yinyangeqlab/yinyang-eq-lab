@@ -12,7 +12,7 @@ import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../lib/activity-monitoring.ts'
 import {VOTE_DATA_NOTICE_VERSION} from '../lib/vote-data-notice.ts';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
-const subject='synthetic-agreement-account';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(subject);
+let subject='synthetic-agreement-account';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(subject);
 const account=()=>sql.prepare('SELECT * FROM privacy_accounts WHERE subject_id=?').get(subject);
 let failBatch=false;
 class Statement{
@@ -96,4 +96,15 @@ failBatch=true;assert.equal((await patch({...privateSync,syncEnabled:false})).st
 assert.equal((await patch({submissionsEnabled:false,shareMusic:false})).status,200);assert.equal((await(await context.exports.GET()).json()).syncEnabled,true,'Research withdrawal alone does not silently disable independent private sync');
 assert.equal((await patch({submissionsEnabled:false,shareMusic:false,syncEnabled:false})).status,200);assert.equal((await(await context.exports.GET()).json()).syncEnabled,false);
 console.log('Private sync consent verified: default-off, separate explicit/versioned acknowledgement, atomic shared Save, no silent research-to-sync opt-in, independent research withdrawal and explicit sync opt-out.');
+// The deployed hidden layout identity can save consent fixtures only.
+subject='invite:layout-test-only';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(subject);
+const testBody={submissionsEnabled:true,shareMusic:true,activityMonitoringEnabled:false,personalResearchEnabled:false,communityEnabled:false,syncEnabled:false,nickname:'Consent fixture',acknowledged:true,noticeVersion:VOTE_DATA_NOTICE_VERSION};
+assert.equal((await patch(testBody)).status,200);let testSaved=await(await context.exports.GET()).json();assert.equal(testSaved.testOnly,true);assert.equal(testSaved.consentTestOnly,true);assert.equal(testSaved.submissionsEnabled,true);assert.equal(testSaved.shareMusic,true);
+const savedFixture=JSON.stringify(account());
+for(const extra of [{syncEnabled:true},{activityMonitoringEnabled:true},{personalResearchEnabled:true},{communityEnabled:true},{retrospectiveChoices:[{studyId,enabled:true}]},{action:'nickname',nickname:'Not consent'}]){
+ assert.equal((await patch({...testBody,...extra})).status,403);assert.equal(JSON.stringify(account()),savedFixture,'Rejected fixture expansion must make zero partial consent changes');
+}
+failBatch=true;assert.equal((await patch({...testBody,shareMusic:false})).status,503);failBatch=false;assert.equal(JSON.stringify(account()),savedFixture);
+assert.equal((await patch({...testBody,submissionsEnabled:false})).status,200);testSaved=await(await context.exports.GET()).json();assert.equal(testSaved.submissionsEnabled,false);assert.equal(testSaved.shareMusic,false);assert.equal(testSaved.syncEnabled,false);assert.equal(testSaved.personalResearchEnabled,false);assert.equal(testSaved.communityEnabled,false);assert.equal(sql.prepare('SELECT COUNT(*) n FROM activity_events WHERE subject_id=?').get(subject).n,0);
+console.log('PASS isolated live-consent fixture: saved consent/music/nickname, explicit opt-out, no research/monitoring/historical/Sync expansion, zero partial writes and rollback.');
 sql.close();

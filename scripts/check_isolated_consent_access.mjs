@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {DatabaseSync} from 'node:sqlite';
+import {createHash,randomBytes} from 'node:crypto';
+const source=readFileSync('infra/pulumi/private-gate.mjs','utf8');
+const redeemSource=source.slice(source.indexOf('async function redeem('),source.indexOf('async function admin('));
+const hash=async x=>createHash('sha256').update(x).digest('hex');
+const db=new DatabaseSync(':memory:');db.exec('CREATE TABLE private_tester_invites(id TEXT PRIMARY KEY,code_hash TEXT,redeemed_at INTEGER,session_hash TEXT,session_expires_at INTEGER,revoked_at INTEGER,code_expires_at INTEGER)');
+const adapter={prepare:q=>({bind:(...a)=>({run:async()=>({meta:{changes:db.prepare(q).run(...a).changes}})})})};
+const redeem=new Function('hash','randomToken','privateResponse','decodedReturnTo','testerSeconds','testerCookie','ownerCookie','dataCookie',redeemSource+';return redeem;')(hash,()=>randomBytes(32).toString('base64url'),(status,message)=>new Response(message,{status}),x=>x,172800,'__Host-yinyangeq_tester','__Host-yinyangeq_owner','__Host-yinyangeq_data');
+const codes=[randomBytes(32).toString('base64url'),randomBytes(32).toString('base64url')];
+for(const [i,id] of ['ordinary','layout-test-only'].entries())db.prepare('INSERT INTO private_tester_invites(id,code_hash,code_expires_at) VALUES(?,?,?)').run(id,await hash(codes[i]),Date.now()/1000+600);
+const request=code=>new Request('https://fixture.invalid/access?test=consent',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,return_to:'/owner-research'})});
+assert.equal((await redeem(request(codes[0]),adapter,true)).status,403);assert.equal(db.prepare('SELECT redeemed_at FROM private_tester_invites WHERE id=?').get('ordinary').redeemed_at,null);
+const result=await redeem(request(codes[1]),adapter,true);assert.equal(result.status,303);assert.equal(result.headers.get('location'),'/participation?review=1&return_to=/preference-tuning');assert.match(result.headers.get('set-cookie'),/__Host-yinyangeq_owner=; Max-Age=0/);assert.match(result.headers.get('set-cookie'),/__Host-yinyangeq_data=; Max-Age=0/);
+assert.equal((await redeem(request(codes[1]),adapter,true)).status,403);
+console.log('PASS actual isolated redemption: fixed hidden identity only, ordinary invitation untouched, one-use code, fixed consent destination and old admin/data cookies cleared.');
+db.close();
