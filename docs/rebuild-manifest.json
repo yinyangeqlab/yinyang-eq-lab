@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 101,
-  "implementationCommit": "f9717ad698a1b889b669cd82baa25031be19f023",
-  "runtimeParity": "Recorded runtime matches verified update101; separate UI/recovery WIP excluded.",
+  "liveUpdate": 103,
+  "implementationCommit": "dae6526b753309c9837c6ff2fc8f2b2ad772b059",
+  "runtimeParity": "Public runtime source matches verified update103; independent dirty working changes excluded. Deployment source/build fingerprints remain unchanged.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -16,7 +16,7 @@
     "pendingUnrelatedDevelopment": [
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
-    "pendingLocalReview": "Three visible consent sections and draft-only all/required presets."
+    "pendingLocalReview": "Desktop/mobile isolated consent review verified; physical devices not tested."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -611,6 +611,10 @@
     {
       "path": "components/sharing-permission-status.tsx",
       "sha256": "5256175d7785945936888797468ed9f153b2cb7f60b319f33940c7e64948d989"
+    },
+    {
+      "path": "components/site-data-footer.tsx",
+      "sha256": "f035a0761b12d7801ea0d5f49ecc913869eb8fcb775513ea29731681a7396072"
     },
     {
       "path": "components/site-utility-links.tsx",
@@ -1923,6 +1927,10 @@
     {
       "path": "scripts/check_free_listening.mjs",
       "sha256": "8d246fa8f630c410e4bf0905968ca5f4f47f8bde2bc0bbe24b9c5940a28e94ad"
+    },
+    {
+      "path": "scripts/check_isolated_consent_access.mjs",
+      "sha256": "22acf73b980e76be08d916c2f7465a0d958cb948447fd2d57660b8f7c0aef057"
     },
     {
       "path": "scripts/check_large_account_sync.mjs",

@@ -1,0 +1,92 @@
+{
+  "deploymentVerification": {
+    "at": "2026-10-21T00:38:23.628367+00:00",
+    "revision": "dae6526b753309c9837c6ff2fc8f2b2ad772b059",
+    "update": 103,
+    "deployment": {
+      "id": "31dd0e6c-026a-4495-a0aa-c3f7ef35d97d",
+      "versions": [
+        {
+          "version_id": "29279d54-eb04-405d-ae2d-148b99a20561",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 443,
+    "retainedPreviousClientAssets": 366,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true
+  },
+  "browserVerification": {
+    "site": "https://yinyangeq.com",
+    "update": 103,
+    "identity": "layout-test-only",
+    "adminOrParticipantSessionUsedForVerification": false,
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "initialDraftCancellation": "Escape returned to Welcome; reopened draft unchecked and nickname absent",
+      "initialOptOut": "Save opt-out returned to Welcome",
+      "savedFixture": "Comparison and music-detail selections saved through the real editor",
+      "discardedWithdrawal": "Close without saving returned to Preference Tuning; reopened comparison/music remained checked",
+      "savedWithdrawal": "Saved opt-out returned to /my-data?participation=off"
+    },
+    "mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "initialDraftCancellation": "Top close returned to Welcome; reopened draft unchecked",
+      "initialOptOut": "Save opt-out returned to Welcome",
+      "discardedOptionalChanges": "Top close discarded music/nickname edits and returned to Preference Tuning",
+      "savedChoicePreservation": {
+        "comparisonSaved": true,
+        "musicSaved": true,
+        "pageOverflow": false,
+        "restrictedDisabled": true,
+        "status": "Your choices are saved. Close or edit below."
+      },
+      "savedWithdrawal": "Saved opt-out returned to /my-data?participation=off",
+      "narrowViewport": {
+        "width": 320,
+        "height": 568,
+        "dialogWidth": 284,
+        "pageHorizontalOverflow": false,
+        "headerAndFooterExitVisible": true
+      }
+    },
+    "sync": "Live /sync displayed Private test account restriction with no enrollment form",
+    "physicalDevicesTested": false
+  },
+  "isolationReadback": {
+    "researchSubmissions": 0,
+    "musicVotes": 0,
+    "monitoringEvents": 0,
+    "syncPayloads": 0,
+    "syncDevices": 0,
+    "syncPairings": 0,
+    "restrictedPermissionsOff": true,
+    "fixtureLeftOptedOut": true
+  },
+  "backupMetadata": {
+    "sourceOnlyHandoverPassed": true,
+    "hostedValidationPassed": true,
+    "dataRecoveryPointUnchanged": true,
+    "newDataSnapshots": 0
+  },
+  "publicationOperation": {
+    "deploymentPerformed": false,
+    "dataExportPerformed": false,
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}
