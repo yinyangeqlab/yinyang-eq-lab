@@ -49,3 +49,7 @@ console.log('PASS private test gate: 24 mutation cases denied, participant reque
 
 for(const path of ['/sync','/pair','/devices']){const response=gate({id:'layout-test-only'},new Request('https://fixture.invalid'+path),()=>assert.fail('Unexpected JSON'),(body,status)=>new Response(body,{status}));assert.equal(response.status,403);assert.ok(!(await response.text()).includes('<form'));}
 console.log('PASS hidden-test Sync reads show a clear restriction and expose no enrollment form.');
+
+assert.equal(gate({id:'layout-test-only'},new Request('https://fixture.invalid/api/my-data',{method:'PATCH'}),()=>assert.fail('Consent-only save blocked')),null);
+for(const method of ['POST','PUT','DELETE'])assert.equal(gate({id:'layout-test-only'},new Request('https://fixture.invalid/api/my-data',{method}), (body,status)=>Response.json(body,{status})).status,403);
+console.log('PASS only exact PATCH /api/my-data is allowed for the hidden consent fixture.');

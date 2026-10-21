@@ -94,7 +94,7 @@
     },
     {
       "path": "app/api/my-data/route.ts",
-      "sha256": "0dcde23603635afd39bab4f3657e586346bb77e68e028771acbe904ada778d52"
+      "sha256": "302d0ff7a8512734f685f14cb1104d0404c64f46ca291b6081474f5cc03872f2"
     },
     {
       "path": "app/api/my-data/yinyangeq-link/route.ts",
@@ -466,7 +466,7 @@
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "da943ff7944a1aff848913fb213d2db4012f1d863072deed2fd949f5b345e60c"
+      "sha256": "b86cbf617effaec92a41c153a9016ec7b357ee1f4e989fda67b917ba13dbc216"
     },
     {
       "path": "components/connector-error.tsx",
@@ -474,7 +474,7 @@
     },
     {
       "path": "components/data-choices-editor.tsx",
-      "sha256": "45c00ada164771d2d131bd09b3902598758aeb11d12ccae2c7c614bac7c26fc6"
+      "sha256": "091aee9ae8d009a501576a570b554bce2e49163a480544f69920a091c4c977a9"
     },
     {
       "path": "components/feedback-panel.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "e37a792d3e76afd07cbcd00090b3bed83fc8dc81c7de39e5fe48264394393424"
+      "sha256": "76641d6fe5860a74758d604ae10e9e9b7c9bccd582d9896ba5d0d14081f6ee93"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1862,7 +1862,7 @@
     },
     {
       "path": "scripts/check_admin_contributions.mjs",
-      "sha256": "e497019bfa6bb4561fc2135a235e10eb1543877724d5889e9ab30b334c268a4f"
+      "sha256": "1e7f520dd7d033f09cda9d36437cfebeb06eaf4c1a3093a5133fb1534e13a30c"
     },
     {
       "path": "scripts/check_admin_session_indicator.mjs",
@@ -1874,7 +1874,7 @@
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "f47704d97022859904ec40235acfaeba90cf864b1fcaa536f4d3f37495c76116"
+      "sha256": "400ac1b9b783e57bc83eb3b322e7be21ed5f80f95b650d3ce080be7a2ae7441d"
     },
     {
       "path": "scripts/check_audit_privacy.mjs",
@@ -2094,7 +2094,7 @@
     },
     {
       "path": "scripts/check_unified_consent_flow.mjs",
-      "sha256": "d08d2cd294598b72d635d0491395844fc732eee5b40e5db49488ca7af1cc4ce7"
+      "sha256": "9a5d7bb039b88373e28b24cf4f5e84e03b45615fcc4dbc3d206f1c402b30d313"
     },
     {
       "path": "scripts/check_vote_limits.mjs",

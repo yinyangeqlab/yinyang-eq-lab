@@ -4,7 +4,7 @@ import {requireParticipantSubject} from '@/lib/admin-contributions';
 import {consentStudies,consentStudyStatements} from '@/lib/consent-studies';
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
 import { communityPermission, communityPermissionStatement } from "@/lib/community-server";
-import { isTestSubject } from "@/lib/admin-contributions";
+import { isTestSubject, LAYOUT_TEST_SUBJECT } from "@/lib/admin-contributions";
 import { PERSONAL_RESEARCH_NOTICE_VERSION } from "@/lib/personal-research-notice";
 import { personalPermission, personalPermissionStatement } from "@/lib/personal-research-server";
 import { normalizeListenerNickname, listenerNicknameError } from "@/lib/listener-nickname";
@@ -36,12 +36,15 @@ export async function GET() {
     const historicalStudies = await consentStudies(env.DB!,identity.subjectId);
     const community = await communityPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ syncEnabled:syncPermission.enabled,historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId), records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ syncEnabled:syncPermission.enabled,historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId),consentTestOnly:identity.subjectId===LAYOUT_TEST_SUBJECT, records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {
   try {
     origin(request); const identity = await dataIdentity(); const body = await readJsonObject(request, 20000);
+    // Only this fixed hidden subject may save consent fixtures. It remains a
+    // test subject everywhere else, including direct contribution API calls.
+    if(identity.subjectId===LAYOUT_TEST_SUBJECT && (body.action!==undefined || body.syncEnabled===true || body.activityMonitoringEnabled===true || body.personalResearchEnabled===true || body.communityEnabled===true || Array.isArray(body.retrospectiveChoices)&&body.retrospectiveChoices.some((choice:unknown)=>!!choice&&typeof choice==='object'&&(choice as {enabled?:unknown}).enabled===true)))throw new RequestInputError("Isolated consent test: research, monitoring, historical sharing and Sync must remain off.",403);
     if (body.action === "nickname") {
       if (identity.subjectId === "owner") throw new RequestInputError("The shared admin account cannot have a listener nickname.", 400);
       const nickname = normalizeListenerNickname(body.nickname);

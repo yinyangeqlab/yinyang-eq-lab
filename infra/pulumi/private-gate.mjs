@@ -113,7 +113,7 @@ function privateResponse(status = 403, detail = denied, form = false, returnTo =
 }
 function json(value, status = 200) { return Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } }); }
 function sameOrigin(request) { return request.headers.get("Origin") === new URL(request.url).origin; }
-async function redeem(request, db) {
+async function redeem(request, db, layoutOnly = false) {
   // The one-time code is the only authority for this endpoint. Some private
   // browsers omit Origin on a normal form POST, so do not require that header.
   if (!(request.headers.get("Content-Type") || "").startsWith("application/x-www-form-urlencoded")) return privateResponse(400, "Use the invitation form.", true);
@@ -122,9 +122,11 @@ async function redeem(request, db) {
   const code = String(form.get("code") || "").trim();
   if (!/^[A-Za-z0-9_-]{43}$/.test(code)) return privateResponse(403, "This invitation code is invalid.", true);
   const now = Math.floor(Date.now() / 1000), session = randomToken();
-  const result = await db.prepare("UPDATE private_tester_invites SET redeemed_at = ?, session_hash = ?, session_expires_at = ? WHERE code_hash = ? AND redeemed_at IS NULL AND revoked_at IS NULL AND code_expires_at > ?").bind(now, await hash(session), now + testerSeconds, await hash(code), now).run();
+  const result = await db.prepare("UPDATE private_tester_invites SET redeemed_at = ?, session_hash = ?, session_expires_at = ? WHERE code_hash = ? AND redeemed_at IS NULL AND revoked_at IS NULL AND code_expires_at > ? AND (?=0 OR id='layout-test-only')").bind(now, await hash(session), now + testerSeconds, await hash(code), now,layoutOnly?1:0).run();
   if (result.meta.changes !== 1) return privateResponse(403, "This invitation is invalid, expired, or already used on another browser.", true);
-  return new Response(null, { status: 303, headers: { Location: decodedReturnTo(form.get("return_to")), "Cache-Control": "no-store", "Set-Cookie": `${testerCookie}=${session}; Max-Age=${testerSeconds}; Path=/; Secure; HttpOnly; SameSite=Strict` } });
+  const response = new Response(null, { status: 303, headers: { Location: layoutOnly ? "/participation?review=1&return_to=/preference-tuning" : decodedReturnTo(form.get("return_to")), "Cache-Control": "no-store", "Set-Cookie": `${testerCookie}=${session}; Max-Age=${testerSeconds}; Path=/; Secure; HttpOnly; SameSite=Strict` } });
+  if(layoutOnly)for(const name of [ownerCookie,dataCookie])response.headers.append("Set-Cookie",`${name}=; Max-Age=0; Path=/; Secure; HttpOnly; SameSite=Strict`);
+  return response;
 }
 async function admin(request, env, path) {
   if (path === "/__private/admin/invite-system") {
@@ -205,6 +207,14 @@ const privateGate = {
       if (url.hostname === `www.${canonical.hostname}` && !hasOwnerSession) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 307);
       const owner = hasOwnerSession;
       if (path.startsWith("/__private/admin/")) return owner ? await admin(request, env, path) : json({ error: denied }, 403);
+      // This form can redeem only the pre-provisioned hidden fixture identity.
+      // No account creation or admin credentials are exposed through this route.
+      if(path==="/access"&&url.searchParams.get("test")==="consent"){
+        if(owner)return json({error:"Use an isolated browser without an admin session."},403);
+        if(request.method==="POST")return redeem(request,env.DB,true);
+        if(request.method!=="GET")return json({error:"Method not allowed."},405);
+        return htmlResponse('<h1>Isolated consent test sign in</h1><p>Private test account only. No research, rankings, votes, monitoring or Sync contributions. Enter the short-lived one-use fixture code.</p><form method="post" action="/access?test=consent"><label for="test-code">One-use test code</label><input id="test-code" name="code" type="password" autocomplete="off" required maxlength="43"><button type="submit">Use isolated consent test account</button></form>');
+      }
       if (path === "/access" && !enabled) return new Response(null, {status: 303, headers: {Location: "/shootout", "Cache-Control": "no-store"}});
       if (path === "/access") {
         if (request.method === "POST") return await redeem(request, env.DB);
@@ -218,7 +228,7 @@ const privateGate = {
         return app.fetch(new Request(bounded,{headers:clean}),env,context);
       }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
-      if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method))return json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403);
+      if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method) && !(path==="/api/my-data"&&request.method==="PATCH"))return json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403);
       if(tester?.id==="layout-test-only" && (path==="/sync" || path==="/pair" || path.startsWith("/devices"))) return htmlResponse('<h1>Private test account</h1><p>Browser Sync is unavailable for this hidden test account. Its local tests stay in this browser and cannot be copied into a participant account.</p><p><a href="/test-history">Review local test history</a></p><p><a href="/shootout/personal">Return to Personal Tournament</a></p>',403);
       // Open access still uses host-only credentials and the existing ownership,
       // consent, erasure and sync tables. No usable invitation code is created.
@@ -252,6 +262,11 @@ const privateGate = {
       }
       const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) || communityManagement;
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
+      // Management-only cookies remain isolated after the tester session expires.
+      if(data?.subject==="invite:layout-test-only"&&!tester){
+        if(!["GET","HEAD","OPTIONS"].includes(request.method))return json({error:"Sign in again with the isolated test account before saving consent."},403);
+        if(path.includes("sync")||path.includes("devices"))return json({error:"Sync is disabled for the isolated test account."},403);
+      }
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
         const redirect = new Response(null, { status: 303, headers: { Location: "/", "Cache-Control": "no-store" } });
         if(data?.setCookie) redirect.headers.append("Set-Cookie",data.setCookie);
@@ -265,7 +280,7 @@ const privateGate = {
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
-      const agreementException = tester?.id==="layout-test-only" || dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      const agreementException = dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
       if (!owner && tester && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
