@@ -447,7 +447,7 @@
     },
     {
       "path": "components/account-auto-sync.tsx",
-      "sha256": "4a5fb0b1800e0073ce3ac60a7d967650cb9d7c78b533e407f7e81b2a1970b0bf"
+      "sha256": "0f0b88cf6754fbb8c994a745cd2238ce37393b940447778d0447dc18768850b4"
     },
     {
       "path": "components/account-device-status.css",
@@ -1507,11 +1507,11 @@
     },
     {
       "path": "lib/account-sync-transfer.d.mts",
-      "sha256": "5cc2ac42fcde4f057649a41889eeb21b83c186b7626b8e0d8d63e03270f60f61"
+      "sha256": "d3c24da066b78194e9794686bcac234825e1972ef31cfe0f45c7233a62d83567"
     },
     {
       "path": "lib/account-sync-transfer.mjs",
-      "sha256": "17dac32527930aaf68ee9a89c79f838fb9fefdeeb7eb58ab22b94ef7d1a3462c"
+      "sha256": "b953b9731914da5f90b118a88707c287ad243e478bac59fe281e5e83bf049ec1"
     },
     {
       "path": "lib/account-sync.d.mts",

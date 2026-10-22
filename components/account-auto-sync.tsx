@@ -30,7 +30,7 @@ export default function AccountAutoSync(){
   const local=captureAccountValues(localStorage),dirty=base&&!same(local,base.values);
   if(!dirty&&Date.now()-(base?Math.max(lastPoll,readStamp(LAST_POLL_KEY)):lastPoll)<POLL_MS)return;
   setAccountSyncActivity('checking','Checking the account for updates…');
-  const remote=await readAccountState(undefined,fetch,message=>{if(!stopped)setAccountSyncActivity(message.startsWith('Downloading')?'downloading':'verifying',message);}) as State;lastState=remote;lastPoll=Date.now();writeStamp(LAST_POLL_KEY,lastPoll);
+  const remote=await readAccountState(undefined,fetch,message=>{if(!stopped)setAccountSyncActivity(message.startsWith('Downloading')?'downloading':'verifying',message);},!dirty&&base?{epoch:base.epoch,revision:base.revision,accountKey:base.accountKey,values:base.values}:null) as State;lastState=remote;lastPoll=Date.now();writeStamp(LAST_POLL_KEY,lastPoll);
   if(base&&(base.accountKey&&base.accountKey!==remote.accountKey||!base.accountKey&&!remote.protectedAccount))base=null;
   if(remote.consent&&observedConsent!==remote.consent.stamp){observedConsent=remote.consent.stamp;try{localStorage.setItem('yinyang-activity-monitoring',String(remote.consent.monitoring));window.dispatchEvent(new Event('yinyang-monitoring-choice'));window.dispatchEvent(new Event('yinyang-data-changed'));}catch{}}
   if(remote.enabled===false){setStatus(remote.devicePaused?'Automatic sync is paused for this device. Resume it in Sync settings.':'Account sync is off. Review your data choices to enable it.');return;}
