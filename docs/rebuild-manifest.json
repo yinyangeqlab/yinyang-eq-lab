@@ -1,7 +1,7 @@
 {
   "liveUpdate": 106,
   "implementationCommit": "87077e897a16b33c00c1528d5f32e430410b617b",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update106. Current release/rebuild documentation records verification separately from the immutable implementation snapshot.",
+  "runtimeParity": "Current live update106 retained; single sidebar divider, compact dismissible healthy sync status and data-choice state colors prepared for local review before publication and deployment.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -42,7 +42,7 @@
     },
     {
       "path": "app/alpha.css",
-      "sha256": "664c7f8149273ce705decd7def25b139c1f08c72ca4461a1f531ecddd684be86"
+      "sha256": "c5eb788e2c2f285dbe746cd9a6c498336b1653ad13fe9d64d1207b7b03cdda8d"
     },
     {
       "path": "app/api/activity/route.ts",
@@ -258,7 +258,7 @@
     },
     {
       "path": "app/layout.tsx",
-      "sha256": "7ca84d6ae078aa92c0ea247bc84ac594ed0c14b42b4ccf80adebf8655431e819"
+      "sha256": "2876a4c120efad9a4e73d9296ddf74a361833b35f5ec5184b1c4c48be90a3177"
     },
     {
       "path": "app/listeners/yinyangeq/page.tsx",
@@ -282,11 +282,11 @@
     },
     {
       "path": "app/my-data/page.tsx",
-      "sha256": "aef2e6fec961abea7feb8969479204465744b0f783c3cfba63ba4e9fc10cf374"
+      "sha256": "6be4d3a86a18180b1cbf4323d0b0506b0a4579d97fbc26162b1cf0099b91fadb"
     },
     {
       "path": "app/my-data/style.css",
-      "sha256": "ff9bc491198e82ef8a65b981cdd7c6df064ee75cc3e887630b42c95cedba266e"
+      "sha256": "77d8b3bdefe8f0c47b19ea19ebcfd8cc19ab4317b7528e96d2441153099bce85"
     },
     {
       "path": "app/my-profile/page.tsx",
@@ -405,8 +405,12 @@
       "sha256": "31f4ca67a4a62572571003d3d5aac85ee6fbfca67a192924bac6b168d95e98fd"
     },
     {
+      "path": "components/account-auto-sync.css",
+      "sha256": "e63db8ca2bc82f6fd890f0b0fb1f85cfb2c1b4d971612b12542e43fa6357226a"
+    },
+    {
       "path": "components/account-auto-sync.tsx",
-      "sha256": "d6b16962670abd063b9f2ee60f85e6334eeeaf85440845d5efdf8bee5ddbf11f"
+      "sha256": "65723d9f9c23c64ff25ce8ebad728773f23afeb0f326155bbc6ee5cc9c17fd1e"
     },
     {
       "path": "components/account-device-status.css",
@@ -466,7 +470,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "42c0eb1ccaf588fbdde7cfb161219096b9234bcb2983a8e5fc626fb8aae3ff42"
+      "sha256": "78eed0a802a88b21b8c2be7894b2985e3321205082707a2784daa7198eaff1b8"
     },
     {
       "path": "components/aura-nav-link.css",

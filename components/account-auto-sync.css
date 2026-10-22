@@ -1,0 +1,13 @@
+/* Quiet status within the workspace; only the healthy notice can be dismissed. */
+.account-sync-status.account-sync-status{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;max-width:none;margin:0;padding:8px 28px;border:0;border-bottom:1px solid #203238;border-radius:0;background:#091316;color:#b6c9ce;font:12px/1.45 Arial,Helvetica,sans-serif;overflow-wrap:anywhere}
+.account-sync-status.account-sync-status p{flex:1 1 260px;min-width:0;margin:0}
+.account-sync-status.account-sync-status a,.account-sync-status.account-sync-status button{display:inline-flex;align-items:center;margin:0;font:inherit}
+.account-sync-status.account-sync-status a{color:#a2c7c5;text-underline-offset:3px}
+.account-sync-status.account-sync-status.is-matched{gap:6px 10px;background:#050d0f;color:#93aaa9;padding-block:5px}
+.account-sync-status.is-matched p{flex:1 1 auto}
+.account-sync-check{color:#8cbca9}
+.account-sync-status.account-sync-status .account-sync-dismiss{flex:none;justify-content:center;width:28px;height:28px;min-height:28px;padding:5px;border:0;border-radius:4px;background:transparent;color:#859d9f;cursor:pointer;transition:background-color .18s,color .18s}
+.account-sync-dismiss svg{width:16px;height:16px}
+.account-sync-status.account-sync-status .account-sync-dismiss:hover{background:#15262a;color:#dbe8e7}
+@media(max-width:600px){.account-sync-status.account-sync-status{padding-inline:14px;gap:5px 10px;font-size:11px}.account-sync-status.is-matched p{flex:1 1 120px}.account-sync-status.is-matched .account-sync-dismiss{margin-left:auto}}
+@media(prefers-reduced-motion:reduce){.account-sync-status.account-sync-status .account-sync-dismiss{transition:none}}
