@@ -9,5 +9,5 @@ export function useListeningReminder(){
   function show(){setSkip(false);setOpen(true);}
   function ready(){acknowledged.current=true;never.current=skip;try{sessionStorage.setItem(ACK,"true");if(skip)localStorage.setItem(SKIP,"true");else localStorage.removeItem(SKIP);}catch{}setOpen(false);}
   function newTest(){if(!never.current){acknowledged.current=false;try{sessionStorage.removeItem(ACK);}catch{}}request();}
-  return {open,skip,setSkip,request,show,ready,newTest};
+  return {open,skip,setSkip,request,show,ready,newTest,dismiss:()=>setOpen(false)};
 }

@@ -3,10 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { isImportedMeasurement, type HeadphoneMeasurement } from "@/lib/measurement";
 import type { CatalogMeasurement } from "@/lib/public-measurements";
+import "./shootout-organization.css";
 
 export type { CatalogMeasurement } from "@/lib/public-measurements";
 
-export default function HeadphonePicker({ rows, selectedId, headphoneType, onType, onSelect, onClear, onImport, onUpload, onEdit, onDelete, responsiveUploadLabel = false }: {
+export function MeasurementEntryActions({onBrowse,onSaved,onUpload}:{onBrowse:()=>void;onSaved:()=>void;onUpload:()=>void}) {
+  return <div className="measurement-entry-actions"><button type="button" className="primary" onClick={onBrowse}>Browse measurement database</button><button type="button" onClick={onSaved}>Use saved measurement</button><button type="button" onClick={onUpload}>Upload measurement</button></div>;
+}
+
+export default function HeadphonePicker({ rows, selectedId, headphoneType, onType, onSelect, onClear, onImport, onUpload, onEdit, onDelete, browseRequest = 0, responsiveUploadLabel = false }: {
   rows: HeadphoneMeasurement[];
   selectedId: string;
   headphoneType: "ie" | "oe" | null;
@@ -18,6 +23,7 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   responsiveUploadLabel?: boolean;
+  browseRequest?: number;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -26,6 +32,17 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
   const [status, setStatus] = useState("");
   const [busyPath, setBusyPath] = useState("");
   const host = useRef<HTMLDivElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const [databaseOnly,setDatabaseOnly] = useState(false);
+  function browseDatabase() {
+    input.current?.focus();
+    setOpen(true); setEditingQuery(true); setQuery(""); setDatabaseOnly(true); void load(); input.current?.scrollIntoView({block:"center",behavior:"smooth"});
+  }
+  useEffect(() => {
+    if (!browseRequest) return;
+    const frame=requestAnimationFrame(browseDatabase);
+    return () => cancelAnimationFrame(frame);
+  }, [browseRequest]);
   const selected = rows.find(row => row.id === selectedId);
   useEffect(() => {
     if (!open) return;
@@ -33,8 +50,10 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
     document.addEventListener("pointerdown", dismiss);
     return () => document.removeEventListener("pointerdown", dismiss);
   }, [open]);
+  const catalogRequest = useRef(false);
   async function load() {
-    if (catalog.length || status === "Loading public index…") return;
+    if (catalog.length || catalogRequest.current) return;
+    catalogRequest.current = true;
     setStatus("Loading public index…");
     try {
       const response = await fetch("/api/headphone-catalog");
@@ -43,6 +62,7 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
       setCatalog(data.entries);
       setStatus(`${data.entries.length.toLocaleString()} public measurements indexed.`);
     } catch (error) { setStatus(error instanceof Error ? error.message : "Public index unavailable."); }
+    finally { catalogRequest.current = false; }
   }
   const needle = (editingQuery ? query : "").trim().toLowerCase();
   const matches = (name: string, source: string) => !needle || `${name} ${source}`.toLowerCase().includes(needle);
@@ -71,18 +91,21 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
       <button type="button" data-headphone-type="oe" className={headphoneType === "oe" ? "active" : ""} aria-pressed={headphoneType === "oe"} onClick={() => onType("oe")} aria-label="Over-Ear"><span>Over-</span><span>Ear</span></button>
     </div>
     <div className="headphone-search" ref={host}>
-      <input type="search" role="combobox" aria-label="Search headphone measurements" aria-expanded={open} aria-controls="headphone-search-results" aria-autocomplete="list" autoComplete="off" spellCheck={false} placeholder="Search headphone measurements" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); setEditingQuery(false); } }} />
-      {selected && <div className="selected-measurement-actions"><button type="button" aria-label={`Edit ${selected.name}`} title="Edit measurement" onClick={() => { setOpen(false); onEdit(selected.id); }}>✎</button><button type="button" aria-label={`Delete ${selected.name}`} title="Delete measurement" onClick={() => { if (window.confirm(`Delete ${selected.name} from this browser?`)) onDelete(selected.id); }}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 7h16M9 4h6M6 7l1 13h10l1-13M10 10v7m4-7v7"/></svg></button><button type="button" aria-label="Remove selected measurement" title="Remove selection" onClick={() => { setOpen(false); setEditingQuery(false); setQuery(""); onClear(); }}>×</button></div>}
+      <input ref={input} type="search" role="combobox" title={selected?.name} aria-label="Search headphone measurements" aria-expanded={open} aria-controls="headphone-search-results" aria-autocomplete="list" autoComplete="off" spellCheck={false} placeholder="Search model or measurement source" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); setEditingQuery(false); } if(event.key==="ArrowDown"){event.preventDefault();host.current?.querySelector<HTMLButtonElement>('[role="option"]')?.focus();} }} />
+      {selected && <details className="measurement-management"><summary>Manage</summary><div><strong>{selected.name}</strong><button type="button" onClick={()=>onEdit(selected.id)}>Edit measurement</button><button type="button" onClick={()=>{setOpen(false);setEditingQuery(false);setQuery("");onClear();}}>Remove selection</button><button type="button" onClick={()=>{if(window.confirm(`Delete ${selected.name} from this browser?`))onDelete(selected.id);}}>Delete measurement</button></div></details>}
+
       {open && <div id="headphone-search-results" className="headphone-search-results" role="listbox">
-        <strong>Your uploaded measurements</strong>
+        {databaseOnly&&<button type="button" className="measurement-show-all" onClick={()=>setDatabaseOnly(false)}>Include my saved measurements</button>}
+        {!databaseOnly&&<><strong>Your uploaded measurements</strong>
         {savedSection(uploaded, "uploaded")}
         <strong>Imported measurements</strong>
-        {savedSection(imported, "imported")}
+        {savedSection(imported, "imported")}</>}
         <strong>Public measurement index · creator sources</strong>
         {publicRows.length ? publicRows.map(row => <button type="button" role="option" aria-selected={false} disabled={!!busyPath} key={row.path} onClick={() => void importRow(row)}><b>{row.name}</b><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {row.source}{row.rig ? ` · Rig: ${row.rig}` : " · Rig not listed"}</small></button>) : <p>{catalog.length ? "No public measurements match." : status || "Loading…"}</p>}
         {catalog.length > 0 && <p>{status} Showing the first {publicRows.length} matching public results.</p>}
       </div>}
     </div>
-    <button type="button" className="add-measurement-button" onClick={onUpload}><span className="upload-plus" aria-hidden="true">+</span><span className={responsiveUploadLabel ? "pt-upload-long" : undefined}>Upload your own headphone/IEM measurement</span>{responsiveUploadLabel && <span className="pt-upload-short">Upload headphone</span>}</button>
+    <button type="button" className="browse-measurement-button" onClick={browseDatabase}>Browse database</button>
+    <button type="button" className="add-measurement-button" onClick={onUpload}><span className="upload-plus" aria-hidden="true">+</span><span className={responsiveUploadLabel ? "pt-upload-long" : undefined}>Upload measurement</span>{responsiveUploadLabel && <span className="pt-upload-short">Upload headphone</span>}</button>
   </div>;
 }

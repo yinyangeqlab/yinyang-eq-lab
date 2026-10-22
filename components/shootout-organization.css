@@ -1,0 +1,26 @@
+/* Shared measurement entry across Tournament modes. */
+.measurement-entry-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.measurement-entry-actions button,.browse-measurement-button,.measurement-show-all{min-height:44px;padding:10px 14px;border:1px solid #42615e;border-radius:8px;background:#122521;color:#def1eb;font:inherit;font-size:13px;cursor:pointer}
+.measurement-entry-actions button.primary{background:#244c40;border-color:#76b7a0;color:#edfff7}
+.measurement-entry-actions button:focus-visible,.browse-measurement-button:focus-visible,.measurement-management summary:focus-visible{outline:2px solid #99eed1;outline-offset:3px}
+.shootout-content .measurement-picker{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0}
+.shootout-content .measurement-picker .headphone-search{flex:1 1 300px;min-width:200px}
+.shootout-content .measurement-picker .headphone-search>input{padding-right:85px}
+.shootout-content .measurement-picker .add-measurement-button,.shootout-content .browse-measurement-button{flex:0 1 auto;min-height:44px;white-space:normal;font-size:13px}
+.measurement-management{position:absolute;right:7px;top:3px;z-index:12}
+.measurement-management>summary{display:flex;align-items:center;min-height:38px;padding:6px 9px;border-radius:6px;background:#19312e;color:#d2eee3;font-size:12px;cursor:pointer;list-style:none}
+.measurement-management>div{position:absolute;right:0;top:100%;width:min(290px,75vw);display:grid;gap:7px;padding:12px;border:1px solid #4b7065;border-radius:8px;background:#11211c;box-shadow:0 10px 30px #0009}
+.measurement-management strong{font-size:13px;overflow-wrap:anywhere}
+.measurement-management button{min-height:40px;border:1px solid #48665a;border-radius:6px;background:#1b3027;color:#e2f2ea;font-size:13px;cursor:pointer}
+.measurement-management button:last-child{color:#f0c0b3}
+.measurement-show-all{flex-basis:100%;font-size:12px}
+.sound-check-measurements{border-top:1px solid #3a5145;margin-top:18px;padding-top:14px}
+.sound-check-measurements h3{font-size:14px;margin:0}
+.sound-check-measurements .measurement-entry-actions{margin-top:10px;gap:8px}
+.sound-check-measurements .measurement-entry-actions button{flex:1 1 160px;font-size:12px}
+@media(max-width:600px){
+ .measurement-entry-actions{flex-direction:column}.measurement-entry-actions button{width:100%}
+ .shootout-content .measurement-picker .headphone-search{flex-basis:100%;min-width:0}
+ .shootout-content .measurement-picker .browse-measurement-button,.shootout-content .measurement-picker .add-measurement-button{flex:1 1 130px;width:auto;justify-content:center}
+ .sound-check-measurements .measurement-entry-actions{flex-direction:row}.sound-check-measurements .measurement-entry-actions button{flex-basis:100%}
+}
