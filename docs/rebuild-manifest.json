@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 109,
-  "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
-  "runtimeParity": "Owner-approved CSS cleanup prepared for deployment after preview; live update109 remains the production baseline until verification.",
+  "liveUpdate": 110,
+  "implementationCommit": "a8030b0f156bb56926b83d479f875b10ea34305e",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update110. CSS cleanup removed 99 superseded declarations with player/library/consent styles and interactions preserved; the already-published repository source-link rename is deployed. Source-only recovery metadata and hosted validation passed without a data export.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -19,7 +19,8 @@
     "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026.",
     "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified.",
     "repositoryRename": "Existing lab app repository renamed to yinyang-eq-lab; current documentation and GitHub URLs updated without deployment. Historical release provenance retained.",
-    "cssCleanupPreview": "Owner approved: remove 99 superseded CSS declarations; player, library and consent computed styles, layout and interactions verified unchanged."
+    "cssCleanupPreview": "Deployed as update110 after owner preview approval; 99 obsolete declarations removed, 12 before/after state pairs unchanged, player/library/consent interactions verified.",
+    "repositoryBranding": "Canonical yinyangeqlab/yinyang-eq-lab source links deployed with update110; historical release provenance remains unchanged."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [

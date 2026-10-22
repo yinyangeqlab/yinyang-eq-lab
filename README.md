@@ -103,11 +103,11 @@ The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Clo
 
 ## Current release and rebuilding
 
-The verified live release is recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md). As of October 21, 2026, that is **0.2.0-beta.1 / update109**, including clearer mobile Welcome text, original yin-yang/waveform artwork, a smooth three-state sidebar, and compact account-sync status. See the [release verification](docs/releases/update109-verification.json) and [current version page](https://yinyangeq.com/version). Physical headphone output and real Safari/iOS interruption and recovery remain unverified.
+The verified live release is recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md). As of October 21, 2026, that is **0.2.0-beta.1 / update110**, including clearer mobile Welcome text, original yin-yang/waveform artwork, a smooth three-state sidebar, and compact account-sync status. See the [release verification](docs/releases/update110-verification.json) and [current version page](https://yinyangeq.com/version). Physical headphone output and real Safari/iOS interruption and recovery remain unverified.
 
 Start development at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/RECOVERY.md](docs/RECOVERY.md); follow [docs/REBUILD.md](docs/REBUILD.md) for fresh-clone commands, private-input restoration and deployment boundaries. Historical handoffs and demos describe their own release dates. GitHub contains application and credential-free deployment code, not production recordings, curve seeds, credentials or database state.
 
-Matching update109 recovery metadata and hosted validation passed, with existing encrypted off-device data snapshots and their original timestamps preserved. This metadata handover created no new data snapshot. Daily scheduling remains active. Two empty queued validation records remain on GitHub; the later successful validation confirmed they did not block execution. See the [recovery verification](docs/releases/update109-verification.json) for the recorded scope.
+Matching update110 recovery metadata and hosted validation passed, with existing encrypted off-device data snapshots and their original timestamps preserved. This metadata handover created no new data snapshot. Daily scheduling remains active. Two empty queued validation records remain on GitHub; the later successful validation confirmed they did not block execution. See the [recovery verification](docs/releases/update110-verification.json) for the recorded scope.
 
 ## Run locally
 

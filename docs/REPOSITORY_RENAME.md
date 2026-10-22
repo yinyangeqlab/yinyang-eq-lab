@@ -1,3 +1,5 @@
+Source-link deployment verified with update110 on October 22, 2026: the canonical repository and bug-report links are live. The rename itself remains the original in-place maintenance commit described below; no history, video repository, protected media or data backup was replaced. See docs/releases/update110-verification.json.
+
 # Repository branding — October 21, 2026
 
 Canonical source: [yinyangeqlab/yinyang-eq-lab](https://github.com/yinyangeqlab/yinyang-eq-lab).

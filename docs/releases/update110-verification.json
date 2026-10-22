@@ -1,0 +1,368 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 110,
+  "implementationCommit": "a8030b0f156bb56926b83d479f875b10ea34305e",
+  "deploymentVerification": {
+    "at": "2026-10-22T07:43:54.629934+00:00",
+    "revision": "a8030b0f156bb56926b83d479f875b10ea34305e",
+    "update": 110,
+    "deployment": {
+      "id": "ea62a4e3-8d39-467c-b4e9-aeebb2d16f38",
+      "versions": [
+        {
+          "version_id": "fcfd11aa-29a7-4bb0-a121-21c0bf927dc1",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 591,
+    "retainedPreviousClientAssets": 499,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": true,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true,
+    "browserVerificationScope": "Live public homepage and dedicated layout-fixture consent appearance/leave-without-saving on mobile and desktop; full player/library interactions use isolated local before/after synthetic review."
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "browserVerification": {
+    "title": "CSS cleanup preview verification",
+    "status": "Owner-approved CSS preview; exact CSS hashes deployed and live assets verified as update110.",
+    "createdAtUtc": "2026-10-22T06:24:31.470846+00:00",
+    "baselineCommit": "d8be7050b73f6890aaa48ad9d1a1a882995dd110",
+    "sourceHashes": {
+      "app/globals.css": "8a128317000c8acaa65cf2365a07c9e2fea701f083962d3d2fc2548f3d33c53f",
+      "app/music-library/style.css": "8ce8bd2e2dda6cf72d103807368b67b7d373b9fa9af6eb583f59aa196c8e2d10",
+      "components/comparison-data-settings.css": "a2ff89347ff5366726d72af32c3cc6af8e72bed3db989479268caecf12c9f265"
+    },
+    "removedDeclarations": {
+      "app/globals.css": 27,
+      "app/music-library/style.css": 19,
+      "components/comparison-data-settings.css": 53
+    },
+    "computedStyleAndGeometryComparisons": [
+      {
+        "screen": "player-volume",
+        "width": 320,
+        "nodes": 154,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "player-volume",
+        "width": 390,
+        "nodes": 154,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "player-volume",
+        "width": 1280,
+        "nodes": 154,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "library",
+        "width": 320,
+        "nodes": 795,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "library",
+        "width": 390,
+        "nodes": 795,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "library",
+        "width": 1280,
+        "nodes": 795,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "consent",
+        "width": 320,
+        "nodes": 124,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "consent",
+        "width": 390,
+        "nodes": 124,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "consent",
+        "width": 1280,
+        "nodes": 124,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "dock",
+        "width": 390,
+        "nodes": 154,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "dock",
+        "width": 1280,
+        "nodes": 154,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      },
+      {
+        "screen": "consent-disabled",
+        "width": 390,
+        "nodes": 126,
+        "computedStylePropertiesPerNode": 200,
+        "differences": [],
+        "afterHorizontalOverflow": false
+      }
+    ],
+    "playerBehavior": {
+      "before": {
+        "playing": {
+          "error": null,
+          "paused": false
+        },
+        "pause": true,
+        "muted": true,
+        "zoomed": true,
+        "passage": "0:13 \u2013 0:18",
+        "selectedTarget": "B"
+      },
+      "after": {
+        "playing": {
+          "error": null,
+          "paused": false
+        },
+        "pause": true,
+        "muted": true,
+        "zoomed": true,
+        "passage": "0:09 \u2013 0:14",
+        "selectedTarget": "B"
+      }
+    },
+    "libraryBehavior": {
+      "before": {
+        "searchCount": 1,
+        "emptyFilterWorks": true,
+        "loadMoreFamilies": 24,
+        "play": true,
+        "pause": true
+      },
+      "after": {
+        "searchCount": 1,
+        "emptyFilterWorks": true,
+        "loadMoreFamilies": 24,
+        "play": true,
+        "pause": true
+      }
+    },
+    "consentBehavior": {
+      "before": {
+        "allChecked": true,
+        "requiredOnly": [
+          true,
+          false,
+          false,
+          false
+        ],
+        "cancelPreserved": true,
+        "lastFocus": "Close",
+        "wrapped": "Close data agreement without saving",
+        "localSave": true,
+        "escape": {
+          "closed": true,
+          "focus": "Open data choices",
+          "focusVisible": true
+        }
+      },
+      "after": {
+        "allChecked": true,
+        "requiredOnly": [
+          true,
+          false,
+          false,
+          false
+        ],
+        "cancelPreserved": true,
+        "lastFocus": "Close",
+        "wrapped": "Close data agreement without saving",
+        "localSave": true,
+        "escape": {
+          "closed": true,
+          "focus": "Open data choices",
+          "focusVisible": true
+        }
+      }
+    },
+    "dropdownChecks": {
+      "desktop": {
+        "expanded": true,
+        "keyboardOperable": true,
+        "optionsBackground": "rgb(12, 27, 34)",
+        "optionsText": "rgb(230, 240, 243)",
+        "colorScheme": "dark"
+      },
+      "mobile390": {
+        "expanded": true,
+        "keyboardSelected": "all",
+        "optionsBackground": "rgb(12, 27, 34)",
+        "colorScheme": "dark"
+      },
+      "nativePopupPixelsCaptured": false
+    },
+    "checks": {
+      "cssCleanup": "passed; zero superseded declarations remain across the 12 checked stylesheets",
+      "typescriptNoEmit": "passed",
+      "productionBuild": "passed; build.log",
+      "sourceOnly": "passed; 581 rebuild inputs",
+      "gitDiffWhitespace": "passed",
+      "regressionSuites": [
+        "check_consent_choices.mjs: passed",
+        "check_unified_consent_flow.mjs: passed",
+        "check_open_music_source.mjs: passed",
+        "check_personal_playback.mjs: passed (6 checks)",
+        "check_music_preferences.cjs: passed"
+      ]
+    },
+    "scope": [
+      "Three approved CSS source files changed; no player/library/consent behavior logic changed. Previously published repository branding and source links are also included in the deployment.",
+      "Actual MusicPanel, its production audio-workbench stylesheet and wrapper classes, actual Music Library and ComparisonDataSettings rendered against both CSS versions.",
+      "All API writes are rejected in the local fixture. Read-only synthetic API responses; all audio URL families served generated local WAV. Consent save/cancel works on disposable React state only. No admin/participant session, research record or Sync operation."
+    ],
+    "limits": [
+      "Chromium-based local component review; no physical audio-output, Safari/iOS or assistive-technology user certification.",
+      "Native popup expansion and keyboard/color checks passed; native popup pixels are omitted by the screenshot surface.",
+      "Audio fixtures test playback behavior, not the original recordings or headphone fit."
+    ],
+    "releaseBuild": {
+      "productionBuildPassed": true,
+      "fullProtectedMediaPackagePassed": true,
+      "typeScriptPassed": true,
+      "baselineRepositoryRenameIncluded": true
+    },
+    "cleanupCheck": {
+      "stylesheets": 12,
+      "supersededDeclarationsRemaining": 0
+    }
+  },
+  "liveBrowserVerification": {
+    "at": "2026-10-22T07:44:37.065Z",
+    "update": 110,
+    "homepageMobile": {
+      "heading": "Find your sound.Let your ears decide.",
+      "height": 844,
+      "horizontalOverflow": false,
+      "loadedStyles": [
+        "/_next/static/css/layout.BTSlSg_4.css",
+        "/_next/static/css/alpha-shell.DpFgoF_y.css",
+        "/_next/static/css/page.BVJ9Jilz.css",
+        "/_next/static/css/admin-account-link.CqRNn1_N.css",
+        "/_next/static/css/mode-illustration.DtLZhMQF.css"
+      ],
+      "sourceLink": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+      "width": 390
+    },
+    "homepageDesktop": {
+      "heading": "Find your sound.Let your ears decide.",
+      "height": 900,
+      "horizontalOverflow": false,
+      "sourceLink": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+      "width": 1280
+    },
+    "consentMobile": {
+      "choicesVisible": true,
+      "disabledInputs": 4,
+      "height": 844,
+      "horizontalOverflow": false,
+      "isolatedTestAccount": true,
+      "width": 390
+    },
+    "consentDesktop": {
+      "height": 900,
+      "horizontalOverflow": false,
+      "isolatedTestAccount": true,
+      "width": 1280
+    },
+    "consentLeaveWithoutSavingReturnedHome": true,
+    "reviewIdentity": "dedicated hidden non-contributing layout test account; visible isolated-test notice verified",
+    "consentSaved": false,
+    "nicknameChanged": false,
+    "researchContributions": false,
+    "syncOperations": false,
+    "libraryLiveAccess": "Existing required-choice gate retained; exited without saving. Library/player interactions verified in isolated local before/after fixture.",
+    "liveAppearancePassed": true
+  },
+  "backupMetadata": {
+    "at": "2026-10-22T07:47:47.184068+00:00",
+    "sourceBaselineUpdate": 110,
+    "implementationCommit": "a8030b0f156bb56926b83d479f875b10ea34305e",
+    "sourceOnlyHandoverPassed": true,
+    "matchingCurrentReleaseBaseline": true,
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": false,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T07:48:24Z",
+    "dailyWorkflowActive": true
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}

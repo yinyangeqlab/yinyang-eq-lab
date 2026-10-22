@@ -1,6 +1,29 @@
+# Current live release — 0.2.0-beta.1 / update110, October 22, 2026
+
+Completion verified October 22, 2026: owner-approved CSS cleanup update110 is deployed. All 99 obsolete declarations are removed; the cleanup check passes. Player, Library and consent styles/layout and interactions passed before/after review at mobile and desktop sizes. Exact production code/assets and existing protections passed verification. Source-only recovery metadata and matching hosted validation passed with all prior encrypted off-device data snapshots and original timestamps unchanged, zero data exports and no new snapshots. Verified lab-attributed source and release records are published. See docs/releases/update110-verification.json.
+
+The owner-approved CSS cleanup removes 99 superseded declarations: 27 in global styles, 19 in Music Library and 53 in consent-dialog styles. The effective styles and interaction code are preserved. The previously published repository rename and source links are included in this deployment. Source `a8030b0f156bb56926b83d479f875b10ea34305e` uses the verified lab author and committer.
+
+Twelve before/after state and viewport comparisons at 320px, 390px and 1280px found zero computed-style or geometry differences and no horizontal overflow. Actual player controls, Library search/filter/pagination/playback and consent preset/cancel/draft-save/focus/Escape behavior passed isolated synthetic checks before and after cleanup. Native select closed/expanded keyboard checks retained explicit dark options and selected/disabled readability. No participant/admin session, real consent, contribution or Sync write was used. The cleanup check passes with zero superseded declarations in all 12 checked stylesheets. TypeScript, production build and five relevant regression suites passed. Physical devices, headphone output, Safari/iOS and assistive-technology user testing remain unverified under the existing coverage limits.
+
+Source/build `work/css-cleanup-release-20261021`; infrastructure `work/css-cleanup-infra-20261021`. Production verification matched 591 JS/CSS files and retained 499 additional prior browser assets. The plan updated one existing app Worker code/assets only. Schema 213, CPU 5000ms, six abuse bindings, private media/access, disabled public Worker URLs, separate edge/cost controls and existing service notice remain. No migrations, data import/export or new backup snapshot. Existing encrypted off-device recovery and Legacy0.1/update103 are retained. Matching source-only metadata handover and hosted validation passed; the original data recovery timestamp is unchanged. Canonical unrelated drafts, index and HEAD remain preserved.
+
+## Previous release and preparation notes
+
 # Current live release — 0.2.0-beta.1 / update109, October 21, 2026
 
-Repository branding maintenance — October 21, 2026: the owner authorized renaming the existing application repository to `yinyangeqlab/yinyang-eq-lab`, using only the lab identity. The app remains YinYang EQ, by Yin Yang EQ Lab. Repository links, clone instructions and package metadata are updated in source; the live update109 application/build and original release provenance remain unchanged. The separate `yinyangeqlab.github.io` repository hosts public demo videos and credits only, with its existing short links preserved. This maintenance performs no website deployment, backup export or data change. See docs/REPOSITORY_RENAME.md.
+Session closeout — canonical repository and links for future sessions:
+
+- Application: https://github.com/yinyangeqlab/yinyang-eq-lab
+- Git origin: https://github.com/yinyangeqlab/yinyang-eq-lab.git
+- Bug reports: https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new
+- Releases: https://github.com/yinyangeqlab/yinyang-eq-lab/releases
+- Rename guide: docs/REPOSITORY_RENAME.md
+- Video repository: https://github.com/yinyangeqlab/yinyangeqlab.github.io — demos/credits only; keep https://yinyangeqlab.github.io/ and its t.mp4/m.mp4 links.
+
+Use only the verified yinyangeqlab account and required lab author/committer. Do not recreate the former repository name or publish historical pre-scrub history. The canonical checkout is intentionally behind published main with separate local changes; fetch and inspect before work, without pulling/resetting over them. The rename and source-link publication are complete. The live site remains update109; old backups and original recovery timestamps are preserved. This closeout updates local documentation only, with no deployment, export or new snapshot. Owner requested stopping here.
+
+Repository rename completed October 21, 2026: canonical application source is `https://github.com/yinyangeqlab/yinyang-eq-lab`, renamed in place with the original repository ID, history, issues, tags and release assets preserved. Source link/metadata maintenance commit `d87dbdeaa811035a9c9244178a6b116f783fc4be` has verified yinyangeqlab author and committer. The product remains YinYang EQ, by Yin Yang EQ Lab. The separate public video repository has a clearer description; its name, content commit and short URLs are unchanged, so no video Pages rebuild was triggered. Five active checkout/worktree remotes resolve directly to the new name. Historical/immutable remotes and release provenance remain preserved. GitHub redirects the old app URL. Live update109, backups and data remain unchanged; no build, deployment or export. See docs/REPOSITORY_RENAME.md.
 
 Completion verified October 21, 2026: owner-approved mobile readability update109 is deployed; public mobile and desktop appearance checks passed. Exact production code/assets and existing protections passed verification. Source-only recovery metadata and matching hosted validation passed, preserving all prior encrypted off-device data snapshots and original timestamps with no export or new snapshot. Lab-attributed source and release records are published. See docs/releases/update109-verification.json.
 
