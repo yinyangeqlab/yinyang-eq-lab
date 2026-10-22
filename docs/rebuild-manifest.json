@@ -27,7 +27,8 @@
       "status": "Local reviewed commits only; no push, deployment or data export.",
       "groups": [
         "timing",
-        "measurement"
+        "measurement",
+        "sync"
       ]
     }
   },
@@ -423,7 +424,7 @@
     },
     {
       "path": "components/account-auto-sync.tsx",
-      "sha256": "65723d9f9c23c64ff25ce8ebad728773f23afeb0f326155bbc6ee5cc9c17fd1e"
+      "sha256": "af49209c3ce2ec60a6c0894ebb2a074df0560003ae9d689eb62147e5bca7dd86"
     },
     {
       "path": "components/account-device-status.css",
@@ -431,7 +432,7 @@
     },
     {
       "path": "components/account-device-status.tsx",
-      "sha256": "0bd245c8c0fd1fe334ad2874484fdf09a93d5b177d1c385a56366f3e5a3e07cc"
+      "sha256": "3f4790828b05f5b82df3d0081fa7fd295a681bc4be8d297d4cbf0376ef7474f7"
     },
     {
       "path": "components/account-page-heading.tsx",
@@ -442,8 +443,16 @@
       "sha256": "ea1e51aba61ae0bc0d8e9b34521c8b45160b74bff521f175627bcc146ba2b34e"
     },
     {
+      "path": "components/account-sync-activity.css",
+      "sha256": "bc7309e525d25e35f1c75152e024779067d5704d3e99e0085673b751f5564f55"
+    },
+    {
+      "path": "components/account-sync-activity.tsx",
+      "sha256": "f677ed5f00fd576556aa7bb8c29a287f3d4a3ec4308f8d7dc55e9c903e9f9ee9"
+    },
+    {
       "path": "components/account-sync-manager.tsx",
-      "sha256": "1af27f45f965e0545be4a3e03cc13ef261c49f8ff935173cba2bb7e48935a7c3"
+      "sha256": "67ce632dcad840e094d683dbaa79cd2f0ea9c9803fc9497c02a20f3f91d6c58c"
     },
     {
       "path": "components/action-hover.css",
@@ -1394,6 +1403,10 @@
       "sha256": "8b18472659e59bb50a087c36793383983af627351b87dd36ade70ad22b4d005c"
     },
     {
+      "path": "lib/account-sync-activity.ts",
+      "sha256": "dc16ccf211c9a9dc4ad1cf72ae225ec9a1a45a00f4239fc457e6939a951823ce"
+    },
+    {
       "path": "lib/account-sync-cache.mjs",
       "sha256": "ae99614d79d5001fc6e3d5b329439b6f3210f985ff640100fff0a3f2f4ecf417"
     },
@@ -1427,11 +1440,11 @@
     },
     {
       "path": "lib/account-sync-transfer.d.mts",
-      "sha256": "0101dd79c5fd120072d58c743eb5888c0ae486c4943411e2eff1296286293cd1"
+      "sha256": "5cc2ac42fcde4f057649a41889eeb21b83c186b7626b8e0d8d63e03270f60f61"
     },
     {
       "path": "lib/account-sync-transfer.mjs",
-      "sha256": "d47e65589e1f7b53a6a22cf7b028ef9fc298a63fac7283c586f91c37136e852f"
+      "sha256": "17dac32527930aaf68ee9a89c79f838fb9fefdeeb7eb58ab22b94ef7d1a3462c"
     },
     {
       "path": "lib/account-sync.d.mts",
@@ -1939,15 +1952,15 @@
     },
     {
       "path": "scripts/check_account_auto_sync.mjs",
-      "sha256": "5e59b8d928973dc19295aceceb12dd422f3881c03fc8a6126296a1d60a318025"
+      "sha256": "262e3a8289c631fe35d1407e64db32481ccd21315ac3cb1a4b642fd2eb804cbf"
     },
     {
       "path": "scripts/check_account_storage_denial.mjs",
-      "sha256": "3d2b23aeebd71ec49349b080641e2da5672a6d9c092988a1236226dc5828caf2"
+      "sha256": "1f2a0d1f393747e61ab6575c206f60b72223d3de7c2ef2dabefa06fcfb96a7a1"
     },
     {
       "path": "scripts/check_account_sync_manager.mjs",
-      "sha256": "87738b533c0186dffbe9fd540bb200a3b0d7dfe3544db338ab5fb11161809b59"
+      "sha256": "ea90261f1defd1cdce269ef06a71101f5467da5f1a02fd8e882ea90c53a94a35"
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
