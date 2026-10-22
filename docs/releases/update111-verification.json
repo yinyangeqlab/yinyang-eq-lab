@@ -1,0 +1,99 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 111,
+  "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005",
+  "deploymentVerification": {
+    "at": "2026-10-22T09:01:19.589070+00:00",
+    "revision": "9d896daacb7a28702fecae2ab9352e1cfe125005",
+    "update": 111,
+    "deployment": {
+      "id": "e230066f-e5e8-4b36-9492-be1b1318023d",
+      "versions": [
+        {
+          "version_id": "aa252892-7e2b-4263-8737-75f14a2116ac",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 624,
+    "retainedPreviousClientAssets": 531,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "verification": {
+    "typescriptPassed": true,
+    "productionBuildPassed": true,
+    "fullMediaPackagingPassed": true,
+    "infrastructureCheckPassed": true,
+    "syntheticRegressionSuitesPassed": 11,
+    "componentReviewWidths": [
+      1280,
+      320
+    ],
+    "nativeSelectClosedExpandedKeyboardChecksPassed": true,
+    "researchChangesImplemented": false,
+    "limits": [
+      "Physical audio/devices, Safari/iOS and assistive-technology user testing unverified.",
+      "Local component review does not certify whole-application acceptance.",
+      "No participant/admin browser session or real Sync/consent used in component review."
+    ]
+  },
+  "backupMetadata": {
+    "at": "2026-10-22T09:04:54.683574+00:00",
+    "sourceBaselineUpdate": 111,
+    "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005",
+    "sourceOnlyHandoverPassed": true,
+    "matchingCurrentReleaseBaseline": true,
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": false,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T09:07:10Z",
+    "dailyWorkflowActive": true
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": true,
+    "publicationOnHold": false,
+    "credentialsOrPrivateReceiptsIncluded": false,
+    "publicationSeparateFromDeployment": true
+  }
+}
