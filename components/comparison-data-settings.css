@@ -47,7 +47,7 @@
 .trial-data-actions a { color:#91dcd2; text-decoration:underline; }
 .trial-data-actions button { min-height:40px; padding:8px 12px; border:1px solid #8d6170; border-radius:7px; background:#2d1c25; color:#eedbe1; cursor:pointer; }
 
-/* Keep all five consent choices outside disclosures and ahead of profile details. */
+/* Keep all five consent choices outside disclosures. */
 .comparison-data-settings .agreement-intro{margin:0 0 8px;font-size:13px;line-height:1.4;color:#cededc}
 .comparison-data-settings .agreement-research-invite{margin:0 0 12px;padding:12px;border:1px solid #507b77;border-radius:9px;background:#102922;color:#d4e8e1}
 .comparison-data-settings .agreement-research-invite h3{margin:0 0 6px;font-size:15px;line-height:1.35;color:#e1f5ec}
@@ -100,9 +100,9 @@
 .comparison-data-settings .agreement-choice-card .monitoring-option{min-height:44px;line-height:1.5;font-size:13px}
 .comparison-data-settings .agreement-choice-card.monitoring-choice{padding-top:9px}
 .comparison-data-settings .monitoring-choice legend{padding:0 6px}
-.comparison-data-settings .agreement-nickname{padding:16px 0;margin:2px 0;border-top:1px solid #29444c;border-bottom:1px solid #29444c}
+.comparison-data-settings .agreement-nickname{padding:12px 6px;margin:0 0 14px;border-bottom:1px solid #29444c}
 .comparison-data-settings .agreement-nickname input{max-width:540px;background:#051218;border-color:#45666c;min-height:44px}
-.comparison-data-settings .agreement-nickname p{line-height:1.6}
+.comparison-data-settings .agreement-nickname p{line-height:1.6;overflow-wrap:anywhere}
 .comparison-data-settings .agreement-details summary{min-height:44px}
 .comparison-data-settings .agreement-policy p{color:#b2c6ce;font-size:13px;line-height:1.7}
 .comparison-data-settings .agreement-save-notice{padding-top:9px;line-height:1.5}

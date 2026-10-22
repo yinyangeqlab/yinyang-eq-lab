@@ -1,7 +1,7 @@
 {
   "liveUpdate": 105,
   "implementationCommit": "f030b2900c2553645f2a5ef9ef70cb61d8aab1a9",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update105. Current release/rebuild documentation records verification separately from the immutable implementation snapshot.",
+  "runtimeParity": "Pending nickname placement/focus-clipping UI correction based on verified beta update105; no consent lifecycle, payload or server policy change.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -498,11 +498,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "5f249ee973ced2776616ff3feed941c828d8ff0208e15fc148053a9b3c779819"
+      "sha256": "276a19777d809263c44680fc78696f77b3237fe9834dba49a19f4a06d5b76fb1"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "2ce324170de40cc0b74c749e95b8dc2c23de423813862b1ba95150f67894fccb"
+      "sha256": "8dc5dbd7de839841d7fa017bf27127ac34c992659f4ec71cf21cbba26a5515cf"
     },
     {
       "path": "components/connector-error.tsx",
