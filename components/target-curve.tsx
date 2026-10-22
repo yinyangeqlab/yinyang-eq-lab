@@ -32,8 +32,8 @@ export default function Curve({ points, color }: { points: Point[]; color: strin
   const clipId = useId();
   return <svg className="curve" viewBox="0 0 560 210" preserveAspectRatio="none" role="img" aria-label={`Frequency response curve, 1 kHz at 75 dB, displayed from ${CURVE_VIEW.min} to ${CURVE_VIEW.max} dB; arrows mark values outside this view`}>
     <defs><clipPath id={clipId}><rect x="64" y="17" width="482" height="176" /></clipPath></defs>
-    <line x1="54" x2="54" y1="17" y2="193" stroke="#71838d" strokeWidth="1" />
-    {[17, anchorY, 193].map(y => <line key={y} x1="51" x2="57" y1={y} y2={y} stroke="#71838d" strokeWidth="1" />)}
+    <line x1="54" x2="54" y1="17" y2="193" stroke="rgba(130,160,175,.45)" strokeWidth=".75" vectorEffect="non-scaling-stroke" />
+    {[17, anchorY, 193].map(y => <line key={y} x1="51" x2="57" y1={y} y2={y} stroke="rgba(130,160,175,.45)" strokeWidth=".75" vectorEffect="non-scaling-stroke" />)}
     <path d={path} clipPath={`url(#${clipId})`} fill="none" stroke={color} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
     <circle cx={anchorX} cy={anchorY} r="4" fill={color} stroke="#090e12" strokeWidth="1.5" />
     {lowPoint[1] < CURVE_VIEW.min && <text x={plotX(lowPoint[0])} y="190" textAnchor="middle" fill={color} fontSize="15" fontWeight="900">↓</text>}

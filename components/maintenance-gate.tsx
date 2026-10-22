@@ -21,6 +21,6 @@ export default function MaintenanceGate({ children }: { children: React.ReactNod
   }, [check]);
 
   if (enabled === null) return <main className="maintenance-screen"><p>Loading site…</p></main>;
-  if (enabled) return <main className="maintenance-screen" role="status"><div className="maintenance-card"><span className="mini-label">YINYANG EQ LEAGUE</span><h1>We’ll be back shortly.</h1><p>The site is undergoing maintenance. Your music and saved measurements stay on your device. Please try again in a few minutes.</p><button type="button" onClick={() => void check()}>Check again</button></div></main>;
+  if (enabled) return <main className="maintenance-screen" role="status"><div className="maintenance-card"><span className="mini-label">YINYANG EQ</span><h1>We’ll be back shortly.</h1><p>The site is undergoing maintenance. Your music and saved measurements stay on your device. Please try again in a few minutes.</p><button type="button" onClick={() => void check()}>Check again</button></div></main>;
   return children;
 }

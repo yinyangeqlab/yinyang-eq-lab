@@ -14,7 +14,7 @@ export default function CurveCreditsPage() {
 
   return <main className="curve-credits">
     <header className="credits-header">
-      <a href="/" className="credits-brand"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ League</em></span></a>
+      <a href="/" className="credits-brand"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ</em></span></a>
       <nav aria-label="Credits navigation"><a href="/shootout">Tournament</a><a href="/music-library">Listening pool</a></nav>
     </header>
     <section className="credits-intro">
@@ -39,6 +39,6 @@ export default function CurveCreditsPage() {
       {!shown.length && <p className="credits-empty">No curves match this search. Try another curve, creator or source.</p>}
     </section>
 
-    <footer className="credits-footer"><div><strong>Are you a curve creator?</strong><p>For a correction, a preferred credit, a source clarification, a reuse concern or a removal request, contact <a href={`mailto:${credits.contact}`}>{credits.contact}</a>.</p></div><p>Creator names and links identify sources. They do not imply endorsement of YinYang EQ League.</p></footer>
+    <footer className="credits-footer"><div><strong>Are you a curve creator?</strong><p>For a correction, a preferred credit, a source clarification, a reuse concern or a removal request, contact <a href={`mailto:${credits.contact}`}>{credits.contact}</a>.</p></div><p>Creator names and links identify sources. They do not imply endorsement of YinYang EQ.</p></footer>
   </main>;
 }

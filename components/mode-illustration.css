@@ -1,0 +1,65 @@
+/* Original archived mode drawings; presentation only, with the existing host palette. */
+.mode-illustration{--mode-art-ink:currentColor;display:flex;align-items:center;justify-content:center;flex:none;width:100%;height:120px;color:inherit;pointer-events:none;user-select:none;opacity:.78;transition:opacity 180ms ease,filter 180ms ease}
+.mode-illustration>svg{display:block;flex:none;width:160px;height:120px;max-width:100%;overflow:visible}
+.welcome-mode .alpha-mode-art{height:128px;margin:12px 0 8px}
+.alpha-mode-art .mode-illustration>svg{width:160px;height:120px;max-width:100%;stroke-width:1.7}
+.tournament-mode .mode-illustration{color:var(--mode-glow,currentColor)}
+.mode-illustration.mode-illustration--compact{width:64px;height:48px}
+.mode-illustration.mode-illustration--compact>svg{width:64px;height:48px}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-illustration{opacity:1;filter:drop-shadow(0 0 8px color-mix(in srgb,currentColor 18%,transparent))}
+.mode-art-orbit-guide{opacity:.3;stroke-width:1;stroke-dasharray:2 6}
+.mode-art-orbit-ellipse{opacity:.5;stroke-dasharray:none}
+.mode-art-orbit,.mode-art-swing{transform-box:view-box;transform-origin:80px 60px}
+.mode-art-orbit-planet{fill:#241a0b;stroke:#ffd28b;stroke-width:1.5}
+.mode-art-orbit-planet-small{fill:#2c1b0a;stroke:#f1a346}
+.mode-art-orbit-signal{stroke:#ffe1aa;stroke-width:1.1}
+.mode-art-listener-halo{fill:var(--mode-art-ink);fill-opacity:.055;stroke:var(--mode-art-ink);stroke-opacity:.17;stroke-width:1}
+.mode-art-listener-head{fill:#0b1014;fill-opacity:.95}
+.mode-art-listener{stroke-width:2.1}
+.mode-art-listener-body{opacity:.55;stroke-width:1.5}
+.mode-art-headphones{stroke:#ffe2b3;stroke-width:3}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-orbit-outer{animation:mode-art-personal-orbit 13s linear infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-orbit-inner{animation:mode-art-personal-orbit 10s linear infinite reverse}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-orbit-third{animation:mode-art-personal-orbit 17s linear infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-listener-halo{animation:mode-art-listener-breathe 3.6s ease-in-out infinite}
+@keyframes mode-art-personal-orbit{to{transform:rotate(360deg)}}
+@keyframes mode-art-listener-breathe{0%,100%{fill-opacity:.035;stroke-opacity:.17}50%{fill-opacity:.11;stroke-opacity:.45}}
+
+/* Blind: sound reaches a stationary listener whose eyes are covered. */
+.mode-art-blind-source{opacity:.6;stroke-width:2}
+.mode-art-blindfold{fill:currentColor;fill-opacity:.9;stroke:color-mix(in srgb,currentColor 55%,#fff);stroke-width:1.1}
+.mode-art-blindfold-tie{stroke-width:1.4}
+.mode-art-blind-wave{opacity:.32;stroke-width:1.5;transform-box:view-box}
+.mode-art-blind-wave.mode-art-wave-2{opacity:.5}
+.mode-art-blind-wave.mode-art-wave-3{opacity:.24}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-blind-waves-left .mode-art-blind-wave{animation:mode-art-blind-in-left 1.8s ease-out infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-blind-waves-right .mode-art-blind-wave{animation:mode-art-blind-in-right 1.8s ease-out -.3s infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-blind-wave.mode-art-wave-2{animation-delay:-.6s}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-blind-wave.mode-art-wave-3{animation-delay:-1.2s}
+@keyframes mode-art-blind-in-left{0%{transform:translateX(-5px);opacity:0}25%{opacity:.8}100%{transform:translateX(7px);opacity:0}}
+@keyframes mode-art-blind-in-right{0%{transform:translateX(5px);opacity:0}25%{opacity:.8}100%{transform:translateX(-7px);opacity:0}}
+
+/* Open: two named targets can swing freely in an exploratory playground. */
+.mode-art-playground-frame{stroke:currentColor;stroke-opacity:.75;stroke-width:2}
+.mode-art-playground-ground{stroke-opacity:.25;stroke-width:1}
+.mode-art-swing-a{transform-origin:59px 24px}
+.mode-art-swing-b{transform-origin:101px 24px}
+.mode-art-swing-rope{stroke:#acb3c7;stroke-opacity:.65;stroke-width:1.2}
+.mode-art-swing-seat{stroke:#dfd5ff;stroke-width:3}
+.mode-art-play-target{fill:currentColor;fill-opacity:.18;stroke:currentColor;stroke-width:1.5}
+.mode-art-play-target-a{color:#ff526f}
+.mode-art-play-target-b{color:#48b8ff}
+.mode-art-play-letter{font:600 11px system-ui,sans-serif;fill:#f1eaff;stroke:none;text-anchor:middle}
+.mode-art-playground-path{stroke-width:1.3;stroke-dasharray:3 5;stroke-opacity:.5}
+.mode-art-playground-node{fill:currentColor;stroke:none}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-swing-a{animation:mode-art-open-swing 3s ease-in-out infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-swing-b{animation:mode-art-open-swing 3s ease-in-out -1.5s infinite}
+:is(.welcome-mode,.tournament-mode):is(:hover,:focus-visible,:focus-within,.recommended,[aria-pressed="true"],[aria-current="page"]) .mode-art-playground-path{animation:mode-art-open-path 5s linear infinite}
+@keyframes mode-art-open-swing{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+@keyframes mode-art-open-path{to{stroke-dashoffset:-32}}
+
+@media(prefers-reduced-motion:reduce){
+ .mode-illustration{transition:none;filter:none!important}
+ .mode-illustration *{animation:none!important;transition:none!important}
+ .mode-illustration :is(.mode-art-orbit,.mode-art-swing,.mode-art-blind-wave){transform:none!important}
+}

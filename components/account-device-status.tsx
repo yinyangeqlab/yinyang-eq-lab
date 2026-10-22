@@ -10,7 +10,7 @@ export default function AccountDeviceStatus({admin=false,promptCurrent=false}:{a
  const version=useRef(0),prompted=useRef(false);
  const load=useCallback(async()=>{const request=++version.current;try{
   const response=await fetch(admin?'/api/owner-research/yinyangeq/devices':'/api/my-profile/devices',{cache:'no-store'}),result=await response.json() as DeviceList&{error?:string};
-  if(request!==version.current)return;if(!response.ok)throw Error(result.error||'Could not check devices.');setData(result);setError('');
+  if(request!==version.current)return;if(!response.ok)throw Error(result.error?.startsWith('Private test only:') || /test[- ](?:only|account)/i.test(result.error || '') ? 'Private Test Mode cannot link or Sync devices. Your local listening data stays in this browser.' : result.error||'Could not check devices.');setData(result);setError('');
   const current=result.devices.find(device=>device.current);if(promptCurrent&&!admin&&!prompted.current&&current&&(current.label==='Unnamed device'||new URLSearchParams(window.location.search).has('setup'))){prompted.current=true;setEdit({id:current.id,label:current.label==='Unnamed device'?'':current.label,browserName:current.browserName,notes:current.notes});}
  }catch(cause){if(request===version.current){setData(null);setError((cause as Error).message);}}},[admin,promptCurrent]);
  useEffect(()=>{void load();const reload=()=>void load(),timer=window.setInterval(()=>{if(document.visibilityState==='visible')void load();},10000);window.addEventListener('focus',reload);window.addEventListener('yinyang-device-status',reload);return()=>{version.current++;window.clearInterval(timer);window.removeEventListener('focus',reload);window.removeEventListener('yinyang-device-status',reload);};},[load]);
