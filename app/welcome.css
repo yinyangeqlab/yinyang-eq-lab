@@ -90,14 +90,12 @@
  .welcome-nav nav a.welcome-tool-link { display:inline-flex; align-items:center; min-height:40px; }
 }
 
-.welcome-sync-note { display:flex; align-items:center; flex-wrap:wrap; gap:12px 18px; width:fit-content; max-width:100%; margin-top:24px; padding:14px 16px; border:1px solid #ffd38366; border-radius:14px; background:#071014ed; box-shadow:0 8px 28px #0005; text-shadow:none; }
+.welcome-sync-note { display:flex; align-items:center; flex-wrap:wrap; gap:12px 18px; width:fit-content; max-width:100%; margin-top:24px; padding:14px 16px; border:1px solid #35515b; border-radius:14px; background:#071014ed; box-shadow:0 8px 28px #0005; text-shadow:none; }
 .welcome-copy .welcome-sync-note p { margin:0; color:#fff8e9; font-size:15px; font-weight:700; line-height:1.5; }
-.welcome-sync-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; padding:13px 18px; border:1px solid #ffe4a9; border-radius:10px; background:linear-gradient(135deg,#ffe3a0,#ffbd50); color:#302007; font-size:15px; font-weight:800; white-space:nowrap; text-shadow:none; box-shadow:0 0 20px #ffbc4d52; animation:welcome-sync-pulse 2.4s ease-in-out 2; }
+.welcome-sync-button { display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:50px; padding:13px 18px; border:1px solid #52747b; border-radius:10px; background:#0d252d; color:#b4f0e5; font-size:15px; font-weight:700; white-space:nowrap; text-shadow:none; }
 .welcome-sync-button svg { width:22px; height:22px; flex-shrink:0; }
-.welcome-sync-button:hover,.welcome-sync-button:focus-visible { background:linear-gradient(135deg,#fff0c8,#ffd17a); animation:none; box-shadow:0 0 26px #ffbc4d7a; }
+.welcome-sync-button:hover,.welcome-sync-button:focus-visible { background:#173942; color:#e1fff6; }
 .welcome-sync-button:focus-visible { outline:3px solid #fff; outline-offset:5px; }
-@keyframes welcome-sync-pulse { 0%,100% { transform:scale(1); box-shadow:0 0 20px #ffbc4d52; } 50% { transform:scale(1.045); box-shadow:0 0 32px #ffbc4da0,0 0 0 5px #ffd38318; } }
-@media(prefers-reduced-motion:reduce) { .welcome-sync-button { animation:none; } }
 
 /* Browser and data options stay at the right edge, including on phones. */
 .welcome-settings { position:relative; margin-left:auto; color:#ddf5ef; }
@@ -475,3 +473,11 @@
 @media (max-width:360px) {
  .alpha-route-content .welcome-copy { padding-inline:16px; }
 }
+
+.welcome-fair{max-width:1240px;margin:0 auto;padding:34px 28px 0}
+.welcome-fair h2{margin:0 0 14px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#91b4c1}
+.welcome-fair ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.welcome-fair li{display:grid;gap:5px;align-content:start;padding:15px 16px;border:1px solid #263c42;border-radius:12px;background:#080d12}
+.welcome-fair strong{color:#eef7f8;font-size:15px}
+.welcome-fair span{color:#a7bac5;font-size:14px;line-height:1.65}
+@media(max-width:760px){.welcome-fair{padding:28px 20px 0}}

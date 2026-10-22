@@ -33,6 +33,8 @@ export default function AdminAccountLink({ placement = "utility" }: { placement?
     return () => window.clearTimeout(timer);
   }, [session]);
   const active = session.admin;
+  // Participants never see an admin entry inside listening pages; the Welcome footer keeps "Admin sign in", and an active session still shows its indicator.
+  if (placement === "utility" && !active) return null;
   const explanation = active ? "Admin session active. Admin privileges and test-only contribution restrictions apply. Open admin controls." : "Open admin sign-in and controls.";
   return <a className={`${placement === "welcome" ? "welcome-admin-link" : "owner-utility-link"} admin-session-link${active ? " admin-session-active" : ""}`} href={active || placement === "utility" ? "/owner-research" : "/admin-login"} title={explanation} aria-label={explanation} data-admin-active={active ? "true" : "false"}>
     <ShieldCheck aria-hidden="true" />

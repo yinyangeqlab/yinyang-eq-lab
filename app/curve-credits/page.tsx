@@ -21,7 +21,7 @@ export default function CurveCreditsPage() {
       <span className="credits-eyebrow">THE PEOPLE BEHIND THE CURVES</span>
       <h1>Good listening starts<br />with giving credit.</h1>
       <p>Target curves reflect the work of researchers, reviewers and the audio community. This page credits curve creators and explains how curves were imported or reproduced. Every built-in curve is included, whether or not a reuse license has been identified. Each entry separates attribution, source, changes and our basis for use.</p>
-      <div className="credits-stats" aria-label="Curve attribution summary">
+      <div className="credits-stats" role="group" aria-label="Curve attribution summary">
         <div><strong>{credited}</strong><span>credited curves</span></div><div><strong>{sourced}</strong><span>source references</span></div><div><strong>{licensed}</strong><span>stated licenses</span></div>
       </div>
     </section>
