@@ -1,0 +1,109 @@
+{
+  "deploymentVerification": {
+    "at": "2026-10-22T01:47:21.203579+00:00",
+    "revision": "87077e897a16b33c00c1528d5f32e430410b617b",
+    "update": 106,
+    "deployment": {
+      "id": "f31629dd-9de5-481f-9700-6cc5e6624c52",
+      "versions": [
+        {
+          "version_id": "a2338932-810f-4dc7-bf0e-f6d8fe7c7d12",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 528,
+    "retainedPreviousClientAssets": 435,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "browserVerification": {
+    "localOnly": false,
+    "identity": "hidden layout-test-only fixture",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "narrow": {
+      "focusOutlineInsideScrollport": true,
+      "horizontalOverflow": false,
+      "pageOverflow": false,
+      "viewport": [
+        320,
+        568
+      ]
+    },
+    "nicknameBeforeSharing": true,
+    "focusOutlineComplete": true,
+    "consentSaved": false,
+    "nicknameChanged": false,
+    "liveReview": {
+      "identity": "hidden consent test fixture",
+      "metrics": {
+        "focusOutlineInsideScrollport": true,
+        "horizontalOverflow": false,
+        "nicknameBeforeSharing": true,
+        "pageOverflow": false
+      },
+      "consentSaved": false,
+      "nicknameChanged": false
+    },
+    "scope": "Desktop/mobile/narrow checks used the hidden local fixture; final live check used the existing hidden consent fixture, without saving."
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "validation": {
+    "baselineBetaSuitesPassed": 43,
+    "nicknameAndConsentRegressionsPassed": 4,
+    "desktopMobileAndNarrowLayoutPassed": true,
+    "typescriptPassed": true,
+    "productionBuildPassed": true,
+    "baselineProductionKnownDependencyAdvisories": 0,
+    "buildOnlyBracesAdvisoryRemains": true,
+    "physicalAudioAndSafariGapsAccepted": true
+  },
+  "backupMetadata": {
+    "sourceOnlyHandoverPassed": true,
+    "hostedValidationPassed": false,
+    "hostedValidationPending": true,
+    "hostedValidationStatus": "queued",
+    "dataRecoveryPointUnchanged": true,
+    "newDataSnapshots": 0,
+    "dailyWorkflowActive": true,
+    "at": "2026-10-22T01:50:34Z"
+  },
+  "publicationOperation": {
+    "deploymentPerformed": false,
+    "dataExportPerformed": false,
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}

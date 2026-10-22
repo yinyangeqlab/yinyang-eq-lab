@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 105,
-  "implementationCommit": "f030b2900c2553645f2a5ef9ef70cb61d8aab1a9",
-  "runtimeParity": "Pending nickname placement/focus-clipping UI correction based on verified beta update105; no consent lifecycle, payload or server policy change.",
+  "liveUpdate": 106,
+  "implementationCommit": "87077e897a16b33c00c1528d5f32e430410b617b",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update106. Current release/rebuild documentation records verification separately from the immutable implementation snapshot.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",

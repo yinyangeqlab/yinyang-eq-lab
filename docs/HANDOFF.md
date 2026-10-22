@@ -1,3 +1,15 @@
+# Current live release — 0.2.0-beta.1 / update106, October 21, 2026
+
+Completion verified October 21, 2026: nickname placement and focus clipping were checked on desktop, mobile and narrow layouts using the hidden fixture, without saving consent or nickname changes. Production code/assets and existing protections passed verification. Source-only backup metadata handover passed with no new data export; hosted validation remains queued and no hosted success is claimed; daily coverage and the old Legacy0.1/update103 checkpoint remain. Public verification: docs/releases/update106-verification.json.
+
+The optional listener nickname now appears below the introduction, before the sharing invitation and permissions. Its focus outline has horizontal clearance inside the consent dialog scroll area, and nickname help text wraps safely. Original colors, validation, optional status, save/cancel behavior and all permission controls remain unchanged. Source `87077e897a16b33c00c1528d5f32e430410b617b` uses the verified lab identity.
+
+Desktop1440×900, mobile390×844 and narrow320×568 hidden-fixture checks passed: no horizontal overflow, complete focus outline and nickname before sharing controls. No nickname or consent was saved during review. Four existing nickname/consent regressions, TypeScript, full production build and protected-media packaging passed. No new server endpoint, schema, media or participant setting change. The owner-accepted hardware/Safari gaps and tracked security hardening remain.
+
+Source/build `work/nickname-layout-release-20261021`; infrastructure `work/nickname-layout-infra-20261021`. One existing app Worker code/assets update; no other resource mutation. Production verification matched 528 JS/CSS files and retained 435 additional prior browser assets. Schema213, CPU5000ms, six abuse bindings, private media/access, disabled public Worker URLs, edge burst protection, independent guard and the existing service notice remain. Existing Legacy0.1/update103 and encrypted off-device recovery are retained. Source-only metadata handover is verified separately and creates no data export. Canonical unrelated work and index are preserved.
+
+## Previous release and preparation notes
+
 # Current live release — 0.2.0-beta.1 / update105, October 21, 2026
 
 Completion verified October 21, 2026: the version/help routing correction is live, both information pages open for the opted-out hidden test identity without saving consent, and the browser console is clean. Source-only backup metadata handover and hosted validation passed; daily coverage remains enabled and no new data export was made. The old Legacy 0.1/update103 checkpoint is retained. Implementation and release records use only the verified yinyangeqlab author/committer. Hardware and Safari gaps remain explicitly accepted. Public verification: docs/releases/update105-verification.json.
