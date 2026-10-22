@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { PanelLeftOpen, PanelLeft, X } from "lucide-react";
 import { releaseInfo } from "@/lib/release-info";
+import AccountAutoSync from "@/components/account-auto-sync";
 
 type Destination = "home" | "listen" | "tune" | "explore" | "library" | "results" | "rankings" | "space";
 type Layout = "full" | "icons" | "hidden";
@@ -57,7 +57,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   const [layoutLoaded, setLayoutLoaded] = useState(false);
   const mobileOpen = narrow && layout === "full";
   const [modalOpen, setModalOpen] = useState(false);
-  const panel = useRef<HTMLElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const menu = useRef<HTMLButtonElement>(null);
   const restoreMenuFocus = useRef(false);
   const utilityTitles: Record<string,string> = {"/shortcuts":"Shortcuts & help","/version":"About this version","/privacy":"Privacy notice","/my-data":"My data & sharing","/participation":"Data choices","/account-sync":"Devices & Sync","/my-profile":"My profile","/profile-access":"Profile access","/test-history":"Private test history","/owner-research":"Research administration"};
@@ -76,7 +76,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   useEffect(() => { if (layoutLoaded) { try { localStorage.setItem("yinyang-navigation-layout", layout); } catch {} } }, [layout, layoutLoaded]);
   useEffect(() => {
     const update = () => setModalOpen([...document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]')]
-      .some(el => !el.closest(".alpha-navigation") && el.getClientRects().length > 0));
+      .some(el => !el.closest(".alpha-navigation-frame") && el.getClientRects().length > 0));
     update();
     const observer = new MutationObserver(update);
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden", "open", "class", "style"] });
@@ -91,7 +91,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!mobileOpen || modalOpen) return;
-    const frame = requestAnimationFrame(() => panel.current?.querySelector<HTMLButtonElement>(".alpha-mobile-close")?.focus());
+    const frame = requestAnimationFrame(() => menu.current?.focus({ preventScroll: true }));
     const keys = (event: KeyboardEvent) => {
       if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeMenu(); }
       if (event.key !== "Tab") return;
@@ -107,31 +107,38 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (mobileOpen || !restoreMenuFocus.current) return;
     restoreMenuFocus.current = false;
-    const frame = requestAnimationFrame(() => (menu.current || panel.current?.querySelector<HTMLButtonElement>(".alpha-sidebar-chevron"))?.focus({ preventScroll: true }));
+    const frame = requestAnimationFrame(() => menu.current?.focus({ preventScroll: true }));
     return () => cancelAnimationFrame(frame);
   }, [mobileOpen]);
 
-  useEffect(() => {
-    if (layout === "hidden" && !mobileOpen) document.querySelector<HTMLButtonElement>(".alpha-reopen button")?.focus({ preventScroll: true });
-  }, [layout, mobileOpen]);
-
   function closeMenu() { restoreMenuFocus.current = true; setLayout("icons"); }
+  const layoutNames = { full: "Full navigation", icons: "Icons only", hidden: "Navigation hidden" };
+  const nextLayout = layout === "full" ? "icons" : layout === "icons" ? "hidden" : "full";
+  const nextAction = layout === "full" ? "Show navigation icons only" : layout === "icons" ? "Hide navigation" : "Show full navigation";
+  function cycleLayout() { setLayout(current => current === "full" ? "icons" : current === "icons" ? "hidden" : "full"); }
 
   return <div className="alpha-app" data-alpha-layout={layout} data-alpha-destination={active || "utility"}>
     <Suspense fallback={null}><QueryDestination path={pathname} onChange={setActive}/></Suspense>
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
     {mobileOpen && <button className="alpha-menu-backdrop" type="button" aria-label="Close navigation" onClick={closeMenu} tabIndex={-1}/>}
-    <aside ref={panel} className={`alpha-navigation${mobileOpen ? " alpha-mobile-open" : ""}`} aria-label="Main navigation" role={mobileOpen ? "dialog" : undefined} aria-modal={mobileOpen ? true : undefined} inert={modalOpen}>
+    <div ref={panel} className="alpha-navigation-frame" role={mobileOpen ? "dialog" : undefined} aria-label={mobileOpen ? "Main navigation" : undefined} aria-modal={mobileOpen ? true : undefined} inert={modalOpen}>
+    <aside id="alpha-navigation" className={`alpha-navigation${mobileOpen ? " alpha-mobile-open" : ""}`} aria-label="Main navigation">
       <Link className="alpha-brand" href="/" prefetch={false} aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt=""/><span>YinYang EQ<small>LET YOUR EARS DECIDE</small></span></Link>
-      <div className="alpha-layout-controls"><button className="alpha-sidebar-chevron" type="button" onClick={() => setLayout(layout === "full" ? "icons" : "full")} aria-label={layout === "full" ? "Collapse sidebar" : "Expand sidebar"} title={layout === "full" ? "Collapse sidebar" : "Expand sidebar"}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={layout === "full" ? "m14 6-6 6 6 6" : "m10 6 6 6-6 6"}/></svg></button><details onKeyDown={event=>{if(event.key === "Escape"){event.currentTarget.open=false;event.currentTarget.querySelector("summary")?.focus();}}}><summary aria-label="Navigation layout" title="Navigation layout">•••</summary><div>{(["full", "icons", "hidden"] as Layout[]).map(value => <button key={value} type="button" aria-pressed={layout === value} onClick={event => { setLayout(value); event.currentTarget.closest("details")?.removeAttribute("open"); }}>{value === "full" ? "Full navigation" : value === "icons" ? "Icons only" : "Hide navigation"}</button>)}</div></details><button className="alpha-mobile-close" type="button" onClick={closeMenu} aria-label="Collapse to navigation icons"><X size={18} aria-hidden="true"/></button></div>
+
       <nav aria-label="Main destinations">{destinations.map(d => <Link key={d.id} href={d.href} prefetch={false} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={() => { if (narrow) setLayout("icons"); window.scrollTo(0,0); }}><DestinationIcon kind={d.id}/><span>{d.label}</span></Link>)}</nav>
       <nav className="alpha-secondary-navigation" aria-label="Data and help"><Link href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} prefetch={false} title="Devices and Sync"><span aria-hidden="true">⇄</span><span>Devices &amp; Sync</span></Link><Link href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} prefetch={false} title="Keyboard shortcuts"><span aria-hidden="true">⌨</span><span>Shortcuts &amp; help</span></Link><Link href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} prefetch={false} title="Privacy notice"><span aria-hidden="true">◇</span><span>Privacy &amp; data</span></Link></nav>
     </aside>
+    <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded={layout !== "hidden"} aria-describedby="alpha-navigation-state" title={`${nextAction} · Full → Icons → Hidden`} data-next-layout={nextLayout}>
+      <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={layout === "hidden" ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"}/></svg></span>
+    </button>
+    <span id="alpha-navigation-state" className="alpha-navigation-state">{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
+    </div>
     <div className="alpha-workspace">
       <header className="alpha-topbar" inert={modalOpen || mobileOpen}>
-        <div className="alpha-topbar-start">{layout === "hidden" && <div className="alpha-reopen"><button ref={menu} type="button" onClick={() => setLayout("full")} aria-label="Show full navigation" title="Show full navigation"><PanelLeftOpen size={19} aria-hidden="true"/><span>Navigation</span></button><button type="button" onClick={() => setLayout("icons")} aria-label="Show navigation icons" title="Show navigation icons"><PanelLeft size={19} aria-hidden="true"/></button></div>}<span className="alpha-breadcrumb">{title}<span>YinYang EQ</span></span></div>
+        <div className="alpha-topbar-start"><span className="alpha-breadcrumb">{title}<span>YinYang EQ</span></span></div>
         <Link className="alpha-version" href="/version" prefetch={false} aria-label={`About version ${releaseInfo.version}, ${releaseInfo.channel}`} title="About this version, changes and licensing">{releaseInfo.version}<span>{releaseInfo.published ? "BETA" : "LOCAL"}</span></Link>
       </header>
+      <div className="alpha-sync-region" inert={modalOpen || mobileOpen}><AccountAutoSync /></div>
       <div id="alpha-content" className="alpha-route-content" tabIndex={-1} inert={mobileOpen}>{children}</div>
     </div>
   </div>;

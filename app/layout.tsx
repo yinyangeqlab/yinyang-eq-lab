@@ -1,6 +1,5 @@
 import AlphaShell from "@/components/alpha-shell";
 import "./alpha.css";
-import AccountAutoSync from "@/components/account-auto-sync";
 import { env } from "cloudflare:workers";
 import { invitesEnabled } from "@/lib/invite-settings.mjs";
 import { InviteModeProvider } from "@/components/invite-mode";
@@ -40,7 +39,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync /><AlphaShell>{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AlphaShell>{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></InviteModeProvider></body>
     </html>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useState} from 'react';
 import {usePathname} from 'next/navigation';
+import './account-auto-sync.css';
 import {readAccountState,writeAccountState} from '@/lib/account-sync-transfer.mjs';
 import {readSyncBase,writeSyncBase} from '@/lib/account-sync-cache.mjs';
 import {accountDataDigest} from '@/lib/device-sync.mjs';
@@ -8,7 +9,8 @@ import {captureAccountValues,applyAccountValues,mergeAccountValues,validateAccou
 type State={segmented?:boolean;enabled?:boolean;devicePaused?:boolean;protectedAccount?:boolean;accountKey?:string;consent?:{stamp:string;monitoring:boolean};epoch:string;revision:number;initialized:boolean;values:Record<string,string>};
 const same=(a:unknown,b:unknown)=>JSON.stringify(a)===JSON.stringify(b);
 export default function AccountAutoSync(){
- const pathname=usePathname(),[status,setStatus]=useState(''),[conflicts,setConflicts]=useState<string[]>([]),[refresh,setRefresh]=useState(false);
+ const pathname=usePathname(),[status,setStatus]=useState(''),[conflicts,setConflicts]=useState<string[]>([]),[refresh,setRefresh]=useState(false),[dismissed,setDismissed]=useState(false);
+ useEffect(()=>{try{setDismissed(sessionStorage.getItem('yinyang-hide-synced-notice')==='true');}catch{/* Hiding this notice remains available without session storage. */}},[]);
  useEffect(()=>{let stopped=false,busy=false,disabled=false,lastPoll=0,retryAt=0,failures=0,lastReport=0;let observedConsent='';let lastState:State|undefined;
  const safe=['/','/home','/my-profile','/account-sync','/my-data','/privacy','/curve-credits'].includes(pathname);
  async function report(state:State|undefined,phase:string){if(Date.now()-lastReport<25000&&phase==='paused')return;try{const digest=await accountDataDigest(captureAccountValues(localStorage));await fetch('/api/my-profile/devices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'report',epoch:state?.epoch||'',revision:state?.revision||0,dataDigest:digest,consentStamp:observedConsent||null,state:phase})});lastReport=Date.now();window.dispatchEvent(new Event('yinyang-device-status'));}catch{/* Status reporting never interrupts or overwrites saved listening data. */}}
@@ -45,6 +47,7 @@ if(stopped||localStorage.getItem('yinyang-account-sync-paused')==='true')return;
  void tick();const timer=window.setInterval(()=>void tick(),3000);const focus=()=>{lastPoll=0;retryAt=0;disabled=false;void tick();};window.addEventListener('focus',focus);window.addEventListener('yinyang-sync-permission-changed',focus);window.addEventListener('yinyang-data-changed',focus);document.addEventListener('visibilitychange',focus);
  return()=>{stopped=true;window.clearInterval(timer);window.removeEventListener('focus',focus);window.removeEventListener('yinyang-sync-permission-changed',focus);window.removeEventListener('yinyang-data-changed',focus);document.removeEventListener('visibilitychange',focus);};
  },[pathname]);
- if(!status)return null;
- return <aside className="account-sync-status" aria-label="Account automatic sync"><p role="status">{status}</p>{conflicts.length>0&&<p>Conflicting data: {conflicts.map(key=>key.replace(/^target-lab-/, '').replaceAll('-',' ')).join(', ')}. <a href="/account-sync">Review account copies</a></p>}{status.startsWith("Automatic sync is paused")&&<button onClick={()=>{localStorage.removeItem("yinyang-account-sync-paused");window.location.reload();}}>Resume account sync</button>}{refresh&&<button onClick={()=>window.location.reload()}>Refresh saved data</button>}<a href="/account-sync">Sync settings &amp; devices</a></aside>;
+ const matched=status==='✓ This browser matches the account'&&conflicts.length===0&&!refresh;
+ if(!status||(matched&&dismissed))return null;
+ return <aside className={`account-sync-status${matched?" is-matched":""}`} aria-label="Account automatic sync">{matched&&<span className="account-sync-check" aria-hidden="true">✓</span>}<p role="status">{matched?"Browser matches account":status}</p>{conflicts.length>0&&<p>Conflicting data: {conflicts.map(key=>key.replace(/^target-lab-/, '').replaceAll('-',' ')).join(', ')}. <a href="/account-sync">Review account copies</a></p>}{status.startsWith("Automatic sync is paused")&&<button onClick={()=>{localStorage.removeItem("yinyang-account-sync-paused");window.location.reload();}}>Resume account sync</button>}{refresh&&<button onClick={()=>window.location.reload()}>Refresh saved data</button>}<a className="account-sync-settings" href="/account-sync" title="Sync settings and devices">{matched?"Sync settings":"Sync settings & devices"}</a>{matched&&<button className="account-sync-dismiss" type="button" aria-label="Hide up-to-date sync notice" title="Hide for this browser session; sync continues and warnings still appear" onClick={()=>{setDismissed(true);try{sessionStorage.setItem("yinyang-hide-synced-notice","true");}catch{}}}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>}</aside>;
 }
