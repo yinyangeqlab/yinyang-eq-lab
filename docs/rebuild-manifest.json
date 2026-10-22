@@ -562,6 +562,10 @@
       "sha256": "2e6c4d85adf44c8276b9f55638607b94ae76d8e6f862606d8500b7c8d48efe99"
     },
     {
+      "path": "components/display-preferences-panel.tsx",
+      "sha256": "def4a39d727b81a54f7481bff40da241a6f8c60ab49be6a18b3c700336aec523"
+    },
+    {
       "path": "components/feedback-panel.tsx",
       "sha256": "ccc5e75d7e4d5bfbae32f3b5c906419ade5c402f0697eafdd451b9cf5fa14a55"
     },
@@ -1642,6 +1646,10 @@
       "sha256": "124c680391c4172ed6e9e37ef1ea963cb9ca82c0f31a5f68f1492ddc329223b6"
     },
     {
+      "path": "lib/display-preferences.ts",
+      "sha256": "25612d162658f9bdb3288f012fc16c55106e5162b02f95fb906dd46f59dae9ca"
+    },
+    {
       "path": "lib/dynamics-preview.ts",
       "sha256": "b219b644efe41c3db0ff90688485dafe05c8962ca5b92899d0a664c71fdacbe5"
     },
@@ -2026,8 +2034,16 @@
       "sha256": "1f2a0d1f393747e61ab6575c206f60b72223d3de7c2ef2dabefa06fcfb96a7a1"
     },
     {
+      "path": "scripts/check_account_sync_frequency.mjs",
+      "sha256": "dc8325f45df771b4a86343d9753330449ca9b693405758bb63371e5e288b2d05"
+    },
+    {
       "path": "scripts/check_account_sync_manager.mjs",
       "sha256": "ea90261f1defd1cdce269ef06a71101f5467da5f1a02fd8e882ea90c53a94a35"
+    },
+    {
+      "path": "scripts/check_account_sync_unchanged_read.mjs",
+      "sha256": "3a07273bc69748615de552955071f473d00f9c9b2985713d4557c40033bd8b20"
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
@@ -2088,6 +2104,10 @@
     {
       "path": "scripts/check_consent_correlations.mjs",
       "sha256": "80e7a567ef78bd83f12bc8dd81b3f498d6f55eb4852cdde46a7ed7ead4b01483"
+    },
+    {
+      "path": "scripts/check_display_preferences.mjs",
+      "sha256": "4479f70905cb640528662afedee1f972d9ee7610a39d73639f8675c9807e0ff4"
     },
     {
       "path": "scripts/check_file_matching.mjs",
@@ -2176,6 +2196,10 @@
     {
       "path": "scripts/check_passage_edit.mjs",
       "sha256": "c9341015f781dc7958a7b2e781ad735f4bca6308a681b7b035e22834d5e92eec"
+    },
+    {
+      "path": "scripts/check_passage_float_tolerance.mjs",
+      "sha256": "d88394ef16ded7af98672a65947afe65264bb7616d2f147ee8847dda1ee9090f"
     },
     {
       "path": "scripts/check_passage_keyboard.mjs",
