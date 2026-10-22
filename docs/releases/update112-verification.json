@@ -60,26 +60,44 @@
     "physicalDevicesSafariFirefoxScreenReader": "not tested"
   },
   "backupMetadata": {
-    "at": "2026-10-22T10:09:43.793146+00:00",
-    "sourceBaselineUpdate": 111,
-    "sourceOnlyHandoverPassed": false,
-    "handoverStatus": "refused before any change: existing hosted writer (two orphaned queued validate-only runs 39714463821 and 39707998100); no inspected evidence supplied",
+    "at": "2026-10-22T10:34:53.440713+00:00",
+    "sourceBaselineUpdate": 112,
+    "sourceOnlyHandoverPassed": true,
+    "handoverStatus": "registered; matching hosted validation-only run passed",
     "newDataSnapshots": 0,
     "databaseExportPerformed": false,
-    "siteDeploymentPerformed": true,
-    "matchingCurrentReleaseBaseline": false,
+    "siteDeploymentPerformed": false,
+    "matchingCurrentReleaseBaseline": true,
     "dailyWorkflowActive": true,
     "rollbackPreserved": true,
     "rollbackBuild": "work/reconciled-drafts-release-20261022",
-    "rollbackManifestFiles": 1587
+    "rollbackManifestFiles": 1587,
+    "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T10:35:28Z",
+    "privateEvidenceLedgerPersisted": true,
+    "hostOrphanRecordsRemain": true,
+    "scheduledRunBeforeRepair": "failed on the previous deployment baseline; no replacement data export triggered",
+    "backupSafetyTestsPassed": 56,
+    "isolatedToolingTestsPassed": 33
   },
   "publication": {
     "githubLogin": "yinyangeqlab",
     "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
     "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
-    "pushed": false,
+    "pushed": true,
     "publicationOnHold": false,
     "credentialsOrPrivateReceiptsIncluded": false,
-    "publicationSeparateFromDeployment": true
+    "publicationSeparateFromDeployment": true,
+    "publicationAuthorized": true
   }
 }

@@ -1,3 +1,9 @@
+# Update112 recovery registration verified — October 22, 2026
+
+Matching source-only recovery metadata and hosted validation passed after preserving and revalidating the two exact empty validation proofs in private durable evidence. Prior data snapshots and timestamps remain unchanged. No deployment, data export, migration or new data recovery point was performed by the repair. Daily scheduling remains active; today’s earlier failed export is not replaced by metadata registration. See docs/releases/update112-verification.json.
+
+## Earlier rebuild notes (historical)
+
 Current live baseline is 0.2.0-beta.1 / update111, implementation `9d896daacb7a28702fecae2ab9352e1cfe125005`. Source/build `work/reconciled-drafts-release-20261022`; infrastructure `work/reconciled-drafts-infra-20261022`. Selected-passage timing, measurement entry and account Sync activity are deployed on the current layout. Research notes remain proposals. TypeScript, production build, full protected-media packaging, infrastructure checks and eleven synthetic regression suites passed. One existing app Worker code/assets update only; schema213, all40 migrations and existing protections remain. Matching source-only recovery metadata and hosted validation passed with all prior encrypted off-device data snapshots/timestamps unchanged and no export. Physical devices/audio, Safari/iOS and whole-application acceptance remain outside the component review. Reviewed deployed source and verified release records are included in this lab-attributed publication. See docs/releases/update111-verification.json.
 
 ## Earlier rebuild and recovery notes (historical)

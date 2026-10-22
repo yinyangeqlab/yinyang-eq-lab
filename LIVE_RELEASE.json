@@ -2317,15 +2317,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2d2b439555f472ffdf1906a1a79d5dbde9a8ebbc5a0cf0610b34bd438ee3708d"
+      "sha256": "e5705df41f481becb952597968bf0707b68a825728ae1a3cc00e8f3df3a00ad9"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "c13b6250860e6e10b8212500ab41d8fcde91f80a793a3f181890b7cda4ac24c1"
+      "sha256": "4bc0de26fad1e025a96d80fe73f0c2a3940a977e3b99156325dba373a9c01848"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "d55b8793e95f2e6c204a79922d9e5db46324c7d19704a18d9045ca80c5fdef48"
+      "sha256": "fd21142c9f562cfbff4921cf55b7da49e8488207ce5f90ca774aaedfe45a7b64"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2341,7 +2341,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "baa916c5fbc986b50f4fc729b41c7bdb91ee21a1674d8de888318b6009de0841"
+      "sha256": "9dd2e689f8f1cd9602f52394edcd3af09e9af6e203c45aa4a982f5fa9e07d400"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -2373,7 +2373,7 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "bc976578637597897ef0d89c9f8a2cf90a0f8c15d12b3abfac4ff28e9e2bd855"
+      "sha256": "98a7ddebb6c26e732b3e9878dd0bd43d3d8a075d723146c4d3033beeec9999f4"
     }
   ],
   "localConfigurationFiles": [
@@ -10349,7 +10349,7 @@
   "edgeRateLimit": {
     "verifiedAt": "2026-10-18",
     "ruleId": "61d9126d6065428a87d2c2398b23922a",
-    "name": "Listening pool — edge burst protection",
+    "name": "Listening pool \u2014 edge burst protection",
     "requestsPerPeriod": 120,
     "periodSeconds": 10,
     "blockSeconds": 10,
@@ -10358,13 +10358,13 @@
     "documentation": "infra/edge-rate-limit/README.md"
   },
   "pendingLocalChanges": {
-    "description": "Original canonical unrelated/private drafts and index preserved; update112 source is committed on release/a11y-sync-fixes-20261022 and not pushed.",
+    "description": "Original canonical unrelated/private drafts and index preserved; reviewed update112 source and recovery records included in this authorized lab publication.",
     "canonicalCheckoutOnly": true
   },
   "taskClosure": {
-    "at": "2026-10-22T10:03:58.910777+00:00",
-    "task": "Verified update112 deployment",
-    "status": "Deployed and verified; GitHub publication remains a separate owner-authorized step",
+    "at": "2026-10-22T10:37:06.211424+00:00",
+    "task": "Publish Claude update112 handover and repair recovery queue handling",
+    "status": "Update112 source metadata and hosted validation verified; lab publication includes durable evidence repair; GitHub orphan records remain",
     "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
@@ -10420,16 +10420,16 @@
   "gitSource": {
     "deploymentSource": "work/a11y-sync-release2-20261022",
     "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
-    "pushed": false,
+    "pushed": true,
     "publicationSeparateFromDeployment": true,
-    "branch": "release/a11y-sync-fixes-20261022",
+    "branch": "main",
     "checkout": "workspace/work/a11y-sync-fixes-20261022",
     "authorAndCommitterVerified": true,
     "githubLogin": "yinyangeqlab",
     "previousPublishedReleaseCommit": "1e236e6d3733132f7fd7ee491c3371a78ef9f122",
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "publicationOnHold": false,
-    "publicationAuthorized": false
+    "publicationAuthorized": true
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
@@ -10623,7 +10623,7 @@
   "canonicalDevelopmentRoot": "workspace",
   "liveMirrorRoot": ".",
   "recoveryProcess": {
-    "status": "update111 source-only metadata handover and matching hosted validation passed; prior encrypted off-device data snapshots and original timestamps retained; daily workflow active; zero data exports or new snapshots; writer safeguards retained",
+    "status": "update112 matching source-only metadata and hosted validation passed; prior data snapshots and timestamps unchanged; daily scheduling active; durable private evidence and all writer safeguards retained",
     "liveUpdateUnchanged": 81,
     "canonicalCheckout": "workspace",
     "archive": "archive/legacy-workspaces-20261018",
@@ -10665,7 +10665,7 @@
     "currentSnapshotApplicationImportTested": false,
     "sourceHistoryRestoreVerified": true,
     "compiledRuntimePreserved": true,
-    "backupSafetyTestsPassed": 50,
+    "backupSafetyTestsPassed": 56,
     "privateBundleIsHistorical": true,
     "historicalStandaloneBackupUpdate": 81,
     "offDeviceRecoveryReceiptVerified": true,
@@ -10697,11 +10697,15 @@
     "recoveryMaintenanceRecordCommit": "187a4329684fc9dc48a9b988396e9df9ad22704e",
     "releaseMetadataHandover": {
       "update": 112,
-      "registered": false,
-      "reason": "Stopped before any change: existing hosted writer (orphaned queued validate-only runs 39714463821, 39707998100) without inspected evidence",
-      "scheduledBackupRefusesUntilRegistered": true,
+      "registered": true,
+      "at": "2026-10-22T10:34:53.440713+00:00",
+      "hostedValidationPassed": true,
       "dataExportPerformed": false,
-      "at": "2026-10-22T10:10:07.263836+00:00"
+      "newDataSnapshots": 0,
+      "dataRecoveryPointUnchanged": true,
+      "scheduledBackupRefusesUntilRegistered": false,
+      "privateEvidenceLedgerPersisted": true,
+      "hostOrphanRecordsRemain": true
     },
     "rollbackPack": "work/a11y-sync-rollback-20261022"
   },
