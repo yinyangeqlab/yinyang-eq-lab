@@ -1,0 +1,124 @@
+{
+  "deploymentVerification": {
+    "at": "2026-10-22T02:28:05.981980+00:00",
+    "revision": "eab9029ee22f582c04deff46a65936fb9db7a24a",
+    "update": 107,
+    "deployment": {
+      "id": "fb1a0786-e14a-4e87-8acd-3a7a5766ee96",
+      "versions": [
+        {
+          "version_id": "7fdac21f-3e43-4379-b96f-024563050871",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 547,
+    "retainedPreviousClientAssets": 455,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "browserVerification": {
+    "localOnly": false,
+    "identity": "hidden layout-test-only fixture",
+    "desktop": [
+      1440,
+      900
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "narrow": [
+      320,
+      568
+    ],
+    "singleFullHeightDivider": true,
+    "cycles": [
+      "full",
+      "icons",
+      "hidden",
+      "full"
+    ],
+    "storedIconsAndHiddenSurviveReload": true,
+    "enterAndSpaceCycleWithFocusRetained": true,
+    "hiddenReopenHandleVisible": true,
+    "mobileFocusTrapAndEscapePassed": true,
+    "mobileBackdropReturnsIcons": true,
+    "allNavigationLinksRetained": 12,
+    "iconNavigationToMusicLibraryPassed": true,
+    "narrowHorizontalOverflow": false,
+    "consentDialogInertsSidebar": true,
+    "consentCancelledWithoutSaving": true,
+    "accountOrContributionChanges": false,
+    "finalChevronUnboxed": true,
+    "hoverGlowRemoved": true,
+    "offColor": "rgb(143, 166, 158)",
+    "onColor": "rgb(146, 217, 178)",
+    "syncHealthyDismissalSyntheticRenderPassed": true,
+    "syncWarningsAfterDismissalPassed": true,
+    "syncHealthyRowHeightPx": 38.67,
+    "syncNoticeTest": "Actual component rendering with synthetic state; hidden fixture cannot enroll in account Sync. No real account was used.",
+    "liveReview": {
+      "publicHomeThreeStateCyclePassed": true,
+      "allNavigationDestinationsPresent": true,
+      "accountDataInspected": false,
+      "scope": "Public homepage and appearance controls only. Healthy notice tested through actual component render with synthetic state."
+    }
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "validation": {
+    "baselineBetaSuitesPreviouslyPassed": 43,
+    "automaticSyncAndStorageDenialRegressionsPassed": 2,
+    "syntheticSyncPresentationPassed": true,
+    "desktopMobileAndNarrowLayoutPassed": true,
+    "typescriptPassed": true,
+    "productionBuildPassed": true,
+    "physicalAudioAndSafariGapsAccepted": true
+  },
+  "backupMetadata": {
+    "sourceOnlyHandoverPassed": false,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPassed": false,
+    "newReleaseHostedValidationDispatched": false,
+    "priorHostedValidationStuck": true,
+    "normalAndForceCancelRejected": true,
+    "dataRecoveryPointUnchanged": true,
+    "newDataSnapshots": 0,
+    "dailyWorkflowActive": true,
+    "matchingCurrentReleaseBaseline": false,
+    "nextScheduledRunMayRefuseBaselineMismatch": true,
+    "settingsOrSafeguardsWeakened": false,
+    "at": "2026-10-22T02:31:49.879459+00:00"
+  },
+  "publicationOperation": {
+    "deploymentPerformed": false,
+    "dataExportPerformed": false,
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}
