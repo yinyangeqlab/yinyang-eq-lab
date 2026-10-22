@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 107,
-  "implementationCommit": "eab9029ee22f582c04deff46a65936fb9db7a24a",
-  "runtimeParity": "Verified live baseline remains 0.2.0-beta.1/update107. Local sidebar hover and motion correction is based on that source and is not deployed; existing source-only recovery metadata is unchanged.",
+  "liveUpdate": 108,
+  "implementationCommit": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update108. Sidebar hover/motion correction is deployed; source-only recovery metadata and hosted validation passed without a data export.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
