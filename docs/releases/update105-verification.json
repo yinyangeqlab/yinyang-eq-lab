@@ -1,0 +1,84 @@
+{
+  "deploymentVerification": {
+    "at": "2026-10-22T01:30:52.081837+00:00",
+    "revision": "f030b2900c2553645f2a5ef9ef70cb61d8aab1a9",
+    "update": 105,
+    "deployment": {
+      "id": "fd5930a4-9bd1-4bd8-b385-ad552aca451d",
+      "versions": [
+        {
+          "version_id": "42659df9-ffcd-4987-9069-ef3a4f01d200",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 511,
+    "retainedPreviousClientAssets": 511,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "browserVerification": {
+    "site": "https://yinyangeq.com",
+    "version": "0.2.0-beta.1",
+    "update": 105,
+    "identity": "existing hidden opted-out test account",
+    "versionPage": "Reached /version and About this version with no consent save",
+    "shortcutsPage": "Reached /shortcuts and Keep your hands on the music with no consent save",
+    "consentPromptCancelled": true,
+    "consentSaved": false,
+    "submissionsMade": false,
+    "adminSessionUsed": false,
+    "physicalAudioTested": false,
+    "safariTested": false,
+    "consoleWarningsOrErrors": []
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "validation": {
+    "focusedLocalSuitesPassed": 43,
+    "publicInfoRoutingRegressionPassed": true,
+    "typescriptPassed": true,
+    "productionBuildPassed": true,
+    "productionKnownDependencyAdvisories": 0,
+    "buildOnlyBracesAdvisoryRemains": true,
+    "physicalAudioAndSafariGapsAccepted": true
+  },
+  "backupMetadata": {
+    "sourceOnlyHandoverPassed": true,
+    "hostedValidationPassed": true,
+    "dataRecoveryPointUnchanged": true,
+    "newDataSnapshots": 0,
+    "dailyWorkflowActive": true,
+    "at": "2026-10-22T01:34:52Z"
+  },
+  "publicationOperation": {
+    "deploymentPerformed": false,
+    "dataExportPerformed": false,
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}
