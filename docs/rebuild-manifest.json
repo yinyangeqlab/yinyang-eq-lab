@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 111,
-  "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update111: selected-passage source coverage, explicit measurement entry and account Sync activity are deployed on the update110 layout. Source-only recovery metadata and hosted validation passed without a data export. Subsequent release-record, agent-guidance and research documentation does not change deployed runtime behavior.",
+  "liveUpdate": 112,
+  "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update112: passage completion float tolerance, shared Sync check timing with single-request unchanged checks, accessibility and layout fixes, per-browser motion and shortcut preferences and the fair-comparison summary are deployed on the update110 layout. Source-only recovery metadata is not yet registered for update112 (see docs/ENCRYPTED_BACKUP.md). Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "c1fbd9248f795ab014c267aca3984d437985fd5d4c3c0618315b39639f2a030c"
+      "sha256": "c13b6250860e6e10b8212500ab41d8fcde91f80a793a3f181890b7cda4ac24c1"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "ebf9c6aea7b29d0789b10f960c62c4145414e4d1c4b6bfee59d2092e607f7078"
+      "sha256": "d55b8793e95f2e6c204a79922d9e5db46324c7d19704a18d9045ca80c5fdef48"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "871fe07e85960cd06801001068a23d8e622baaba11f40203cf930b1a4d162bd5"
+      "sha256": "2d2b439555f472ffdf1906a1a79d5dbde9a8ebbc5a0cf0610b34bd438ee3708d"
     },
     {
       "path": "README.md",
@@ -1107,11 +1107,11 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "0252bc97ecc53c794573edeed8ff1cb8c932c74da1ff8a4ddf20dbc6bec63786"
+      "sha256": "bc976578637597897ef0d89c9f8a2cf90a0f8c15d12b3abfac4ff28e9e2bd855"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "7bd832a3adb61517b0803c6705aa1224d4eb267bb60b64ba4129a422448076d2"
+      "sha256": "baa916c5fbc986b50f4fc729b41c7bdb91ee21a1674d8de888318b6009de0841"
     },
     {
       "path": "docs/REBUILD.md",
