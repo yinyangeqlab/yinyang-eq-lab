@@ -1,3 +1,9 @@
+# Update111 source-only metadata handover verified — October 22, 2026
+
+Matching source/build metadata and hosted validation-only checks passed for the reconciled code-only release. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling remains active. Existing single-writer, schema/media/deployment checks and exact private evidence for known empty validation readers remain enforced. Private configuration, destination, receipts and key remain outside Git. This is source metadata registration, not a new data recovery point. Reviewed source and verified release records are included in this lab-attributed publication. See docs/releases/update111-verification.json.
+
+## Earlier recovery notes (historical)
+
 # Update110 source-only metadata handover verified — October 22, 2026
 
 Matching source/build metadata and hosted validation-only checks passed for the UI-only CSS cleanup release. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling remains active. Existing single-writer, schema/media/deployment checks and exact private evidence for the two known empty validation readers remain enforced. Storage credentials, destination, private receipts and recovery key remain outside Git. This is source metadata registration, not a new data recovery point. See docs/releases/update110-verification.json.

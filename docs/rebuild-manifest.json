@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 110,
-  "implementationCommit": "a8030b0f156bb56926b83d479f875b10ea34305e",
-  "runtimeParity": "Deployed baseline remains verified 0.2.0-beta.1/update110, implementation a8030b0f156bb56926b83d479f875b10ea34305e. Reviewed local source changes listed under sourceVariants.localDraftReconciliation are not deployed. LIVE_RELEASE.json and immutable release provenance are unchanged.",
+  "liveUpdate": 111,
+  "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update111: selected-passage source coverage, explicit measurement entry and account Sync activity are deployed on the update110 layout. Source-only recovery metadata and hosted validation passed without a data export. Subsequent release-record, agent-guidance and research documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -24,13 +24,15 @@
     "localDraftReconciliation": {
       "date": "2026-10-22",
       "baseCommit": "c26669cd2d5faecfd983a890a3ecd7dc9092427b",
-      "status": "Local reviewed commits only; no push, deployment or data export.",
+      "status": "Reviewed source deployed as update111; included with verified release records in this lab-attributed publication.",
       "groups": [
         "timing",
         "measurement",
         "sync",
         "docs"
-      ]
+      ],
+      "deployedUpdate": 111,
+      "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005"
     }
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -53,7 +55,23 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "090609772f527f0003a1bafbfbe028ba9392419eee11241965e246051b55175b"
+      "sha256": "9d1f8f33d9bd6c300d7451c0e1bcc539e346a716bbe84b6577be7e2649874465"
+    },
+    {
+      "path": "HANDOFF.md",
+      "sha256": "c1fbd9248f795ab014c267aca3984d437985fd5d4c3c0618315b39639f2a030c"
+    },
+    {
+      "path": "HOSTING_HANDOFF.md",
+      "sha256": "ebf9c6aea7b29d0789b10f960c62c4145414e4d1c4b6bfee59d2092e607f7078"
+    },
+    {
+      "path": "LIVE_STATE.md",
+      "sha256": "871fe07e85960cd06801001068a23d8e622baaba11f40203cf930b1a4d162bd5"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c0f4ab092a78021c0d8ef886db6e63d9d3ad21199e07f239bcaa8b8be455af22"
     },
     {
       "path": "app/account-sync/page.tsx",
@@ -1081,7 +1099,27 @@
     },
     {
       "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
-      "sha256": "07e45d34d7807e730fc7763ea91f97aec4f32e4eefb13fc81017b71fb14f1a23"
+      "sha256": "03682bd31c73f15f763b61ec87deacab131780a085476c0781bfe228eb0e1805"
+    },
+    {
+      "path": "docs/ENCRYPTED_BACKUP.md",
+      "sha256": "0252bc97ecc53c794573edeed8ff1cb8c932c74da1ff8a4ddf20dbc6bec63786"
+    },
+    {
+      "path": "docs/HANDOFF.md",
+      "sha256": "97f466a4dc19cb46e70113474f42fa42499bceb8b0a497848c55ff5ae86c674d"
+    },
+    {
+      "path": "docs/REBUILD.md",
+      "sha256": "9fd1c036877a376db231acad8f189a30643c7f8b0a4cd725ab4fee5766b8ce08"
+    },
+    {
+      "path": "docs/RECOVERY.md",
+      "sha256": "ad5ae3997886a9dd16b4e3912ed1a847aa5ddcebd405433bb8f62741850666bb"
+    },
+    {
+      "path": "docs/releases/update111-verification.json",
+      "sha256": "72733412d9f6977d8190b756134b2def3c4be30877a26618c9ec65aefa76f696"
     },
     {
       "path": "docs/research/README.md",

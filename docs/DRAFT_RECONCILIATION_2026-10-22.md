@@ -1,6 +1,6 @@
 # Local draft reconciliation — October 22, 2026
 
-Status: reviewed local source commits only. No push, deployment, production write, data export or backup snapshot. The deployed baseline remains update110; LIVE_RELEASE.json and historical release records are unchanged.
+Current status: the reviewed code is deployed as update111 from implementation 9d896daacb7a28702fecae2ab9352e1cfe125005. Production asset/protection checks, source-only recovery handover and hosted validation passed. This publication includes the four reviewed source commits and verified release records using only the lab account. No new data export or snapshot occurred. Historical release provenance is unchanged. The reconciliation-stage notes below describe preparation before deployment.
 
 ## Baseline and preservation
 
@@ -28,4 +28,4 @@ Node26.12.0/npm12.2.1 and dependencies matching the exact current package lock w
 
 A local account-free synthetic harness exercised the actual measurement picker, reminder and activity components at desktop1280px and a320px iframe viewport. Checks covered catalog focus/keyboard entry, dialog focus trap/return, the three measurement actions and native select closed/expanded keyboard behavior. Dark option surfaces, selected and disabled readability remain. This is component review, not whole-application acceptance, physical-device/audio certification or Safari/iOS testing. No production account/session, consent or Sync was used.
 
-The public rebuild manifest describes this undeployed source variant without changing the recorded live release. The original owner's full update110 snapshot check passed. Staged commits passed the public path/credential guard.
+The public rebuild manifest now describes the verified update111 runtime and the subsequent release-record documentation. The original owner's full update110 snapshot check passed. Staged commits passed the public path/credential guard.

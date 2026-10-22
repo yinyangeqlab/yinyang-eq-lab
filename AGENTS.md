@@ -12,7 +12,7 @@ This checkout is the active source. In the owner container it is workspace/. Do 
 
 # Current release and rebuild instructions
 
-Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current deployed baseline is 0.2.0-beta.1 / update110. Read the active notice and audit limits in HANDOFF.md. Reviewed local source commits are not deployed; see docs/DRAFT_RECONCILIATION_2026-10-22.md. Preserve separate original drafts when selecting a baseline. Historical handoffs are not deployment instructions.
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current deployed baseline is 0.2.0-beta.1 / update111. Read the active notice and audit limits in HANDOFF.md. The reviewed source is deployed as update111; see docs/DRAFT_RECONCILIATION_2026-10-22.md and docs/releases/update111-verification.json. Preserve separate original drafts when selecting a baseline. Historical handoffs are not deployment instructions.
 
 In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
 
