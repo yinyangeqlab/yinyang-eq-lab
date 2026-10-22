@@ -6,6 +6,8 @@
 
 A browser listening lab for headphone EQ: find your personal favorite targets, contribute blind comparisons, and shape your own curve.
 
+**Public beta · 0.2.0-beta.1** — [About this version](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+
 **[Explore the site](https://yinyangeq.com) · [Watch the demo](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new)**
 
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
@@ -21,6 +23,16 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 [Watch or download the cinematic trailer →]((retired demo))
 
 </div>
+
+## Try the current beta
+
+Start with **Personal Tournament** to build a shortlist of favorite targets, **Blind Research** to contribute eligible comparisons, or **Open Comparison** to explore named targets. Choose your headphone measurement, select music, set a comfortable volume, and compare A and B.
+
+The current beta refreshes Welcome, listening setup and playback, Personal Tournament, Preference Tuning, Music Library, and My Space. Music selection and available audio specifications sit beside the player; the original AMOLED curves, waveforms, and colors remain. The sidebar divider cycles **Full → Icons → Hidden → Full**, with your layout remembered across reloads. The library loads more tracks as you browse.
+
+Use **Space** to play or pause, **1 / 2** to select A or B, **S** to switch sides, and **← / →** to seek a quarter second in the active comparison. Shortcuts respect typing, form controls, and open dialogs. See [all shortcuts](https://yinyangeq.com/shortcuts), or [report a beta bug](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new) with your browser, device, and steps to reproduce it.
+
+The videos and screenshots below show the **October 17 interface**, before the current beta refresh. They introduce the listening workflow; their layouts and labels are historical.
 
 ## Desktop and mobile layouts
 
@@ -54,7 +66,7 @@ Controlled blind comparisons require **five matched seconds on each side of the 
 
 ## Make the curve yours
 
-Start from a reference, then adjust bass, body, ear gain, upper presence, and treble. Drag the curve or use the sliders, listen to the change, and bypass your adjustments to compare. When you are ready, generate EQ fits and download your target or preset.
+Start from a reference, then adjust bass, body, ear gain, upper presence, and treble. The current curve-first workspace supports dragging curve points and frequency landmarks, entering exact values, and undoing or redoing adjustments. Axis controls change the view; bypassing adjustments keeps the selected starting correction. Listen as you work, then generate EQ fits and download your target or preset.
 
 ![Preference tuning with a raised bass curve, colored frequency regions, sliders, playback, and export controls](docs/images/preference-tuning.jpg)
 
@@ -72,11 +84,13 @@ You can also search creator-sourced headphone measurements, import your own resp
 
 ## Participation and your data
 
-The deployed listening tools require an affirmative comparison-data participation agreement. Optional choices cover identifiable activity monitoring, tags and fingerprints from your own music, Personal research sharing, and private account sync. Review them in **Your data choices**; change or withdraw them in **My data**. Declining optional sharing still allows listening under the required agreement. Withdrawal stops future participation and listening-tool access; deleting earlier submissions is a separate action.
+The deployed listening tools require an affirmative comparison-data participation agreement. Optional choices cover identifiable activity monitoring, tags and fingerprints from your own music, Personal research / Community contributions, and private account sync. Open **Your data choices** independently to review permissions, or manage them in **My data**. Your nickname is optional. Saving is explicit; cancelling leaves saved choices unchanged. Declining optional sharing still allows listening under the required agreement. Withdrawal stops future participation and listening-tool access; deleting earlier submissions is a separate action. The [version page](https://yinyangeq.com/version) and [keyboard help](https://yinyangeq.com/shortcuts) are available without saving participation consent.
 
 Preference Tuning downloads are recorded for private admin research, including the exported file, curve and tuning settings. Original measurement files are contributed only after specific file and rights approval. Audio selected from your device is processed locally and is not uploaded by ordinary listening or sync. See the live [privacy notice](https://yinyangeq.com/privacy) for collection, retention and deletion details.
 
 Optional **private account sync** keeps saved results, measurements, custom targets, EQs, progress, settings and saved music metadata on the server and browsers you explicitly approve. It excludes music/audio bytes, credentials, active playback and admin tests. Select local music again on each browser. Manage devices and conflicts in Sync settings; enabling sync does not grant research sharing or publish a profile.
+
+Sync transfers saved data in resumable pieces, replacing the former whole-account 512 KB cap; browser and service storage limits still apply. The compact healthy-sync notice can be dismissed without pausing sync. Errors, conflicts, and actions that need your attention remain visible. **My data** distinguishes saved On, Off, and partial permissions.
 
 The screenshots and trailer show demo sessions captured on October 17, 2026. Target names, track availability, and counts can change. Media credits are in [docs/DEMO.md](docs/DEMO.md).
 
@@ -88,7 +102,11 @@ The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Clo
 
 ## Current release and rebuilding
 
-The verified live release is recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md). As of October 20, 2026, that is **update101**, including segmented optional account sync. Start development at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/RECOVERY.md](docs/RECOVERY.md); follow [docs/REBUILD.md](docs/REBUILD.md) for fresh-clone commands, private-input restoration and deployment boundaries. Historical handoffs and demos describe their own release dates. GitHub contains application and credential-free deployment code, not production recordings, curve seeds, credentials or database state.
+The verified live release is recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md). As of October 21, 2026, that is **0.2.0-beta.1 / update107**, including the refreshed beta interface, three-state sidebar, and compact account-sync status. See the [release verification](docs/releases/update107-verification.json) and [current version page](https://yinyangeq.com/version). Physical headphone output and real Safari/iOS interruption and recovery remain unverified.
+
+Start development at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/RECOVERY.md](docs/RECOVERY.md); follow [docs/REBUILD.md](docs/REBUILD.md) for fresh-clone commands, private-input restoration and deployment boundaries. Historical handoffs and demos describe their own release dates. GitHub contains application and credential-free deployment code, not production recordings, curve seeds, credentials or database state.
+
+Matching update107 recovery metadata and hosted validation passed, with existing encrypted off-device data snapshots and their original timestamps preserved. This metadata handover created no new data snapshot. Daily scheduling remains active. Two empty queued validation records remain on GitHub; the later successful validation confirmed they did not block execution. See the [recovery verification](docs/releases/update107-recovery-verification.json) for the recorded scope.
 
 ## Run locally
 
