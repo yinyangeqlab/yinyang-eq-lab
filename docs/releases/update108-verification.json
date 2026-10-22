@@ -1,0 +1,148 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 108,
+  "implementationCommit": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
+  "deploymentVerification": {
+    "at": "2026-10-22T04:37:36.710943+00:00",
+    "revision": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
+    "update": 108,
+    "deployment": {
+      "id": "13b7c751-e699-47e5-a5f1-aeae86d98449",
+      "versions": [
+        {
+          "version_id": "76f13f7e-cc1f-4c19-9293-c8fd88e69535",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 559,
+    "retainedPreviousClientAssets": 467,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "browserVerification": {
+    "scope": "Local implementation and synthetic component/browser review only; no publication or deployment.",
+    "baseline": "4225fd495309ecf8aad58f4c14afb899132af95c",
+    "changedFiles": {
+      "app/alpha.css": "46c580fdc672809463bf36c16f887e4aed70efd5f0502e80045fbaacaf54efa0",
+      "components/alpha-shell.tsx": "73ddc7ebad845d0f2461d5ba3a7f54292e63bb35809910a9b721a7b0ad1bba3e",
+      "docs/rebuild-manifest.json": "54fe5335ad81d46f80d13c3a51ca2f433485e00c2e583997f32493aa440e3259"
+    },
+    "passed": [
+      "Pinned Node 26.12.0 / npm 12.2.1",
+      "Public rebuild source check: 581 files",
+      "TypeScript noEmit",
+      "Production application build",
+      "git diff --check",
+      "All three states retain the same mounted sidebar",
+      "Measured intermediate opening, compacting and hiding frames; desktop rail/nav/content positions match",
+      "Hovered divider has box-shadow:none, filter:none, transform:none and one 1px line",
+      "Desktop, 390x844 and 320x568 layouts; no horizontal overflow",
+      "Enter and Space cycling with divider focus retained",
+      "Hidden navigation is inert and aria-hidden",
+      "Saved hidden layout survives reload",
+      "Mobile Tab wrapping and Escape/backdrop closing",
+      "Modal makes navigation frame inert",
+      "Native select expansion and keyboard selection; explicit dark option/optgroup and disabled colors"
+    ],
+    "limits": [
+      "Synthetic UI fixture uses actual AlphaShell and production CSS with routing/account-sync stubs. No account, participant writes or Sync used.",
+      "Native popup pixel surface omitted by browser screenshots; accessibility expansion, keyboard operation and computed colors verified.",
+      "Physical devices and Safari/iOS were not tested."
+    ],
+    "operations": {
+      "commits": false,
+      "push": false,
+      "deployment": false,
+      "backupExport": false,
+      "participantChanges": false
+    }
+  },
+  "liveBrowserVerification": {
+    "scope": "Public homepage appearance/navigation only; no account or consent changes.",
+    "desktopCyclePassed": true,
+    "keyboardEnterAndSpacePassed": true,
+    "mobileCycleAndEscapePassed": true,
+    "narrow": {
+      "dividerVisible": true,
+      "layout": "full",
+      "overflow": false,
+      "viewport": [
+        320,
+        568
+      ]
+    },
+    "hover": {
+      "contentX": 204,
+      "filter": "none",
+      "frameWidth": 204,
+      "hover": true,
+      "layout": "full",
+      "lineWidth": "1px",
+      "navWidth": 204,
+      "overflow": false,
+      "shadow": "none",
+      "transform": "none",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "physicalDevicesAndSafariTested": false
+  },
+  "backupMetadata": {
+    "at": "2026-10-22T04:41:46.490174+00:00",
+    "sourceBaselineUpdate": 108,
+    "implementationCommit": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
+    "sourceOnlyHandoverPassed": true,
+    "matchingCurrentReleaseBaseline": true,
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": false,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T04:41:53Z",
+    "dailyWorkflowActive": true
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}

@@ -1,14 +1,81 @@
+# Update108 source-only metadata handover verified — October 21, 2026
+
+Matching source/build metadata and hosted validation-only checks passed for the UI-only sidebar release. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling remains active. Existing single-writer, schema/media/deployment checks and exact private evidence for the two known empty validation readers remain enforced. Storage credentials, destination, private receipts and recovery key remain outside Git. This is source metadata registration, not a new data recovery point. See docs/releases/update108-verification.json.
+
+## Earlier recovery notes (historical)
+
 # Metadata-only recovery handover verified — October 21, 2026
 
 Current live update107 has matching source/build metadata and a successful hosted validation-only check. Independent authentication verified every existing encrypted off-device data snapshot and timestamp unchanged. No data export, new data snapshot, retention run or site redeployment occurred. Daily03:00 America/Los_Angeles execution remains enabled. All50 backup safety tests passed. Unknown, scheduled, data-writing or started jobs still block a metadata writer. A private operator-inspected proof can identify an exact empty validation-only orphan; it binds the prior handover receipt, lab actor, unique dispatch and immutable workflow/launcher code. Two such host records remain visible because the host refuses cancellation/deletion; the successful matching run and unchanged single concurrency group establish that they do not block the real writer. Future handovers must retain fail-closed checks and use separate inspected evidence for each known reader. Private receipts and evidence remain outside Git. This is metadata compatibility, not a new data recovery point.
 
 ## Earlier recovery notes
 
+# Daily backups and source-only release handover verified — October 20, 2026
+
+Routine data backups remain daily at 03:00 America/Los_Angeles. Commits and
+previews do not trigger exports. Manual workflow runs now default to validation
+only. The hosted validation-only run passed, and independent authentication
+confirmed its encrypted index/data history and existing data-backup timestamp
+were unchanged. This improvement created zero data exports or data snapshots.
+All 42 synthetic Python backup/handover safety tests pass.
+
+Ordinary verified code-only deployments can register exact source/build metadata
+through scripts/recovery/release_handover.py. Matching migrations, operational
+schema SQL, live schema, recovery semantics, media hashes and exact deployment
+identity are required. Original data/source provenance is preserved; metadata
+registration never claims a new data recovery point. The next scheduled export
+uses the registered source. Schema/media/recovery or risky data changes still
+require an explicit backup decision. Unknown deployments remain blocked.
+
+Retention and shared-media reuse are unchanged. Only the active source metadata
+pin is kept separately; it does not chain earlier handovers. Daily retention
+prunes unreferenced objects. The new validation/resume checks preserve an
+unrelated owner workflow pause. An inspected failed handover can be resumed with
+--resume-paused-handover; inspect its private failure receipt first.
+
+The private backup tooling was published with verified lab author and committer.
+The prepared update102 deployment runner now invokes the source-only handover
+and preserves the previous data-backup record. Its sealed package check passes;
+this task did not deploy the website, change production data, export data or
+publish application source. Existing unrelated work and the parent mirror remain
+preserved. Private receipts establish actual backup coverage.
+
+## Earlier handoff state
+
+# Backup workflow repaired — October 20, 2026
+
+Encrypted off-device backup now has a verified matching update101 recovery point
+and private hosted baseline. The owner explicitly approved one fresh read-only
+snapshot and baseline refresh after the earlier release-time export declines.
+The hosted validation run completed successfully; daily 03:00 America/Los_Angeles
+execution and failure notifications remain enabled. The old update96 point was
+preserved through handover, immutable media was reused, and retention policy is
+unchanged. No website deployment, production data write or source publication
+was performed.
+
+The October 20 failure was the intentional deployment compatibility refusal:
+the pinned update96 baseline no longer matched update101/schema213. Exact
+update101 source/build/assets and all 213 schema definitions were checked before
+the SELECT-only export. Encryption, owner-only access, independent download and
+decryption, complete 341-file reconstruction and matching recovery checks passed.
+The 23 backup safety tests and 18 synthetic recovery tests also passed. Original
+release and migration fingerprints remain unchanged, including historical source
+provenance outside scrubbed publication history. Current owner instructions were
+preserved; their intentional AGENTS.md documentation drift was recorded privately
+instead of rewriting the recorded live fingerprint. Restore still requires a
+fresh authoritative deletion review; no participant database import was tested.
+
+Private receipts establish coverage. Runtime/source baseline remains update101;
+canonical dirty work and the parent live mirror were preserved. Fetch refreshed
+origin/main to the already published scrubbed source; local HEAD was not moved.
+
+## Earlier handoff state
+
 Current live release is update94.0033/0034 applied; a fresh database uses all35 migrations. Matching encrypted off-device backup, full reconstruction and the refreshed hosted baseline are verified; the daily backup schedule is enabled. See LIVE_RELEASE.json for the latest verified status. Historical update93/81 instructions below require their matching source/schema.
 
 # Recovery and workspace guide
 
-Current live release is update93 with invites off; see HANDOFF.md. The approved nickname feature and migration0032 are live; a fresh database uses all33 migrations. Recovery rehearsals and the existing private update81 bundle below are historical and require their matching source/migration revision. No new recovery bundle or production restoration was made for update82. Keep any recovery environment closed until its ownership/deletion review is complete.
+Current live release is update93 with invites off; see HANDOFF.md. The approved nickname feature and migration0032 are live; a fresh database uses all33 migrations. The recurring encrypted off-device backup plan and indexed reconstruction command are documented in [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md). The latest successful private receipt establishes actual snapshot coverage. The standalone update81 bundle and rehearsals below are historical and require their matching source/migration revision. Keep any recovery environment closed until its ownership/deletion review is complete.
 
 ## One development checkout
 
@@ -16,9 +83,9 @@ The owner container has one active development checkout: `workspace/`. Fetch, ed
 
 The parent folder retains a verified update81 source mirror and `work/` release snapshots for provenance. Existing Git worktree paths stay in place to preserve Git metadata. `archive/legacy-workspaces-20261018` holds inactive old previews, independent checkouts and generated output. `private/` contains external recovery inputs. These areas are outside the canonical Git checkout and must never be committed. The parent README and AGENTS.md direct new sessions here.
 
-## Current recovery snapshot
+## Historical standalone recovery snapshot
 
-The verified encrypted snapshot is update81, bound to Git revision `33f80d6bb04d9fa1b66de47368d733c5f41c5eac` and its migration/source fingerprints. A separate session released update82 while this backup was uploading. This is not an update82 database backup. Restore/verify this bundle using the recorded matching revision; do not rewrite its manifest to bypass compatibility checks. Future current-release snapshots require a fresh current export and matching source.
+The original standalone encrypted snapshot is update81, bound to Git revision `33f80d6bb04d9fa1b66de47368d733c5f41c5eac` and its migration/source fingerprints. A separate session released update82 while that backup was uploading. It is not an update82 database backup. Restore/verify that bundle using the recorded matching revision; do not rewrite its manifest to bypass compatibility checks. New indexed snapshots preserve their own current export and matching original source. Do not use the update81 commands below to verify a newer snapshot.
 
 ## What recovery reproduces
 
@@ -87,7 +154,7 @@ npm run recovery -- pack \
 npm run recovery -- verify --bundle /absolute/private/bundle-update81
 ```
 
-The bundle has a versioned manifest, source/migration fingerprint, file sizes and SHA-256 checksums. No symlinks, path traversal, missing media, unexpected asset paths or output overwrites are accepted. Bundles are private data, not Git artifacts. Copies are independent of release-source media (no mutable hardlink sharing). See [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md) for encrypted off-device storage and retrieval. Destination records and recovery keys stay private. No recurring backup or retention automation is configured; future snapshots require current data and deletion review.
+The bundle has a versioned manifest, source/migration fingerprint, file sizes and SHA-256 checksums. No symlinks, path traversal, missing media, unexpected asset paths or output overwrites are accepted. Bundles are private data, not Git artifacts. Copies are independent of release-source media (no mutable hardlink sharing). See [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md) for the recurring schedule, retention policy and encrypted off-device storage/retrieval. Destination records and recovery keys stay private. Every snapshot requires current data; every later restore requires a fresh authoritative deletion review.
 
 ## 3. Restore into a fresh local checkout
 
@@ -122,6 +189,6 @@ Full packaging must verify340 assets/200 recordings; public-only packaging remai
 
 Copy docs/recovery/new-environment.example.json outside Git and fill it with newly authorized resource identifiers. Run `node scripts/recovery/prepare-environment.mjs --profile /private/new-environment.json --out /private/offline-plan`. This makes no remote calls. It generates app bindings, edge/budget rule definitions, a separately scheduled guard configuration and fresh app secrets in private files. Install/encrypt secrets through the owner secret manager, supply provider/guard API credentials separately, and review provider state/resource adoption before any authorized future provisioning. Copy the tracked guard worker/policy alongside its generated config when preparing that separate Worker. No original account IDs or credentials are needed by this generator. Never blindly run a new stack over the existing production resources.
 
-## Current status
+## Historical rehearsal status
 
-Live is now update82 following a separate release. The encrypted recovery snapshot remains update81. This backup task did not deploy or change production data. See RECOVERY_TESTS.md for the actual rehearsal and limits. See REBUILD.md for the existing-stack deployment boundary and REBUILD_AUDIT.md for prior clone verification.
+The original standalone rehearsal covered update81; live advanced to update82 in a separate release during that task. That task did not deploy or change production data. See RECOVERY_TESTS.md for its rehearsal and limits. New indexed backup coverage is recorded by the latest private success receipt. See REBUILD.md for the existing-stack deployment boundary and REBUILD_AUDIT.md for prior clone verification.
