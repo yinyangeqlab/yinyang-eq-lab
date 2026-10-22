@@ -1,7 +1,7 @@
 {
   "liveUpdate": 107,
   "implementationCommit": "eab9029ee22f582c04deff46a65936fb9db7a24a",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update107. Matching recovery source metadata and validation passed through documentation/tooling maintenance only; no redeployment.",
+  "runtimeParity": "Verified live baseline remains 0.2.0-beta.1/update107. Local sidebar hover and motion correction is based on that source and is not deployed; existing source-only recovery metadata is unchanged.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -42,7 +42,7 @@
     },
     {
       "path": "app/alpha.css",
-      "sha256": "c5eb788e2c2f285dbe746cd9a6c498336b1653ad13fe9d64d1207b7b03cdda8d"
+      "sha256": "46c580fdc672809463bf36c16f887e4aed70efd5f0502e80045fbaacaf54efa0"
     },
     {
       "path": "app/api/activity/route.ts",
@@ -470,7 +470,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "78eed0a802a88b21b8c2be7894b2985e3321205082707a2784daa7198eaff1b8"
+      "sha256": "73ddc7ebad845d0f2461d5ba3a7f54292e63bb35809910a9b721a7b0ad1bba3e"
     },
     {
       "path": "components/aura-nav-link.css",
