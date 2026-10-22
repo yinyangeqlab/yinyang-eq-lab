@@ -43,3 +43,18 @@ export function intervalStats(rows: Interval[]) {
   const overlap = commonSegments(rows).reduce((sum, [start, end]) => sum + end - start, 0);
   return { heardA: +heard[0].toFixed(2), heardB: +heard[1].toFixed(2), overlapSeconds: +overlap.toFixed(2) };
 }
+
+/** Evidence for the currently selected green passage, excluding all other audio. */
+export function selectedPassageIntervals(rows: Interval[], passage: { start: number; end: number } | null): Interval[] {
+  if (!passage || !Number.isFinite(passage.start) || !Number.isFinite(passage.end) || passage.end <= passage.start) return [];
+  return rows.flatMap(row => {
+    const start = Math.max(row.start, passage.start), end = Math.min(row.end, passage.end);
+    return end > start ? [{ ...row, start, end }] : [];
+  });
+}
+
+/** Unique source coverage: replaying a portion never fills in unheard portions. */
+export function selectedPassageProgress(rows: Interval[]): [number, number] {
+  const seconds = (side: 0 | 1) => Math.min(5, merged(rows, side).reduce((sum, [start, end]) => sum + end - start, 0));
+  return [seconds(0), seconds(1)];
+}

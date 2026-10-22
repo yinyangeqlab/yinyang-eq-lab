@@ -8,7 +8,7 @@ import { createPortal } from "react-dom";
 import {musicDisplayTitle} from "@/lib/music-display";
 import { type ReactNode, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
-import { intervalStats, type Interval } from "@/lib/listening";
+import { intervalStats, selectedPassageIntervals, selectedPassageProgress, type Interval } from "@/lib/listening";
 import { fitAutoEq } from "@/lib/autoeq";
 import { channelBalance } from "@/lib/channel-balance";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
@@ -197,7 +197,6 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   const activeRef = useRef<{ side: 0 | 1; start: number; rate: number } | null>(null);
   const sideRef = useRef<0 | 1>(0);
   const heardRef = useRef<[number, number]>([0, 0]);
-  const heardStartedRef = useRef<number | null>(null);
   const onHeardRef = useRef(onHeard);
   onHeardRef.current = onHeard;
   const testModeRef = useRef(testMode);
@@ -247,6 +246,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   const passageTrackKey=duration&&file?(sourceKindRef.current==="curated"&&candidateUrlRef.current?`pool:${candidateUrlRef.current}`:`file:${file.name}:${file.size}:${file.lastModified}`):"";
   const automaticPassage=useMemo(()=>shuffleComparisonPassage(duration,(curatedPreview??analysis)?.waveform,passageBook.get(passageTrackKey)??[]),[duration,curatedPreview,analysis,passageTrackKey,passageBook]);
   const passage=passageOverride??automaticPassage?.passage??null;
+  const passageRef = useRef(passage);
+  passageRef.current = passage;
+  useEffect(() => { onHeardRef.current(heardNow()); }, [passage?.start, passage?.end]);
   const [shuffleStatus,setShuffleStatus]=useState("");
   useEffect(()=>{
     if(!passageTrackKey||!passage)return;
@@ -284,7 +286,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     const run = passageRunRef.current;
     if (!run || run.transitioning) return;
     run.transitioning = true; closeInterval(run.range.end); audioRef.current?.pause();
-    const stats = intervalStats(intervalsRef.current); heardRef.current = [stats.heardA, stats.heardB]; onHeardRef.current(heardRef.current);
+    heardRef.current = heardNow(); onHeardRef.current(heardRef.current);
     if (run.step === 0) { run.step = 1; await playPassageSide(run); }
     else { cancelPassage(); setPassageDone(true); }
   }
@@ -320,10 +322,10 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   }, [testMode]);
 
   function closeInterval(endOverride?:number) {
-    stopHeard();
     const current = activeRef.current, end = endOverride ?? audioRef.current?.currentTime;
     if (current && end !== undefined && Number.isFinite(end) && end > current.start + .05) intervalsRef.current.push({ ...current, end });
     activeRef.current = null;
+    heardRef.current = heardNow(); onHeardRef.current(heardRef.current);
   }
   function startInterval() {
     const audio = audioRef.current;
@@ -333,17 +335,11 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     const start = run?.pendingStart ? run.range.start : audio.currentTime;
     if (run) run.pendingStart = false;
     activeRef.current = { side: sideRef.current, start, rate: audio.playbackRate };
-    if (heardStartedRef.current === null) heardStartedRef.current = performance.now();
   }
   function heardNow(): [number, number] {
-    const result: [number, number] = [...heardRef.current];
-    if (heardStartedRef.current !== null) result[sideRef.current] += (performance.now() - heardStartedRef.current) / 1000;
-    return result;
+    return selectedPassageProgress(snapshotIntervals());
   }
-  function stopHeard() {
-    heardRef.current = heardNow(); heardStartedRef.current = null; onHeardRef.current(heardRef.current);
-  }
-  useEffect(() => { const timer = window.setInterval(() => { if (heardStartedRef.current !== null) onHeardRef.current(heardNow()); }, 250); return () => clearInterval(timer); }, []);
+  useEffect(() => { const timer = window.setInterval(() => { if (activeRef.current) onHeardRef.current(heardNow()); }, 250); return () => clearInterval(timer); }, []);
   useEffect(() => { const resumeVisibleAudio = () => { if (document.visibilityState === "visible" && audioRef.current && !audioRef.current.paused) void engine.current?.context.resume(); }; document.addEventListener("visibilitychange", resumeVisibleAudio); return () => document.removeEventListener("visibilitychange", resumeVisibleAudio); }, []);
   const listenShortcut = useRef<(side: 0 | 1) => unknown>(() => false);
   listenShortcut.current = onListenShortcut ?? listenToSide;
@@ -377,9 +373,10 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     return () => window.removeEventListener("keydown", handlePlaybackShortcut, true);
   }, []);
   function snapshotIntervals() {
-    const rows=[...intervalsRef.current], active=activeRef.current, end=audioRef.current?.currentTime;
+    const audio=audioRef.current;
+    const rows=[...intervalsRef.current], active=activeRef.current, end=audio?.seeking ? lastPlaybackPosition.current : audio?.currentTime;
     if(active && end!==undefined && Number.isFinite(end) && end>active.start) rows.push({...active,end});
-    return rows;
+    return selectedPassageIntervals(rows, passageRef.current);
   }
   async function replayPassage() {
     if(beforePlayback&&!beforePlayback())return false;
@@ -390,7 +387,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     closeInterval();audio.currentTime=start;
     try{await audio.play();return true;}catch{return false;}
   }
-  function resetHeard() { cancelPassage(); setPassageDone(false); closeInterval(); intervalsRef.current = []; heardRef.current = [0, 0]; heardStartedRef.current = null; onHeardRef.current([0, 0]); startInterval(); }
+  function resetHeard() { cancelPassage(); setPassageDone(false); closeInterval(); intervalsRef.current = []; heardRef.current = [0, 0]; onHeardRef.current([0, 0]); startInterval(); }
   async function listenToSide(next: 0 | 1, reminderChecked = false) {
     if(!reminderChecked&&beforePlayback&&!beforePlayback())return false;
     cancelPassage();
@@ -408,7 +405,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   useImperativeHandle(ref, () => ({ replay: replayPassage, isHashing: () => hashing, heard: heardNow, reset: resetHeard, stop: () => { cancelPassage(); audioRef.current?.pause(); }, pause: () => { cancelPassage(); audioRef.current?.pause(); }, playPassage, isPlaying: () => !!audioRef.current && !audioRef.current.paused, randomSong: async () => { setSampleChoice("random"); return chooseRandomSample("random", true); }, listen: async next => {if(beforePlayback&&!beforePlayback())return false; return listenToSide(next, true);}, snapshot: () => ({ ...meta, normalizationStatus:loudnessStatus,loudnessTarget:requestedLoudness,intervals: snapshotIntervals(), ...intervalStats(snapshotIntervals()), consent: sourceKindRef.current === "curated" || consent }), finish: () => {
     cancelPassage();
     closeInterval(); audioRef.current?.pause();
-    const intervals = [...intervalsRef.current];
+    const intervals = snapshotIntervals();
     const stats = intervalStats(intervals);
     return { ...meta, normalizationStatus:loudnessStatus,loudnessTarget:requestedLoudness, intervals, ...stats, consent: sourceKindRef.current === "curated" || consent };
   } }));
