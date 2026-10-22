@@ -1,7 +1,7 @@
 {
   "liveUpdate": 112,
   "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update112: passage completion float tolerance, shared Sync check timing with single-request unchanged checks, accessibility and layout fixes, per-browser motion and shortcut preferences and the fair-comparison summary are deployed on the update110 layout. Source-only recovery metadata is not yet registered for update112 (see docs/ENCRYPTED_BACKUP.md). Release-record documentation does not change deployed runtime behavior.",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update112: passage completion float tolerance, shared Sync check timing with single-request unchanged checks, accessibility and layout fixes, per-browser motion and shortcut preferences and the fair-comparison summary are deployed on the update110 layout. Matching source-only recovery metadata and hosted validation passed for update112; existing data snapshots and timestamps remain unchanged (see docs/ENCRYPTED_BACKUP.md). Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "c13b6250860e6e10b8212500ab41d8fcde91f80a793a3f181890b7cda4ac24c1"
+      "sha256": "4bc0de26fad1e025a96d80fe73f0c2a3940a977e3b99156325dba373a9c01848"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "d55b8793e95f2e6c204a79922d9e5db46324c7d19704a18d9045ca80c5fdef48"
+      "sha256": "fd21142c9f562cfbff4921cf55b7da49e8488207ce5f90ca774aaedfe45a7b64"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2d2b439555f472ffdf1906a1a79d5dbde9a8ebbc5a0cf0610b34bd438ee3708d"
+      "sha256": "e5705df41f481becb952597968bf0707b68a825728ae1a3cc00e8f3df3a00ad9"
     },
     {
       "path": "README.md",
@@ -1107,19 +1107,19 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "bc976578637597897ef0d89c9f8a2cf90a0f8c15d12b3abfac4ff28e9e2bd855"
+      "sha256": "98a7ddebb6c26e732b3e9878dd0bd43d3d8a075d723146c4d3033beeec9999f4"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c4014727c737512119200b3071fe320c3cb4c151f6c6252179e5df2935e24eda"
+      "sha256": "2a859fa9ae9927490d12ab1b2cb44426593ed752358d95ae8fbdb16f05ec1cc9"
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "9fd1c036877a376db231acad8f189a30643c7f8b0a4cd725ab4fee5766b8ce08"
+      "sha256": "ccec66b73191015385ac2c3edb3f6f6342d0cec94b6ae5ba634bb58899b20f23"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "ad5ae3997886a9dd16b4e3912ed1a847aa5ddcebd405433bb8f62741850666bb"
+      "sha256": "4f8595c3ea4049097acefda576d894d43c0e822ca1fbe6893abfcd7c973edcd9"
     },
     {
       "path": "docs/releases/update111-verification.json",
