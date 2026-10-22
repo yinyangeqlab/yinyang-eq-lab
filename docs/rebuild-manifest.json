@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 108,
-  "implementationCommit": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
-  "runtimeParity": "Verified live baseline remains 0.2.0-beta.1/update108. Owner approved the mobile Welcome readability preview for commit and deployment; release verification will establish the new live baseline.",
+  "liveUpdate": 109,
+  "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update109. Mobile Welcome readability and accessibility landmark corrections are deployed; source-only recovery metadata and hosted validation passed without a data export.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -17,7 +17,7 @@
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
     "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026.",
-    "mobileReadabilityPreview": "Owner-approved mobile Welcome readability update: original yin-yang/waveforms in an artwork row, opaque reading surfaces, larger text and controls, quieter Sync; two accessibility landmark corrections. Deployment verification pending."
+    "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
