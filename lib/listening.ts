@@ -55,6 +55,10 @@ export function selectedPassageIntervals(rows: Interval[], passage: { start: num
 
 /** Unique source coverage: replaying a portion never fills in unheard portions. */
 export function selectedPassageProgress(rows: Interval[]): [number, number] {
-  const seconds = (side: 0 | 1) => Math.min(5, merged(rows, side).reduce((sum, [start, end]) => sum + end - start, 0));
+  // Passage bounds are rounded to 0.01s, so a fully heard 5s passage can sum to 4.999999999999998; treat that as 5.
+  const seconds = (side: 0 | 1) => {
+    const total = merged(rows, side).reduce((sum, [start, end]) => sum + end - start, 0);
+    return total >= 5 - 1e-6 ? 5 : total;
+  };
   return [seconds(0), seconds(1)];
 }
