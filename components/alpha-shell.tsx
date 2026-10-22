@@ -120,16 +120,16 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   return <div className="alpha-app" data-alpha-layout={layout} data-alpha-destination={active || "utility"}>
     <Suspense fallback={null}><QueryDestination path={pathname} onChange={setActive}/></Suspense>
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
-    {mobileOpen && <button className="alpha-menu-backdrop" type="button" aria-label="Close navigation" onClick={closeMenu} tabIndex={-1}/>}
+    <button className={`alpha-menu-backdrop${mobileOpen ? " is-open" : ""}`} type="button" aria-label="Close navigation" onClick={closeMenu} tabIndex={-1} inert={!mobileOpen} aria-hidden={!mobileOpen}/>
     <div ref={panel} className="alpha-navigation-frame" role={mobileOpen ? "dialog" : undefined} aria-label={mobileOpen ? "Main navigation" : undefined} aria-modal={mobileOpen ? true : undefined} inert={modalOpen}>
-    <aside id="alpha-navigation" className={`alpha-navigation${mobileOpen ? " alpha-mobile-open" : ""}`} aria-label="Main navigation">
+    <aside id="alpha-navigation" className={`alpha-navigation${mobileOpen ? " alpha-mobile-open" : ""}`} aria-label="Main navigation" inert={layout === "hidden"} aria-hidden={layout === "hidden"}>
       <Link className="alpha-brand" href="/" prefetch={false} aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt=""/><span>YinYang EQ<small>LET YOUR EARS DECIDE</small></span></Link>
 
       <nav aria-label="Main destinations">{destinations.map(d => <Link key={d.id} href={d.href} prefetch={false} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={() => { if (narrow) setLayout("icons"); window.scrollTo(0,0); }}><DestinationIcon kind={d.id}/><span>{d.label}</span></Link>)}</nav>
       <nav className="alpha-secondary-navigation" aria-label="Data and help"><Link href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} prefetch={false} title="Devices and Sync"><span aria-hidden="true">⇄</span><span>Devices &amp; Sync</span></Link><Link href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} prefetch={false} title="Keyboard shortcuts"><span aria-hidden="true">⌨</span><span>Shortcuts &amp; help</span></Link><Link href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} prefetch={false} title="Privacy notice"><span aria-hidden="true">◇</span><span>Privacy &amp; data</span></Link></nav>
     </aside>
     <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded={layout !== "hidden"} aria-describedby="alpha-navigation-state" title={`${nextAction} · Full → Icons → Hidden`} data-next-layout={nextLayout}>
-      <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={layout === "hidden" ? "m9 6 6 6-6 6" : "m15 6-6 6 6 6"}/></svg></span>
+      <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6"/></svg></span>
     </button>
     <span id="alpha-navigation-state" className="alpha-navigation-state">{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
     </div>
