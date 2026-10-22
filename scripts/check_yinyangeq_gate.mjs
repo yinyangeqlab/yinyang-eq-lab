@@ -10,6 +10,21 @@ for(const path of ['/listeners/yinyangeq','/api/public-profiles/yinyangeq','/api
  const response=await publicRead(new Request('https://fixture.invalid'+path,{headers:{'x-yinyang-data-session':'forged','oai-authenticated-user-id':'owner'}}),env,{},()=>false,app,async()=>null);assert.equal(response.status,200);assert.equal(forwarded.headers.get('x-yinyang-data-session'),null);assert.equal(forwarded.headers.get('oai-authenticated-user-id'),null);
  assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null,'public bypass is read-only');
 }
+// Public release/help pages must not require or save participation choices.
+// Exercise the actual early gate with a DB that fails on any access.
+for (const path of ['/version','/shortcuts']) {
+ for (const method of ['GET','HEAD']) {
+  const deniedDb={prepare(){throw Error('Public information must not access participant DB')}};
+  const request=new Request('https://fixture.invalid'+path+'?_rsc=fixture', {method,headers:{Cookie:'__Host-yinyang-tester=opted-out-fixture','oai-authenticated-user-id':'owner','x-yinyang-data-session':'forged'}});
+  const response=await publicRead(request,{...env,DB:deniedDb},{},()=>false,app,async()=>null);
+  assert.equal(response.status,200);assert.equal(response.headers.get('set-cookie'),null);
+  assert.equal(forwarded.headers.get('oai-authenticated-user-id'),null);assert.equal(forwarded.headers.get('x-yinyang-data-session'),null);
+ }
+ assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null);
+}
+for (const path of ['/version/private','/shortcuts/private','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
+ assert.equal(await publicRead(new Request('https://fixture.invalid'+path),env,{},()=>false,app,async()=>null),null,'Public information must not bypass private or listening routes');
+}
 assert.equal(await publicRead(new Request('https://fixture.invalid/api/public-profiles/yinyangeq/private'),env,{},()=>false,app,async()=>null),null);
 assert.equal(await publicRead(new Request('https://fixture.invalid/music/private.mp3'),env,{},()=>false,app,async()=>null),null,'profile access cannot expose private media');
 const routeStart=source.indexOf('if(path==="/profile-access"'),routeEnd=source.indexOf('let tester =',routeStart);assert.ok(routeStart>0&&routeEnd>routeStart);
