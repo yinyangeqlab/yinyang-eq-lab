@@ -1,12 +1,40 @@
+# Current live release — 0.2.0-beta.1 / update105, October 21, 2026
+
+Completion verified October 21, 2026: the version/help routing correction is live, both information pages open for the opted-out hidden test identity without saving consent, and the browser console is clean. Source-only backup metadata handover and hosted validation passed; daily coverage remains enabled and no new data export was made. The old Legacy 0.1/update103 checkpoint is retained. Implementation and release records use only the verified yinyangeqlab author/committer. Hardware and Safari gaps remain explicitly accepted. Public verification: docs/releases/update105-verification.json.
+
+The owner-authorized beta, including the final public version/help routing correction, is deployed from lab-attributed source `f030b2900c2553645f2a5ef9ef70cb61d8aab1a9`. It refreshes Welcome, navigation, listening setup/playback, Personal Tournament, Preference Tuning, Music Library and My Space. Original colors, AMOLED curves/waves and functional controls remain. Library uses Load more; the sidebar offers full, icons-only and hidden views. Version and beta bug-report links are visible. Apache 2.0 code licensing and separate branding/assets rights remain unchanged.
+
+The final production preflight allowed one existing app Worker code/assets update and no other resource mutations. Source/build `work/beta-info-release-20261021`; infrastructure `work/beta-info-infra-20261021`. Production verification matched 511 JS/CSS files; 511 prior browser assets were retained. Schema213, CPU5000ms, six abuse bindings, private access/media, disabled public Worker URLs and the existing service notice remain unchanged. No migrations, participant-data import/export or changes to participant settings/saved records were performed. The update104 version-page check followed the existing admission redirect and could create ordinary ephemeral access/session records; update105 makes version/help reads public before account lookup. The separate edge burst rule and one-minute cost guard were checked and preserved.
+
+43 local focused security/account/audio/UI suites, TypeScript and the full protected-media production package passed. Vite8.1.6 addresses the reviewed tooling advisories; one upstream braces advisory remains build-only. CSP script restrictions and HSTS remain hardening follow-ups. Physical headphone output and real Safari/iOS interruption/recovery remain unverified; the owner explicitly accepted these gaps on October21,2026. Synthetic/Chromium tests are not hardware certification or independent penetration testing.
+
+Legacy0.1/update103 source/build/media and existing encrypted off-device recovery are retained. Matching source-only backup metadata handover is recorded separately; it preserves the data recovery timestamp and does not claim a fresh export. Independent canonical work and the parent mirror remain preserved. Source publication and deployment are separately verified; release-record publication follows completion. Evidence: artifacts/beta-info-routing-20261021/live-verification.json.
+
+## Previous release and preparation notes
+
+# Current live release — 0.2.0-beta.1 / update104, October 21, 2026
+
+The owner-authorized beta is deployed from lab-attributed source `85a1633fd7291d474d3a6f8f74f3501aec688f53`. It refreshes Welcome, navigation, listening setup/playback, Personal Tournament, Preference Tuning, Music Library and My Space. Original colors, AMOLED curves/waves and functional controls remain. Library uses Load more; the sidebar offers full, icons-only and hidden views. Version and beta bug-report links are visible. Apache 2.0 code licensing and separate branding/assets rights remain unchanged.
+
+The final production preflight allowed one existing app Worker code/assets update and no other resource mutations. Source/build `work/beta-release-20261021`; infrastructure `work/beta-infra-20261021`. Production verification matched 511 JS/CSS files; 418 prior browser assets were retained. Schema213, CPU5000ms, six abuse bindings, private access/media, disabled public Worker URLs and the existing service notice remain unchanged. No migrations, participant-data import/export or production account changes were performed. The separate edge burst rule and one-minute cost guard were checked and preserved.
+
+43 local focused security/account/audio/UI suites, TypeScript and the full protected-media production package passed. Vite8.1.6 addresses the reviewed tooling advisories; one upstream braces advisory remains build-only. CSP script restrictions and HSTS remain hardening follow-ups. Physical headphone output and real Safari/iOS interruption/recovery remain unverified; the owner explicitly accepted these gaps on October21,2026. Synthetic/Chromium tests are not hardware certification or independent penetration testing.
+
+Legacy0.1/update103 source/build/media and existing encrypted off-device recovery are retained. Matching source-only backup metadata handover is recorded separately; it preserves the data recovery timestamp and does not claim a fresh export. Independent canonical work and the parent mirror remain preserved. Source publication and deployment are separately verified; release-record publication follows completion. Evidence: artifacts/beta-release-20261021/live-verification.json.
+
+## Previous release and preparation notes
+
 # Current live release — update103, October 20, 2026
 
-Browser verification completed October20,2026 using only the hidden non-contributing consent fixture: desktop1440×900 and mobile390×844 cancellation, initial opt-out, saved-choice preservation and saved withdrawal all passed. At320×568 both exits remained usable without page horizontal overflow. Independent fixture-only reads verified zero research/vote/monitoring/Sync records; the fixture is left opted out. Source-only backup metadata handover and hosted validation passed; the daily workflow is active and the existing data recovery point is unchanged. Source and verified release records are published separately from deployment; this publication performs no deployment or data export. See docs/CONSENT_BROWSER_REVIEW_2026-10-20.md for evidence and limits.
+Publication verified October 20, 2026: update103 source `dae6526b753309c9837c6ff2fc8f2b2ad772b059` and release-record commit `d5933b6d927f39115dac8b5865f4dedd6b3fa9df` are on GitHub main. Both actual authors and committers are `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>` and both GitHub identities are yinyangeqlab. Publication performed no redeployment or data export. The canonical dirty checkout and unrelated work remain preserved; local HEAD was not reset or pulled. Public source-only verification passes for 562 inputs. Public verification receipt: docs/releases/update103-verification.json. Earlier paragraphs describe their release-time publication state.
 
-The owner-authorized isolated consent-test support is deployed from lab-attributed source `dae6526b753309c9837c6ff2fc8f2b2ad772b059`. The fixed hidden `layout-test-only` identity can save its own comparison/music-detail consent fixture and nickname. Research, rankings, votes, uploads, monitoring, historical-study sharing, profile publication and Sync remain blocked; direct forged enable requests are denied before writes. The ordinary consent editor and its cancellation/opt-out behavior are reused, with a visible fixture notice and disabled restricted choices. Sign-in uses an expiring one-use code limited to this fixed identity, existing rate limits, host-only cookies and a fixed destination. No admin or participant session is used for review.
+Browser verification completed October20,2026 using only the hidden non-contributing consent fixture: desktop1440×900 and mobile390×844 cancellation, initial opt-out, saved-choice preservation and saved withdrawal all passed. At320×568 both exits remained usable without page horizontal overflow. Independent fixture-only reads verified zero research/vote/monitoring/Sync records; the fixture is left opted out. Source-only backup metadata handover and hosted validation passed; the daily workflow is active and the existing data recovery point is unchanged. No Git push/publication or data export occurred. See docs/CONSENT_BROWSER_REVIEW_2026-10-20.md for evidence and limits.
 
-Source/build `work/consent-isolation-release-20261020`; infrastructure `work/consent-isolation-infra-20261020`. One existing Worker updated; other resources unchanged. No schema migration, media change, participant-record mutation, history transfer or data export. Focused consent/API/transaction, gate, contribution-denial and sign-in tests, TypeScript and production build passed. Production verification matched 443 live JS/CSS files; 366 prior browser assets retained. Schema213, CPU5000ms, six abuse bindings, private media/admission, disabled public Worker URLs and the existing service notice remain unchanged. Desktop/mobile consent interactions passed after deployment; see the browser review report.
+The owner-authorized isolated consent-test support is deployed from local lab-attributed source `dae6526b753309c9837c6ff2fc8f2b2ad772b059`. The fixed hidden `layout-test-only` identity can save its own comparison/music-detail consent fixture and nickname. Research, rankings, votes, uploads, monitoring, historical-study sharing, profile publication and Sync remain blocked; direct forged enable requests are denied before writes. The ordinary consent editor and its cancellation/opt-out behavior are reused, with a visible fixture notice and disabled restricted choices. Sign-in uses an expiring one-use code limited to this fixed identity, existing rate limits, host-only cookies and a fixed destination. No admin or participant session is used for review.
 
-Existing encrypted off-device data recovery remains retained. Source-only metadata handover registers the exact release without a new data snapshot; hosted validation status is recorded in LIVE_RELEASE.json. Daily data backups retain their schedule. Independent dirty working changes and the parent mirror remain preserved. Source and verified deployment records are published using only the lab account. Public verification receipt: docs/releases/update103-verification.json. Owner-only logs and private receipts remain outside Git.
+Source/build `work/consent-isolation-release-20261020`; infrastructure `work/consent-isolation-infra-20261020`. One existing Worker updated; other resources unchanged. No schema migration, media change, participant-record mutation, history transfer or data export. Focused consent/API/transaction, gate, contribution-denial and sign-in tests, TypeScript and production build passed. Production verification matched 443 live JS/CSS files; 366 prior browser assets retained. Schema213, CPU5000ms, six abuse bindings, private media/admission, disabled public Worker URLs and the existing service notice remain unchanged. Desktop/mobile consent interactions are recorded separately after browser completion; deployment alone does not certify them.
+
+Existing encrypted off-device data recovery remains retained. Source-only metadata handover registers the exact release without a new data snapshot; hosted validation status is recorded in LIVE_RELEASE.json. Daily data backups retain their schedule. Independent dirty working changes and the parent mirror remain preserved. Source commit and deployment records are local; no Git push/publication occurred. Evidence: artifacts/consent-isolation-20261020/live-verification.json.
 
 ## Previous release and preparation notes
 
@@ -18,10 +46,70 @@ The owner-authorized consent and licensing update is deployed from published lab
 
 Source/build `work/consent-footer-release-20261020`; infrastructure `work/consent-footer-infra-20261020`. One existing app Worker updated; all other resources unchanged. No migration, participant setting write, enrollment, history transfer or new data export. The isolated build, app/infra TypeScript and consent/privacy/gate regressions passed. The full340-asset/200-recording package was verified, and 431 live JS/CSS files matched exact hashes; 354 prior browser assets were copied forward, with existing paths preserved. CPU5000ms, six abuse bindings, private media/admission, disabled public Worker URLs and independent edge/cost controls remain. Database schema retains213 definitions and the existing service notice is unchanged. No feature lock, forced refresh or audio stop was introduced. Browser control interaction and physical devices were not independently certified; actual component/navigation harnesses cover the consent behavior.
 
-The previous verified encrypted off-device data recovery point is retained. No fresh export was requested or performed for this UI-only release. The deployment runner registers matching source/build metadata separately, with unchanged schema/media/recovery checks and a hosted validation-only run. The existing data snapshot and timestamp remain unchanged; the next successful daily export supplies the next data recovery point. No new update102 data snapshot is claimed by this deployment. Independent Personal Shootout, sync and recovery working changes remain preserved and excluded. Source publication is already complete; these historical deployment records are included with the later update103 publication. Evidence: artifacts/consent-footer-deploy-20261020/live-verification.json.
+The previous verified encrypted off-device data recovery point is retained. No fresh export was requested or performed for this UI-only release. The deployment runner registers matching source/build metadata separately, with unchanged schema/media/recovery checks and a hosted validation-only run. The existing data snapshot and timestamp remain unchanged; the next successful daily export supplies the next data recovery point. No new update102 data snapshot is claimed by this deployment. Independent Personal Shootout, sync and recovery working changes remain preserved and excluded. Source publication is already complete; these deployment records are local and have not been committed or pushed. Evidence: artifacts/consent-footer-deploy-20261020/live-verification.json.
 
+## Previous release and preparation notes
 
-## Earlier published release and handoff notes
+# Daily backups and source-only release handover verified — October 20, 2026
+
+Routine data backups remain daily at 03:00 America/Los_Angeles. Commits and
+previews do not trigger exports. Manual workflow runs now default to validation
+only. The hosted validation-only run passed, and independent authentication
+confirmed its encrypted index/data history and existing data-backup timestamp
+were unchanged. This improvement created zero data exports or data snapshots.
+All 42 synthetic Python backup/handover safety tests pass.
+
+Ordinary verified code-only deployments can register exact source/build metadata
+through scripts/recovery/release_handover.py. Matching migrations, operational
+schema SQL, live schema, recovery semantics, media hashes and exact deployment
+identity are required. Original data/source provenance is preserved; metadata
+registration never claims a new data recovery point. The next scheduled export
+uses the registered source. Schema/media/recovery or risky data changes still
+require an explicit backup decision. Unknown deployments remain blocked.
+
+Retention and shared-media reuse are unchanged. Only the active source metadata
+pin is kept separately; it does not chain earlier handovers. Daily retention
+prunes unreferenced objects. The new validation/resume checks preserve an
+unrelated owner workflow pause. An inspected failed handover can be resumed with
+--resume-paused-handover; inspect its private failure receipt first.
+
+The private backup tooling was published with verified lab author and committer.
+The prepared update102 deployment runner now invokes the source-only handover
+and preserves the previous data-backup record. Its sealed package check passes;
+this task did not deploy the website, change production data, export data or
+publish application source. Existing unrelated work and the parent mirror remain
+preserved. Private receipts establish actual backup coverage.
+
+## Earlier handoff state
+
+# Backup workflow repaired — October 20, 2026
+
+Encrypted off-device backup now has a verified matching update101 recovery point
+and private hosted baseline. The owner explicitly approved one fresh read-only
+snapshot and baseline refresh after the earlier release-time export declines.
+The hosted validation run completed successfully; daily 03:00 America/Los_Angeles
+execution and failure notifications remain enabled. The old update96 point was
+preserved through handover, immutable media was reused, and retention policy is
+unchanged. No website deployment, production data write or source publication
+was performed.
+
+The October 20 failure was the intentional deployment compatibility refusal:
+the pinned update96 baseline no longer matched update101/schema213. Exact
+update101 source/build/assets and all 213 schema definitions were checked before
+the SELECT-only export. Encryption, owner-only access, independent download and
+decryption, complete 341-file reconstruction and matching recovery checks passed.
+The 23 backup safety tests and 18 synthetic recovery tests also passed. Original
+release and migration fingerprints remain unchanged, including historical source
+provenance outside scrubbed publication history. Current owner instructions were
+preserved; their intentional AGENTS.md documentation drift was recorded privately
+instead of rewriting the recorded live fingerprint. Restore still requires a
+fresh authoritative deletion review; no participant database import was tested.
+
+Private receipts establish coverage. Runtime/source baseline remains update101;
+canonical dirty work and the parent live mirror were preserved. Fetch refreshed
+origin/main to the already published scrubbed source; local HEAD was not moved.
+
+## Earlier handoff state
 
 # Current live release — update101, October 19, 2026
 
@@ -48,6 +136,8 @@ Protected YinYangEQ data remains indefinitely retained and excluded from routine
 ## Historical release notes
 
 # Current live release — update99, October 19, 2026
+
+> Existing local Personal Shootout review: [preview handoff](docs/HANDOFF.md#local-shootout-ui-preview--independent-review-handoff-october-19-2026), **http://localhost:5176/shootout/personal**. Live baseline is update99; the existing isolated preview retains its earlier update96 build context and uncommitted UI/timing changes. Preserve and inspect it as built. Do not rebuild, replace, push or deploy it.
 
 The owner-authorized release adds reviewed public-profile category selection, consolidates collection consent in the shared data form, and clarifies account-sync conflict controls. Four ongoing choices include one combined Personal research/Community control with explicit admin-versus-public-summary wording. Historical-study choices and selected measurement-file contribution/rights approvals use that same form. Current account choices stay authoritative; old all-sharing agreements never silently grant new permission. Unspecified future studies are not preapproved, and the protected owner account remains excluded from ordinary archives.
 
@@ -78,6 +168,14 @@ Account/monitoring/ownership regressions,38 synthetic migrations, bounded source
 The owner explicitly declined a new backup export for this release. The existing verified encrypted off-device update96 recovery point is retained; no update97 data backup or refreshed hosted baseline is claimed. The existing daily schedule remains configured, but its safety checks will refuse the changed release/schema until an authorized matching baseline refresh. Do not rewrite fingerprints or label the old point current. Original-browser data was captured privately before linking; account enrollment/history transfer are separate follow-up operations. Unrelated Shootout UI and recovery development remain preserved and excluded.
 
 ## Historical release notes
+
+# Local Shootout UI preview — review handoff, October 19, 2026
+
+The owner requested another task inspect the local UI. Open **http://localhost:5176/shootout/personal** on this computer. Fresh review browsers must first use **http://localhost:5176/__local/layout-account** and click **Use private test account**. Use only the hidden non-contributing layout account, never an admin session. Live is update99; this UI/timing work remains uncommitted, not pushed and not deployed. The existing local preview retains its original update96 build context and must not be rebuilt or replaced from update99 for this review.
+
+Read the [Local Shootout UI preview section](docs/HANDOFF.md#local-shootout-ui-preview--independent-review-handoff-october-19-2026) for the exact build, restart command, scope, evidence and review limits. The preview is an isolated local assembly; the Personal Shootout changes and all unrelated changes in the dirty canonical checkout must be preserved. No new task was created or messaged by this handoff.
+
+---
 
 > Update96 recovery verified: matching encrypted off-device database/source/build backup and source-history restore passed independent verification. This month’s full reconstruction remains valid for the identical schema/media; its original rehearsal identity is preserved. The refreshed hosted baseline passed validation, and the daily03:00 America/Los_Angeles schedule is enabled. Existing retention is unchanged.
 
@@ -123,7 +221,11 @@ A fresh encrypted off-device backup succeeded before deployment. A matching upda
 
 # Current live release — update93, October 18, 2026
 
+> Hosted encrypted backup — October 19, 2026: the independent daily 03:00 America/Los_Angeles backup is active and works without the owner computer or desktop app. A hosted run reconstructed and verified all341 recovery files with matching source/schema and18 synthetic recovery checks;23 backup safety checks pass. The former local schedule is paused and a local writer guard prevents concurrent scheduled backups. Retention remains7daily,4weekly,12monthly and one annual point per year indefinitely. Refresh the matching backup baseline after future authorized releases. This setup did not deploy or write live application data. Storage details, credentials and verification receipts remain owner-only. See ENCRYPTED_BACKUP.md.
+
 Live: https://yinyangeq.com. The owner approved the redesigned maintenance UI shown in the local preview. Feature availability now uses labelled Paused/Available cards; duration uses quick choices and a custom combined-unit form with a readable total. Current live expiry and next-publication duration are clearly separated. Selections take effect only when published. Dark green styling, keyboard controls and mobile layout are retained.
+
+> Encrypted backup status — October 18, 2026: update93 has a verified encrypted off-device backup matched to implementation `4dbba07333b0755a1ffbd5dc2ce0416b936c6249`. All 341 recovery files were reconstructed and verified with matching source/schema; 18 synthetic recovery checks and 12 backup safety checks pass. Unpublished source history was recovered into a fresh local Git repository, and the small compiled runtime is preserved. The owner-selected schedule is daily at 03:00 Pacific, retaining 7 daily, 4 weekly, 12 monthly and one annual point per year without automatic annual expiry. Shared media is stored once. Fresh credentials and authoritative deletion reconciliation are required before restoration. The original update81 standalone backup remains historical. This backup task did not deploy, write live data or publish to GitHub. See ENCRYPTED_BACKUP.md for scheduling requirements and recovery limits.
 
 Only components/service-status-panel.tsx and components/service-status-panel.css changed. Implementation `4dbba07333b0755a1ffbd5dc2ce0416b936c6249`. Source/build `work/maintenance-ui-release-20261018`; infrastructure `work/maintenance-ui-infra-20261018`. Pending personal-shootout and backup/recovery changes remain preserved and excluded. No backend policy, schema, scoring, listening-protocol or participant-choice changes. One Worker updated; three resources unchanged. All145 earlier client assets retained. CPU5000ms, six abuse bindings, private media/admission, disabled public Worker URLs and edge/cost guards remain unchanged. No forced refresh or audio stop. GitHub publication remains separate and unrequested.
 

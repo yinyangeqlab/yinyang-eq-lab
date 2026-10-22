@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 104,
-  "implementationCommit": "85a1633fd7291d474d3a6f8f74f3501aec688f53",
-  "runtimeParity": "Verified 0.2.0-beta.1 application with a pending public version/help routing correction. No listening or private-data routes are relaxed.",
+  "liveUpdate": 105,
+  "implementationCommit": "f030b2900c2553645f2a5ef9ef70cb61d8aab1a9",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update105. Current release/rebuild documentation records verification separately from the immutable implementation snapshot.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -16,7 +16,7 @@
     "pendingUnrelatedDevelopment": [
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
-    "pendingLocalReview": "Owner accepted physical-audio and Safari/iOS coverage gaps on October 21, 2026. Production preflight and exact deployed verification remain required."
+    "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
