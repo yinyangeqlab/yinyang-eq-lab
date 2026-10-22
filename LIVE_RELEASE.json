@@ -2277,15 +2277,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "8b9b602249c1f5cf29ac7e4da66353825a4d22d26d49905a3e95a8a9d8dbaba1"
+      "sha256": "57b6bb7bfa6065f375868e66bb7d3175ec4d45a4654dc8731061d28a6eec0171"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "5f93de09b9b33e88e1136424528cbbb72a37968ce6b883b7586dd5177188fb9e"
+      "sha256": "483248e51a768928549d57144ea8576184049a9f90a6b3f06689bd26591b53b0"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "882d197117418426354ec2f8f565ab575cf9f45206d09d06db4e43a1f77b01db"
+      "sha256": "22ff2fb95d588fdc9d16dd6cb98d95eee9c4984a5a53b8ef0ddc832c60ae8e5b"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2301,7 +2301,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "12111308953c87a86e70314b7bcd33089095120a0ce803767c54cff01d39c7c1"
+      "sha256": "cf838fe4d7cc99de5f7cd43592a2baf2a88b2d88f5e347b8b54e91a22256e4c3"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -9879,7 +9879,7 @@
     "pushVerifiedAt": "2026-10-22T04:35:41.504030+00:00",
     "authorAndCommitterVerified": true,
     "githubLogin": "yinyangeqlab",
-    "previousPublishedReleaseCommit": "2cbb3d55f780340dfb757be7ab91b15c02cb13d5"
+    "previousPublishedReleaseCommit": "5d6988102b0f800deb8baa730e4f11e4227fbd48"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
