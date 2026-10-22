@@ -131,7 +131,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
     <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded={layout !== "hidden"} aria-describedby="alpha-navigation-state" title={`${nextAction} · Full → Icons → Hidden`} data-next-layout={nextLayout}>
       <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6"/></svg></span>
     </button>
-    <span id="alpha-navigation-state" className="alpha-navigation-state">{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
+    <span id="alpha-navigation-state" hidden>{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
     </div>
     <div className="alpha-workspace">
       <header className="alpha-topbar" inert={modalOpen || mobileOpen}>
