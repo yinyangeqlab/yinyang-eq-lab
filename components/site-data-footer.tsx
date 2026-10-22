@@ -1,6 +1,6 @@
 import { releaseInfo } from "@/lib/release-info";
 
-const repository = "https://github.com/yinyangeqlab/yinyang-eq-league/blob/main";
+const repository = "https://github.com/yinyangeqlab/yinyang-eq-lab/blob/main";
 
 export default function SiteDataFooter() {
   return <footer className="site-data-footer" aria-label="Data, credits and licensing">

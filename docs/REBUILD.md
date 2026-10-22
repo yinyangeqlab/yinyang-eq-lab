@@ -103,8 +103,8 @@ As of October18,2026, the current live application is update81. Its implementati
 Use the pinned Node26.12.0/npm12.2.1 toolchain for recovery. Ordinary preview builds declare Node.js22.13+ support; Node22.18+ or24+ is needed for the optional TypeScript/SQLite regression scripts. Python3 is used by the publication and migration checks.
 
 ```sh
-git clone https://github.com/yinyangeqlab/yinyang-eq-league.git
-cd yinyang-eq-league
+git clone https://github.com/yinyangeqlab/yinyang-eq-lab.git
+cd yinyang-eq-lab
 npm ci
 node scripts/check-live-source.mjs --source-only
 npm run build

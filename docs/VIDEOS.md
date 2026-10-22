@@ -1,6 +1,6 @@
 # Videos and Discord sharing
 
-[Watch both embedded videos](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2) · [Project](https://yinyangeq.com)
+[Watch both embedded videos](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/2) · [Project](https://yinyangeq.com)
 
 Short direct GitHub-hosted links to paste into Discord:
 

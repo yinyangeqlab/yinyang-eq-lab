@@ -4,7 +4,7 @@ https://github.com/user-attachments/assets/3502a781-9a84-45a2-8352-ff9a57ba0e49
 
 **Short link for Discord: https://yinyangeqlab.github.io/m.mp4** · [Sharing guide](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
 
-[Watch or download the mobile walkthrough](https://github.com/yinyangeqlab/yinyang-eq-league/releases/download/mobile-layouts-2026-10-17/yinyang-eq-league-mobile-walkthrough.mp4) · [Mobile demo release](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/mobile-layouts-2026-10-17)
+[Watch or download the mobile walkthrough](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/download/mobile-layouts-2026-10-17/yinyang-eq-league-mobile-walkthrough.mp4) · [Mobile demo release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/mobile-layouts-2026-10-17)
 
 45.2-second portrait video, 1080 × 1920, 30 fps, H.264/AAC.
 

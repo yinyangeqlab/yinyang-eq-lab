@@ -1,7 +1,7 @@
 {
   "liveUpdate": 109,
   "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update109. Mobile Welcome readability and accessibility landmark corrections are deployed; source-only recovery metadata and hosted validation passed without a data export.",
+  "runtimeParity": "Live update109 and its immutable implementation/build remain unchanged. Published source has repository URL and package-name metadata updates only; these source changes are not deployed.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -17,7 +17,8 @@
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
     "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026.",
-    "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified."
+    "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified.",
+    "repositoryRename": "Existing lab app repository renamed to yinyang-eq-lab; current documentation and GitHub URLs updated without deployment. Historical release provenance retained."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -307,7 +308,7 @@
     },
     {
       "path": "app/page.tsx",
-      "sha256": "a0d8bfbabb5eda57c14e0ee03ccd108e60140effa95bd7e61afdd6896f254391"
+      "sha256": "86d2411a311d7ebddca3e98317ee192324415aedc331647e9317c406de98f52c"
     },
     {
       "path": "app/participation/page.tsx",
@@ -363,7 +364,7 @@
     },
     {
       "path": "app/shortcuts/page.tsx",
-      "sha256": "bf2a02a3d4a9c95be733213ba422b454c5cd47821ee885a0b7de43c07e10e8d1"
+      "sha256": "47e9afa7360835447e6d5b5d51973db86da5faa8c9b8aa61659ea91607f1e0c6"
     },
     {
       "path": "app/test-history/page.tsx",
@@ -667,7 +668,7 @@
     },
     {
       "path": "components/site-data-footer.tsx",
-      "sha256": "92778b539e42543f776de0cb587c235a8f203c6d53be2342622aa446686cca4f"
+      "sha256": "8dca8a402ae22cf3514d7e0dbc7c7eaf44fac598cd88e0521c06661dcd5f963b"
     },
     {
       "path": "components/site-utility-links.tsx",
@@ -1723,7 +1724,7 @@
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "eeffb9132ee20a0c3e7bf29c84544d052a6900e19b86377c2b041a089de8389d"
+      "sha256": "f302d1e0428572a4ae69fc3afa047acf559052bcb9e8b69b79921c1d83d8bb8f"
     },
     {
       "path": "lib/request-json.ts",
@@ -1819,11 +1820,11 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "36769ee444e13f0ac3969e93c9728daaace09ee1c4163c69ee68b046bfd8264f"
+      "sha256": "a8b7f0ae5d6b44a95fa0e3ca8378341bcccaaf0ad8af938741a3b9dc77135359"
     },
     {
       "path": "package.json",
-      "sha256": "accfc1bf77aaf5f7fd014d2b9fbda09457d3e59d0fcccf7d52c347d254bba2e5"
+      "sha256": "8e4c1ccb4d583287f5904452a44042f607ec5509ce6ff870d7e8ec9675790fcb"
     },
     {
       "path": "postcss.config.mjs",
@@ -2351,5 +2352,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": false
+  "pendingDeploymentApproval": true
 }
