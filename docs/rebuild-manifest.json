@@ -447,7 +447,7 @@
     },
     {
       "path": "components/account-auto-sync.tsx",
-      "sha256": "af49209c3ce2ec60a6c0894ebb2a074df0560003ae9d689eb62147e5bca7dd86"
+      "sha256": "4a5fb0b1800e0073ce3ac60a7d967650cb9d7c78b533e407f7e81b2a1970b0bf"
     },
     {
       "path": "components/account-device-status.css",
