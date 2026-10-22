@@ -1,3 +1,9 @@
+# Update109 source-only metadata handover verified — October 21, 2026
+
+Matching source/build metadata and hosted validation-only checks passed for the UI-only mobile readability release. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling remains active. Existing single-writer, schema/media/deployment checks and exact private evidence for the two known empty validation readers remain enforced. Storage credentials, destination, private receipts and recovery key remain outside Git. This is source metadata registration, not a new data recovery point. See docs/releases/update109-verification.json.
+
+## Earlier recovery notes (historical)
+
 # Update108 source-only metadata handover verified — October 21, 2026
 
 Matching source/build metadata and hosted validation-only checks passed for the UI-only sidebar release. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling remains active. Existing single-writer, schema/media/deployment checks and exact private evidence for the two known empty validation readers remain enforced. Storage credentials, destination, private receipts and recovery key remain outside Git. This is source metadata registration, not a new data recovery point. See docs/releases/update108-verification.json.

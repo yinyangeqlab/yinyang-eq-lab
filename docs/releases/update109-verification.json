@@ -1,0 +1,394 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 109,
+  "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
+  "deploymentVerification": {
+    "at": "2026-10-22T05:23:56.020264+00:00",
+    "revision": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
+    "update": 109,
+    "deployment": {
+      "id": "d71f252f-2e4d-4bb8-b540-2745b78607f3",
+      "versions": [
+        {
+          "version_id": "ea1258a6-b937-4579-93af-a19cf9191e85",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 572,
+    "retainedPreviousClientAssets": 480,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "externalProtections": {
+      "edgeBurstRuleEnabled": true,
+      "requestsPer10SecondsPerIp": 120,
+      "blockSeconds": 10,
+      "costGuardCronEveryMinute": true,
+      "costGuardSecretPresent": true,
+      "costGuardPublicEndpoints": false,
+      "budgetLatchPreserved": true,
+      "budgetCutoffCurrentlyEnabled": false,
+      "wafVerifiedVia": "dashboard",
+      "settingsChanged": false
+    }
+  },
+  "browserVerification": {
+    "scope": "Pre-deployment local review of actual Welcome/AlphaShell and production CSS in an isolated frontend harness.",
+    "baseline": "cb60fe00cb6e1c04088b9f55f0b5b1904280028a",
+    "changedFiles": {
+      "app/page.tsx": "a0d8bfbabb5eda57c14e0ee03ccd108e60140effa95bd7e61afdd6896f254391",
+      "app/welcome.css": "6bf69a9aa8055bd27dfe0b13d2a03064269720af45f9121070d10df8bd0f7b4a",
+      "components/alpha-shell.tsx": "d3b173b550fa47a0350b6d793043af36c04554d839e00b107172d24661142d06",
+      "docs/rebuild-manifest.json": "a0410dfc54a9ee11d6fde5c5c288b976933a5d4e61282d28e00532dd062f95b4"
+    },
+    "axe": {
+      "axe-320.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          320,
+          568
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 39
+          }
+        ]
+      },
+      "axe-390.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          390,
+          844
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 39
+          }
+        ]
+      },
+      "axe-430.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          430,
+          932
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 39
+          }
+        ]
+      },
+      "axe-before-390.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          390,
+          844
+        ],
+        "violations": 2,
+        "violationIds": [
+          "landmark-complementary-is-top-level",
+          "region"
+        ],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 48
+          }
+        ]
+      },
+      "axe-desktop.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          1440,
+          900
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 49
+          }
+        ]
+      },
+      "axe-guide-430.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          430,
+          932
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 42,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 39
+          }
+        ]
+      },
+      "axe-menu-320.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          320,
+          568
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 42
+          }
+        ]
+      },
+      "axe-menu-390.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          390,
+          844
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 41
+          }
+        ]
+      },
+      "axe-text-spacing-320.json": {
+        "engine": "4.11.4",
+        "viewport": [
+          320,
+          568
+        ],
+        "violations": 0,
+        "violationIds": [],
+        "passes": 40,
+        "manualReview": [
+          {
+            "id": "color-contrast",
+            "nodes": 39
+          }
+        ]
+      }
+    },
+    "manualContrast": {
+      "meaningfulTextNodes": 20,
+      "minimumConservativeRatio": 5.852840028882372,
+      "allMeaningfulTextPassed": true,
+      "method": "Computed foreground colors against conservative gradient stop/background combinations. All meaningful text here is lighter than every background stop; the brightest stop is a conservative bound for these gradients. Decorative aria-hidden glyphs reviewed separately, not treated as meaningful text. This supplements axe incomplete results; not a pixel audit of desktop artwork."
+    },
+    "behavioralChecks": {
+      "skipNavigation": {
+        "focusVisible": true,
+        "outline": "solid",
+        "destination": "alpha-content"
+      },
+      "pauseMotion": {
+        "dataMotion": false,
+        "pressed": false,
+        "imageAnimationPlayState": "paused"
+      },
+      "dataMenuEscape": {
+        "focusTag": "SUMMARY",
+        "focusVisible": true,
+        "menuClosed": true,
+        "outline": "solid",
+        "outlineWidth": "2px"
+      },
+      "textSpacing320": {
+        "headerControlsOverlap": false,
+        "horizontalOverflow": false,
+        "viewport": [
+          320,
+          568
+        ]
+      },
+      "menu320": {
+        "horizontalOverflow": false,
+        "open": true,
+        "panel": {
+          "left": 56.66666793823242,
+          "right": 288.6666679382324,
+          "top": 169.7291717529297,
+          "width": 232
+        },
+        "viewport": [
+          320,
+          568
+        ],
+        "withinViewport": true
+      },
+      "finalMobileMetrics": {
+        "description": {
+          "background": "rgb(6, 16, 21)",
+          "font": "16px",
+          "lineHeight": "26.4px"
+        },
+        "horizontalOverflow": false,
+        "navDescription": {
+          "hidden": true,
+          "referenced": true
+        },
+        "primary": [
+          {
+            "height": 52,
+            "text": "Find my target \u2192",
+            "top": 665.71875,
+            "width": 278.66668701171875
+          },
+          {
+            "height": 49.83333587646485,
+            "text": "See how it works \u2193",
+            "top": 729.71875,
+            "width": 278.66668701171875
+          }
+        ],
+        "viewport": [
+          390,
+          844
+        ]
+      },
+      "reducedMotion": {
+        "sourceRulePreserved": true,
+        "osPreferenceEmulation": false
+      }
+    },
+    "checks": {
+      "productionBuild": "passed; build.log",
+      "typescriptNoEmit": "passed",
+      "sourceOnlyRebuildInputs": "passed: 581 files, live baseline update108",
+      "gitDiffWhitespace": "passed",
+      "cssCleanup": {
+        "status": "existing failure unchanged",
+        "updatedDuplicateDeclarations": 99,
+        "baselineDuplicateDeclarations": 99,
+        "scope": "scripts/check_style_cleanup.mjs; no automatic cleanup applied"
+      }
+    },
+    "limits": [
+      "Axe results supplement manual review; this is not a claim of full WCAG compliance or a whole-application audit.",
+      "Mobile gradient contrast incomplete nodes were reviewed separately; desktop artwork-related contrast incompletes remain outside this mobile change.",
+      "No physical iPhone/Safari or assistive-technology user test was performed.",
+      "OS reduced-motion emulation was not available. Existing reduced-motion CSS and runtime preference handling are preserved; Pause motion was exercised."
+    ],
+    "operations": {
+      "participantChanges": false,
+      "adminSession": false,
+      "consentChanges": false,
+      "researchContributions": false,
+      "sync": false,
+      "backupExport": false
+    }
+  },
+  "liveBrowserVerification": {
+    "scope": "Public live Welcome appearance, data menu and keyboard Escape/focus only; no account/admin session, consent changes or contributions.",
+    "mobile390": {
+      "artDisplay": "block",
+      "artGridArea": "artwork",
+      "copyBackground": "rgb(6, 16, 21)",
+      "copyGridArea": "copy",
+      "descriptionFont": "16px",
+      "descriptionLineHeight": "26.4px",
+      "descriptionReferenced": true,
+      "horizontalOverflow": false,
+      "primaryHeight": 52,
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    "narrow320": {
+      "copyBackground": "rgb(6, 16, 21)",
+      "headerOverlap": false,
+      "horizontalOverflow": false,
+      "viewport": [
+        320,
+        568
+      ]
+    },
+    "desktop": {
+      "artGridArea": "auto",
+      "copyGridArea": "auto",
+      "heroDisplay": "flex",
+      "horizontalOverflow": false,
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    "dataMenu": {
+      "background": "rgb(10, 28, 36)",
+      "open": true,
+      "withinViewport": true
+    },
+    "escape": {
+      "closed": true,
+      "focusTag": "SUMMARY",
+      "focusVisible": true
+    },
+    "physicalDevicesAndSafariTested": false,
+    "axeScope": "Pre-deployment isolated actual component harness; exact compiled assets verified after deployment."
+  },
+  "backupMetadata": {
+    "at": "2026-10-22T05:27:55.473659+00:00",
+    "sourceBaselineUpdate": 109,
+    "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
+    "sourceOnlyHandoverPassed": true,
+    "matchingCurrentReleaseBaseline": true,
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": false,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T05:28:05Z",
+    "dailyWorkflowActive": true
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "credentialsOrPrivateReceiptsIncluded": false
+  }
+}
