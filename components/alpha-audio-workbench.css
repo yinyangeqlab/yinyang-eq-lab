@@ -1,0 +1,542 @@
+/* 0.2 alpha presentation around the real production player and tuning engine.
+   No generated data, alternate audio graph or privacy-state styling is used. */
+.alpha-listening .shootout-content{max-width:1440px;margin-inline:auto;padding-inline:clamp(12px,2.4vw,32px)}
+.alpha-listening .shootout-view>.cards,.alpha-listening .personal-ab.cards{gap:clamp(8px,1.5vw,20px);margin-block:10px}
+.alpha-listening .listen-card{overflow:hidden;border-color:#35414b;background:#050709;border-radius:15px;transition:border-color 160ms ease,box-shadow 160ms ease}
+.alpha-listening .listen-card:hover,.alpha-listening .listen-card:focus-visible{border-color:#8ba7bb;box-shadow:0 0 0 1px #90c9f61a,0 10px 28px #0006}
+.alpha-listening .listen-card .curve-frame{height:clamp(160px,24vh,260px);background:#000}
+.alpha-listening .listen-card .card-bottom{padding:10px 14px}
+.alpha-listening .shootout-heading-row{gap:12px}
+.alpha-listening .shootout-heading-row h1{font-size:clamp(24px,2.6vw,36px);letter-spacing:-.045em;line-height:1.12}
+.alpha-listening .shootout-setup-control{min-height:40px}
+.alpha-listening .choice-controls{gap:10px}
+.alpha-listening .choice-controls>button{min-height:48px;border-radius:10px;transition:background-color 150ms ease,border-color 150ms ease,box-shadow 150ms ease,transform 150ms ease}
+.alpha-listening .choice-controls>button:not(:disabled):hover{transform:translateY(-1px)}
+.alpha-listening .choice-controls>button:active{transform:translateY(0)}
+.alpha-listening .personal-listen-status{margin-block:6px}
+.alpha-listening .personal-progress{margin-block:8px;background:#07100e;border-color:#2d4941;border-radius:10px}
+.alpha-audio-deck{min-width:0;contain:style}
+.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck{padding:12px 16px;row-gap:8px;border-radius:14px;background:#070b10;border-color:#314555;box-shadow:0 10px 30px #0003}
+.alpha-audio-deck .alpha-source-strip{grid-column:1/-1;display:flex;align-items:center;gap:6px 13px;flex-wrap:wrap;min-width:0;color:#adc0cd;font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums}
+.alpha-source-strip>span{min-width:0;overflow-wrap:anywhere}
+.alpha-source-strip .alpha-source-name{flex:1 1 220px;color:#edf6fb;font-size:14px;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alpha-listening .alpha-audio-deck .playback-topbar{margin:0;gap:8px}
+.alpha-listening .alpha-audio-deck .music-header{display:flex;align-items:center;min-width:0;gap:12px}
+.alpha-listening .alpha-audio-deck .music-header h2{font-size:16px}
+.alpha-listening .alpha-audio-deck .music-header>div>p{max-width:100ch;margin:4px 0;font-size:12px;line-height:1.5;color:#9cafbd}
+.alpha-listening .alpha-audio-deck .source-controls{padding:7px 0;border-block:1px solid #24333f;flex-wrap:wrap}
+.alpha-listening .alpha-audio-deck .source-controls .sample-row .music-meta{font-size:12px;line-height:1.45;font-weight:500;color:#afc2d0}
+.alpha-listening .alpha-audio-deck .playback-transport{min-width:0;min-height:52px;gap:10px}
+.alpha-listening .alpha-audio-deck .playback-secondary{gap:8px}
+.alpha-listening .alpha-audio-deck .player-row{margin:0;padding:0;background:#000;border-radius:9px;overflow:hidden;border-color:#2d4658}
+.alpha-listening .alpha-audio-deck .track-waveform{max-width:none}
+.alpha-listening .alpha-audio-deck .personal-track-details{gap:10px}
+.alpha-listening .alpha-audio-deck .music-details>summary,.alpha-listening .alpha-audio-deck .audio-stats>summary{min-height:36px;display:flex;align-items:center;gap:8px;color:#c3d7e4;font-size:12px;cursor:pointer}
+.alpha-listening .alpha-audio-deck .music-details>summary::before,.alpha-listening .alpha-audio-deck .audio-stats>summary::before{content:'▸';font-size:11px;color:#87acbf}
+.alpha-listening .alpha-audio-deck details[open]>summary::before{content:'▾'}
+.alpha-listening .alpha-audio-deck summary::marker{content:''}
+.alpha-listening .alpha-audio-deck summary::-webkit-details-marker{display:none}
+.alpha-audio-deck .alpha-playback-shortcuts,.alpha-tuning-shortcuts{grid-column:1/-1;margin:0;color:#8da6b8;font-size:11px;line-height:1.8}
+.alpha-playback-shortcuts span{margin-inline:3px;color:#526c7e}
+.alpha-playback-shortcuts kbd,.alpha-tuning-shortcuts kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;padding:0 4px;border:1px solid #395363;border-bottom-width:2px;border-radius:4px;background:#101b24;color:#d0e2ee;font:inherit}
+.alpha-listening .alpha-audio-deck .shootout-music-vote{margin:0;padding-top:6px;gap:6px 10px;border-top:1px solid #24333f}
+.alpha-listening .alpha-audio-deck .music-vote-explanation{font-size:11px;line-height:1.5}
+.alpha-listening select,.alpha-tuning select{color-scheme:dark}
+.alpha-listening select option,.alpha-listening select optgroup,.alpha-tuning select option,.alpha-tuning select optgroup{background:#101c25;color:#e3eef4}
+.alpha-listening select option:disabled,.alpha-tuning select option:disabled{color:#91a1ad}
+.alpha-listening .music-panel-host.persistent .alpha-source-strip,.alpha-listening .music-panel-host.persistent .alpha-playback-shortcuts{display:none}
+/* Curves remain the visual focus, with actual setup and playback directly below. */
+.alpha-tuning .pt-content{max-width:1500px;padding:18px clamp(12px,2.4vw,32px) 32px}
+.alpha-tuning .pt-workbench{gap:12px}
+.alpha-tuning .pt-chart-card{padding:14px 16px;border-radius:14px;background:#080e14;border-color:#355663}
+.alpha-tuning .pt-chart-card .pt-card-heading h2{font-size:18px;line-height:1.3}
+.alpha-tuning .pt-chart-surface{height:clamp(210px,30vh,330px)}
+.alpha-tuning .pt-chart-wrap{padding:5px 10px 8px;border-color:#314c59;box-shadow:inset 0 0 28px #153c4614}
+.alpha-tuning .pt-chart-meta{flex-wrap:wrap;justify-content:flex-end}
+.alpha-tuning .pt-axis-button{min-height:34px;padding:6px 10px;font-size:12px;border-radius:7px}
+.alpha-tuning .pt-axis-panel{margin:10px 0;padding:12px;background:#071118;border-color:#3c5868;border-radius:10px}
+.alpha-tuning .pt-axis-fields{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.alpha-tuning .pt-axis-fields label{font-size:11px}
+.alpha-tuning .pt-axis-fields input[type=number]{height:36px;font-size:13px}
+.alpha-tuning .pt-axis-fields label>span{bottom:10px}
+.alpha-tuning .pt-axis-actions{font-size:12px;flex-wrap:wrap;gap:8px}
+.alpha-tuning .pt-axis-actions button{min-height:34px;padding:6px 10px;font-size:12px}
+.alpha-tuning .pt-gain-controls{gap:8px}
+.alpha-tuning .pt-gain-item{padding:8px 10px;background:#0b171f;border-color:#304957;border-radius:8px}
+.alpha-tuning .pt-gain-item .pt-control strong{font-size:12px}
+.alpha-tuning .pt-gain-item .pt-control output{font-size:14px;margin-top:3px}
+.alpha-tuning .pt-gain-item .pt-control input[type=range]{min-height:28px}
+.alpha-tuning .pt-setup{gap:10px}
+.alpha-tuning .pt-setup .pt-baseline,.alpha-tuning .pt-setup .pt-headphones{padding:12px;gap:12px;background:#0a141c;border-color:#304957;border-radius:11px}
+.alpha-tuning .pt-cohort-note{font-size:11px;line-height:1.5}
+.alpha-tuning .pt-listen{padding:12px 16px;border-radius:12px;background:#091018;border-color:#304957;gap:8px}
+.alpha-tuning .pt-listen .pt-source-row{flex-wrap:wrap;gap:8px}
+.alpha-tuning .pt-listen .pt-source-row .pt-track-play,.alpha-tuning .pt-listen .pt-source-row .pt-file,.alpha-tuning .pt-listen .pt-source-row select{min-height:38px;font-size:12px}
+.alpha-tuning .pt-chart-card button,.alpha-tuning .pt-listen button,.alpha-tuning .pt-finalize button{transition:background-color 150ms ease,border-color 150ms ease,box-shadow 150ms ease}
+.alpha-tuning .pt-chart-card button:hover:not(:disabled),.alpha-tuning .pt-listen button:hover:not(:disabled){border-color:#83cdbf;box-shadow:0 0 14px #65d8ca12}
+.alpha-tuning .pt-gesture-guide{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;font-size:11px;color:#9ebbc7;margin:8px 0}
+.alpha-tuning .pt-gesture-guide label{display:flex;align-items:center;gap:6px;min-height:32px;color:#d2e9e7}
+.alpha-tuning .pt-gesture-guide input{accent-color:#71e6d3}
+.alpha-tuning .pt-placement-marker{cursor:ew-resize;touch-action:none;outline:none}
+.alpha-tuning .pt-placement-marker:focus-visible .pt-marker-halo{stroke:#fff;stroke-opacity:1;stroke-width:2px}
+.alpha-tuning .pt-placement-marker:hover .pt-marker-halo{fill-opacity:.24;stroke-opacity:1}
+.alpha-tuning .pt-placement-marker text{pointer-events:none}
+@media(max-width:980px){
+ .alpha-tuning .pt-axis-fields{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .alpha-tuning .pt-setup{grid-template-columns:1fr}
+ .alpha-tuning .pt-setup .pt-headphones .measurement-picker{grid-template-columns:30px 126px minmax(0,1fr) auto}
+ .alpha-tuning .pt-history{flex-wrap:wrap}
+ .alpha-listening .alpha-audio-deck .playback-transport{flex-wrap:wrap}
+}
+@media(max-width:639px){
+ .alpha-listening .shootout-content{padding-inline:10px}
+ .alpha-listening .shootout-view>.cards,.alpha-listening .personal-ab.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .alpha-listening .listen-card .curve-frame,.alpha-listening .personal-ab .listen-card .curve-frame{height:clamp(120px,21vh,175px)}
+ .alpha-listening .listen-card .card-bottom{padding:8px}
+ .alpha-listening .listen-card .card-bottom strong{font-size:14px}
+ .alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck{padding:10px;gap:7px}
+ .alpha-audio-deck .alpha-source-strip{gap:4px 10px;font-size:11px}
+ .alpha-source-strip .alpha-source-name{flex-basis:100%;font-size:13px}
+ .alpha-listening .alpha-audio-deck .playback-topbar .music-header>div>p{font-size:11px;line-height:1.5}
+ .alpha-listening .alpha-audio-deck .playback-transport button{min-width:40px;min-height:40px}
+ .alpha-listening .alpha-audio-deck .source-controls .sample-row{min-width:0;width:100%}
+ .alpha-listening .alpha-audio-deck select{max-width:100%;font-size:16px}
+ .alpha-listening .choice-controls{gap:7px}
+ .alpha-listening .choice-controls>button{font-size:14px;min-height:48px}
+ .alpha-tuning .pt-content{padding-inline:10px}
+ .alpha-tuning .pt-chart-card{padding:11px 10px}
+ .alpha-tuning .pt-chart-card>.pt-card-heading{align-items:flex-start;flex-direction:column;gap:6px}
+ .alpha-tuning .pt-chart-meta{width:100%;justify-content:flex-start;gap:6px}
+ .alpha-tuning .pt-chart-surface{height:230px}
+ .alpha-tuning .pt-axis-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .alpha-tuning .pt-gain-controls{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .alpha-tuning .pt-gain-item:last-child{grid-column:1/-1}
+ .alpha-tuning .pt-gain-item .pt-control small{white-space:normal}
+ .pt-shell.alpha-tuning .pt-gain-item .pt-control{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:4px 8px}
+ .pt-shell.alpha-tuning .pt-gain-item .pt-control>span{grid-column:1/-1;grid-row:1;padding:0;overflow:visible;text-overflow:clip;white-space:normal}
+ .pt-shell.alpha-tuning .pt-gain-item .pt-control strong{display:block;font-size:12px;line-height:1.4;white-space:normal}
+ .pt-shell.alpha-tuning .pt-gain-item .pt-control input[type=range]{grid-column:1;grid-row:2;width:100%;min-width:0;margin:0;min-height:30px}
+ .pt-shell.alpha-tuning .pt-gain-item .pt-control output{position:static;grid-column:2;grid-row:2;margin:0;font-variant-numeric:tabular-nums}
+ .pt-shell.alpha-tuning .pt-region-tabs button{min-height:44px;padding:5px 4px}
+ .pt-shell.alpha-tuning .pt-region-tabs strong{display:block;font-size:11px;line-height:1.3;white-space:normal;text-wrap:balance}
+ .pt-shell.alpha-tuning .pt-region-tabs small{font-size:10px;line-height:1.4}
+ .pt-shell.alpha-tuning .pt-current-target{flex-wrap:wrap;gap:3px 8px;white-space:normal}
+ .pt-shell.alpha-tuning .pt-current-target>span{flex-basis:100%}
+ .pt-shell.alpha-tuning .pt-current-target strong,.pt-shell.alpha-tuning .pt-current-target small{overflow:visible;white-space:normal;overflow-wrap:anywhere}
+ .pt-shell.alpha-tuning .pt-legend{flex-wrap:wrap;gap:5px 14px;font-size:10px;line-height:1.5}
+ .pt-shell.alpha-tuning .pt-legend>span{white-space:nowrap}
+ .pt-shell.alpha-tuning .pt-legend>span:last-child{flex-basis:100%;justify-content:center;white-space:normal}
+ .alpha-tuning .pt-setup .pt-headphones .measurement-picker{grid-template-columns:30px 126px minmax(0,1fr)}
+ .alpha-tuning .pt-listen{padding:11px 10px}
+ .alpha-tuning .pt-listen .pt-source-row select{font-size:16px;flex:1 1 100%;max-width:none}
+ .alpha-tuning .pt-listen .pt-source-row .pt-file{flex:1 1 auto;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){.alpha-listening *, .alpha-tuning *{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+
+/* Keep the persistent deck mounted for continuity, but omit empty off-page chrome. */
+.alpha-listening .music-panel-host[hidden]{display:none!important}
+
+/* One listening desk: setup, target pair, and transport share the same rhythm.
+   Scope these rules to the full player; its persistent dock keeps its geometry. */
+.shell.alpha-listening{--desk-line:#ffffff18;--desk-muted:#99adb5;--desk-teal:#79dacb;--desk-surface:#080d10}
+.shell.alpha-listening .shootout-content{padding-top:14px}
+.shell.alpha-listening .shootout-setup{margin-bottom:14px}
+.shell.alpha-listening .shootout-setup-content{padding:16px 18px 10px;border:1px solid var(--desk-line);border-radius:14px;background:linear-gradient(120deg,#0d1518,#050809 70%)}
+.shell.alpha-listening .shootout-setup-control{width:100%;grid-template-columns:auto auto minmax(0,1fr);justify-content:start;gap:8px 12px;margin:4px 0 10px}
+.shell.alpha-listening .shootout-setup-control :is(.shootout-setup-toggle,.listening-reminder-link){width:auto;min-height:36px;padding:7px 13px;border:1px solid #ffffff21;border-radius:8px;background:#0c1418;box-shadow:none;color:#c1d4d9;font-size:12px}
+.shell.alpha-listening .shootout-setup-control .setup-auto-hide-note{grid-column:3;grid-row:1;text-align:right;color:#8b9fa8;font-size:11px}
+.shell.alpha-listening .alpha-setup-summary{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px;margin:0;font-size:12px;line-height:1.6;color:#a8c9c7;overflow-wrap:anywhere}
+.shell.alpha-listening .shootout-heading-row{grid-template-columns:minmax(0,1fr) auto;gap:10px 24px;margin:0 0 16px;align-items:center}
+.shell.alpha-listening .shootout-heading-row h1{margin:0;font-size:clamp(25px,2.5vw,34px);line-height:1.12;letter-spacing:-.04em}
+.shell.alpha-listening .shootout-heading-row p{display:block;margin:7px 0 0;max-width:76ch;color:#9db0b9;font-size:12px;line-height:1.6}
+.shell.alpha-listening .shootout-status-slot{grid-column:1/-1;grid-row:2}
+.shell.alpha-listening .shootout-status-slot:empty{display:none}
+.shell.alpha-listening .shootout-heading-aside{grid-column:2;grid-row:1;display:flex;align-items:center;gap:14px;width:auto;justify-items:stretch}
+.shell.alpha-listening .shootout-heading-aside>.count-pill{margin:0;padding:0 14px 0 0;border:0;border-right:1px solid #ffffff20;border-radius:0;background:none;box-shadow:none;color:#9bc6c2;font-size:10px;line-height:1.5}
+.shell.alpha-listening .shootout-heading-aside .loudness-control{width:230px;max-width:100%;padding:8px 10px;border:1px solid #9677af40;background:#17101e;box-shadow:none;border-radius:8px}
+.shell.alpha-listening .shootout-heading-aside .loudness-control>span{color:#b6a8c2;font-size:10px;line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+.shell.alpha-listening .shootout-heading-aside .loudness-control.locked{width:250px;min-width:0;box-sizing:border-box;grid-template-columns:minmax(0,1fr) auto}
+.shell.alpha-listening .shootout-heading-aside .loudness-control.locked>strong{min-width:0;white-space:normal;line-height:1.4}
+.shell.alpha-listening .shootout-heading-aside .loudness-locked-value{min-width:0;max-width:100%;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.shell.alpha-listening .shootout-heading-aside .loudness-lock-status{flex:none;min-width:30px}
+.shell.alpha-listening .tournament-modes{width:100%;max-width:none;margin:0 0 14px;gap:8px}
+.shell.alpha-listening .tournament-modes .tournament-mode{min-height:62px;padding:12px 14px;border-radius:10px;box-shadow:none;transition:border-color 160ms ease,background-color 160ms ease,box-shadow 160ms ease}
+.shell.alpha-listening .tournament-modes .tournament-mode[aria-pressed=true]{box-shadow:inset 0 -2px 0 currentColor}
+.shell.alpha-listening .tournament-modes .tournament-mode:hover{box-shadow:0 0 18px #75d8cb15}
+.shell.alpha-listening .measurement-picker{margin:0;padding:3px 0;gap:10px;grid-template-columns:32px 160px minmax(0,1fr) auto}
+.shell.alpha-listening .measurement-picker .headphone-mark svg{width:28px;height:28px}
+.shell.alpha-listening .measurement-picker .headphone-search input{min-height:42px;border:1px solid #3b5961;border-radius:8px;background:#101d22;font-weight:550;box-shadow:none}
+.shell.alpha-listening .measurement-picker .add-measurement-button{min-height:42px;max-width:260px;border:1px solid #31545c;border-radius:8px;padding:8px 12px;font-size:11px;white-space:normal;text-align:left;background:#0c171b;box-shadow:none}
+.shell.alpha-listening .measurement-picker .headphone-search-results{border-color:#506c72;background:#10191e}
+.shell.alpha-listening .channel-match-choice,.shell.alpha-listening .personal-channel-settings{margin:8px 0 0;padding:8px 0 0;border:0;border-top:1px solid var(--desk-line);background:none;color:#9eb4bc;font-size:12px}
+.shell.alpha-listening .personal-setup-note{margin:8px 0 0;font-size:11px;line-height:1.5;color:#8da4ad}
+.shell.alpha-listening .session-strip{padding:7px 0;font-size:12px;color:#a7bac1;font-weight:500}
+.shell.alpha-listening .empty.compact{padding:30px 20px;background:#030505;border:1px dashed #ffffff20;border-radius:12px}
+.shell.alpha-listening .empty.compact h2{margin:0 0 8px;color:#d4e2e5;font-size:22px;letter-spacing:-.02em}
+.shell.alpha-listening .empty.compact p{margin:7px auto 20px;max-width:66ch;font-size:13px;line-height:1.6}
+.shell.alpha-listening .empty-measurement-actions button{min-height:42px;border-radius:8px;font-size:13px;box-shadow:none}
+
+/* Target edits are distinct from song edits; only applying a pair is primary. */
+.shell.alpha-listening .pair-picker{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px 16px;margin:12px 0;padding:12px 0;border-block:1px solid var(--desk-line)}
+.alpha-target-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.shell.alpha-listening .pair-picker .target-search-field{min-width:0;color:#ffadc0;font-size:11px;letter-spacing:.015em}
+.shell.alpha-listening .pair-picker .target-search-field:nth-child(2){color:#a9d6fc}
+.shell.alpha-listening .pair-picker .target-search-input{height:40px;min-height:40px;padding:8px 10px;margin-top:5px;border:1px solid #b663794d;border-radius:8px;background:#11090e;box-shadow:none;color:#fae1e7;font-size:13px;font-weight:550}
+.shell.alpha-listening .pair-picker .target-search-field:nth-child(2) .target-search-input{border-color:#6192b54d;background:#09111a;color:#d7edff}
+.alpha-target-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+.shell.alpha-listening .pair-picker :is(.alpha-target-actions,.alpha-song-action) button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 11px;border:1px solid #38535b;border-radius:8px;background:#0c181d;box-shadow:none;color:#bdd4dc;font-size:12px;font-weight:550;line-height:1.35;white-space:normal}
+.shell.alpha-listening .pair-picker .alpha-target-actions .alpha-primary-action{background:#65d4c2;border-color:#81e4d3;color:#05241f;font-weight:750}
+.shell.alpha-listening .pair-picker .alpha-song-action{grid-column:2;justify-self:end}
+.shell.alpha-listening .pair-picker .alpha-song-action button{background:transparent;border-color:#ffffff24;color:#a8bfc8}
+.shell.alpha-listening .pair-picker .pending-indicator{color:#f1cf90;font-size:10px;display:block}
+.shell.alpha-listening .pair-picker .has-pending,.shell.alpha-listening .pair-picker.has-pending{border-color:#ffffff20}
+
+/* The real source waveform, smooth spectrum and card interactions stay intact. */
+.shell.alpha-listening .listen-card{border-color:#ffffff1f;border-radius:12px;background:#020304;box-shadow:none}
+.shell.alpha-listening .listen-card:first-child{border-top-color:#c950735f}
+.shell.alpha-listening .listen-card:nth-child(2){border-top-color:#448fc15f}
+.shell.alpha-listening .listen-card .curve-frame{background:#000;height:clamp(170px,25vh,270px)}
+.shell.alpha-listening .listen-card .card-bottom{border-top-color:#ffffff12;min-height:50px;padding:9px 12px}
+.shell.alpha-listening .listen-card .card-bottom button{border-radius:7px;min-height:34px;font-size:12px;box-shadow:none}
+.shell.alpha-listening .comparison-listening-footer{margin-bottom:8px}
+.shell.alpha-listening section.matched-passage-box{padding:6px 10px;border-radius:9px;border-color:#a58b503d;background:#1a170f}
+.shell.alpha-listening section.matched-passage-box :is(.passage-play,.passage-new){min-height:36px;border-radius:7px;box-shadow:none}
+.shell.alpha-listening section.matched-passage-box .passage-play{font-weight:650;background:#40341d;border-color:#a58b5070;color:#f3dfaf}
+.shell.alpha-listening .personal-duel>h2{margin:18px 0 5px;font-size:21px;letter-spacing:-.025em}
+.shell.alpha-listening .personal-duel>p:not(.personal-listen-status){font-size:12px;line-height:1.6;color:#9fb1bb}
+.shell.alpha-listening .personal-progress{padding:12px 14px;gap:7px;border-color:#36524a66;background:#0a1412}
+.shell.alpha-listening .personal-progress>div:first-child{gap:8px 18px}
+.shell.alpha-listening .personal-progress>p{margin:0;font-size:11px;color:#8fa89f;line-height:1.6}
+.shell.alpha-listening .personal-progress .personal-actions{margin:4px 0;gap:8px}
+.shell.alpha-listening .personal-progress .personal-actions>button{min-height:36px;padding:7px 11px;border-radius:7px;border-color:#ffffff23;background:#11221c;color:#bbd9c9;font-size:12px;box-shadow:none}
+.shell.alpha-listening .personal-progress .personal-progress-help summary{min-height:28px;font-size:11px;color:#91b1a2}
+.shell.alpha-listening .alpha-session-start{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px;padding:16px 0;border-block:1px solid var(--desk-line)}
+.shell.alpha-listening .alpha-session-start h2{margin:0;font-size:20px}
+.shell.alpha-listening .alpha-session-start p{flex-basis:100%;margin:0;color:#9fb4bd;font-size:12px;line-height:1.6}
+.shell.alpha-listening .alpha-session-start-copy{flex:1 1 360px;min-width:0}
+.shell.alpha-listening .alpha-session-start-copy p{margin-top:6px}
+.shell.alpha-listening .alpha-session-start-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px}
+.shell.alpha-listening .alpha-session-start-actions label{display:flex;align-items:center;gap:10px}
+.shell.alpha-listening .alpha-session-start-actions select{min-height:40px;padding:7px 10px;border:1px solid #39545d;border-radius:7px;background:#10212a;color:#d8edf0}
+.shell.alpha-listening .alpha-session-start label{font-size:12px}
+.shell.alpha-listening .alpha-session-utilities{justify-content:center;padding:6px 0 10px;gap:8px}
+.shell.alpha-listening .alpha-session-utilities button{min-height:36px;padding:7px 11px;font-size:12px;box-shadow:none;border-color:#ffffff24;background:#0d161a;border-radius:7px}
+
+/* A single track identity, visible source specs, familiar transport and waveform. */
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck{padding:16px 18px;margin-top:16px;gap:10px;border:1px solid #ffffff20;border-radius:14px;background:#080d10;box-shadow:none}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-topbar{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;width:100%;justify-items:stretch}
+.shell.alpha-listening .music-panel-host:not(.persistent) .music-header{grid-column:1;grid-row:auto;display:flex;align-items:center;justify-content:space-between;width:100%;gap:16px}
+.shell.alpha-listening .alpha-track-heading{min-width:0;flex:1}
+.shell.alpha-listening .alpha-track-heading>.mini-label{display:block;margin:0 0 5px;color:#72c5ba;font-size:10px;font-weight:650;letter-spacing:.12em}
+.shell.alpha-listening .alpha-track-heading .playback-title-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px}
+.shell.alpha-listening .alpha-track-heading h2{margin:0;max-width:100%;font-size:20px;font-weight:650;letter-spacing:-.025em;line-height:1.3;overflow-wrap:anywhere}
+.shell.alpha-listening .alpha-track-heading .playback-time{margin:0;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums;color:#a4bbc5}
+.shell.alpha-listening .music-header .alpha-track-artist{display:block;margin:5px 0 0;color:#9aafb8;font-size:12px;line-height:1.5}
+.shell.alpha-listening .alpha-source-strip{justify-content:flex-start;gap:4px 0;padding:0;color:#99afb9;font-size:11px;line-height:1.7}
+.shell.alpha-listening .alpha-source-strip>span{padding-right:12px;margin-right:12px;border-right:1px solid #ffffff20}
+.shell.alpha-listening .alpha-source-strip>span:last-child{border:0;padding:0;margin:0}
+.shell.alpha-listening .alpha-source-strip .waveform-source-caption{display:block;font-size:10px;color:#7f9ca9}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls{width:100%;padding:10px 0;margin:0;gap:8px 14px;border-block:1px solid #ffffff10;justify-content:flex-start;text-align:left}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls .sample-row{display:flex;align-items:center;justify-content:flex-start;gap:8px 14px;flex-wrap:wrap;min-width:0}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls .sample-row .music-meta{flex:1 1 250px;text-align:left;font-size:11px;color:#95aab3}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-source-choice{flex:0 1 auto;gap:10px;width:auto;font-size:12px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-source-choice select{min-height:38px;min-width:150px;border-color:#3b5862;border-radius:7px;background:#11212a;color:#d5e8ee;font-size:12px}
+.shell.alpha-listening .research-music-source{margin:0}
+.shell.alpha-listening .research-source-fields{gap:8px 18px}
+.shell.alpha-listening .research-source-fields p{font-size:11px;margin:0;text-align:left;color:#9aaeb7}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls .alpha-song-action{flex:none;align-self:center}
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-song-action button{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 11px;border:1px solid #3a555e;border-radius:7px;background:#0d1a20;color:#b9d3dc;font-size:12px;font-weight:500;box-shadow:none}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls .sample-row{flex:1 1 350px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;width:fit-content;max-width:100%;margin:2px auto;padding:4px 0;min-height:52px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport button{min-width:36px;min-height:36px;border-radius:7px;box-shadow:none;transition:background-color 140ms ease,border-color 140ms ease,box-shadow 140ms ease}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play{width:48px;height:48px;min-height:48px;border:1px solid #8ddad2;background:#72d8cb;color:#072820;border-radius:50%;box-shadow:0 0 18px #6ed6c516}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play:hover{background:#a2eee1;box-shadow:0 0 20px #75d9c932}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .waveform-zoom{padding:3px 5px;border:1px solid #ffffff18;border-radius:8px;background:#060a0e;gap:5px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .waveform-zoom button{border:0;background:#14232b;color:#b9d7e2}
+.shell.alpha-listening .music-panel-host:not(.persistent) .waveform-zoom button:disabled{color:#536571;background:#0d151b;opacity:1}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-dynamics{padding-right:10px;border-right:1px solid #ffffff1c}
+.shell.alpha-listening .music-panel-host:not(.persistent) .player-row{margin:0;border:1px solid #20303b;border-radius:9px;background:#000;box-shadow:none}
+.shell.alpha-listening .music-panel-host:not(.persistent) .track-waveform{background:#000;min-height:112px}
+.shell.alpha-listening .alpha-playback-shortcuts{margin:0;color:#8099a5;font-size:10px;text-align:center;line-height:1.8}
+.shell.alpha-listening .alpha-audio-deck .shootout-music-vote{padding:10px 0;margin:0;border-block:1px solid #ffffff10;justify-content:flex-start;text-align:left;gap:7px 10px}
+.shell.alpha-listening .alpha-audio-deck .shootout-music-vote button{min-height:32px;border-radius:6px;font-size:11px;box-shadow:none}
+.shell.alpha-listening .alpha-audio-deck .music-vote-explanation{color:#8da6b0;font-size:10px;text-align:left;line-height:1.6}
+.shell.alpha-listening .alpha-audio-deck :is(.music-details,.audio-stats){border:0;border-top:1px solid #ffffff10;border-radius:0;background:transparent;padding:0;margin:0;box-shadow:none;min-width:0}
+.shell.alpha-listening .alpha-audio-deck :is(.music-details,.audio-stats)>summary{display:flex;align-items:center;flex-wrap:wrap;gap:7px;min-height:34px;padding:5px 0;color:#b1c7d0;font-size:11px;line-height:1.6;font-weight:500;white-space:normal}
+.shell.alpha-listening .alpha-audio-deck :is(.music-details,.audio-stats)>p{display:block!important;margin:5px 0 10px;color:#9cafb8;font-size:12px;line-height:1.7;max-width:110ch}
+.shell.alpha-listening .alpha-audio-deck .playback-privacy-label{color:#7ec9bd;font-weight:600}
+.shell.alpha-listening .alpha-audio-deck .playback-privacy summary{color:#99afb9;font-size:11px}
+.shell.alpha-listening .alpha-audio-deck .personal-track-details{gap:0}
+.shell.alpha-listening .alpha-audio-deck .live-audio-stats{padding:10px 12px;border:1px solid #ffffff13;border-radius:8px;background:#030708}
+.shell.alpha-listening .alpha-audio-deck .live-stats-heading{gap:6px 14px;color:#a6bbc4}
+.shell.alpha-listening .alpha-audio-deck .live-stats-heading strong{font-size:11px;font-weight:600}
+.shell.alpha-listening .alpha-audio-deck .live-stats-heading span{font-size:10px}
+.shell.alpha-listening .alpha-audio-deck .live-stats-grid{gap:8px}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics{padding:0;margin:0;border:0;border-top:1px solid #ffffff10;border-radius:0;background:transparent;min-width:0}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics>summary{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:34px;padding:5px 0;color:#b1c7d0;font-size:11px;font-weight:500;line-height:1.6;cursor:pointer}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics>summary:before{content:"▸"}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics[open]>summary:before{content:"▾"}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics>summary span{font-size:10px;color:#8099a5}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics>p{margin:5px 0 10px;color:#9cafb8;font-size:12px;line-height:1.7;max-width:110ch}
+.shell.alpha-listening .alpha-audio-deck .audio-diagnostics .live-stats-grid{margin-bottom:10px}
+.shell.alpha-listening .alpha-audio-deck .live-branch-state{display:block;margin-top:3px;color:#8099a5;font-size:10px;font-weight:500}
+.shell.alpha-listening .alpha-audio-deck [data-live-audible="true"] .live-branch-state{color:#e2f2ef}
+@media(max-width:639px){.shell.alpha-listening .alpha-audio-deck .audio-diagnostics .live-stats-grid>div{grid-template-columns:1fr}.shell.alpha-listening .alpha-audio-deck .audio-diagnostics .live-stats-grid strong{display:flex;justify-content:space-between;align-items:center}.shell.alpha-listening .alpha-audio-deck .audio-diagnostics .live-branch-state{margin:0}.shell.alpha-listening .alpha-audio-deck .audio-diagnostics .live-stats-grid span{justify-content:space-between}}
+.shell.alpha-listening .personal-music-settings{padding:10px 0;border:0;border-bottom:1px solid var(--desk-line);border-radius:0;background:transparent;box-shadow:none;margin:0 0 10px}
+.shell.alpha-listening .personal-music-fields{gap:10px 16px}
+.shell.alpha-listening .personal-music-fields label{font-size:11px;color:#9bb9c1}
+.shell.alpha-listening .personal-music-fields select{min-height:38px;font-size:12px;border-radius:7px;background:#11212a;color:#dfedf2;border-color:#3d5962}
+.shell.alpha-listening .personal-music-help summary{font-size:11px;min-height:30px;color:#92aab4}
+.shell.alpha-listening :is(button,a,input,select,summary):focus-visible{outline:2px solid #94e4d7;outline-offset:3px}
+.shell.alpha-listening :is(button,summary){-webkit-tap-highlight-color:transparent}
+
+@media(max-width:1100px){
+ .shell.alpha-listening .shootout-heading-aside{gap:10px}
+ .shell.alpha-listening .shootout-heading-aside>.count-pill{display:none}
+ .shell.alpha-listening .measurement-picker{grid-template-columns:30px 146px minmax(0,1fr)}
+ .shell.alpha-listening .measurement-picker .add-measurement-button{grid-column:3;justify-self:start;max-width:none;min-height:34px;font-size:10px}
+ .shell.alpha-listening .pair-picker{grid-template-columns:minmax(0,1fr)}
+ .shell.alpha-listening .pair-picker .alpha-song-action{grid-column:1;grid-row:2;justify-self:end}
+ .shell.alpha-listening .alpha-target-actions{padding-right:130px}
+}
+@media(max-width:700px){
+ .shell.alpha-listening .shootout-setup-content{padding:12px 12px 10px}
+ .shell.alpha-listening .shootout-setup-control{grid-template-columns:1fr 1fr;gap:6px 8px}
+ .shell.alpha-listening .shootout-setup-control .setup-auto-hide-note{grid-column:1/-1;grid-row:2;text-align:left;font-size:10px}
+ .shell.alpha-listening .shootout-setup-control :is(.shootout-setup-toggle,.listening-reminder-link){min-height:40px;width:100%}
+ .shell.alpha-listening .shootout-heading-row{grid-template-columns:minmax(0,1fr);gap:12px;margin-bottom:12px}
+ .shell.alpha-listening .shootout-heading-aside{grid-column:1;grid-row:auto;justify-content:space-between;width:100%}
+ .shell.alpha-listening .shootout-heading-aside>.count-pill{display:none}
+ .shell.alpha-listening .shootout-heading-aside .loudness-control,.shell.alpha-listening .shootout-heading-aside .loudness-control.locked{width:100%;min-width:0;grid-template-columns:minmax(0,1fr) auto}
+ .shell.alpha-listening .measurement-picker{grid-template-columns:28px minmax(0,1fr);gap:8px}
+ .shell.alpha-listening .measurement-picker .headphone-type-switch{justify-self:start}
+ .shell.alpha-listening .measurement-picker .headphone-search{grid-column:1/-1}
+ .shell.alpha-listening .measurement-picker .headphone-search input{font-size:16px}
+ .shell.alpha-listening .measurement-picker .add-measurement-button{grid-column:1/-1;width:100%;min-height:40px;font-size:11px}
+ .shell.alpha-listening .tournament-modes .tournament-mode{min-height:58px;padding:10px;font-size:12px}
+ .shell.alpha-listening .pair-picker{gap:9px;margin:10px 0}
+ .shell.alpha-listening .alpha-target-fields{gap:8px}
+ .shell.alpha-listening .pair-picker .target-search-input{font-size:16px;min-height:42px}
+ .shell.alpha-listening .alpha-target-actions{padding-right:0;gap:6px}
+ .shell.alpha-listening .pair-picker .alpha-song-action{grid-row:3;justify-self:stretch}
+ .shell.alpha-listening .pair-picker .alpha-song-action button{width:100%}
+ .shell.alpha-listening .pair-picker .alpha-target-actions button{flex:1 1 85px;min-height:42px;padding:7px;font-size:11px}
+ .shell.alpha-listening .listen-card .curve-frame,.shell.alpha-listening .personal-ab .listen-card .curve-frame{height:160px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck{padding:12px;gap:8px;margin-top:12px}
+ .shell.alpha-listening .alpha-track-heading h2{font-size:18px}
+ .shell.alpha-listening .alpha-source-strip{font-size:10px}
+ .shell.alpha-listening .alpha-source-strip>span{margin-right:8px;padding-right:8px}
+ .shell.alpha-listening .alpha-source-strip .waveform-source-caption{flex-basis:100%;border:0;margin:2px 0 0;padding:0}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .source-controls .sample-row .music-meta{flex-basis:100%}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-source-choice{width:100%;justify-content:space-between}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-source-choice select{min-width:0;max-width:100%;font-size:16px;flex:1}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport{gap:8px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport button{min-height:40px;min-width:40px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-dynamics{padding-right:5px;gap:5px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .waveform-zoom{gap:3px;padding:2px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .waveform-zoom button{min-width:30px}
+ .shell.alpha-listening .personal-music-fields select{font-size:16px;min-height:42px}
+ .shell.alpha-listening .alpha-audio-deck :is(.music-details,.audio-stats)>summary{min-height:40px}
+ .shell.alpha-listening .alpha-session-start .primary{width:100%;min-height:44px;white-space:normal}
+}
+@media(max-width:360px){
+ .shell.alpha-listening .shootout-heading-aside{flex-wrap:wrap}
+ .shell.alpha-listening .shootout-heading-aside>.count-pill{border:0}
+ .shell.alpha-listening .shootout-heading-aside .loudness-control{width:100%}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport{gap:6px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-dynamics{flex-basis:100%;justify-content:center;border-right:0;padding:0}
+}
+
+/* Loudness is compact setup information, with the original native selector. */
+.shell.alpha-listening .shootout-heading-aside .loudness-control,.shell.alpha-listening .shootout-heading-aside .loudness-control.locked{width:auto;max-width:100%;min-width:0;grid-template-columns:auto auto;align-items:center;justify-content:start;gap:4px 8px;padding:4px 0;border:0;border-radius:0;background:transparent;box-shadow:none;color:var(--desk-muted)}
+.shell.alpha-listening .shootout-heading-aside .loudness-control>strong{font-size:11px;font-weight:500;letter-spacing:normal;white-space:normal;color:inherit;line-height:1.4}
+.shell.alpha-listening .shootout-heading-aside .loudness-control b{font-size:12px;font-weight:600;letter-spacing:normal;color:inherit}
+.shell.alpha-listening .shootout-heading-aside .loudness-control select{min-height:32px;padding:4px 6px;color:inherit;font-size:12px;font-weight:600}
+.shell.alpha-listening .shootout-heading-aside .loudness-control>.loudness-select-wrap{min-width:0}
+.shell.alpha-listening .shootout-heading-aside .loudness-control>.loudness-select-wrap .loudness-selected-label{color:inherit;font-size:12px;font-weight:600}
+.shell.alpha-listening .shootout-heading-aside .loudness-control>span:not(.loudness-warning){position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shell.alpha-listening .shootout-heading-aside .loudness-control .loudness-lock-status{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:0;color:inherit}
+.shell.alpha-listening .shootout-heading-aside .loudness-control .loudness-lock-status svg{width:12px;height:12px}
+.shell.alpha-listening .shootout-heading-aside .loudness-control .loudness-lock-status small{font-size:10px;line-height:1.4}
+
+/* Transport stays easy to find, with the site's rounded rectangular controls. */
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play{width:64px;height:40px;min-height:40px;border-radius:8px}
+.pt-shell.alpha-tuning .pt-deck-actions button.pt-deck-play{width:64px;height:40px;min-height:40px;border-radius:8px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-dynamics-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:auto;padding:7px 10px}
+.shell.alpha-listening .deck-dynamics-label{font-size:11px;font-weight:500;line-height:1.4}
+.shell.alpha-listening .shootout-vote-actions .voting-row{margin-top:14px}
+
+/* Keep the instrument immediately below A/B; music selection follows the decision. */
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck{padding:0;margin-top:10px;gap:6px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport{grid-column:1/-1;display:flex;width:100%;min-height:44px;margin:0;padding:6px 9px;border:1px solid #2c3b43;border-bottom:0;border-radius:8px 8px 0 0;background:#0b1116;gap:8px;justify-content:center}
+.shell.alpha-listening .music-panel-host:not(.persistent) .player-row{grid-column:1/-1;height:88px;min-height:88px;margin:-6px 0 0;border:1px solid #2c3b43;border-top:0;border-radius:0 0 8px 8px;background:#000}
+.shell.alpha-listening .music-panel-host:not(.persistent) .player-row .track-waveform.compact{height:100%;min-height:0;padding:6px 8px;box-sizing:border-box}
+.shell.alpha-listening .music-panel-host:not(.persistent) .player-row .track-waveform.compact .waveform-canvas-area{height:100%}
+.shell.alpha-listening .music-panel-host:not(.persistent) .player-row .track-waveform.compact canvas{height:100%}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .playback-time{position:static;flex:none;margin-left:8px;gap:5px;color:#9eafb8;font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:82px;height:38px;min-height:38px;padding:5px 10px;border-radius:7px;border-color:#536570;background:#121a20;color:#edf3f6;box-shadow:inset 0 1px #ffffff0a}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play:hover{border-color:#9caeb8;background:#202b33;color:#fff;box-shadow:0 0 13px #ff526f12,0 0 13px #48b8ff12}
+.shell.alpha-listening .deck-play-label{font-size:12px;font-weight:600;line-height:1}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-dynamics-toggle[aria-pressed=true]{background:#29343c;border-color:#a9b8c1;color:#fff}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-topbar{margin:5px 0 0;padding:10px 12px;border:1px solid #ffffff12;border-radius:8px;background:#080d10;gap:7px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-track-heading h2{font-size:16px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .playback-title-line{min-height:0}
+.shell.alpha-listening .music-panel-host:not(.persistent) .source-controls{padding:6px 0 0;border-bottom:0}
+.shell.alpha-listening .alpha-audio-deck>.shootout-vote-actions,.shell.alpha-listening .alpha-audio-deck>.personal-votes{grid-column:1/-1;width:100%;margin:4px 0}
+.shell.alpha-listening .alpha-audio-deck>.personal-comparison-actions{grid-column:1/-1;width:100%;margin:4px 0}
+.shell.alpha-listening .alpha-audio-deck :is(.comparison-listening-footer,.personal-listen-status){margin-block:4px}
+.shell.alpha-listening .alpha-audio-deck .matched-passage-box{margin-block:5px;padding:8px 10px}
+.shell.alpha-listening .alpha-audio-deck>.shootout-vote-actions .voting-row{margin-top:0}
+.shell.alpha-listening .pair-picker .alpha-target-actions .alpha-primary-action{background:#162027;border-color:#637780;color:#e4edf1}
+.shell.alpha-listening .pair-picker .alpha-target-actions .alpha-primary-action:hover{background:#25323b;border-color:#9aabb4}
+.shell.alpha-listening .single-listen.switch-to-a{background:#210d14;border-color:#ff526f;color:#ffd4de}
+.shell.alpha-listening .single-listen.switch-to-b{background:#0d1a29;border-color:#48b8ff;color:#d3ecff}
+.shell.alpha-listening .shootout-heading-row{margin-bottom:10px;gap:8px 16px}
+.shell.alpha-listening .shootout-heading-row h1{font-size:clamp(22px,2vw,28px)}
+.shell.alpha-listening .admin-test-notice{margin:5px 0;padding:6px 10px;font-size:10px;line-height:1.5}
+.shell.alpha-listening .admin-test-notice+.shootout-setup .alpha-setup-intro{display:none}
+
+/* Secondary tools stay available without taking a full row of tabs. */
+.shootout-tools-menu{position:relative;flex:none}
+.shootout-tools-menu>summary{display:flex;align-items:center;gap:12px;min-height:34px;padding:6px 10px;border:1px solid #34454e;border-radius:6px;background:#0d161c;color:#c1d0d8;font-size:12px;cursor:pointer;list-style:none}
+.shootout-tools-menu>summary::-webkit-details-marker{display:none}
+.alpha-route-content .topbar.compact-header .shootout-tools-menu>nav{position:absolute;top:calc(100% + 6px);left:0;z-index:55;display:grid;gap:4px;width:210px;padding:7px;border:1px solid #526873;border-radius:8px;background:#0b1319;box-shadow:0 12px 30px #0009}
+.alpha-route-content .topbar.compact-header .shootout-tools-menu>nav>button{width:100%;min-height:36px;text-align:left;border-radius:5px}
+.shell.alpha-listening .topbar.compact-header{min-height:0;padding-block:6px}
+.shell.alpha-listening .shootout-setup-content{padding-top:10px;padding-bottom:8px}
+
+@media(max-width:640px){
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px 6px;padding:5px 7px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .playback-dynamics{grid-column:1/3;grid-row:1;justify-self:start;flex-basis:auto;padding:0;border:0;gap:5px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .playback-time{grid-column:3;grid-row:1;justify-self:end;margin:0;font-size:10px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-play{grid-column:1;grid-row:2;width:76px;height:36px;min-height:36px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-secondary{display:flex;align-items:center;grid-column:2/-1;grid-row:2;justify-self:end;min-width:0;gap:5px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-dynamics-toggle{min-height:30px;padding:4px 6px;gap:4px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-dynamics-reset{min-width:30px;min-height:30px;width:30px;height:30px}
+ .shell.alpha-listening .deck-dynamics-label{font-size:10px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .waveform-zoom{padding:2px 3px;gap:3px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .waveform-zoom button{width:24px;min-width:24px;height:30px;min-height:30px}
+ .shell.alpha-listening .music-panel-host:not(.persistent) .playback-transport .deck-volume-toggle{width:32px;min-width:32px;height:34px;min-height:34px}
+ .shell.alpha-listening .alpha-playback-shortcuts{font-size:9px;line-height:1.5}
+ .shell.alpha-listening .topbar.compact-header{padding-inline:10px}
+}
+
+/* Compact the setup chrome, retaining the complete editor and target controls. */
+.alpha-workspace:has(.alpha-listening)>.alpha-topbar{min-height:46px;padding-block:6px}
+.alpha-route-content>.shell.alpha-listening{min-height:calc(100svh - 46px)}
+.shell.alpha-listening .topbar.compact-header{padding-block:4px}
+.shell.alpha-listening .shootout-content{padding-top:7px}
+.shell.alpha-listening .admin-test-notice{padding:4px 8px;margin:4px 0;font-size:10px;line-height:1.4}
+.shell.alpha-listening .shootout-content .shootout-setup{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 10px;margin-bottom:6px}
+.shell.alpha-listening .shootout-content .shootout-setup-control{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;width:100%;min-height:34px;margin:0 0 6px}
+.shell.alpha-listening .shootout-content .shootout-setup-control :is(.shootout-setup-toggle,.listening-reminder-link){width:auto;min-height:32px;padding:6px 8px;font-size:11px;line-height:1.25}
+.shell.alpha-listening .shootout-content .shootout-setup-control .setup-auto-hide-note{flex:1 1 230px;max-width:none;width:auto;margin:0;text-align:left;font-size:10px}
+.shell.alpha-listening .shootout-content .shootout-setup.is-collapsed>.shootout-setup-control{grid-column:2;grid-row:1;align-self:center;flex-wrap:nowrap;margin:0}
+.shell.alpha-listening .shootout-content .shootout-setup.is-collapsed .setup-auto-hide-note{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shell.alpha-listening .shootout-content .alpha-setup-summary{grid-column:1;grid-row:1;align-self:center;min-width:0;gap:1px 7px;font-size:11px;line-height:1.4}
+.shell.alpha-listening .shootout-content .alpha-setup-summary strong{flex:1 1 100%;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.shell.alpha-listening .shootout-content .shootout-setup-panel{grid-column:1/-1;min-width:0}
+.shell.alpha-listening .shootout-content .shootout-setup-content{padding:10px 12px 8px}
+.shell.alpha-listening .shootout-content .shootout-setup.is-collapsed .shootout-setup-content{margin:0;padding:0;border-width:0}
+.shell.alpha-listening .shootout-content .shootout-heading-row{margin-bottom:8px;gap:6px 14px}
+.shell.alpha-listening .shootout-heading-row h1{font-size:clamp(20px,2vw,26px)}
+.shell.alpha-listening .shootout-content .pair-picker{grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;margin:6px 0;padding:6px 0}
+.shell.alpha-listening .shootout-content .alpha-target-fields{gap:6px}
+.shell.alpha-listening .shootout-content .pair-picker .target-search-field{min-width:0;font-size:10px;line-height:1.3}
+.shell.alpha-listening .shootout-content .pair-picker .target-search{margin-top:3px}
+.shell.alpha-listening .shootout-content .pair-picker .target-search-input{min-height:34px;height:34px;margin:0;padding:6px 8px;font-size:12px}
+.shell.alpha-listening .shootout-content .alpha-target-actions{padding:0;gap:5px;flex-wrap:nowrap}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{position:relative;overflow:visible;flex:0 0 auto;min-width:0;min-height:34px;padding:6px 7px;font-size:10px;white-space:nowrap}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .action-icon{width:17px}
+.shell.alpha-listening .shootout-content .pair-picker .randomize-button:has(.pending-indicator){display:grid;grid-template-columns:17px auto;gap:2px 5px}
+.shell.alpha-listening .shootout-content .pair-picker .randomize-button .pending-indicator{position:static;grid-column:1/-1;transform:none;margin:0;padding:0;border:0;border-radius:0;background:none;line-height:1.2;font-size:9px;text-align:center}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button{border-color:#7bcbd3;background:linear-gradient(115deg,#173e49 0%,#243b4a 54%,#3b304c 100%);color:#e5faff;box-shadow:inset 0 1px 0 #ffffff18,0 0 9px #56c8cf22}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button:hover{border-color:#a4eef0;background:linear-gradient(115deg,#205563 0%,#304b5b 54%,#524064 100%);color:#fff;box-shadow:0 0 13px #66d5dc55}
+.shell.alpha-listening .listen-card .curve-frame{height:clamp(152px,23vh,240px)}
+.shell.alpha-listening .listen-card .card-bottom{min-height:38px;padding:6px 10px}
+.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row{display:grid;grid-template-columns:auto minmax(0,180px) 4ch;align-items:center;justify-content:center;gap:8px;flex:1 1 100%;grid-column:1/-1;grid-row:3;width:100%;min-width:0;min-height:30px;margin:0;color:#9eafb8;font-size:11px;line-height:1.3}
+.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row[hidden]{display:none}
+.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row .deck-volume{display:block;position:static;inset:auto;transform:none;box-sizing:border-box;flex:none;width:100%;max-width:100%;min-width:0;height:30px;min-height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.shell.alpha-listening .music-panel-host .playback-volume-row output{text-align:right;font:500 10px/1.3 ui-monospace,monospace;color:#c1d0d8}
+.shell.alpha-listening .music-panel-host.persistent.edge-expanded .music-panel>.playback-transport{display:flex!important}
+@media(min-width:641px){
+ .shell.alpha-listening .shootout-content .tournament-modes{margin-bottom:8px}
+ .shell.alpha-listening .shootout-content .tournament-modes .tournament-mode.mode-with-art{grid-template-columns:44px minmax(0,1fr);min-height:72px;padding:7px;gap:6px;text-align:left;justify-items:start}
+ .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-copy{align-items:flex-start;gap:3px}
+ .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-copy :is(.tournament-mode-suggestion,.tournament-mode-status){align-self:flex-start}
+ .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-label{font-size:12px}
+ .shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact,.shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact>svg{width:44px;height:33px}
+ .shell.alpha-listening .shootout-content .measurement-picker{grid-template-columns:24px 125px minmax(0,1fr) 124px;gap:6px}
+ .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:125px;height:36px}
+ .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{font-size:10px}
+ .shell.alpha-listening .shootout-content .measurement-picker .headphone-mark svg{width:24px;height:24px}
+ .shell.alpha-listening .shootout-content .measurement-picker .add-measurement-button{grid-column:4;grid-row:1;min-height:38px;max-width:100%;padding:5px 6px;font-size:10px;line-height:1.25}
+}
+@media(max-width:640px){
+ .shell.alpha-listening .shootout-content .shootout-setup{grid-template-columns:minmax(0,1fr);gap:4px}
+ .shell.alpha-listening .shootout-content .shootout-setup.is-collapsed>.shootout-setup-control{grid-column:1;grid-row:1;justify-content:space-between}
+ .shell.alpha-listening .shootout-content .shootout-setup-control :is(.shootout-setup-toggle,.listening-reminder-link){min-height:38px}
+ .shell.alpha-listening .shootout-content .alpha-setup-summary{grid-column:1;grid-row:2;gap:2px 7px}
+ .shell.alpha-listening .shootout-content .alpha-setup-summary strong{flex:1 1 160px}
+ .shell.alpha-listening .shootout-content .pair-picker{grid-template-columns:minmax(0,1fr)}
+ .shell.alpha-listening .shootout-content .pair-picker .target-search-input{font-size:16px;min-height:38px;height:38px}
+ .shell.alpha-listening .shootout-content .alpha-target-actions{justify-content:stretch}
+ .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{flex:1 1 auto;min-height:38px;padding-inline:5px}
+}
+
+/* Tuning uses its original player and curve editor, with the same desk controls. */
+.pt-shell.alpha-tuning .pt-chart-card,.pt-shell.alpha-tuning .pt-listen{background:#080d10;border-color:#ffffff20;box-shadow:none}
+.pt-shell.alpha-tuning .pt-listen{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto;gap:10px;padding:14px 16px}
+.pt-shell.alpha-tuning .pt-listen>.pt-card-heading{grid-column:1;grid-row:1;margin:0;align-items:center}
+.pt-shell.alpha-tuning .pt-listen .pt-card-heading h2{font-size:18px;margin:3px 0 0}
+.pt-shell.alpha-tuning .pt-listen>.pt-source-row{grid-column:1;grid-row:2;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0;padding:8px 0;border-block:1px solid #ffffff10}
+.pt-shell.alpha-tuning .pt-listen .pt-source-row :is(button,select,.pt-file){min-height:38px;border-radius:7px;background:#11212a;border-color:#3d5962;color:#c7dfe5;box-shadow:none;font-size:12px}
+.pt-shell.alpha-tuning .pt-listen .pt-source-row select{flex:1 1 250px;min-width:0;max-width:none}
+.pt-shell.alpha-tuning .pt-playback-deck{grid-column:1;grid-row:3;height:auto;min-height:184px;grid-template-rows:auto 112px;gap:10px;margin:0;padding:4px 0 0;background:transparent;border:0;border-radius:0;box-shadow:none}
+.pt-shell.alpha-tuning .pt-deck-toolbar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);min-height:52px;gap:10px}
+.pt-shell.alpha-tuning .pt-deck-heading strong{font-size:13px;font-weight:600;color:#c9dfe4}
+.pt-shell.alpha-tuning .pt-deck-heading small{font-size:10px;color:#8da7b2}
+.pt-shell.alpha-tuning .pt-deck-actions{gap:9px}
+.pt-shell.alpha-tuning .pt-deck-actions button,.pt-shell.alpha-tuning .pt-deck-volume button{width:36px;height:36px;min-height:36px;border:1px solid #506c78;border-radius:7px;background:#0c1b23;color:#c6dfe9;box-shadow:none}
+.pt-shell.alpha-tuning .pt-deck-actions .pt-deck-play{width:48px;height:48px;border-radius:50%;background:#72d8cb;border-color:#8ddad2;color:#072820}
+.pt-shell.alpha-tuning .pt-deck-actions .pt-deck-play:hover:not(:disabled){background:#a2eee1;box-shadow:0 0 20px #75d9c932}
+.pt-shell.alpha-tuning .pt-deck-zoom{padding:3px 5px;margin:0;gap:5px;border:1px solid #ffffff18;border-radius:8px;background:#060a0e}
+.pt-shell.alpha-tuning .pt-deck-zoom button{width:30px;height:30px;min-height:30px;border:0;background:#14232b;border-radius:7px;font-size:18px}
+.pt-shell.alpha-tuning .pt-deck-title{font-size:12px;color:#a8d2ce}
+.pt-shell.alpha-tuning .pt-playback-deck .track-waveform.compact{border:1px solid #20303b;border-radius:9px;background:#000}
+.pt-shell.alpha-tuning .alpha-tuning-shortcuts{grid-column:1;grid-row:4;margin:0;text-align:center;font-size:10px;line-height:1.8;color:#8099a5}
+.pt-shell.alpha-tuning :is(button,input,select,summary):focus-visible{outline:2px solid #94e4d7;outline-offset:3px}
+@media(max-width:800px){
+ .pt-shell.alpha-tuning .pt-deck-toolbar{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;gap:8px}
+ .pt-shell.alpha-tuning .pt-deck-heading{grid-column:1;grid-row:1;justify-content:center}
+ .pt-shell.alpha-tuning .pt-deck-heading small{flex-basis:auto}
+ .pt-shell.alpha-tuning .pt-deck-actions{grid-column:1;grid-row:2;justify-content:center;min-width:0;gap:7px}
+ .pt-shell.alpha-tuning .pt-deck-title{grid-column:1;grid-row:3;text-align:center}
+ .pt-shell.alpha-tuning .pt-playback-deck{grid-template-rows:auto 112px;min-height:240px}
+}
+@media(max-width:480px){
+ .pt-shell.alpha-tuning .pt-listen{padding:12px}
+ .pt-shell.alpha-tuning .pt-listen .pt-source-row select{font-size:16px;min-height:42px;flex-basis:100%}
+ .pt-shell.alpha-tuning .pt-listen .pt-source-row :is(button,.pt-file){flex:1 1 100px;justify-content:center;min-height:42px;font-size:11px}
+ .pt-shell.alpha-tuning .pt-deck-actions{gap:5px;flex-wrap:wrap}
+ .pt-shell.alpha-tuning .pt-deck-actions button,.pt-shell.alpha-tuning .pt-deck-volume button{min-width:32px;width:32px;min-height:40px;height:40px}
+ .pt-shell.alpha-tuning .pt-deck-actions .pt-deck-play{width:46px;height:46px}
+ .pt-shell.alpha-tuning .pt-deck-zoom{gap:2px;padding:2px}
+ .pt-shell.alpha-tuning .pt-deck-zoom button{min-width:26px;width:26px;min-height:32px;height:32px}
+}
+
+.alpha-listening .chart{container-type:inline-size}
+@container (max-width:220px){.chart-labels span{font-size:9px!important;letter-spacing:0!important}.chart-labels span:nth-child(2){display:none!important}.chart-labels span:first-child{left:0!important;transform:none!important}.chart-labels span:last-child{right:0!important;transform:none!important}}
+@container (max-width:185px){.chart-labels span:nth-child(3){display:none!important}.chart-labels span{font-size:9px!important}}
+.alpha-listening .card-bottom strong{overflow-wrap:anywhere}
+
+/* The persistent icon rail leaves a narrower workbench on small phones. */
+@media(max-width:480px){
+ .shell.alpha-listening .channel-match-choice{flex-wrap:wrap;gap:8px}
+ .shell.alpha-listening .channel-match-choice select{flex:1 1 110px;min-width:0;max-width:100%}
+ .shell.alpha-listening .channel-match-choice button{flex:1 0 100%;min-height:38px;padding:8px;white-space:normal}
+ .shell.alpha-listening .shootout-content .alpha-target-actions{flex-wrap:wrap}
+ .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{flex:1 1 100px;min-height:40px;white-space:normal;gap:5px;padding:7px}
+ .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button:last-child{flex-basis:100%}
+ .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .action-icon{flex-shrink:0}
+}

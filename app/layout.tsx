@@ -1,3 +1,5 @@
+import AlphaShell from "@/components/alpha-shell";
+import "./alpha.css";
 import AccountAutoSync from "@/components/account-auto-sync";
 import { env } from "cloudflare:workers";
 import { invitesEnabled } from "@/lib/invite-settings.mjs";
@@ -8,10 +10,11 @@ import "@/components/action-hover.css";
 import PrivacyEvents from "@/components/privacy-events";
 import ServiceWarningPopup from "@/components/service-warning";
 import SiteDataFooter from "@/components/site-data-footer";
+import SiteBetaNotice from "@/components/site-beta-notice";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yinyangeq.com"),
-  title: "YinYang EQ League",
+  title: "YinYang EQ",
   description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.",
   icons: {
     icon: "/favicon.svg",
@@ -19,7 +22,7 @@ export const metadata: Metadata = {
     apple: "/brand-avatar-aligned.png",
   },
   openGraph: {
-    title: "YinYang EQ League",
+    title: "YinYang EQ",
     description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.",
     images: [{ url: "/social-preview-aligned-v2.png", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
   },
@@ -37,7 +40,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync />{children}<SiteDataFooter /></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AccountAutoSync /><AlphaShell>{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></InviteModeProvider></body>
     </html>
   );
 }

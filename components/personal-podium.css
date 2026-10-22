@@ -80,3 +80,6 @@
 .personal-full-standings .podium-history-table:focus-visible{outline:2px solid var(--podium-accent);outline-offset:3px;}
 .standings-scroll-hint{display:none;}
 @media(max-width:700px){.personal-full-standings .standings-scroll-hint{display:block;font-size:11px;color:var(--podium-accent);margin:4px 0 8px;}}
+
+/* A shortlist without a clear favorite has no unequal podium or award object. */
+.podium-contender-mark{width:76px;height:76px;stroke:#bcd3c6;stroke-width:1.5;margin:auto auto 12px;filter:drop-shadow(0 0 10px #bcd3c620)}.podium-contender-mark circle:first-child{opacity:.35}.podium-contender-mark path{stroke-width:2}.podium-place-neutral{--award-main:#b7c8be;--award-light:#d1ddd4;--award-shadow:#80968a;align-self:end!important;margin-top:0!important}.podium-unresolved .podium-place{padding-top:20px}.podium-unresolved .podium-step{height:26px!important;background:linear-gradient(#71958c,#385a53);border-color:#9eb7ac}.podium-unresolved .podium-award{color:#d4e6dc}.podium-unresolved .podium-place h3{color:#e9f3ec}

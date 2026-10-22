@@ -72,3 +72,47 @@
 @media(prefers-reduced-motion:reduce){.comparison-data-settings .agreement-presets button,.comparison-data-settings .agreement-choice-card{transition:none}}
 
 .comparison-data-settings .agreement-choice-card details{margin-top:6px;font-size:12px;line-height:1.5;color:#c0d6cf}.comparison-data-settings .agreement-choice-card summary{cursor:pointer;min-height:36px;align-content:center;color:#b9ded5}.comparison-data-settings summary:focus-visible,.comparison-data-settings input:focus-visible{outline:2px solid #9fe2db;outline-offset:3px}.comparison-data-settings .agreement-save-notice{flex:none;margin:8px 0 0;font-size:11px;line-height:1.4;color:#b9d0c8}
+
+/* Alpha presentation: one readable surface with primary choices visible, original consent lifecycle intact. */
+.vote-data-dialog.comparison-data-settings{width:min(900px,calc(100vw / var(--display-scale,1) - 36px));max-width:900px;padding:22px;border:1px solid #3b5c61;border-radius:16px;background:#0b1921;color:#e0edef;box-shadow:0 24px 100px #0009;color-scheme:dark}
+.comparison-data-settings .agreement-header h2{font-size:26px;font-weight:600;letter-spacing:-.025em;line-height:1.2}
+.comparison-data-settings .agreement-header{padding-bottom:8px;border-bottom:1px solid #29444c;margin-bottom:9px}
+.comparison-data-settings .agreement-status{margin:0 0 12px;color:#b6d5ce;line-height:1.5}
+.comparison-data-settings .agreement-copy{padding-right:8px;overscroll-behavior:contain;scrollbar-color:#476c6c #071219}
+.comparison-data-settings .agreement-intro{font-size:13px;line-height:1.6;color:#b8cdd2}
+.comparison-data-settings .agreement-research-invite{padding:15px 17px;background:#102a2a;border:1px solid #396b62;border-radius:11px}
+.comparison-data-settings .agreement-research-invite h3{font-size:17px;font-weight:600;letter-spacing:-.015em}
+.comparison-data-settings .agreement-research-invite p{font-size:12px;line-height:1.6}
+.comparison-data-settings .agreement-presets{margin-top:15px;gap:10px}
+.comparison-data-settings .agreement-presets button{min-height:44px;background:#12332f;border-color:#547d73;font-family:inherit;font-size:13px;transition:background .18s,border-color .18s,box-shadow .18s}
+.comparison-data-settings .agreement-preset-help{font-size:11px;line-height:1.6;margin:9px 0 17px}
+.comparison-data-settings .agreement-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px;align-items:stretch}
+.comparison-data-settings .agreement-choices>.agreement-choice-card:first-child{grid-column:1/-1}
+.comparison-data-settings .agreement-choices>.agreement-choice-card:last-child{grid-column:1/-1}
+.comparison-data-settings .agreement-choice-card{padding:13px 14px;background:#09191e;border-color:#31514f;border-radius:10px;margin-bottom:12px}
+.comparison-data-settings .agreement-choices>.agreement-choice-card{margin-bottom:0}
+.comparison-data-settings .agreement-choice-card h3,.comparison-data-settings .agreement-choice-card legend{font-size:14px;line-height:1.5}
+.comparison-data-settings .agreement-choice-card h3>span,.comparison-data-settings .agreement-choice-card legend>span{width:24px;height:24px;background:#1e413b;color:#b4eadb}
+.comparison-data-settings .agreement-choice-card h3 small,.comparison-data-settings .agreement-choice-card legend small{font-size:11px}
+.comparison-data-settings .agreement-choice-card .data-choice{padding-top:9px;gap:11px;line-height:1.5}
+.comparison-data-settings .data-choice small{line-height:1.6;color:#adc3cb}
+.comparison-data-settings .agreement-choice-card>p,.comparison-data-settings .agreement-choice-card>ul{font-size:12px;line-height:1.6;color:#b5cbd0}
+.comparison-data-settings .agreement-choice-card .monitoring-option{min-height:44px;line-height:1.5;font-size:13px}
+.comparison-data-settings .agreement-choice-card.monitoring-choice{padding-top:9px}
+.comparison-data-settings .monitoring-choice legend{padding:0 6px}
+.comparison-data-settings .agreement-nickname{padding:16px 0;margin:2px 0;border-top:1px solid #29444c;border-bottom:1px solid #29444c}
+.comparison-data-settings .agreement-nickname input{max-width:540px;background:#051218;border-color:#45666c;min-height:44px}
+.comparison-data-settings .agreement-nickname p{line-height:1.6}
+.comparison-data-settings .agreement-details summary{min-height:44px}
+.comparison-data-settings .agreement-policy p{color:#b2c6ce;font-size:13px;line-height:1.7}
+.comparison-data-settings .agreement-save-notice{padding-top:9px;line-height:1.5}
+.comparison-data-settings .vote-data-actions{margin-top:7px;padding-top:12px;gap:10px;border-color:#29444c}
+.comparison-data-settings .vote-data-actions button{min-height:46px;border-radius:9px;font-size:13px;line-height:1.4;transition:background .18s,border-color .18s,box-shadow .18s}
+.comparison-data-settings .vote-data-continue{background:#275a4d;border:1px solid #8acfb6;color:#e6fff2}
+.comparison-data-settings .vote-data-continue:hover:not(:disabled){background:#34715e;box-shadow:0 0 15px #73d5b326}
+.comparison-data-settings .vote-data-secondary{background:#10232b;border:1px solid #45636d;color:#d0e3e8}
+.comparison-data-settings .vote-data-secondary:hover:not(:disabled){background:#1a3540;border-color:#729ba6}
+.comparison-data-settings select,.comparison-data-settings select option,.comparison-data-settings select optgroup{background:#0b1921;color:#e5f1f3;color-scheme:dark}
+@media(max-width:650px){.vote-data-dialog.comparison-data-settings{width:calc(100vw / var(--display-scale,1) - 22px);padding:15px;max-height:calc(100svh / var(--display-scale,1) - 22px);border-radius:12px}.comparison-data-settings .agreement-header h2{font-size:22px}.comparison-data-settings .agreement-copy{padding-right:4px}.comparison-data-settings .agreement-choices{grid-template-columns:1fr;gap:10px}.comparison-data-settings .agreement-choice-card{padding:12px}.comparison-data-settings .agreement-research-invite{padding:13px}.comparison-data-settings .agreement-presets{gap:7px}.comparison-data-settings .agreement-presets button{flex-basis:145px}.comparison-data-settings .agreement-choice-card h3,.comparison-data-settings .agreement-choice-card legend{font-size:13px}.comparison-data-settings .agreement-nickname input{font-size:16px}.comparison-data-settings .vote-data-actions button{font-size:12px;padding:10px}.comparison-data-settings .agreement-status{font-size:11px}}
+@media(max-height:350px){.vote-data-dialog.comparison-data-settings{display:block;overflow:auto}.comparison-data-settings .agreement-copy{overflow:visible}}
+@media(prefers-reduced-motion:reduce){.comparison-data-settings .agreement-presets button,.comparison-data-settings .vote-data-actions button{transition:none}}

@@ -1,5 +1,5 @@
 {
-  "updated": "October 18, 2026",
+  "updated": "October 21, 2026",
   "previewOnly": false,
   "contact": "yinyangeqlab@gmail.com",
   "targets": [
@@ -590,6 +590,20 @@
       "sourceLabel": "Underlying Diamond source",
       "sourceNote": "YinYang EQ Lab supplied this variant. Its CC BY 4.0 grant covers the Lab’s contributions only; the underlying Diamond-derived material remains separately attributed to PEQdB.",
       "basis": "Licensed use under the linked terms; the grant applies only to the rights covered by that license."
+    },
+    {
+      "id": "180914d5-efd7-507d-9d36-9735b540d4ea",
+      "name": "RTINGS 5128 DF HRTF + LSC 120 / 14.5 / 0.55",
+      "credit": "Provided by Teoxoy (Discord); exact curve authorship unverified",
+      "status": "credited",
+      "license": "",
+      "sourceUrl": "https://www.rtings.com/headphones/learn/research/eq-remeasurements",
+      "sourceLabel": "RTINGS methodology — background, not this exact file",
+      "sourceNote": "The site owner identifies Teoxoy (Discord) as the provider of “rtings-5128 DF HRTF + LSC 120 14.5 0.55.txt”. A public upstream source for this exact modified curve has not been verified. The filename refers to an RTINGS 5128 diffuse-field HRTF and low-shelf parameters; this is not verification that RTINGS created or published this file.",
+      "changes": "Community-provided numerical reference. The original generation/export process and any changes before receipt are unverified.",
+      "licenseUrl": "",
+      "notice": "Provider credit does not establish original authorship or a redistribution license.",
+      "basis": "Attribution is recorded for the community-provided reference. No permission or license for redistributing the numerical file is inferred."
     }
   ]
 }

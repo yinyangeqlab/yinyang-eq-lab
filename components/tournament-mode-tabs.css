@@ -50,3 +50,27 @@
   .shell .tournament-modes .tournament-mode:is(:hover,:focus-visible,:active),.tournament-mode:is(:hover,:focus-visible)>svg { transform:none; }
   .mode-hover-ripple,.mode-hover-spark { display:none;animation:none!important; }
 }
+
+/* The whole selectable surface glows; the illustration supplies each mode's motion. */
+.shell .shootout-content .tournament-modes .tournament-mode.mode-with-art{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:10px;min-height:96px;transform:none;text-align:left;transition:background-color 160ms ease,border-color 160ms ease,box-shadow 200ms ease}
+.shell .tournament-modes .mode-with-art .tournament-mode-copy{min-width:0;gap:4px;align-items:flex-start}
+.shell .tournament-modes .mode-with-art .tournament-mode-label{white-space:normal;overflow-wrap:normal;line-height:1.3}
+.shell .tournament-modes .mode-with-art .tournament-mode-copy :is(.tournament-mode-suggestion,.tournament-mode-status){display:block;align-self:flex-start;width:fit-content;max-width:100%;margin:0;padding:1px 5px;border:1px solid color-mix(in srgb,var(--mode-glow) 28%,transparent);border-radius:4px;color:var(--mode-glow);font-size:9px;font-weight:500;line-height:1.4;white-space:nowrap}
+.shell .shootout-content .tournament-modes .tournament-mode.mode-with-art:is(:hover,:focus-visible,[aria-pressed=true],[aria-current=page]){transform:none;border-color:var(--mode-glow);background:linear-gradient(120deg,var(--mode-surface),color-mix(in srgb,var(--mode-surface) 55%,#080d10));box-shadow:inset 0 0 28px color-mix(in srgb,var(--mode-glow) 9%,transparent),0 0 18px color-mix(in srgb,var(--mode-glow) 18%,transparent);animation:mode-surface-breathe 4s ease-in-out infinite}
+.shell .tournament-modes .mode-with-art .mode-hover-halo{inset:0;border-radius:inherit;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--mode-glow) 13%,transparent),transparent 78%);filter:none}
+.shell .tournament-modes .mode-with-art:is(:hover,:focus-visible,[aria-pressed=true],[aria-current=page]) .mode-hover-halo{opacity:1}
+@keyframes mode-surface-breathe{0%,100%{box-shadow:inset 0 0 28px color-mix(in srgb,var(--mode-glow) 7%,transparent),0 0 16px color-mix(in srgb,var(--mode-glow) 12%,transparent)}50%{box-shadow:inset 0 0 34px color-mix(in srgb,var(--mode-glow) 13%,transparent),0 0 22px color-mix(in srgb,var(--mode-glow) 22%,transparent)}}
+@media(max-width:1100px){
+ .shell .shootout-content .tournament-modes .tournament-mode.mode-with-art{grid-template-columns:minmax(0,1fr);justify-items:center;gap:5px;padding:9px 5px;min-height:116px;text-align:center}
+ .shell .tournament-modes .mode-with-art .tournament-mode-copy{align-items:center;gap:4px;width:100%}
+ .shell .tournament-modes .mode-with-art .tournament-mode-copy :is(.tournament-mode-suggestion,.tournament-mode-status){align-self:center}
+ .shell .tournament-modes .mode-with-art .tournament-mode-hint{display:none}
+ .shell .tournament-modes .mode-with-art .mode-illustration--compact{width:60px;height:45px}
+ .shell .tournament-modes .mode-with-art .mode-illustration--compact>svg{width:60px;height:45px}
+}
+@media(max-width:640px){
+ .shell .shootout-content .tournament-modes{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .shell .shootout-content .tournament-modes .mode-with-art{grid-column:auto}
+ .shell .tournament-modes .mode-with-art .tournament-mode-label{font-size:clamp(11px,3.15vw,12px)}
+}
+@media(prefers-reduced-motion:reduce){.shell .shootout-content .tournament-modes .tournament-mode.mode-with-art{animation:none!important;transition:none!important}}
