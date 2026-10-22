@@ -1,7 +1,7 @@
 {
   "liveUpdate": 110,
   "implementationCommit": "a8030b0f156bb56926b83d479f875b10ea34305e",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update110. CSS cleanup removed 99 superseded declarations with player/library/consent styles and interactions preserved; the already-published repository source-link rename is deployed. Source-only recovery metadata and hosted validation passed without a data export.",
+  "runtimeParity": "Deployed baseline remains verified 0.2.0-beta.1/update110, implementation a8030b0f156bb56926b83d479f875b10ea34305e. Reviewed local source changes listed under sourceVariants.localDraftReconciliation are not deployed. LIVE_RELEASE.json and immutable release provenance are unchanged.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -20,7 +20,15 @@
     "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified.",
     "repositoryRename": "Existing lab app repository renamed to yinyang-eq-lab; current documentation and GitHub URLs updated without deployment. Historical release provenance retained.",
     "cssCleanupPreview": "Deployed as update110 after owner preview approval; 99 obsolete declarations removed, 12 before/after state pairs unchanged, player/library/consent interactions verified.",
-    "repositoryBranding": "Canonical yinyangeqlab/yinyang-eq-lab source links deployed with update110; historical release provenance remains unchanged."
+    "repositoryBranding": "Canonical yinyangeqlab/yinyang-eq-lab source links deployed with update110; historical release provenance remains unchanged.",
+    "localDraftReconciliation": {
+      "date": "2026-10-22",
+      "baseCommit": "c26669cd2d5faecfd983a890a3ecd7dc9092427b",
+      "status": "Local reviewed commits only; no push, deployment or data export.",
+      "groups": [
+        "timing"
+      ]
+    }
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -562,7 +570,7 @@
     },
     {
       "path": "components/matched-passage-control.tsx",
-      "sha256": "0a6de0407ce6c079cd6f609e7db6d7d1ba69da04f49aa0911628099f2000a842"
+      "sha256": "69247865f454f7430afbd191bd6cd0842b08492b8c28bdd679a8217334226086"
     },
     {
       "path": "components/measurement-manager.tsx",
@@ -578,7 +586,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "e92a86a3821d312ebd5907f3f7ea49f7a1201642c50a33454ad2e9f67c766500"
+      "sha256": "1af2f1e053a310985c45fe3bae26c8946dc1f3ce9f2a0683f30ea05e28c517fd"
     },
     {
       "path": "components/name-filter-lab.tsx",
@@ -1590,7 +1598,7 @@
     },
     {
       "path": "lib/listening.ts",
-      "sha256": "a4f1a1524a867fee0fb1cba9171102534998b372fb0041f1dd33ee7111e0512d"
+      "sha256": "9071fae3b98539c6943a11d073bff938813f6b1a1b18f317bc23eb4ab4579e43"
     },
     {
       "path": "lib/loudness.ts",
@@ -1986,7 +1994,7 @@
     },
     {
       "path": "scripts/check_comparison_passage.mjs",
-      "sha256": "7ea4a888688e73a1b6179964012a707319e953e2592fd5a83241ab9423e45b07"
+      "sha256": "0e50b224c61c7a42f4005fc6a83435dd63a6703bf82df63e8e227ca4793de396"
     },
     {
       "path": "scripts/check_consent_choices.mjs",
@@ -2151,6 +2159,10 @@
     {
       "path": "scripts/check_security_response_headers.mjs",
       "sha256": "b0807a6ca75b4f10466d5dde0faac240f74bf9519e07864a1fd18ba2a73e06e4"
+    },
+    {
+      "path": "scripts/check_selected_passage_timing.mjs",
+      "sha256": "843687c59c19c5c51523fce78184f32c731792dfea2c059f6a37809d15406f0b"
     },
     {
       "path": "scripts/check_service_warning.mjs",

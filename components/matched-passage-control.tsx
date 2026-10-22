@@ -2,7 +2,9 @@
 import "./matched-passage-control.css";
 import type { ReactNode } from "react";
 export function MatchedPassageMeter({side,seconds,required,qualified}:{side:"A"|"B";seconds:number;required:boolean;qualified:boolean}){
-  return <div className={`curve-passage-meter ${required?"is-required":"is-optional"} ${qualified?"ready":""}`}><span><b>{side}</b> <span>{seconds.toFixed(1)} / 5 sec</span></span><progress max={5} value={Math.min(5,seconds)} aria-label={`${side} listening time`}/></div>;
+  const progress = Number.isFinite(seconds) ? Math.max(0, Math.min(5, seconds)) : 0;
+  const displayed = Math.floor((progress + 1e-9) * 10) / 10;
+  return <div className={`curve-passage-meter ${required?"is-required":"is-optional"} ${qualified?"ready":""}`}><span><b>{side}</b> <span>{displayed.toFixed(1)} / 5 sec</span></span><progress max={5} value={progress} aria-label={`${side} listening time in selected passage`}/></div>;
 }
 export function MatchedPassageFooter({heard,required,qualified,children,showMeters=true}:{heard:[number,number];required:boolean;qualified:boolean;children:ReactNode;showMeters?:boolean}){
  return <div className="comparison-listening-footer">{showMeters&&<MatchedPassageMeter side="A" seconds={heard[0]} required={required} qualified={qualified}/>}<div className="comparison-switch">{children}</div>{showMeters&&<MatchedPassageMeter side="B" seconds={heard[1]} required={required} qualified={qualified}/>}</div>;
