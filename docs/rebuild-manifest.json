@@ -1,7 +1,7 @@
 {
   "liveUpdate": 109,
   "implementationCommit": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
-  "runtimeParity": "Live update109 and its immutable implementation/build remain unchanged. Published source has repository URL and package-name metadata updates only; these source changes are not deployed.",
+  "runtimeParity": "Owner-approved CSS cleanup prepared for deployment after preview; live update109 remains the production baseline until verification.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -18,7 +18,8 @@
     ],
     "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026.",
     "mobileReadabilityPreview": "Deployed as update109 after owner preview approval; original yin-yang/waveforms retained with larger mobile text and opaque reading surfaces. Local checks and public live appearance verified.",
-    "repositoryRename": "Existing lab app repository renamed to yinyang-eq-lab; current documentation and GitHub URLs updated without deployment. Historical release provenance retained."
+    "repositoryRename": "Existing lab app repository renamed to yinyang-eq-lab; current documentation and GitHub URLs updated without deployment. Historical release provenance retained.",
+    "cssCleanupPreview": "Owner approved: remove 99 superseded CSS declarations; player, library and consent computed styles, layout and interactions verified unchanged."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -252,7 +253,7 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "2e922e599428c3cc1f9a1497e7889c864e1dc9b628650d56b3d67022f8727772"
+      "sha256": "8a128317000c8acaa65cf2365a07c9e2fea701f083962d3d2fc2548f3d33c53f"
     },
     {
       "path": "app/home/route.ts",
@@ -276,7 +277,7 @@
     },
     {
       "path": "app/music-library/style.css",
-      "sha256": "1eeebfbfca493b20157d5a358ccaf1b70e86f1fd61beddff5b5fec40a5f6b3b6"
+      "sha256": "8ce8bd2e2dda6cf72d103807368b67b7d373b9fa9af6eb583f59aa196c8e2d10"
     },
     {
       "path": "app/my-data/layout.tsx",
@@ -504,7 +505,7 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "276a19777d809263c44680fc78696f77b3237fe9834dba49a19f4a06d5b76fb1"
+      "sha256": "a2ff89347ff5366726d72af32c3cc6af8e72bed3db989479268caecf12c9f265"
     },
     {
       "path": "components/comparison-data-settings.tsx",
@@ -2352,5 +2353,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": true
+  "pendingDeploymentApproval": false
 }
