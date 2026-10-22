@@ -1,3 +1,9 @@
+# Metadata-only recovery handover verified — October 21, 2026
+
+Current live update107 has matching source/build metadata and a successful hosted validation-only check. Independent authentication verified every existing encrypted off-device data snapshot and timestamp unchanged. No data export, new data snapshot, retention run or site redeployment occurred. Daily03:00 America/Los_Angeles execution remains enabled. All50 backup safety tests passed. Unknown, scheduled, data-writing or started jobs still block a metadata writer. A private operator-inspected proof can identify an exact empty validation-only orphan; it binds the prior handover receipt, lab actor, unique dispatch and immutable workflow/launcher code. Two such host records remain visible because the host refuses cancellation/deletion; the successful matching run and unchanged single concurrency group establish that they do not block the real writer. Future handovers must retain fail-closed checks and use separate inspected evidence for each known reader. Private receipts and evidence remain outside Git. This is metadata compatibility, not a new data recovery point.
+
+## Earlier recovery notes
+
 # Encrypted off-device recovery
 
 ## Deployment backup scope — owner preference, October 19, 2026

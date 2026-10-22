@@ -102,23 +102,37 @@
     "physicalAudioAndSafariGapsAccepted": true
   },
   "backupMetadata": {
-    "sourceOnlyHandoverPassed": false,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPassed": false,
-    "newReleaseHostedValidationDispatched": false,
-    "priorHostedValidationStuck": true,
-    "normalAndForceCancelRejected": true,
-    "dataRecoveryPointUnchanged": true,
+    "at": "2026-10-22T03:01:33.244271+00:00",
+    "sourceBaselineUpdate": 107,
+    "implementationCommit": "eab9029ee22f582c04deff46a65936fb9db7a24a",
+    "sourceOnlyHandoverPassed": true,
+    "matchingCurrentReleaseBaseline": true,
+    "remoteReceiptAndIndexAuthenticated": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
     "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": false,
+    "liveDeploymentUnchanged": true,
+    "singleWriterGuardPreserved": true,
+    "inspectedReadOnlyOrphanClassified": true,
+    "priorValidationRecordDeleted": false,
+    "hostedValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationMode": "validation-only",
+    "hostedValidationVerifiedAt": "2026-10-22T03:07:37Z",
     "dailyWorkflowActive": true,
-    "matchingCurrentReleaseBaseline": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": true,
-    "settingsOrSafeguardsWeakened": false,
-    "at": "2026-10-22T02:31:49.879459+00:00"
+    "backupSafetyTestsPassed": 50,
+    "isolatedToolingTestsPassed": 27,
+    "emptyHostRecordsStillQueued": 2,
+    "emptyHostRecordsBlockingWriters": false,
+    "privateToolingLabIdentityVerified": true,
+    "applicationPublicationIsDocumentationOnly": true
   },
   "publicationOperation": {
     "deploymentPerformed": false,
     "dataExportPerformed": false,
     "credentialsOrPrivateReceiptsIncluded": false
-  }
+  },
+  "subsequentRecoveryMaintenance": "docs/releases/update107-recovery-verification.json"
 }
