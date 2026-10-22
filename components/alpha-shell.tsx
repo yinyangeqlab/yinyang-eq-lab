@@ -6,6 +6,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { releaseInfo } from "@/lib/release-info";
 import AccountAutoSync from "@/components/account-auto-sync";
+import { applyMotionPreference, readDisplayPreferences, subscribeDisplayPreferences } from "@/lib/display-preferences";
 
 type Destination = "home" | "listen" | "tune" | "explore" | "library" | "results" | "rankings" | "space";
 type Layout = "full" | "icons" | "hidden";
@@ -60,20 +61,27 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   const panel = useRef<HTMLDivElement>(null);
   const menu = useRef<HTMLButtonElement>(null);
   const restoreMenuFocus = useRef(false);
+  const keepSavedLayout = useRef(false);
   const utilityTitles: Record<string,string> = {"/shortcuts":"Shortcuts & help","/version":"About this version","/privacy":"Privacy notice","/my-data":"My data & sharing","/participation":"Data choices","/account-sync":"Devices & Sync","/my-profile":"My profile","/profile-access":"Profile access","/test-history":"Private test history","/owner-research":"Research administration"};
   const title = destinations.find(d => d.id === active)?.label || utilityTitles[pathname] || "YinYang EQ";
 
   useEffect(() => {
     const compact = window.matchMedia("(max-width: 800px)");
     setNarrow(compact.matches);
-    try { const saved = localStorage.getItem("yinyang-navigation-layout"); setLayout(saved === "full" || saved === "icons" || saved === "hidden" ? saved : compact.matches ? "icons" : "full"); }
+    try {
+      const saved = localStorage.getItem("yinyang-navigation-layout");
+      // A saved desktop "full" would open the mobile modal drawer over every narrow page load; start at icons without overwriting it.
+      keepSavedLayout.current = compact.matches && saved === "full";
+      setLayout(keepSavedLayout.current ? "icons" : saved === "full" || saved === "icons" || saved === "hidden" ? saved : compact.matches ? "icons" : "full");
+    }
     catch { setLayout(compact.matches ? "icons" : "full"); }
     setLayoutLoaded(true);
     const resize = () => setNarrow(compact.matches);
     compact.addEventListener("change", resize);
     return () => compact.removeEventListener("change", resize);
   }, []);
-  useEffect(() => { if (layoutLoaded) { try { localStorage.setItem("yinyang-navigation-layout", layout); } catch {} } }, [layout, layoutLoaded]);
+  useEffect(() => { applyMotionPreference(readDisplayPreferences().motion); return subscribeDisplayPreferences(value => applyMotionPreference(value.motion)); }, []);
+  useEffect(() => { if (layoutLoaded && keepSavedLayout.current) { keepSavedLayout.current = false; return; } if (layoutLoaded) { try { localStorage.setItem("yinyang-navigation-layout", layout); } catch {} } }, [layout, layoutLoaded]);
   useEffect(() => {
     const update = () => setModalOpen([...document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]')]
       .some(el => !el.closest(".alpha-navigation-frame") && el.getClientRects().length > 0));

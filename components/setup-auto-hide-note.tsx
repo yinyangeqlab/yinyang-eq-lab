@@ -1,3 +1,3 @@
 export default function SetupAutoHideNote(){
-  return <small id="setup-auto-hide-note" className="setup-auto-hide-note">Hides once when music first plays. Reopen to keep options visible for this test.</small>;
+  return <small id="setup-auto-hide-note" className="setup-auto-hide-note">Setup folds away when music first plays so you can focus on listening. Show it again and it stays open for this test.</small>;
 }

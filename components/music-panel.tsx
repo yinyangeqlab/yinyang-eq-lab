@@ -21,6 +21,7 @@ import { matchSongSuggestion, type SongSuggestion } from "@/lib/song-match";
 import { musicCandidates } from "@/lib/music-catalog";
 import { musicRotation, musicCommunityRank, playbackTarget, type MusicChoice, type MusicCounts } from "@/lib/music-preferences";
 import { listeningPool as curatedMusic } from "@/lib/music-catalog";
+import { readDisplayPreferences } from "@/lib/display-preferences";
 
 export type MusicContext = { songTitle: string; songArtist: string; songAlbum: string; recordingId: string; sha256: string | null; audioFormat: string | null; sampleRate: number | null; bitrate: number | null; duration: number | null; intervals: Interval[]; heardA: number; heardB: number; overlapSeconds: number; normalizationStatus: string; loudnessTarget: string };
 export type MusicPanelHandle = { finish: () => (MusicContext & { consent: boolean }) | null; snapshot: () => (MusicContext & { consent: boolean }) | null; heard: () => [number, number]; reset: () => void; stop: () => void; pause: () => void; isPlaying: () => boolean; isHashing: () => boolean; listen: (side: 0 | 1) => Promise<boolean>; randomSong: () => Promise<boolean>; replay: () => Promise<boolean>; playPassage: () => Promise<boolean> };
@@ -361,6 +362,8 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
       const seek = event.key === "ArrowLeft" ? -1 : event.key === "ArrowRight" ? 1 : 0;
       if (event.code === "Space" && !event.shiftKey) { toggleWithSpace(event); return; }
       if (side === null && !seek) return;
+      // Letter/number shortcuts can be turned off on Shortcuts & help (WCAG 2.1.4); Space and arrows remain.
+      if (side !== null && !readDisplayPreferences().singleKeyShortcuts) return;
       event.preventDefault(); event.stopPropagation();
       if (seek) {
         const audio = audioRef.current; if (!audio || !Number.isFinite(audio.duration)) return;
