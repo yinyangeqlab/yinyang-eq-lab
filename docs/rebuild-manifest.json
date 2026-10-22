@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 103,
-  "implementationCommit": "dae6526b753309c9837c6ff2fc8f2b2ad772b059",
-  "runtimeParity": "Owner-authorized 0.2.0-beta.1 release candidate based on scrubbed main and live update103; exact live release records follow verified deployment.",
+  "liveUpdate": 104,
+  "implementationCommit": "85a1633fd7291d474d3a6f8f74f3501aec688f53",
+  "runtimeParity": "Verified 0.2.0-beta.1 application with a pending public version/help routing correction. No listening or private-data routes are relaxed.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -1346,7 +1346,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "76641d6fe5860a74758d604ae10e9e9b7c9bccd582d9896ba5d0d14081f6ee93"
+      "sha256": "2bbb5fe5f8596089adac61bd71587489ef7791253baa14938e7881e3d790cd2d"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -2198,7 +2198,7 @@
     },
     {
       "path": "scripts/check_yinyangeq_gate.mjs",
-      "sha256": "f92ee4fea778cfe19fbe7d68ae7660c5c58455bee63d94dc4eb26c8232832685"
+      "sha256": "f2a0b7e930f3d63958ebc22b611d0ebba5e1bdc210ea9d8ed4ea2e3bdde4e1cc"
     },
     {
       "path": "scripts/check_yinyangeq_history.mjs",
