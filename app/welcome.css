@@ -313,3 +313,165 @@
 /* Keep the product name intact beside data controls in the narrow shell. */
 .welcome-brand>span{white-space:nowrap}
 @media(max-width:480px){.welcome-brand{gap:6px;font-size:13px}.welcome-brand img{width:28px;height:28px}.welcome-brand em{font-size:12px}.welcome-settings summary{padding:10px 8px}.welcome-settings summary>span{max-width:82px;font-size:11px;white-space:normal;text-align:left}.welcome-nav{gap:10px}}
+
+/* Phone reading surface: the original artwork has its own row above the copy. */
+@media (max-width:800px) {
+ .alpha-route-content .welcome-hero {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"navigation" "artwork" "copy" "footer";
+  align-content:start;
+  min-height:0;
+  background:#061015;
+ }
+ .alpha-route-content .welcome-nav {
+  grid-area:navigation;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));
+  padding:16px;
+  gap:8px;
+  background:#061015;
+  border-bottom:1px solid #29424a;
+  box-shadow:none;
+ }
+ .alpha-route-content .welcome-nav>.welcome-brand,
+ .alpha-route-content .welcome-nav>.welcome-settings { grid-column:auto;grid-row:auto;min-width:0; }
+ .alpha-route-content .welcome-nav>.welcome-settings { justify-self:stretch; }
+ .alpha-route-content .welcome-brand { gap:6px;font-size:14px; }
+ .alpha-route-content .welcome-brand em { display:inline;font-size:inherit; }
+ .alpha-route-content .welcome-settings summary {
+  min-height:44px;
+  padding:8px;
+  gap:6px;
+  background:#0d252d;
+ }
+ .alpha-route-content .welcome-settings summary>span {
+  max-width:76px;
+  font-size:12px;
+  line-height:1.35;
+ }
+ .alpha-route-content .welcome-menu-icon { width:18px;height:18px; }
+ .alpha-route-content .welcome-settings-panel {
+  width:min(290px,calc(100vw - var(--alpha-nav-width) - 32px));
+  max-width:none;
+  background:#0a1c24;
+ }
+ .alpha-route-content .welcome-settings-panel a { min-height:56px; }
+ .alpha-route-content .welcome-settings-panel span { font-size:14px;line-height:1.5; }
+ .alpha-route-content :is(.welcome-art,.welcome-sound-field,.welcome-shade) {
+  grid-area:artwork;
+  position:relative;
+  inset:auto;
+  width:100%;
+  height:clamp(180px,56vw,280px);
+ }
+ .alpha-route-content .welcome-art { z-index:0; }
+ .alpha-route-content .welcome-art img { object-position:center 45%; }
+ .alpha-route-content .welcome-sound-field { z-index:1;opacity:.35; }
+ .alpha-route-content .welcome-shade {
+  z-index:2;
+  background:linear-gradient(180deg,#06101500 55%,#061015 100%);
+ }
+ .alpha-route-content .welcome-copy {
+  grid-area:copy;
+  position:relative;
+  width:auto;
+  margin:0;
+  padding:12px 20px 28px;
+  background:#061015;
+  text-shadow:none;
+ }
+ .alpha-route-content .welcome-kicker { font-size:11px;line-height:1.6;letter-spacing:.1em; }
+ .alpha-route-content .welcome-copy h1 {
+  margin:16px 0 20px;
+  font-size:clamp(28px,8.2vw,40px);
+  line-height:1.14;
+  letter-spacing:-.04em;
+ }
+ .alpha-route-content .welcome-copy>p {
+  max-width:42ch;
+  margin:0 0 24px;
+  color:#dbe8eb;
+  font-size:16px;
+  line-height:1.65;
+  text-shadow:none;
+ }
+ .alpha-route-content .welcome-actions { display:grid;grid-template-columns:minmax(0,1fr);gap:12px; }
+ .alpha-route-content .welcome-actions a { min-height:48px;font-size:15px; }
+ .alpha-route-content .welcome-actions .welcome-primary { min-height:52px;box-shadow:none; }
+ .alpha-route-content .welcome-secondary { background:#0d252d;color:#e6f4f2;border-color:#52747b; }
+ .alpha-route-content .welcome-sync-note {
+  display:flex;
+  flex-direction:row;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 12px;
+  width:100%;
+  margin-top:24px;
+  padding:20px 0 0;
+  background:transparent;
+  border:0;
+  border-top:1px solid #35515b;
+  border-radius:0;
+  box-shadow:none;
+ }
+ .alpha-route-content .welcome-copy .welcome-sync-note p {
+  flex:1 1 140px;
+  color:#c5d7dc;
+  font-size:14px;
+  font-weight:400;
+  line-height:1.6;
+  text-align:left;
+ }
+ .alpha-route-content .welcome-sync-button {
+  width:auto;
+  min-height:44px;
+  padding:8px 12px;
+  font-size:14px;
+  background:#0d252d;
+  border-color:#52747b;
+  color:#b4f0e5;
+  box-shadow:none;
+  animation:none;
+ }
+ .alpha-route-content .welcome-sync-button:is(:hover,:focus-visible) {
+  background:#173942;
+  color:#e1fff6;
+  box-shadow:none;
+  filter:none;
+ }
+ .alpha-route-content .welcome-copy .welcome-access-note {
+  margin:24px 0 0;
+  color:#c5d7dc;
+  font-size:14px;
+  font-weight:400;
+  line-height:1.65;
+  letter-spacing:0;
+ }
+ .alpha-route-content .welcome-hero-foot {
+  grid-area:footer;
+  gap:12px 18px;
+  padding:20px;
+  background:#061015;
+  border-top:1px solid #29424a;
+  color:#c5d7dc;
+  font-size:12px;
+  line-height:1.5;
+  letter-spacing:.06em;
+ }
+ .alpha-route-content .welcome-hero-foot .welcome-tagline { font-size:16px;text-shadow:none; }
+ .alpha-route-content .welcome-motion-control { min-height:44px;font-size:12px;background:#0d252d;color:#dbe8eb;border-color:#52747b; }
+ .alpha-route-content :is(.welcome-mode p,.welcome-research-invite p,.welcome-steps p,.welcome-section-head p) { font-size:16px;line-height:1.7; }
+ .alpha-route-content .welcome-mode .welcome-mode-data { font-size:14px;line-height:1.7; }
+ .alpha-route-content :is(.welcome-ranking-guide summary,.welcome-ranking-guide dd,.welcome-ranking-guide>p) { font-size:14px;line-height:1.7; }
+ .alpha-route-content .welcome-footer { font-size:14px;line-height:1.65; }
+ .alpha-route-content .welcome-footer-links { gap:8px 20px; }
+ .alpha-route-content .welcome-footer-links a { display:inline-flex;align-items:center;min-height:44px; }
+ .alpha-route-content .welcome-footer .welcome-admin-link { min-height:44px;font-size:12px; }
+ .alpha-route-content .site-data-footer { font-size:14px;line-height:1.65; }
+ .alpha-route-content .site-data-footer>a { display:inline-flex;align-items:center;min-height:44px; }
+ .alpha-route-content .site-data-footer .site-footer-license { font-size:14px;line-height:1.65; }
+}
+
+@media (max-width:360px) {
+ .alpha-route-content .welcome-copy { padding-inline:16px; }
+}

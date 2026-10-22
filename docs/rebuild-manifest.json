@@ -1,7 +1,7 @@
 {
   "liveUpdate": 108,
   "implementationCommit": "165cf688e75c2be2062414c6fe87bb0b561a85c1",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update108. Sidebar hover/motion correction is deployed; source-only recovery metadata and hosted validation passed without a data export.",
+  "runtimeParity": "Verified live baseline remains 0.2.0-beta.1/update108. Owner approved the mobile Welcome readability preview for commit and deployment; release verification will establish the new live baseline.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -16,7 +16,8 @@
     "pendingUnrelatedDevelopment": [
       "Uncommitted encrypted backup/recovery scripts and operational notes excluded from application release."
     ],
-    "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026."
+    "pendingLocalReview": "Physical headphone output and Safari/iOS remain unverified; the owner accepted these beta coverage gaps on October 21, 2026.",
+    "mobileReadabilityPreview": "Owner-approved mobile Welcome readability update: original yin-yang/waveforms in an artwork row, opaque reading surfaces, larger text and controls, quieter Sync; two accessibility landmark corrections. Deployment verification pending."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -306,7 +307,7 @@
     },
     {
       "path": "app/page.tsx",
-      "sha256": "b232bf47577b832ee4ef4fb54f06c9c87662eb2dfb707ed50795e133295df943"
+      "sha256": "a0d8bfbabb5eda57c14e0ee03ccd108e60140effa95bd7e61afdd6896f254391"
     },
     {
       "path": "app/participation/page.tsx",
@@ -374,7 +375,7 @@
     },
     {
       "path": "app/welcome.css",
-      "sha256": "3aa8209f938b611a2a0032cbee708d9c7c49b21bc80b7828e510ec2228f9d3dd"
+      "sha256": "6bf69a9aa8055bd27dfe0b13d2a03064269720af45f9121070d10df8bd0f7b4a"
     },
     {
       "path": "build/connector-preview-plugin.mjs",
@@ -470,7 +471,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "73ddc7ebad845d0f2461d5ba3a7f54292e63bb35809910a9b721a7b0ad1bba3e"
+      "sha256": "d3b173b550fa47a0350b6d793043af36c04554d839e00b107172d24661142d06"
     },
     {
       "path": "components/aura-nav-link.css",
