@@ -1,6 +1,7 @@
 // Execute the actual automatic-sync effect with blocked browser storage.
 // No network, cookies, participant data or real browser state.
 import assert from 'node:assert/strict';
+import {setAccountSyncActivity,getAccountSyncActivity} from '../lib/account-sync-activity.ts';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from '../node_modules/typescript/lib/typescript.js';
@@ -24,7 +25,7 @@ for (const getterDenied of [false, true]) {
   const pending = [];
   let status = '', requests = 0, locks = 0;
   const context = {pending, pathname: '/account-sync', Date, Event,
-    setStatus: value => {status = value;}, setConflicts() {}, setRefresh() {},
+    setStatus: value => {status = value;}, setConflicts() {}, setRefresh() {}, setAccountSyncActivity,
     captureAccountValues: blocked, accountDataDigest: async () => 'unused',
     fetch: async () => { requests++; throw Error('No transport allowed'); },
     document: {visibilityState: 'visible', addEventListener() {}, removeEventListener() {}},
@@ -41,5 +42,6 @@ for (const getterDenied of [false, true]) {
   assert.equal(result.status, 'fulfilled', 'Storage denial must not escape as an unhandled rejection');
   assert.match(status, /storage is unavailable/i);
   assert.equal(requests, 0); assert.equal(locks, 0);
+  assert.equal(getAccountSyncActivity().phase, 'idle', 'Storage denial must clear activity feedback');
 }
 console.log('PASS blocked localStorage getter and getItem: visible paused state, no unhandled rejection, no network or account writes.');

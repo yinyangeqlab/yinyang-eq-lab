@@ -1,5 +1,7 @@
 "use client";
 import {useEffect,useState} from 'react';
+import {setAccountSyncActivity} from '@/lib/account-sync-activity';
+import {SyncActivityIndicator,useAccountSyncActivity} from '@/components/account-sync-activity';
 import {usePathname} from 'next/navigation';
 import './account-auto-sync.css';
 import {readAccountState,writeAccountState} from '@/lib/account-sync-transfer.mjs';
@@ -9,18 +11,20 @@ import {captureAccountValues,applyAccountValues,mergeAccountValues,validateAccou
 type State={segmented?:boolean;enabled?:boolean;devicePaused?:boolean;protectedAccount?:boolean;accountKey?:string;consent?:{stamp:string;monitoring:boolean};epoch:string;revision:number;initialized:boolean;values:Record<string,string>};
 const same=(a:unknown,b:unknown)=>JSON.stringify(a)===JSON.stringify(b);
 export default function AccountAutoSync(){
+ const activity=useAccountSyncActivity();
  const pathname=usePathname(),[status,setStatus]=useState(''),[conflicts,setConflicts]=useState<string[]>([]),[refresh,setRefresh]=useState(false),[dismissed,setDismissed]=useState(false);
  useEffect(()=>{try{setDismissed(sessionStorage.getItem('yinyang-hide-synced-notice')==='true');}catch{/* Hiding this notice remains available without session storage. */}},[]);
  useEffect(()=>{let stopped=false,busy=false,disabled=false,lastPoll=0,retryAt=0,failures=0,lastReport=0;let observedConsent='';let lastState:State|undefined;
  const safe=['/','/home','/my-profile','/account-sync','/my-data','/privacy','/curve-credits'].includes(pathname);
- async function report(state:State|undefined,phase:string){if(Date.now()-lastReport<25000&&phase==='paused')return;try{const digest=await accountDataDigest(captureAccountValues(localStorage));await fetch('/api/my-profile/devices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'report',epoch:state?.epoch||'',revision:state?.revision||0,dataDigest:digest,consentStamp:observedConsent||null,state:phase})});lastReport=Date.now();window.dispatchEvent(new Event('yinyang-device-status'));}catch{/* Status reporting never interrupts or overwrites saved listening data. */}}
+ async function report(state:State|undefined,phase:string){if(Date.now()-lastReport<25000&&phase==='paused')return;try{if(!stopped)setAccountSyncActivity('confirming',phase==='synced'?'Confirming this browser’s data and consent…':'Reporting this browser’s sync status…');const digest=await accountDataDigest(captureAccountValues(localStorage));await fetch('/api/my-profile/devices',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'report',epoch:state?.epoch||'',revision:state?.revision||0,dataDigest:digest,consentStamp:observedConsent||null,state:phase})});lastReport=Date.now();window.dispatchEvent(new Event('yinyang-device-status'));}catch{/* Status reporting never interrupts or overwrites saved listening data. */}finally{if(phase==='paused'&&!stopped)setAccountSyncActivity('idle');}}
  async function tick(){if(stopped||busy||disabled||document.visibilityState!=='visible'||Date.now()<retryAt)return;busy=true;
  try{if(localStorage.getItem('yinyang-account-sync-paused')==='true'){setStatus('Automatic sync is paused on this browser. Your account copy is retained.');await report(lastState,'paused');return;}await navigator.locks.request('yinyang-account-auto-sync',async()=>{
   if(stopped)return;
   let base:State|null=null;try{base=await readSyncBase(localStorage) as State|null;if(base)validateAccountValues(base.values);}catch{throw Error('Saved sync state could not be read. Local data is unchanged.');}
   const local=captureAccountValues(localStorage),dirty=base&&!same(local,base.values);
   if(!dirty&&Date.now()-lastPoll<30000)return;
-  const remote=await readAccountState() as State;lastState=remote;lastPoll=Date.now();
+  setAccountSyncActivity('checking','Checking the account for updates…');
+  const remote=await readAccountState(undefined,fetch,message=>{if(!stopped)setAccountSyncActivity(message.startsWith('Downloading')?'downloading':'verifying',message);}) as State;lastState=remote;lastPoll=Date.now();
   if(base&&(base.accountKey&&base.accountKey!==remote.accountKey||!base.accountKey&&!remote.protectedAccount))base=null;
   if(remote.consent&&observedConsent!==remote.consent.stamp){observedConsent=remote.consent.stamp;try{localStorage.setItem('yinyang-activity-monitoring',String(remote.consent.monitoring));window.dispatchEvent(new Event('yinyang-monitoring-choice'));window.dispatchEvent(new Event('yinyang-data-changed'));}catch{}}
   if(remote.enabled===false){setStatus(remote.devicePaused?'Automatic sync is paused for this device. Resume it in Sync settings.':'Account sync is off. Review your data choices to enable it.');return;}
@@ -35,19 +39,20 @@ if(stopped||localStorage.getItem('yinyang-account-sync-paused')==='true')return;
   const incoming=!same(desired,local);
   if(incoming&&!safe){setStatus('Changes from another device are ready. Open Sync settings to apply them safely.');await report(remote,'pending');return;}
   let saved=remote;
-  if(!remote.segmented||!remote.initialized||!same(desired,remote.values))saved=await writeAccountState(remote,desired,fetch,message=>{if(stopped||localStorage.getItem('yinyang-account-sync-paused')==='true')throw Error('Transfer paused; saved copies are retained.');setStatus(message);}) as State;
+  if(!remote.segmented||!remote.initialized||!same(desired,remote.values)){setAccountSyncActivity('uploading','Preparing saved data for upload…');saved=await writeAccountState(remote,desired,fetch,message=>{if(stopped||localStorage.getItem('yinyang-account-sync-paused')==='true')throw Error('Transfer paused; saved copies are retained.');setAccountSyncActivity(message.startsWith('Verifying')?'verifying':'uploading',message);setStatus(message);}) as State;}
   if(stopped||localStorage.getItem('yinyang-account-sync-paused')==='true')return;
   // Save the acknowledged base even if a fresh local edit raced the write;
   // the next three-way merge then uploads that edit without losing remote state.
   if(!same(local,captureAccountValues(localStorage))){await writeSyncBase(localStorage,saved);return;}
-  if(incoming){applyAccountValues(localStorage,desired);setRefresh(true);window.dispatchEvent(new Event('yinyang-data-changed'));}
-  await writeSyncBase(localStorage,saved);failures=0;retryAt=0;setStatus(incoming?'Account data updated on this browser. Refresh to show it in any open tools.':'✓ This browser matches the account');await report(saved,'synced');
+  if(incoming){setAccountSyncActivity('applying','Applying verified account updates to this browser…');applyAccountValues(localStorage,desired);setRefresh(true);window.dispatchEvent(new Event('yinyang-data-changed'));}
+  await writeSyncBase(localStorage,saved);failures=0;retryAt=0;setStatus(incoming?'Account data updated on this browser. Refresh to show it in any open tools.':'✓ This browser matches the account');setAccountSyncActivity('confirming','Confirming this browser’s data and consent…');await report(saved,'synced');
  });}catch(cause){const error=cause as Error&{status?:number};if(error.status===401||error.status===403){disabled=true;setStatus('');setConflicts([]);}else if(error.status===409){lastPoll=0;setStatus('Another device saved changes. Retrying safely…');}else{await report(lastState,'pending');failures++;retryAt=Date.now()+Math.min(60000,3000*2**Math.min(failures,4));setStatus(error.name==='SecurityError'?'Sync paused because browser storage is unavailable. Allow site storage, then retry.':error.status===422?error.message:'Sync paused. Your browser data is saved locally. '+error.message);}}
- finally{busy=false;}}
+ finally{busy=false;if(!stopped)setAccountSyncActivity('idle');}}
  void tick();const timer=window.setInterval(()=>void tick(),3000);const focus=()=>{lastPoll=0;retryAt=0;disabled=false;void tick();};window.addEventListener('focus',focus);window.addEventListener('yinyang-sync-permission-changed',focus);window.addEventListener('yinyang-data-changed',focus);document.addEventListener('visibilitychange',focus);
- return()=>{stopped=true;window.clearInterval(timer);window.removeEventListener('focus',focus);window.removeEventListener('yinyang-sync-permission-changed',focus);window.removeEventListener('yinyang-data-changed',focus);document.removeEventListener('visibilitychange',focus);};
+ return()=>{stopped=true;setAccountSyncActivity('idle');window.clearInterval(timer);window.removeEventListener('focus',focus);window.removeEventListener('yinyang-sync-permission-changed',focus);window.removeEventListener('yinyang-data-changed',focus);document.removeEventListener('visibilitychange',focus);};
  },[pathname]);
- const matched=status==='✓ This browser matches the account'&&conflicts.length===0&&!refresh;
- if(!status||(matched&&dismissed))return null;
- return <aside className={`account-sync-status${matched?" is-matched":""}`} aria-label="Account automatic sync">{matched&&<span className="account-sync-check" aria-hidden="true">✓</span>}<p role="status">{matched?"Browser matches account":status}</p>{conflicts.length>0&&<p>Conflicting data: {conflicts.map(key=>key.replace(/^target-lab-/, '').replaceAll('-',' ')).join(', ')}. <a href="/account-sync">Review account copies</a></p>}{status.startsWith("Automatic sync is paused")&&<button onClick={()=>{localStorage.removeItem("yinyang-account-sync-paused");window.location.reload();}}>Resume account sync</button>}{refresh&&<button onClick={()=>window.location.reload()}>Refresh saved data</button>}<a className="account-sync-settings" href="/account-sync" title="Sync settings and devices">{matched?"Sync settings":"Sync settings & devices"}</a>{matched&&<button className="account-sync-dismiss" type="button" aria-label="Hide up-to-date sync notice" title="Hide for this browser session; sync continues and warnings still appear" onClick={()=>{setDismissed(true);try{sessionStorage.setItem("yinyang-hide-synced-notice","true");}catch{}}}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>}</aside>;
+ const active=activity.phase!=='idle';
+ const matched=!active&&status==='✓ This browser matches the account'&&conflicts.length===0&&!refresh;
+ if((!status&&!active)||(matched&&dismissed))return null;
+ return <aside className={`account-sync-status${matched?" is-matched":""}`} aria-label="Account automatic sync">{matched&&<span className="account-sync-check" aria-hidden="true">✓</span>}<p role="status" aria-live="polite"><SyncActivityIndicator active={active}>{active?activity.message:matched?"Browser matches account":status}</SyncActivityIndicator></p>{conflicts.length>0&&<p>Conflicting data: {conflicts.map(key=>key.replace(/^target-lab-/, '').replaceAll('-',' ')).join(', ')}. <a href="/account-sync">Review account copies</a></p>}{status.startsWith("Automatic sync is paused")&&<button onClick={()=>{localStorage.removeItem("yinyang-account-sync-paused");window.location.reload();}}>Resume account sync</button>}{refresh&&<button onClick={()=>window.location.reload()}>Refresh saved data</button>}<a className="account-sync-settings" href="/account-sync" title="Sync settings and devices">{matched?"Sync settings":"Sync settings & devices"}</a>{matched&&<button className="account-sync-dismiss" type="button" aria-label="Hide up-to-date sync notice" title="Hide for this browser session; sync continues and warnings still appear" onClick={()=>{setDismissed(true);try{sessionStorage.setItem("yinyang-hide-synced-notice","true");}catch{}}}><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg></button>}</aside>;
 }
