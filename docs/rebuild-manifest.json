@@ -26,7 +26,8 @@
       "baseCommit": "c26669cd2d5faecfd983a890a3ecd7dc9092427b",
       "status": "Local reviewed commits only; no push, deployment or data export.",
       "groups": [
-        "timing"
+        "timing",
+        "measurement"
       ]
     }
   },
@@ -358,7 +359,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "13e7f76422a363bb908126c434ac166e5a72de3254c81ca3c86af0758f406742"
+      "sha256": "fa7fec9b283b47e11b753bed0e94f934625380e134e80a48ac56428d8689ee2f"
     },
     {
       "path": "app/shootout/personal/layout.tsx",
@@ -366,7 +367,7 @@
     },
     {
       "path": "app/shootout/personal/page.tsx",
-      "sha256": "b2a0cebdff831104e03f859d307689a773c82d87ecf658d48bfb2110e96f3131"
+      "sha256": "5fdc5c9635868a8011bd09416befa5716c2f53212b513822fd08538e63259d22"
     },
     {
       "path": "app/shootout/personal/personal.css",
@@ -494,7 +495,7 @@
     },
     {
       "path": "components/before-you-listen.tsx",
-      "sha256": "333d37121730bfff131709e407ca20c77ce06221e13a91d7b8a44ef3b4765b8e"
+      "sha256": "f319dad4be07345a19d2c4888e89a2837d7a5d43e29eb007f270b2b39a961e27"
     },
     {
       "path": "components/community-method.tsx",
@@ -534,7 +535,7 @@
     },
     {
       "path": "components/headphone-picker.tsx",
-      "sha256": "756b4ed573cf6a8d317c936056446e07256d492b759968e66810c9617740e456"
+      "sha256": "f48776bec88ff2fc7cc1de6b6bfc4825db1c9bdeac9e5a18c925b3c0626c1a3f"
     },
     {
       "path": "components/invite-mode.tsx",
@@ -671,6 +672,10 @@
     {
       "path": "components/sharing-permission-status.tsx",
       "sha256": "5256175d7785945936888797468ed9f153b2cb7f60b319f33940c7e64948d989"
+    },
+    {
+      "path": "components/shootout-organization.css",
+      "sha256": "63b7f07c7f5efc94ffb43d1e85ef3faade4aa789b3f6214e1dc4f01283c7fe45"
     },
     {
       "path": "components/site-beta-notice.tsx",
@@ -970,7 +975,7 @@
     },
     {
       "path": "components/use-listening-reminder.ts",
-      "sha256": "0d5a9cdb82f31e750a9c6f384bad3b80975daa9322ca41c5242c59873d39580d"
+      "sha256": "0025beca5da3fea39f4f21cac76ac69a2a88439e014213327df39477afc4c7c4"
     },
     {
       "path": "components/yinyangeq-account-panel.tsx",
@@ -2170,7 +2175,7 @@
     },
     {
       "path": "scripts/check_setup_auto_hide.mjs",
-      "sha256": "dde7d88332c0eed80ff3fc8254e21d1ac7ed0b3431a8fe416a9f7b918ad99113"
+      "sha256": "026e2e6435035bb6984bab1fc7582084616c394b0fea5ce1d81a91512301d37f"
     },
     {
       "path": "scripts/check_source_bitrate.mjs",
