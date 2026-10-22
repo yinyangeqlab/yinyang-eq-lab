@@ -17,7 +17,7 @@ export const releaseInfo = {
   ],
 } as const;
 
-export const repositoryUrl = "https://github.com/yinyangeqlab/yinyang-eq-league";
+export const repositoryUrl = "https://github.com/yinyangeqlab/yinyang-eq-lab";
 const bugReportBody = `Version: ${releaseInfo.version}
 
 ## What happened?

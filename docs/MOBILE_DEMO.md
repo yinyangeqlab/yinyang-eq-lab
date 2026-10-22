@@ -4,7 +4,7 @@
 
 **Short link for Discord: (retired demo)** · [Sharing guide](VIDEOS.md). The inline player is a smaller streaming copy; the original remains available below.
 
-[Watch or download the mobile walkthrough]((retired demo)) · [Mobile demo release](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/mobile-layouts-2026-10-17)
+[Watch or download the mobile walkthrough]((retired demo)) · [Mobile demo release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/mobile-layouts-2026-10-17)
 
 45.2-second portrait video, 1080 × 1920, 30 fps, H.264/AAC.
 

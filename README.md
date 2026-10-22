@@ -1,6 +1,6 @@
 <div align="center">
 
-# YinYang EQ League
+# YinYang EQ Lab
 
 ### Find your sound. Let your ears decide.
 
@@ -8,7 +8,7 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 
 **Public beta · 0.2.0-beta.1** — [About this version](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
-**[Explore the site](https://yinyangeq.com) · [Watch the demo](https://github.com/yinyangeqlab/yinyang-eq-league/releases/tag/demo-2026-10-17) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new)**
+**[Explore the site](https://yinyangeq.com) · [Watch the demo](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/demo-2026-10-17) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
 [![Vibe coded with GPT Codex](https://img.shields.io/badge/vibe_coded_with-GPT_Codex-aea1ff?style=flat-square)](#made-with-gpt-codex)
@@ -30,7 +30,7 @@ Start with **Personal Tournament** to build a shortlist of favorite targets, **B
 
 The current beta refreshes Welcome, listening setup and playback, Personal Tournament, Preference Tuning, Music Library, and My Space. Music selection and available audio specifications sit beside the player; the original AMOLED curves, waveforms, and colors remain. The sidebar divider cycles **Full → Icons → Hidden → Full**, with your layout remembered across reloads. The library loads more tracks as you browse.
 
-Use **Space** to play or pause, **1 / 2** to select A or B, **S** to switch sides, and **← / →** to seek a quarter second in the active comparison. Shortcuts respect typing, form controls, and open dialogs. See [all shortcuts](https://yinyangeq.com/shortcuts), or [report a beta bug](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new) with your browser, device, and steps to reproduce it.
+Use **Space** to play or pause, **1 / 2** to select A or B, **S** to switch sides, and **← / →** to seek a quarter second in the active comparison. Shortcuts respect typing, form controls, and open dialogs. See [all shortcuts](https://yinyangeq.com/shortcuts), or [report a beta bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new) with your browser, device, and steps to reproduce it.
 
 The videos and screenshots below show the **October 17 interface**, before the current beta refresh. They introduce the listening workflow; their layouts and labels are historical.
 
@@ -44,11 +44,11 @@ Take a quick, casual tour of the phone layout: **45 seconds · vertical 9:16 · 
 
 A historical look at the October 17 interface, including comparisons, measurements, the music library, and Preference Tuning. The current site also includes Personal Tournament, Research Rankings, Community Preferences, and optional account sync. [Video and music credits](docs/MOBILE_DEMO.md).
 
-**Share to Discord:** [Trailer]((retired demo)) · [Mobile demo]((retired demo)) · [Copy short links and credits →](docs/VIDEOS.md) · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-league/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
+**Share to Discord:** [Trailer]((retired demo)) · [Mobile demo]((retired demo)) · [Copy short links and credits →](docs/VIDEOS.md) · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
 
 ## Hear the difference
 
-What happens when the same song meets two different headphone targets? YinYang EQ League lets you switch between them, listen, and choose **Prefer A**, **Prefer B**, or **Unsure / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
+What happens when the same song meets two different headphone targets? YinYang EQ lets you switch between them, listen, and choose **Prefer A**, **Prefer B**, or **Unsure / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
 
 
 *One track, two target EQs. Switch sides during playback, hide or reveal curves in open mode, and add optional listening notes.*
@@ -141,7 +141,7 @@ The source includes references to PEQdB as a target creator and to its TXT prese
 
 ## Bugs, ideas, and contact
 
-Found something broken, have a listening idea, or want to ask about the project? **[Open a GitHub issue](https://github.com/yinyangeqlab/yinyang-eq-league/issues/new)**. For a bug, include your browser/device, the page or mode, what you expected, and what happened. Keep tokens and personal files out of public reports.
+Found something broken, have a listening idea, or want to ask about the project? **[Open a GitHub issue](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**. For a bug, include your browser/device, the page or mode, what you expected, and what happened. Keep tokens and personal files out of public reports.
 
 You can also reach Yin Yang EQ Lab at **[yinyangeqlab@gmail.com](mailto:yinyangeqlab@gmail.com)**.
 

@@ -2277,15 +2277,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "83e4d720951f68624f8fa573535e3aa899a65a0c1eb52f4c5832e7f3a60bd3be"
+      "sha256": "2a4afbc3c7fb24e000bcef8d2abb58365ee5016a63498e9042267fc5b7c23b02"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "15faf24a3352c0fbc801d1e925899353b7e00a5417da06350730cfb2e96d83ed"
+      "sha256": "a63a8469ddf4e72cc9952416bbc313febb630c63ebcb0dd1a485d4bb17c55725"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "49898208f964624f0363bbb61c6781d499090502720bd74ebc59a523d6174ddc"
+      "sha256": "0ca9120f80aca6d1dee35c4c9caa2439ac05fee952cc499da4a43510c285a7c6"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2293,7 +2293,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "2ec9d12dfd53bab23e0a204876b740767d4c0c006b6548c3c9cdaadf189b7b56"
+      "sha256": "669d8b4f9f865c6d893b386bfdf968478005be830b2ede86cd454e7a4d82f421"
     },
     {
       "path": "RESEARCH_PROTOCOL.md",
@@ -2301,7 +2301,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "19025f510e1434ad241e797adb407f6e588cea39bb9f18e54ca3e9a389864fc6"
+      "sha256": "76952bb059ab263cb232150659df3dea07cae8a9a33c6c55a85d91c918552b87"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -9931,7 +9931,8 @@
     "pushVerifiedAt": "2026-10-22T05:21:23.330801+00:00",
     "authorAndCommitterVerified": true,
     "githubLogin": "yinyangeqlab",
-    "previousPublishedReleaseCommit": "5d6988102b0f800deb8baa730e4f11e4227fbd48"
+    "previousPublishedReleaseCommit": "5d6988102b0f800deb8baa730e4f11e4227fbd48",
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
@@ -10306,5 +10307,21 @@
     "physicalAudio": true,
     "safariIos": true,
     "acceptedOn": "2026-10-21"
+  },
+  "repositoryBranding": {
+    "date": "2026-10-21",
+    "oldRepository": "https://github.com/yinyangeqlab/yinyang-eq-league",
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "repositoryId": 1423091115,
+    "inPlaceRename": true,
+    "product": "YinYang EQ",
+    "creator": "Yin Yang EQ Lab",
+    "sourceUrlUpdatesDeployed": false,
+    "liveUpdateUnchanged": 109,
+    "implementationCommitUnchanged": "69289ddfc819b443c9b6e2a882c74699d4ef65ea",
+    "videoRepositoryNameUnchanged": "yinyangeqlab.github.io",
+    "deploymentPerformed": false,
+    "dataExportPerformed": false,
+    "guide": "docs/REPOSITORY_RENAME.md"
   }
 }
