@@ -15,7 +15,7 @@ const compiled = ts.transpileModule('const run=' + effect + ';run();', { compile
 const values = new Map([['target-lab-trials', '[]']]);
 let clock = 1_000_000_000_000;
 const TestDate = class extends Date { static now() { return clock; } };
-const stats = { reads: 0, reports: 0, statuses: [] };
+const stats = { reads: 0, reports: 0, statuses: [], known: [] };
 let readFailure = null;
 const remote = { epoch: 'e1', revision: 3, initialized: true, enabled: true, segmented: true, values: { 'target-lab-trials': '[]' }, accountKey: 'k', sections: {}, protectedAccount: true };
 const storage = { getItem: k => values.get(k) ?? null, setItem: (k, v) => values.set(k, String(v)), removeItem: k => values.delete(k) };
@@ -37,7 +37,7 @@ function mount(pathname = '/my-profile') {
     captureAccountValues: () => ({ 'target-lab-trials': values.get('target-lab-trials') }),
     applyAccountValues() {}, validateAccountValues() {}, mergeAccountValues: (_b, local) => ({ values: local, conflicts: [] }),
     accountDataDigest: async () => 'digest-1',
-    readAccountState: async () => { stats.reads++; if (readFailure) throw Object.assign(Error('Too many requests. Please wait a minute.'), { status: readFailure }); return { ...remote }; },
+    readAccountState: async (_endpoint, _fetch, _progress, known) => { stats.reads++; stats.known.push(known); if (readFailure) throw Object.assign(Error('Too many requests. Please wait a minute.'), { status: readFailure }); return { ...remote }; },
     writeAccountState: async () => remote,
     fetch: async (url) => { if (String(url).includes('/devices')) stats.reports++; return { ok: true, json: async () => ({}) }; },
   });
@@ -74,10 +74,14 @@ clock += 31_000; page.tick(); await settle();
 assert.equal(stats.reads, 3);
 assert.equal(stats.reports, 2, 'heartbeat is sent at least once a minute during active checks');
 
+// A clean browser offers its acknowledged copy so an unchanged account costs one request; a local edit never does.
+assert.ok(stats.known.length >= 3 && stats.known.every(k => k && k.epoch === 'e1' && k.revision === 3 && k.accountKey === 'k'), 'clean checks offer the acknowledged copy');
+
 // A local edit is uploaded promptly instead of waiting for the interval.
 values.set('target-lab-trials', '[{"id":"edit"}]');
 const beforeEdit = stats.reads; page.tick(); await settle();
 assert.equal(stats.reads, beforeEdit + 1, 'local edits bypass the check interval');
+assert.equal(stats.known.at(-1), null, 'a dirty browser always downloads the full account');
 values.set('target-lab-trials', '[]');
 
 // Rate limiting: one quiet wait, no extra report, and no retry from focus, visibility, navigation or reloads.
