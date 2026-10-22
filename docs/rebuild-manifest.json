@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 106,
-  "implementationCommit": "87077e897a16b33c00c1528d5f32e430410b617b",
-  "runtimeParity": "Current live update106 retained; single sidebar divider, compact dismissible healthy sync status and data-choice state colors prepared for local review before publication and deployment.",
+  "liveUpdate": 107,
+  "implementationCommit": "eab9029ee22f582c04deff46a65936fb9db7a24a",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update107. Exact immutable source/build fingerprints are preserved; recovery metadata handover remains blocked by an external queued validation.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
