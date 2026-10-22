@@ -1,0 +1,85 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 112,
+  "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
+  "deploymentVerification": {
+    "at": "2026-10-22T10:03:28.156Z",
+    "revision": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
+    "update": 112,
+    "deployment": {
+      "id": "fe55dfde-0f66-478d-932e-3fd3e6499f10",
+      "versions": [
+        {
+          "version_id": "68f5e68b-ce10-400e-b304-6a0ec7d55eff",
+          "percentage": 100
+        }
+      ]
+    },
+    "assetsVerified": 682,
+    "retainedPreviousClientAssets": 587,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "afterDeployPreview": "4 unchanged",
+    "note": "The first update112 deployment omitted retained prior browser assets for about two minutes; it was replaced by a second deployment that retained them, then by the final deployment (1 Worker update each, 3 resources unchanged). Edge and cost-guard settings were not changed or re-verified by this release."
+  },
+  "verification": {
+    "assetsByteComparison": {
+      "checked": 682,
+      "matched": 682,
+      "failures": 0
+    },
+    "protectedMediaAnonymousStatus": 401,
+    "pagesChecked": [
+      "/",
+      "/version",
+      "/privacy",
+      "/shortcuts"
+    ],
+    "axe": {
+      "version": "4.11.4",
+      "scans": 69,
+      "violations": 0,
+      "incompleteContrastReview": 761
+    },
+    "regression": "70 of 73 checks pass; the same three pre-existing checks fail on unchanged update111",
+    "physicalDevicesSafariFirefoxScreenReader": "not tested"
+  },
+  "backupMetadata": {
+    "at": "2026-10-22T10:09:43.793146+00:00",
+    "sourceBaselineUpdate": 111,
+    "sourceOnlyHandoverPassed": false,
+    "handoverStatus": "refused before any change: existing hosted writer (two orphaned queued validate-only runs 39714463821 and 39707998100); no inspected evidence supplied",
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": true,
+    "matchingCurrentReleaseBaseline": false,
+    "dailyWorkflowActive": true,
+    "rollbackPreserved": true,
+    "rollbackBuild": "work/reconciled-drafts-release-20261022",
+    "rollbackManifestFiles": 1587
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": false,
+    "publicationOnHold": false,
+    "credentialsOrPrivateReceiptsIncluded": false,
+    "publicationSeparateFromDeployment": true
+  }
+}
