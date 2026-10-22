@@ -2,13 +2,17 @@
 
 Owner requirement: use ONLY the `yinyangeqlab` GitHub account for all project contributions, commits, pushes, pull requests, and publication. NEVER use a personal GitHub account, personal email, or the inherited global Git identity. Set Git author AND committer to `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>`; GitHub connector commits must use the yinyangeqlab connection. Verify both actual identities before every commit/publication, including in temporary clones, worktrees, scripts, and tools. Repository ownership alone does not control attribution. Preserve local identity guards and never bypass them. Never republish pre-scrub history: use the scrubbed main history for publication, while preserving original historical release provenance. Stop if the lab identity cannot be verified. This is a permanent owner instruction for every future session.
 
+# Canonical GitHub repository — renamed October 21, 2026
+
+Use ONLY `yinyangeqlab/yinyang-eq-lab` for future application work: https://github.com/yinyangeqlab/yinyang-eq-lab (origin: https://github.com/yinyangeqlab/yinyang-eq-lab.git). The former `yinyang-eq-league` name redirects to the same repository; do not recreate it or treat it as another app. The separate `yinyangeqlab.github.io` repository hosts public demo videos and credits, not application source; preserve its short video URLs. Read docs/REPOSITORY_RENAME.md and the current handover. Preserve immutable historical provenance, old backups and lab identity hooks. Renaming/publication does not authorize a deployment.
+
 # Canonical development and recovery workspace
 
 This checkout is the active source. In the owner container it is workspace/. Do not edit the parent live mirror or archived previews. Read docs/HANDOFF.md and docs/RECOVERY.md; fetch and inspect status/divergence before editing. Use the pinned recovery toolchain and keep all external inputs outside Git.
 
 # Current release and rebuild instructions
 
-Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current baseline is live update101. Per-feature timed maintenance, independent consent entry and Tuning fixes are deployed; read the active notice and audit limits in HANDOFF.md. Preserve and exclude separate uncommitted personal-shootout work when selecting a baseline. Historical handoffs are not deployment instructions.
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current deployed baseline is 0.2.0-beta.1 / update110. Read the active notice and audit limits in HANDOFF.md. Reviewed local source commits are not deployed; see docs/DRAFT_RECONCILIATION_2026-10-22.md. Preserve separate original drafts when selecting a baseline. Historical handoffs are not deployment instructions.
 
 In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
 
@@ -34,3 +38,7 @@ For UI changes, check both closed native selects and their expanded option menus
 
 Commits and local previews do not trigger production backup exports. Distinguish source/build baseline maintenance from a fresh data export, and explain actual additional quota use before requesting approval. Prefer the existing verified recovery point and regular daily coverage for low-risk UI-only releases; avoid redundant exports and duplicate immutable media. Database/schema changes, destructive operations and risky imports require an explicit backup decision. One necessary matching release point should serve the release, rather than a point for every commit. Never relabel incompatible source/schema as a valid baseline or claim a declined/unverified export succeeded. If the owner declines an export, preserve existing recovery points, document the precise coverage gap and the scheduled runner's refusal on mismatched baselines. Any future work to separate metadata-only baseline handover from data exports must retain immutable provenance and verification safeguards.
 
+
+## Daily data backups and source-only handovers — October 20, 2026
+
+Routine data backups run once daily; commits/previews do not trigger exports. Manual hosted runs default to validation only. For an ordinary verified code-only deployment, use scripts/recovery/release_handover.py with the exact release and deployment verification receipt to register source/build metadata without a data export. This preserves the existing data snapshot/timestamp until the next scheduled export. Keep migration, operational schema, live schema, recovery-code, media, deployment and provenance checks; changed schema/media/recovery or risky data operations still need an explicit backup decision. Never claim metadata registration is a new data recovery point. Keep existing retention/shared-media reuse and failure notifications. Resume only an inspected failed handover with --resume-paused-handover; preserve unrelated owner pauses.

@@ -28,7 +28,8 @@
       "groups": [
         "timing",
         "measurement",
-        "sync"
+        "sync",
+        "docs"
       ]
     }
   },
@@ -49,6 +50,10 @@
     {
       "path": ".openai/hosting.json",
       "sha256": "89610cb100afd3db32d865423a69a3fe2de1da54150570ea979a63143a6d5bdd"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "090609772f527f0003a1bafbfbe028ba9392419eee11241965e246051b55175b"
     },
     {
       "path": "app/account-sync/page.tsx",
@@ -1073,6 +1078,30 @@
     {
       "path": "docs/CONSENT_UI_REVIEW_2026-10-19.md",
       "sha256": "38bd964a2ef9c942ac21a09c1df0cdd84b6273219e81fd7fa25eecb2b37243ce"
+    },
+    {
+      "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
+      "sha256": "07e45d34d7807e730fc7763ea91f97aec4f32e4eefb13fc81017b71fb14f1a23"
+    },
+    {
+      "path": "docs/research/README.md",
+      "sha256": "a0f5d0a08fcb7ec44547dc88a7b62cbc69888258a8cbcd8a2f772431f3ba8459"
+    },
+    {
+      "path": "docs/research/listener-consistency/analysis-plan.md",
+      "sha256": "67b286238ab3249fc98120fae6556f39e389d2fefe811afb1262b239aecf2ac8"
+    },
+    {
+      "path": "docs/research/listener-consistency/decisions.md",
+      "sha256": "0d2f0860dc3ea3a894ce743a71031c99283776927596afb6ccfcf83a7cf5c128"
+    },
+    {
+      "path": "docs/research/listener-consistency/discussion-2026-10-19.md",
+      "sha256": "4d2e00c921cc46b85e52e8f943303fbd03d0d833312e828d74677cd5465db350"
+    },
+    {
+      "path": "docs/research/listener-consistency/research-questions.md",
+      "sha256": "c3f569896a3afd69b8160e5f7ef4b2d5f4999c32f927073556f00a10b1dfd182"
     },
     {
       "path": "drizzle.config.ts",
