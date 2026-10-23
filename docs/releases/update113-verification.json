@@ -1,0 +1,77 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 113,
+  "implementationCommit": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
+  "deploymentVerification": {
+    "at": "2026-10-23T00:53:56Z",
+    "revision": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
+    "update": 113,
+    "deployment": {
+      "id": "not read: no Cloudflare API credential in the deploying session",
+      "pulumiWorkerEtag": "fa6c2876c4a48ad2a8d152da4706e343e142104796ad5c373d21450755330aa4",
+      "workerModifiedOn": "2026-10-23T00:51:15Z"
+    },
+    "assetsVerified": 713,
+    "retainedPreviousClientAssets": 682,
+    "schemaDefinitions": 213,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "codeAndAssetsOnly": true,
+    "preflightPreviewOfLiveBuild": "4 unchanged",
+    "afterDeployPreview": "4 unchanged"
+  },
+  "verification": {
+    "assetsByteComparison": {
+      "checked": 714,
+      "matched": 713,
+      "failures": 0,
+      "note": "The one non-match, /dynamic-range-worklet.js, is behind the participant gate (303) and is byte-identical to the update112 file."
+    },
+    "protectedMediaAnonymousStatus": 401,
+    "apiTargetsAnonymousStatus": 401,
+    "anonymousDeleteTargetsStatus": 401,
+    "pagesChecked": [
+      "/",
+      "/version",
+      "/privacy",
+      "/shortcuts"
+    ],
+    "axe": {
+      "version": "4.11.4",
+      "scope": "starter and comparison states at 1440, 390 and 320 px",
+      "violations": 0
+    },
+    "regression": "71 of 74 checks pass; the same three pre-existing checks fail on unchanged code (check_listener_nickname, check_ranking_view, check_source_bitrate)",
+    "withdrawEndToEnd": "local gated preview: owner 200, other participant 403, approved 409, malformed id 400",
+    "physicalDevicesSafariFirefoxScreenReader": "not tested"
+  },
+  "backupMetadata": {
+    "sourceBaselineUpdate": 112,
+    "sourceOnlyHandoverPassed": false,
+    "handoverStatus": "pending: not registered; the scheduled backup refuses until registration",
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": true,
+    "backupDecision": "Owner chose the split release (no migration), so no export was required."
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": false,
+    "publicationSeparateFromDeployment": true,
+    "publicationAuthorized": false
+  }
+}

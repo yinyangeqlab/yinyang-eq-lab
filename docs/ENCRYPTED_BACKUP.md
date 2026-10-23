@@ -1,3 +1,9 @@
+# Update113 source-only metadata handover pending — October 22, 2026
+
+update113 (code-only, no migration or schema change) is deployed and verified, but its source/build metadata is not registered yet. Until `scripts/recovery/release_handover.py` registers it with the receipt `work/targets-shortcuts-rollback-20261022/handover-deployment-verification.json`, the scheduled data backup refuses the mismatched baseline (it still names update112). Registration is metadata only, never a data snapshot; all earlier encrypted off-device snapshots and timestamps are unchanged. No data export was made or authorized for update113.
+
+## Earlier recovery notes (historical)
+
 # Update112 source-only recovery handover repaired — October 22, 2026
 
 Matching update112 source/build metadata and hosted validation-only checks passed. Independent authentication verified all prior encrypted off-device data snapshots and original timestamps unchanged; no database export, new snapshot or retention run. Daily scheduling is active with the matching baseline. Today’s earlier scheduled run failed on the previous baseline, and the next data export remains on the normal daily schedule. Durable private hashed evidence preserves the two inspected empty validation proofs across releases; each active run is still checked live and unknown, scheduled, data-writing or started jobs still block. Workflow enablement now has a propagation delay and active-state check before dispatch; this does not establish a repair to GitHub’s stranded-record defect. The host still refuses cancellation/deletion of those two records. All 56 canonical backup safety tests and 33 isolated tooling tests passed. Private ledger, original receipts, configuration and keys stay outside Git. This is source metadata registration, not a new data recovery point.

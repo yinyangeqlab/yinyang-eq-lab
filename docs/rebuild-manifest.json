@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 112,
-  "implementationCommit": "b4165be9fc38453190b97d9fbb813d50ac732c0e",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update112: passage completion float tolerance, shared Sync check timing with single-request unchanged checks, accessibility and layout fixes, per-browser motion and shortcut preferences and the fair-comparison summary are deployed on the update110 layout. Matching source-only recovery metadata and hosted validation passed for update112; existing data snapshots and timestamps remain unchanged (see docs/ENCRYPTED_BACKUP.md). Release-record documentation does not change deployed runtime behavior.",
+  "liveUpdate": 113,
+  "implementationCommit": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update113: the Personal comparison layout and starter, user-chosen target pools with local-only private targets, the Private or Share-for-public-review upload choice, withdraw of pending submissions, the owner Target submissions list and consistent playback shortcuts with a scope setting are deployed on the update112 foundation. Source-only recovery metadata registration for update113 is pending (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "4bc0de26fad1e025a96d80fe73f0c2a3940a977e3b99156325dba373a9c01848"
+      "sha256": "d35ea85fa03503b8017bfb5a9489f83910c4024acbd48a0ffb252e8be623d69b"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "fd21142c9f562cfbff4921cf55b7da49e8488207ce5f90ca774aaedfe45a7b64"
+      "sha256": "4e40cb7fda03cf2513f2f18347d28b9eadf4469cf314fa87a4e20b15d5aeaaca"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "e5705df41f481becb952597968bf0707b68a825728ae1a3cc00e8f3df3a00ad9"
+      "sha256": "67a0ed537ffac657b6b34c8ccd25a6f7aeade39763c049093906a072bf9e3a84"
     },
     {
       "path": "README.md",
@@ -1147,15 +1147,15 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "98a7ddebb6c26e732b3e9878dd0bd43d3d8a075d723146c4d3033beeec9999f4"
+      "sha256": "a88165ede8d76a629008208bcdc1215451343422d1fa97bf6f3ef897c133ed98"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "2a859fa9ae9927490d12ab1b2cb44426593ed752358d95ae8fbdb16f05ec1cc9"
+      "sha256": "162e8e64b52e193447d6013d4ba5aefdfe852693a1e63ef78b172686cabc3c89"
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "ccec66b73191015385ac2c3edb3f6f6342d0cec94b6ae5ba634bb58899b20f23"
+      "sha256": "5df02e26b622d410b1343468b0c609a00bac3cd4b0142c6cf1644ca4fe67f496"
     },
     {
       "path": "docs/RECOVERY.md",
