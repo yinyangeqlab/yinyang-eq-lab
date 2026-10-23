@@ -398,6 +398,10 @@
       "sha256": "8a9567324ded7c9657035b4ad125671c4dc4178c4887f7e8f24ccf9e73875ada"
     },
     {
+      "path": "app/shootout/target-visibility.css",
+      "sha256": "a3143c047d7bfd3529d205fa89c48103553ad492324a3842a06c39d7f106b76d"
+    },
+    {
       "path": "app/shortcuts/page.tsx",
       "sha256": "42f9372f4488decc21c2d7f75446866634528061119cecbd4794861da88135ab"
     },
@@ -542,6 +546,10 @@
       "sha256": "b338f4e8c73bd9eb1cd85bf0bf6b3dd33f2e2f09a7a9eaa797acfa0de32c06ab"
     },
     {
+      "path": "components/compare-strip.css",
+      "sha256": "22872e43800db3077bacef71d81da997c7f6a3cc2a70c8ecbb16aec82048676c"
+    },
+    {
       "path": "components/comparison-data-actions.tsx",
       "sha256": "e427574bea1ac3edeef66113c0d00ff6f20e901d8cfd59a4f2ea59a1c31210a9"
     },
@@ -630,6 +638,10 @@
       "sha256": "8688c0be5fff6cb4096804eee8297a5050837eba7c6101d0b2bf83a6938a1035"
     },
     {
+      "path": "components/passage-selection.css",
+      "sha256": "9e90104d7849db442364db2faa3182730c49eac7d45fae4280ac7a9b25ff0ebb"
+    },
+    {
       "path": "components/personal-podium.css",
       "sha256": "5fe805fa073bb4ea6741c649923328df453a6720dae6b4f8602db7270b3d28d1"
     },
@@ -644,6 +656,26 @@
     {
       "path": "components/personal-sharing-status.tsx",
       "sha256": "c6a4fd68a07e82b90af46ff3c773f1dc41d27741f16c1c2ca7f1e33f71492ea4"
+    },
+    {
+      "path": "components/personal-target-picker.css",
+      "sha256": "0bef1280d947220a08be48e06b5a8b742b33b5d6186def23772afd9499f37d5d"
+    },
+    {
+      "path": "components/personal-target-picker.tsx",
+      "sha256": "8de38e2b25686e9ea522e20aa0a2cafed81233bc026c48daaee79df0fb8781b6"
+    },
+    {
+      "path": "components/personal-theme-picker.css",
+      "sha256": "8b8379faf7d23b2705cf21337fbb7b4fe21e8000a566727a3d83490b4a96178d"
+    },
+    {
+      "path": "components/personal-theme-picker.tsx",
+      "sha256": "78ea8d3fae69336f3a4077520511de2d8a5a065d9c54c4afd2d845f697b00de6"
+    },
+    {
+      "path": "components/playback-deck.css",
+      "sha256": "6eee93017015011b04d74216b037debd4281c32197a95cc5ab207ab08c499328"
     },
     {
       "path": "components/privacy-events.tsx",
@@ -712,6 +744,14 @@
     {
       "path": "components/shootout-organization.css",
       "sha256": "63b7f07c7f5efc94ffb43d1e85ef3faade4aa789b3f6214e1dc4f01283c7fe45"
+    },
+    {
+      "path": "components/shortcut-scope-select.css",
+      "sha256": "aa30936d1ab5c49945c26c996dff2e2a99af823bef334a22831eae000a79169b"
+    },
+    {
+      "path": "components/shortcut-scope-select.tsx",
+      "sha256": "1e4264ffdc41c45ba700e1ee54a593ea54e301adde581ea643882f189c4d2d96"
     },
     {
       "path": "components/site-beta-notice.tsx",
@@ -1786,6 +1826,18 @@
       "sha256": "4884e1442a5badfb53eb1eb736c15d8103ebf994b3876ca509e78db44d3e754d"
     },
     {
+      "path": "lib/personal-start-status.ts",
+      "sha256": "e01d355ea311effe308d01133dc963d9eccdd31f19e454918fbd9f19cc7d4b48"
+    },
+    {
+      "path": "lib/personal-target-pool.ts",
+      "sha256": "00c7be420227ebf35b4501b0a7070255d770ad048361be76b4648ae02e254eff"
+    },
+    {
+      "path": "lib/playback-shortcuts.ts",
+      "sha256": "7e12d0f3f2358f369e0bda70fd568795f65310103cf616ab49091a0dc9b45db0"
+    },
+    {
       "path": "lib/preference-finalize.ts",
       "sha256": "9c8e5407eb614e86dc55ba95136e430e36e144818f0b43ac5603981aded74059"
     },
@@ -2232,6 +2284,18 @@
     {
       "path": "scripts/check_personal_shootout.mjs",
       "sha256": "8b24dae7d86887fa5855c1906db0e016a912a3802c68ffb5ee5d98cc53f23ebe"
+    },
+    {
+      "path": "scripts/check_personal_start_status.mjs",
+      "sha256": "976219856afb41a935ae90b3abd881da66a741ed908dfbc1c5b12e1a2c5a9c7f"
+    },
+    {
+      "path": "scripts/check_personal_target_pool.mjs",
+      "sha256": "446dd96d75e89992b335a1db72871e205ecbf8c745dcdb1cd8b97dddc7846af0"
+    },
+    {
+      "path": "scripts/check_playback_shortcuts.mjs",
+      "sha256": "fc7c7b48b6edc4704fd98d43d27ad252f40c7aa39bae1b0df093121252dd5a05"
     },
     {
       "path": "scripts/check_preference_ranking.mjs",
