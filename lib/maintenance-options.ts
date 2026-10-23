@@ -40,7 +40,7 @@ export function maintenanceFeatureFor(request:Request):MaintenanceFeature|null {
   if(path==="/api/community-preferences/reference" || request.method==="POST" && ["/api/personal-research","/api/community-preferences/personal"].includes(path))return "shootouts";
   if(path==="/api/music-votes")return "listeningPool";
   if(path==="/api/preference-exports")return "preferenceTuning";
-  if(["/api/targets","/api/research-measurements","/api/suggestions"].includes(path))return "contributions";
+  if(["/api/targets","/api/targets/removal-request","/api/research-measurements","/api/suggestions"].includes(path))return "contributions";
   return null;
 }
 export function featureMaintenanceResponse(request:Request,status:{active:boolean;pauseSubmissions:boolean;lockedFeatures?:MaintenanceFeature[];message:string;expiresAt?:number|null}):Response|null {

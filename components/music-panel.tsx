@@ -1,5 +1,6 @@
 "use client";
 import "./playback-deck.css";
+import { useConsentPrompt } from "@/components/use-consent-prompt";
 import { SHORTCUT_REGION, shortcutDecision } from "@/lib/playback-shortcuts";
 import ShortcutScopeSelect from "./shortcut-scope-select";
 import { adminMusicChoices, saveAdminMusicChoice } from "@/lib/admin-test-store";
@@ -134,6 +135,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   const [musicCounts, setMusicCounts] = useState<MusicCounts>({});
   const [musicChoices, setMusicChoices] = useState<Record<string, MusicChoice>>({});
   const [musicVotesReady, setMusicVotesReady] = useState(false);
+  const agreement = useConsentPrompt("Listening needs no agreement. Rating a song is saved with your account choices, so we ask once, here.");
   const [musicSignedIn, setMusicSignedIn] = useState(false);
   const [musicSaving, setMusicSaving] = useState(false);
   const [musicVoteMessage, setMusicVoteMessage] = useState("");
@@ -177,6 +179,13 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   const poolRankText = !musicVotesReady ? musicVoteMessage === "Music votes unavailable." ? "Community rank unavailable" : "Loading community rank…" : poolCommunityRank ? `Community rank #${poolCommunityRank.position} of ${poolCommunityRank.total} rated` : "Not ranked yet · no community votes";
   async function voteForMusic(choice: MusicChoice | null) {
     if (!candidateUrl || musicSaving) return;
+    if (!adminTestOnly) {
+      // Already agreed: proceed now. Otherwise the box opens and the rating is retried once the person agrees.
+      let proceed = false, immediate = true;
+      await agreement.ask(() => { if (immediate) proceed = true; else void voteForMusic(choice); });
+      immediate = false;
+      if (!proceed) return;
+    }
     if(adminTestOnly){try{setMusicChoices(saveAdminMusicChoice(candidateUrl,choice));setMusicVoteMessage("Private test rating saved locally · community rank unchanged.");}catch(error){setMusicVoteMessage(error instanceof Error?error.message:"Local test could not be saved.");}return;}
     const votingUrl = candidateUrl;
     musicVoteRequest.current++;
@@ -873,6 +882,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     {testMode === "open" && <details className="live-audio-stats audio-diagnostics" aria-label="After-EQ level diagnostics"><summary>After-EQ levels <span>Optional · computed A/B signals</span></summary><p>Both EQ paths are calculated at the current playhead before sample selection. Only the sample marked Playing is audible. These internal mixed-channel estimates include EQ and volume-matching gain; they do not measure your headphones or loudness at your ears.</p><div className="live-stats-grid">{[0, 1].map(branch => <div key={branch} data-live-branch={branch} data-live-audible={isPlaying && side === branch}><strong>Sample {branch ? "B" : "A"}<small className="live-branch-state">{!file ? "No track" : !isPlaying ? "Paused" : side === branch ? "Playing" : "Muted"}</small></strong><span>Peak <b data-live="peak">—</b></span><span>RMS <b data-live="rms">—</b></span><span>Crest <b data-live="crest">—</b></span></div>)}</div></details>}
     {!personalOnly && testMode !== "blind" && <button type="button" className="music-data-settings" onClick={onDataSettings}>Song detail sharing {consent ? "on" : "off"} · Data settings</button>}
     {!personalOnly && <details className="music-details file-identity"><summary>File fingerprint &amp; processing</summary><p className="music-meta">{file ? `${displayedLoudness} · ${hashing ? "hashing locally…" : meta.sha256 ? `File fingerprint (SHA-256) ${meta.sha256.slice(0, 12)}…` : "hash unavailable"} · ${meta.audioFormat} · ${meta.sampleRate ? `${Math.round(meta.sampleRate / 100) / 10} kHz source rate` : "source sample rate not read"} · ${sourceBitrateLabel(bitrateDetails, meta.bitrate, file, duration, sourceKindRef.current === "curated")}` : "Choose a stereo sample, then click A or B."}</p></details>}
+  {agreement.dialog}
   </section>;
 });
 

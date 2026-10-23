@@ -288,7 +288,8 @@ const privateGate = {
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
-      const agreementException = dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      // Viewing needs no agreement: only requests that change or collect data do. Every state-changing route still checks the agreement itself.
+      const agreementException = dataRoute || (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
       if (!owner && tester && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
@@ -332,7 +333,7 @@ const privateGate = {
         context.waitUntil(rankingCache.put(rankingKey, cached).catch(() => console.warn("ranking_cache_write_failed")));
         const miss=rankingResponse(response, "MISS"); if(data?.setCookie) miss.headers.append("Set-Cookie",data.setCookie); return miss;
       }
-      if (rankingCache && response.ok && request.method === "POST" && ["/api/votes", "/api/listening-runs", "/api/owner-research/legacy", "/api/targets", "/api/owner-research/moderation", "/api/owner-research/erasure"].includes(path)) {
+      if (rankingCache && response.ok && request.method === "POST" && ["/api/votes", "/api/listening-runs", "/api/owner-research/legacy", "/api/targets", "/api/owner-research/moderation", "/api/owner-research/erasure", "/api/owner-research/target-removals"].includes(path)) {
         try { await rankingCache.delete(rankingKey); } catch { console.warn("ranking_cache_invalidation_failed"); }
       }
       if (rankingCache && response.ok && request.method === "DELETE" && path === "/api/my-data") {
