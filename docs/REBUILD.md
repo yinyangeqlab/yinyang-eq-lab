@@ -1,3 +1,7 @@
+# Update117 deployed — October 23, 2026
+
+24 unchanged artist-authorized AAC recordings are deployed on the verified update116 source. Schema remains220 /42 migrations plus db/service-status.sql. Matching encrypted recovery, exact deployment verification and daily scheduling passed. See docs/releases/update117-verification.json. Existing immutable deployment provenance is unchanged.
+
 # Update116 deployed — October 23, 2026
 
 Release `92a8c50` (anonymous shareable shootouts) with additive migration 0041; see docs/HANDOFF.md and docs/SHAREABLE_SHOOTOUTS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 116). A fresh database now uses all 42 migrations plus db/service-status.sql (220 definitions). The update116 encrypted recovery baseline, full reconstruction, hosted validation and first subsequent scheduled nightly backup are verified; see docs/releases/update116-recovery-verification.json. PRs #3 and #4 are merged into main.

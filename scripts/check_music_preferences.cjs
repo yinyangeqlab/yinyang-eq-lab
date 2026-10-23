@@ -12,20 +12,20 @@ function load(file, imports = {}, nodeEnv = "development") {
 }
 const { rankMusic, musicCommunityRank, musicRotation, musicReview, playbackGain, playbackTarget } = load('lib/music-preferences.ts');
 const json = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
-const catalogImports = Object.fromEntries(['listening-pool-original-audio','music-candidates','shantae-cc-tracks','shantae-audio','listening-pool-local','listening-pool-measurements'].map(name=>['@/data/'+name+'.json',json('data/'+name+'.json')]));
+const catalogImports = Object.fromEntries(['permission-music','listening-pool-original-audio','music-candidates','shantae-cc-tracks','shantae-audio','listening-pool-local','listening-pool-measurements'].map(name=>['@/data/'+name+'.json',json('data/'+name+'.json')]));
 const catalog = load('lib/music-catalog.ts',catalogImports);
 const productionCatalog = load('lib/music-catalog.ts',catalogImports,'production');
-assert.equal(productionCatalog.listeningPool.length,200);
+assert.equal(productionCatalog.listeningPool.length,224);
 assert(productionCatalog.listeningPool.every(t=>!t.fileUrl.includes('__local-listening-pool')));
-assert.equal(productionCatalog.listeningPool.filter(t=>t.fileUrl.startsWith('/api/listening-audio/')).length,200);
+assert.equal(productionCatalog.listeningPool.filter(t=>t.fileUrl.startsWith('/api/listening-audio/')).length,224);
 const tracks = catalog.listeningPool;
-assert.equal(tracks.length,200);
-assert.equal(new Set(tracks.map(t=>t.url)).size,200);
-assert.equal(new Set(tracks.map(t=>t.songFamily || t.url)).size,193);
+assert.equal(tracks.length,224);
+assert.equal(new Set(tracks.map(t=>t.url)).size,224);
+assert.equal(new Set(tracks.map(t=>t.songFamily || t.url)).size,217);
 const counts = Object.fromEntries(tracks.map((t, i) => [t.url, { keep: i, pass: 0 }]));
 const pool = musicRotation(tracks, counts, () => .4);
-assert.equal(pool.length, 193);
-assert.equal(new Set(pool.map(t => t.url)).size, 193);
+assert.equal(pool.length, 217);
+assert.equal(new Set(pool.map(t => t.url)).size, 217);
 assert.deepEqual(musicRotation(tracks, {}, () => .4), pool);
 assert.equal(musicRotation([{ url: 'x', group: 'unmeasured' }], {}).length, 1);
 const versions = [{url:'a1',songFamily:'a'}, {url:'a2',songFamily:'a'}, {url:'b'}];
@@ -70,10 +70,10 @@ for(let seed=1;seed<=100;seed++) {
 const seen=new Set(), appearances=new Map();
 for(let seed=1;seed<=1000;seed++) {
  const cycle=musicRotation(tracks,{},seeded(seed));
- assert.equal(new Set(cycle.map(t=>t.songFamily || t.url)).size,193);
+ assert.equal(new Set(cycle.map(t=>t.songFamily || t.url)).size,217);
  for(const t of cycle){seen.add(t.url); appearances.set(t.url,(appearances.get(t.url)||0)+1)}
 }
-assert.equal(seen.size,200);
+assert.equal(seen.size,224);
 for(const track of tracks) {
  const siblings=tracks.filter(t=>(t.songFamily||t.url)===(track.songFamily||track.url)).length;
  assert(siblings===1 ? appearances.get(track.url)===1000 : appearances.get(track.url)>400 && appearances.get(track.url)<600);
@@ -143,5 +143,5 @@ const request = (choice,trackUrl = tracks[0].url) => new Request('http://localho
   user = null;
   assert.equal((await endpoint.POST(request('keep'))).status, 401);
   assert.deepEqual((await (await endpoint.GET()).json()).mine, {});
-  console.log('Listening pool passed: all 200 versions vote/replace/undo; 193 families per cycle; 100 exact seeded vote-invariance comparisons; 1000-cycle coverage of every version; 49/50 distinct-account review boundary, independent masters, privacy and signed-out rejection.');
+  console.log('Listening pool passed: all 224 versions vote/replace/undo; 217 families per cycle; 100 exact seeded vote-invariance comparisons; 1000-cycle coverage of every version; 49/50 distinct-account review boundary, independent masters, privacy and signed-out rejection.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

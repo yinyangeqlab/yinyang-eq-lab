@@ -1,0 +1,81 @@
+{
+  "update": 117,
+  "verifiedAt": "2026-10-23T13:32:37.782884+00:00",
+  "sourceCommit": "06318b114767a0282880721f27168443306f29b4",
+  "baseUpdate": 116,
+  "deployment": {
+    "workerUpdated": 1,
+    "resourcesUnchanged": 3,
+    "afterPreview": "4 unchanged",
+    "schemaDefinitions": 220,
+    "migrations": []
+  },
+  "assets": {
+    "jsCssChecked": 794,
+    "jsCssMatched": 794,
+    "protectedRecordings": 224,
+    "newAudioBytes": 98252313
+  },
+  "checks": {
+    "library": true,
+    "linkPreview": true,
+    "card": true,
+    "newMusic": true,
+    "oldMusic": true,
+    "rawMedia": true,
+    "targets": true,
+    "owner": true
+  },
+  "retainedPreviousClientAssets": 695,
+  "recordings": {
+    "new": 24,
+    "total": 224,
+    "format": "AAC-LC in original M4A files",
+    "originalBytesUnchanged": true,
+    "sourceSha256Verified": true
+  },
+  "analysis": {
+    "preservedPeaksCandidates": 20,
+    "unclassified": 4,
+    "noAudibilityEquivalenceClaim": true
+  },
+  "backup": {
+    "encryptedOffDevice": true,
+    "newDataSnapshots": 1,
+    "newMediaFiles": 24,
+    "reusedMediaFiles": 340,
+    "additionalEncryptedBytes": 144847044,
+    "verifiedBeforeDeployment": true,
+    "capturedLiveUpdate": 116,
+    "compatibleUnchangedSchema": 220,
+    "sourceAndBuildMatchesUpdate117": true,
+    "independentFullReconstruction": true,
+    "priorSnapshotsAndTimestampsUnchanged": true,
+    "matchingBaselineRegistered": true,
+    "hostedValidationPassed": true,
+    "dailySchedulingActive": true
+  },
+  "protections": {
+    "cpuLimitMs": 5000,
+    "abuseBindings": 6,
+    "privateMediaAccess": true,
+    "publicWorkerUrlsDisabled": true,
+    "independentEdgeAndCostControls": "unchanged"
+  },
+  "productionParticipantDataMutated": false,
+  "gitHubPublished": true,
+  "notTested": [
+    "Authenticated production audio audition",
+    "Physical devices",
+    "Safari/iOS",
+    "AAC/lossless perceptual equivalence"
+  ],
+  "publication": {
+    "branch": "release/jason-aac-records-20261023",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/6",
+    "state": "open",
+    "githubLogin": "yinyangeqlab",
+    "authorAndCommitterVerified": true,
+    "merged": false
+  }
+}
