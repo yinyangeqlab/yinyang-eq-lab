@@ -1,0 +1,14 @@
+/* Upload form: private vs public-review choice. */
+.upload-form fieldset.target-visibility{display:grid;gap:8px;margin:2px 0 4px;padding:0;border:0;min-width:0}
+.upload-form fieldset.target-visibility legend{padding:0;margin:0 0 6px;color:#dbe9ec;font-size:13px;font-weight:700}
+.upload-form fieldset.target-visibility label{display:flex!important;align-items:flex-start;gap:10px;margin:0!important;padding:10px 12px;border:1px solid #2a4650;border-radius:10px;background:rgba(10,24,30,.7);cursor:pointer;transition:border-color .14s ease,background .14s ease}
+.upload-form fieldset.target-visibility label:has(input:checked){border-color:#5fd8bf;background:rgba(18,52,46,.55)}
+.upload-form fieldset.target-visibility label:has(input:disabled){opacity:.55;cursor:not-allowed}
+.upload-form fieldset.target-visibility label:has(input:focus-visible){outline:2px solid #e6fff6;outline-offset:2px}
+.upload-form fieldset.target-visibility input:not([type=file]){display:inline-block;width:18px;max-width:18px;height:18px;padding:0;border:0;background:none;flex:none;margin:2px 0 0;accent-color:#6fdccb}
+.upload-form fieldset.target-visibility label>span{display:grid;gap:2px;min-width:0}
+.upload-form fieldset.target-visibility strong{color:#eef7f8;font-size:14px}
+.upload-form fieldset.target-visibility small{color:#9fb4bd;font-size:12px;line-height:1.45}
+.upload-form .target-visibility-badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:rgba(140,240,224,.2);color:#b8f5e4;font:800 10.5px/1.4 inherit;font-style:normal;letter-spacing:.08em;text-transform:uppercase;vertical-align:1px}
+.upload-form .target-visibility-summary{margin:2px 0 0;padding:8px 12px;border:1px solid #33565d;border-left-width:4px;border-radius:9px;background:rgba(40,70,80,.25);color:#dbe9ec;font-size:13px;line-height:1.45}
+.upload-form .target-visibility-summary[data-choice=public]{border-color:#3f8d79;background:rgba(40,140,110,.18);color:#d6fbef}
