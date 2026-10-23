@@ -2151,7 +2151,7 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "bd598a344fa18c86d401ceb478f4b1a8a6e050848297fe09091864468153804e"
+      "sha256": "3de5f3bfa1f0e1e482704285fdd64bbcfd700b6b3d3af2a47722bd15eb5e6c62"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
