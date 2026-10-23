@@ -1,8 +1,12 @@
+# Update116 deployed — October 23, 2026
+
+Release `92a8c50` (anonymous shareable shootouts) with additive migration 0041; see docs/HANDOFF.md and docs/SHAREABLE_SHOOTOUTS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 116). A fresh database now uses all 42 migrations plus db/service-status.sql (220 definitions). Recovery handover registration is pending for updates 113 to 116 (docs/HANDOFF.md).
+
+## Earlier rebuild notes (historical)
+
 # Update115 deployed — October 22, 2026
 
 Release `5561af4` (per-page link previews, source-only on top of update114, no migration); see docs/HANDOFF.md and docs/LINK_PREVIEWS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 115). A fresh database still uses all 41 migrations plus db/service-status.sql (216 definitions). Recovery handover registration is pending for updates 113, 114 and 115 (docs/HANDOFF.md).
-
-Staged, not deployed: shareable anonymous shootouts (branch `shareable-shootout`, migration 0041); see docs/SHAREABLE_SHOOTOUTS.md.
 
 ## Earlier rebuild notes (historical)
 

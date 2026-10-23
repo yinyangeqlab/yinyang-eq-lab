@@ -1,6 +1,6 @@
 # Per-page link previews and shareable shootouts
 
-Status: built and verified locally on top of the live update115 build (branch `shareable-shootout`, based on `share-previews-links`). **Not deployed.** Nothing here changes `LIVE_RELEASE.json`, `LIVE_STATE.md` or the handoffs; update them only after a verified deployment. Migration is numbered 0041 because update114 used 0040.
+Status: **deployed as update116 on October 23, 2026** (additive migration 0041, schema 216 to 220; branch `shareable-shootout`, PR #4). See docs/HANDOFF.md for the verification record and the pending Codex backup baseline.
 
 ## 1. Per-page link previews
 
