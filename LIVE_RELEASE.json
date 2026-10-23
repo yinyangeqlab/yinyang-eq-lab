@@ -2369,15 +2369,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "67a0ed537ffac657b6b34c8ccd25a6f7aeade39763c049093906a072bf9e3a84"
+      "sha256": "5a8bf40881528ea243fe31adba4fc5f8a85178ff466c2740a75b1f208775a464"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "d35ea85fa03503b8017bfb5a9489f83910c4024acbd48a0ffb252e8be623d69b"
+      "sha256": "064ebd9d4223934fd0fce6bb5cf3f3f48503eaa2cb0f937f91ec3d3da3b596e0"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "4e40cb7fda03cf2513f2f18347d28b9eadf4469cf314fa87a4e20b15d5aeaaca"
+      "sha256": "9d3abbaa20fbb5027561b332142184da63f862dca3c1272f04f49cb107decd57"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2393,7 +2393,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "cdf93c4687f70941c465765310eff33af99cb4e17708a73a0797c2134cc0f6b9"
+      "sha256": "4bfe029027db4a5e7a8bf54cf3e91668e5f1dc1d5cc6dfe15ce4a92797387fa1"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -10538,8 +10538,8 @@
     "documentation": "infra/edge-rate-limit/README.md"
   },
   "pendingLocalChanges": {
-    "description": "Update113 source commits are local on release/targets-shortcuts-20261022 and not pushed. Owner requests not yet built: approved-target removal request (needs migration 0040 and a backup decision) and the consent redesign (needs written design and review).",
-    "canonicalCheckoutOnly": true
+    "description": "Next-release source (migration 0040, removal requests, browse-first consent) is committed and published but not deployed; it needs production migration and a Worker update first. See docs/HANDOFF.md.",
+    "canonicalCheckoutOnly": false
   },
   "taskClosure": {
     "at": "2026-10-23T00:58:27.649384+00:00",

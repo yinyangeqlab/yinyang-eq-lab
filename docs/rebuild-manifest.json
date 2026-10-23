@@ -1,7 +1,7 @@
 {
   "liveUpdate": 113,
   "implementationCommit": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update113: the Personal comparison layout and starter, user-chosen target pools with local-only private targets, the Private or Share-for-public-review upload choice, withdraw of pending submissions, the owner Target submissions list and consistent playback shortcuts with a scope setting are deployed on the update112 foundation. Source-only recovery metadata registration for update113 is pending (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update113: the Personal comparison layout and starter, user-chosen target pools with local-only private targets, the Private or Share-for-public-review upload choice, withdraw of pending submissions, the owner Target submissions list and consistent playback shortcuts with a scope setting are deployed on the update112 foundation. Source-only recovery metadata registration for update113 is pending (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior. Source for the next release (migration 0040 and the browse-first consent flow) is published but not deployed; see docs/HANDOFF.md.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "d35ea85fa03503b8017bfb5a9489f83910c4024acbd48a0ffb252e8be623d69b"
+      "sha256": "064ebd9d4223934fd0fce6bb5cf3f3f48503eaa2cb0f937f91ec3d3da3b596e0"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "4e40cb7fda03cf2513f2f18347d28b9eadf4469cf314fa87a4e20b15d5aeaaca"
+      "sha256": "9d3abbaa20fbb5027561b332142184da63f862dca3c1272f04f49cb107decd57"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "67a0ed537ffac657b6b34c8ccd25a6f7aeade39763c049093906a072bf9e3a84"
+      "sha256": "5a8bf40881528ea243fe31adba4fc5f8a85178ff466c2740a75b1f208775a464"
     },
     {
       "path": "README.md",
@@ -194,6 +194,10 @@
       "sha256": "fd2e96ada5605a6000db03cd7d2613a25b99a1793e1719bd321a704371c43df1"
     },
     {
+      "path": "app/api/owner-research/target-removals/route.ts",
+      "sha256": "bb560ee65a38ec7300a7b0c4f00e487feaa2a070b1b000dc09c4031736e6d422"
+    },
+    {
       "path": "app/api/owner-research/yinyangeq/devices/route.ts",
       "sha256": "9d6df0bf18ea84f2193fe07566da06a1fcb85c1c7d97a5b8890e74df89822214"
     },
@@ -236,6 +240,10 @@
     {
       "path": "app/api/suggestions/route.ts",
       "sha256": "2df1fd0b4bbc698236db79969661a776749537c2283bdf95ad72107de5141596"
+    },
+    {
+      "path": "app/api/targets/removal-request/route.ts",
+      "sha256": "64c230d860d9643432243c79fa888865f99045af80f4f6093cff25863841d2ed"
     },
     {
       "path": "app/api/targets/route.ts",
@@ -786,6 +794,10 @@
       "sha256": "47a7226e04fdd36e0b49d1f8df2f82815e6522a3988442ba2ff0a7ce2488254f"
     },
     {
+      "path": "components/target-removal-panel.tsx",
+      "sha256": "429b30b11f1f2ea936c061f4db74dd2a81f62a687417f4b58d8d547d5607fca1"
+    },
+    {
       "path": "components/tester-invites.tsx",
       "sha256": "b4636916ec2637d1f630d86092d2767c35af5c93bad2b3c245cc9fade642ed87"
     },
@@ -1050,6 +1062,10 @@
       "sha256": "a0784eb77831a799fad7991df4f1b666f876201565a80175e1aa68733574a2e4"
     },
     {
+      "path": "components/use-consent-prompt.tsx",
+      "sha256": "4b19ce52d84fd8e472a49d383a2d73d4b51717a9ae1fac6c366735e0bfd78d4d"
+    },
+    {
       "path": "components/use-listening-reminder.ts",
       "sha256": "0025beca5da3fea39f4f21cac76ac69a2a88439e014213327df39477afc4c7c4"
     },
@@ -1151,11 +1167,11 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "162e8e64b52e193447d6013d4ba5aefdfe852693a1e63ef78b172686cabc3c89"
+      "sha256": "c01ef110da5c0bf4a38859ee00859abf082b83b9afaa40aaff730cbdfcf6a696"
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "5df02e26b622d410b1343468b0c609a00bac3cd4b0142c6cf1644ca4fe67f496"
+      "sha256": "4eef0068b2f9527e1a87285454a79ada96f92b2d44b9d5989298ee1fae255597"
     },
     {
       "path": "docs/RECOVERY.md",
@@ -1348,6 +1364,10 @@
     {
       "path": "drizzle/0039_segmented_account_sync.sql",
       "sha256": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417"
+    },
+    {
+      "path": "drizzle/0040_target_removal_requests.sql",
+      "sha256": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9"
     },
     {
       "path": "drizzle/meta/0012_snapshot.json",
