@@ -1,11 +1,12 @@
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { rankingEvidence } from "@/lib/ranking-evidence";
 import { rankPreferences } from "@/lib/preference-ranking";
-import { submissionContext } from "@/lib/submission-ownership";
+import { dataIdentity, submissionContext } from "@/lib/submission-ownership";
+import { requireParticipantSubject } from "@/lib/admin-contributions";
 import { maintenanceResponse } from "@/lib/maintenance";
 import { count, desc, eq, gte, and } from "drizzle-orm";
 import { getDb } from "@/db";
-import { targets } from "@/db/schema";
+import { submissionOwners, targets } from "@/db/schema";
 import { parseCurve } from "@/lib/curves";
 import { compareTargets } from "@/lib/target-review";
 import { targetSubmissionContext } from "@/lib/target-submission";
@@ -27,6 +28,8 @@ export async function POST(request: Request) {
     const limited = await publicWriteGate(request);
     if (limited) return limited;
     const data = await readJsonObject(request, 300_000);
+    // Private targets never leave the participant's device; only an explicit public-review choice is accepted.
+    if (data.visibility === "private") return Response.json({ error: "Private targets stay on your device. Choose public review to submit one." }, { status: 400 });
     const name = String(data.name ?? "").trim().slice(0, 80);
     const creator = String(data.creator ?? "").trim().slice(0, 60);
     const description = String(data.description ?? "").trim().slice(0, 240);
@@ -55,5 +58,33 @@ export async function POST(request: Request) {
     const inputError = requestInputResponse(error);
     if (inputError) return inputError;
     return Response.json({ error: error instanceof Error ? error.message : "Upload failed." }, { status: 400 });
+  }
+}
+
+/** Withdraw your own submission while it is still pending review. Approved targets may already carry votes and rankings, so they are never deleted here. */
+export async function DELETE(request: Request) {
+  try {
+    const identity = await dataIdentity();
+    requireParticipantSubject(identity.subjectId);
+    const limited = await publicWriteGate(request);
+    if (limited) return limited;
+    const data = await readJsonObject(request, 1_000);
+    const id = String(data.id ?? "").trim();
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return Response.json({ error: "Choose one of your submitted targets." }, { status: 400 });
+    const db = getDb();
+    const [owner] = await db.select({ id: submissionOwners.recordId }).from(submissionOwners).where(and(eq(submissionOwners.recordKind, "target"), eq(submissionOwners.recordId, id), eq(submissionOwners.subjectId, identity.subjectId)));
+    if (!owner) return Response.json({ error: "This target was not submitted by your sign-in." }, { status: 403 });
+    const [row] = await db.select({ status: targets.status }).from(targets).where(eq(targets.id, id));
+    if (!row) return Response.json({ withdrawn: true, already: true });
+    if (row.status !== "pending") return Response.json({ error: "This target is already approved or reviewed, so it cannot be withdrawn here. Ask the owner to remove it." }, { status: 409 });
+    await db.batch([
+      db.delete(targets).where(and(eq(targets.id, id), eq(targets.status, "pending"))),
+      db.delete(submissionOwners).where(and(eq(submissionOwners.recordKind, "target"), eq(submissionOwners.recordId, id), eq(submissionOwners.subjectId, identity.subjectId))),
+    ]);
+    return Response.json({ withdrawn: true });
+  } catch (error) {
+    const inputError = requestInputResponse(error);
+    if (inputError) return inputError;
+    return Response.json({ error: error instanceof Error ? error.message : "Withdrawal failed." }, { status: 400 });
   }
 }

@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const [voteRows, feedbackRows, targetRows, openChoices, runRows, measurementRows, exportRows, musicVoteRows, reviewEvents, deletionTotals] = await Promise.all([
       db.select().from(votes),
       db.select().from(feedbackSubmissions),
-      db.select({ id: targets.id, name: targets.name, creator: targets.creator }).from(targets),
+      db.select({ id: targets.id, name: targets.name, creator: targets.creator, status: targets.status, createdAt: targets.createdAt, curveKind: targets.curveKind, submissionKind: targets.submissionKind, headphoneType: targets.headphoneType }).from(targets),
       db.select().from(comparisonChoices),
       db.select().from(listeningRuns),
       db.select().from(researchMeasurements),
