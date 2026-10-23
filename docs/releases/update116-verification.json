@@ -60,7 +60,7 @@
     "liveEndToEnd": "create 201; config names withheld; card 200 image/png; Discord-style og tags; GET /embed frame-ancestors * with no X-Frame-Options; /s, /share-shootout and other pages unchanged DENY; vote accepted; results 404 without key and 200 with key; no cookies on public responses; delete 404 with wrong or missing key and 200 with the right key, then link, card and results 404",
     "earlierLinkPreviewsStillServed": true,
     "regression": "embed logic suite, link-preview, gate, security-header, browser-pairing and participation suites, migration chain (220), TypeScript, lint, production build, source-only rebuild check and snapshot check pass; the full 74-script regression was not re-run",
-    "leftover": "one verification shootout (4vhjhp6kcg, one run) remains; its key was discarded; harmless; owner asked to delete it",
+    "leftover": "none: the verification shootout 4vhjhp6kcg was deleted by the owner on 2026-10-23; production held 0 shootouts and 0 runs afterwards (schema 220)",
     "notTested": "a real paste into Discord, Slack or iMessage; production browser interaction and audio; Safari/iOS; physical devices"
   },
   "backupMetadata": {

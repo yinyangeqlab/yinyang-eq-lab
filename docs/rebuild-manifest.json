@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "1bb24ecf6fb2026099fbe0f1d0aacf4ff8d2294c49b1c5c020f9960e6d7cc13f"
+      "sha256": "2ecf2266b2bc395c5e2608c7c5d77157ba03e6407a59581a9289c8d97397632b"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "42b241d2f28eceb95afd8f41e48de15cbdd35578a59e9dc4cf869f6031a97c27"
+      "sha256": "02acbf535695eae80d39abf80d13f632a2969e97d169c5996c66a50be24c6590"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "0dc919ceab566e758d5fa6fbf6e6b1f983a5617ad310917eeb73d3002f2b7958"
+      "sha256": "092884795cbece8361b7a79f13fed6fa79212993a399732205031c00115a2765"
     },
     {
       "path": "README.md",
@@ -1267,7 +1267,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "89bd7a76ff506f24d468f0fb8a4d38307772ec38334be3cbdc61264042995ec9"
+      "sha256": "b3a1d99309ac479ab9d55fae3a24e19fcb7a5eaf628402175b5d7ad47eb94e0e"
     },
     {
       "path": "docs/LINK_PREVIEWS.md",
@@ -1299,7 +1299,7 @@
     },
     {
       "path": "docs/releases/update116-verification.json",
-      "sha256": "823f1288dd341ae66480fdb436a5850a0233f82125db10db3f4968f676cf2f17"
+      "sha256": "64709d5c4edbfb678c6cca14d345198d3a169e8e9b5665d6f6908bb7e5e888b1"
     },
     {
       "path": "docs/research/README.md",
