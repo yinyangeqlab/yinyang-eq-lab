@@ -8,7 +8,7 @@ import ts from 'typescript';
 const file=process.argv[2]||'app/shootout/page.tsx';
 const ast=ts.createSourceFile('page.tsx',readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),handlers=new Map();
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)handlers.set(n.name.text,n.getText(ast));ts.forEachChild(n,visit);}visit(ast);
-const names=['upload','submitTarget','withdrawTarget','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
+const names=['upload','submitTarget','withdrawTarget','loadRemovals','requestRemoval','cancelRemoval','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
 const code=ts.transpileModule(names.map(n=>handlers.get(n)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function load(path){const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,Error});return module.exports;}
 const {parseCurve}=load('lib/curves.ts'),{compareTargets}=load('lib/target-review.ts'),{screenTargetName}=load('lib/target-name-policy.ts'),{targetHeadphoneType}=load('lib/target-type.ts');
@@ -16,7 +16,7 @@ const points=Array.from({length:20},(_,i)=>[20*1000**(i/19),i/10]);
 const target=(id,type='ie')=>({id,name:`Reference ${id}`,points,status:'approved',measurement:{type}});
 function harness(extra={}){
  const stored=new Map(),calls=[];
- const state={sharedAdmin:false,targetVisibility:'private',passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
+ const state={sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
  name:'Warm reference',creator:'QA',description:'Synthetic',targetCategory:'ie',referenceSystem:'Unknown',submissionKind:'target',targetMeasurementId:'',measurements:[],csv:points.map(p=>p.join(',')).join('\n'),fileName:'curve.csv',curveKind:'original',parentTargetId:'',
  selectedMeasurement:{id:'measurement',name:'QA',type:'ie',points},headphoneType:'ie',rankType:'ie',targets:[target('a')],localTargets:[],testMode:'blind',sessionExpired:false,sessionFinished:false,sessionTrials:[],sessionId:'old',pair:['old-a','old-b'],trialId:'old-trial',revealed:true,busy:false,submissionsEnabled:true,voteDataAccepted:true,
  feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},
@@ -27,7 +27,7 @@ function harness(extra={}){
  fetch:async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({ok:true})};},
  ...extra};
  Object.defineProperties(state,{allTargets:{get:()=>[...state.targets,...state.localTargets]},testPool:{get:()=>[...state.targets,...(state.testMode==='open'?state.localTargets:[])].filter(t=>targetHeadphoneType(t)===state.headphoneType)}});
- for(const key of ['targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
+ for(const key of ['removalRequests','targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
  state.URL=URL;state.window={location:{href:"http://local.test/shootout"},history:{replaceState(){}},requestAnimationFrame:fn=>fn()};state.document={querySelector:()=>null};
  const context=vm.createContext(state);vm.runInContext(code,context);
  return {state,stored,calls,run:code=>vm.runInContext(code,context)};
@@ -66,5 +66,18 @@ await test('Withdraw sends DELETE for the submission id and returns the row to p
  const refused=harness({localTargets:[row]});refused.state.setBusy=()=>{};refused.state.window.confirm=()=>true;
  refused.state.fetch=async()=>({ok:false,json:async()=>({error:'already approved'})});
  await refused.run(`withdrawTarget(${JSON.stringify(row)})`);assert.equal(refused.stored.get('target-lab-private-targets'),undefined);assert.match(refused.state.message,/already approved/);
+});
+await test('Removal request posts for the approved target, refreshes the list and can be cancelled; a done request returns the row to private',async()=>{
+ const row={id:'loc',name:'Mine',points,status:'pending',visibility:'public',submissionId:'srv-1'};
+ const h=harness({localTargets:[row]});h.state.setBusy=()=>{};h.state.window.confirm=()=>true;const calls=h.calls;let requests=[];h.stored.set('target-lab-private-targets',JSON.stringify([row]));
+ h.state.fetch=async(url,options)=>{if(options&&options.method==='POST'){calls.push({url,method:'POST',body:JSON.parse(options.body)});requests=[{id:'req-1',targetId:'srv-1',status:'pending'}];return {ok:true,json:async()=>({id:'req-1'})};}
+  if(options&&options.method==='DELETE'){calls.push({url,method:'DELETE',body:JSON.parse(options.body)});requests=[];return {ok:true,json:async()=>({cancelled:true})};}
+  return {ok:true,json:async()=>({requests})};};
+ await h.run(`requestRemoval(${JSON.stringify(row)})`);
+ assert.equal(calls.find(c=>c.method==='POST').url,'/api/targets/removal-request');assert.equal(calls.find(c=>c.method==='POST').body.id,'srv-1');
+ assert.equal(h.state.removalRequests.length,1);assert.equal(h.state.removalRequests[0].status,'pending');assert.match(h.state.message,/Removal requested/);
+ await h.run("cancelRemoval('req-1')");assert.equal(calls.find(c=>c.method==='DELETE').body.id,'req-1');assert.equal(h.state.removalRequests.length,0);
+ requests=[{id:'req-1',targetId:'srv-1',status:'done'}];await h.run('loadRemovals()');
+ const saved=JSON.parse(h.stored.get('target-lab-private-targets'))[0];assert.equal(saved.status,'local');assert.equal(saved.visibility,'private');assert.equal(saved.submissionId,undefined);
 });
 console.log(`${passed} passed; ${failed} failed`);if(failed)process.exitCode=1;

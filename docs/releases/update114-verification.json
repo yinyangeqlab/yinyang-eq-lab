@@ -1,0 +1,91 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 114,
+  "implementationCommit": "12c6b88802b9df597835f88b05ce48f92ed025eb",
+  "deploymentVerification": {
+    "at": "2026-10-23T03:00:24Z",
+    "revision": "12c6b88802b9df597835f88b05ce48f92ed025eb",
+    "update": 114,
+    "deployment": {
+      "id": "not read: the deploying session reads state through Pulumi, not the Cloudflare deployments API",
+      "pulumiWorkerEtag": "79d4c34311bd16271b7d51ea73c19902834ce9f07f7071d8c46dba6e7d3eecb4",
+      "workerModifiedOn": "2026-10-23T02:59:12Z"
+    },
+    "assetsVerified": 743,
+    "retainedPreviousClientAssets": 713,
+    "schemaDefinitions": 216,
+    "migrations": [
+      "0040_target_removal_requests"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "preflightPreviewOfLiveUpdate113Build": "4 unchanged",
+    "afterDeployPreview": "4 unchanged",
+    "migrationAppliedBeforeDeploy": true
+  },
+  "database": {
+    "migration": "0040_target_removal_requests",
+    "statements": 3,
+    "schemaBefore": 213,
+    "schemaAfter": 216,
+    "newTableRows": 0,
+    "timeTravelBookmarkBefore": "recorded in the private rollback folder",
+    "backupDecision": "No export with the deployment. After it, the owner approved exactly one fresh encrypted export to establish the update114 baseline; pending, to be run by the private recovery tooling."
+  },
+  "verification": {
+    "assetsByteComparison": {
+      "checked": 743,
+      "matched": 743,
+      "failures": 0
+    },
+    "protectedMediaAnonymousStatus": 401,
+    "apiTargetsAnonymousStatus": 401,
+    "removalRequestAnonymousStatus": 401,
+    "ownerRemovalQueueAnonymousStatus": 403,
+    "pagesChecked": [
+      "/",
+      "/version",
+      "/privacy",
+      "/shortcuts",
+      "/discover",
+      "/music-library",
+      "/preference-tuning",
+      "/shootout"
+    ],
+    "regression": "71 of 74 checks pass; the same three pre-existing checks fail on unchanged code (check_listener_nickname, check_ranking_view, check_source_bitrate)",
+    "migrationChain": "41 migrations, 216 definitions",
+    "localEndToEnd": "removal-request ownership/state rules, one-time consent box on each entry point and write refusal without agreement, through the private gate",
+    "notTested": "owner queue page and owner decision in a browser; production browser sessions; audio; Safari/iOS; Firefox; screen readers; physical devices"
+  },
+  "backupMetadata": {
+    "sourceBaselineUpdate": 112,
+    "sourceOnlyHandoverPassed": false,
+    "handoverStatus": "pending: not registered; schema changed so the ordinary code-only handover should refuse until the baseline is updated with this backup decision",
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": true,
+    "update113Registered": false,
+    "ownerApprovedFreshExport": true,
+    "freshExportCompleted": false
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": true,
+    "publicationSeparateFromDeployment": true,
+    "publicationAuthorized": true
+  }
+}

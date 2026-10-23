@@ -1,6 +1,6 @@
-# Update113 source-only metadata handover pending — October 22, 2026
+# Update114 schema change and source-only metadata handover pending — October 22, 2026
 
-update113 (code-only, no migration or schema change) is deployed and verified, but its source/build metadata is not registered yet. Until `scripts/recovery/release_handover.py` registers it with the receipt `work/targets-shortcuts-rollback-20261022/handover-deployment-verification.json`, the scheduled data backup refuses the mismatched baseline (it still names update112). Registration is metadata only, never a data snapshot; all earlier encrypted off-device snapshots and timestamps are unchanged. No data export was made or authorized for update113.
+update114 is deployed and verified with additive migration 0040 (target_removal_requests; schema 213 to 216). Its source/build metadata is not registered, and update113's never was. Because the schema changed, the code-only handover should refuse until the schema baseline is updated with an explicit backup decision. No export or snapshot was made with the deployment; coverage until then is the existing encrypted daily snapshots plus a D1 Time Travel bookmark taken before the migration. The owner then approved exactly one fresh encrypted export to establish the update114 baseline and restart the daily schedule; it is pending and runs through the private recovery tooling. The scheduled data backup refuses the mismatched baseline until registration. All earlier encrypted off-device snapshots and timestamps are unchanged.
 
 ## Earlier recovery notes (historical)
 

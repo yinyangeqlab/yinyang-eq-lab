@@ -7,7 +7,7 @@ const ast=ts.createSourceFile('music-panel.tsx',source,ts.ScriptTarget.Latest,tr
 function visit(node){if(ts.isFunctionDeclaration(node)&&['refreshMusicVotes','voteForMusic'].includes(node.name?.text))functions.push(node.getText(ast));ts.forEachChild(node,visit)}visit(ast);
 assert.equal(functions.length,2);
 function fixture(){
- const state={musicVoteRequest:{current:0},candidateUrl:'song',candidateUrlRef:{current:'song'},personalOnly:false,adminTestOnly:false,adminMusicChoices:()=>({}),musicSaving:false,requests:[],musicCounts:{},musicChoices:{}};
+ const state={agreement:{ask:async then=>then()},musicVoteRequest:{current:0},candidateUrl:'song',candidateUrlRef:{current:'song'},personalOnly:false,adminTestOnly:false,adminMusicChoices:()=>({}),musicSaving:false,requests:[],musicCounts:{},musicChoices:{}};
  state.fetch=(url,options)=>new Promise(resolve=>state.requests.push({url,options,resolve}));
  for(const key of ['AdminTestOnly','MusicCounts','MusicChoices','MusicSignedIn','MusicVotesReady','MusicVoteMessage','MusicSaving'])state['set'+key]=value=>state[key[0].toLowerCase()+key.slice(1)]=value;
  vm.createContext(state);vm.runInContext(ts.transpileModule(functions.join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
@@ -20,16 +20,18 @@ s.requests[1].resolve(snapshot(4));await newer;s.requests[0].resolve(snapshot(1)
 assert.equal(s.musicCounts.song.keep,4,'older rank read must not overwrite a newer snapshot');
 assert.equal(s.musicVotesReady,true);
 const stale=s.refreshMusicVotes(),voting=s.voteForMusic('keep');
+await new Promise(resolve=>setImmediate(resolve));
 s.requests[3].resolve(snapshot(5));await voting;
 s.requests[2].resolve(snapshot(4));await stale;
 assert.equal(s.musicCounts.song.keep,5,'a read started before the vote must not undo its updated rank');
 assert.equal(s.musicChoices.song,'keep');assert.equal(s.musicSaving,false);
 assert.equal(s.requests[3].options.method,'POST');
-const undo=s.voteForMusic(null);s.requests[4].resolve({ok:true,json:async()=>({byTrack:{},mine:{},signedIn:true})});await undo;
+const undo=s.voteForMusic(null);await new Promise(resolve=>setImmediate(resolve));s.requests[4].resolve({ok:true,json:async()=>({byTrack:{},mine:{},signedIn:true})});await undo;
 assert.equal(s.musicCounts.song,undefined,'undo must remove an unrated recording from the community rank');
 const personal=fixture();personal.personalOnly=true;
 assert.equal(personal.requests.length,0,'Personal must not submit song ratings automatically');
 const personalVote=personal.voteForMusic('keep');
+await new Promise(resolve=>setImmediate(resolve));
 assert.equal(personal.requests[0].url,'/api/music-votes');
 assert.equal(personal.requests[0].options.method,'POST');
 assert.deepEqual(JSON.parse(personal.requests[0].options.body),{trackUrl:'song',choice:'keep'});

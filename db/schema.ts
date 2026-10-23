@@ -458,3 +458,19 @@ export const accountDeviceStatus=sqliteTable("account_device_status",{id:text("i
 export const accountSyncVersions=sqliteTable("account_sync_versions",{id:text("id").primaryKey(),subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),deviceId:text("device_id").notNull(),epoch:text("epoch").notNull(),baseRevision:integer("base_revision").notNull(),manifest:text("manifest").notNull(),createdAt:integer("created_at").notNull(),committedAt:integer("committed_at")},t=>[index("account_sync_versions_subject").on(t.subjectId)]);
 export const accountSyncEntries=sqliteTable("account_sync_entries",{versionId:text("version_id").notNull().references(()=>accountSyncVersions.id,{onDelete:"cascade"}),storageKey:text("storage_key").notNull(),entryIndex:integer("entry_index").notNull(),partCount:integer("part_count").notNull(),contentHash:text("content_hash"),sourceIds:text("source_ids").notNull().default("[]"),ownerKind:text("owner_kind"),ownerId:text("owner_id")},t=>[primaryKey({columns:[t.versionId,t.storageKey,t.entryIndex]})]);
 export const accountSyncParts=sqliteTable("account_sync_parts",{versionId:text("version_id").notNull(),storageKey:text("storage_key").notNull(),entryIndex:integer("entry_index").notNull(),partIndex:integer("part_index").notNull(),payload:text("payload").notNull()},t=>[primaryKey({columns:[t.versionId,t.storageKey,t.entryIndex,t.partIndex]}),foreignKey({columns:[t.versionId,t.storageKey,t.entryIndex],foreignColumns:[accountSyncEntries.versionId,accountSyncEntries.storageKey,accountSyncEntries.entryIndex]}).onDelete("cascade")]);
+
+/** A participant's request to take their approved target out of public rankings; the owner decides. */
+export const targetRemovalRequests = sqliteTable("target_removal_requests", {
+  id: text("id").primaryKey().notNull(),
+  targetId: text("target_id").notNull(),
+  subjectId: text("subject_id").notNull(),
+  message: text("message").notNull().default(""),
+  status: text("status").notNull().default("pending"),
+  adminNote: text("admin_note"),
+  createdAt: integer("created_at").notNull(),
+  resolvedAt: integer("resolved_at"),
+}, table => [
+  uniqueIndex("target_removal_open_idx").on(table.targetId).where(sql`${table.status} = 'pending'`),
+  index("target_removal_subject_idx").on(table.subjectId),
+  check("target_removal_status", sql`${table.status} IN ('pending','done','declined')`),
+]);

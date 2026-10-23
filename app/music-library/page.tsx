@@ -1,4 +1,5 @@
 "use client";
+import { useConsentPrompt } from "@/components/use-consent-prompt";
 import { adminMusicChoices, saveAdminMusicChoice } from "@/lib/admin-test-store";
 
 import {musicDisplayTitle,isAnalysisNote} from "@/lib/music-display";
@@ -35,6 +36,7 @@ function QueryLibraryView({onChange}:{onChange:(value:"recordings"|"suggestions"
 }
 
 export default function MusicLibraryPage() {
+  const consent = useConsentPrompt("Browsing the library needs no agreement. Rating a song is saved with your account choices, so we ask once, here.");
   const [libraryView,setLibraryView] = useState<"recordings"|"suggestions">("recordings");
   const [suggestionsOpened,setSuggestionsOpened] = useState(false);
   useEffect(()=>{if(libraryView === "suggestions")setSuggestionsOpened(true);},[libraryView]);
@@ -100,14 +102,16 @@ export default function MusicLibraryPage() {
         setByTrack(result.byTrack ?? {});
     localStorage.setItem("target-lab-music-shortlist-v1", JSON.stringify(result.mine));
   }
-  async function decide(track: Track, value: "keep" | "pass") {
+  async function decide(track: Track, value: "keep" | "pass") { await consent.ask(() => void runDecide(track, value)); }
+  async function runDecide(track: Track, value: "keep" | "pass") {
     if (!signedIn) { setVoteMessage("Sign in to submit a music vote."); return; }
     setSaving(track.url); setVoteMessage("");
     try { await saveVote(track.url, decisions[track.url] === value ? null : value); }
     catch (error) { setVoteMessage(error instanceof Error ? error.message : "Could not save music vote."); }
     finally { setSaving(null); }
   }
-  async function submitMany(source: Record<string, "keep" | "pass">) {
+  async function submitMany(source: Record<string, "keep" | "pass">) { await consent.ask(() => void runSubmitMany(source)); }
+  async function runSubmitMany(source: Record<string, "keep" | "pass">) {
     if (!signedIn) { setVoteMessage("Sign in to submit music votes."); return; }
     setSaving("import"); setVoteMessage("");
     let count = 0;
@@ -185,5 +189,6 @@ export default function MusicLibraryPage() {
     })}</div>{loadMore}</section>
     <section className="library-method"><h2>Dynamics measurements</h2><p>The three provisional categories are dense / flattened peaks, preserved peaks, and exceptional dynamics. They use loud-passage crest, peak-to-short-term-loudness contrast and repeated high-peak plateaus, rather than integrated loudness or LRA alone. Borderline cases and recordings awaiting this analysis remain unclassified and eligible. A category does not prove how a recording was mastered or establish its sound quality.</p><p>Loudness matching applies constant gain without compression or limiting when EQ is off. A shared song-family target may fall below −16 LUFS to leave 1 dB of true-peak headroom; the player shows the actual target. Optional EQ retains its existing protective processing and changes the signal. Original downloads remain unchanged. Source and license links accompany each version.</p><a href="/shootout" className="library-return">Return to listening →</a></section>
   </div><div hidden={libraryView !== "suggestions"}>{activeTrack && <aside className="library-active-player" aria-label="Current library playback"><div><strong>{activePlaying ? "Playing" : "Paused"} · {musicDisplayTitle(activeTrack.title)}</strong><small>{activeTrack.artist} · playback position is kept.</small></div><button type="button" onClick={()=>{const audio=activeAudio.current;if(!audio)return;if(audio.paused)void audio.play().catch(()=>setVoteMessage("Playback could not resume. Open the track and try Play."));else audio.pause();}}>{activePlaying ? "Pause track" : "Resume track"}</button><button type="button" onClick={()=>{setLibraryView("recordings");showTrack(activeTrack);}}>Show recording</button></aside>}{suggestionsOpened && <SongSuggestions testOnly={adminTestOnly} ready={ready && votesLoaded} />}</div>
+  {consent.dialog}
   </main>;
 }
