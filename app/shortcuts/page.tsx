@@ -1,5 +1,8 @@
 import Link from "next/link";
 import DisplayPreferencesPanel from "@/components/display-preferences-panel";
+import { shareMetadata } from "@/lib/share-metadata";
+
+export const metadata = shareMetadata("/shortcuts");
 
 const shortcuts = [
   ["Space", "Play or pause the active listening player."],

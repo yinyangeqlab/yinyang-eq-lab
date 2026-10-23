@@ -7,6 +7,7 @@ import { preDatabaseGuard, listenerGuard, boundedBody } from "./abuse-controls.m
 import { isPublicAsset } from "./public-assets.mjs";
 import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
 import { browserPairing, linkedTester } from "./browser-pairing.mjs";
+import { sharePageFor, shareHtml, isUnfurlCrawler } from "./share-pages.mjs";
 
 const encoder = new TextEncoder();
 const ownerCookie = "__Host-yinyangeq_owner";
@@ -171,6 +172,13 @@ async function admin(request, env, path) {
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
+    // Link-preview crawlers (Discord, Slack, iMessage...) cannot sign in, so gated
+    // pages would redirect them to a generic page. Answer with public copy only:
+    // no session, no database, no app content.
+    if ((request.method === "GET" || request.method === "HEAD") && isUnfurlCrawler(request.headers.get("User-Agent"))) {
+      const page = sharePageFor(path, url.search);
+      if (page) return new Response(request.method === "HEAD" ? null : shareHtml(page, { pathname: page.path }), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300", "Vary": "User-Agent", ...(page.private ? { "X-Robots-Tag": "noindex, nofollow" } : {}) } });
+    }
     const publicLandingAsset = isPublicAsset(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/version" || path === "/shortcuts" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {

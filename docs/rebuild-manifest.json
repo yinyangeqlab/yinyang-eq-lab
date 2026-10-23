@@ -259,7 +259,7 @@
     },
     {
       "path": "app/community-preferences/layout.tsx",
-      "sha256": "e86dc6076d8cadf088492151de2fd20fa418cb2bd75b528a2c0844c2a25465c0"
+      "sha256": "0302b44b2a2551acfc3ab11f23e3ffb4fba42f2907f1b07b932d5cc89168204e"
     },
     {
       "path": "app/community-preferences/page.tsx",
@@ -267,7 +267,7 @@
     },
     {
       "path": "app/curve-credits/layout.tsx",
-      "sha256": "295652f7aee612ee2ec3a327f72396585471dd8aa051b89b27e26ebc90406653"
+      "sha256": "d21fc97c1ed585738224fb85ef21a71660969825d98512336dd39154a994ab2f"
     },
     {
       "path": "app/curve-credits/page.tsx",
@@ -279,7 +279,7 @@
     },
     {
       "path": "app/discover/page.tsx",
-      "sha256": "760b296bec6962a33001d9b43279cb88b92f8129d6e5c0b3fd55262ddbcb8aeb"
+      "sha256": "4a788b96b1b734c2f010c9b05fc30e02e4bcc6492655afbf77756dcf91df0098"
     },
     {
       "path": "app/discover/style.css",
@@ -303,7 +303,7 @@
     },
     {
       "path": "app/music-library/layout.tsx",
-      "sha256": "fc1c5be2e3e8ecf3f2c9ddc1fb955c2e105622e7546dffc5cecd62bb85d18e13"
+      "sha256": "e77d5184fad92bc85686e52f69b985406ea737c7359dbfa53f08c9f3a6416bbc"
     },
     {
       "path": "app/music-library/page.tsx",
@@ -315,7 +315,7 @@
     },
     {
       "path": "app/my-data/layout.tsx",
-      "sha256": "120f9649f7e64887320b7a744060c8ea1431b5dad1d8f076c3f065130d27d052"
+      "sha256": "8b4282c11203f2ae06e4afdc82a62b895e068638611138211034aff877113042"
     },
     {
       "path": "app/my-data/page.tsx",
@@ -335,7 +335,7 @@
     },
     {
       "path": "app/owner-research/layout.tsx",
-      "sha256": "2c27ef00812e3d7aa7f1640269f8e89a21e3b94653882b88e58eb51849cb329a"
+      "sha256": "200957b835e6a4f982c5466c6999a0e9866169351f18dd3acd7508b0febb09ec"
     },
     {
       "path": "app/owner-research/page.tsx",
@@ -355,7 +355,7 @@
     },
     {
       "path": "app/preference-tuning/layout.tsx",
-      "sha256": "bb225a3c5a0546a6f253c517af1d8532034a087a40acc22eedf70aeed3610646"
+      "sha256": "d1b5e14cd74ac19c95efed6fc38933afba2c17d84b783e8ce852e7a5c0a9dfce"
     },
     {
       "path": "app/preference-tuning/page.tsx",
@@ -367,7 +367,7 @@
     },
     {
       "path": "app/privacy/layout.tsx",
-      "sha256": "f13b2151ac8480e7cd017f16b148bbd377cc4578365022df3c7bbd49a4aa68c7"
+      "sha256": "2f6a9b3ce8f144197e171f4e5501fbf9205df7021b9c398fad7997ccf89f17fa"
     },
     {
       "path": "app/privacy/page.tsx",
@@ -379,7 +379,7 @@
     },
     {
       "path": "app/shootout/layout.tsx",
-      "sha256": "c956abb515f9d3b63fb238dcc8501655072624afd27c6a2e74e42d3ec792fcf2"
+      "sha256": "b1971b86c5b625ae6b78312a7e481d306e1d658c0d495510873fd4247ef80b67"
     },
     {
       "path": "app/shootout/page.tsx",
@@ -387,7 +387,7 @@
     },
     {
       "path": "app/shootout/personal/layout.tsx",
-      "sha256": "6dfe328ab08376173ca7574a2a221814e34b78bb848a421a5da6996d69bbecd0"
+      "sha256": "b8ceb49f23b8909c57e932079552cfbf2aba928cb7a591ffb437c89576bb837a"
     },
     {
       "path": "app/shootout/personal/page.tsx",
@@ -403,7 +403,7 @@
     },
     {
       "path": "app/shortcuts/page.tsx",
-      "sha256": "42f9372f4488decc21c2d7f75446866634528061119cecbd4794861da88135ab"
+      "sha256": "0491f26ba5ca191502c726f330b57491350454a403350f304cd60eccb6951896"
     },
     {
       "path": "app/test-history/page.tsx",
@@ -411,7 +411,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "ace56dcdc9a054c909d9296cf0f38067a5559c9d664053ea6a675a150cf283b7"
+      "sha256": "90237e5cddeecd872c64ebb4eff1dbfa30b121935bd3fe73fe77a517f73a61b2"
     },
     {
       "path": "app/welcome.css",
@@ -1475,7 +1475,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "d4a4d8ecbe2537aaf56a9937133d8148c38c7c4f1b547617f949e2e5d8c96678"
+      "sha256": "a885397673dd9a0d1660ff78a9fa332c87827e0056a80a69af285c9e20724db6"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1487,7 +1487,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "2bbb5fe5f8596089adac61bd71587489ef7791253baa14938e7881e3d790cd2d"
+      "sha256": "67f35978f98e2450bc730627fc51983dab3921d3b25d1019f6b0ab7055083ee4"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1495,7 +1495,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "cba1b89db3a676dfc69f4c045d5b938ef41eda5b7a279b099afc93987b90d29d"
+      "sha256": "be28bfcbfdcf13c0d7e296ae6f786bc6005dbf591978466d30229a127fba0ef2"
     },
     {
       "path": "infra/pulumi/tsconfig.json",

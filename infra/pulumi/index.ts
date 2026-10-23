@@ -55,6 +55,7 @@ function moduleSource(bytes: Buffer): string {
 
 const modules: Record<string, cloudflare.types.input.WorkersScriptFiles> = {};
 modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/invite-settings.mjs"))};
+modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/share-pages.mjs"))};
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
 modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-sync-notice.mjs"))};
 modules["account-preferences.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-preferences.mjs"))};
