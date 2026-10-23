@@ -1,4 +1,3 @@
-import AlphaShell from "@/components/alpha-shell";
 import "./alpha.css";
 import { env } from "cloudflare:workers";
 import { invitesEnabled } from "@/lib/invite-settings.mjs";
@@ -6,10 +5,7 @@ import { InviteModeProvider } from "@/components/invite-mode";
 import type { Metadata } from "next";
 import "./globals.css";
 import "@/components/action-hover.css";
-import PrivacyEvents from "@/components/privacy-events";
-import ServiceWarningPopup from "@/components/service-warning";
-import SiteDataFooter from "@/components/site-data-footer";
-import SiteBetaNotice from "@/components/site-beta-notice";
+import SiteChrome from "@/components/site-chrome";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yinyangeq.com"),
@@ -39,7 +35,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en">
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><ServiceWarningPopup /><PrivacyEvents /><AlphaShell>{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteChrome>{children}</SiteChrome></InviteModeProvider></body>
     </html>
   );
 }

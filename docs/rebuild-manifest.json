@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 115,
-  "implementationCommit": "5561af4ff4c6b0c6b3287d2d88e85a6415e09fab",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update115: per-page link previews (one preview table, a metadata-only edge response for link-preview crawlers, generated cards) on top of update114, which contains: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
+  "liveUpdate": 116,
+  "implementationCommit": "92a8c502eb463bd9fa97b5ba1cfa89fac1dd41f0",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update116: anonymous shareable blind shootouts (additive migration 0041, public shootout routes in the gate, framing exception for GET /embed/<id> only) on top of update115, which contains: per-page link previews (one preview table, a metadata-only edge response for link-preview crawlers, generated cards) on top of update114, which contains: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "d50b17b5d8bd3e497d022e9ace201924b0ad5825936db1656920920e3a8281d4"
+      "sha256": "2ecf2266b2bc395c5e2608c7c5d77157ba03e6407a59581a9289c8d97397632b"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "c2b3b14d0f7baa51b0ba67ce213e68bc8840ebff071c4be62bc6a67d650b2734"
+      "sha256": "02acbf535695eae80d39abf80d13f632a2969e97d169c5996c66a50be24c6590"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "1dee6e09cbca62b4b3b85085e0ea0c63c896bd676a762489e7280129498cc68a"
+      "sha256": "092884795cbece8361b7a79f13fed6fa79212993a399732205031c00115a2765"
     },
     {
       "path": "README.md",
@@ -104,6 +104,22 @@
     {
       "path": "app/api/comparison-choices/route.ts",
       "sha256": "7ad677e42afe51e518f6389d4a4a456e47132695b931fe1f6e564f75ba5688d6"
+    },
+    {
+      "path": "app/api/embed-shootouts/[id]/results/route.ts",
+      "sha256": "95a6b94f4401505570dc039fa235668009e24f8c8a0776489b7f9e33dc329e36"
+    },
+    {
+      "path": "app/api/embed-shootouts/[id]/route.ts",
+      "sha256": "c80b5109bc97584e45fbd8f42f980bea0cf3c08a1a4c1e41019840a710c7b331"
+    },
+    {
+      "path": "app/api/embed-shootouts/[id]/votes/route.ts",
+      "sha256": "9d96a72a4bb4564e2c3b5c86cd0b827efe152311dddab0ddfba47965816e19b1"
+    },
+    {
+      "path": "app/api/embed-shootouts/route.ts",
+      "sha256": "d51e56b27f07a267263e4b06b2d3e33919ce6ff4b4b4f3a39df939336a4fab90"
     },
     {
       "path": "app/api/feedback/route.ts",
@@ -172,6 +188,10 @@
     {
       "path": "app/api/owner-research/community-pilot/route.ts",
       "sha256": "c513630e18ba92db738dbb2db7c8dc8daa00fa8545cde328ed65b82554439a4f"
+    },
+    {
+      "path": "app/api/owner-research/embed-shootouts/route.ts",
+      "sha256": "e6995eb60553f3b68c9d7e6dad7b99b203d8502e2a0bc6f99aa9487739e51e33"
     },
     {
       "path": "app/api/owner-research/erasure/route.ts",
@@ -298,6 +318,10 @@
       "sha256": "4fc966253ea5e0549318e9d2db985d3e0899e5927626d5699d965f02fa70a88a"
     },
     {
+      "path": "app/embed/[id]/page.tsx",
+      "sha256": "4e6457719d9de8dc9ec6436911c64936cc845f0523d408bd1ae9d5004468f6c2"
+    },
+    {
       "path": "app/globals.css",
       "sha256": "8a128317000c8acaa65cf2365a07c9e2fea701f083962d3d2fc2548f3d33c53f"
     },
@@ -307,7 +331,7 @@
     },
     {
       "path": "app/layout.tsx",
-      "sha256": "2876a4c120efad9a4e73d9296ddf74a361833b35f5ec5184b1c4c48be90a3177"
+      "sha256": "ad71c2de7504eb122fc10c167215a9aac54342a8fdee406bc92854c3577fbaa2"
     },
     {
       "path": "app/listeners/yinyangeq/layout.tsx",
@@ -395,7 +419,7 @@
     },
     {
       "path": "app/privacy/page.tsx",
-      "sha256": "2e8e4e3b6c3f9b15d539bd3cfd806fab32dbef4968c68cf46b778cefaa69c1a0"
+      "sha256": "ff672083225b61d9f9c0a0bb7d95c3c5c5df3d75af53a78a1764442d3b4255a5"
     },
     {
       "path": "app/profile-access/layout.tsx",
@@ -404,6 +428,26 @@
     {
       "path": "app/profile-access/page.tsx",
       "sha256": "ab661e4bc4d89f8d2184d4073bec7911d61abdc635b08e8d2665aec1fdc16800"
+    },
+    {
+      "path": "app/s/[id]/card.png/route.ts",
+      "sha256": "92783edb797c87e033e4cb74dc53b88d3ca5d89123a1679e3f385ea64a3a020a"
+    },
+    {
+      "path": "app/s/[id]/page.tsx",
+      "sha256": "b2f63df5d58b033c7abfcfe440c5e2f9e6b988b41217054cc1cdb8acbc6d36c2"
+    },
+    {
+      "path": "app/s/[id]/results/page.tsx",
+      "sha256": "5fab2011a68251c53bd30b8bbee62972e04103fc067f0537bbe26f08d5f45f41"
+    },
+    {
+      "path": "app/share-shootout/layout.tsx",
+      "sha256": "0d28e789448992d56ceedebe154c36ea983ad406cd0ffc2b85b97bebd753cf70"
+    },
+    {
+      "path": "app/share-shootout/page.tsx",
+      "sha256": "1fb6f6f567320ef9340d68cbda55df3ebb538528f43033430b09197b0e1b8f41"
     },
     {
       "path": "app/shootout/layout.tsx",
@@ -606,6 +650,34 @@
       "sha256": "ca612a99c93c0775fbe80ccd8155ef453011bc26e9286cfb18b7d99f5b5a892a"
     },
     {
+      "path": "components/embed-common.ts",
+      "sha256": "be560c1312ea4e7294e3d597cb9f1ab45e1a8bb0164135469c740eea6d4031a4"
+    },
+    {
+      "path": "components/embed-create.tsx",
+      "sha256": "ae29d2889bdbfbce231b19d645bcaad676b9d5bd5c1510fb0308300428647003"
+    },
+    {
+      "path": "components/embed-curve-plot.tsx",
+      "sha256": "892839bc6db0d5f847ab2d1ae7b536199d17e5ceed9ed49e71343eebbca9c692"
+    },
+    {
+      "path": "components/embed-manage.css",
+      "sha256": "fcde77b54265647045efb2ebb46d24bfd4bcea4ab07f51034e23fb58ac8e300d"
+    },
+    {
+      "path": "components/embed-results.tsx",
+      "sha256": "ac81dd1c4f3523dee5cbb2cdf394dac4bc87d6b0c1353a493866849feb20ed51"
+    },
+    {
+      "path": "components/embed-shootout.css",
+      "sha256": "440d81d43d04851bb128bc3311ad7657cea273610e2154a183c6844596eb15df"
+    },
+    {
+      "path": "components/embed-shootout.tsx",
+      "sha256": "0e1e8ec87b07d424f91c6d003df2faf330dbfe67cb5bd60016f9c18fefe09f53"
+    },
+    {
       "path": "components/feedback-panel.tsx",
       "sha256": "ccc5e75d7e4d5bfbae32f3b5c906419ade5c402f0697eafdd451b9cf5fa14a55"
     },
@@ -788,6 +860,10 @@
     {
       "path": "components/site-beta-notice.tsx",
       "sha256": "b1bde5c8c28f1c2cd58d2b6778cddf811118be06fc56ad899cdc07d95c512387"
+    },
+    {
+      "path": "components/site-chrome.tsx",
+      "sha256": "d71c5b70c06c9348a0e197f0937f6ee0292c0cc01f7bd2517cef72e777054e4c"
     },
     {
       "path": "components/site-data-footer.tsx",
@@ -1171,7 +1247,7 @@
     },
     {
       "path": "db/schema.ts",
-      "sha256": "718045ec43f517e1d3e6260b8f09812dca98867c7fdecf3f81284593914530f0"
+      "sha256": "af7bae7777819ca54f1216f004047051ce628322c78efe16c44e769cb21f5220"
     },
     {
       "path": "db/service-status.sql",
@@ -1187,11 +1263,11 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "13ce1cfdc3149e79ebd91da27641b0f19aba1613144444221fd8ae33afda0468"
+      "sha256": "58bcd7c6ebe723f814b974464bae3bf43481229b8aa1c0c7aa6d497f4305deeb"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ae624e4ef7363bb0741202f701ec11ec3adf7fe7a6e976b393a393e58c79e042"
+      "sha256": "a65ddd5766aa16a3399a9165602b99830b91943c6de78651511a64c72e88e633"
     },
     {
       "path": "docs/LINK_PREVIEWS.md",
@@ -1199,11 +1275,15 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "1067891475c26d8b3bff19db5688f8c08b6b7f92309f88559dfc9b34c85c1908"
+      "sha256": "1de14a946eb6ef0e211254a7d27966be2e34a180a639d63536af1a0f934b8fd4"
     },
     {
       "path": "docs/RECOVERY.md",
       "sha256": "4f8595c3ea4049097acefda576d894d43c0e822ca1fbe6893abfcd7c973edcd9"
+    },
+    {
+      "path": "docs/SHAREABLE_SHOOTOUTS.md",
+      "sha256": "12f5dafbec9ca8ef2f8c087a25f003841634eaadade797bd270ed20d3cd4ff15"
     },
     {
       "path": "docs/releases/update111-verification.json",
@@ -1216,6 +1296,10 @@
     {
       "path": "docs/releases/update115-verification.json",
       "sha256": "3c840512a5ac5ee1afdb8dfa27c486de365da6bdb52f8d0841e64358d823d67a"
+    },
+    {
+      "path": "docs/releases/update116-verification.json",
+      "sha256": "64709d5c4edbfb678c6cca14d345198d3a169e8e9b5665d6f6908bb7e5e888b1"
     },
     {
       "path": "docs/research/README.md",
@@ -1406,6 +1490,10 @@
       "sha256": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9"
     },
     {
+      "path": "drizzle/0041_embed_shootouts.sql",
+      "sha256": "de9dbc88e900086caa6b3646cab07e5fcfb476da2b17c54f94f69b4e1e0a6a5f"
+    },
+    {
       "path": "drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f"
     },
@@ -1543,7 +1631,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "37747b5b55ec0d82c65b11f9451d72c3a683ede79f511094b65d81c51139c0c3"
+      "sha256": "2221509e7dd0848b21cf9dec35a2fc06f164140f1bd46b5211d9deacc33e8f91"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1748,6 +1836,22 @@
     {
       "path": "lib/dynamics-preview.ts",
       "sha256": "b219b644efe41c3db0ff90688485dafe05c8962ca5b92899d0a664c71fdacbe5"
+    },
+    {
+      "path": "lib/embed-audio.ts",
+      "sha256": "59e2c14ecc1face8372c5a50e08bb80ffcb7769d04cb0e72e30e6224a9f6b7c4"
+    },
+    {
+      "path": "lib/embed-card.ts",
+      "sha256": "790bad2d04ef9e4d42597cadf7b8da41a43945fd71d3b7ab47de48134f90302c"
+    },
+    {
+      "path": "lib/embed-shootout.ts",
+      "sha256": "f4b81565b3dca9d5d0bd17b78e51a07ac9e7b4417d1f09c898307114cd008bda"
+    },
+    {
+      "path": "lib/embed-store.ts",
+      "sha256": "579ab0267d9fe0777b92edb17cedeae1ba46845247e3aed757d3ce182c54e427"
     },
     {
       "path": "lib/feedback.ts",
@@ -1967,7 +2071,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "54d4cb3a7ebcb26a631e11216ffca7661726453268f189c5a6749049fc96966b"
+      "sha256": "f666526075c86dc8dd5cea156941a5e30cb69cbd8326386883423494750aeecd"
     },
     {
       "path": "lib/song-match.ts",
@@ -2162,6 +2266,10 @@
       "sha256": "912ff94f04aa9a09130ea0114ae7c53a54437c58ba254ecef53ea6ddafd7d803"
     },
     {
+      "path": "public/share/share-shootout.jpg",
+      "sha256": "479d0ad5afd0535d87a528888db3c90d32750e27e0233d1ab1abcede73516778"
+    },
+    {
       "path": "public/share/shootout.jpg",
       "sha256": "1aba0468e852e7c4796ffe81dd8d38862c1f649119e3b43f97a4ff72861a0191"
     },
@@ -2290,6 +2398,10 @@
       "sha256": "683ee592f2253c37ee6d20975df7adc0726d9f4afa67d15ed39bebfa030e587c"
     },
     {
+      "path": "scripts/check_embed_shootout.mjs",
+      "sha256": "5ed1b9073043397fa0c3ab19413948e37a479bdbc05ff2af1a7c402d247c6cb1"
+    },
+    {
       "path": "scripts/check_file_matching.mjs",
       "sha256": "01e27510752428629db2513288c18ed824260497556df7d129b72f0c68a7704a"
     },
@@ -2343,7 +2455,7 @@
     },
     {
       "path": "scripts/check_migration_chain.py",
-      "sha256": "9f5e1bac2ea5dffe4c19905a5620e676cd903fc19907f755400664bd08a19e45"
+      "sha256": "a2de2abdc2ec68774bfadcfd88e56cccab7ea754211dd22bc97e5d245df81eeb"
     },
     {
       "path": "scripts/check_music_preferences.cjs",
@@ -2459,7 +2571,7 @@
     },
     {
       "path": "scripts/check_security_response_headers.mjs",
-      "sha256": "b0807a6ca75b4f10466d5dde0faac240f74bf9519e07864a1fd18ba2a73e06e4"
+      "sha256": "62fe6440de9612bb580af8920816d1ed1732b4c7e10cfec56c563bada5e86f59"
     },
     {
       "path": "scripts/check_selected_passage_timing.mjs",
@@ -2475,7 +2587,7 @@
     },
     {
       "path": "scripts/check_share_previews.mjs",
-      "sha256": "a3a0a75a92062c7a0608e4ac0e3c58759bb3c504047c08b45c305b3fc96287cb"
+      "sha256": "68717fd7a14ff3f040b0329f19c2f00e16462c2378655f9104bec56a721ca28f"
     },
     {
       "path": "scripts/check_source_bitrate.mjs",

@@ -1,3 +1,9 @@
+# Update116 schema change; recovery baseline pending with Codex — October 23, 2026
+
+update116 is deployed and verified with additive migration 0041 (embed_shootouts and embed_shootout_runs; schema 216 to 220). Updates 113 to 116 are unregistered. No export or snapshot was made with the deployments; coverage is the existing encrypted daily snapshots plus D1 Time Travel bookmarks before migrations 0040 and 0041 (private rollback folders). The owner approved exactly one fresh encrypted export to establish the baseline and delegated it to the private recovery tooling (Codex), to be taken against the deployed update116 baseline. It is pending; do not record a new recovery point until it completes and verifies.
+
+## Earlier recovery notes (historical)
+
 # Update114 schema change and source-only metadata handover pending — October 22, 2026
 
 update114 is deployed and verified with additive migration 0040 (target_removal_requests; schema 213 to 216). Its source/build metadata is not registered, and update113's never was. Because the schema changed, the code-only handover should refuse until the schema baseline is updated with an explicit backup decision. No export or snapshot was made with the deployment; coverage until then is the existing encrypted daily snapshots plus a D1 Time Travel bookmark taken before the migration. The owner then approved exactly one fresh encrypted export to establish the update114 baseline and restart the daily schedule; it is pending and runs through the private recovery tooling. The scheduled data backup refuses the mismatched baseline until registration. All earlier encrypted off-device snapshots and timestamps are unchanged.

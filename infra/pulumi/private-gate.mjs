@@ -179,6 +179,23 @@ const privateGate = {
       const page = sharePageFor(path, url.search);
       if (page) return new Response(request.method === "HEAD" ? null : shareHtml(page, { pathname: page.path }), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300", "Vary": "User-Agent", ...(page.private ? { "X-Robots-Tag": "noindex, nofollow" } : {}) } });
     }
+    // Anonymous shareable shootouts: public pages, preview card and API. Edge burst
+    // protection runs first; cookies and identity headers never reach the app.
+    const shootoutPage = /^\/(?:s|embed)\/[a-z0-9]{10}(?:\/card\.png|\/results)?$/.test(path) || path === "/share-shootout";
+    const shootoutApi = path === "/api/embed-shootouts" || /^\/api\/embed-shootouts\/[a-z0-9]{10}(?:\/(?:votes|results))?$/.test(path);
+    if ((shootoutPage && (request.method === "GET" || request.method === "HEAD")) || shootoutApi) {
+      const limited = await preDatabaseGuard(request, env, false);
+      if (limited) return limited;
+      const bounded = await boundedBody(request);
+      if (bounded instanceof Response) return bounded;
+      const clean = new Headers(bounded.headers);
+      const managing = /^\/api\/embed-shootouts\/[a-z0-9]{10}\/results$/.test(path); // the sharer's manage key travels as a bearer token
+      for (const name of ["cookie", "authorization", "oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) {
+        if (name === "authorization" && managing) continue;
+        clean.delete(name);
+      }
+      return app.fetch(new Request(bounded, { headers: clean }), env, context);
+    }
     const publicLandingAsset = isPublicAsset(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/privacy" || path === "/curve-credits" || path === "/version" || path === "/shortcuts" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
@@ -357,10 +374,12 @@ export default {
     const headers = new Headers(response.headers);
     headers.set("X-YinYang-Worker", "1");
     headers.set("X-Content-Type-Options", "nosniff");
-    headers.set("X-Frame-Options", "DENY");
+    // Only the chrome-less shootout page may be framed by other sites.
+    const embeddable = request.method === "GET" && /^\/embed\/[a-z0-9]{10}$/.test(new URL(request.url).pathname);
+    if (!embeddable) headers.set("X-Frame-Options", "DENY");
     if (!headers.has("Referrer-Policy")) headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    if (headers.get("Content-Type")?.includes("text/html")) headers.append("Content-Security-Policy", "frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+    if (headers.get("Content-Type")?.includes("text/html")) headers.append("Content-Security-Policy", `frame-ancestors ${embeddable ? "*" : "'none'"}; base-uri 'self'; form-action 'self'`);
     return withMediaLength(request, new Response(response.body, { status: response.status, statusText: response.statusText, headers }));
   },
 };

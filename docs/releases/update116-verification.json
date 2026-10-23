@@ -1,0 +1,91 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 116,
+  "implementationCommit": "92a8c502eb463bd9fa97b5ba1cfa89fac1dd41f0",
+  "deploymentVerification": {
+    "at": "2026-10-23T08:53:15Z",
+    "revision": "92a8c502eb463bd9fa97b5ba1cfa89fac1dd41f0",
+    "update": 116,
+    "deployment": {
+      "id": "not read: the deploying session reads state through Pulumi, not the Cloudflare deployments API",
+      "pulumiWorkerEtag": "c36f724e6e6d27f9eccdd58e7f02cdaeaaea03939483498e532d6fca61ac2850",
+      "workerModifiedOn": "2026-10-23T08:51:00Z"
+    },
+    "assetsVerified": 771,
+    "retainedPreviousClientAssets": 672,
+    "schemaDefinitions": 220,
+    "migrations": [
+      "0041_embed_shootouts"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "preflightPreviewOfLiveUpdate115Build": "4 unchanged",
+    "afterDeployPreview": "4 unchanged",
+    "migrationAppliedBeforeDeploy": true
+  },
+  "database": {
+    "migration": "0041_embed_shootouts",
+    "statements": 4,
+    "schemaBefore": 216,
+    "schemaAfter": 220,
+    "newTableRowsAfterMigration": 0,
+    "appliedWith": "wrangler d1 execute --remote --command (the --file import path returned an authentication error and changed nothing)",
+    "timeTravelBookmarkBefore": "recorded in the private rollback folder (D1_BOOKMARK_PRE_0041.txt)",
+    "backupDecision": "No export with the deployment. The owner delegated the baseline export to Codex, to be taken against the deployed update116 baseline."
+  },
+  "verification": {
+    "assetsByteComparison": {
+      "checked": 771,
+      "matched": 771,
+      "failures": 0
+    },
+    "protectedMediaAnonymousStatus": 401,
+    "apiTargetsAnonymousStatus": 401,
+    "removalRequestAnonymousStatus": 401,
+    "ownerRemovalQueueAnonymousStatus": 403,
+    "ownerShootoutsAnonymousStatus": 403,
+    "crawlerSpoofApiTargetsStatus": 401,
+    "liveEndToEnd": "create 201; config names withheld; card 200 image/png; Discord-style og tags; GET /embed frame-ancestors * with no X-Frame-Options; /s, /share-shootout and other pages unchanged DENY; vote accepted; results 404 without key and 200 with key; no cookies on public responses; delete 404 with wrong or missing key and 200 with the right key, then link, card and results 404",
+    "earlierLinkPreviewsStillServed": true,
+    "regression": "embed logic suite, link-preview, gate, security-header, browser-pairing and participation suites, migration chain (220), TypeScript, lint, production build, source-only rebuild check and snapshot check pass; the full 74-script regression was not re-run",
+    "leftover": "none: the verification shootout 4vhjhp6kcg was deleted by the owner on 2026-10-23; production held 0 shootouts and 0 runs afterwards (schema 220)",
+    "notTested": "a real paste into Discord, Slack or iMessage; production browser interaction and audio; Safari/iOS; physical devices"
+  },
+  "backupMetadata": {
+    "sourceBaselineUpdate": 112,
+    "sourceOnlyHandoverPassed": false,
+    "handoverStatus": "pending: updates 113 to 116 unregistered; schema changed (220); Codex to take the single owner-approved fresh export against update116",
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": true,
+    "update113Registered": false,
+    "update114Registered": false,
+    "update115Registered": false,
+    "update116Registered": false,
+    "ownerApprovedFreshExport": true,
+    "delegatedTo": "Codex",
+    "freshExportCompleted": false
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": true,
+    "branch": "shareable-shootout",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/4 (draft, stacked on PR #3, not merged)",
+    "publicationSeparateFromDeployment": true,
+    "publicationAuthorized": true
+  }
+}
