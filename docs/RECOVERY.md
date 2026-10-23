@@ -1,3 +1,10 @@
+# Update117 matching encrypted recovery point verified — October 23, 2026
+
+One owner-approved matching encrypted off-device recovery point was verified before rollout, using a current SELECT-only export from update116 with the unchanged schema220 and the exact prepared update117 source/build/media. All 365 recovery files were independently reconstructed and verified. All 340 prior media objects were reused; only 24 new AAC assets were added. Prior snapshots, timestamps and encrypted object records were preserved. The point was activated only after deployment verification; hosted validation passed and daily03:00 America/Los_Angeles scheduling is active. No second data export or snapshot was made during finalization. Additional encrypted storage: 144,847,044 bytes. No private storage identifiers or recovery key are published.
+
+
+## Earlier recovery records (historical)
+
 # Update116 encrypted recovery baseline verified — October 23, 2026
 
 **Recovery completed October 23, 2026.** One owner-approved encrypted off-device export established the update116 baseline (schema 220), including the deployed changes from updates113–115. All 341 recovery files passed independent download, decryption and reconstruction with matching source/schema; synthetic recovery checks and all 56 backup safety tests passed. All 340 media files reused existing encrypted objects. Independent checks after publication confirmed all four prior snapshots, their original timestamps and encrypted-object hashes/owner-only permissions unchanged. Exact deployed source/build and original Git history are preserved, including the documented source-manifest variant; original migration fingerprints are unchanged. Hosted validation passed, daily scheduling is active at 03:00 America/Los_Angeles, and the first subsequent scheduled data backup succeeded. The manual repair made exactly one snapshot; the subsequent scheduled run followed the normal daily cadence. No production writes, application import or website deployment occurred. See docs/releases/update116-recovery-verification.json.

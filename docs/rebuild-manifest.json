@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 116,
-  "implementationCommit": "b22885f",
-  "runtimeParity": "Candidate update117 on verified update116: 24 unchanged owner-supplied AAC recordings, artist-permission credits, measured loudness, regenerated waveforms and provisional peak-contrast classifications. Existing update116 application and schema remain intact. Deployment and recovery status are recorded separately.",
+  "liveUpdate": 117,
+  "implementationCommit": "06318b114767a0282880721f27168443306f29b4",
+  "runtimeParity": "Verified update117: 24 unchanged AAC recordings, permission credits, fresh analysis and accurate music link previews, on update116; no schema change. Exact runtime snapshot and compiled assets verified. Matching encrypted recovery point and daily validation verified.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -60,15 +60,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "560f56917b0828e2ad78c872892808bff2cf00a25acd5f14de9dfa61b47fd614"
+      "sha256": "186557450eef8286507c7cf82d0be8b6003c53fa7d165b64b4bff1b93e2c3a82"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "fd07bc80fe01d6d2f0e2c8de29e4ac10f55d6bbc854c1695ec62f69f7e32cc4d"
+      "sha256": "3aced5261c6cfe6406b7738141604e005ecd26282a6469179f60cf035fe5c030"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "511481f82088ab9ef04f45280bcb668dbca1afb4dd63cca1a8e59afd28efdcce"
+      "sha256": "9b9f9faf1556669311c8976718452cbd0bbbd8645d3754b6f7331a2050e5e4e0"
     },
     {
       "path": "README.md",
@@ -1268,15 +1268,15 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "02aff90d7b0ce458928bd8474ab1d5bc76b1974587f7886ae0b00a855732c47a"
+      "sha256": "7a4165147b3f47ba98fd45b6bc2ac0154e2bd9e1c5ede3e16e05989aba7c22b2"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "1c9cdc5853719bad6b6d5458bedc6fcdd7941e181ad39cc193953947fdfc3726"
+      "sha256": "255b426432cc7bb7ba17d17266d27991eb431f77db7e7cc23669aabcdbc7b157"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
-      "sha256": "9375e06a7d34a153fd71e6f2cb94f071f4eae3a3c84e78eafb74b6af3aa4a69a"
+      "sha256": "a6eb5b87f78fbdee0d0e670d9e8ba3d7c879feb51e9a9643afc28f4ee41f8b1a"
     },
     {
       "path": "docs/LINK_PREVIEWS.md",
@@ -1284,11 +1284,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "cc02d443e5a641213647b390ff428a38776f9a3dbc72543839a2beed8bed562c"
+      "sha256": "d57de5df16b46eda67befae5d3473d7ff7f40041840a8e105a450867e5075e1b"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "bed3e177d1a050d7e0c41c193cfd9c2c002e6dcfbe3b5734022572e3b4bb28ee"
+      "sha256": "a40de74e05094d7052c9f141da95c172a9de5661aa6b89ffe55c987816492dab"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
@@ -1317,6 +1317,10 @@
     {
       "path": "docs/releases/update116-verification.json",
       "sha256": "3588555565fc3dab9c8b582c13007ff11565f5bcd7200459f0b120fa13099a7d"
+    },
+    {
+      "path": "docs/releases/update117-verification.json",
+      "sha256": "dfaa7acc6a46f28515b2134791c56f4a116a875f109280ba24f9ad04b1e97656"
     },
     {
       "path": "docs/research/README.md",
@@ -2808,6 +2812,5 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": false,
-  "candidateUpdate": 117
+  "pendingDeploymentApproval": false
 }

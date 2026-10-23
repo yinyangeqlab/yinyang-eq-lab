@@ -1,3 +1,7 @@
+## Deployment completion — October 23, 2026
+
+Update117 is deployed and verified with one matching encrypted off-device recovery point, full reconstruction and active daily scheduling. See docs/releases/update117-verification.json. The preparation record below preserves its original scope and scientific limits.
+
 # Jason J. Chevallier music import — October 23, 2026
 
 Prepared locally from fetched scrubbed GitHub main `b22885f` (live update116). Existing workspace drafts and historical releases are preserved. The release is prepared on an isolated lab branch; deployment and recovery receipts record actual completion. No production database mutation or schema change is part of this import.
