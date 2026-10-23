@@ -324,7 +324,7 @@ const privateGate = {
         context.waitUntil(rankingCache.put(rankingKey, cached).catch(() => console.warn("ranking_cache_write_failed")));
         const miss=rankingResponse(response, "MISS"); if(data?.setCookie) miss.headers.append("Set-Cookie",data.setCookie); return miss;
       }
-      if (rankingCache && response.ok && request.method === "POST" && ["/api/votes", "/api/listening-runs", "/api/owner-research/legacy", "/api/targets", "/api/owner-research/moderation", "/api/owner-research/erasure"].includes(path)) {
+      if (rankingCache && response.ok && request.method === "POST" && ["/api/votes", "/api/listening-runs", "/api/owner-research/legacy", "/api/targets", "/api/owner-research/moderation", "/api/owner-research/erasure", "/api/owner-research/target-removals"].includes(path)) {
         try { await rankingCache.delete(rankingKey); } catch { console.warn("ranking_cache_invalidation_failed"); }
       }
       if (rankingCache && response.ok && request.method === "DELETE" && path === "/api/my-data") {
