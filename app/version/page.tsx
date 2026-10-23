@@ -1,8 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { bugReportUrl, releaseInfo, repositoryUrl } from "@/lib/release-info";
+import { shareMetadata } from "@/lib/share-metadata";
 
-export const metadata: Metadata = { title: "About this version · YinYang EQ" };
+export const metadata: Metadata = shareMetadata("/version");
 const repository = repositoryUrl;
 
 export default function VersionPage() {

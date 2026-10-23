@@ -6,7 +6,9 @@ export const publicAssetPaths = [
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/favicon.svg", "/favicon.ico",
 ];
-export const publicAssetBypassPatterns = ["!/_next/static/*", ...publicAssetPaths.map(path => `!${path}`)];
+// Link-preview cards (scripts/generate-share-cards.mjs): static JPEGs only.
+const shareCardPattern = /^\/share\/[a-z0-9-]+\.jpg$/;
+export const publicAssetBypassPatterns = ["!/_next/static/*", "!/share/*",...publicAssetPaths.map(path => `!${path}`)];
 export function isPublicAsset(path) {
-  return path.startsWith("/_next/static/") || publicAssetPaths.includes(path);
+  return path.startsWith("/_next/static/") || shareCardPattern.test(path) || publicAssetPaths.includes(path);
 }

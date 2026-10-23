@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, AudioLines, UsersRound, ChartNoAxesColumn } from "lucide-react";
 import "./style.css";
-export const metadata = {title:"Discover | YinYang EQ"};
+import { shareMetadata } from "@/lib/share-metadata";
+export const metadata = shareMetadata("/discover");
 const destinations = [
   {href:"/curve-credits",title:"Targets & sources",text:"Find target names, creators and documented sources.",Icon:AudioLines},
   {href:"/community-preferences",title:"Community preferences",text:"Explore the preference pilot, sharing choices and current limits.",Icon:UsersRound},
