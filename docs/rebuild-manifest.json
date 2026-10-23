@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 113,
-  "implementationCommit": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update113: the Personal comparison layout and starter, user-chosen target pools with local-only private targets, the Private or Share-for-public-review upload choice, withdraw of pending submissions, the owner Target submissions list and consistent playback shortcuts with a scope setting are deployed on the update112 foundation. Source-only recovery metadata registration for update113 is pending (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior. Source for the next release (migration 0040 and the browse-first consent flow) is published but not deployed; see docs/HANDOFF.md.",
+  "liveUpdate": 114,
+  "implementationCommit": "12c6b88802b9df597835f88b05ce48f92ed025eb",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update114: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,15 +59,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "064ebd9d4223934fd0fce6bb5cf3f3f48503eaa2cb0f937f91ec3d3da3b596e0"
+      "sha256": "ffcb14231aef7b1ee39db83062caf300affb6bf7b45b64b2c4764b8c18c41ec5"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "9d3abbaa20fbb5027561b332142184da63f862dca3c1272f04f49cb107decd57"
+      "sha256": "f41726c5eeedc79938b3e18863135fc01c6b8ac39f8c2942c175f08140caac27"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "5a8bf40881528ea243fe31adba4fc5f8a85178ff466c2740a75b1f208775a464"
+      "sha256": "7b494a5fd42de1a909764482d5fefd962c3ab1df5c16763af954a9333a18c953"
     },
     {
       "path": "README.md",
@@ -1163,15 +1163,15 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "a88165ede8d76a629008208bcdc1215451343422d1fa97bf6f3ef897c133ed98"
+      "sha256": "f6f6d580c6a5b110ce8648299b4bb6b36949c1ca6eb4a06fb57b12b320ff1129"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c01ef110da5c0bf4a38859ee00859abf082b83b9afaa40aaff730cbdfcf6a696"
+      "sha256": "7afea6f25ba429bc6bfc1cc486aca1b097381d37a877cfe70554bba775501f1a"
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "4eef0068b2f9527e1a87285454a79ada96f92b2d44b9d5989298ee1fae255597"
+      "sha256": "6fa4fa108015aa873a0c50a292778aa53770a49ba88346453bd460ba0ed24b2f"
     },
     {
       "path": "docs/RECOVERY.md",
@@ -1180,6 +1180,10 @@
     {
       "path": "docs/releases/update111-verification.json",
       "sha256": "72733412d9f6977d8190b756134b2def3c4be30877a26618c9ec65aefa76f696"
+    },
+    {
+      "path": "docs/releases/update114-verification.json",
+      "sha256": "dbd111e5216c5d1de75a250d33570d84573b93c7027c45de0996d9418332ac1d"
     },
     {
       "path": "docs/research/README.md",
