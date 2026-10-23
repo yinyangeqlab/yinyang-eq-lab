@@ -60,15 +60,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "a71a1a562b3cfb6ef5a20bb1728fa34f78ae91652016a24d6f230f620dbd9b09"
+      "sha256": "03b1b470c1da8c7083539d75097c20920631805148638ee923cff45d5514210f"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "29ab82733ef145ea0dc45e86dbb2e21abfe5a5bd02aaeaa320d73a9b7ac7983a"
+      "sha256": "8bf6233c22347ac342d5311022acb4e31f7499b478fcd9540ec4f13fdd768e76"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "6d85866a3a53e1ef024ca36846aaec8b2afb7b5f8e8227a18fbb4eef5ff274cb"
+      "sha256": "7d2aa8e269321bb84ac85a39a48514551aa13f4bfccc26b9c4fdcd6e8ad90691"
     },
     {
       "path": "README.md",
@@ -1272,7 +1272,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "01e4684a3a156f0ed04dff3ba92ef8378a7306b4375a11ff2abff497c447dcf5"
+      "sha256": "a89f9a7578c05fc15d67bcd4951fe6c6bdd68601eaba1644259181d627dc0c5c"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1320,7 +1320,7 @@
     },
     {
       "path": "docs/releases/update117-verification.json",
-      "sha256": "26833955dd9566ecadb85dfa5448e83e0696f9fa423924771b74dd713cc3aa0a"
+      "sha256": "567a27a0d51b5c58822907c5a8b8811a6c3cb2567690c4c5c363ef71b229b0b4"
     },
     {
       "path": "docs/research/README.md",

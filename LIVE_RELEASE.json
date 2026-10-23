@@ -2525,15 +2525,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "6d85866a3a53e1ef024ca36846aaec8b2afb7b5f8e8227a18fbb4eef5ff274cb"
+      "sha256": "7d2aa8e269321bb84ac85a39a48514551aa13f4bfccc26b9c4fdcd6e8ad90691"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "a71a1a562b3cfb6ef5a20bb1728fa34f78ae91652016a24d6f230f620dbd9b09"
+      "sha256": "03b1b470c1da8c7083539d75097c20920631805148638ee923cff45d5514210f"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "29ab82733ef145ea0dc45e86dbb2e21abfe5a5bd02aaeaa320d73a9b7ac7983a"
+      "sha256": "8bf6233c22347ac342d5311022acb4e31f7499b478fcd9540ec4f13fdd768e76"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2549,7 +2549,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ea1b2cee9c0ab897ea3a1b76c34110cc6ca8a579470a9c1ddde7ce9ab4c9fc4b"
+      "sha256": "a89258b14c49e44f4f479bad728e2e4217f9e684a49d23638f829be1fd4187a7"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -2593,7 +2593,7 @@
     },
     {
       "path": "docs/releases/update117-verification.json",
-      "sha256": "26833955dd9566ecadb85dfa5448e83e0696f9fa423924771b74dd713cc3aa0a"
+      "sha256": "567a27a0d51b5c58822907c5a8b8811a6c3cb2567690c4c5c363ef71b229b0b4"
     }
   ],
   "localConfigurationFiles": [
@@ -11466,7 +11466,7 @@
     "documentation": "infra/edge-rate-limit/README.md"
   },
   "pendingLocalChanges": {
-    "description": "Separate original workspace drafts preserved. Runtime source and verified deployment records published on the lab release branch in PR #6; main merge remains separate.",
+    "description": "Separate original workspace drafts preserved. Runtime source and verified deployment records published through the lab account and merged into main in PR #6.",
     "canonicalCheckoutOnly": false
   },
   "taskClosure": {
@@ -11542,12 +11542,14 @@
     "releaseRecordDocumentationVariant": {
       "path": "docs/rebuild-manifest.json",
       "immutableSourceSha256": "924ef0fc2a692f53101540041e2efb5c08b368e756c5704172e2e64bdfe138bb",
-      "releaseRecordsSha256": "f3e68a105825086ed0299c44b5f7a7c8b3799d53f8846692a0c8ddd441dbd22a",
+      "releaseRecordsSha256": "f5a0334fee98eeb87df2c54cb6981011a3529e508fd879a71c3f00c411e4b598",
       "reason": "Runtime snapshot and backup retain original prepared source; subsequent deployment/recovery documentation is recorded separately without rewriting original source provenance."
     },
     "publicationBranch": "release/jason-aac-records-20261023",
     "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/6",
-    "merged": false
+    "merged": true,
+    "mergeCommit": "a556e4bd837bd39b893efe32ad8fa2ef9482a566",
+    "publicationState": "merged"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",

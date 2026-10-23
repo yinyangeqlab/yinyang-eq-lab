@@ -73,9 +73,10 @@
   "publication": {
     "branch": "release/jason-aac-records-20261023",
     "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/6",
-    "state": "open",
+    "state": "merged",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "merged": false
+    "merged": true,
+    "mergeCommit": "a556e4bd837bd39b893efe32ad8fa2ef9482a566"
   }
 }
