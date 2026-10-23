@@ -19,6 +19,7 @@ manual = {
     "0038_participant_account_sync.sql": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8",
     "0039_segmented_account_sync.sql": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417",
     "0040_target_removal_requests.sql": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9",
+    "0041_embed_shootouts.sql": "de9dbc88e900086caa6b3646cab07e5fcfb476da2b17c54f94f69b4e1e0a6a5f",
 }
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:
@@ -62,6 +63,6 @@ except sqlite3.IntegrityError:
 db.execute("DELETE FROM research_measurements WHERE id = ?", ("sample",))
 assert db.execute("SELECT COUNT(*) FROM research_measurement_chunks").fetchone()[0] == 0
 db.executescript((root / "db/service-status.sql").read_text())
-assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 216
+assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 220
 assert not db.execute("PRAGMA foreign_key_check").fetchall()
-print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema216, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")
+print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema220, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")

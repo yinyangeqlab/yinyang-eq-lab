@@ -2425,15 +2425,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "1dee6e09cbca62b4b3b85085e0ea0c63c896bd676a762489e7280129498cc68a"
+      "sha256": "778c871f79ec8a8cbbc3ff7a839a58348919dd2383b567de7e283d61daa8b4b5"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "d50b17b5d8bd3e497d022e9ace201924b0ad5825936db1656920920e3a8281d4"
+      "sha256": "c385518da60516e178374f238afde79d3917dd29c71e2c0168456be3998403d8"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "c2b3b14d0f7baa51b0ba67ce213e68bc8840ebff071c4be62bc6a67d650b2734"
+      "sha256": "bece484a55da03ada52012b63c663d6a61806efe80096fbeff3583de20a01b3d"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2449,7 +2449,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ae624e4ef7363bb0741202f701ec11ec3adf7fe7a6e976b393a393e58c79e042"
+      "sha256": "a167683fd42a49503179365405548f1f73d323bdc45d11b87008d8b3f41b9bea"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -10874,7 +10874,7 @@
     "documentation": "infra/edge-rate-limit/README.md"
   },
   "pendingLocalChanges": {
-    "description": "The anonymous shareable shootout embed exists only as local commit 69ea526 on branch worktree-share-previews-embed (not pushed, not deployed). It adds tables and its migration number 0040 is now taken by update114, so it needs renumbering and an explicit backup decision. Recovery handover for update115 is pending.",
+    "description": "Shareable anonymous shootouts are staged on branch shareable-shootout (migration 0041, schema 216 to 220; not deployed, needs a backup decision and an infrastructure update). Recovery handover for updates 113-115 is pending.",
     "canonicalCheckoutOnly": false
   },
   "taskClosure": {

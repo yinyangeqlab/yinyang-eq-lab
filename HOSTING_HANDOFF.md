@@ -12,6 +12,8 @@ Source `5561af4ff4c6b0c6b3287d2d88e85a6415e09fab` (branch `share-previews-links`
 
 Not part of this release: the shareable anonymous shootout embed exists only as local commit `69ea526` on branch `worktree-share-previews-embed` (not pushed). It adds tables, so it needs its own explicit backup decision, and its migration is numbered 0040, which update114 has since used; renumber it before any use.
 
+**Staged, not deployed: shareable anonymous shootouts.** Branch `shareable-shootout` (based on update115) adds `/share-shootout`, `/s/<id>`, `/embed/<id>`, private sharer results with an opt-in switch for sharing with the owner, a generated preview card and an owner read endpoint, limited to targets with an MIT or CC BY 4.0 license. It needs additive migration `0041_embed_shootouts.sql` (2 tables, 2 indexes; schema 216 to 220, so an explicit backup decision), the public shootout routes and the `/embed/<id>` framing exception in the gate (an infrastructure update), and the app build. Verified locally only: logic suite, gate and header suites, TypeScript, lint, and a browser run on synthetic data. See docs/SHAREABLE_SHOOTOUTS.md.
+
 ## Previous release and preparation notes
 
 # Current live release — 0.2.0-beta.1 / update114, October 22, 2026

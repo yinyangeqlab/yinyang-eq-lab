@@ -80,4 +80,21 @@ assert.equal(await run('/preference-tuning'), null, 'ordinary visitors still hit
 assert.equal(await run('/api/my-data', { headers: discord }), null, 'API routes are never answered as previews');
 assert.equal(await run('/music/private.mp3', { headers: discord }), null);
 
-console.log('PASS share previews: every page route has a preview, cards exist, crawlers get public copy only and every other request still reaches the gate.');
+// Shootout routes: public, guarded, identity stripped, and nothing broader.
+const dirty = { Cookie: '__Host-yinyangeq_owner=forged', Authorization: 'Bearer owner', 'oai-authenticated-user-id': 'owner', 'x-yinyang-data-session': 'forged' };
+for (const [path, method] of [['/s/k7m2q9xwab', 'GET'], ['/s/k7m2q9xwab/card.png', 'GET'], ['/s/k7m2q9xwab/results', 'GET'], ['/embed/k7m2q9xwab', 'GET'], ['/share-shootout', 'GET'], ['/api/embed-shootouts', 'POST'], ['/api/embed-shootouts/k7m2q9xwab', 'GET'], ['/api/embed-shootouts/k7m2q9xwab/votes', 'POST']]) {
+  const response = await run(path, { method, headers: dirty, body: method === 'POST' ? '{}' : undefined });
+  assert.equal(response?.status, 200, `${method} ${path}`);
+  for (const name of ['cookie', 'authorization', 'oai-authenticated-user-id', 'x-yinyang-data-session']) assert.equal(forwarded.headers.get(name), null, `${name} stripped on ${path}`);
+}
+const managing = await run('/api/embed-shootouts/k7m2q9xwab/results', { method: 'GET', headers: { ...dirty, Authorization: 'Bearer ' + 'A'.repeat(43) } });
+assert.equal(managing.status, 200);
+assert.equal(forwarded.headers.get('authorization'), 'Bearer ' + 'A'.repeat(43), 'manage key reaches only the results endpoint');
+assert.equal(forwarded.headers.get('cookie'), null);
+assert.equal((await run('/s/k7m2q9xwab', { method: 'POST', body: '{}' })), null, 'shootout pages are read-only');
+for (const path of ['/s/short', '/s/k7m2q9xwab/extra', '/embed/k7m2q9xwab/card.png.x', '/api/embed-shootouts/k7m2q9xwab/other', '/api/embed-shootouts/../my-data', '/s/K7M2Q9XWAB'])
+  assert.equal(await run(path), null, `${path} must stay gated`);
+const limitedResponse = new Response('slow down', { status: 429 });
+assert.equal(await run('/api/embed-shootouts', { method: 'POST', body: '{}' }, async () => limitedResponse), limitedResponse, 'edge burst protection runs before the app');
+assert.equal(forwarded, null);
+console.log('PASS share previews: every page route has a preview, cards exist, crawlers get public copy only, shootout routes are public yet guarded and stripped of identity, and other routes stay gated.');
