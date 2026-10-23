@@ -1,3 +1,17 @@
+# Current live release — 0.2.0-beta.1 / update117, October 23, 2026
+
+Update117 is deployed and verified from lab-attributed source `06318b114767a0282880721f27168443306f29b4` on `release/jason-aac-20261023`, based on freshly fetched update116 main. It adds all 24 owner-supplied Jason J. Chevallier AAC-LC M4A files byte for byte (98,252,313 bytes; 93.7 MiB), with “Used with permission · All rights reserved” credits and an explanation that visitors receive no reuse license. The source and library link preview no longer describe every recording as openly licensed. The larger mixed-format draft was never deployed.
+
+Loudness, true peak, LRA, stereo waveforms and the library’s peak-contrast analysis were regenerated from the exact AAC files. 20 recordings meet the provisional preserved-peaks screen; 4 remain unclassified. Categories do not establish mastering history, audible equivalence to lossless, or sound quality. The library now has 224 recordings / 217 song families.
+
+Exactly one existing Worker updated; three resources unchanged, with four unchanged in the post-deployment preview. No migration or participant-data mutation. Schema220, CPU5000ms, six abuse bindings, protected media/access, disabled public Worker URLs and independent edge/cost controls remain. All 794 public JS/CSS files matched the build byte for byte, 695 prior browser assets were retained, and all 224 protected recordings matched their local source hashes. Live library copy, link preview/card and anonymous access-denial checks passed. Production authenticated audio audition, physical devices and Safari/iOS were not tested.
+
+One owner-approved matching encrypted off-device recovery point was verified before rollout, using a current SELECT-only export from update116 with the unchanged schema220 and the exact prepared update117 source/build/media. All 365 recovery files were independently reconstructed and verified. All 340 prior media objects were reused; only 24 new AAC assets were added. Prior snapshots, timestamps and encrypted object records were preserved. The point was activated only after deployment verification; hosted validation passed and daily03:00 America/Los_Angeles scheduling is active. No second data export or snapshot was made during finalization. Additional encrypted storage: 144,847,044 bytes. No private storage identifiers or recovery key are published.
+
+Source/build `work/jason-aac-release-20261023`; infrastructure `work/jason-aac-infra-20261023`; rollback evidence `work/jason-aac-rollback-20261023`. Existing workspace drafts are preserved. Source and records are local lab commits; no GitHub push or PR was performed. See docs/releases/update117-verification.json and docs/JASON_MUSIC_IMPORT_2026-10-23.md.
+
+## Previous releases (historical)
+
 # Current live release — 0.2.0-beta.1 / update116, October 23, 2026
 
 PRs #3 and #4 are now merged into main in order with lab-attributed merge commits. The merged release passed its 686-file source check; the reconciled records add one verification file, and the final 687-file check passes for update116. This publication does not deploy or change production.
