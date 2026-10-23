@@ -1,3 +1,4 @@
+import permissionTracks from "@/data/permission-music.json";
 import originalLocalAudio from "@/data/listening-pool-original-audio.json";
 import localTracks from "@/data/listening-pool-local.json";
 import measurements from "@/data/listening-pool-measurements.json";
@@ -6,6 +7,7 @@ import shantaeTracks from "@/data/shantae-cc-tracks.json";
 import shantaeAudio from "@/data/shantae-audio.json";
 
 export type MusicCandidate = {
+  permissionOnly?: boolean;
   songFamily?: string;
   sourceUrl?: string;
   versionLabel?: string;
@@ -59,6 +61,7 @@ function playbackUrl(url: string | undefined) {
   return process.env.NODE_ENV === "production" ? local?.replace("/__local-listening-pool/", "/api/listening-audio/") : local;
 }
 export const musicCandidates: MusicCandidate[] = [
+  ...(permissionTracks as MusicCandidate[]),
   ...originalCandidates.map(track => ({ ...track, ...(measurements as Record<string, object>)[track.fileUrl ?? ""], filename: track.filename || track.fileUrl?.split("/").pop(), fileUrl: playbackUrl(track.fileUrl), previewNote: track.playerId ? "Official album audio; measured loudness and peaks. Peak-contrast classification pending." : track.previewNote })),
   ...(localTracks as MusicCandidate[]).map(track => ({ ...track, fileUrl: playbackUrl(track.fileUrl), localOnly: false, previewNote: "Original source audio, unchanged. Dynamics classification is provisional." })),
 ];
