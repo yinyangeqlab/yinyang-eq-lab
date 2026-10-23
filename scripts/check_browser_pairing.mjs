@@ -68,6 +68,7 @@ const gateSource=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.
   .replace(/from ["']\.\/maintenance-options\.mjs["']/g,'from '+JSON.stringify(maintenanceUrl))
   .replace('import { invitesEnabled, testerSubject } from "./invite-settings.mjs";',`import {invitesEnabled,testerSubject} from ${JSON.stringify(new URL('../lib/invite-settings.mjs',import.meta.url).href)};`)
   .replace('import { browserPairing, linkedTester } from "./browser-pairing.mjs";',`import {browserPairing,linkedTester} from ${JSON.stringify(new URL('../lib/browser-pairing.mjs',import.meta.url).href)};`)
+  .replace('import { sharePageFor, shareHtml, isUnfurlCrawler } from "./share-pages.mjs";',`import {sharePageFor,shareHtml,isUnfurlCrawler} from ${JSON.stringify(new URL('../lib/share-pages.mjs',import.meta.url).href)};`)
   .replace('import { isPublicAsset } from "./public-assets.mjs";',`import {isPublicAsset} from ${JSON.stringify(new URL('../infra/pulumi/public-assets.mjs',import.meta.url).href)};`)
   .replace('import { withMediaLength } from "./media-response.mjs";',`import {withMediaLength} from ${JSON.stringify(new URL('../lib/worker-media-response.mjs',import.meta.url).href)};`)
   .replace('import { serveWorkerMedia } from "./media-route.mjs";','const serveWorkerMedia=()=>null;')
