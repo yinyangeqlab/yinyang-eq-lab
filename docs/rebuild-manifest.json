@@ -399,7 +399,7 @@
     },
     {
       "path": "app/shortcuts/page.tsx",
-      "sha256": "a93c3b25aed6e3ab0dbe609df1b42313e9f36a0e1dbaca9d07ca2bcf9ced1293"
+      "sha256": "42f9372f4488decc21c2d7f75446866634528061119cecbd4794861da88135ab"
     },
     {
       "path": "app/test-history/page.tsx",
@@ -563,7 +563,7 @@
     },
     {
       "path": "components/display-preferences-panel.tsx",
-      "sha256": "def4a39d727b81a54f7481bff40da241a6f8c60ab49be6a18b3c700336aec523"
+      "sha256": "ca612a99c93c0775fbe80ccd8155ef453011bc26e9286cfb18b7d99f5b5a892a"
     },
     {
       "path": "components/feedback-panel.tsx",
@@ -1647,7 +1647,7 @@
     },
     {
       "path": "lib/display-preferences.ts",
-      "sha256": "25612d162658f9bdb3288f012fc16c55106e5162b02f95fb906dd46f59dae9ca"
+      "sha256": "f0e0c7c3b79afd66da79f643aa803f696c528a0310ead45565e773d30cfe3fcc"
     },
     {
       "path": "lib/dynamics-preview.ts",
@@ -2107,7 +2107,7 @@
     },
     {
       "path": "scripts/check_display_preferences.mjs",
-      "sha256": "4479f70905cb640528662afedee1f972d9ee7610a39d73639f8675c9807e0ff4"
+      "sha256": "683ee592f2253c37ee6d20975df7adc0726d9f4afa67d15ed39bebfa030e587c"
     },
     {
       "path": "scripts/check_file_matching.mjs",
@@ -2203,7 +2203,7 @@
     },
     {
       "path": "scripts/check_passage_keyboard.mjs",
-      "sha256": "d076403106aeb0b1bdde07307646e6dbbcd582ba667f6cde7ca41189713eefa7"
+      "sha256": "c2935e91882211500857b4d163eb6e75289ae49996d4238a4dfba3a71beaf5e6"
     },
     {
       "path": "scripts/check_passage_ranking.mjs",

@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
+const {shortcutDecision}=module.exports;
+// A tiny stand-in for an element: which selectors it satisfies through closest(), and whether it is keyboard-focused.
+const el=(kinds)=>({closest:s=>kinds.some(k=>s.split(',').some(p=>p.trim().startsWith(k)||p.includes(`[role='${k}']`)))?{}:null});
+const ctx=(o={})=>({scope:'everywhere',singleKey:true,modalOpen:false,regionActive:true,mouseFocused:false,...o});
+const key=(k,o={})=>({code:k===' '?'Space':'Key'+k.toUpperCase(),key:k,shiftKey:false,...o});
+const run=(t,k,c)=>shortcutDecision(t,k,c);
+let n=0;const t=(name,fn)=>{fn();console.log('PASS '+name);n++;};
+const mouseButton=el(['button']),kbdButton=el(['button']),textbox=el(['textarea']),slider=el(['slider']),select=el(['select']);
+t('letters, numbers and arrows work right after a mouse click left focus on a button',()=>{for(const k of ['1','2','a','b','s','ArrowLeft','ArrowRight'])assert.equal(run(mouseButton,key(k),ctx({mouseFocused:true})).run,true,k);});
+t('Space after a mouse click plays/pauses and releases the button; a keyboard-focused button keeps Space as press',()=>{const m=run(mouseButton,{code:'Space',key:' ',shiftKey:false},ctx({mouseFocused:true}));assert.equal(m.run,true);assert.equal(m.blurTarget,true);assert.equal(run(kbdButton,{code:'Space',key:' ',shiftKey:false},ctx()).run,false);});
+t('typing fields and native menus keep every key',()=>{for(const target of [textbox,select])for(const k of ['1','a','s','ArrowLeft'])assert.equal(run(target,key(k),ctx()).run,false,k);assert.equal(run(textbox,{code:'Space',key:' ',shiftKey:false},ctx()).run,false);});
+t('sliders keep arrows; Space and letters still work (a clicked waveform must not mute Space)',()=>{assert.equal(run(slider,key('ArrowLeft'),ctx()).run,false);assert.equal(run(slider,{code:'Space',key:' ',shiftKey:false},ctx()).run,true);assert.equal(run(el(['radio']),{code:'Space',key:' ',shiftKey:false},ctx()).run,false);assert.equal(run(slider,key('a'),ctx()).run,true);});
+t('page body and plain content are live',()=>{assert.equal(run(null,key('2'),ctx()).run,true);assert.equal(run(el([]),{code:'Space',key:' ',shiftKey:false},ctx()).run,true);});
+t('letter shortcuts honor the existing single-key preference; Space and arrows do not depend on it',()=>{assert.equal(run(null,key('a'),ctx({singleKey:false})).run,false);assert.equal(run(null,key('ArrowRight'),ctx({singleKey:false})).run,true);assert.equal(run(null,{code:'Space',key:' ',shiftKey:false},ctx({singleKey:false})).run,true);});
+t('player-area-only scope needs the player region; off disables everything; modal dialogs always win',()=>{assert.equal(run(null,key('a'),ctx({scope:'player',regionActive:false})).run,false);assert.equal(run(null,key('a'),ctx({scope:'player',regionActive:true})).run,true);for(const k of ['a','ArrowLeft'])assert.equal(run(null,key(k),ctx({scope:'off'})).run,false);assert.equal(run(null,{code:'Space',key:' ',shiftKey:false},ctx({scope:'off'})).run,false);assert.equal(run(null,key('a'),ctx({modalOpen:true})).run,false);});
+t('Shift with a letter and unrelated keys are ignored',()=>{assert.equal(run(null,key('a',{shiftKey:true}),ctx()).run,false);assert.equal(run(null,key('x'),ctx()).run,false);});
+console.log(`${n} passed`);
