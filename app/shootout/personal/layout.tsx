@@ -1,3 +1,4 @@
 import type { Metadata } from "next";
-export const metadata: Metadata = { title: "Personal Tournament | YinYang EQ" };
+import { shareMetadata } from "@/lib/share-metadata";
+export const metadata: Metadata = shareMetadata("/shootout/personal");
 export default function Layout({ children }: { children: React.ReactNode }) { return children; }

@@ -1,3 +1,4 @@
-import type {Metadata} from "next";
-export const metadata:Metadata = {title:'Music library | YinYang EQ'};
+import type { Metadata } from "next";
+import { shareMetadata } from "@/lib/share-metadata";
+export const metadata: Metadata = shareMetadata("/music-library");
 export default function Layout({children}:{children:React.ReactNode}){return children;}
