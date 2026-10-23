@@ -280,7 +280,8 @@ const privateGate = {
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
-      const agreementException = dataRoute || ["/shootout","/participation"].includes(path) && (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      // Viewing needs no agreement: only requests that change or collect data do. Every state-changing route still checks the agreement itself.
+      const agreementException = dataRoute || (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
       if (!owner && tester && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)

@@ -13,7 +13,7 @@ function harness(mode){
  const state={sharedAdmin:false,testMode:mode,previewMode:null,busy:false,submissionsEnabled:true,selectedMeasurement:{id:'synthetic'},pair:['a','b'],trialId:'old-trial',heard:[6,6],commonHeard:6,revealed:true,sessionId:'old-session',sessionExpired:false,sessionFinished:false,trials:[{id:'saved-answer',mode}],lastResearchSource:'blind',autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},crypto:webcrypto,stopCount:0,resetCount:0,feedbackCount:0};
  for(const key of ['PreviewMode','Message','ReviewVoteData','SetupCollapsed','TestMode','PickA','PickB','SessionId','LastActivity','SessionFinished','SessionExpired','Pair','TrialId','Revealed','Heard','CommonHeard','LastResearchSource'])state['set'+key]=value=>{state[key[0].toLowerCase()+key.slice(1)]=value;};
  state.musicPanelRef={current:{stop(){state.stopCount++;},reset(){state.resetCount++;}}};state.resetFeedback=()=>state.feedbackCount++;
- state.requestSoundCheck=(action,newTest)=>{state.pendingAction=action;state.newTest=newTest;};
+ state.rememberPendingStart=()=>{};state.requestSoundCheck=(action,newTest)=>{state.pendingAction=action;state.newTest=newTest;};
  state.URL=URL;state.window={requestAnimationFrame:fn=>fn(),location:{href:`http://127.0.0.1:5175/shootout?mode=${mode}&tab=shootout`},history:{replaceState(_state,_title,url){state.lastURL=url;}}};state.document={querySelector:()=>({focus(){state.focused=true;}})};
  const context=vm.createContext(state);vm.runInContext(handlers,context);
  return {state,call:code=>vm.runInContext(code,context),modePreview(){state.switchingResearchSource=vm.runInContext(expressions.get('switchingResearchSource'),context);return vm.runInContext(expressions.get('modePreview'),context);}};

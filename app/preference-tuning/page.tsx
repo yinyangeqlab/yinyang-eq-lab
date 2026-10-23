@@ -1,4 +1,5 @@
 "use client";
+import { useConsentPrompt } from "@/components/use-consent-prompt";
 import "@/components/alpha-audio-workbench.css";
 import { recordAdminTestIfNeeded } from "@/lib/admin-test-store";
 import {musicDisplayTitle} from "@/lib/music-display";
@@ -189,6 +190,7 @@ function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { ana
 }
 type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: BiquadFilterNode[]; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode };
 export default function PreferenceTuning() {
+  const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
   const [targets, setTargets] = useState<Target[]>([fallback]);
   const [curatedRanking, setCuratedRanking] = useState<{ id: string; name: string; rank: number }[]>([]);
   const curatedLeader = curatedRanking.find(row => row.rank === 1) ?? null;
@@ -326,7 +328,9 @@ export default function PreferenceTuning() {
   }), [normalized, filters]);
   const finalizeKey = JSON.stringify({ selected, settings, measurementId });
   const finalIsCurrent = finalized?.key === finalizeKey;
-  async function finalizeCurve() {
+  /** Tuning itself needs no agreement. Viewing the finished EQ or exporting it keeps the file, curve and settings for private research, so that step asks once. */
+  async function finalizeCurve() { await consent.ask(runFinalize); }
+  async function runFinalize() {
     if (!measurement?.points?.length || finalizing) return;
     setFinalizing(true); setFinalProgress(0); setFinalized(null);
     const curve = preferenceCurve;
@@ -341,7 +345,8 @@ export default function PreferenceTuning() {
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not generate EQ filters."); }
     finally { setFinalizing(false); }
   }
-  async function downloadText(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) {
+  async function downloadText(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) { await consent.ask(() => void runDownload(filename, contents, type, variant)); }
+  async function runDownload(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) {
     const exportKind = variant ? "eq" : filename === "original-target.csv" ? "original-target" : "preference-target";
     const format = filename.endsWith("-equalizerapo.txt") ? "equalizerapo" : filename.endsWith("-easyeffects.txt") ? "easyeffects" : filename.endsWith("-qudelix5k.txt") ? "qudelix5k" : variant ? "txt" : "csv";
     try {
@@ -595,5 +600,6 @@ export default function PreferenceTuning() {
         <details className="pt-instructions-more"><summary>More controls and shortcuts</summary><div><p><b>Fine tuning:</b> Use Axis &amp; size for chart limits. Advanced frequency placement moves the BT, EGC, and TT points. The ±20 dB range expands the sliders. Tap colored frequency labels for sound examples.</p><p><b>Playback:</b> Space pauses or resumes when a form field is not focused. Shuffle folder picks another local track. Files from your device stay in the browser.</p><p><b>Export:</b> Standard spaces filters evenly; Precise fits more closely. Smooth favors a gentler curve; Close follows it more tightly. Leave device headroom when applying EQ.</p></div></details>
       </section>
     </div>}
+  {consent.dialog}
   </main>;
 }
