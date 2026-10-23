@@ -1,0 +1,86 @@
+{
+  "version": "0.2.0-beta.1",
+  "update": 115,
+  "implementationCommit": "5561af4ff4c6b0c6b3287d2d88e85a6415e09fab",
+  "deploymentVerification": {
+    "at": "2026-10-23T03:31:18Z",
+    "revision": "5561af4ff4c6b0c6b3287d2d88e85a6415e09fab",
+    "update": 115,
+    "deployment": {
+      "id": "not read: the deploying session reads state through Pulumi, not the Cloudflare deployments API",
+      "pulumiWorkerEtag": "fc180c7a6f7999a583fbbce31eeef3c914c22e4e7aeba8ccb367a913e34aae7c",
+      "workerModifiedOn": "2026-10-23T03:28:21Z"
+    },
+    "assetsVerified": 754,
+    "retainedPreviousClientAssets": 659,
+    "schemaDefinitions": 216,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "privateMediaProtected": true,
+    "noticePreserved": true,
+    "newBackupExport": false,
+    "browserInteractionVerified": false,
+    "deploymentVerified": true,
+    "version": "0.2.0-beta.1",
+    "hardwareSafariGapsAccepted": true
+  },
+  "productionPreflight": {
+    "workerUpdates": 1,
+    "otherResourceMutations": 0,
+    "preflightPreviewOfLiveUpdate114Build": "4 unchanged",
+    "preflightPreviewOfUpdate113Build": "1 Worker update (live was update114, not update113)",
+    "afterDeployPreview": "4 unchanged",
+    "migrationAppliedBeforeDeploy": false
+  },
+  "database": {
+    "migration": null,
+    "schemaBefore": 216,
+    "schemaAfter": 216,
+    "participantDataWrites": 0
+  },
+  "verification": {
+    "assetsByteComparison": { "checked": 754, "matched": 754, "failures": 0 },
+    "protectedMediaAnonymousStatus": 401,
+    "apiTargetsAnonymousStatus": 401,
+    "removalRequestAnonymousStatus": 401,
+    "ownerRemovalQueueAnonymousStatus": 403,
+    "crawlerSpoofApiTargetsStatus": 401,
+    "crawlerSpoofMusicStatus": 401,
+    "linkPreviewsChecked": [
+      "/preference-tuning",
+      "/shootout/personal",
+      "/shootout?tab=rankings",
+      "/curve-credits",
+      "/my-data",
+      "/owner-research"
+    ],
+    "shareCardsServedAsStaticJpeg": true,
+    "pageFramingHeaders": "unchanged (X-Frame-Options DENY, frame-ancestors 'none')",
+    "regression": "check_share_previews, check_yinyangeq_gate, check_security_response_headers, check_browser_pairing, check_admin_contributions, check_participation_entry, check_isolated_consent_access, check_unified_consent_flow, check_target_upload and check_migration_chain pass; TypeScript and production build pass; the full 74-script regression was not re-run",
+    "notTested": "a real paste into Discord, Slack or iMessage; production browser sessions; audio; Safari/iOS; Firefox; screen readers; physical devices"
+  },
+  "backupMetadata": {
+    "sourceBaselineUpdate": 112,
+    "sourceOnlyHandoverPassed": false,
+    "handoverStatus": "pending: not registered. Source-only change on an unchanged schema, but update113 and update114 are also unregistered and the owner-approved fresh export for the update114 baseline has not run; that export should now be taken against the deployed update115 baseline by the private recovery tooling.",
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "siteDeploymentPerformed": true,
+    "update113Registered": false,
+    "update114Registered": false,
+    "ownerApprovedFreshExport": true,
+    "freshExportCompleted": false
+  },
+  "publication": {
+    "githubLogin": "yinyangeqlab",
+    "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
+    "pushed": true,
+    "branch": "share-previews-links",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/3 (draft, not merged)",
+    "publicationSeparateFromDeployment": true,
+    "publicationAuthorized": true
+  }
+}

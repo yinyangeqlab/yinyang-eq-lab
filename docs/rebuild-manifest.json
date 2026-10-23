@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 114,
-  "implementationCommit": "12c6b88802b9df597835f88b05ce48f92ed025eb",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update114: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
+  "liveUpdate": 115,
+  "implementationCommit": "5561af4ff4c6b0c6b3287d2d88e85a6415e09fab",
+  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update115: per-page link previews (one preview table, a metadata-only edge response for link-preview crawlers, generated cards) on top of update114, which contains: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -59,19 +59,23 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "d900e8c15044c3f674b5e73c1506129ac903895d4d669f2d17583113dace6609"
+      "sha256": "d50b17b5d8bd3e497d022e9ace201924b0ad5825936db1656920920e3a8281d4"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "a6e9fb16cc99c99d0c607fff02170b6ccafd3c42a17cb4c88ae0b26c15fae8a9"
+      "sha256": "c2b3b14d0f7baa51b0ba67ce213e68bc8840ebff071c4be62bc6a67d650b2734"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "231a316aa5b103cf0727c0ea16436e986e190d884e5003f6142ce68169e3290c"
+      "sha256": "1dee6e09cbca62b4b3b85085e0ea0c63c896bd676a762489e7280129498cc68a"
     },
     {
       "path": "README.md",
       "sha256": "853610efc19ec521639428a8e17963e5c0ae8628eb1c35644a0ef18c5612cb2b"
+    },
+    {
+      "path": "app/account-sync/layout.tsx",
+      "sha256": "b7e4c6f08ab361e5afd50b600c9f9686741d9a4745ccfa8c1bf87921cd458ba2"
     },
     {
       "path": "app/account-sync/page.tsx",
@@ -267,7 +271,7 @@
     },
     {
       "path": "app/community-preferences/layout.tsx",
-      "sha256": "e86dc6076d8cadf088492151de2fd20fa418cb2bd75b528a2c0844c2a25465c0"
+      "sha256": "0302b44b2a2551acfc3ab11f23e3ffb4fba42f2907f1b07b932d5cc89168204e"
     },
     {
       "path": "app/community-preferences/page.tsx",
@@ -275,7 +279,7 @@
     },
     {
       "path": "app/curve-credits/layout.tsx",
-      "sha256": "295652f7aee612ee2ec3a327f72396585471dd8aa051b89b27e26ebc90406653"
+      "sha256": "d21fc97c1ed585738224fb85ef21a71660969825d98512336dd39154a994ab2f"
     },
     {
       "path": "app/curve-credits/page.tsx",
@@ -287,7 +291,7 @@
     },
     {
       "path": "app/discover/page.tsx",
-      "sha256": "760b296bec6962a33001d9b43279cb88b92f8129d6e5c0b3fd55262ddbcb8aeb"
+      "sha256": "4a788b96b1b734c2f010c9b05fc30e02e4bcc6492655afbf77756dcf91df0098"
     },
     {
       "path": "app/discover/style.css",
@@ -306,12 +310,16 @@
       "sha256": "2876a4c120efad9a4e73d9296ddf74a361833b35f5ec5184b1c4c48be90a3177"
     },
     {
+      "path": "app/listeners/yinyangeq/layout.tsx",
+      "sha256": "7030c2477a6e221ac82cddf1cca4b84970aae47c3533576f171992fd53facab4"
+    },
+    {
       "path": "app/listeners/yinyangeq/page.tsx",
       "sha256": "aba6028973202d26a40adbab7f0333d8dff895947cd2e5aea01de0f0dc302045"
     },
     {
       "path": "app/music-library/layout.tsx",
-      "sha256": "fc1c5be2e3e8ecf3f2c9ddc1fb955c2e105622e7546dffc5cecd62bb85d18e13"
+      "sha256": "e77d5184fad92bc85686e52f69b985406ea737c7359dbfa53f08c9f3a6416bbc"
     },
     {
       "path": "app/music-library/page.tsx",
@@ -323,7 +331,7 @@
     },
     {
       "path": "app/my-data/layout.tsx",
-      "sha256": "120f9649f7e64887320b7a744060c8ea1431b5dad1d8f076c3f065130d27d052"
+      "sha256": "8b4282c11203f2ae06e4afdc82a62b895e068638611138211034aff877113042"
     },
     {
       "path": "app/my-data/page.tsx",
@@ -332,6 +340,10 @@
     {
       "path": "app/my-data/style.css",
       "sha256": "77d8b3bdefe8f0c47b19ea19ebcfd8cc19ab4317b7528e96d2441153099bce85"
+    },
+    {
+      "path": "app/my-profile/layout.tsx",
+      "sha256": "061f615abf42d3a3c1632a2d77f067cc1c5fc4b716c565762fa3c0ab2763cfb7"
     },
     {
       "path": "app/my-profile/page.tsx",
@@ -343,7 +355,7 @@
     },
     {
       "path": "app/owner-research/layout.tsx",
-      "sha256": "2c27ef00812e3d7aa7f1640269f8e89a21e3b94653882b88e58eb51849cb329a"
+      "sha256": "200957b835e6a4f982c5466c6999a0e9866169351f18dd3acd7508b0febb09ec"
     },
     {
       "path": "app/owner-research/page.tsx",
@@ -352,6 +364,10 @@
     {
       "path": "app/page.tsx",
       "sha256": "c2a0f26f0ff634ba437967bb98c51a228568284329486d8029110a750cc21143"
+    },
+    {
+      "path": "app/participation/layout.tsx",
+      "sha256": "7987152a456a0f2b905964c60a88e777c49e5a3b885d4b8a108ccdb9e5a28f83"
     },
     {
       "path": "app/participation/page.tsx",
@@ -363,7 +379,7 @@
     },
     {
       "path": "app/preference-tuning/layout.tsx",
-      "sha256": "bb225a3c5a0546a6f253c517af1d8532034a087a40acc22eedf70aeed3610646"
+      "sha256": "d1b5e14cd74ac19c95efed6fc38933afba2c17d84b783e8ce852e7a5c0a9dfce"
     },
     {
       "path": "app/preference-tuning/page.tsx",
@@ -375,11 +391,15 @@
     },
     {
       "path": "app/privacy/layout.tsx",
-      "sha256": "f13b2151ac8480e7cd017f16b148bbd377cc4578365022df3c7bbd49a4aa68c7"
+      "sha256": "2f6a9b3ce8f144197e171f4e5501fbf9205df7021b9c398fad7997ccf89f17fa"
     },
     {
       "path": "app/privacy/page.tsx",
       "sha256": "2e8e4e3b6c3f9b15d539bd3cfd806fab32dbef4968c68cf46b778cefaa69c1a0"
+    },
+    {
+      "path": "app/profile-access/layout.tsx",
+      "sha256": "b2906eb359c0cc9ab5571b885e061fe3a273f728473549f980f304afca673c61"
     },
     {
       "path": "app/profile-access/page.tsx",
@@ -387,7 +407,7 @@
     },
     {
       "path": "app/shootout/layout.tsx",
-      "sha256": "c956abb515f9d3b63fb238dcc8501655072624afd27c6a2e74e42d3ec792fcf2"
+      "sha256": "b1971b86c5b625ae6b78312a7e481d306e1d658c0d495510873fd4247ef80b67"
     },
     {
       "path": "app/shootout/page.tsx",
@@ -395,7 +415,7 @@
     },
     {
       "path": "app/shootout/personal/layout.tsx",
-      "sha256": "6dfe328ab08376173ca7574a2a221814e34b78bb848a421a5da6996d69bbecd0"
+      "sha256": "b8ceb49f23b8909c57e932079552cfbf2aba928cb7a591ffb437c89576bb837a"
     },
     {
       "path": "app/shootout/personal/page.tsx",
@@ -411,7 +431,11 @@
     },
     {
       "path": "app/shortcuts/page.tsx",
-      "sha256": "42f9372f4488decc21c2d7f75446866634528061119cecbd4794861da88135ab"
+      "sha256": "0491f26ba5ca191502c726f330b57491350454a403350f304cd60eccb6951896"
+    },
+    {
+      "path": "app/test-history/layout.tsx",
+      "sha256": "c989f6add6a054d3bdccdb5e92879ed632cfd257c738e69259310ace480b906b"
     },
     {
       "path": "app/test-history/page.tsx",
@@ -419,7 +443,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "ace56dcdc9a054c909d9296cf0f38067a5559c9d664053ea6a675a150cf283b7"
+      "sha256": "90237e5cddeecd872c64ebb4eff1dbfa30b121935bd3fe73fe77a517f73a61b2"
     },
     {
       "path": "app/welcome.css",
@@ -1167,11 +1191,15 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c7a9c7bf0d91f52c00c562414fa8638088f39938ae6d421c6efea4e080d5e861"
+      "sha256": "ae624e4ef7363bb0741202f701ec11ec3adf7fe7a6e976b393a393e58c79e042"
+    },
+    {
+      "path": "docs/LINK_PREVIEWS.md",
+      "sha256": "c4517841d16f1b9eb49f7e66baf92ba81bb6c3d6a50bfa1aba5b5960d332878f"
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "6fa4fa108015aa873a0c50a292778aa53770a49ba88346453bd460ba0ed24b2f"
+      "sha256": "1067891475c26d8b3bff19db5688f8c08b6b7f92309f88559dfc9b34c85c1908"
     },
     {
       "path": "docs/RECOVERY.md",
@@ -1184,6 +1212,10 @@
     {
       "path": "docs/releases/update114-verification.json",
       "sha256": "c9c9b1cac9016a5ffce714dff04cbe28156be29e3401beaffcfddfed72f6cf93"
+    },
+    {
+      "path": "docs/releases/update115-verification.json",
+      "sha256": "3c840512a5ac5ee1afdb8dfa27c486de365da6bdb52f8d0841e64358d823d67a"
     },
     {
       "path": "docs/research/README.md",
@@ -1499,7 +1531,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "d4a4d8ecbe2537aaf56a9937133d8148c38c7c4f1b547617f949e2e5d8c96678"
+      "sha256": "a885397673dd9a0d1660ff78a9fa332c87827e0056a80a69af285c9e20724db6"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1511,7 +1543,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "949e35aaa65d43a309ef18546d0bd3988ff352912bca5ae0044615c735be72d4"
+      "sha256": "37747b5b55ec0d82c65b11f9451d72c3a683ede79f511094b65d81c51139c0c3"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1519,7 +1551,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "cba1b89db3a676dfc69f4c045d5b938ef41eda5b7a279b099afc93987b90d29d"
+      "sha256": "be28bfcbfdcf13c0d7e296ae6f786bc6005dbf591978466d30229a127fba0ef2"
     },
     {
       "path": "infra/pulumi/tsconfig.json",
@@ -1926,6 +1958,18 @@
       "sha256": "f2a9a5f0887e0459264cb7b326a0dff252a4127b89822584090600dfada63c99"
     },
     {
+      "path": "lib/share-metadata.ts",
+      "sha256": "84032cdfc9de97f8652fa69300d01790c77e1baa949fc7a97ed7ac44da7bd6fd"
+    },
+    {
+      "path": "lib/share-pages.d.mts",
+      "sha256": "78cf729b533b1d45081847fbbdae9767080e2b850a354ce32231a4dad5f3bfae"
+    },
+    {
+      "path": "lib/share-pages.mjs",
+      "sha256": "54d4cb3a7ebcb26a631e11216ffca7661726453268f189c5a6749049fc96966b"
+    },
+    {
       "path": "lib/song-match.ts",
       "sha256": "a46972690ca3d11a4673fbfb1fc1e7b629353da17413b2554edf80874e7a0f77"
     },
@@ -2070,6 +2114,66 @@
       "sha256": "d051a8c47936990a9085693d307bb7cea1bc1b6d7ed956bcbaacf674f4ec96b9"
     },
     {
+      "path": "public/share/blind-research.jpg",
+      "sha256": "76e83a07f1e936494922cb35f3c3c80ca89d584e07ffb4817aea20eb3d15d58d"
+    },
+    {
+      "path": "public/share/community.jpg",
+      "sha256": "81cf4f398424d9e85e79ef5c1faa2ae52c1580821b4c613b393c7e94acafc464"
+    },
+    {
+      "path": "public/share/curve-credits.jpg",
+      "sha256": "2ff80fc1a788b2ed62c6922c19ee1d1ce0302c3c019513ae0d76d1d5288378df"
+    },
+    {
+      "path": "public/share/discover.jpg",
+      "sha256": "2d23eb75f1b40269fc2d99d44290bdf080b7a1f9148cfe0f7c8a8974d596227f"
+    },
+    {
+      "path": "public/share/journal.jpg",
+      "sha256": "98d4b16e911c75a4ab95c842ae7bdfe5338fd92efc284d271f063e7a8495d857"
+    },
+    {
+      "path": "public/share/music-library.jpg",
+      "sha256": "88eb6a4f61a29b1efc5a868317e2b55a61ba9315fbb4495eceb42323a57f5029"
+    },
+    {
+      "path": "public/share/open-comparison.jpg",
+      "sha256": "d7658d091fe463e43419732bdb98d52386291cd7934cbe17b1feb9ce70a48fb2"
+    },
+    {
+      "path": "public/share/personal.jpg",
+      "sha256": "20db6628689d1ecac4fadc915e62453f10c4e10fd3cab4b29a003866627d3139"
+    },
+    {
+      "path": "public/share/preference-tuning.jpg",
+      "sha256": "ee9ce725ba8223d2201cab1aba8ce4197ce6f655147db744855393bbcd37c429"
+    },
+    {
+      "path": "public/share/privacy.jpg",
+      "sha256": "005c63d78215f3a09f2f46022e1d913c85961ee2c311a4662fbc57d550ec3bcf"
+    },
+    {
+      "path": "public/share/private.jpg",
+      "sha256": "38a33ef464ee958d7bf567149a49d4652cfd8e7a90ea9d374c0ae586a4aae504"
+    },
+    {
+      "path": "public/share/rankings.jpg",
+      "sha256": "912ff94f04aa9a09130ea0114ae7c53a54437c58ba254ecef53ea6ddafd7d803"
+    },
+    {
+      "path": "public/share/shootout.jpg",
+      "sha256": "1aba0468e852e7c4796ffe81dd8d38862c1f649119e3b43f97a4ff72861a0191"
+    },
+    {
+      "path": "public/share/shortcuts.jpg",
+      "sha256": "f79879818aa46a5a6515ceeff608be093476c122b33668e7ed95d80f27399150"
+    },
+    {
+      "path": "public/share/version.jpg",
+      "sha256": "f7557ca916aa0ec8310ef08275bc34f24cb6ddf1bd476c48c35f80ea826c5fe2"
+    },
+    {
       "path": "public/social-preview-aligned-v2.png",
       "sha256": "f6f4690dec36cbc074a9104663d52d9d5e84256b95f66ab8cb8a3e5ce94e6460"
     },
@@ -2151,7 +2255,7 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "bd598a344fa18c86d401ceb478f4b1a8a6e050848297fe09091864468153804e"
+      "sha256": "3de5f3bfa1f0e1e482704285fdd64bbcfd700b6b3d3af2a47722bd15eb5e6c62"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
@@ -2370,6 +2474,10 @@
       "sha256": "026e2e6435035bb6984bab1fc7582084616c394b0fea5ce1d81a91512301d37f"
     },
     {
+      "path": "scripts/check_share_previews.mjs",
+      "sha256": "a3a0a75a92062c7a0608e4ac0e3c58759bb3c504047c08b45c305b3fc96287cb"
+    },
+    {
       "path": "scripts/check_source_bitrate.mjs",
       "sha256": "482f58e1026ee1cc54d1e8735dc57ec7ef1d3344cbe3ed271a7bdafee7fbec25"
     },
@@ -2444,6 +2552,10 @@
     {
       "path": "scripts/execution-profile.mjs",
       "sha256": "2e71116f4d2b70cff8bb70436f8dd5c709ec7ff62893424530f404e0193d3630"
+    },
+    {
+      "path": "scripts/generate-share-cards.mjs",
+      "sha256": "5afed5ad2af57a69021a3d7689d3e286596567fe5b56d2a4b1dd7c349d6a86e2"
     },
     {
       "path": "scripts/init-local.mjs",
