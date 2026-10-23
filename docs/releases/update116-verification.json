@@ -64,28 +64,38 @@
     "notTested": "a real paste into Discord, Slack or iMessage; production browser interaction and audio; Safari/iOS; physical devices"
   },
   "backupMetadata": {
-    "sourceBaselineUpdate": 112,
+    "sourceBaselineUpdate": 116,
     "sourceOnlyHandoverPassed": false,
-    "handoverStatus": "pending: updates 113 to 116 unregistered; schema changed (220); Codex to take the single owner-approved fresh export against update116",
-    "newDataSnapshots": 0,
-    "databaseExportPerformed": false,
+    "handoverStatus": "Verified fresh update116 data baseline; covers deployed changes from updates113\u2013116; full reconstruction and hosted validation passed; daily schedule active.",
+    "newDataSnapshots": 1,
+    "databaseExportPerformed": true,
     "siteDeploymentPerformed": true,
     "update113Registered": false,
     "update114Registered": false,
     "update115Registered": false,
-    "update116Registered": false,
+    "update116Registered": true,
     "ownerApprovedFreshExport": true,
     "delegatedTo": "Codex",
-    "freshExportCompleted": false
+    "freshExportCompleted": true,
+    "updates113Through115SupersededBy116Baseline": true,
+    "hostedValidationPassed": true,
+    "dailyBackupsEnabled": true,
+    "nextScheduledDataRunVerified": true,
+    "priorSnapshotsUnchanged": true,
+    "recoveryVerification": "docs/releases/update116-recovery-verification.json",
+    "scheduledDataRunSucceededAt": "2026-10-23T10:24:25Z"
   },
   "publication": {
     "githubLogin": "yinyangeqlab",
     "author": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
     "committer": "Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>",
     "pushed": true,
-    "branch": "shareable-shootout",
-    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/4 (draft, stacked on PR #3, not merged)",
+    "branch": "main",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/4",
     "publicationSeparateFromDeployment": true,
-    "publicationAuthorized": true
+    "publicationAuthorized": true,
+    "pullRequestMerged": true,
+    "mergeCommit": "852912cb7e334fe4ae6485b33b78ae16e031d6b7",
+    "priorStackMergeCommit": "af63e4c64dfde9755c2b0cb2ab15314496fee264"
   }
 }

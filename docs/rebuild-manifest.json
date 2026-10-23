@@ -33,7 +33,8 @@
       ],
       "deployedUpdate": 111,
       "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005"
-    }
+    },
+    "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -59,15 +60,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "2ecf2266b2bc395c5e2608c7c5d77157ba03e6407a59581a9289c8d97397632b"
+      "sha256": "560f56917b0828e2ad78c872892808bff2cf00a25acd5f14de9dfa61b47fd614"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "02acbf535695eae80d39abf80d13f632a2969e97d169c5996c66a50be24c6590"
+      "sha256": "fd07bc80fe01d6d2f0e2c8de29e4ac10f55d6bbc854c1695ec62f69f7e32cc4d"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "092884795cbece8361b7a79f13fed6fa79212993a399732205031c00115a2765"
+      "sha256": "511481f82088ab9ef04f45280bcb668dbca1afb4dd63cca1a8e59afd28efdcce"
     },
     {
       "path": "README.md",
@@ -1263,11 +1264,11 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "58bcd7c6ebe723f814b974464bae3bf43481229b8aa1c0c7aa6d497f4305deeb"
+      "sha256": "02aff90d7b0ce458928bd8474ab1d5bc76b1974587f7886ae0b00a855732c47a"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "b3a1d99309ac479ab9d55fae3a24e19fcb7a5eaf628402175b5d7ad47eb94e0e"
+      "sha256": "d5a92ea9da65af5f950c5d195ef3118382960a10f9f2bce98ffbadafe059fff5"
     },
     {
       "path": "docs/LINK_PREVIEWS.md",
@@ -1275,11 +1276,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "1de14a946eb6ef0e211254a7d27966be2e34a180a639d63536af1a0f934b8fd4"
+      "sha256": "cc02d443e5a641213647b390ff428a38776f9a3dbc72543839a2beed8bed562c"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "4f8595c3ea4049097acefda576d894d43c0e822ca1fbe6893abfcd7c973edcd9"
+      "sha256": "bed3e177d1a050d7e0c41c193cfd9c2c002e6dcfbe3b5734022572e3b4bb28ee"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
@@ -1298,8 +1299,12 @@
       "sha256": "3c840512a5ac5ee1afdb8dfa27c486de365da6bdb52f8d0841e64358d823d67a"
     },
     {
+      "path": "docs/releases/update116-recovery-verification.json",
+      "sha256": "ee852dc3defaf619fc00f02c19ac438fa7eef77c070a8991314b22432f860cd1"
+    },
+    {
       "path": "docs/releases/update116-verification.json",
-      "sha256": "64709d5c4edbfb678c6cca14d345198d3a169e8e9b5665d6f6908bb7e5e888b1"
+      "sha256": "3588555565fc3dab9c8b582c13007ff11565f5bcd7200459f0b120fa13099a7d"
     },
     {
       "path": "docs/research/README.md",
