@@ -12,12 +12,13 @@ journal = json.loads((root / "drizzle/meta/_journal.json").read_text())
 journaled = len(journal["entries"])
 assert [e["tag"] for e in journal["entries"]] == [p.stem for p in paths[:journaled]]
 assert [e["idx"] for e in journal["entries"]] == list(range(journaled))
-# Updates100/101 shipped these manual, additive migrations after snapshot0037.
+# Updates100/101 and the target removal request release shipped these manual, additive migrations after snapshot0037.
 # Preserve their exact original SQL and journal provenance. Never accept an
 # unknown suffix or silently treat snapshot0037 as the current full schema.
 manual = {
     "0038_participant_account_sync.sql": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8",
     "0039_segmented_account_sync.sql": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417",
+    "0040_target_removal_requests.sql": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9",
 }
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:
@@ -61,6 +62,6 @@ except sqlite3.IntegrityError:
 db.execute("DELETE FROM research_measurements WHERE id = ?", ("sample",))
 assert db.execute("SELECT COUNT(*) FROM research_measurement_chunks").fetchone()[0] == 0
 db.executescript((root / "db/service-status.sql").read_text())
-assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 213
+assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 216
 assert not db.execute("PRAGMA foreign_key_check").fetchall()
-print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema213, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")
+print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema216, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")

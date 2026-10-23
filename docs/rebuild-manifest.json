@@ -339,7 +339,7 @@
     },
     {
       "path": "app/owner-research/page.tsx",
-      "sha256": "20513db2b4a4339a9458e4cf60e55a825a60d0b58c6543fc1a4f8453a80db076"
+      "sha256": "475f968a9457a74f3784b1ab0152a546d617002123a0164767bcec6340000a23"
     },
     {
       "path": "app/page.tsx",
@@ -383,7 +383,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "2943f089005c1871384a1e0961a7127b6caf6e9991b46d414a898abb6ebed88c"
+      "sha256": "2838314ec9640ad1841dc96f9017e30fba42e74117fb1236ba1effc0ab3f66ed"
     },
     {
       "path": "app/shootout/personal/layout.tsx",
@@ -1131,7 +1131,7 @@
     },
     {
       "path": "db/schema.ts",
-      "sha256": "d4118ae667f01e8ff1e06574a93f101f7a5245eb8a82d34ce31cc9a3060379ec"
+      "sha256": "718045ec43f517e1d3e6260b8f09812dca98867c7fdecf3f81284593914530f0"
     },
     {
       "path": "db/service-status.sql",
@@ -1487,7 +1487,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "2bbb5fe5f8596089adac61bd71587489ef7791253baa14938e7881e3d790cd2d"
+      "sha256": "4940ca277faf805e7bc437ab0ef8b5db0a52deb3e928e9724926aa8bd7b6e554"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1739,7 +1739,7 @@
     },
     {
       "path": "lib/maintenance-options.ts",
-      "sha256": "4ff6bff7183b2732ba30bc64d0990ae55380eacdd5e32dab7c3a48b476c355c9"
+      "sha256": "2114da146cfeb0dec0977c1f3934b057fe0a338151c45a9391f8ba08f4e07f56"
     },
     {
       "path": "lib/maintenance.ts",
@@ -1847,7 +1847,7 @@
     },
     {
       "path": "lib/privacy-erasure.ts",
-      "sha256": "d5c51468bef38967a0261307b791437e1816eb319b653d1fbf168906a21890ee"
+      "sha256": "6f1b6a05bc9714838412dfef651fdbd547eb6e003ef8f10e42e6d255811be001"
     },
     {
       "path": "lib/profile-api.ts",
@@ -2103,7 +2103,7 @@
     },
     {
       "path": "scripts/check_admin_contributions.mjs",
-      "sha256": "1e7f520dd7d033f09cda9d36437cfebeb06eaf4c1a3093a5133fb1534e13a30c"
+      "sha256": "124e9087155c6dde075a3376724dbedea592424d5c88170741275ebf6450218f"
     },
     {
       "path": "scripts/check_admin_session_indicator.mjs",
@@ -2215,7 +2215,7 @@
     },
     {
       "path": "scripts/check_migration_chain.py",
-      "sha256": "945e463ff8532970781aa4e94db998883740db3486c3f890778d39db3235288e"
+      "sha256": "9f5e1bac2ea5dffe4c19905a5620e676cd903fc19907f755400664bd08a19e45"
     },
     {
       "path": "scripts/check_music_preferences.cjs",
@@ -2359,7 +2359,7 @@
     },
     {
       "path": "scripts/check_target_upload.mjs",
-      "sha256": "73d0efdf33da1db23c7ac6cbbc9df6cd3dfccf545fcadb711f99af4c9b96c2a6"
+      "sha256": "92d208e322acea05f68404ad6722fae7a5df6f0fe0f3e9abecddfbd63e96c513"
     },
     {
       "path": "scripts/check_unified_consent_flow.mjs",

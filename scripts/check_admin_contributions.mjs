@@ -40,7 +40,7 @@ const gateSource=readFileSync('infra/pulumi/private-gate.mjs','utf8');
 const gateStart=gateSource.indexOf('      if(tester?.id==="layout-test-only" &&');
 const gateEnd=gateSource.indexOf('      // Open access still uses',gateStart);
 const gate=new Function('tester','request','json','htmlResponse','const path=new URL(request.url).pathname;'+gateSource.slice(gateStart,gateEnd)+';return null;');
-for(const method of ['POST','PATCH','PUT','DELETE'])for(const path of ['/api/music-votes','/api/targets','/api/listening-runs','/api/personal-research','/pair','/api/my-profile']){
+for(const method of ['POST','PATCH','PUT','DELETE'])for(const path of ['/api/music-votes','/api/targets','/api/targets/removal-request','/api/listening-runs','/api/personal-research','/pair','/api/my-profile']){
  const response=gate({id:'layout-test-only'},new Request('https://fixture.invalid'+path,{method}), (value,status)=>Response.json(value,{status}));assert.equal(response.status,403);
  assert.equal(gate({id:'participant'},new Request('https://fixture.invalid'+path,{method}),()=>assert.fail('Ordinary participant blocked')),null);
 }
