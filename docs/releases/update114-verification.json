@@ -42,7 +42,7 @@
     "schemaAfter": 216,
     "newTableRows": 0,
     "timeTravelBookmarkBefore": "recorded in the private rollback folder",
-    "backupDecision": "Owner declined a fresh export; coverage is the existing encrypted daily snapshots plus the Time Travel bookmark. No export or snapshot was made."
+    "backupDecision": "No export with the deployment. After it, the owner approved exactly one fresh encrypted export to establish the update114 baseline; pending, to be run by the private recovery tooling."
   },
   "verification": {
     "assetsByteComparison": {
@@ -76,7 +76,9 @@
     "newDataSnapshots": 0,
     "databaseExportPerformed": false,
     "siteDeploymentPerformed": true,
-    "update113Registered": false
+    "update113Registered": false,
+    "ownerApprovedFreshExport": true,
+    "freshExportCompleted": false
   },
   "publication": {
     "githubLogin": "yinyangeqlab",
