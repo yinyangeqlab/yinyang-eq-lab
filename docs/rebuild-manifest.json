@@ -383,7 +383,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "fa7fec9b283b47e11b753bed0e94f934625380e134e80a48ac56428d8689ee2f"
+      "sha256": "2943f089005c1871384a1e0961a7127b6caf6e9991b46d414a898abb6ebed88c"
     },
     {
       "path": "app/shootout/personal/layout.tsx",
@@ -391,11 +391,11 @@
     },
     {
       "path": "app/shootout/personal/page.tsx",
-      "sha256": "5fdc5c9635868a8011bd09416befa5716c2f53212b513822fd08538e63259d22"
+      "sha256": "825b30159a88db848784868e172c92a45cb295111dfe018044d12b94083a3737"
     },
     {
       "path": "app/shootout/personal/personal.css",
-      "sha256": "e4752bd4bb07d0985139a2f795750b1bfbe424257b891132f6fcf13ecc2143eb"
+      "sha256": "8a9567324ded7c9657035b4ad125671c4dc4178c4887f7e8f24ccf9e73875ada"
     },
     {
       "path": "app/shortcuts/page.tsx",
@@ -607,7 +607,7 @@
     },
     {
       "path": "components/matched-passage-control.tsx",
-      "sha256": "69247865f454f7430afbd191bd6cd0842b08492b8c28bdd679a8217334226086"
+      "sha256": "509b6643250352a18f16c004392d716595280142d239a6dc0508d4c4cb6e98b9"
     },
     {
       "path": "components/measurement-manager.tsx",
@@ -623,7 +623,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "b5a93408947ddbdc80fb27cba5073bf498f329d69a18067db1b5ca2261d5139f"
+      "sha256": "bb23549d2145484a4588dc49c4022320ff3e40728675d033e28144e80907d2de"
     },
     {
       "path": "components/name-filter-lab.tsx",
@@ -763,7 +763,7 @@
     },
     {
       "path": "components/track-waveform.tsx",
-      "sha256": "9ae8e8bbebe308782ee718f1d8d26d0c30efccb5d2cf15e907a5aa29358df436"
+      "sha256": "2d8160e33a1c5fdae53d23c2c9a138e470bd40f37c49a0da8720074e6eb72cbf"
     },
     {
       "path": "components/ui/accordion.tsx",
@@ -2219,7 +2219,7 @@
     },
     {
       "path": "scripts/check_personal_passage_optout.mjs",
-      "sha256": "451755f9a87785acb233ff015f2a66ca25e41660bacb532308f8ad57e0a89c46"
+      "sha256": "fb06f21ae5c3860de1e9905f03fe47799e4e87b30611480b041171feff24f9b7"
     },
     {
       "path": "scripts/check_personal_playback.mjs",
@@ -2295,7 +2295,7 @@
     },
     {
       "path": "scripts/check_target_upload.mjs",
-      "sha256": "87fc9938055055cb62b8e0d4d42bcf748ae6c694980b42b065b97be11c235632"
+      "sha256": "73d0efdf33da1db23c7ac6cbbc9df6cd3dfccf545fcadb711f99af4c9b96c2a6"
     },
     {
       "path": "scripts/check_unified_consent_flow.mjs",

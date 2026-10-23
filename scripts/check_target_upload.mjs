@@ -8,7 +8,7 @@ import ts from 'typescript';
 const file=process.argv[2]||'app/shootout/page.tsx';
 const ast=ts.createSourceFile('page.tsx',readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),handlers=new Map();
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)handlers.set(n.name.text,n.getText(ast));ts.forEachChild(n,visit);}visit(ast);
-const names=['upload','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
+const names=['upload','submitTarget','withdrawTarget','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
 const code=ts.transpileModule(names.map(n=>handlers.get(n)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function load(path){const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,Error});return module.exports;}
 const {parseCurve}=load('lib/curves.ts'),{compareTargets}=load('lib/target-review.ts'),{screenTargetName}=load('lib/target-name-policy.ts'),{targetHeadphoneType}=load('lib/target-type.ts');
@@ -16,7 +16,7 @@ const points=Array.from({length:20},(_,i)=>[20*1000**(i/19),i/10]);
 const target=(id,type='ie')=>({id,name:`Reference ${id}`,points,status:'approved',measurement:{type}});
 function harness(extra={}){
  const stored=new Map(),calls=[];
- const state={sharedAdmin:false,passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
+ const state={sharedAdmin:false,targetVisibility:'private',passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
  name:'Warm reference',creator:'QA',description:'Synthetic',targetCategory:'ie',referenceSystem:'Unknown',submissionKind:'target',targetMeasurementId:'',measurements:[],csv:points.map(p=>p.join(',')).join('\n'),fileName:'curve.csv',curveKind:'original',parentTargetId:'',
  selectedMeasurement:{id:'measurement',name:'QA',type:'ie',points},headphoneType:'ie',rankType:'ie',targets:[target('a')],localTargets:[],testMode:'blind',sessionExpired:false,sessionFinished:false,sessionTrials:[],sessionId:'old',pair:['old-a','old-b'],trialId:'old-trial',revealed:true,busy:false,submissionsEnabled:true,voteDataAccepted:true,
  feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},
@@ -27,7 +27,7 @@ function harness(extra={}){
  fetch:async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({ok:true})};},
  ...extra};
  Object.defineProperties(state,{allTargets:{get:()=>[...state.targets,...state.localTargets]},testPool:{get:()=>[...state.targets,...(state.testMode==='open'?state.localTargets:[])].filter(t=>targetHeadphoneType(t)===state.headphoneType)}});
- for(const key of ['message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
+ for(const key of ['targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
  state.URL=URL;state.window={location:{href:"http://local.test/shootout"},history:{replaceState(){}},requestAnimationFrame:fn=>fn()};state.document={querySelector:()=>null};
  const context=vm.createContext(state);vm.runInContext(code,context);
  return {state,stored,calls,run:code=>vm.runInContext(code,context)};
@@ -48,4 +48,23 @@ await test('Preference lineage survives upload; form resets; no submission on up
 await test('Uploading twice creates distinct comparison IDs and preserves prior results',async()=>{const h=harness();for(let i=0;i<2;i++){h.state.csv=points.map(p=>p.join(',')).join('\n');h.state.name='Warm '+i;await h.run('upload({preventDefault(){}})');await h.run('vote(0)');}assert.equal(h.state.trials.length,2);assert.equal(h.state.localTargets.length,2);assert.notEqual(h.state.trials[0].id,h.state.trials[1].id);});
 for(const failure of ['http','network','malformed'])await test(`Failed listening-run ${failure} retains result and allows Continue`,async()=>{const h=harness();await h.run('upload({preventDefault(){}})');h.state.fetch=async()=>{if(failure==='network')throw Error('Offline');return {ok:false,json:async()=>{if(failure==='malformed')throw SyntaxError('Invalid JSON');return {error:'Synthetic failure'};}};};await h.run('vote(1)');assert.equal(h.state.revealed,true);assert.equal(h.state.busy,false);assert.equal(h.state.trials.length,1);h.run('nextPair()');assert.equal(h.state.revealed,false);});
 await test('Ranked Continue still clears pair/trial for a fresh server assignment',()=>{const h=harness({targets:[target('a'),target('b')],pair:['a','b'],testMode:'blind'});h.run('nextPair()');assert.equal(h.state.pair,null);assert.equal(h.state.trialId,null);assert.equal(h.state.revealed,false);});
+await test('Public choice sends a visibility=public submission and marks the saved row; private never posts',async()=>{
+ const pub=harness({targetVisibility:'public'});const calls0=pub.calls;pub.state.fetch=async(url,options)=>{calls0.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({id:'srv-1'})};};pub.state.setBusy=()=>{};pub.state.window.confirm=()=>true;
+ await pub.run('upload({preventDefault(){}})');await new Promise(r=>setTimeout(r,20));
+ const posts=pub.calls.filter(c=>c.url==='/api/targets');assert.equal(posts.length,1);assert.equal(posts[0].body.visibility,'public');
+ const row=JSON.parse(pub.stored.get('target-lab-private-targets'))[0];assert.equal(row.visibility,'public');assert.equal(row.status,'pending');
+ const priv=harness();await priv.run('upload({preventDefault(){}})');await new Promise(r=>setTimeout(r,20));
+ assert.equal(priv.calls.filter(c=>c.url==='/api/targets').length,0);const prow=JSON.parse(priv.stored.get('target-lab-private-targets'))[0];assert.equal(prow.visibility,'private');assert.equal(prow.status,'local');
+});
+await test('Withdraw sends DELETE for the submission id and returns the row to private; a refusal keeps it pending',async()=>{
+ const row={id:'loc',name:'Mine',points,status:'pending',visibility:'public',submissionId:'srv-1'};
+ const h=harness({localTargets:[row]});h.state.setBusy=()=>{};h.state.window.confirm=()=>true;const calls=h.calls;
+ h.state.fetch=async(url,options)=>{calls.push({url,method:options.method,body:JSON.parse(options.body)});return {ok:true,json:async()=>({withdrawn:true})};};
+ await h.run(`withdrawTarget(${JSON.stringify(row)})`);
+ const sent=calls.find(c=>c.method==='DELETE');assert.equal(sent.url,'/api/targets');assert.equal(sent.body.id,'srv-1');
+ const saved=JSON.parse(h.stored.get('target-lab-private-targets'))[0];assert.equal(saved.status,'local');assert.equal(saved.visibility,'private');assert.equal(saved.submissionId,undefined);
+ const refused=harness({localTargets:[row]});refused.state.setBusy=()=>{};refused.state.window.confirm=()=>true;
+ refused.state.fetch=async()=>({ok:false,json:async()=>({error:'already approved'})});
+ await refused.run(`withdrawTarget(${JSON.stringify(row)})`);assert.equal(refused.stored.get('target-lab-private-targets'),undefined);assert.match(refused.state.message,/already approved/);
+});
 console.log(`${passed} passed; ${failed} failed`);if(failed)process.exitCode=1;

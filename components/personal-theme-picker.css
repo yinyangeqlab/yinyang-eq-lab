@@ -1,0 +1,18 @@
+/* Results-look picker on the Personal start card: each tile is a miniature of the real results scene. */
+.theme-picker{flex-basis:100%;min-width:0;margin:6px 0 0;padding:0;border:0}
+.theme-picker legend{padding:0;margin:0 0 8px;color:#b9ccd3;font-size:13px;font-weight:700;letter-spacing:.02em}
+.theme-picker-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.theme-tile{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:14px;background:#0a141a;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}
+.theme-tile:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.45)}
+.theme-tile input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:2}
+.theme-tile-art{display:block;aspect-ratio:240/130;background:#10202a}
+.theme-tile-art svg{display:block;width:100%;height:100%}
+.theme-tile-caption{display:grid;gap:2px;padding:10px 12px 12px;background:#0a141a;color:#e8f2f5}
+.theme-tile-caption strong{font-size:15px}
+.theme-tile-caption span{color:#b9ccd3;font-size:13px;line-height:1.45}
+.theme-tile-ring{position:absolute;inset:0;border:1.5px solid #2f4750;border-radius:14px;pointer-events:none;transition:border-color .14s ease,box-shadow .14s ease}
+.theme-tile-check{position:absolute;top:8px;right:8px;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#8cf0e0;color:#03191b;font-size:14px;font-weight:800;opacity:0;transform:scale(.7);transition:opacity .14s ease,transform .14s ease;pointer-events:none}
+.theme-tile input:checked ~ .theme-tile-ring{border:2.5px solid #8cf0e0;box-shadow:0 0 0 3px rgba(140,240,224,.16)}
+.theme-tile input:checked ~ .theme-tile-check{opacity:1;transform:none}
+.theme-tile input:focus-visible ~ .theme-tile-ring{border-color:#e6fff6;box-shadow:0 0 0 3px rgba(230,255,246,.5)}
+@media(max-width:640px){.theme-picker-grid{grid-template-columns:1fr}.theme-tile{flex-direction:row;align-items:stretch}.theme-tile-art{flex:0 0 46%;aspect-ratio:auto;min-height:92px}.theme-tile-caption{flex:1;align-content:center}}
