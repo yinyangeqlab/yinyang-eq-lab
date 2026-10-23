@@ -11,6 +11,7 @@ const shortcuts = [
   ["Ctrl / ⌘ + Z", "Undo a Preference Tuning adjustment."],
   ["Ctrl / ⌘ + Shift + Z", "Redo a Preference Tuning adjustment."],
   ["Shift + drag", "Toggle between exact-point and whole-region curve dragging in Preference Tuning."],
+  ["Shortcuts menu", "Under the player, choose where playback keys work: everywhere, the player area only, or off. Keys keep working after a mouse click; Space still presses a button you reached with Tab."],
   ["Tab / Shift + Tab", "Move between available controls. Enter or Space activates the focused button."],
   ["Escape", "Close supported dialogs or the mobile navigation and return to its control."],
 ];
