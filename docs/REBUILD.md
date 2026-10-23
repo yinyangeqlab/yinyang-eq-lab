@@ -1,3 +1,9 @@
+# Update113 deployed — October 22, 2026
+
+Code-only release `5ff9a79`; see docs/HANDOFF.md and docs/releases/update113-verification.json. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies 624+ files against docs/rebuild-manifest.json (live update 113). A fresh database still uses all 40 migrations plus db/service-status.sql (213 definitions); no migration was added. Recovery handover registration is pending (see HANDOFF.md).
+
+## Earlier rebuild notes (historical)
+
 # Update112 recovery registration verified — October 22, 2026
 
 Matching source-only recovery metadata and hosted validation passed after preserving and revalidating the two exact empty validation proofs in private durable evidence. Prior data snapshots and timestamps remain unchanged. No deployment, data export, migration or new data recovery point was performed by the repair. Daily scheduling remains active; today’s earlier failed export is not replaced by metadata registration. See docs/releases/update112-verification.json.
