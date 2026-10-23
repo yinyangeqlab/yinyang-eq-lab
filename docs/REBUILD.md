@@ -1,3 +1,9 @@
+# Update115 deployed — October 22, 2026
+
+Release `5561af4` (per-page link previews, source-only on top of update114, no migration); see docs/HANDOFF.md and docs/LINK_PREVIEWS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 115). A fresh database still uses all 41 migrations plus db/service-status.sql (216 definitions). Recovery handover registration is pending for updates 113, 114 and 115 (docs/HANDOFF.md).
+
+## Earlier rebuild notes (historical)
+
 # Update114 deployed — October 22, 2026
 
 Release `12c6b88` with additive migration 0040; see docs/HANDOFF.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 114). A fresh database now uses all 41 migrations plus db/service-status.sql (216 definitions). Recovery handover registration is pending (docs/HANDOFF.md).
