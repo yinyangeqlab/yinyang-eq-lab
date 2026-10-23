@@ -1,7 +1,7 @@
 {
   "liveUpdate": 116,
-  "implementationCommit": "92a8c502eb463bd9fa97b5ba1cfa89fac1dd41f0",
-  "runtimeParity": "Runtime source matches verified 0.2.0-beta.1/update116: anonymous shareable blind shootouts (additive migration 0041, public shootout routes in the gate, framing exception for GET /embed/<id> only) on top of update115, which contains: per-page link previews (one preview table, a metadata-only edge response for link-preview crawlers, generated cards) on top of update114, which contains: approved-target removal requests with additive migration 0040, read-only pages that open without an agreement while every write route still requires it, and the one-time data-choices box at each point where a test starts or results are kept are deployed on the update113 foundation (Personal layout and target pools, upload visibility and withdraw, playback shortcut scope). Source-only recovery metadata registration for update114 is pending and needs an explicit schema-baseline decision (see docs/ENCRYPTED_BACKUP.md); existing data snapshots and timestamps remain unchanged. Release-record documentation does not change deployed runtime behavior.",
+  "implementationCommit": "b22885f",
+  "runtimeParity": "Candidate update117 on verified update116: 24 unchanged owner-supplied AAC recordings, artist-permission credits, measured loudness, regenerated waveforms and provisional peak-contrast classifications. Existing update116 application and schema remain intact. Deployment and recovery status are recorded separately.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -348,11 +348,11 @@
     },
     {
       "path": "app/music-library/page.tsx",
-      "sha256": "8f379bdc59df91d36eeba8006545d3b38d45c74c8a9e505329dc6c1d9320ec14"
+      "sha256": "02ba3f782f1db4dba81c9a1490c46e4ca2e63d32e16a38eb67b5bc6457e31acb"
     },
     {
       "path": "app/music-library/style.css",
-      "sha256": "8ce8bd2e2dda6cf72d103807368b67b7d373b9fa9af6eb583f59aa196c8e2d10"
+      "sha256": "b991fcb09c219992dc54ac772888d1cf2472d9abe59a26a23bc8e6246039f567"
     },
     {
       "path": "app/my-data/layout.tsx",
@@ -1192,7 +1192,7 @@
     },
     {
       "path": "data/listening-pool-audio-manifest.json",
-      "sha256": "3996f6fb72496beafbb2ab4aea3d6a5f7b8dcc5c3f127fd8830eba88cc52fcef"
+      "sha256": "85cb6112a2f689caa39d2eeeb0ab239d2314413426b18b7384e94310462f4a84"
     },
     {
       "path": "data/listening-pool-license-evidence.json",
@@ -1224,15 +1224,19 @@
     },
     {
       "path": "data/music-waveform-hashes.json",
-      "sha256": "64f4a0ec267baf431abc0cea59e0609117ca0cb559a032cc79d510a70677efea"
+      "sha256": "8b0d16334970418059f339c5cdacd0aa52e37ac840b6ed3927b040e0c1ceb560"
     },
     {
       "path": "data/music-waveforms.json",
-      "sha256": "04f34bf6d93d61b3e93126755d5a68180f9ccfb2247f89df2b1e386f139a6472"
+      "sha256": "1647f0e80709b259f2261f986e63914cb4149b169ae7dde54e73ae51020df361"
     },
     {
       "path": "data/open-music.json",
       "sha256": "0c5a003b28f3255f086fb9c022ebbebd3a23482b095b4017ee370d6c8e7ba986"
+    },
+    {
+      "path": "data/permission-music.json",
+      "sha256": "2966fbd55b3b3b3a3d483574354048a4f54340221bc3d634ed6dc35d31d93d98"
     },
     {
       "path": "data/shantae-audio.json",
@@ -1271,6 +1275,10 @@
       "sha256": "1c9cdc5853719bad6b6d5458bedc6fcdd7941e181ad39cc193953947fdfc3726"
     },
     {
+      "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
+      "sha256": "9375e06a7d34a153fd71e6f2cb94f071f4eae3a3c84e78eafb74b6af3aa4a69a"
+    },
+    {
       "path": "docs/LINK_PREVIEWS.md",
       "sha256": "c4517841d16f1b9eb49f7e66baf92ba81bb6c3d6a50bfa1aba5b5960d332878f"
     },
@@ -1285,6 +1293,10 @@
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
       "sha256": "12f5dafbec9ca8ef2f8c087a25f003841634eaadade797bd270ed20d3cd4ff15"
+    },
+    {
+      "path": "docs/jason-music-analysis.json",
+      "sha256": "04cc3a7f722041abc0d70a45d1452f370cec51ee4396972a41b1be79c188cf91"
     },
     {
       "path": "docs/releases/update111-verification.json",
@@ -1928,7 +1940,7 @@
     },
     {
       "path": "lib/music-catalog.ts",
-      "sha256": "7c3980d2a5c27444de41a0d5c26d3b8ed8948ce8e22714a50b804236fd1e85e2"
+      "sha256": "199afebcd3292fac9244b3ced2efc1f3fa01e13c62dd2db1c6efe8b08b43eb10"
     },
     {
       "path": "lib/music-display.ts",
@@ -2076,7 +2088,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "f666526075c86dc8dd5cea156941a5e30cb69cbd8326386883423494750aeecd"
+      "sha256": "cc793808018c6cfc244308219c5b56cd07aceaf90a094bd85e258ea10aee5a26"
     },
     {
       "path": "lib/song-match.ts",
@@ -2244,7 +2256,7 @@
     },
     {
       "path": "public/share/music-library.jpg",
-      "sha256": "88eb6a4f61a29b1efc5a868317e2b55a61ba9315fbb4495eceb42323a57f5029"
+      "sha256": "c330b10fd7195dc024f83c66b0b5578959cf6fdb801dc2dfd5d32c5c6ca4eaba"
     },
     {
       "path": "public/share/open-comparison.jpg",
@@ -2464,7 +2476,7 @@
     },
     {
       "path": "scripts/check_music_preferences.cjs",
-      "sha256": "478338ef7dc41c7b1074e1c1299ecbaebde7a516488f916926ed80ba6ece8688"
+      "sha256": "15df329c4c9f4710f832a0d2bbedbf8b0f968b7b4ab1bdff0641b8937b487f51"
     },
     {
       "path": "scripts/check_music_rank_refresh.mjs",
@@ -2509,6 +2521,10 @@
     {
       "path": "scripts/check_passage_shuffle.mjs",
       "sha256": "ad69b05dca88e7f1f85c47411d190b11374a43396c0d8f1d8305e8bda56e9126"
+    },
+    {
+      "path": "scripts/check_permission_music.mjs",
+      "sha256": "5e685a097026a3215605c121e08baabbc682a32fc31072a27746abab323b9231"
     },
     {
       "path": "scripts/check_personal_contribution_status.mjs",
@@ -2696,7 +2712,7 @@
     },
     {
       "path": "scripts/package-listening-pool.py",
-      "sha256": "593ba021f2ac52c2168249fbaafdc361359800b8f4ed6313c458e0ba4c997604"
+      "sha256": "4a5b9116197079bc8a15308f5419e8a1a50b6e284883482bdda66566a4966aa6"
     },
     {
       "path": "scripts/package-static-assets.mjs",
@@ -2792,5 +2808,6 @@
     "npm": "12.2.1",
     "testedPlatform": "linux"
   },
-  "pendingDeploymentApproval": false
+  "pendingDeploymentApproval": false,
+  "candidateUpdate": 117
 }

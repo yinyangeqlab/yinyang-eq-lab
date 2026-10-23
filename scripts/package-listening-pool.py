@@ -22,6 +22,24 @@ for key,url in json.loads((root/'data/shantae-audio.json').read_text()).items():
  source=release/('public'+url);digest=hashlib.sha256(source.read_bytes()).hexdigest();assert digest==audit[url]['sha256'],key
  size=source.stat().st_size
  manifest['shantae-'+key]={'bytes':size,'sha256':digest,'mime':{'.flac':'audio/flac','.m4a':'audio/mp4','.mp3':'audio/mpeg'}[source.suffix], 'parts':[{'path':url,'bytes':size}]}
+# Artist-permission recordings use the same verified private asset pipeline.
+permission_tracks=json.loads((root/'data/permission-music.json').read_text())
+existing=json.loads((root/'data/listening-pool-audio-manifest.json').read_text())
+for track in permission_tracks:
+ key=track['fileUrl'].removeprefix('/api/listening-audio/')
+ assert key not in manifest,key
+ asset=existing[key];digest=hashlib.sha256()
+ for part in asset['parts']:
+  relative=Path(part['path'].lstrip('/'))
+  assert relative.parts[:2]==('music','listening-pool-chunks') and '..' not in relative.parts,key
+  source=root/'public'/relative;destination=release/'public'/relative
+  data=source.read_bytes();assert len(data)==part['bytes'],key;digest.update(data)
+  if source.resolve()!=destination.resolve():
+   destination.parent.mkdir(parents=True,exist_ok=True)
+   if destination.exists():assert destination.read_bytes()==data,key
+   else:destination.write_bytes(data)
+ assert digest.hexdigest()==asset['sha256']==track['sha256'],key
+ manifest[key]=asset
 (release/'data/listening-pool-audio-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 # Keep a source copy of the metadata manifest; original audio remains outside Git.
 (root/'data/listening-pool-audio-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
