@@ -2521,15 +2521,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "092884795cbece8361b7a79f13fed6fa79212993a399732205031c00115a2765"
+      "sha256": "511481f82088ab9ef04f45280bcb668dbca1afb4dd63cca1a8e59afd28efdcce"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "2ecf2266b2bc395c5e2608c7c5d77157ba03e6407a59581a9289c8d97397632b"
+      "sha256": "560f56917b0828e2ad78c872892808bff2cf00a25acd5f14de9dfa61b47fd614"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "02acbf535695eae80d39abf80d13f632a2969e97d169c5996c66a50be24c6590"
+      "sha256": "fd07bc80fe01d6d2f0e2c8de29e4ac10f55d6bbc854c1695ec62f69f7e32cc4d"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2545,7 +2545,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a65ddd5766aa16a3399a9165602b99830b91943c6de78651511a64c72e88e633"
+      "sha256": "1c9cdc5853719bad6b6d5458bedc6fcdd7941e181ad39cc193953947fdfc3726"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -2577,7 +2577,7 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "58bcd7c6ebe723f814b974464bae3bf43481229b8aa1c0c7aa6d497f4305deeb"
+      "sha256": "02aff90d7b0ce458928bd8474ab1d5bc76b1974587f7886ae0b00a855732c47a"
     }
   ],
   "localConfigurationFiles": [
