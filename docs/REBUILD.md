@@ -1,6 +1,6 @@
 # Update116 deployed — October 23, 2026
 
-Release `92a8c50` (anonymous shareable shootouts) with additive migration 0041; see docs/HANDOFF.md and docs/SHAREABLE_SHOOTOUTS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 116). A fresh database now uses all 42 migrations plus db/service-status.sql (220 definitions). Recovery handover registration is pending for updates 113 to 116 (docs/HANDOFF.md).
+Release `92a8c50` (anonymous shareable shootouts) with additive migration 0041; see docs/HANDOFF.md and docs/SHAREABLE_SHOOTOUTS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 116). A fresh database now uses all 42 migrations plus db/service-status.sql (220 definitions). The update116 encrypted recovery baseline, full reconstruction, hosted validation and first subsequent scheduled nightly backup are verified; see docs/releases/update116-recovery-verification.json. PRs #3 and #4 are merged into main.
 
 ## Earlier rebuild notes (historical)
 
