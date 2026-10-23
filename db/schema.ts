@@ -474,3 +474,14 @@ export const targetRemovalRequests = sqliteTable("target_removal_requests", {
   index("target_removal_subject_idx").on(table.subjectId),
   check("target_removal_status", sql`${table.status} IN ('pending','done','declined')`),
 ]);
+
+// Anonymous shareable shootouts (migration 0041). Runs carry no identifiers.
+export const embedShootouts = sqliteTable("embed_shootouts", {
+  id: text("id").primaryKey(), manageHash: text("manage_hash").notNull(), title: text("title").notNull(), targetIds: text("target_ids").notNull(),
+  createdAt: integer("created_at").notNull(), expiresAt: integer("expires_at").notNull(),
+  ownerShare: integer("owner_share").notNull().default(0), ownerShareAt: integer("owner_share_at"), ownerShareNotice: text("owner_share_notice"),
+}, table => [index("embed_shootouts_expires").on(table.expiresAt), check("embed_owner_share", sql`${table.ownerShare} IN (0,1)`), check("embed_target_ids_json", sql`json_valid(${table.targetIds})`)]);
+export const embedShootoutRuns = sqliteTable("embed_shootout_runs", {
+  id: text("id").primaryKey(), shootoutId: text("shootout_id").notNull().references(() => embedShootouts.id, { onDelete: "cascade" }),
+  hour: integer("hour").notNull(), listenerKind: text("listener_kind").notNull(), sighted: integer("sighted").notNull().default(0), picks: text("picks").notNull(),
+}, table => [index("embed_shootout_runs_shootout").on(table.shootoutId, table.hour), check("embed_run_kind", sql`${table.listenerKind} IN ('headphones','iem','speakers','other','unknown')`), check("embed_run_sighted", sql`${table.sighted} IN (0,1)`), check("embed_run_picks_json", sql`json_valid(${table.picks})`)]);
