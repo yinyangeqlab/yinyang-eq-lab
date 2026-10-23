@@ -263,7 +263,7 @@
     },
     {
       "path": "app/community-preferences/page.tsx",
-      "sha256": "54594b157511d78be67700c69834c697adb925482c767b3cf1e0c1b281abb05d"
+      "sha256": "633e83b1ea3e036a63133712e0a09cf7234deb9b0eb3f0c08d2af6c80e61bb7a"
     },
     {
       "path": "app/curve-credits/layout.tsx",
@@ -307,7 +307,7 @@
     },
     {
       "path": "app/music-library/page.tsx",
-      "sha256": "6a18070cfdeb4af11e7979765dad0e1600e57121d6970ecab72f650232621004"
+      "sha256": "8f379bdc59df91d36eeba8006545d3b38d45c74c8a9e505329dc6c1d9320ec14"
     },
     {
       "path": "app/music-library/style.css",
@@ -359,7 +359,7 @@
     },
     {
       "path": "app/preference-tuning/page.tsx",
-      "sha256": "b0201d7c6766863fdb0e0c59759face6abe52fb97528bf6b48637f017cfa7c43"
+      "sha256": "3a35b361be25322d6e46dd7359844d8e8681b35ed9c6c57cffa1420ca607dd70"
     },
     {
       "path": "app/preference-tuning/style.css",
@@ -383,7 +383,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "2838314ec9640ad1841dc96f9017e30fba42e74117fb1236ba1effc0ab3f66ed"
+      "sha256": "6c625e2b23cf411733ba7e01878cc8df93119156dc6bb24e58344981f27ef863"
     },
     {
       "path": "app/shootout/personal/layout.tsx",
@@ -391,7 +391,7 @@
     },
     {
       "path": "app/shootout/personal/page.tsx",
-      "sha256": "825b30159a88db848784868e172c92a45cb295111dfe018044d12b94083a3737"
+      "sha256": "4b088714622f4cbaaabfee24cafa00a1c03ce4d90bfcd54a7b06f69f93469db0"
     },
     {
       "path": "app/shootout/personal/personal.css",
@@ -555,11 +555,11 @@
     },
     {
       "path": "components/comparison-data-settings.css",
-      "sha256": "a2ff89347ff5366726d72af32c3cc6af8e72bed3db989479268caecf12c9f265"
+      "sha256": "10d9126d95f7b93afb4cefb168bea149c939efe5a05e47c8c0874fdc679e0a5d"
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "8dc5dbd7de839841d7fa017bf27127ac34c992659f4ec71cf21cbba26a5515cf"
+      "sha256": "48dc956a9a3a8b873aaad8342676329f44c651d1a1c052fe091013c7857c5bc3"
     },
     {
       "path": "components/connector-error.tsx",
@@ -567,7 +567,7 @@
     },
     {
       "path": "components/data-choices-editor.tsx",
-      "sha256": "2e6c4d85adf44c8276b9f55638607b94ae76d8e6f862606d8500b7c8d48efe99"
+      "sha256": "6d31b4e9be488543dd4197c09c2b267eeb66985f197942ec56565394411d3f10"
     },
     {
       "path": "components/display-preferences-panel.tsx",
@@ -631,7 +631,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "bb23549d2145484a4588dc49c4022320ff3e40728675d033e28144e80907d2de"
+      "sha256": "85aeb979a94e06d77f1a33ec2915551f55c89b7c8fa1d808c97996b340ae8d17"
     },
     {
       "path": "components/name-filter-lab.tsx",
@@ -1487,7 +1487,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "4940ca277faf805e7bc437ab0ef8b5db0a52deb3e928e9724926aa8bd7b6e554"
+      "sha256": "949e35aaa65d43a309ef18546d0bd3988ff352912bca5ae0044615c735be72d4"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -2127,7 +2127,7 @@
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "7ed077681243e34e06305865a7cfdf105e61966c59b60c59d662743a4de95ba9"
+      "sha256": "bd598a344fa18c86d401ceb478f4b1a8a6e050848297fe09091864468153804e"
     },
     {
       "path": "scripts/check_browser_sync.mjs",
@@ -2223,7 +2223,7 @@
     },
     {
       "path": "scripts/check_music_rank_refresh.mjs",
-      "sha256": "7c6d3ece3f7f1a4cc42efbcf944bf2e273ce351c7b17af2873bbcdb9a864045a"
+      "sha256": "e690e1fefb37a8de21ff0711fe2084a4a42e0dd4c2c0aa718c02ba1227ceff54"
     },
     {
       "path": "scripts/check_nickname_brand_forms.mjs",
@@ -2243,7 +2243,7 @@
     },
     {
       "path": "scripts/check_participation_entry.mjs",
-      "sha256": "2dc2127907d81a1f4a749d6db56850dcc658785418341b3d34ac8be9c1241ed3"
+      "sha256": "205c72066487975294c86dae8007ea51c2cd82066725145c6a96baa0938d7718"
     },
     {
       "path": "scripts/check_passage_edit.mjs",
@@ -2327,7 +2327,7 @@
     },
     {
       "path": "scripts/check_research_source.mjs",
-      "sha256": "55b3c33c2468e3c17d396edc5e0786d1f416ca9758f999befbc17c3c61dc1f3d"
+      "sha256": "012d58dcbe27ecccb6148375283d1c852825fe8cd5e498adfffbc13c08038854"
     },
     {
       "path": "scripts/check_security_response_headers.mjs",
