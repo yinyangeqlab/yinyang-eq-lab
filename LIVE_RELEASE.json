@@ -2389,15 +2389,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "7b494a5fd42de1a909764482d5fefd962c3ab1df5c16763af954a9333a18c953"
+      "sha256": "231a316aa5b103cf0727c0ea16436e986e190d884e5003f6142ce68169e3290c"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "ffcb14231aef7b1ee39db83062caf300affb6bf7b45b64b2c4764b8c18c41ec5"
+      "sha256": "d900e8c15044c3f674b5e73c1506129ac903895d4d669f2d17583113dace6609"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "f41726c5eeedc79938b3e18863135fc01c6b8ac39f8c2942c175f08140caac27"
+      "sha256": "a6e9fb16cc99c99d0c607fff02170b6ccafd3c42a17cb4c88ae0b26c15fae8a9"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2413,7 +2413,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "6789c6dd5c295d1377e635f40f5669bb79608d69effacdad79389b1e4d8126d9"
+      "sha256": "c7a9c7bf0d91f52c00c562414fa8638088f39938ae6d421c6efea4e080d5e861"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -2445,7 +2445,7 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "f6f6d580c6a5b110ce8648299b4bb6b36949c1ca6eb4a06fb57b12b320ff1129"
+      "sha256": "13ce1cfdc3149e79ebd91da27641b0f19aba1613144444221fd8ae33afda0468"
     }
   ],
   "localConfigurationFiles": [
@@ -11028,7 +11028,9 @@
       "privateEvidenceLedgerPersisted": true,
       "hostOrphanRecordsRemain": true,
       "receipt": "work/targets-removal-rollback-20261022/handover-deployment-verification.json",
-      "instructions": "work/targets-removal-rollback-20261022/HANDOVER_FOR_CODEX.md"
+      "instructions": "work/targets-removal-rollback-20261022/HANDOVER_FOR_CODEX.md",
+      "ownerApprovedFreshExport": true,
+      "freshExportCompleted": false
     },
     "rollbackPack": "work/a11y-sync-rollback-20261022"
   },
