@@ -63,11 +63,19 @@
     "independentEdgeAndCostControls": "unchanged"
   },
   "productionParticipantDataMutated": false,
-  "gitHubPublished": false,
+  "gitHubPublished": true,
   "notTested": [
     "Authenticated production audio audition",
     "Physical devices",
     "Safari/iOS",
     "AAC/lossless perceptual equivalence"
-  ]
+  ],
+  "publication": {
+    "branch": "release/jason-aac-records-20261023",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/6",
+    "state": "open",
+    "githubLogin": "yinyangeqlab",
+    "authorAndCommitterVerified": true,
+    "merged": false
+  }
 }
