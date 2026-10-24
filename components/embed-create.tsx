@@ -18,6 +18,7 @@ export default function EmbedCreate() {
   const [created, setCreated] = useState<Created | null>(null);
   const [saved, setSaved] = useState<SavedShootout[]>([]);
   const [copied, setCopied] = useState("");
+  const [keySaved, setKeySaved] = useState(false);
   const origin = siteOrigin();
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function EmbedCreate() {
       const response = await fetch("/api/embed-shootouts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title, targetIds: picked }) });
       const body = await response.json().catch(() => ({})) as Created & { error?: string };
       if (!response.ok) { setError(body.error || "The shootout could not be created."); return; }
-      saveShootout({ id: body.id, key: body.manageKey, title: title.trim() || "Blind shootout", created: Date.now() });
+      setKeySaved(saveShootout({ id: body.id, key: body.manageKey, title: title.trim() || "Blind shootout", created: Date.now() }));
       setSaved(readSaved()); setCreated(body);
     } catch { setError("The shootout could not be created. Check your connection."); }
     finally { setBusy(false); }
@@ -94,7 +95,7 @@ export default function EmbedCreate() {
           <div><span className="em-label">Share link (public)</span><div className="em-copy"><input readOnly value={shareUrl} aria-label="Share link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("link", shareUrl)}>{copied === "link" ? "Copied" : "Copy"}</button></div></div>
           <div><span className="em-label">Embed code</span><div className="em-copy"><input readOnly value={embedSnippet(created.id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(created.id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
           <div className="em-private"><span className="em-label">Private results link. Keep this to yourself.</span><div className="em-copy"><input readOnly value={resultsUrl} aria-label="Private results link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("results", resultsUrl)}>{copied === "results" ? "Copied" : "Copy"}</button></div>
-            <p className="em-note">This link is the only way to see your results or delete the shootout, and it cannot be recovered. It is saved in this browser; bookmark it too.</p></div>
+            <p className="em-note">This link is the only way to see your results or delete the shootout, and it cannot be recovered. {keySaved ? "It is saved in this browser; bookmark it too." : "Browser storage could not save this key. Copy or bookmark the private results link before leaving this page."}</p></div>
         </div>
         <div className="es-actions"><a className="es-button es-primary" href={`/s/${created.id}/results#key=${created.manageKey}`}>Open my results</a><a className="es-button" href={`/s/${created.id}`} target="_blank" rel="noopener">Try it yourself</a></div>
         <p className="em-note">Tip for Discord: paste the share link on its own line. Discord shows a preview card (it cannot run interactive embeds inside a message), and the card opens the shootout in the browser.</p>

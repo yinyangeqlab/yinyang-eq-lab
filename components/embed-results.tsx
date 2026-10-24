@@ -26,6 +26,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
   const [copied, setCopied] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [keySaved, setKeySaved] = useState(true);
   const origin = siteOrigin();
 
   const load = useCallback(async (manageKey: string) => {
@@ -35,9 +36,10 @@ export default function EmbedResultsView({ id }: { id: string }) {
       const body = await response.json().catch(() => ({})) as EmbedResults & { error?: string };
       if (!response.ok) { setError(body.error || "Results could not be loaded."); setData(null); return; }
       setData(body); setKey(manageKey);
-      saveShootout({ id, key: manageKey, title: body.title, created: body.createdAt });
+      const saved = saveShootout({ id, key: manageKey, title: body.title, created: body.createdAt });
+      setKeySaved(saved);
       // The fragment is never sent to a server; remove it from the address bar once it is saved on this device.
-      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+      if (saved && location.hash) history.replaceState(null, "", location.pathname + location.search);
     } catch { setError("Results could not be loaded. Check your connection."); }
     finally { setLoading(false); }
   }, [id]);
@@ -83,6 +85,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
   return <div className="em-root">
     <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/share-shootout">Make another shootout</a></header>
     <main className="em-wrap" aria-busy={loading}>
+      {!keySaved && data && <p className="es-error" role="alert">Browser storage could not save your private results key. Keep the private results link bookmarked or copied before leaving.</p>}
       {loading && <p className="es-status">Loading results…</p>}
 
       {!loading && !data && <section className="em-card"><h1>Private results</h1>

@@ -228,6 +228,10 @@ export default function PreferenceTuning() {
   const [editId, setEditId] = useState<string | null>(null);
   const [activeBand, setActiveBand] = useState(3);
   const [message, setMessage] = useState("");
+  const [storageNotice, setStorageNotice] = useState("");
+  const sourceGeneration = useRef(0);
+  const playbackIntent = useRef(0);
+  const analysisRequest = useRef<AbortController | null>(null);
   const [measurementAttention, setMeasurementAttention] = useState(0);
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
@@ -260,8 +264,9 @@ export default function PreferenceTuning() {
     } catch {}
     setAxisLoaded(true);
     try { setMeasurements(JSON.parse(localStorage.getItem("target-lab-measurements") || "[]")); } catch {}
-    setMeasurementId(localStorage.getItem("target-lab-active-measurement") || "");
+    try { setMeasurementId(localStorage.getItem("target-lab-active-measurement") || ""); } catch {}
     try { const savedRows = JSON.parse(localStorage.getItem("target-lab-measurements") || "[]") as HeadphoneMeasurement[]; const active = savedRows.find(row => row.id === localStorage.getItem("target-lab-active-measurement")); if (active) setHeadphoneType(active.type); } catch {}
+    const generationRef = sourceGeneration, intentRef = playbackIntent, requestRef = analysisRequest, audio = media.current;
     let stopped = false;
     let stopRankingRefresh = () => {};
     async function load() {
@@ -310,10 +315,13 @@ export default function PreferenceTuning() {
       } catch { setMessage("Shared targets are unavailable right now. You can still use a flat reference or import a curve."); }
     }
     void load();
-    return () => { stopped = true; stopRankingRefresh(); if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
+    return () => { stopped = true; generationRef.current++; intentRef.current++; requestRef.current?.abort(); audio?.pause(); stopRankingRefresh(); if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
   }, []);
-  useEffect(() => { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); }, [settings, selected, expanded]);
-  useEffect(() => { if (axisLoaded) localStorage.setItem("preference-tuning-axis-v1", JSON.stringify(axis)); }, [axis, axisLoaded]);
+  // A failed external storage write needs immediate visible feedback; editing remains available.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { if (!axisLoaded) return; try { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [settings, selected, expanded, axisLoaded]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Report an external storage failure.
+  useEffect(() => { if (axisLoaded) try { localStorage.setItem("preference-tuning-axis-v1", JSON.stringify(axis)); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [axis, axisLoaded]);
   const target = targets.find(t => t.id === selected) || fallback;
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
   const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
@@ -420,37 +428,44 @@ export default function PreferenceTuning() {
     }).catch(() => { setDynamicsReady(false); setDynamicSliderEnabled(false); updateDynamicRange(0); });
   }
   function stop() {
+    playbackIntent.current++;
     media.current?.pause();
     setPlaying(false);
   }
   async function play() {
     const audio = media.current;
     if (!audio || !(audio.currentSrc || audio.src)) return;
+    const intent = ++playbackIntent.current;
+    const source = sourceGeneration.current;
     try {
       const current = ensureGraph();
       if (!current.media) { current.media = current.context.createMediaElementSource(audio); current.media.connect(current.input); setupDynamics(current); }
       await Promise.all([current.context.resume(), audio.play()]);
-      setPlaying(true); setMessage("");
-    } catch { setMessage("Playback could not start. Choose another track or check browser audio permissions."); }
+      if (intent !== playbackIntent.current || source !== sourceGeneration.current) return;
+      setPlaying(!audio.paused); setMessage("");
+    } catch { if (intent === playbackIntent.current && source === sourceGeneration.current) setMessage("Playback could not start. Choose another track or check browser audio permissions."); }
   }
   async function loadAudio(file: File | undefined) {
     if (!file) return;
+    const generation = ++sourceGeneration.current; analysisRequest.current?.abort();
     stop(); if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = URL.createObjectURL(file);
     if (media.current) { media.current.src = objectUrl.current; media.current.load(); }
     setAudioUrl(objectUrl.current); setAudioName(file.name); setAudioAnalysis(null);
-    setPosition(0); setMessage("Track ready. Press Play music to hear changes live.");
-    void analyzeTrack(file).then(setAudioAnalysis).catch(() => setMessage("Track ready; source waveform analysis is unavailable for this format."));
+    setPosition(0); setDuration(0); setWaveZoom(1); setMessage("Track ready. Press Play music to hear changes live.");
+    void analyzeTrack(file).then(result => { if (generation === sourceGeneration.current) setAudioAnalysis(result); }).catch(() => { if (generation === sourceGeneration.current) setMessage("Track ready; source waveform analysis is unavailable for this format."); });
   }
   function loadCurated(index: number, autoPlay = false) {
     const track = curatedMusic[index]; if (!track) return;
+    const generation = ++sourceGeneration.current; analysisRequest.current?.abort();
+    const controller = new AbortController(); analysisRequest.current = controller;
     lastCuratedIndex.current = index;
     stop(); if (objectUrl.current) { URL.revokeObjectURL(objectUrl.current); objectUrl.current = ""; }
     if (media.current) { media.current.src = track.fileUrl; media.current.load(); }
-    setAudioUrl(track.fileUrl); setAudioName(musicDisplayTitle(track.title) + " · " + track.artist); setAudioAnalysis(null); setPosition(0); setDuration(0);
+    setAudioUrl(track.fileUrl); setAudioName(musicDisplayTitle(track.title) + " · " + track.artist); setAudioAnalysis(null); setPosition(0); setDuration(0); setWaveZoom(1);
     setMessage(autoPlay ? "Starting random curated track…" : "Curated track ready. Press Play music.");
     if (autoPlay) void play();
-    void fetch(track.fileUrl).then(response => { if (!response.ok) throw new Error(); return response.blob(); }).then(analyzeTrack).then(setAudioAnalysis).catch(() => {});
+    void fetch(track.fileUrl, { signal: controller.signal }).then(response => { if (!response.ok) throw new Error(); return response.blob(); }).then(blob => generation === sourceGeneration.current ? analyzeTrack(blob) : null).then(result => { if (generation === sourceGeneration.current && result) setAudioAnalysis(result); }).catch(() => {});
   }
   function playRandomCurated() {
     if (!curatedMusic.length) return;
@@ -527,15 +542,20 @@ export default function PreferenceTuning() {
     window.addEventListener("keydown", escape);
     return () => window.removeEventListener("keydown", escape);
   }, [instructionsOpen]);
-  function saveMeasurements(rows: HeadphoneMeasurement[]) { setMeasurements(rows); localStorage.setItem("target-lab-measurements", JSON.stringify(rows)); }
-  function chooseMeasurement(id: string) { setMeasurementId(id); localStorage.setItem("target-lab-active-measurement", id); const row = measurements.find(item => item.id === id); if (row) setHeadphoneType(row.type); }
-  function clearMeasurement() { setMeasurementId(""); localStorage.removeItem("target-lab-active-measurement"); }
-  function addMeasurement(row: HeadphoneMeasurement) { saveMeasurements([...measurements, row]); setMeasurementId(row.id); setHeadphoneType(row.type); localStorage.setItem("target-lab-active-measurement", row.id); }
+  function persistBrowserValue(key: string, value: string | null) {
+    try { if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value); }
+    catch { setStorageNotice("Browser storage is unavailable. Tuning and headphone changes apply in this tab only; they will not be saved when you leave."); }
+  }
+  function saveMeasurements(rows: HeadphoneMeasurement[]) { setMeasurements(rows); persistBrowserValue("target-lab-measurements", JSON.stringify(rows)); }
+  function chooseMeasurement(id: string) { setMeasurementId(id); persistBrowserValue("target-lab-active-measurement", id); const row = measurements.find(item => item.id === id); if (row) setHeadphoneType(row.type); }
+  function clearMeasurement() { setMeasurementId(""); persistBrowserValue("target-lab-active-measurement", null); }
+  function addMeasurement(row: HeadphoneMeasurement) { saveMeasurements([...measurements, row]); setMeasurementId(row.id); setHeadphoneType(row.type); persistBrowserValue("target-lab-active-measurement", row.id); }
   function deleteMeasurement(id: string) { saveMeasurements(measurements.filter(row => row.id !== id)); if (measurementId === id) clearMeasurement(); }
-  async function importMeasurement(entry: CatalogMeasurement) { const row = await importCatalogEntry(entry); addMeasurement(row); }
+  async function importMeasurement(entry: CatalogMeasurement) { try { const row = await importCatalogEntry(entry); addMeasurement(row); } catch (error) { setMessage(error instanceof Error ? error.message : "Could not import this headphone measurement."); } }
   const slider = (key: keyof Settings, title: string, detail: string, min: number, max: number, step = .5, unit = "dB", color?: string) =>
     <label className="pt-control" key={key} title={detail}><span><strong>{title}</strong><small>{detail}</small></span><input type="range" min={min} max={max} step={step} value={settings[key]} style={color ? { accentColor: color } : undefined} onPointerDown={beginGesture} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={e => set(key, Number(e.target.value))} aria-label={title} /><output style={color ? { color } : undefined}>{settings[key] > 0 && unit === "dB" ? "+" : ""}{settings[key]} {unit}</output></label>;
   return <main className="pt-shell alpha-tuning">
+    {storageNotice && <p role="status" className="pt-message">{storageNotice}</p>}
     <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/music-library">Listening Pool</a><span aria-current="page">Preference Tuning</span></nav></header>
     <div className="pt-content">
       <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>

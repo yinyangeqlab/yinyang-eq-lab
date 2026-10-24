@@ -50,7 +50,7 @@ export function readSaved(): SavedShootout[] {
   } catch { return []; }
 }
 export function saveShootout(entry: SavedShootout) {
-  try { localStorage.setItem(KEYS, JSON.stringify([entry, ...readSaved().filter(item => item.id !== entry.id)].slice(0, 50))); } catch { /* storage unavailable */ }
+  try { localStorage.setItem(KEYS, JSON.stringify([entry, ...readSaved().filter(item => item.id !== entry.id)].slice(0, 50))); return readSaved().some(item => item.id === entry.id && item.key === entry.key); } catch { return false; }
 }
 export function forgetShootout(id: string) {
   try { localStorage.setItem(KEYS, JSON.stringify(readSaved().filter(item => item.id !== id))); } catch { /* storage unavailable */ }

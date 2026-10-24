@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 121,
-  "implementationCommit": "7e71e139aef1dd944953783a2076db1809266370",
-  "runtimeParity": "Verified private EQ workflow fixes under unchanged owner-only maintenance. Immutable source/build/recovery fingerprints are preserved; release documentation is recorded separately.",
+  "liveUpdate": 122,
+  "implementationCommit": "d1a507d614a266bec1c96c3acc0cd2d6bf6f1257",
+  "runtimeParity": "Verified main workflow fixes under unchanged owner-only maintenance. Immutable source/build/recovery fingerprints are preserved; release documentation is recorded separately.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,19 +66,19 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "1a8b0d38f31cad73eaeeb76b5bbe6354750e7887673f491c5fab677ea9f7c37f"
+      "sha256": "8805aeaed6c2d8215e8b832e46d8753eb815e00cfdea455705750c85e51b4a60"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "0ff6f4949f5d03016a84f402471f2bbbc8ec20f1cfccb20176abd2cb1314610b"
+      "sha256": "f5fd1893c1ed75d9d0e7c63861c6aa1d9f2a53e91fbc12d63a66b11f8a393d8c"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "fb6c5c28404e6f339200f12713e62acc1d2a9857db69ca69addf234b036deb8b"
+      "sha256": "bca8f4860b162cd1bfc8b4af1b0393b3e0c8a9c76028960ca27532555dcb4b4f"
     },
     {
       "path": "README.md",
-      "sha256": "84cd2e43c916efef9dd352a698dc24cc839e7cc4445c685f8bc97ebf7f4383aa"
+      "sha256": "1eb067af1baff8dc98716b2526df7a2332a6bfd4383907852b090a5e4315f497"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -366,7 +366,7 @@
     },
     {
       "path": "app/music-library/page.tsx",
-      "sha256": "02ba3f782f1db4dba81c9a1490c46e4ca2e63d32e16a38eb67b5bc6457e31acb"
+      "sha256": "664b45af22d5827773cfe24f1e0713a4aeb76e03398bb19e25780b8e8ca7c18e"
     },
     {
       "path": "app/music-library/style.css",
@@ -378,7 +378,7 @@
     },
     {
       "path": "app/my-data/page.tsx",
-      "sha256": "6be4d3a86a18180b1cbf4323d0b0506b0a4579d97fbc26162b1cf0099b91fadb"
+      "sha256": "2888b02c037e70ed13671a215598c01d415fbe3b5a433d95a82fbc19d66b602d"
     },
     {
       "path": "app/my-data/style.css",
@@ -390,7 +390,7 @@
     },
     {
       "path": "app/my-profile/page.tsx",
-      "sha256": "7828b49a875e6bf620e9872d531cab5f576a5c6ee5bc65a2d790dc00f8a8a81b"
+      "sha256": "7a0a5150aa55c81b1bdeb6893c7249f454b1128a552c65eb6437f2b0c85cc074"
     },
     {
       "path": "app/owner-research/admin-layout.css",
@@ -426,7 +426,7 @@
     },
     {
       "path": "app/preference-tuning/page.tsx",
-      "sha256": "3a35b361be25322d6e46dd7359844d8e8681b35ed9c6c57cffa1420ca607dd70"
+      "sha256": "4688f00e54cb495566255c4fb79d2caebf44469f3709eec0a3891f6763bde506"
     },
     {
       "path": "app/preference-tuning/style.css",
@@ -678,11 +678,11 @@
     },
     {
       "path": "components/embed-common.ts",
-      "sha256": "be560c1312ea4e7294e3d597cb9f1ab45e1a8bb0164135469c740eea6d4031a4"
+      "sha256": "84e54e6ea04bf5edce3e73c3c3c2faed30e2b24343d1c81c97740dbafbd13d42"
     },
     {
       "path": "components/embed-create.tsx",
-      "sha256": "ae29d2889bdbfbce231b19d645bcaad676b9d5bd5c1510fb0308300428647003"
+      "sha256": "66a581c84b730f0945610216b285d6e23ac6e10ef8f7e4b4f98cc13e5afe4569"
     },
     {
       "path": "components/embed-curve-plot.tsx",
@@ -694,7 +694,7 @@
     },
     {
       "path": "components/embed-results.tsx",
-      "sha256": "ac81dd1c4f3523dee5cbb2cdf394dac4bc87d6b0c1353a493866849feb20ed51"
+      "sha256": "58a0ea861f914d0bc8af4380eeaf70ecfd693fe623e4f420a69b03ce68132333"
     },
     {
       "path": "components/embed-shootout.css",
@@ -1306,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "2c98a13f9432d15a5af60b37755db73f6dfe924c552fa95a7743c017fe26db67"
+      "sha256": "5620ab2e7d810251c86207af1160a079bb80668c75463d77168036d8f25cc85c"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1322,11 +1322,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "b042019c8221b4956157ff49cde4a691ceae8a9ac4edf93410f465c3cf4f74aa"
+      "sha256": "b6df7570c336cf503e4278f5fc13212c57198cf3b0f600a56ea37fd2102eac99"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "8f7fb5aaf12411843194036a4e6920d2b722734c4656acdb1e5bc33deba2afb2"
+      "sha256": "080f66a4f646e1eabb1097f2adfaa227f9d305f746f472fda9e0dcf4b9ea00b3"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
@@ -1361,6 +1361,10 @@
       "sha256": "567a27a0d51b5c58822907c5a8b8811a6c3cb2567690c4c5c363ef71b229b0b4"
     },
     {
+      "path": "docs/releases/update122-verification.json",
+      "sha256": "db7c9fff14aac8725dc6b2d259999a65a706db554daa0332005b435bc900732f"
+    },
+    {
       "path": "docs/research/README.md",
       "sha256": "a0f5d0a08fcb7ec44547dc88a7b62cbc69888258a8cbcd8a2f772431f3ba8459"
     },
@@ -1379,6 +1383,10 @@
     {
       "path": "docs/research/listener-consistency/research-questions.md",
       "sha256": "c3f569896a3afd69b8160e5f7ef4b2d5f4999c32f927073556f00a10b1dfd182"
+    },
+    {
+      "path": "docs/reviews/2026-10-24-main-workflows.md",
+      "sha256": "6375d122d1d8f399d497926dbd7890b9ad5ae8b879db49c9b2f75a1bec756f6a"
     },
     {
       "path": "drizzle.config.ts",
@@ -2511,6 +2519,10 @@
     {
       "path": "scripts/check_local_audio_error.mjs",
       "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
+    },
+    {
+      "path": "scripts/check_main_workflows.mjs",
+      "sha256": "58d7a1ecc34dc1b66269589831d298599b8746193e3dadd79490ce62abf3ff4a"
     },
     {
       "path": "scripts/check_maintenance_dependencies.cjs",
