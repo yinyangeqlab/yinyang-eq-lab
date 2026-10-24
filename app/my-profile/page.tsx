@@ -17,6 +17,7 @@ export default function Page(){const [page,setPage]=useState(1),[data,setData]=u
   catch(cause){if(version===requestVersion.current)setError(cause instanceof Error?cause.message:"Profile activity could not be loaded.");}
   finally{if(version===requestVersion.current)setLoading(false);}
  },[page]);
+ // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
  useEffect(()=>{const requests=requestVersion;void load();return()=>{requests.current++;};},[load]);async function action(work:()=>Promise<unknown>){setBusy(true);setError("");try{await work();await load();}catch(cause){setError(cause instanceof Error?cause.message:"Action failed.");}finally{setBusy(false);}}
  return <main className="profile-page alpha-account"><AccountPageHeading eyebrow="Owner participant account" title="Your YinYangEQ profile" actions={<a href="/listeners/yinyangeq">View public profile ↗</a>}><p>Everything starts private. Review the exact public view before publishing. Hiding changes visibility; permanently removing a contribution and its ranking effect is managed in <a href="/my-data">My data</a>.</p></AccountPageHeading><AccountSectionLinks links={[{href:"#profile-sharing",label:"Publication choices"},{href:"#profile-sync",label:"Sync & recovery"},{href:"#profile-entries",label:"Saved activity"}]}/>{error&&<p role="alert">{error}</p>}
  {data&&<AccountDeviceStatus/>}

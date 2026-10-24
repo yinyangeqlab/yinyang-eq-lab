@@ -4,7 +4,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {validateSyncPayload} from '../lib/browser-sync.mjs';
-import {linkedTester,browserPairing} from '../lib/browser-pairing.mjs';
+
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 const db={prepare(query){const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};

@@ -43,7 +43,7 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
     onSeek(next);
   };
   const currentSeek = useRef(seekTo);
-  currentSeek.current = seekTo;
+  useEffect(() => { currentSeek.current = seekTo; });
   const seekAtPointer = (clientX: number) => {
     const canvas = canvasRef.current, rect = canvas?.getBoundingClientRect();
     if (!canvas || !rect?.width || !duration || displayOnly) return;

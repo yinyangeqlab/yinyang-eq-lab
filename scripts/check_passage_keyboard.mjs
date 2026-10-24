@@ -8,8 +8,8 @@ function visit(n){if(ts.isVariableDeclaration(n)&&n.name?.getText(ast)==='toggle
 let clicks=0,prevented=0;
 const state={audioRef:{current:{closest:()=>({querySelector:()=>({click(){clicks++;}})})}}};vm.createContext(state);vm.runInContext(ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
 state.event={code:'Space',preventDefault(){prevented++},stopPropagation(){}};vm.runInContext('toggleWithSpace(event)',state);assert.equal(clicks,1);assert.equal(prevented,1);
-const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
-const {shortcutDecision}=module.exports;
+const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+const {shortcutDecision}=fixtureModule.exports;
 const el=kinds=>({closest:s=>kinds.some(k=>s.split(',').some(p=>p.trim().startsWith(k)||p.includes(`[role='${k}']`)))?{}:null});
 const space={code:'Space',key:' ',shiftKey:false},context={scope:'everywhere',singleKey:true,modalOpen:false,regionActive:true,mouseFocused:false};
 // A control reached with the keyboard keeps its native Space action.

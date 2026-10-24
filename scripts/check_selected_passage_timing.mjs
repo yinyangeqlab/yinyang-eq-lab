@@ -69,11 +69,11 @@ assert.equal(intervalStats(selectedPassageIntervals(long,{start:10,end:20})).ove
 assert.deepEqual(selectedPassageIntervals(long,{start:NaN,end:20}),[]);
 console.log('PASS real player handlers: selected-only timing, five-second cap, both requirement states, stalls, repeats, seeks, selection changes, resets, and matched overlap');
 
-const require=createRequire(import.meta.url),module={exports:{}};
+const require=createRequire(import.meta.url),fixtureModule={exports:{}};
 const meterSource=ts.transpileModule(readFileSync('components/matched-passage-control.tsx','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
-vm.runInNewContext(meterSource,{module,exports:module.exports,require:name=>name.endsWith('.css')?{}:require(name)});
+vm.runInNewContext(meterSource,{module:fixtureModule,exports:fixtureModule.exports,require:name=>name.endsWith('.css')?{}:require(name)});
 for(const required of [false,true])for(const [seconds,shown] of [[-1,'0.0'],[0,'0.0'],[2.35,'2.3'],[4.999,'4.9'],[5,'5.0'],[12,'5.0'],[NaN,'0.0']]){
- const markup=renderToStaticMarkup(module.exports.MatchedPassageMeter({side:'A',seconds,required,qualified:false}));
+ const markup=renderToStaticMarkup(fixtureModule.exports.MatchedPassageMeter({side:'A',seconds,required,qualified:false}));
  assert.ok(markup.includes(`${shown} / 5 sec`),markup);
  assert.match(markup,/A listening time in selected passage/);
 }

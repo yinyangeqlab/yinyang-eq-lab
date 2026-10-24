@@ -173,7 +173,8 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     const timer = window.setInterval(refreshVisible, 60_000);
     window.addEventListener("focus", refresh);
     window.addEventListener("yinyang-data-changed", refresh);
-    return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("yinyang-data-changed", refresh); musicVoteRequest.current++; };
+    const requests = musicVoteRequest;
+    return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); window.removeEventListener("yinyang-data-changed", refresh); requests.current++; };
   }, [candidateUrl]);
   const poolCommunityRank = useMemo(() => candidateUrl ? musicCommunityRank(musicCandidates, musicCounts, candidateUrl) : null, [candidateUrl, musicCounts]);
   const poolRankText = !musicVotesReady ? musicVoteMessage === "Music votes unavailable." ? "Community rank unavailable" : "Loading community rank…" : poolCommunityRank ? `Community rank #${poolCommunityRank.position} of ${poolCommunityRank.total} rated` : "Not ranked yet · no community votes";
@@ -263,6 +264,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   const passage=passageOverride??automaticPassage?.passage??null;
   const passageRef = useRef(passage);
   passageRef.current = passage;
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- The sampler reads current interval/passage refs; callback identity must not restart its lifetime.
   useEffect(() => { onHeardRef.current(heardNow()); }, [passage?.start, passage?.end]);
   const [shuffleStatus,setShuffleStatus]=useState("");
   useEffect(()=>{
@@ -354,6 +356,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
   function heardNow(): [number, number] {
     return selectedPassageProgress(snapshotIntervals());
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- The sampler reads current interval/passage refs; callback identity must not restart its lifetime.
   useEffect(() => { const timer = window.setInterval(() => { if (activeRef.current) onHeardRef.current(heardNow()); }, 250); return () => clearInterval(timer); }, []);
   useEffect(() => { const resumeVisibleAudio = () => { if (document.visibilityState === "visible" && audioRef.current && !audioRef.current.paused) void engine.current?.context.resume(); }; document.addEventListener("visibilitychange", resumeVisibleAudio); return () => document.removeEventListener("visibilitychange", resumeVisibleAudio); }, []);
   const listenShortcut = useRef<(side: 0 | 1) => unknown>(() => false);
@@ -397,7 +400,8 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     document.addEventListener("focusin", trackRegion, true);
     window.addEventListener("keydown", handlePlaybackShortcut, true);
     return () => { window.removeEventListener("keydown", handlePlaybackShortcut, true); document.removeEventListener("pointerdown", trackRegion, true); document.removeEventListener("focusin", trackRegion, true); };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- The interval closer reads current refs; shortcut subscriptions follow personalOnly rather than render callback identity.
+  }, [personalOnly]);
   function snapshotIntervals() {
     const audio=audioRef.current;
     const rows=[...intervalsRef.current], active=activeRef.current, end=audio?.seeking ? lastPlaybackPosition.current : audio?.currentTime;
@@ -439,8 +443,10 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     if (testMode !== "open") audioRef.current?.pause();
     resetHeard();
     if (testMode === "blind" && pair) void chooseRandomSample("random");
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Reset and choose music once per pair/mode; restarting for callback identity would discard current listening evidence.
   }, [pair, testMode]);
   function clearMusicSource(){cancelPassage();curatedFetchRef.current++;sourceSerialRef.current++;hashSerialRef.current++;candidateUrlRef.current=null;measuredLufsRef.current=null;setDuration(0);setPassageOverride(null);setPosition(0); sourceKindRef.current=null;setCandidateUrl(null);setMusicVoteMessage(""); audioRef.current?.pause(); if (urlRef.current) {URL.revokeObjectURL(urlRef.current);urlRef.current=null;} setFile(null);setAnalysis(null);setCuratedPreview(null);if(audioRef.current){audioRef.current.removeAttribute("src");audioRef.current.load();}resetHeard();setHashing(false);setSourceError("");setWaveformZoom(1);setWaveformFocus(null);setLoudnessStatus("Choose a stereo song to measure loudness.");}
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Clear audio only when the source mode changes, never on incidental renders.
   useEffect(()=>{if(testMode==="bring")clearMusicSource();else if(testMode==="open")setOpenMusicSource(sourceKindRef.current==="uploaded"?"own":"pool");},[testMode]);
   // The page remounts this player each round. Reload the song the listener already chose (held in memory only, never stored).
   // Declared after the effect above because that one clears the source on mount in Upload mode.
@@ -482,7 +488,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { passageHistory?: PassageShuffl
     const loudnessGainDb = target !== null && measuredLufsRef.current !== null ? target - measuredLufsRef.current : 0;
     current.preamp.gain.setTargetAtTime(10 ** ((Math.min(fits[0].preamp, fits[1].preamp) - current.balanceBoostDb - 1 + loudnessGainDb) / 20), current.context.currentTime, .03);
   }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Apply the live graph for the listed audio/setup inputs; helper identity must not restart playback.
   useEffect(() => { applyFit(); }, [pair, targets, file, measurement, loudnessTarget, testMode, loudnessStatus, sharedPlaybackTarget]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Own one animation loop per mounted player; drawing and cleanup read the current engine/DOM refs.
   useEffect(() => { drawWaveforms(); return () => { if (waveFrame.current !== null) cancelAnimationFrame(waveFrame.current); if (urlRef.current) URL.revokeObjectURL(urlRef.current); if (engine.current && engine.current.context.state !== "closed") void engine.current.context.close(); }; }, []);
 
   function updateLevelMeter(branch: number, analyser: AnalyserNode | undefined, active: boolean) {

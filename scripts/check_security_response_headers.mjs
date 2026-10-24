@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import{readFileSync}from'node:fs';
 import vm from'node:vm';
 const src=readFileSync('infra/pulumi/private-gate.mjs','utf8');
-const wrapper=src.slice(src.indexOf('export default {'),src.indexOf('\nfunction rankingResponse')).replace('export default','exports.handler =');
+const wrapper=src.slice(src.indexOf('const worker = {'),src.indexOf('\nfunction rankingResponse')).replace('const worker =','exports.handler =');
 let response;
 const context={exports:{},privateGate:{fetch:async()=>response},Headers,Response,URL,withMediaLength:(_,r)=>r};vm.runInNewContext(wrapper,context);
 for(const type of ['text/html; charset=utf-8','application/json','audio/mpeg']){

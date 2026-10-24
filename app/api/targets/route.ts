@@ -4,7 +4,7 @@ import { rankPreferences } from "@/lib/preference-ranking";
 import { dataIdentity, submissionContext } from "@/lib/submission-ownership";
 import { requireParticipantSubject } from "@/lib/admin-contributions";
 import { maintenanceResponse } from "@/lib/maintenance";
-import { count, desc, eq, gte, and } from "drizzle-orm";
+import { count, eq, gte, and } from "drizzle-orm";
 import { getDb } from "@/db";
 import { submissionOwners, targets } from "@/db/schema";
 import { parseCurve } from "@/lib/curves";

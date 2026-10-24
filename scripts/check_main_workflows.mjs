@@ -12,18 +12,18 @@ let checks=0;
 const check=(value,message)=>{assert.ok(value,message);checks++;};
 const text=n=>n==null||typeof n==='boolean'?'':typeof n!=='object'?String(n):Array.isArray(n)?n.map(text).join(''):text(n.props?.children);
 const all=(n,fn)=>!n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(x=>all(x,fn)):[...(fn(n)?[n]:[]),...all(n.props?.children,fn)];
-function mount(path,{globals={},imports={},audio,props={}}={}){
- const hooks=[],effects=[],events=new Map();let index=0,tree,live=true,late=0;
+function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}={}){
+ const hooks=[],effects=[],events=new Map(),timers=[],updates=[];let index=0,tree,live=true,late=0;
  const React={
-  useState(initial){const i=index++;if(!hooks[i])hooks[i]={value:typeof initial==='function'?initial():initial};return[hooks[i].value,next=>{if(!live)late++;hooks[i].value=typeof next==='function'?next(hooks[i].value):next;}];},
+  useState(initial){const i=index++;if(!hooks[i])hooks[i]={value:typeof initial==='function'?initial():initial};return[hooks[i].value,next=>{if(!live)late++;if(queueFunctional&&typeof next==='function')updates.push(()=>{hooks[i].value=next(hooks[i].value);});else hooks[i].value=typeof next==='function'?next(hooks[i].value):next;}];},
   useRef(initial){const i=index++;if(!hooks[i])hooks[i]={current:initial};return hooks[i];},
   useMemo(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j])))hooks[i]={value:fn(),deps};return hooks[i].value;},
-  useCallback(fn,deps){return React.useMemo(()=>fn,deps);},
+  useCallback(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j])))hooks[i]={value:fn,deps};return hooks[i].value;},
   useEffect(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j]))){const cleanup=hooks[i]?.cleanup;hooks[i]={deps};effects.push(()=>{cleanup?.();hooks[i].cleanup=fn();});}},
  };
  const jsx=(type,props)=>{if(props?.ref&&typeof type==='string')props.ref.current=type==='audio'?audio:{focus(){}};return{type,props};};
  const storage=new Map();
- const window={location:{search:''},addEventListener(n,fn){if(!events.has(n))events.set(n,new Set());events.get(n).add(fn);},removeEventListener(n,fn){events.get(n)?.delete(fn);},setInterval(){return 1;},clearInterval(){}};
+ const window={location:{search:''},addEventListener(n,fn){if(!events.has(n))events.set(n,new Set());events.get(n).add(fn);},removeEventListener(n,fn){events.get(n)?.delete(fn);},setInterval(fn,delay){timers.push({fn,delay});return timers.length;},clearInterval(){}};
  const env={console,Error,URL,Blob,AbortController,Date,JSON,URLSearchParams,queueMicrotask,setTimeout(){},clearTimeout(){},window,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},...globals};
  const cache=new Map();
  function load(file){if(cache.has(file))return cache.get(file);const mod={exports:{}};cache.set(file,mod.exports);const req=id=>{
@@ -36,13 +36,13 @@ function mount(path,{globals={},imports={},audio,props={}}={}){
   return require(id);
  };vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{...env,require:req,module:mod,exports:mod.exports});cache.set(file,mod.exports);return mod.exports;}
  const Component=load(path).default;
- const h={render(){index=0;tree=Component(props);while(effects.length)effects.shift()();return tree;},find(fn){const nodes=all(tree,fn);assert.equal(nodes.length,1,'One rendered element expected');return nodes[0];},button(label){return this.find(n=>n.type==='button'&&text(n)===label);},get tree(){return tree;},events,storage,get late(){return late;},unmount(){live=false;for(const hook of hooks)hook?.cleanup?.();},load};h.render();return h;
+ const h={render(){while(updates.length)updates.shift()();index=0;tree=Component(props);while(effects.length)effects.shift()();return tree;},find(fn){const nodes=all(tree,fn);assert.equal(nodes.length,1,'One rendered element expected');return nodes[0];},button(label){return this.find(n=>n.type==='button'&&text(n).trim()===label);},get tree(){return tree;},events,timers,storage,get late(){return late;},unmount(){live=false;for(const hook of hooks)hook?.cleanup?.();},load};h.render();return h;
 }
-function tuning({blocked=false}={}){
+function tuning({blocked=false,queueFunctional=false}={}){
  const jobs=[],requests=[],play=deferred();const node=()=>({connect(){},disconnect(){},frequency:{value:0},gain:{value:0},Q:{value:0}});
  const audio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},play(){this.paused=false;return play.promise;}};
  class AudioContext {state='running';destination={};createGain=node;createBiquadFilter=node;createMediaElementSource=node;createAnalyser(){return{...node(),fftSize:0};}resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}}
- const h=mount('app/preference-tuning/page.tsx',{audio,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
+ const h=mount('app/preference-tuning/page.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
  h.render();return Object.assign(h,{audio,jobs,requests,play,choose(name){h.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[{name}]}});h.render();},wave(){return h.find(n=>n.type==='@/components/track-waveform').props;}});
 }
 {
@@ -88,5 +88,16 @@ function tuning({blocked=false}={}){
 {
  const h=mount('components/embed-create.tsx',{globals:{location:{origin:'https://fixture.invalid'},localStorage:{getItem(){return null;},setItem(){throw Error('quota');}},fetch:async(url,options)=>({ok:true,json:async()=>options?.method==='POST'?{id:'synthetic',manageKey:'synthetic-key'}:{targets:[{id:'a',name:'A'},{id:'b',name:'B'}]}})}});
  await flush();h.render();for(const input of all(h.tree,n=>n.type==='input'&&n.props.type==='checkbox'))input.props.onChange();h.render();h.button('Create shootout').props.onClick();await flush();h.render();check(text(h.tree).includes('Copy or bookmark the private results link before leaving'),'Creation warns when its private key is not saved');check(h.find(n=>n.type==='input'&&n.props['aria-label']==='Private results link').props.value.endsWith('#key=synthetic-key'),'Creation still exposes a recoverable private link when storage fails');h.unmount();
+}
+{
+ const h=tuning({queueFunctional:true});await flush();h.render();const bass=()=>h.find(n=>n.type==='input'&&n.props['aria-label']==='Bass');bass().props.onChange({target:{value:'1'}});bass().props.onChange({target:{value:'5'}});h.render();h.button('Undo 2').props.onClick();h.render();check(bass().props.value===1,'Batched tuning edits capture each previous value before queued history updates');h.button('Undo 1').props.onClick();h.render();check(bass().props.value===0,'Undo restores the original value after batched edits');h.button('Redo 2').props.onClick();h.render();check(bass().props.value===1,'Redo keeps the correct next edit after batched changes');h.unmount();
+}
+{
+ let now=100000;class ClockDate extends Date{static now(){return now;}}
+ const h=mount('components/activity-monitoring-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({events:[{id:'fixture',subject_id:'synthetic',session_id:'fixture',test_active:1,created_at:100000,route:'/synthetic',event_type:'heartbeat',listener_label:'Fixture'}],next:null,hasMore:false,retentionDays:30,activeWindowSeconds:90})})}});await flush();h.render();check(text(h.tree).includes('1 session currently reporting'),'Fresh activity is initially marked active');now=191000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(text(h.tree).includes('0 sessions currently reporting'),'Activity ages out on a clock tick without a fetch or another user action');h.unmount();
+}
+{
+ let now=100000;class ClockDate extends Date{static now(){return now;}}
+ const h=mount('components/yinyangeq-account-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({created:true,devices:[],snapshots:[],captures:[],grants:[{id:'fixture',label:'Synthetic expiry grant',expires_at:101000}]})})}});await flush();h.render();check(text(h.tree).includes('Synthetic expiry grant'),'A current sign-in grant is displayed');now=102000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(!text(h.tree).includes('Synthetic expiry grant'),'Expired sign-in grant disappears without interaction');h.unmount();
 }
 console.log(`PASS ${checks} main workflow regressions: actual Tuning, music votes, private links, profile pagination and data erasure handlers; synthetic fixtures only.`);

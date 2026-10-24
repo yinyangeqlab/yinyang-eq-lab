@@ -1,11 +1,12 @@
 "use client";
+import {navigateFresh} from "@/lib/browser-navigation";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 export default function PrivacyEvents() {
   const pathname = usePathname();
   useEffect(() => {
     let handled = false;
-    const refresh = () => { if (!handled) { handled = true; window.location.assign("/my-data?browser-cleared=1"); } };
+    const refresh = () => { if (!handled) { handled = true; navigateFresh("/my-data?browser-cleared=1"); } };
     const channel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("yinyang-privacy-erasure") : null;
     if (channel) channel.onmessage = refresh;
     const syncChannel = typeof BroadcastChannel !== "undefined" ? new BroadcastChannel("yinyang-browser-sync") : null;

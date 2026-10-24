@@ -13,6 +13,7 @@ const same=(a:unknown,b:unknown)=>JSON.stringify(a)===JSON.stringify(b);
 export default function AccountAutoSync(){
  const activity=useAccountSyncActivity();
  const pathname=usePathname(),[status,setStatus]=useState(''),[conflicts,setConflicts]=useState<string[]>([]),[refresh,setRefresh]=useState(false),[dismissed,setDismissed]=useState(false);
+ // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
  useEffect(()=>{try{setDismissed(sessionStorage.getItem('yinyang-hide-synced-notice')==='true');}catch{/* Hiding this notice remains available without session storage. */}},[]);
  useEffect(()=>{
  // Check, heartbeat and backoff times live in localStorage so page changes, refreshes and other tabs share them (not account-synced).

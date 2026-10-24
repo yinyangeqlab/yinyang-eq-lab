@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
-const {shortcutDecision}=module.exports;
+const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+const {shortcutDecision}=fixtureModule.exports;
 // A tiny stand-in for an element: which selectors it satisfies through closest(), and whether it is keyboard-focused.
 const el=(kinds)=>({closest:s=>kinds.some(k=>s.split(',').some(p=>p.trim().startsWith(k)||p.includes(`[role='${k}']`)))?{}:null});
 const ctx=(o={})=>({scope:'everywhere',singleKey:true,modalOpen:false,regionActive:true,mouseFocused:false,...o});

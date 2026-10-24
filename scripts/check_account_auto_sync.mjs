@@ -6,7 +6,7 @@ import vm from 'node:vm';import ts from 'typescript';
 import {getAccountSyncActivity,setAccountSyncActivity} from '../lib/account-sync-activity.ts';
 import * as transfer from '../lib/account-sync-transfer.mjs';import * as cache from '../lib/account-sync-cache.mjs';
 import * as sync from '../lib/account-sync.mjs';import * as deviceSync from '../lib/device-sync.mjs';
-import{VOTE_DATA_NOTICE_VERSION}from'../lib/vote-data-notice.ts';import{ACTIVITY_MONITORING_NOTICE_VERSION}from'../lib/activity-monitoring.ts';import{PERSONAL_RESEARCH_NOTICE_VERSION}from'../lib/personal-research-notice.ts';import{COMMUNITY_NOTICE_VERSION}from'../lib/community-notice.ts';import {validateSyncPayload} from '../lib/browser-sync.mjs';
+import {validateSyncPayload} from '../lib/browser-sync.mjs';
 const key='target-lab-trials',val=rows=>({[key]:JSON.stringify(rows)});
 let result=sync.mergeAccountValues(val([{id:'a',x:0}]),val([{id:'a',x:0},{id:'b'}]),val([{id:'a',x:0},{id:'c'}]));assert.deepEqual(JSON.parse(result.values[key]).map(row=>row.id).sort(),['a','b','c']);assert.equal(result.conflicts.length,0);
 result=sync.mergeAccountValues(val([{id:'a'},{id:'b'}]),val([{id:'b'}]),val([{id:'a'},{id:'b'},{id:'c'}]));assert.deepEqual(JSON.parse(result.values[key]).map(row=>row.id).sort(),['b','c'],'offline deletion survives independent append');

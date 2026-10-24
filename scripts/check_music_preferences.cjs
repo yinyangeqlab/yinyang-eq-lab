@@ -5,10 +5,10 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 function load(file, imports = {}, nodeEnv = "development") {
-  const module = { exports: {} };
+  const fixtureModule = { exports: {} };
   const code = ts.transpileModule(fs.readFileSync(path.join(root, file), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
-  vm.runInNewContext(code, { module, exports: module.exports, require: id => { if (id in imports) return imports[id]; throw Error(`Unexpected import: ${id}`); }, Response, Set, Date, process: {env:{NODE_ENV:nodeEnv}} });
-  return module.exports;
+  vm.runInNewContext(code, { module: fixtureModule, exports: fixtureModule.exports, require: id => { if (id in imports) return imports[id]; throw Error(`Unexpected import: ${id}`); }, Response, Set, Date, process: {env:{NODE_ENV:nodeEnv}} });
+  return fixtureModule.exports;
 }
 const { rankMusic, musicCommunityRank, musicRotation, musicReview, playbackGain, playbackTarget } = load('lib/music-preferences.ts');
 const json = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));

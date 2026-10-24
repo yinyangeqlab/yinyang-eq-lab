@@ -19,7 +19,7 @@ export async function POST(request:Request){try{
  return Response.json(await setProfileEntry(env.DB!,user.subjectId,kind,id,body.state as "published"|"hidden"|"draft",body.includeFiles===true,String(body.previewHash||"")),{headers:profileHeaders});
 }catch(error){return profileFailure(error);}}
 export async function DELETE(request:Request){try{
- profileOrigin(request);const user=await identity(),body=await readJsonObject(request,2048);if(body.confirmation!=="DELETE PRIVATE JOURNAL ENTRY")throw new RequestInputError("Confirm permanent journal deletion.",400);
+ profileOrigin(request);await identity();const body=await readJsonObject(request,2048);if(body.confirmation!=="DELETE PRIVATE JOURNAL ENTRY")throw new RequestInputError("Confirm permanent journal deletion.",400);
  const profile=await requireProfileAccount(env.DB!);const id=String(body.sourceId||"");const event=await env.DB!.prepare("SELECT record_kind FROM owner_profile_events WHERE profile_slug=? AND id=? AND record_kind IN ('browser-result','music')").bind(profile.slug,id).first();if(!event)throw new RequestInputError("Journal entry not found.",404);
  await env.DB!.batch([
   env.DB!.prepare("DELETE FROM owner_profile_snapshots WHERE profile_slug=?").bind(profile.slug),

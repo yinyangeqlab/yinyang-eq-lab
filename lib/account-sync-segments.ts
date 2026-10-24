@@ -105,7 +105,7 @@ export async function syncPartPage(db: D1Database, account: SyncAccount, row: Sy
     return { segmented: true, ...state, parts, nextPart: rows.length > 2 && last ? JSON.stringify([last.key, last.entry, last.part]) : null };
 }
 export async function storedAccountValues(db: D1Database, account: SyncAccount, row: SyncState) { if (!segmentedHead(row.payload))
-    return validateAccountValues(JSON.parse(row.payload)); const parts: Part[] = []; let page = await syncPartPage(db, account, row), sections = page!.sections; for (;;) {
+    return validateAccountValues(JSON.parse(row.payload)); const parts: Part[] = []; let page = await syncPartPage(db, account, row); const sections = page!.sections; for (;;) {
     parts.push(...page!.parts);
     if (!page!.nextPart)
         break;

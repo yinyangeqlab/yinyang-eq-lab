@@ -1,5 +1,5 @@
 import { publicTargetPredicate } from "@/lib/public-targets";
-import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { eq, and } from "drizzle-orm";

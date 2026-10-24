@@ -1,5 +1,5 @@
 import {storedAccountValues} from '@/lib/account-sync-segments';
-import {validateAccountValues} from '@/lib/account-sync.mjs';
+
 export async function inspectAccountSync(db:D1Database,slug:string,request:Request){
  const row=await db.prepare('SELECT epoch,revision,initialized,payload,updated_at FROM owner_account_sync WHERE profile_slug=?').bind(slug).first<{epoch:string;revision:number;initialized:number;payload:string;updated_at:number}>();
  const profile=await db.prepare('SELECT subject_id FROM owner_public_profiles WHERE slug=?').bind(slug).first<{subject_id:string}>();

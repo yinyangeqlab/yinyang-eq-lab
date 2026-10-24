@@ -375,7 +375,7 @@ const privateGate = {
 
 // Diagnostics for verifying selective routing without logging visitor data.
 // Direct static delivery never executes this wrapper and has no such header.
-export default {
+const worker = {
   async fetch(request, env, context) {
     const response = await privateGate.fetch(request, env, context);
     const headers = new Headers(response.headers);
@@ -397,3 +397,4 @@ function rankingResponse(response, state) {
   headers.set("X-Ranking-Cache", state);
   return new Response(response.body, { status: response.status, headers });
 }
+export default worker;

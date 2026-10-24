@@ -14,6 +14,7 @@ export default function CurveCreditsPage() {
 
   return <main className="curve-credits">
     <header className="credits-header">
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages, @next/next/no-img-element -- Use full-document navigation so access checks and unsaved-listening beforeunload guards run. This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
       <a href="/" className="credits-brand"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ</em></span></a>
       <nav aria-label="Credits navigation"><a href="/shootout">Tournament</a><a href="/music-library">Listening pool</a></nav>
     </header>

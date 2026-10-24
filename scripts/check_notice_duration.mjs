@@ -40,7 +40,7 @@ const serviceJs=ts.transpileModule(serviceSource,{compilerOptions:{target:ts.Scr
 const fixed=1800000000000;let stored=null;
 const service=vm.runInNewContext(serviceJs+';({publishServiceStatus})',{
  ...maintenanceOptions,Response,Request,crypto,Date:class extends Date{static now(){return fixed;}},
- env:{DB:{prepare(query){return {bind(...args){return {async run(){stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async first(){return stored}}}}}
+ env:{DB:{prepare(_query){return {bind(...args){return {async run(){stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async first(){return stored}}}}}
 });
 assert.equal((await service.publishServiceStatus({...body,durationMinutes:150})).expiresAt,fixed+150*60000);
 assert.equal((await service.publishServiceStatus({...body,hours:2})).expiresAt,fixed+2*3600000);
