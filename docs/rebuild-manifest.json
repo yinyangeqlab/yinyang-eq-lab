@@ -934,11 +934,11 @@
     },
     {
       "path": "components/tournament-mode-tabs.css",
-      "sha256": "1c1d8cbd2ecb6d49ea31e78ad28d59d6d84497bbd5cf9c372b6662f45158c27b"
+      "sha256": "ce4daf83842772390bb8b0b4a9d7dba0c49a23769f04bbcd7490f67739a6a267"
     },
     {
       "path": "components/tournament-mode-tabs.tsx",
-      "sha256": "aa741cba2705102acef7a00b821c3dc5f07e9537dd5e54082e239e57c494ff59"
+      "sha256": "939fe67d770cd2edd010a2408ef45058cc75fd75f12e474864e16c68d0d259c0"
     },
     {
       "path": "components/track-waveform.tsx",
