@@ -2,7 +2,7 @@
 
 The Apache License 2.0 in [LICENSE](LICENSE) applies to the original software source code in this repository. It allows use, modification, and redistribution of that code, including commercial use, subject to Apache 2.0's terms and notices.
 
-The Apache license does **not** grant rights to the YinYang EQ League or Yin Yang EQ Lab names, wordmarks, logos, icons, favicons, brand colors or visual identity. These brand assets and marks are reserved by Yin Yang EQ Lab. Do not use them to brand a fork, product, or service, or to suggest endorsement or affiliation. Apache 2.0 section 6 allows reasonable, customary use of names to describe the origin of the software and reproduce its NOTICE; it does not grant broader brand rights.
+The Apache license does **not** grant rights to the YinYang EQ or Yin Yang EQ Lab names (including earlier project names), wordmarks, logos, icons, favicons, brand colors or visual identity. These brand assets and marks are reserved by Yin Yang EQ Lab. Do not use them to brand a fork, product, or service, or to suggest endorsement or affiliation. Apache 2.0 section 6 allows reasonable, customary use of names to describe the origin of the software and reproduce its NOTICE; it does not grant broader brand rights.
 
 The following are also outside the Apache code grant unless a file or accompanying notice says otherwise:
 
