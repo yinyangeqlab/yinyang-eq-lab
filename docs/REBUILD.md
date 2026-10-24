@@ -1,3 +1,9 @@
+# Update123 runtime verified; recovery registration pending — October 24, 2026
+
+Lint/runtime fixes are deployed behind persistent owner-only maintenance. Source-only encrypted off-device recovery registration requires owner approval for update123; automatic review limited the prior approval to update122. Existing data snapshots/timestamps are preserved; no fresh export or new snapshot. Matching source metadata/hosted validation remains pending, and the scheduled runner must refuse a mismatched baseline. Read LIVE_STATE.md, docs/LINT_POLICY.md and docs/releases/update123-verification.json. Original immutable provenance and recovery-toolchain bytes remain preserved.
+
+## Earlier records (historical)
+
 # Update122 main workflow fixes verified — October 24, 2026
 
 Main workflow fixes are deployed under persistent owner-only maintenance. Owner-approved source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update122-verification.json; prior immutable provenance is preserved.

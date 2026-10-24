@@ -1,6 +1,6 @@
 # Lint cleanup — October 24, 2026
 
-Status: prepared and tested; verified rollout/recovery records pending.
+Status: runtime update123 deployed and verified under persistent admin-only maintenance; source-only recovery upload awaits owner approval.
 
 Baseline: scrubbed main `7121ee23b1dfeecfe00d9626880ba63a0df517eb`, live update122. Original canonical checkout/drafts and Claude setup files remain preserved. Owner authorized remaining lint fixes, tests and any runtime deployment under the persistent owner-only lock.
 
@@ -25,3 +25,7 @@ Synthetic browser review used actual components without a production account: de
 This is a code-only release with unchanged schema/media/recovery semantics. Keep owner-only maintenance enabled with no automatic expiry. Deploy only the existing app Worker with prior browser assets retained. Source-only encrypted off-device recovery registration must preserve existing data snapshots/timestamps; do not create a fresh participant-data export for lint cleanup. Update all release/handoff records only after verified deployment.
 
 Release-scan correction: the initial local commit preceded a failed scan of two already-public in-memory SQL fixtures. It was not published/deployed. Exact reviewed path/blob hashes now permit only those synthetic setup rows; every credential/path check remains active and changed/new fixtures fail closed. The actual scanner regression passes in a disposable index. The commit is corrected and rescanned before any publication/deployment.
+
+## Verified runtime rollout
+
+Update123 from `74d3ab76daac921ab01d5d4a13dfa5a052a05a73` passed real HTTP admin authentication, five changed routes, 24 anonymous denials, all 957 exact JS/CSS assets and gate/helper module checks. Final preview: four unchanged resources. Source-only recovery registration was rejected before execution because automatic approval review requires a new approval for the update123 payload. No upload or new data export occurred. Existing data snapshots/timestamps are retained; matching source metadata and hosted validation remain pending. The scheduled runner must refuse a mismatched baseline until that handover succeeds. Source and runtime records are published through PR #15; GitHub records merge state. The site remains closed except authenticated admins.
