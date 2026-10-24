@@ -8,12 +8,13 @@ import SiteBetaNotice from "@/components/site-beta-notice";
 import SiteDataFooter from "@/components/site-data-footer";
 
 // Shareable shootout pages are public and anonymous, and /embed pages run inside
-// other sites. They must not load the sidebar shell, account sync, cross-tab
+// other sites. The private EQ page has its own full-navigation header and
+// memory-only session guard. These pages must not load the sidebar shell, account sync, cross-tab
 // privacy redirects, service popups or the site footer.
 const STANDALONE = /^\/(?:embed|s)\/[a-z0-9]+(?:\/|$)/;
 
 export function isStandalonePath(pathname: string | null): boolean {
-  return pathname !== null && (STANDALONE.test(pathname) || pathname === "/share-shootout");
+  return pathname !== null && (STANDALONE.test(pathname) || pathname === "/share-shootout" || pathname === "/eq-compare");
 }
 
 export default function SiteChrome({ children }: { children: ReactNode }) {

@@ -134,3 +134,5 @@ LIVE_RELEASE.json, production deployment and recovery provenance are unchanged.
 ## Reviewed locked-release candidate — October 24, 2026
 
 Reconciled onto update118 with the owner-only maintenance gate unchanged. Preset rename/readiness, original reveal time, leave-page protection through download, accessible progress, decoded-audio bounds and independent per-song randomization are covered by 83 focused checks. Desktop1280px/narrow360px synthetic browser interaction and actual Web Audio rendering passed. Browser-native dropdown expansion and keyboard selection passed with explicit dark computed option colors; popup pixel capture remains unavailable. No production browser admin/participant session or physical headphone/Safari/iOS certification is claimed. Deployment remains separate until the exact locked plan passes verification.
+
+The private route uses its own full-navigation header and does not mount the site-wide sidebar, Sync or cross-tab redirect effects. This keeps every visible exit under the unsaved-session leave-page guard. Ordinary site routes keep their existing shell and privacy controls. An actual component regression covers both route classes.

@@ -110,4 +110,13 @@ state.newName = 'Renamed imported EQ'; vm.runInContext('rename(newName)', contex
 check(state.preset.name === state.newName && JSON.stringify(state.preset.channels) === JSON.stringify(stereo.channels), 'Renaming an applied preset keeps it ready and preserves every filter');
 state.initialPreset = null; state.preset = null; vm.runInContext('rename("Unapplied draft")', context);
 check(state.preset === null, 'Renaming a dirty draft cannot accidentally apply stale settings');
+// Run the actual site shell selector: the private tool must not mount internal
+// sidebar navigation or account/privacy effects that can discard its session.
+const shellSource = readFileSync(new URL('../components/site-chrome.tsx', import.meta.url), 'utf8');
+const shellModule = { exports: {} }; let shellPath = '/eq-compare';
+const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
+vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id.startsWith('@/components/') ? { default: ({children}) => require('react').createElement('aside', {'data-site-effect': id}, children) } : require(id) });
+const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, null, require('react').createElement('main', null, 'Private tool')));
+check(shellMarkup() === '<main>Private tool</main>', 'Private EQ mounts only its own navigation and no Sync/sidebar/privacy effects');
+shellPath = '/home'; check(shellMarkup().includes('data-site-effect'), 'Ordinary site routes retain the existing shell and privacy controls');
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

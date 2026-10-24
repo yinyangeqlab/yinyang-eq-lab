@@ -890,7 +890,7 @@
     },
     {
       "path": "components/site-chrome.tsx",
-      "sha256": "d71c5b70c06c9348a0e197f0937f6ee0292c0cc01f7bd2517cef72e777054e4c"
+      "sha256": "9db2adb6b949f9763848ae38235db5a42eed64c08ae6dc481abe3bdaa6c4fbb7"
     },
     {
       "path": "components/site-data-footer.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "d783907e97836adc261870a17f5c897bc74af988bd1ce57fa3c8e50e933cf605"
+      "sha256": "dfe3b9e7cbbc9216f3ebcc18aa96c9ca945ebfcc056d82825d2309e1ffd95375"
     },
     {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
@@ -2430,7 +2430,7 @@
     },
     {
       "path": "scripts/check_blind_eq.mjs",
-      "sha256": "01855acfdf6ec5bc15ce81652b9b66aa1d66b427528a151f3f5e8f507a849857"
+      "sha256": "f8b83011e6330de6b4a44aaed6b53e3ec084c225184276417440ca21c6e058da"
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
