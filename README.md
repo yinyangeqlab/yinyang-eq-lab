@@ -1,6 +1,8 @@
 <div align="center">
 
-# YinYang EQ Lab
+# YinYang EQ
+
+**by Yin Yang EQ Lab**
 
 ### Find your sound. Let your ears decide.
 
@@ -8,21 +10,13 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 
 **Public beta · 0.2.0-beta.1** — [About this version](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
-**[Explore the site](https://yinyangeq.com) · [Watch the demo](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/demo-2026-10-17) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
+**[Explore the site](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
-[![Vibe coded with GPT Codex](https://img.shields.io/badge/vibe_coded_with-GPT_Codex-aea1ff?style=flat-square)](#made-with-gpt-codex)
+**Development assistance: OpenAI Codex and Anthropic Claude.**
 
 </div>
 
-(retired demo)
-
-<div align="center">
-
-**54.6 seconds · 1080p · real browser interaction**  
-[Watch or download the cinematic trailer →]((retired demo))
-
-</div>
 
 ## Try the current beta
 
@@ -32,26 +26,13 @@ The current beta refreshes Welcome, listening setup and playback, Personal Tourn
 
 Use **Space** to play or pause, **1 / 2** to select A or B, **S** to switch sides, and **← / →** to seek a quarter second in the active comparison. Shortcuts respect typing, form controls, and open dialogs. See [all shortcuts](https://yinyangeq.com/shortcuts), or [report a beta bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new) with your browser, device, and steps to reproduce it.
 
-The videos and screenshots below show the **October 17 interface**, before the current beta refresh. They introduce the listening workflow; their layouts and labels are historical.
-
-## Desktop and mobile layouts
-
-Take a quick, casual tour of the phone layout: **45 seconds · vertical 9:16 · actual browser interactions**.
-
-(retired demo)
-
-**[Watch or download the mobile walkthrough →]((retired demo))**
-
-A historical look at the October 17 interface, including comparisons, measurements, the music library, and Preference Tuning. The current site also includes Personal Tournament, Research Rankings, Community Preferences, and optional account sync. [Video and music credits](docs/MOBILE_DEMO.md).
-
-**Share to Discord:** [Trailer]((retired demo)) · [Mobile demo]((retired demo)) · [Copy short links and credits →](docs/VIDEOS.md) · [Watch both in the video gallery](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/2). Inline players use smaller streaming copies; the links above retain the 1080p originals.
+The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
 ## Hear the difference
 
 What happens when the same song meets two different headphone targets? YinYang EQ lets you switch between them, listen, and choose **Prefer A**, **Prefer B**, or **Unsure / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
 
 
-*One track, two target EQs. Switch sides during playback, hide or reveal curves in open mode, and add optional listening notes.*
 
 | Mode | How it works | Where choices go |
 | --- | --- | --- |
@@ -92,11 +73,11 @@ Optional **private account sync** keeps saved results, measurements, custom targ
 
 Sync transfers saved data in resumable pieces, replacing the former whole-account 512 KB cap; browser and service storage limits still apply. The compact healthy-sync notice can be dismissed without pausing sync. Errors, conflicts, and actions that need your attention remain visible. **My data** distinguishes saved On, Off, and partial permissions.
 
-The screenshots and trailer show demo sessions captured on October 17, 2026. Target names, track availability, and counts can change. Media credits are in [docs/DEMO.md](docs/DEMO.md).
+The remaining screenshots show demo sessions captured on October 17, 2026. Target names, track availability, and counts can change. Media credits are in [docs/DEMO.md](docs/DEMO.md).
 
-## Made with GPT Codex
+## Development assistance
 
-**This project was vibe coded by Yin Yang EQ Lab with GPT Codex.** Yin Yang EQ Lab directed the project, reviewed its releases, and used Codex to help write and revise code and documentation. Third-party components and data keep their original credits and licenses.
+**Yin Yang EQ Lab directs and maintains this project, with assistance from OpenAI Codex and Anthropic Claude.** Both tools have assisted with code, documentation and review. Yin Yang EQ Lab remains responsible for project decisions and releases. Third-party components and data keep their original credits and licenses.
 
 The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Cloudflare Workers, and D1**. The browser handles interactive curves and audio processing; the server stores shared records and serves the application.
 

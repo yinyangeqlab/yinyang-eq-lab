@@ -34,7 +34,8 @@
       "deployedUpdate": 111,
       "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005"
     },
-    "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged."
+    "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged.",
+    "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment."
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -72,7 +73,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "c0f4ab092a78021c0d8ef886db6e63d9d3ad21199e07f239bcaa8b8be455af22"
+      "sha256": "5db64eba6dccb80833d2fa1c77c7a04d7dc8b2f9546338b04921e4ff43ffb02e"
     },
     {
       "path": "app/account-sync/layout.tsx",
