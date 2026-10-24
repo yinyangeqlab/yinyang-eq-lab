@@ -5,7 +5,7 @@ import {personalSharingLabel} from "@/lib/personal-sharing-notice";
 import HistoryCapture from "@/components/yinyangeq-history-capture";
 import ListenerNicknamePanel from "@/components/listener-nickname-panel";
 import { useInvitesEnabled } from "@/components/invite-mode";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Trial } from "@/components/results-profile";
 import { clearSiteBrowserData, comparisonLookup, deleteBrowserTrial, notifySharingChoicesChanged } from "@/lib/browser-data";
 import "./style.css";
@@ -17,22 +17,26 @@ type RecordRow = { kind: string; id: string; title: string; createdAt: number; l
 type ActivityRow = { id:string; event_type:string; route:string; shootout_tab:string|null; test_mode:string|null; test_active:number; created_at:number };
 type MyData = {syncEnabled:boolean; protectedAccount?:boolean; personalResearchEnabled:boolean; communityEnabled:boolean; nickname: string; records: RecordRow[]; submissionsEnabled: boolean; shareMusic: boolean; agreementVersion?:string|null; agreedAt?:number|null; activityMonitoringEnabled:boolean; activityMonitoringVersion?:string|null; activityLogs:ActivityRow[]; activityLogLimit:number; sharedAdmin: boolean; testOnly?:boolean };
 export default function MyDataPage() {
+  const requestVersion = useRef(0), erasing = useRef(false), alive = useRef(true);
   const [ownerConfirmation,setOwnerConfirmation]=useState("");
   const invites = useInvitesEnabled();
   const [data,setData] = useState<MyData | null>(null), [error,setError] = useState(""), [message,setMessage] = useState(""), [busy,setBusy] = useState(false), [loading,setLoading] = useState(true);
   const [local,setLocal] = useState<Trial[]>([]), [query,setQuery] = useState(""), [pending,setPending] = useState<RecordRow | "all" | "browser" | null>(null), [confirmation,setConfirmation] = useState("");
   const loadLocal = useCallback(() => { try { setLocal(JSON.parse(localStorage.getItem("target-lab-trials") || "[]")); } catch { setError("Some browser history could not be read. You can still clear this browser’s site data."); } }, []);
   const load = useCallback(async () => {
+    if (!alive.current || erasing.current) return;
+    const version = ++requestVersion.current;
     setLoading(true); setError("");
-    try { const response = await fetch("/api/my-data", { cache:"no-store" }); const result = await response.json() as MyData & {error?:string}; if (!response.ok) throw new Error(result.error || "Sign in to manage your submitted data."); setData(result); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : "Data could not be loaded."); }
-    finally { setLoading(false); }
+    try { const response = await fetch("/api/my-data", { cache:"no-store" }); const result = await response.json() as MyData & {error?:string}; if (!response.ok) throw new Error(result.error || "Sign in to manage your submitted data."); if (alive.current && version === requestVersion.current) setData(result); }
+    catch (cause) { if (alive.current && version === requestVersion.current) setError(cause instanceof Error ? cause.message : "Data could not be loaded."); }
+    finally { if (alive.current && version === requestVersion.current) setLoading(false); }
   }, []);
+  useEffect(() => { const requests = requestVersion; alive.current = true; return () => { alive.current = false; requests.current++; }; }, []);
   useEffect(() => { const trial = new URLSearchParams(window.location.search).get("trial"); if (trial) setQuery(trial); void load(); loadLocal(); }, [load,loadLocal]);
   useEffect(()=>{const refresh=()=>{void load();loadLocal();};window.addEventListener('yinyang-data-changed',refresh);window.addEventListener('focus',refresh);window.addEventListener('storage',refresh);return()=>{window.removeEventListener('yinyang-data-changed',refresh);window.removeEventListener('focus',refresh);window.removeEventListener('storage',refresh);};},[load,loadLocal]);
   function choose(row: typeof pending) {setOwnerConfirmation("");setPending(row);setConfirmation("");setError("");setMessage("");}
   async function erase() {
-    if (!pending || busy) return; setBusy(true);setError("");
+    if (!pending || erasing.current) return; erasing.current = true; requestVersion.current++; setLoading(false); setBusy(true);setError("");
     try {
       if (pending === "browser") { if(data?.syncEnabled)localStorage.setItem("yinyang-account-sync-paused","true"); await clearSyncBase(localStorage); clearSiteBrowserData(); if(data?.syncEnabled)localStorage.setItem("yinyang-account-sync-paused","true"); loadLocal(); setMessage(data?.syncEnabled?"This browser’s saved site data was cleared. Automatic sync is paused here; the account copy and server submissions are retained.":"This browser’s saved site data was cleared. Server submissions were not changed."); }
       else {
@@ -40,11 +44,11 @@ export default function MyDataPage() {
         const response = await fetch("/api/my-data", { method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({... (all?{scope:"all",confirmation}:{scope:"one",kind:pending.kind,id:pending.id,confirmation}),includeOwnerAccount:data?.protectedAccount===true,ownerAccountConfirmation:ownerConfirmation}) });
         const result = await response.json() as {error?:string;browserIds?:string[]}; if(!response.ok) throw new Error(result.error || "Deletion failed.");
         // Clear local copies only after the server confirms successful erasure.
-        if (all) { setData(null); try { clearSiteBrowserData(); loadLocal(); } catch { setError("Server erasure succeeded, but browser storage could not be cleared. Clear this site’s browser data manually."); } setMessage("Data linked to this sign-in was deleted from the active site database, including associated admin notes. This browser’s site data was cleared and access was signed out. Older unlinked records still require admin assistance."); }
-        else { const ids = new Set([pending.id,pending.localId,pending.trialId,...(result.browserIds||[])].filter(Boolean)); for(const row of local) if(ids.has(row.id)||row.serverTrialId && ids.has(row.serverTrialId)) deleteBrowserTrial(row.id); loadLocal(); await load(); notifySharingChoicesChanged(); setMessage("Submission and its linked owned comparison records were permanently deleted. Associated admin notes were erased and shared results will update."); }
+        if (all) { setData(null); let cleared = false; try { clearSiteBrowserData(); loadLocal(); cleared = true; } catch { setError("Server erasure succeeded, but browser storage could not be cleared. Clear this site’s browser data manually."); } setMessage(`Data linked to this sign-in was deleted from the active site database, including associated admin notes. ${cleared ? "This browser’s site data was cleared." : "Browser storage still needs manual clearing."} Access was signed out. Older unlinked records still require admin assistance.`); }
+        else { const ids = new Set([pending.id,pending.localId,pending.trialId,...(result.browserIds||[])].filter(Boolean)); for(const row of local) if(ids.has(row.id)||row.serverTrialId && ids.has(row.serverTrialId)) deleteBrowserTrial(row.id); loadLocal(); erasing.current = false; await load(); notifySharingChoicesChanged(); setMessage("Submission and its linked owned comparison records were permanently deleted. Associated admin notes were erased and shared results will update."); }
       }
       setPending(null);
-    } catch(cause) {setError(cause instanceof Error?cause.message:"Deletion failed. Please try again.");} finally {setBusy(false);}
+    } catch(cause) {setError(cause instanceof Error?cause.message:"Deletion failed. Please try again.");} finally {erasing.current = false;setBusy(false);}
   }
   const required = pending === "all" ? "DELETE ALL MY DATA" : pending === "browser" ? "CLEAR THIS BROWSER" : "DELETE";
   const records = (data?.records || []).filter(row => !query || JSON.stringify(row).toLowerCase().includes(query.toLowerCase())).sort((a,b)=>b.createdAt-a.createdAt);

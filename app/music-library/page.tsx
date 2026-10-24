@@ -80,7 +80,8 @@ export default function MusicLibraryPage() {
         setByTrack(result.byTrack ?? {});
         setAdminTestOnly(result.testOnly===true);
     setDecisions(result.testOnly?adminMusicChoices():result.mine);
-        const saved = JSON.parse(localStorage.getItem("target-lab-music-shortlist-v1") || "{}");
+        let saved: unknown = null;
+        try { saved = JSON.parse(localStorage.getItem("target-lab-music-shortlist-v1") || "{}"); } catch { /* Account votes remain available when the optional browser cache is blocked. */ }
         if (result.signedIn && saved && typeof saved === "object" && !Array.isArray(saved)) {
           const valid = Object.fromEntries(Object.entries(saved).filter(([id, value]) => tracks.some(track => track.url === id) && (value === "keep" || value === "pass"))) as Record<string, "keep" | "pass">;
           if (Object.keys(valid).length && !Object.keys(result.mine).length) setLegacy(valid);
@@ -100,7 +101,7 @@ export default function MusicLibraryPage() {
     setDecisions(result.mine);
     setTotals(result.totals);
         setByTrack(result.byTrack ?? {});
-    localStorage.setItem("target-lab-music-shortlist-v1", JSON.stringify(result.mine));
+    try { localStorage.setItem("target-lab-music-shortlist-v1", JSON.stringify(result.mine)); } catch { /* The server already saved the vote; a cache failure must not invite a retry. */ }
   }
   async function decide(track: Track, value: "keep" | "pass") { await consent.ask(() => void runDecide(track, value)); }
   async function runDecide(track: Track, value: "keep" | "pass") {
