@@ -2557,15 +2557,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "ed8d3904def894b94dba74653dc5773c7cd48163e541d49fdbb9154e20a73fc6"
+      "sha256": "721b8d6cdc6c451cea499c12a530c7c804b84a988dd032e1c6adf49b80e57ccf"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "60ab5552ce936687f99e1ac64c5f0802a88dcf65f36bbee089359461d915e2ef"
+      "sha256": "946f3ecec2dd3415d1ccc14ef13c020c8dd3289ba349e7540b7364ff047bd91f"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "eb4750bee64fbbb2f1d8f90993cd6fcbf6a5d1dd5aa6f1846f2c96a741436145"
+      "sha256": "d6fb6b99a40203c2b8a4ee92ec4d71b99ea999e8126b4b69787eff93ce1d6288"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2581,7 +2581,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "0cb2a3e3787d141e05d2668ad871a5de1b9e04189cabb8ab5fe57bd523335df4"
+      "sha256": "80823a23a074fca5e6e68ffe4eef46764ca49434aa5585ba81a1c352a0b0cce2"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -12146,9 +12146,9 @@
     "canonicalCheckoutOnly": false
   },
   "taskClosure": {
-    "at": "2026-10-24T12:14:41.725507+00:00",
-    "status": "Lint/runtime fixes deployed and verified as update123 under admin-only maintenance; source/records published through PR #15; source-only recovery upload awaits owner approval",
-    "remainingWorkForThisTask": true
+    "at": "2026-10-24T20:36:22.386121+00:00",
+    "status": "Update123 lint/runtime release verified under persistent admin-only maintenance; owner-approved source-only recovery registration, independent reconstruction and hosted validation complete. Documentation-only recovery closeout published separately; no website redeployment.",
+    "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
     "verifiedAt": "2026-10-18T14:51:51.827Z",
@@ -12214,7 +12214,7 @@
     "releaseRecordDocumentationVariant": {
       "path": "docs/rebuild-manifest.json",
       "immutableSourceSha256": "c802afea3d646cb7d728e7850dd04ceb8938566e198d53b8e2f083edf49be5b4",
-      "reason": "Immutable deployed source/build remains unchanged; release-record publication separately records current docs/clone-safe hashes."
+      "reason": "Immutable deployed/recovery source preserves original fingerprints; documentation-only publication separately refreshes current recovery records and clone-safe input hashes."
     }
   },
   "abuseControls": {
@@ -12411,7 +12411,7 @@
   "canonicalDevelopmentRoot": "workspace",
   "liveMirrorRoot": ".",
   "recoveryProcess": {
-    "status": "Update123 deployment verified; source-only encrypted off-device recovery upload requires owner approval after automatic review limited the earlier approval to update122. Existing data snapshots/timestamps are retained. The matching source baseline remains pending and the scheduled runner must refuse a mismatched baseline until registration succeeds.",
+    "status": "Owner-approved update123 source-only registration, independent reconstruction and exact hosted validation passed. Existing encrypted off-device data snapshots and original timestamps are unchanged; no fresh participant-data export or new data snapshot. Daily scheduling is active with the matching source baseline.",
     "liveUpdateUnchanged": 81,
     "canonicalCheckout": "workspace",
     "archive": "archive/legacy-workspaces-20261018",
@@ -12460,23 +12460,23 @@
     "backupExecution": "independent hosted job",
     "localBackupSchedulePaused": true,
     "fullReconstructionVerified": true,
-    "hostedValidationPassed": false,
+    "hostedValidationPassed": true,
     "fullReconstructionCoverage": "All 341 recovery files, exact deployed source/build, original source history and matching schema; synthetic recovery checks passed.",
-    "matchingCurrentReleaseBaseline": false,
+    "matchingCurrentReleaseBaseline": true,
     "newExportDeclinedByOwner": false,
     "priorReleaseTimeExportDeclinesPreserved": true,
     "ownerApprovedMatchingBaselineRefreshAt": "2026-10-20T11:05:36.361227+00:00",
     "sourceOnlyHandover": true,
     "sourceHandoverDataExport": false,
-    "sourceBaselineUpdate": 122,
-    "sourceBaselineVerifiedAt": "2026-10-23T09:28:40.853009+00:00",
-    "metadataValidationPassed": false,
-    "metadataOnlyHandoverVerified": false,
-    "latestHostedRunMode": "scheduled-data-backup",
+    "sourceBaselineUpdate": 123,
+    "sourceBaselineVerifiedAt": "2026-10-24T20:36:22.386121+00:00",
+    "metadataValidationPassed": true,
+    "metadataOnlyHandoverVerified": true,
+    "latestHostedRunMode": "validation-only",
     "latestDataSnapshotUnchanged": true,
     "hostedValidationPending": false,
     "dailyBackupsEnabled": true,
-    "sourceOnlyHandoverPending": true,
+    "sourceOnlyHandoverPending": false,
     "newReleaseValidationDispatched": true,
     "nextScheduledRunMayRefuseBaselineMismatch": false,
     "inspectedReadOnlyHostRecords": 2,

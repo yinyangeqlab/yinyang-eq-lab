@@ -1,6 +1,6 @@
 # Lint cleanup — October 24, 2026
 
-Status: runtime update123 deployed and verified under persistent admin-only maintenance; source-only recovery upload awaits owner approval.
+Status: runtime update123 remains deployed and verified under persistent admin-only maintenance; owner-approved source-only recovery registration, independent reconstruction and exact hosted validation passed.
 
 Baseline: scrubbed main `7121ee23b1dfeecfe00d9626880ba63a0df517eb`, live update122. Original canonical checkout/drafts and Claude setup files remain preserved. Owner authorized remaining lint fixes, tests and any runtime deployment under the persistent owner-only lock.
 
@@ -29,3 +29,7 @@ Release-scan correction: the initial local commit preceded a failed scan of two 
 ## Verified runtime rollout
 
 Update123 from `74d3ab76daac921ab01d5d4a13dfa5a052a05a73` passed real HTTP admin authentication, five changed routes, 24 anonymous denials, all 957 exact JS/CSS assets and gate/helper module checks. Final preview: four unchanged resources. Source-only recovery registration was rejected before execution because automatic approval review requires a new approval for the update123 payload. No upload or new data export occurred. Existing data snapshots/timestamps are retained; matching source metadata and hosted validation remain pending. The scheduled runner must refuse a mismatched baseline until that handover succeeds. Source and runtime records are published through PR #15; GitHub records merge state. The site remains closed except authenticated admins.
+
+## Approved recovery closeout — October 24, 2026
+
+The owner explicitly approved the update123 encrypted source/build registration after the earlier action was rejected before execution. Source-only registration, independent download/reconstruction and the exact matching hosted validation-only run passed. Prior data snapshots and original timestamps are exactly unchanged; no fresh participant-data export, new data snapshot or retention run. Daily scheduling is active with the matching update123 source baseline. The prior pending-source-baseline coverage gap is resolved. This follow-up changes documentation only; the verified application deployment and persistent admin-only lock remain unchanged.
