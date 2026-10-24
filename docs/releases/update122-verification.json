@@ -1,0 +1,91 @@
+{
+  "update": 122,
+  "deploymentVerification": {
+    "at": "2026-10-24T11:15:11.167841+00:00",
+    "revision": "d1a507d614a266bec1c96c3acc0cd2d6bf6f1257",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "e8a527f1-58a1-4455-b2d1-59e99b567bc5",
+    "versions": [
+      {
+        "version_id": "fad429fe-55f3-4f07-ac8f-9cb5fa557e25",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 24,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 921,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true,
+    "versionPageAdminRouteVerified": true,
+    "changedAdminRoutesVerified": [
+      "/preference-tuning",
+      "/my-data",
+      "/my-profile",
+      "/music-library",
+      "/share-shootout"
+    ]
+  },
+  "candidateVerification": {
+    "mainWorkflowChecks": 28,
+    "existingWorkflowSuites": 31,
+    "existingSuitesPassed": true,
+    "blindEqWorkflowChecks": 37,
+    "typescriptPassed": true,
+    "infraTypescriptPassed": true,
+    "buildPassed": true,
+    "fullStaticPackage": true,
+    "protectedRecordings": 224,
+    "retainedPreviousClientFiles": 821,
+    "eslintBaselineErrors": 7,
+    "eslintBaselineWarnings": 6,
+    "eslintCurrentErrors": 7,
+    "eslintCurrentWarnings": 5,
+    "newLintFindings": 0
+  },
+  "browserVerification": {
+    "syntheticOnly": true,
+    "productionBrowserAccountUsed": false,
+    "desktopWidth": 1280,
+    "narrowWidth": 360,
+    "tuningPlaybackPassed": true,
+    "keyboardSelectionPassed": true,
+    "expandedNativeMenusChecked": true,
+    "darkOptionsAndDisabledStylesChecked": true,
+    "horizontalOverflow": false,
+    "blockedStorageFeedbackPassed": true,
+    "unsavedPrivateKeyFragmentRetained": true,
+    "limits": [
+      "Native popup pixels not captured",
+      "No physical-headphone or Safari/iOS certification",
+      "No production participant writes"
+    ]
+  },
+  "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/14",
+  "migrations": [],
+  "newDataSnapshot": false,
+  "recoveryRegistrationPending": false,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "finalPreview": {
+    "same": 4
+  }
+}

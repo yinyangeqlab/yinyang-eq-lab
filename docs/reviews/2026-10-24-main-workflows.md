@@ -1,6 +1,6 @@
 # Main workflow review — October 24, 2026
 
-Status: implementation and local verification complete; deployment verification pending.
+Status: update122 deployed and verified behind the unchanged admin-only maintenance lock; source-only recovery registration and hosted validation passed.
 
 Owner scope: review the remaining main workflows, fix reproducible bugs, test and deploy with owner-only maintenance retained. Baseline: scrubbed main `98d77db8b5416c5128892914a0849f69489a73fb` / deployed update121. Original canonical drafts and Claude setup files are preserved separately.
 
@@ -19,7 +19,7 @@ Reviewed source and existing regressions for welcome/navigation, participation a
 
 `node scripts/check_main_workflows.mjs` executes actual page/component handlers with synthetic storage and deferred transports: 28 checks covering out-of-order audio/data/profile work, unmount, blocked storage, private-key persistence, vote success and erasure feedback. The fixture never accesses production participant records or makes production contributions.
 
-All 31 selected existing workflow suites passed: consent/access/participation (4), Personal Tournament (6), account/browser Sync (8), shareable shootout, target upload/file matching/context (3), playback/free/matched/passage (5), music refresh/local preview (2), and owner-only/per-feature maintenance (2). TypeScript passed. Changed-file ESLint retains seven baseline errors (state-in-effect and Next anchor rules) and six baseline warnings; no new unsuppressed findings. Two targeted state-in-effect exceptions document immediate feedback for failed external storage writes. Final full build and deployment checks are recorded with the release evidence.
+All 31 selected existing workflow suites passed: consent/access/participation (4), Personal Tournament (6), account/browser Sync (8), shareable shootout, target upload/file matching/context (3), playback/free/matched/passage (5), music refresh/local preview (2), and owner-only/per-feature maintenance (2). TypeScript passed. Changed-file ESLint retains seven baseline errors (state-in-effect and Next anchor rules) and five warnings (six on baseline); no new unsuppressed findings. Two targeted state-in-effect exceptions document immediate feedback for failed external storage writes. Final full build and deployment checks are recorded with the release evidence.
 
 Isolated browser review used actual components with synthetic data and audio at desktop and 360px width. Checked Tuning playback, source selection, keyboard target selection, closed/expanded native target/music menus, selected/disabled option styles and dark color scheme, no horizontal overflow, blocked-storage notice and preserved private-results fragment. Native popup pixels are not captured by the in-app screenshot; accessibility expansion and computed option styles were verified. No production admin browser session was used.
 
@@ -28,3 +28,7 @@ Limits: this is a bounded source/regression/UI review, not a claim that every wo
 ## Release and recovery
 
 Prepared as a code-only release behind the existing non-expiring owner-only lock. No migration, media replacement, participant import/export, fresh manual data backup or new data snapshot is required. Matching source-only recovery registration must preserve the existing data recovery timestamps and encrypted off-device coverage. The preserved update121 build and stack state remain the rollback reference; a rollback must retain the owner-only lock.
+
+## Verified rollout
+
+Deployed update122 from `d1a507d614a266bec1c96c3acc0cd2d6bf6f1257`. Real HTTP admin authentication, all five changed workflow routes, 24 anonymous denials, all 921 JS/CSS bytes and exact gate/helper modules passed. Final preview: four unchanged resources. Owner-approved source-only recovery registration, independent reconstruction and exact matching hosted validation passed; prior data snapshots and original timestamps are unchanged. No fresh export. Published through PR #14; GitHub records merge state. The lock has no automatic expiry and reopening still requires the owner.
