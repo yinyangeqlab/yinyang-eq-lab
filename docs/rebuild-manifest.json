@@ -73,7 +73,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "5db64eba6dccb80833d2fa1c77c7a04d7dc8b2f9546338b04921e4ff43ffb02e"
+      "sha256": "442b6c284becbaf8e975b10330d40f110704a56000edd7ae0f43dd1efcb397fe"
     },
     {
       "path": "app/account-sync/layout.tsx",

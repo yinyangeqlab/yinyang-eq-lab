@@ -6,11 +6,11 @@
 
 ### Find your sound. Let your ears decide.
 
-A browser listening lab for headphone EQ: find your personal favorite targets, contribute blind comparisons, and shape your own curve.
+A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
 **Public beta · 0.2.0-beta.1** — [About this version](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
-**[Explore the site](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
+**[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
 **Development assistance: OpenAI Codex and Anthropic Claude.**
@@ -18,80 +18,124 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 </div>
 
 
-## Try the current beta
-
-Start with **Personal Tournament** to build a shortlist of favorite targets, **Blind Research** to contribute eligible comparisons, or **Open Comparison** to explore named targets. Choose your headphone measurement, select music, set a comfortable volume, and compare A and B.
-
-The current beta refreshes Welcome, listening setup and playback, Personal Tournament, Preference Tuning, Music Library, and My Space. Music selection and available audio specifications sit beside the player; the original AMOLED curves, waveforms, and colors remain. The sidebar divider cycles **Full → Icons → Hidden → Full**, with your layout remembered across reloads. The library loads more tracks as you browse.
-
-Use **Space** to play or pause, **1 / 2** to select A or B, **S** to switch sides, and **← / →** to seek a quarter second in the active comparison. Shortcuts respect typing, form controls, and open dialogs. See [all shortcuts](https://yinyangeq.com/shortcuts), or [report a beta bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new) with your browser, device, and steps to reproduce it.
-
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-## Hear the difference
+## What it is
 
-What happens when the same song meets two different headphone targets? YinYang EQ lets you switch between them, listen, and choose **Prefer A**, **Prefer B**, or **Unsure / Tie**. Start with a headphone measurement so each target can be fitted to your headphones.
+Headphone EQ targets are easy to find and hard to choose between. Online, the choice often leans on a target's name or someone's reputation. YinYang EQ asks a simpler question: *which of these do you prefer, on your headphones, with music you know, when you don't know which is which?*
 
+- **Blind, and fitted to your headphones.** In the blind modes, target names are hidden and A/B order is randomized. Each target is fitted to *your* headphone measurement, so you hear the EQ that would actually be applied.
+- **You leave with something usable.** Personal Tournament narrows many targets to a shortlist of favorites. Preference Tuning lets you shape a curve and export it as a target or preset.
+- **Your listening can also be evidence, if you choose.** Optional, consented comparisons feed exploratory rankings and a longer-term question: how consistent are listeners with themselves, how much do they agree with one another, and does that depend on headphones, music, or experience?
 
+YinYang EQ is a **free, noncommercial public beta and an exploratory research project**. It is not a validated measure of sound quality, and no findings from this data have been published. [What is established, what is only a question, and what is not claimed](#what-this-project-can-and-cannot-claim) is set out below.
 
-| Mode | How it works | Where choices go |
+## Why take part
+
+**For you:** a blind answer to "which do I prefer?" on your own headphones, a saved shortlist, and a tunable curve you can download. All of this works without sharing anything for research.
+
+**For the project (only if you opt in):** most public discussion of headphone targets is anecdotal. A pooled set of blind, loudness-matched, fitted comparisons could help show where listeners agree on a target and where they split, how repeatable individual preferences are, and whether differences track measurable context such as headphone type or music. Those are open questions, not findings. The data is self-selected and uncontrolled, so it can describe the people who took part, not listeners in general, and each contribution is only as useful as the methodology around it. That is why the limits are stated here.
+
+**Your control:** research sharing, activity monitoring, music tags and sync are separate opt-ins, and you can delete submissions in **My data**.
+
+## What you can do
+
+| Mode | What happens | Where your choices go |
 | --- | --- | --- |
-| **Personal Tournament** | Narrow your favorites in an adaptive blind tournament, then recheck finalists with different music. Save progress and return later. | Choices stay in this browser by default. Personal research sharing and private account sync are separate optional choices. |
-| **Blind Research · Listening Pool** | Compare hidden targets using a site-selected stereo track. | Eligible comparisons contribute to Combined Research Rankings and the Listening Pool source filter. |
-| **Blind Research · Bring Your Own** | Compare hidden targets using a stereo song from your device. | Eligible comparisons contribute to Combined Research Rankings and the Bring Your Own source filter. Audio stays on your device; sharing song details is optional. |
-| **Open Comparison · Unranked** | Choose named targets and explore freely, including your private curves. | Approved-target comparisons can enter private admin research under the participation agreement. Comparisons involving private targets stay local. Neither enters public Research Rankings. |
+| **Personal Tournament** | An adaptive, blind tournament narrows targets to your favorites, then rechecks finalists with different music. Progress can be saved. | Stay in this browser by default. Research sharing and private account sync are separate, optional choices. |
+| **Blind Research · Listening Pool** | Compare hidden targets using a site-selected stereo track. | Eligible comparisons contribute to Research Rankings. |
+| **Blind Research · Bring Your Own** | Compare hidden targets using a stereo song from your device. | Eligible comparisons contribute to Research Rankings. Audio stays on your device; sharing song tags and fingerprints is optional. |
+| **Open Comparison · Unranked** | Pick two named targets, including your own private curves, and explore freely. | Approved-target comparisons can enter private admin research under the participation agreement; comparisons involving private targets stay local. Never counted in public Research Rankings. |
+| **Preference Tuning** | Start from a reference and shape bass, body, ear gain, presence and treble on an interactive curve, with undo/redo, exact value entry and bypass. Generate EQ fits and download a target or preset. | Exports are recorded for private research, including the downloaded file and tuning settings (see [Privacy](#participation-privacy-and-your-data)). |
+| **[Shareable shootouts](https://yinyangeq.com/share-shootout)** | Pick two to four targets and share a blind A/B by link or embed. | Anonymous; see [below](#shareable-shootouts). |
 
-Controlled blind comparisons require **five matched seconds on each side of the same passage** before voting unlocks. Use the passage controls to compare the same section through both targets. Free-listening comparisons remain separate from controlled ranking evidence. Eligible ties count as half a preference for each target; identical-EQ checks remain diagnostic and do not affect target rankings. Research Rankings use participant-balanced evidence and describe exploratory preferences, which depend on the headphones, measurement, music, and listener.
 
-**Community Preferences** is a separate optional validation pilot using future Personal choices and randomized reference checks. Its public numerical summaries remain withheld pending independent listener validation and privacy review. It is not another name for Research Rankings, and listeners do not receive a skill rank.
 
-## Make the curve yours
-
-Start from a reference, then adjust bass, body, ear gain, upper presence, and treble. The current curve-first workspace supports dragging curve points and frequency landmarks, entering exact values, and undoing or redoing adjustments. Axis controls change the view; bypassing adjustments keeps the selected starting correction. Listen as you work, then generate EQ fits and download your target or preset.
+Also available: a Listening Pool with stereo waveforms, source credits and song ratings (ratings are separate from target preferences), searchable creator-sourced headphone measurements, import of your own response, paired left/right channels, and saved results.
 
 ![Preference tuning with a raised bass curve, colored frequency regions, sliders, playback, and export controls](docs/images/preference-tuning.jpg)
 
-*From a reference curve to your preference: the screenshot shows a +7.5 dB bass adjustment. It is a demo setting, not a recommended tuning.*
+*Preference Tuning (October 17 interface). The +7.5 dB bass boost is a demo setting, not a recommendation.*
 
-## Give your music a listening room
+**Keyboard:** **Space** play/pause · **1 / 2** select A or B · **S** switch sides · **← / →** seek a quarter second. See [all shortcuts](https://yinyangeq.com/shortcuts).
 
-Explore the **Listening Pool** with stereo waveforms, source credits, and listening notes. Audition tracks, rate songs with Upvote or Downvote, and apply a saved or generated EQ to supported audio previews. Song ratings are separate from target preferences and do not remove eligible songs from the comparison pool. This source release omits cached waveforms and hosted recordings; its playback differences are described below.
+## How a comparison works
 
-![Music library showing track cards, stereo waveforms, playback, Keep and Pass controls, and artist credits](docs/images/music-library.jpg)
+- **Blind and randomized.** In Blind Research the server issues the trial, assigns the target pair and randomizes A/B order. Personal Tournament uses an adaptive scheduler in the browser with randomized sides. Target names are hidden until you vote.
+- **Same passage, both sides.** Controlled Blind Research unlocks voting only after at least **five seconds of the same source passage have been heard on each side**. Skipped audio does not count. Five seconds is an initial product setting, not a validated threshold.
+- **Level matching.** Tracks are loudness-normalized (−16 LUFS in Blind Research) and A and B share gain and headroom. Source normalization does **not** guarantee equal perceived loudness after EQ is applied.
+- **Three answers.** *Prefer A*, *Prefer B*, or *Unsure / Tie*. Eligible ties count as half a preference for each target. Identical-EQ trials are diagnostic checks and do not affect rankings.
+- **Open Comparison is separate.** Free listening never enters controlled rankings.
 
-*The October 17 screenshot shows an earlier library layout and earlier Keep/Pass labels. The current Listening Pool uses song-rating controls and groups alternate masters by song.*
+**Research Rankings** use a participant-balanced, regularized Bradley–Terry-style score with a weak prior. Each participant group's total weight is split across the pairs they heard, so one person repeating many comparisons cannot stand in for many independent listeners. This is a descriptive score under stated assumptions, not a validated estimator, and its ranges are not population confidence intervals. Full definitions and limits are in the [research protocol](RESEARCH_PROTOCOL.md).
 
-You can also search creator-sourced headphone measurements, import your own response, work with paired left/right channels, try private targets, and revisit saved results.
+**Community Preferences** is a separate, optional validation pilot (future Personal choices plus randomized reference checks). Its public numerical summaries are withheld pending independent listener validation and privacy review. It is not another name for Research Rankings, and listeners do not receive a skill rank.
 
-## Participation and your data
+## What this project can and cannot claim
 
-The deployed listening tools require an affirmative comparison-data participation agreement. Optional choices cover identifiable activity monitoring, tags and fingerprints from your own music, Personal research / Community contributions, and private account sync. Open **Your data choices** independently to review permissions, or manage them in **My data**. Your nickname is optional. Saving is explicit; cancelling leaves saved choices unchanged. Declining optional sharing still allows listening under the required agreement. Withdrawal stops future participation and listening-tool access; deleting earlier submissions is a separate action. The [version page](https://yinyangeq.com/version) and [keyboard help](https://yinyangeq.com/shortcuts) are available without saving participation consent.
+**Background from published sources (not results of this project)**
 
-Preference Tuning downloads are recorded for private admin research, including the exported file, curve and tuning settings. Original measurement files are contributed only after specific file and rights approval. Audio selected from your device is processed locally and is not uploaded by ordinary listening or sync. See the live [privacy notice](https://yinyangeq.com/privacy) for collection, retention and deletion details.
+- General guidance for subjective sound-quality tests ([ITU-R BS.1284-2](https://www.itu.int/rec/R-REC-BS.1284-2-201901-I/en)) says comparison tests must match loudness accurately, that listeners should normally be trained, that listening conditions should be reported, and that statistical expertise is needed to design and analyze a test. This project borrows the loudness-matching idea. It does **not** meet the rest: participants are untrained, conditions are uncontrolled, and panel sizes are not planned.
+- Published listening tests of headphone target preference exist. One example is Olive, Welti and McMullin, ["Listener Preferences for Different Headphone Target Response Curves"](https://aes2.org/publications/elibrary-page/?id=16768), AES Convention 134, Paper 8867 (2013). Its AES E-Library abstract describes two double-blind listening tests in which trained listeners rated eight headphone target responses on two headphone models. (We cite the public abstract only; the full paper has not been reviewed for this README.) YinYang EQ is a different kind of study: remote, self-selected and exploratory, and it does not replicate that design.
 
-Optional **private account sync** keeps saved results, measurements, custom targets, EQs, progress, settings and saved music metadata on the server and browsers you explicitly approve. It excludes music/audio bytes, credentials, active playback and admin tests. Select local music again on each browser. Manage devices and conflicts in Sync settings; enabling sync does not grant research sharing or publish a profile.
+**Open research questions this project is built to explore (proposed, not demonstrated)**
 
-Sync transfers saved data in resumable pieces, replacing the former whole-account 512 KB cap; browser and service storage limits still apply. The compact healthy-sync notice can be dismissed without pausing sync. Errors, conflicts, and actions that need your attention remain visible. **My data** distinguishes saved On, Off, and partial permissions.
+These come from the project's [listener-consistency research notes](docs/research/README.md), which are proposals and do not authorize product changes:
 
-The remaining screenshots show demo sessions captured on October 17, 2026. Target names, track availability, and counts can change. Media credits are in [docs/DEMO.md](docs/DEMO.md).
+- How do listeners vary in telling EQ differences apart, and does that depend on the EQ pair, track, equipment and session?
+- How repeatable are individual preferences within and between sessions, and how do ties relate to repeatability?
+- Do preference patterns differ across groups once listening context and comparison coverage are accounted for?
+- What, if anything, would justify weighting listeners by consistency? No weighting or listener skill score is implemented or decided. How populations differ is an open question, not a result.
 
-## Development assistance
+Disagreeing with the majority is not treated as an error, and no universal correct EQ preference is assumed.
 
-**Yin Yang EQ Lab directs and maintains this project, with assistance from OpenAI Codex and Anthropic Claude.** Both tools have assisted with code, documentation and review. Yin Yang EQ Lab remains responsible for project decisions and releases. Third-party components and data keep their original credits and licenses.
+**Not established**
 
-The application uses **TypeScript, React, Next.js/Vinext, the Web Audio API, Cloudflare Workers, and D1**. The browser handles interactive curves and audio processing; the server stores shared records and serves the application.
+- That rankings reflect sound quality, accuracy, or the "best" target.
+- That participants are representative. They are self-selected, use uncontrolled equipment and rooms, and the site cannot verify that accounts are distinct people.
+- That the five-second rule, the loudness normalization or the scoring weights are optimal or validated.
+- Any publishable result. The [research notes](docs/research/README.md), [Community Preference design](docs/COMMUNITY_PREFERENCE_DESIGN.md) and [Community validation protocol](docs/COMMUNITY_VALIDATION_PROTOCOL_2026-10-19.md) record what would be needed first, such as a preregistered analysis, validation against independent samples and a privacy review.
 
-## Current release and rebuilding
+If the data eventually supports a finding, it would be reported with its limits, including exclusions, protocol versions and sensitivity checks.
 
-The verified live release is recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md). As of October 21, 2026, that is **0.2.0-beta.1 / update111**, including clearer mobile Welcome text, original yin-yang/waveform artwork, a smooth three-state sidebar, and compact account-sync status. See the [release verification](docs/releases/update111-verification.json) and [current version page](https://yinyangeq.com/version). Physical headphone output and real Safari/iOS interruption and recovery remain unverified.
+## Participation, privacy, and your data
 
-Start development at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/RECOVERY.md](docs/RECOVERY.md); follow [docs/REBUILD.md](docs/REBUILD.md) for fresh-clone commands, private-input restoration and deployment boundaries. Historical handoffs and demos describe their own release dates. GitHub contains application and credential-free deployment code, not production recordings, curve seeds, credentials or database state.
+You can browse the site without being asked for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
 
-Matching update111 recovery metadata and hosted validation passed, with existing encrypted off-device data snapshots and their original timestamps preserved. This metadata handover created no new data snapshot. Daily scheduling remains active. Two empty queued validation records remain on GitHub; the later successful validation confirmed they did not block execution. See the [recovery verification](docs/releases/update111-verification.json) for the recorded scope.
+- tags and fingerprints of music from your own device
+- identifiable activity monitoring
+- Personal research / Community Preferences contributions
+- private account sync
+- an optional nickname (visible only to you and admins)
+
+Declining optional choices still allows listening. Withdrawing stops future participation and access to the listening tools; deleting earlier submissions is a separate action in **My data**. Cancelling a consent form leaves saved choices unchanged.
+
+What is recorded, in brief (the [live privacy notice](https://yinyangeq.com/privacy) is authoritative):
+
+- **Comparisons:** your choice, the targets compared, headphone category, playback intervals and times, protocol version, measurement reference and EQ-fit summary. Blind votes and eligible ties feed public Research Rankings; Open Comparison results are for admin-only research. Valid comparisons are kept long term, and admins can view individual records.
+- **Audio files** from your device are processed locally and are not uploaded by ordinary listening or sync.
+- **Sync** (optional) copies saved results, measurements, targets, EQs and settings to the server and your approved browsers. It excludes audio, credentials and active playback, and does not grant research sharing.
+- **Activity monitoring** (optional) is kept for 30 days and does not capture typed text, audio, raw IP addresses or device fingerprints.
+- **Preference Tuning exports** are recorded for private research, including the downloaded file and tuning settings.
+- Backups have separate retention. Downloaded copies and backups cannot be remotely erased. Data is not sold or used for advertising.
+
+The notice also describes a protected public-archive release (rounded, uncertainty-bounded results with no identifiers) and states that its privacy budget is not an independent certification of anonymity.
+
+### Shareable shootouts
+
+Anyone can build a blind A/B for two to four targets and share a link (`/s/<id>`), an iframe snippet (`/embed/<id>`) and a private results link whose manage key lives in the URL fragment. Runs store only the picks, an hour bucket, an optional setup answer, whether curves were viewed and which sound played: no IP address, cookie, account or exact time. Shootouts are deleted 180 days after results were last opened, or when the sharer deletes them. Only built-in targets with a redistribution-compatible license (currently MIT or CC BY 4.0) can be used. See [docs/SHAREABLE_SHOOTOUTS.md](docs/SHAREABLE_SHOOTOUTS.md).
+
+## Current status
+
+- **Live release:** 0.2.0-beta.1 / update117 (October 23, 2026), recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update117-verification.json).
+- **Not verified:** physical headphone output, and real Safari/iOS interruption and recovery.
+- **Beta:** some features may be unfinished and bugs may appear.
+- **Free and noncommercial:** the site has no advertising, payments or paid features, and its [privacy notice](https://yinyangeq.com/privacy) states that data is not sold or used for advertising.
+- The remaining screenshots show the October 17, 2026 interface and demo data; labels, target names and counts have since changed.
 
 ## Run locally
 
-Requires **Node.js 22.13 or newer**. For a fresh checkout:
+Requires **Node.js 22.13 or newer** (and Python 3 for the release check). The commands below were last run end to end on a fresh export of this repository with Node.js 26.12.0 and npm 12.2.1.
 
 ```sh
 npm ci
@@ -100,39 +144,36 @@ npm run setup:local
 npm run dev
 ```
 
-`setup:local` initializes a fresh **local D1 database** from the checked-in SQL files and creates ignored development secrets. It refuses to overwrite an existing database. Open the URL printed by the dev server (normally `http://localhost:5173`). No Cloudflare account or production credentials are needed for this preview. See [local setup](docs/LOCAL_SETUP.md) for existing databases, feature requirements, and production configuration. Use `npm run build` followed by `node scripts/package-static-assets.mjs --public-only` for a public-clone preview package. Full live packaging requires authorized media and omits --public-only; deployment rejects public-only packages.
+`setup:local` creates a fresh local D1 database from the checked-in migrations plus ignored development secrets, and refuses to overwrite an existing database. Open the URL the dev server prints (normally `http://localhost:5173`). No Cloudflare account or production credentials are needed. See [local setup](docs/LOCAL_SETUP.md) for details.
 
-The tracked `.openai/hosting.json` and `wrangler.local.json` contain local binding placeholders only. A fresh local database needs all checked-in migrations, including both distinct historical `0012` files. For an existing database, inspect its migration history and follow the current rebuild instructions rather than replaying initialization. Recovery uses the pinned Node 26.12.0/npm 12.2.1 toolchain. Full `--snapshot` verification requires the owner's private immutable release inputs; those must not be published to make a public clone pass. Building, committing, pushing and deploying are separate operations.
+The public repository is a **clean source release**. It excludes production data, credentials, deployment state, numerical target seed curves, **all music recordings** and participant records. In a fresh clone:
 
-This is a clean source release. Production data, credentials, deployment state, account-specific deployment configuration, target seed curves, and audio files are excluded. The site builds without them; listening comparisons need target records, and music playback needs appropriate audio sources.
+- Comparisons need target records, which `setup:local` does not install.
+- The Music Library lists tracks with their waveforms, credits and license links, but **no recording will play**. Pressing Play on any card, not only the Shantae tracks, shows only a generic “This browser could not play this preview.”; the real cause is that the audio file is absent. Supply audio files you are entitled to use at the paths the catalog expects (for example `public/music/shantae/<id>.<ext>`) to restore playback.
 
-The [source handoff](docs/HANDOFF.md) records dated application checkpoints and this accuracy correction. The [target inventory](docs/TARGET_INVENTORY.md) lists an earlier target-name inventory and category rules without distributing their curve data. Future additions require a clear redistribution license for the actual curve files.
+Use `npm run build` then `node scripts/package-static-assets.mjs --public-only` for a clone preview; public-only packages cannot be deployed. Full `--snapshot` verification needs the owner's private release inputs.
 
-The live site uses **owner-supplied album downloads** for 32 tracks from Jake Kaufman’s *Shantae: Half-Genie Hero OST*: **26 original FLAC files and six AAC files**. These are copies of the artist’s recordings. The 32 included tracks’ [individual Bandcamp pages](https://virt.bandcamp.com/album/shantae-half-genie-hero-ost) link to CC BY-NC-SA 4.0. “Title” and “Let’s Go Shopping” are marked all rights reserved and are excluded. The recordings retain their own licenses and are **not** covered by this repository’s Apache license.
-
-The **live website plays those 26 FLAC and six AAC files with the site’s EQ and waveform data**. The audio files and live waveform cache are hosted separately and are **excluded from this GitHub repository**. Someone running this repository without supplying those assets gets Bandcamp players without the site’s EQ, because its `data/shantae-audio.json` is empty. Its `data/music-waveforms.json` is also empty, so library players display “Waveform unavailable” until a compatible cache is supplied. Other music entries include external audio URLs and creator/license links. The screenshots show the populated live-site configuration.
-
-The production gate supports controlled invitation and open-listener access; the current setting is independent of the source release. Participation, protected-media access, ownership checks and abuse protections still apply. Configure equivalent controls, D1 bindings and secrets in your own hosting environment before deploying a replacement. Public-only preview packages must not be deployed.
+Building, committing, pushing and deploying are separate operations. Maintainers: start at [docs/HANDOFF.md](docs/HANDOFF.md), [docs/RECOVERY.md](docs/RECOVERY.md) and [docs/REBUILD.md](docs/REBUILD.md). Before pushing, run `npm run check:release`, review `git diff --cached --name-only`, and never add `.env*`, tokens, working databases, `public/music/`, or build output.
 
 ## License and provenance
 
-Copyright 2026 **Yin Yang EQ Lab (@yinyangeqlab)**. The [Apache License 2.0](LICENSE) covers only the original software source code; it permits broad reuse, including commercial and closed-source reuse, with its required notices. It does not grant rights to the YinYang EQ League or Yin Yang EQ Lab names, logos, marks, branded assets, site copy, screenshots, or visual design. Those rights are reserved unless a separate notice says otherwise. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md), [NOTICE](NOTICE), and [THIRD_PARTY.md](THIRD_PARTY.md) for the detailed boundaries and other materials' licenses.
+Copyright 2026 **Yin Yang EQ Lab (@yinyangeqlab)**. The [Apache License 2.0](LICENSE) covers only the original software source code and allows broad reuse, including commercial use, with its required notices. It does **not** grant rights to the project or lab names, logos, branding, site copy, screenshots or visual design. See [LICENSE_SCOPE.md](LICENSE_SCOPE.md), [NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md).
 
-The source includes references to PEQdB as a target creator and to its TXT preset format. **No PEQdB target curves, preset exports, or PEQdB application code are included.** Working-project target seed data is excluded from this public repository. The demo can show targets held in a separate database; a screenshot or video does not grant rights to the underlying target data. Music keeps its own license and attribution, including the trailer soundtrack described in [the demo credits](docs/DEMO.md).
+Music, target curves, measurements and datasets keep their own licenses and are **not** covered by Apache 2.0. A screenshot, video or running demo does not grant rights to them.
+
+- **Music:** the Listening Pool has 224 recordings (217 song families). Two kinds are described below. The recordings are not in this repository. Library cards credit the artist and album and link to the source and, where one exists, the license.
+  - **Creative Commons and other open recordings:** the live site plays 32 tracks from Jake Kaufman’s *Shantae: Half-Genie Hero OST* (26 FLAC, six AAC) from album downloads. Each of the 32 tracks’ [Bandcamp pages](https://virt.bandcamp.com/album/shantae-half-genie-hero-ost) states CC BY-NC-SA 4.0 (checked October 23, 2026); “Title” and “Let’s Go Shopping” are all rights reserved and excluded. Other library entries link to external audio with creator and license information.
+  - **Used with permission, all rights reserved:** 24 recordings by Jason J. Chevallier are used on the site with the artist’s permission. They carry no Creative Commons license, and visitors receive no license to reuse or redistribute them; the library says so on each card. See [docs/JASON_MUSIC_IMPORT_2026-10-23.md](docs/JASON_MUSIC_IMPORT_2026-10-23.md).
+- **Waveform data:** `data/music-waveforms.json` and `data/listening-pool-waveforms.json` hold cached waveform summaries, which are peak envelopes and not audio. They are outside the Apache grant and describe recordings that carry their own licenses; see [THIRD_PARTY.md](THIRD_PARTY.md).
+- **Targets and measurements:** numerical target seed data is excluded because redistribution rights are not established for all of it. No PEQdB curves, preset exports or application code are included; PEQdB is referenced as a target creator and for its TXT preset format. The [target inventory](docs/TARGET_INVENTORY.md) lists names and categories only.
+
+## Acknowledgments and how this was built
+
+- Headphone measurement indexes: [AutoEq](https://github.com/jaakkopasanen/AutoEq) (MIT) and [Jay’s Audio](https://github.com/JaysAudio/JaysAudio.github.io) (0BSD). Target credits include Tryptify, AutoEq and MrChillStorm sources; see [TARGET_INVENTORY](docs/TARGET_INVENTORY.md) and [THIRD_PARTY](THIRD_PARTY.md). Credit does not imply endorsement.
+- UI components adapted from [shadcn/ui](https://github.com/shadcn-ui/ui) (MIT). Sites integration code retains OpenAI’s MIT notice. Installed packages keep their own licenses.
+- Trailer soundtrack: “Discovery” by [Scott Buckley](https://www.scottbuckley.com.au/library/discovery/), CC BY 4.0. Mobile walkthrough: “The Funk” by Hotham, CC BY 4.0. Full media credits: [DEMO](docs/DEMO.md), [MOBILE_DEMO](docs/MOBILE_DEMO.md), [VIDEOS](docs/VIDEOS.md).
+- **Yin Yang EQ Lab directs and maintains this project, with assistance from OpenAI Codex and Anthropic Claude.** Both tools have assisted with code, documentation and review. Yin Yang EQ Lab remains responsible for project decisions and releases. Third-party components and data keep their original credits and licenses. Stack: TypeScript, React, Next.js/Vinext, the Web Audio API, Cloudflare Workers and D1.
 
 ## Bugs, ideas, and contact
 
-Found something broken, have a listening idea, or want to ask about the project? **[Open a GitHub issue](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**. For a bug, include your browser/device, the page or mode, what you expected, and what happened. Keep tokens and personal files out of public reports.
-
-You can also reach Yin Yang EQ Lab at **[yinyangeqlab@gmail.com](mailto:yinyangeqlab@gmail.com)**.
-
-<details>
-<summary><strong>Before pushing source changes</strong></summary>
-
-Stage changes with Git and run `npm run check:release`. Review `git diff --cached --name-only` and each new file's redistribution rights. Never add `.env*`, local tokens, the working database, `infra/pulumi/Pulumi.*.yaml`, `public/music/`, `.sites-checkout/`, or build output.
-
-</details>
-
-## Track local updates
-
-Use [the current handoff](docs/HANDOFF.md) for active work and release boundaries. [Local change notes](docs/LOCAL_CHANGES.md) retain the historical October 17 checkpoint.
+Open a **[GitHub issue](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)** with your browser/device, the page or mode, what you expected and what happened. Issues are public: leave out tokens, sign-in codes, private links and personal files. Questions can also go to **[yinyangeqlab@gmail.com](mailto:yinyangeqlab@gmail.com)**.
