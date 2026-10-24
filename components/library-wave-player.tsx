@@ -34,13 +34,14 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    const attemptCounter = playbackAttempt;
     const recovery = attachMediaRecovery(audio, {
       onRecovering: () => { cancelMissingAudioProbe(); setError(""); setBuffering(true); },
       onRecovered: () => { cancelMissingAudioProbe(); setError(""); setBuffering(false); },
       onFailure: () => { setBuffering(false); setError("The audio connection was interrupted. Press Play to try again."); },
     });
     mediaRecovery.current = recovery;
-    return () => { playbackAttempt.current++; cancelMissingAudioProbe(); recovery.dispose(); mediaRecovery.current = null; };
+    return () => { attemptCounter.current++; cancelMissingAudioProbe(); recovery.dispose(); mediaRecovery.current = null; };
   }, [audioGeneration, track.fileUrl]);
 
   const graph = useRef<EqGraph | null>(null);
