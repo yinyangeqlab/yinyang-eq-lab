@@ -1,3 +1,9 @@
+# Update121 workflow fixes verified — October 24, 2026
+
+Private blind EQ workflow fixes are deployed under persistent owner-only maintenance. Source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update121-verification.json; prior immutable provenance is preserved.
+
+## Earlier records (historical)
+
 # Update120 verified — October 24, 2026
 
 PRs #7–10 are merged and their runtime changes are deployed under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed; all prior data snapshots and original timestamps remain unchanged. No migration, data export or new snapshot. See LIVE_STATE.md and docs/releases/update120-verification.json.

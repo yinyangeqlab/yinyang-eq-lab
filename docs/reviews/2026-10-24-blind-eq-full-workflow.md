@@ -1,0 +1,24 @@
+# Full blind EQ workflow review — October 24, 2026
+
+Reviewer/implementation owner: Codex. Fresh baseline main `5ecb022b628406e5884e2333cca7810249824a78`, recorded live update120. Work is isolated in `work/blind-eq-workflow-20261024`; the dirty canonical checkout and index are preserved. Files reviewed: app/eq-compare/{page.tsx,layout.tsx,style.css}, components/blind-eq-{editor,listener}.tsx, components/site-chrome.tsx, lib/blind-eq{,-audio}.ts, preset/session and local-audio checks, workflow/release documentation.
+
+## Accepted and fixed
+
+1. Volume was reset to 25% whenever the next song mounted. The parent now retains the selected session volume and applies it before the next player can produce sound.
+2. Adding local files bypassed the 30-song mixed playlist cap. Uploads now select only available slots; selection handlers also enforce the bound. A local-file Remove action releases the file and its selected slot, so a bad or unwanted file can be replaced without losing preset setup.
+3. A silent default passage failed preparation and hid the passage controls, trapping the listener at the same failing offset. Decoded audio now keeps its passage selector; an audible section can be prepared without discarding choices or skipping the song. Passage replacement clears stale playback and evidence.
+4. Pending resume/fetch/file-read/decode could continue after the song unmounted, and a pending Play could resume after hiding or changing passages. Generation/intent checks now protect each async boundary. Cleanup aborts requests and releases references; cancellation between offline renders prevents preparing the second EQ unnecessarily. In-flight native work is discarded rather than being treated as a successful current result.
+5. A download click disabled the leave-page guard even if saving was blocked or cancelled. The guard stays active until explicit session clearing; downloads show request/error feedback and retain the results on failure. The JSON now includes the complete ordered playlist, source IDs and unanswered count for early reveal, while retaining the original reveal time and per-song mapping. Audio bytes are excluded.
+6. Inline reveal/reset confirmations did not move keyboard focus or restore it on cancellation. They now focus their heading, respond to Escape, restore the invoking control and remain mutually exclusive. A committed choice clears a stale confirmation, and clearing a session focuses the setup heading.
+7. Duplicate preset names made song-by-song results ambiguous. Revealed rows now include stable Preset1/2 ordinals. Identical preamp/filter settings have an explicit setup notice. Skipped rows say Not compared instead of implying a15-second passage was heard.
+8. An expired admin session produced an unhelpful recording failure during maintenance. The maintenance refusal now offers admin sign-in in a new tab so the private comparison tab can be retained and retried. It grants no new access and does not bypass the server lock.
+
+## Verification and limits
+
+37 new checks exercise actual page/listener components and actual DSP cancellation, including late async completions. Existing85 preset/math/privacy/session checks and 32 local-audio checks pass. The 672 maintenance-denial and 544 per-feature suites, share-preview regression, app TypeScript, targeted lint and production build pass. Synthetic browser review uses local fixtures and no participant/admin account. Review coverage includes unsupported imports, manual validation/stereo controls, real Web Audio, silent-passage recovery, saved volume, vote locks, skip/reveal/reset, confirmation focus and desktop/narrow layout. Expanded native selects and keyboard selection are inspected with explicit dark option colors; native popup pixels are not certified by screenshots.
+
+This remains a private preference tool. RMS matching is not a guarantee of equal perceived loudness; the minimum listening timer does not prove attention, physical audibility or matched-source coverage. Research scoring, consent, Sync and persistent account-storage formats are unchanged. K-weighted matching, repeat-consistency trials and a redesign are outside this defect-fix release. Physical headphone output and Safari/iOS remain unverified. The owner-only maintenance gate must stay enabled throughout any rollout.
+
+## Verified rollout
+
+The fixes are deployed as update121 behind the unchanged owner-only maintenance lock. Exact live assets/modules, real HTTP admin authentication, private EQ/version routes, anonymous denial and a no-drift preview passed. The trailing-slash private EQ route redirects to its canonical spelling; it does not expose shared navigation. Source-only recovery registration, independent reconstruction and the exact matching hosted validation passed with existing data snapshots/timestamps unchanged. No fresh data export. Source and release records are published through PR #13; GitHub records merge state.

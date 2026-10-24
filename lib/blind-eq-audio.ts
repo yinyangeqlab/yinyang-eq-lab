@@ -10,7 +10,9 @@ function stats(buffer: AudioBuffer) {
   return { rms: Math.sqrt(power / (buffer.length * buffer.numberOfChannels)), peak };
 }
 
-export async function prepareComparison(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, seconds: number, match: boolean): Promise<PreparedComparison> {
+export async function prepareComparison(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, seconds: number, match: boolean, signal?: AbortSignal): Promise<PreparedComparison> {
+  const checkActive = () => { if (signal?.aborted) throw Error("Comparison preparation was cancelled."); };
+  checkActive();
   if (source.numberOfChannels > 2) throw Error("Use a mono or stereo recording for this comparison.");
   if (!Number.isFinite(start) || start < 0 || !Number.isFinite(seconds) || seconds < 5 || start + seconds > source.duration + .001) throw Error("Choose a passage of at least five seconds inside the recording.");
   // Include half a second of prior audio so IIR filters settle before the passage.
@@ -19,6 +21,7 @@ export async function prepareComparison(source: AudioBuffer, presets: [EqPreset,
   const buffers: AudioBuffer[] = [];
   // Render sequentially to keep memory bounded on narrow/mobile devices.
   for (const preset of presets) {
+    checkActive();
     const offline = new OfflineAudioContext(2, frames + warmup, rate);
     const input = offline.createBufferSource(); input.buffer = source;
     const splitter = offline.createChannelSplitter(2), merger = offline.createChannelMerger(2);
@@ -35,7 +38,8 @@ export async function prepareComparison(source: AudioBuffer, presets: [EqPreset,
       previous.connect(merger, 0, channel);
     }
     merger.connect(offline.destination); input.start(0, start - lead, seconds + lead);
-    const rendered = await offline.startRendering(), trimmed = new AudioBuffer({ numberOfChannels: 2, length: frames, sampleRate: rate });
+    const rendered = await offline.startRendering(); checkActive();
+    const trimmed = new AudioBuffer({ numberOfChannels: 2, length: frames, sampleRate: rate });
     for (let channel = 0; channel < 2; channel++) trimmed.copyToChannel(rendered.getChannelData(channel).subarray(warmup, warmup + frames), channel);
     buffers.push(trimmed);
   }

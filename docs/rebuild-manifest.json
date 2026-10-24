@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 120,
-  "implementationCommit": "00799c6b978f8a69283c00e5a7724ae8382f5240",
-  "runtimeParity": "Verified update120 contains the four reviewed/merged PRs with owner-only maintenance unchanged. Immutable deployment/recovery fingerprints retain original provenance; release documentation is updated separately.",
+  "liveUpdate": 121,
+  "implementationCommit": "7e71e139aef1dd944953783a2076db1809266370",
+  "runtimeParity": "Verified private EQ workflow fixes under unchanged owner-only maintenance. Immutable source/build/recovery fingerprints are preserved; release documentation is recorded separately.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,19 +66,19 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "1c9d95b046f326afefbb18c24d75422cc6c8af1a6bcf586d73c6bdea79aa9941"
+      "sha256": "1a8b0d38f31cad73eaeeb76b5bbe6354750e7887673f491c5fab677ea9f7c37f"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "97751dc86e86b42de5b0cd6bb135dbfc3ade2d3172113a8559b637c611e2691c"
+      "sha256": "0ff6f4949f5d03016a84f402471f2bbbc8ec20f1cfccb20176abd2cb1314610b"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "ad752af4f12b0f21bef4b77d465eba48f86277a0e9d54431c2b58586e78deaed"
+      "sha256": "fb6c5c28404e6f339200f12713e62acc1d2a9857db69ca69addf234b036deb8b"
     },
     {
       "path": "README.md",
-      "sha256": "e97978cc3f21fb8b0841361ac3bae1bd353ae85a28e75168c41b97e340693091"
+      "sha256": "84cd2e43c916efef9dd352a698dc24cc839e7cc4445c685f8bc97ebf7f4383aa"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -334,11 +334,11 @@
     },
     {
       "path": "app/eq-compare/page.tsx",
-      "sha256": "d8a939316138d051e7278ff63aa3fe6b6fe2d990a9c171dabdbc00ddcc2a360d"
+      "sha256": "dcd65bce9ba9eb3022f9cfb312ed8299a766a00fde2ed4d1b2123595860b793d"
     },
     {
       "path": "app/eq-compare/style.css",
-      "sha256": "ebb1042dbccaeb07cd63e05a3c0fbded9ba6301d059792cdef65b15a84563cfe"
+      "sha256": "75f8a60a1a6b2bdb9d271fabac71b7256f7c3b002b31857017b7e50f12c5f467"
     },
     {
       "path": "app/globals.css",
@@ -634,7 +634,7 @@
     },
     {
       "path": "components/blind-eq-listener.tsx",
-      "sha256": "b47848a86fcb40fe6d81254a6bcb18eca9cb98d3c5827ec4263b8e3e62952957"
+      "sha256": "a52ac604ca48b37414c75c7833bf1c6627f9450dbc5a382921b3855350588dbc"
     },
     {
       "path": "components/community-method.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "bd9fd320b0e37763442641ca0a15aeca15ae1751e799c5d6d0bcaea8ae7ff062"
+      "sha256": "43cd53d551e3e275f8ffba9b079d1e18d30ee6afa2cfb2a815937a4a69a3c238"
     },
     {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
@@ -1306,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "d813f958280c5b72c9f4cbc8915df0b79e14f486ccff190481189191209e10d9"
+      "sha256": "2c98a13f9432d15a5af60b37755db73f6dfe924c552fa95a7743c017fe26db67"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1322,11 +1322,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "113755c46759bebe714a049e4b59dfa71023d092db77b3dbeedc4180e1989526"
+      "sha256": "b042019c8221b4956157ff49cde4a691ceae8a9ac4edf93410f465c3cf4f74aa"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "1eab13777940d1974adf23b19448d3ebba973a386e68a4f99bf9a9905d4107d8"
+      "sha256": "8f7fb5aaf12411843194036a4e6920d2b722734c4656acdb1e5bc33deba2afb2"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
@@ -1798,11 +1798,11 @@
     },
     {
       "path": "lib/blind-eq-audio.ts",
-      "sha256": "a5f78dea1e40aa3fd3d1a0ca8474e87032c12679a3a9812c3080677b51722815"
+      "sha256": "2f21dd843fa2792f28784e82da7a5157b8292a4efb22c75891124bbe79a1b7fd"
     },
     {
       "path": "lib/blind-eq.ts",
-      "sha256": "63f9ebc70a8174a49d149600ebd1ffec18ef2b2b251fde32ed8a9aa1898bf371"
+      "sha256": "8faa8b8aa48413f9418d76a2a39a1bedf67e992736ae90666cde72da2653a326"
     },
     {
       "path": "lib/browser-data.ts",
@@ -2433,6 +2433,10 @@
       "sha256": "f8b83011e6330de6b4a44aaed6b53e3ec084c225184276417440ca21c6e058da"
     },
     {
+      "path": "scripts/check_blind_eq_workflow.mjs",
+      "sha256": "a26e1b3bff75d24be36d7bbf17bdf7cc7aba823fadfd63dbd58f75601a56d9f4"
+    },
+    {
       "path": "scripts/check_browser_pairing.mjs",
       "sha256": "3de5f3bfa1f0e1e482704285fdd64bbcfd700b6b3d3af2a47722bd15eb5e6c62"
     },
@@ -2503,6 +2507,10 @@
     {
       "path": "scripts/check_listening_reminder.mjs",
       "sha256": "7af0808cd2db137c9d5655d22402855877c6ca492f8258e1a5c435bc12326f13"
+    },
+    {
+      "path": "scripts/check_local_audio_error.mjs",
+      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
     },
     {
       "path": "scripts/check_maintenance_dependencies.cjs",
@@ -2859,10 +2867,6 @@
     {
       "path": "wrangler.local.json",
       "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d"
-    },
-    {
-      "path": "scripts/check_local_audio_error.mjs",
-      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
     }
   ],
   "environment": {

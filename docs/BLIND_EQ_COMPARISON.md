@@ -1,4 +1,4 @@
-# Private blind EQ — deployed under owner-only maintenance, update119
+# Private blind EQ — deployed under owner-only maintenance, update121
 
 Deployed and verified October 24, 2026. The site remains closed except existing admin sign-in and valid signed admin sessions. Read LIVE_STATE.md for current access and verification limits. The historical draft notes below retain their original context.
 
@@ -25,7 +25,7 @@ production mutation and backup exports remain separate. Live update117 and its i
    someone inspecting the browser's memory or developer tools.
 4. Prepare each song, listen and switch between synchronized looping passages.
    Move the 15-second passage if desired; changing it clears that song's
-   listening evidence. Five seconds of audible, visible-tab playback on each
+   listening evidence. Five seconds of visible-tab playback with the volume above zero on each
    side unlocks A/B/no-preference choices. Skipping is available independently.
 5. Finish to reveal identities and per-song results. Early reveal explicitly
    ends the session and leaves remaining songs unanswered. Revealed sessions
@@ -140,3 +140,9 @@ LIVE_RELEASE.json, production deployment and recovery provenance are unchanged.
 Reconciled onto update118 with the owner-only maintenance gate unchanged. Preset rename/readiness, original reveal time, leave-page protection through download, accessible progress, decoded-audio bounds and independent per-song randomization are covered by 83 focused checks. Desktop1280px/narrow360px synthetic browser interaction and actual Web Audio rendering passed. Browser-native dropdown expansion and keyboard selection passed with explicit dark computed option colors; popup pixel capture remains unavailable. No production browser admin/participant session or physical headphone/Safari/iOS certification is claimed. Deployment remains separate until the exact locked plan passes verification.
 
 The private route uses its own full-navigation header and does not mount the site-wide sidebar, Sync or cross-tab redirect effects. This keeps every visible exit under the unsaved-session leave-page guard. Ordinary site routes keep their existing shell and privacy controls. An actual component regression covers both route classes.
+
+## Full workflow corrections — October 24, 2026
+
+Session volume persists across songs. Mixed local/pool selection stays within30 songs; local files can be removed and replaced. A silent prepared passage leaves the passage selector available for recovery. Skipping, unmounting, hiding and passage replacement cancel stale playback/preparation work. Confirmations support focus and Escape. Repeated preset names are disambiguated by preset ordinal in results, identical settings are disclosed in setup, and skipped rows do not imply a passage was compared.
+
+Result downloads retain the full ordered playlist, source IDs, unanswered count and original reveal timestamp, without audio. A download request is not proof that the browser saved the file: leave-page protection stays active until the session is explicitly cleared. An expired maintenance session offers admin sign-in in a new tab. All comparison data remains memory-only and excluded from research and Sync. See docs/reviews/2026-10-24-blind-eq-full-workflow.md for findings, tests and limits.

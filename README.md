@@ -20,7 +20,7 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-**Current access — update120:** the site is closed for private testing. Only existing admin sign-in and authenticated admin sessions have app access. The lock stays enabled until the owner explicitly requests reopening. [Current live state](LIVE_STATE.md).
+**Current access — update121:** the site is closed for private testing. Only existing admin sign-in and authenticated admin sessions have app access. The lock stays enabled until the owner explicitly requests reopening. [Current live state](LIVE_STATE.md).
 
 The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
 
@@ -132,7 +132,7 @@ When the owner reopens the site, the shareable tool lets anyone build a blind A/
 
 ## Current status
 
-- **Live release:** 0.2.0-beta.1 / update120 (October 24, 2026), under owner-only maintenance, recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update120-verification.json).
+- **Live release:** 0.2.0-beta.1 / update121 (October 24, 2026), under owner-only maintenance, recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update121-verification.json).
 - **Not verified:** physical headphone output, and real Safari/iOS interruption and recovery.
 - **Beta:** some features may be unfinished and bugs may appear.
 - **Free and noncommercial:** the site has no advertising, payments or paid features, and its [privacy notice](https://yinyangeq.com/privacy) states that data is not sold or used for advertising.

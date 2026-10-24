@@ -1,0 +1,97 @@
+{
+  "update": 121,
+  "deploymentVerification": {
+    "at": "2026-10-24T10:47:09.186514+00:00",
+    "revision": "7e71e139aef1dd944953783a2076db1809266370",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "0da4a9c2-452a-4b21-9271-2e36daf9ea00",
+    "versions": [
+      {
+        "version_id": "9b35cd1a-f23b-49f3-ae5f-6ecbe3a42e09",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 18,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 904,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true,
+    "versionPageAdminRouteVerified": true
+  },
+  "candidateVerification": {
+    "workflowChecks": 37,
+    "blindEqChecks": 85,
+    "libraryAudioChecks": 32,
+    "maintenanceDenials": 672,
+    "perFeatureMaintenanceCases": 544,
+    "typeScriptPassed": true,
+    "targetedLintErrors": 0,
+    "targetedLintWarnings": 0,
+    "productionBuildPassed": true,
+    "schemaChanges": false,
+    "newDataExport": false
+  },
+  "browserVerification": {
+    "syntheticOnly": true,
+    "widths": [
+      1280,
+      360
+    ],
+    "unsupportedTxtRejected": true,
+    "manualBoundsAndStereoControlsPassed": true,
+    "actualWebAudioChecksPassed": true,
+    "silentPassageRecoveryPassed": true,
+    "fivePercentVolumePersistedToNextSong": true,
+    "voteResetPassed": true,
+    "earlyRevealAndSkipLabelsPassed": true,
+    "confirmationFocusEscapeAndResetFocusPassed": true,
+    "localFileRemovalPassed": true,
+    "localRemoveButtonHeight": 44,
+    "narrowPageWidth": 345,
+    "nativeSelectExpansionKeyboardAndComputedColorsPassed": true,
+    "nativePopupPixelsNotCertified": true,
+    "downloadPayloadAndFailureGuardVerifiedInComponentHarness": true
+  },
+  "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/13",
+  "migrations": [],
+  "newDataSnapshot": false,
+  "recoveryRegistrationPending": false,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "finalPreview": {
+    "same": 4
+  },
+  "routeSpellingVerification": [
+    {
+      "path": "/eq-compare/",
+      "status": 308,
+      "location": "/eq-compare",
+      "sharedNavigation": false
+    },
+    {
+      "path": "/eq-compare",
+      "status": 200,
+      "location": null,
+      "sharedNavigation": false
+    }
+  ]
+}
