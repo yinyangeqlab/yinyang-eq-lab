@@ -329,6 +329,18 @@
       "sha256": "4e6457719d9de8dc9ec6436911c64936cc845f0523d408bd1ae9d5004468f6c2"
     },
     {
+      "path": "app/eq-compare/layout.tsx",
+      "sha256": "dca4cfcf1dc4fe027879cb34368b28baf189091b58d57404c63a2f288bcf3c10"
+    },
+    {
+      "path": "app/eq-compare/page.tsx",
+      "sha256": "5ff8f13662925cdb509068115c1c57e621801f732254eb7e2786778f2f33c59b"
+    },
+    {
+      "path": "app/eq-compare/style.css",
+      "sha256": "ebb1042dbccaeb07cd63e05a3c0fbded9ba6301d059792cdef65b15a84563cfe"
+    },
+    {
       "path": "app/globals.css",
       "sha256": "8a128317000c8acaa65cf2365a07c9e2fea701f083962d3d2fc2548f3d33c53f"
     },
@@ -615,6 +627,14 @@
     {
       "path": "components/before-you-listen.tsx",
       "sha256": "f319dad4be07345a19d2c4888e89a2837d7a5d43e29eb007f270b2b39a961e27"
+    },
+    {
+      "path": "components/blind-eq-editor.tsx",
+      "sha256": "7614d6b77ce5d6562999dd5d7c0001306bbc33be21e7628282f3db0e661d6439"
+    },
+    {
+      "path": "components/blind-eq-listener.tsx",
+      "sha256": "ac70a5c7c98915a98e767c50d6fc7bb3c958f4056742804651e3023593ffab4d"
     },
     {
       "path": "components/community-method.tsx",
@@ -1265,6 +1285,10 @@
       "sha256": "7a9c347a5000316ff6a287c4ea3d5c4ef3cc31e100f313aab1449819ac06ce29"
     },
     {
+      "path": "docs/BLIND_EQ_COMPARISON.md",
+      "sha256": "efe865eeecf80d67331e314ff62a896591f198df142c69d249cc051b10820525"
+    },
+    {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
       "sha256": "5c7d2ab6003dfe500f39364e0893cb6abda5d7983a281dcf397b814b72543cee"
     },
@@ -1773,6 +1797,14 @@
       "sha256": "c843baf3c20279a48c45d870c2082417f8af34c0955526f5abcb9397345fd442"
     },
     {
+      "path": "lib/blind-eq-audio.ts",
+      "sha256": "a5f78dea1e40aa3fd3d1a0ca8474e87032c12679a3a9812c3080677b51722815"
+    },
+    {
+      "path": "lib/blind-eq.ts",
+      "sha256": "755e894cc521d0c8ae6e5d76e654ba53f6ea40ed80eaf6153ea386117c9afcb3"
+    },
+    {
       "path": "lib/browser-data.ts",
       "sha256": "155077edf4c0f498b37685a4e54a6caa45e3c33d8f396c69dcc36626417976e0"
     },
@@ -2106,7 +2138,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "cc793808018c6cfc244308219c5b56cd07aceaf90a094bd85e258ea10aee5a26"
+      "sha256": "ff8f650e47ae0fb9dc712da89a666bea11078b3e1e77fcf51be16279f477b455"
     },
     {
       "path": "lib/song-match.ts",
@@ -2395,6 +2427,10 @@
     {
       "path": "scripts/check_blind_completion.mjs",
       "sha256": "a3455991434ad9d694e984a869cf10d406a00dbb730a6a3e09ca1eb96bcd5a59"
+    },
+    {
+      "path": "scripts/check_blind_eq.mjs",
+      "sha256": "959c00d40f2dbab547ab1bd2bb974b8a15b56e717508a0cddafeb07b201afa5f"
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
