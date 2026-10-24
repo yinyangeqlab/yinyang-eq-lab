@@ -121,7 +121,21 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     if (!audio.paused) { audio.pause(); return; }
     setError("");
     try { await ensureGraph(audio).context.resume(); if (!mediaRecovery.current?.retry()) await audio.play(); }
-    catch { setError("This browser could not play this preview."); }
+    catch { setError("This browser could not play this preview."); void explainMissingAudio(); }
+  }
+
+  // A local installation has no recordings. Native media errors hide the HTTP status, so on a loopback host
+  // only, a HEAD probe tells an absent file (404, or the 503 the local media route returns without assets)
+  // from other failures. Hosted sites keep their existing messages, so an outage is never mislabeled.
+  async function explainMissingAudio() {
+    const audio = audioRef.current;
+    if (!audio?.src) return;
+    try {
+      const url = new URL(audio.src);
+      if (!["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname) || url.origin !== window.location.origin) return;
+      const response = await fetch(url, { method: "HEAD", cache: "no-store", credentials: "same-origin", signal: AbortSignal.timeout(4000) });
+      if (response.status === 404 || response.status === 503) setError("This recording's audio file is not installed in this local copy, so it cannot play here. See “Run locally” in the README.");
+    } catch {}
   }
 
   return <div className="library-player" role="group" aria-label={`Preview ${track.title} by ${track.artist}`}>
@@ -134,6 +148,6 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     {matchLoudness && <small className="library-match-status">{Number.isFinite(track.integrated_lufs) ? `${targetLufs.toFixed(1)} LUFS target · ${(20 * Math.log10(playbackGain(track.integrated_lufs, targetLufs))).toFixed(1)} dB gain` : "Loudness not measured; original level"}</small>}
     {buffering && <p className="library-player-buffering" role="status">Buffering audio…</p>}
     {error && <p className="library-player-error" role="alert">{error}</p>}
-    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => setBuffering(false)} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = volume; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={() => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); }} />
+    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => setBuffering(false)} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = volume; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={() => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); void explainMissingAudio(); }} />
   </div>;
 }

@@ -705,7 +705,7 @@
     },
     {
       "path": "components/library-wave-player.tsx",
-      "sha256": "c7083bf4bf1e12ec9bc43f015e994c326c1e9afb0c9d75139dd523d3948e7793"
+      "sha256": "948aec94291a23a50c632f726901c6194c776bf9fcb29493c477585c3e69dd63"
     },
     {
       "path": "components/listener-nickname-panel.tsx",
