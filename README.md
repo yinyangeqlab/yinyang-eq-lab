@@ -18,6 +18,10 @@ A browser listening lab for headphone EQ: find your personal favorite targets, c
 </div>
 
 
+**Current access — update119:** the site is closed for private testing. Only existing admin sign-in and authenticated admin sessions have app access. The lock stays enabled until the owner explicitly requests reopening. [Current live state](LIVE_STATE.md).
+
+The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
+
 ## Try the current beta
 
 Start with **Personal Tournament** to build a shortlist of favorite targets, **Blind Research** to contribute eligible comparisons, or **Open Comparison** to explore named targets. Choose your headphone measurement, select music, set a comfortable volume, and compare A and B.

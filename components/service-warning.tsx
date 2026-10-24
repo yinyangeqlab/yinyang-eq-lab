@@ -25,8 +25,9 @@ export default function ServiceWarningPopup() {
       try{
         const r=await fetch("/api/maintenance",{cache:"no-store",signal:AbortSignal.timeout(8000)});
         if(!r.ok)return;
-        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean;lockedFeatures?:unknown};
+        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean;lockedFeatures?:unknown;ownerOnly?:boolean};
         if(stopped)return;
+        if(status.ownerOnly){window.location.reload();return;}
         if(!status.active||!status.id){setNotice(null);currentNotice.current="";dismissed.current="";return;}
         currentNotice.current=status.id;
         const locked=maintenanceLocks(!!status.pauseSubmissions,status.lockedFeatures);

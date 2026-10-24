@@ -26,6 +26,8 @@ for (let index = 0; index < ceilingCurve.length; index++) {
 
 export default function LibraryWavePlayer({ track, onPlay, onPause, active = false, eq = null, matchLoudness = true, targetLufs = -16 }: { active?: boolean; matchLoudness?: boolean; targetLufs?: number; track: TrackSource; onPlay: (audio: HTMLAudioElement) => void; onPause?: (audio: HTMLAudioElement) => void; eq?: LibraryEq | null }) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const missingAudioProbe = useRef<AbortController | null>(null);
+  const playbackAttempt = useRef(0);
   const [audioGeneration, setAudioGeneration] = useState(0);
   const restorePosition = useRef<number | null>(null);
   const mediaRecovery = useRef<ReturnType<typeof attachMediaRecovery> | null>(null);
@@ -33,13 +35,13 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     const audio = audioRef.current;
     if (!audio) return;
     const recovery = attachMediaRecovery(audio, {
-      onRecovering: () => { setError(""); setBuffering(true); },
-      onRecovered: () => { setError(""); setBuffering(false); },
+      onRecovering: () => { cancelMissingAudioProbe(); setError(""); setBuffering(true); },
+      onRecovered: () => { cancelMissingAudioProbe(); setError(""); setBuffering(false); },
       onFailure: () => { setBuffering(false); setError("The audio connection was interrupted. Press Play to try again."); },
     });
     mediaRecovery.current = recovery;
-    return () => { recovery.dispose(); mediaRecovery.current = null; };
-  }, [audioGeneration]);
+    return () => { playbackAttempt.current++; cancelMissingAudioProbe(); recovery.dispose(); mediaRecovery.current = null; };
+  }, [audioGeneration, track.fileUrl]);
 
   const graph = useRef<EqGraph | null>(null);
   const waveform = curatedWaveform(track.fileUrl);
@@ -118,24 +120,45 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   async function togglePlayback() {
     const audio = audioRef.current;
     if (!audio) return;
+    cancelMissingAudioProbe();
+    const attempt = ++playbackAttempt.current, sourceUrl = audio.src;
     if (!audio.paused) { audio.pause(); return; }
     setError("");
-    try { await ensureGraph(audio).context.resume(); if (!mediaRecovery.current?.retry()) await audio.play(); }
-    catch { setError("This browser could not play this preview."); void explainMissingAudio(); }
+    try {
+      await ensureGraph(audio).context.resume();
+      if (attempt !== playbackAttempt.current || audioRef.current !== audio || audio.src !== sourceUrl) return;
+      if (!mediaRecovery.current?.retry()) await audio.play();
+    } catch {
+      if (attempt !== playbackAttempt.current || audioRef.current !== audio || audio.src !== sourceUrl || !audio.paused) return;
+      setError("This browser could not play this preview."); void explainMissingAudio(audio);
+    }
   }
 
   // A local installation has no recordings. Native media errors hide the HTTP status, so on a loopback host
   // only, a HEAD probe tells an absent file (404, or the 503 the local media route returns without assets)
   // from other failures. Hosted sites keep their existing messages, so an outage is never mislabeled.
-  async function explainMissingAudio() {
-    const audio = audioRef.current;
-    if (!audio?.src) return;
+  function cancelMissingAudioProbe() {
+    missingAudioProbe.current?.abort(); missingAudioProbe.current = null;
+  }
+  async function explainMissingAudio(audio: HTMLAudioElement | null) {
+    cancelMissingAudioProbe();
+    if (!audio?.src || audioRef.current !== audio) return;
+    const sourceUrl = audio.src;
+    let url: URL;
+    try { url = new URL(sourceUrl); } catch { return; }
+    if (!["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname) || url.origin !== window.location.origin) return;
+    const controller = new AbortController(); missingAudioProbe.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 4000);
     try {
-      const url = new URL(audio.src);
-      if (!["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname) || url.origin !== window.location.origin) return;
-      const response = await fetch(url, { method: "HEAD", cache: "no-store", credentials: "same-origin", signal: AbortSignal.timeout(4000) });
+      const response = await fetch(url, { method: "HEAD", cache: "no-store", credentials: "same-origin", signal: controller.signal });
+      // Abort alone is insufficient: a settled response can race with retry,
+      // successful playback, element replacement or unmount cleanup.
+      if (controller.signal.aborted || missingAudioProbe.current !== controller || audioRef.current !== audio || audio.src !== sourceUrl || !audio.paused) return;
       if (response.status === 404 || response.status === 503) setError("This recording's audio file is not installed in this local copy, so it cannot play here. See “Run locally” in the README.");
-    } catch {}
+    } catch {} finally {
+      window.clearTimeout(timeout);
+      if (missingAudioProbe.current === controller) missingAudioProbe.current = null;
+    }
   }
 
   return <div className="library-player" role="group" aria-label={`Preview ${track.title} by ${track.artist}`}>
@@ -148,6 +171,6 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     {matchLoudness && <small className="library-match-status">{Number.isFinite(track.integrated_lufs) ? `${targetLufs.toFixed(1)} LUFS target · ${(20 * Math.log10(playbackGain(track.integrated_lufs, targetLufs))).toFixed(1)} dB gain` : "Loudness not measured; original level"}</small>}
     {buffering && <p className="library-player-buffering" role="status">Buffering audio…</p>}
     {error && <p className="library-player-error" role="alert">{error}</p>}
-    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => setBuffering(false)} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = volume; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={() => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); void explainMissingAudio(); }} />
+    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { cancelMissingAudioProbe(); setError(""); setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => { cancelMissingAudioProbe(); setError(""); setBuffering(false); }} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = volume; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={event => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); void explainMissingAudio(event.currentTarget); }} />
   </div>;
 }

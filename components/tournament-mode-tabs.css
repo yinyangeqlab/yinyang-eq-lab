@@ -74,3 +74,8 @@
  .shell .tournament-modes .mode-with-art .tournament-mode-label{font-size:clamp(11px,3.15vw,12px)}
 }
 @media(prefers-reduced-motion:reduce){.shell .shootout-content .tournament-modes .tournament-mode.mode-with-art{animation:none!important;transition:none!important}}
+
+/* Private preset comparison keeps the three Tournament cards unchanged. */
+.shell .tournament-modes .eq-preset-mode-link{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;min-width:0;min-height:44px;padding:10px 14px;border:1px solid #3c5967;border-radius:9px;background:#11242d;color:#c4ece5;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.shell .tournament-modes .eq-preset-mode-link span{font-size:12px;color:#adbfcc}
+.shell .tournament-modes .eq-preset-mode-link:focus-visible{outline:3px solid #f4d281;outline-offset:3px}
