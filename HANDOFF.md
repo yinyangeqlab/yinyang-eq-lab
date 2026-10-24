@@ -1,3 +1,13 @@
+# Current live release — 0.2.0-beta.1 / update118, October 24, 2026
+
+The entire site is closed for private testing. Visitors receive the full-screen maintenance notice. Existing admin sign-in at https://yinyangeq.com/admin-login and valid signed admin sessions retain access. The lock has no automatic expiry and must remain enabled until the owner explicitly requests reopening. The separate blind EQ feature is not deployed.
+
+Maintenance-only source `1aa1330818ceac51e7d5cb12ecaded8c3fd9bc5f` updated exactly one existing Worker. Anonymous denial passed for 18 page/API/media/asset paths; real admin sign-in and authenticated access passed. All 845 JS/CSS files matched the sealed build, and deployed gate/helper modules matched exactly. Cloudflare version metadata confirms all-path worker-first routing. Schema220, CPU5000ms, six abuse bindings, protected D1/media and disabled public Worker URLs remain unchanged. Independent edge/cost controls were untouched. No migration, participant import/export or fresh data snapshot occurred.
+
+Source/build `work/owner-only-maintenance-20261023`; infrastructure `work/owner-only-maintenance-infra-20261023`. The private canonical stack config preserves the closure for subsequent deployments. Source-only recovery metadata registration, independent reconstruction and hosted validation passed. All prior data snapshot records and original timestamps are unchanged; daily scheduling remains active. Publication is authorized. Existing encrypted off-device recovery points retain their original provenance. The public maintenance page passed desktop1280px and narrow360px browser appearance checks. Safari/iOS and physical audio were not freshly reviewed. See docs/releases/update118-verification.json.
+
+## Previous release records (historical)
+
 # Current live release — 0.2.0-beta.1 / update117, October 23, 2026
 
 Update117 is deployed and verified from lab-attributed source `06318b114767a0282880721f27168443306f29b4` on `release/jason-aac-20261023`, based on freshly fetched update116 main. It adds all 24 owner-supplied Jason J. Chevallier AAC-LC M4A files byte for byte (98,252,313 bytes; 93.7 MiB), with “Used with permission · All rights reserved” credits and an explanation that visitors receive no reuse license. The source and library link preview no longer describe every recording as openly licensed. The larger mixed-format draft was never deployed.

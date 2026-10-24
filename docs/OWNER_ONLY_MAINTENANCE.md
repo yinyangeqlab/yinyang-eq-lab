@@ -1,6 +1,6 @@
 # Owner-only site maintenance
 
-Status: prepared and locally verified; not deployed. This change starts directly
+Status: deployed and production verified as update118 on October 24, 2026. The site remains closed until explicit owner authorization to reopen. This change starts directly
 from verified scrubbed main `787bf67d4dfa286202cd7694a87449f4e6085c08` and excludes
 the separate blind EQ feature. The owner's original dirty checkout is preserved.
 
@@ -73,6 +73,4 @@ security-header, share-preview and reserved-profile gate suites pass. App and
 infrastructure TypeScript, targeted lint and production build pass; full packaging
 contains 224 protected recordings and retains prior browser assets.
 
-The CLI could not contact Pulumi: the session denies network socket creation.
-The owner signed into the lab Cloudflare account in Brave so dashboard deployment
-can be inspected as an alternative. This document does not claim a deployment.
+The continuation used the existing Pulumi stack with elevated network access. One Worker updated; the final preview reports four unchanged resources. Public route/API/media/asset denial, real admin sign-in, exact authenticated JS/CSS and exact deployed gate/helper modules passed. Cloudflare version metadata confirms all-path worker-first routing. No migration or data export occurred.

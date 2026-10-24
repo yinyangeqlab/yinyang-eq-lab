@@ -1,0 +1,55 @@
+{
+  "update": 118,
+  "deploymentVerification": {
+    "at": "2026-10-24T07:06:05.732943+00:00",
+    "revision": "1aa1330818ceac51e7d5cb12ecaded8c3fd9bc5f",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "f2585fe9-4634-4167-bb8b-189fddf81486",
+    "versions": [
+      {
+        "version_id": "16ad29cc-7eba-49cb-9d29-8b68e19af3c8",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 18,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 845,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": true,
+    "sourceOnlyRecoveryRegistrationPending": true
+  },
+  "migrations": [],
+  "newDataSnapshot": false,
+  "recoveryRegistrationPending": false,
+  "publicationPending": true,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "finalPreview": {
+    "same": 4
+  },
+  "publicBrowserReview": {
+    "widths": [
+      1280,
+      360
+    ],
+    "maintenanceNoticeReadable": true,
+    "adminBrowserSessionUsed": false
+  }
+}

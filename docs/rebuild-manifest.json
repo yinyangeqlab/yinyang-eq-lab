@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 117,
-  "implementationCommit": "06318b114767a0282880721f27168443306f29b4",
-  "runtimeParity": "Verified update117: 24 unchanged AAC recordings, permission credits, fresh analysis and accurate music link previews, on update116; no schema change. Exact runtime snapshot and compiled assets verified. Matching encrypted recovery point and daily validation verified.",
+  "liveUpdate": 118,
+  "implementationCommit": "1aa1330818ceac51e7d5cb12ecaded8c3fd9bc5f",
+  "runtimeParity": "Verified deployed maintenance-only update118; blind EQ excluded. Deployment source/build fingerprints retain original provenance.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,15 +66,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "03b1b470c1da8c7083539d75097c20920631805148638ee923cff45d5514210f"
+      "sha256": "c0a2476ccdcf0673eafb3720f31823287a39549671f0041c7fdab7eac9ab27b1"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "8bf6233c22347ac342d5311022acb4e31f7499b478fcd9540ec4f13fdd768e76"
+      "sha256": "843f1d863ae9a4f3eb958adf79967f6fbd7b4d7e713e34543d70129dac5654d6"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "7d2aa8e269321bb84ac85a39a48514551aa13f4bfccc26b9c4fdcd6e8ad90691"
+      "sha256": "08d51efd93bfd79e71f867648559889f19cb019d851c8cadd78eceb360349b3a"
     },
     {
       "path": "README.md",
@@ -1282,7 +1282,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a89f9a7578c05fc15d67bcd4951fe6c6bdd68601eaba1644259181d627dc0c5c"
+      "sha256": "8c76bece8ebf6d6a75464829a280e01ca50e063c676bf551884528931e45fee6"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1294,7 +1294,7 @@
     },
     {
       "path": "docs/OWNER_ONLY_MAINTENANCE.md",
-      "sha256": "699b1286dd1d743cefc06935ca02260413e36110255e414ddeb079db1a27eceb"
+      "sha256": "e7dc6433760c84607e9c1fb6d64e240541beeb0712b7043a425ad91993d1a9c0"
     },
     {
       "path": "docs/REBUILD.md",
