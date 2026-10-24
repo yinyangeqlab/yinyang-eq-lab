@@ -730,7 +730,7 @@
     },
     {
       "path": "components/library-wave-player.tsx",
-      "sha256": "c7083bf4bf1e12ec9bc43f015e994c326c1e9afb0c9d75139dd523d3948e7793"
+      "sha256": "e6ab34732d03a8f51493ca52d9ee106255ac55d2137f10ad19218cbd13e1119b"
     },
     {
       "path": "components/listener-nickname-panel.tsx",
@@ -2859,6 +2859,10 @@
     {
       "path": "wrangler.local.json",
       "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d"
+    },
+    {
+      "path": "scripts/check_local_audio_error.mjs",
+      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
     }
   ],
   "environment": {
