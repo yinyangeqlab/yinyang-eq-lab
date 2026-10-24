@@ -3,7 +3,7 @@ export type EqFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q
 export type EqChannel = { preampDb: number; filters: EqFilter[] };
 export type EqPreset = { name: string; channels: [EqChannel, EqChannel] };
 export type BlindChoice = "A" | "B" | "tie" | "skip";
-export type BlindRound = { order: [0 | 1, 0 | 1]; song: string; artist: string; start: number; seconds: number; choice: BlindChoice; heard: [number, number] };
+export type BlindRound = { sourceId?: string; order: [0 | 1, 0 | 1]; song: string; artist: string; start: number; seconds: number; choice: BlindChoice; heard: [number, number] };
 export type BlindSession = { presets: [EqPreset, EqPreset]; order: [0 | 1, 0 | 1]; rounds: BlindRound[]; revealed: boolean; revealedAt: string | null };
 
 export function validateEqPreset(preset: EqPreset): EqPreset {

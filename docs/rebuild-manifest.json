@@ -334,11 +334,11 @@
     },
     {
       "path": "app/eq-compare/page.tsx",
-      "sha256": "d8a939316138d051e7278ff63aa3fe6b6fe2d990a9c171dabdbc00ddcc2a360d"
+      "sha256": "dcd65bce9ba9eb3022f9cfb312ed8299a766a00fde2ed4d1b2123595860b793d"
     },
     {
       "path": "app/eq-compare/style.css",
-      "sha256": "ebb1042dbccaeb07cd63e05a3c0fbded9ba6301d059792cdef65b15a84563cfe"
+      "sha256": "75f8a60a1a6b2bdb9d271fabac71b7256f7c3b002b31857017b7e50f12c5f467"
     },
     {
       "path": "app/globals.css",
@@ -634,7 +634,7 @@
     },
     {
       "path": "components/blind-eq-listener.tsx",
-      "sha256": "b47848a86fcb40fe6d81254a6bcb18eca9cb98d3c5827ec4263b8e3e62952957"
+      "sha256": "a52ac604ca48b37414c75c7833bf1c6627f9450dbc5a382921b3855350588dbc"
     },
     {
       "path": "components/community-method.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "bd9fd320b0e37763442641ca0a15aeca15ae1751e799c5d6d0bcaea8ae7ff062"
+      "sha256": "599c8761109981181eec29a04d621252f47caff1bf6ad26818aadc0aa440f687"
     },
     {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
@@ -1798,11 +1798,11 @@
     },
     {
       "path": "lib/blind-eq-audio.ts",
-      "sha256": "a5f78dea1e40aa3fd3d1a0ca8474e87032c12679a3a9812c3080677b51722815"
+      "sha256": "2f21dd843fa2792f28784e82da7a5157b8292a4efb22c75891124bbe79a1b7fd"
     },
     {
       "path": "lib/blind-eq.ts",
-      "sha256": "63f9ebc70a8174a49d149600ebd1ffec18ef2b2b251fde32ed8a9aa1898bf371"
+      "sha256": "8faa8b8aa48413f9418d76a2a39a1bedf67e992736ae90666cde72da2653a326"
     },
     {
       "path": "lib/browser-data.ts",
@@ -2433,6 +2433,10 @@
       "sha256": "f8b83011e6330de6b4a44aaed6b53e3ec084c225184276417440ca21c6e058da"
     },
     {
+      "path": "scripts/check_blind_eq_workflow.mjs",
+      "sha256": "a26e1b3bff75d24be36d7bbf17bdf7cc7aba823fadfd63dbd58f75601a56d9f4"
+    },
+    {
       "path": "scripts/check_browser_pairing.mjs",
       "sha256": "3de5f3bfa1f0e1e482704285fdd64bbcfd700b6b3d3af2a47722bd15eb5e6c62"
     },
@@ -2503,6 +2507,10 @@
     {
       "path": "scripts/check_listening_reminder.mjs",
       "sha256": "7af0808cd2db137c9d5655d22402855877c6ca492f8258e1a5c435bc12326f13"
+    },
+    {
+      "path": "scripts/check_local_audio_error.mjs",
+      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
     },
     {
       "path": "scripts/check_maintenance_dependencies.cjs",
@@ -2859,10 +2867,6 @@
     {
       "path": "wrangler.local.json",
       "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d"
-    },
-    {
-      "path": "scripts/check_local_audio_error.mjs",
-      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
     }
   ],
   "environment": {

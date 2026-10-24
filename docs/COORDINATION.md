@@ -23,6 +23,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 |-------|--------------|---------|--------|
 | Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; recovery passed; published through PR #12 |
 | Codex | Fix PRs #7/#10; test/merge #7–10; deploy runtime under persistent lock in isolated worktrees | 2026-10-24 | done: all four PRs merged; update120 deployed under lock; recovery passed |
+| Codex | Full blind EQ workflow audit/fixes; isolated current-main worktree; persistent maintenance lock | 2026-10-24 | active |
 | Claude | Read-only review of blind EQ comparison | 2026-10-24 | done; see docs/reviews/2026-10-24-blind-eq-compare.md |
 
 ## Baseline snapshot (2026-10-24)
@@ -58,3 +59,9 @@ Owner explicitly authorized fixes, testing, all four PR merges and runtime deplo
 Runtime deployment verified as update120 from `00799c6b978f8a69283c00e5a7724ae8382f5240`. PR #7/#10 findings are fixed; all four PRs are merged. Public access remains blocked by owner-only maintenance; actual admin sign-in, private EQ/version access, 889 JS/CSS files and deployed gate/helper modules verified. No migration or fresh data export. Source-only recovery registration, independent reconstruction and hosted validation passed; prior data snapshots and timestamps are unchanged.
 
 Completion: source/build `work/four-pr-release-20261024`, revision `00799c6b978f8a69283c00e5a7724ae8382f5240`; all requested PRs merged. 32 local-audio component regressions, 85 private EQ checks and both maintenance suites passed, plus build/type checks and synthetic browser checks. The owner-only lock remains enabled. Original canonical drafts/index are preserved. No fresh data export.
+
+## Full blind EQ workflow review — October 24, 2026
+
+Codex is reviewing the full current workflow from preset setup through result download/reset on refreshed main `5ecb022`. Canonical HEAD `86c60c0` and its unrelated dirty files remain preserved. No new Claude implementation assignment or overlapping file claim exists. Public access must remain closed except signed admin sessions.
+
+Findings for the full workflow review are accepted and fixed in docs/reviews/2026-10-24-blind-eq-full-workflow.md. 37 focused workflow regressions and the existing85 blind EQ checks pass; browser/locked-release closeout is in progress. Original canonical drafts are preserved.
