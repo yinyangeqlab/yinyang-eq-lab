@@ -2553,15 +2553,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2c43c7726d2a39759153c65c04e694b7573d9ef95ec6c4ddce93fc27bc584819"
+      "sha256": "767eaee3f2dabec98464e8f5317cf896c9313e30b826f266c2e431c3721d6982"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "85bf87f9f7fb979b763748d662ad5122d2a88a7312b1796bbee30ab4cb5c2eba"
+      "sha256": "ce1a55b1675674879cb05884ecde88c7f6389d48ca691069d50a9d85203b5f11"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "f9c9dd9b03ebb262f6f26c3dfc929212d4afc67fc40bb4f0a36e5f94c4940f22"
+      "sha256": "ca280daee3c8e1fc1c7282cc24f3a6f203fa4c54b2406f0d0c5b9e60e3abda45"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2577,7 +2577,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "46f27fccfe27f86a399adc6c00dd193650a5d815e41cb911d0ad0bb3fc7a275d"
+      "sha256": "8b9e1afce8f868c53e15de5e1f296b352dd30cf350b1360615526ca39566d97b"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -11811,7 +11811,7 @@
   },
   "taskClosure": {
     "at": "2026-10-24T09:11:39.290565+00:00",
-    "status": "Blind EQ deployment behind persistent admin-only maintenance and recovery validation complete; publication pending",
+    "status": "Blind EQ deployed under persistent admin-only lock; recovery verified and source/records published through PR #12",
     "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
@@ -11879,7 +11879,7 @@
     "branch": "release/blind-eq-maintenance-20261024",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
@@ -11888,7 +11888,10 @@
       "path": "docs/rebuild-manifest.json",
       "immutableSourceSha256": "f2be69b3aa628e4d20b6e47936d5eed413c593216436d2c8381b35e48fbe817c",
       "reason": "Immutable deployed/recovery source retains original fingerprints; publication records update clone-safe documentation hashes separately."
-    }
+    },
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/12",
+    "publicationBranch": "release/blind-eq-records-20261024",
+    "publicationState": "Published through PR #12; GitHub records merge state"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",

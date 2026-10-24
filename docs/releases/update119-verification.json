@@ -76,7 +76,7 @@
   "migrations": [],
   "newDataSnapshot": false,
   "recoveryRegistrationPending": false,
-  "publicationPending": true,
+  "publicationPending": false,
   "recoveryVerification": {
     "sourceOnlyHandoverPassed": true,
     "priorDataSnapshotsExactlyUnchanged": true,
@@ -90,5 +90,10 @@
   },
   "finalPreview": {
     "same": 4
+  },
+  "publication": {
+    "account": "yinyangeqlab",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/12",
+    "branch": "release/blind-eq-records-20261024"
   }
 }
