@@ -24,7 +24,7 @@
     "newDataExport": false,
     "newBackupSnapshot": false,
     "releaseRecordsPending": false,
-    "sourceOnlyRecoveryRegistrationPending": true,
+    "sourceOnlyRecoveryRegistrationPending": false,
     "blindEqAdminRouteVerified": true,
     "versionPageAdminRouteVerified": true,
     "changedAdminRoutesVerified": [
@@ -74,9 +74,30 @@
   "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/15",
   "migrations": [],
   "newDataSnapshot": false,
-  "recoveryRegistrationPending": true,
-  "recoveryApprovalRequired": true,
+  "recoveryRegistrationPending": false,
+  "recoveryApprovalRequired": false,
   "finalPreview": {
     "same": 4
+  },
+  "recoveryOwnerApproved": true,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "verifiedAt": "2026-10-24T20:36:22.386121+00:00",
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "recoveryCloseout": {
+    "verifiedAt": "2026-10-24T20:36:22.386121+00:00",
+    "documentationOnly": true,
+    "websiteRedeployed": false,
+    "existingDataSnapshotsUnchanged": true,
+    "newDataExport": false,
+    "newDataSnapshots": 0
   }
 }

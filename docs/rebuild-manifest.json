@@ -1,7 +1,7 @@
 {
   "liveUpdate": 123,
   "implementationCommit": "74d3ab76daac921ab01d5d4a13dfa5a052a05a73",
-  "runtimeParity": "Lint/runtime fixes verified under persistent admin-only maintenance. Immutable source/build preserved; source-only recovery approval pending.",
+  "runtimeParity": "Update123 lint/runtime deployment unchanged under persistent admin-only maintenance; owner-approved source-only recovery registration, independent reconstruction and exact hosted validation passed. This closeout is documentation only.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,15 +66,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "20f90def7590970af063454387275c1a27c8b390803ea06f577ccb25f892e687"
+      "sha256": "0a7662d3ebee3fcd8fb25c3937619e4bf78d8da6a2568e002c7ce51032decd69"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "98740e4d6a35b45775cee384e8f1445741bcb4420a892c05383052dc0d917eb0"
+      "sha256": "48f46c75146ce4d0331ef0743c36c32c45873d45e2b5e80503f83247073aeb53"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "aa70c8a7ac684be11143df91166499bc86844918303f3599729bafb4b704613d"
+      "sha256": "287fbf1c6147c5de9c0c3bc9bfa7b27fa6684340a745f2b39c66c01114463063"
     },
     {
       "path": "README.md",
@@ -1306,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "8aafac65db04fe711946e0cf311380c12542fe21ccf9d1affc0b11cc61e837fd"
+      "sha256": "f9517cbe19bdb8a8872b3ed1027440c0c3f65318001c30cd283d6f75eed76461"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1326,11 +1326,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "9dff1c4a6789546f503cf98fa2afee86ceff607caf8768cd41b8510cc585f6bc"
+      "sha256": "3fb9cd2b59e785bfdfd393e4663ebb0cbd04df839d3d3e8bb316664be4a421e2"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "f3662c2d4e6404877f5574f11f7c95e5f0553590ac59544ba915d83e7553bada"
+      "sha256": "1c2cb2a1e5077838de82afe01afd033c8c5c770fcd0b7e4d423a69bf916bcc9c"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
@@ -1370,7 +1370,7 @@
     },
     {
       "path": "docs/releases/update123-verification.json",
-      "sha256": "5d94ab9038544de0d7abaefddd266caff0e2fbf84397adf03159e3b6b0c412f7"
+      "sha256": "455ba4b0ebc946362801fe3ec76157fe6da5acedec93bbb463de05ccdbd6da51"
     },
     {
       "path": "docs/research/README.md",
@@ -1394,7 +1394,7 @@
     },
     {
       "path": "docs/reviews/2026-10-24-lint-cleanup.md",
-      "sha256": "3819109b82caf501aa977cd51169f52345e328a9b7e8ee75295071c0740cee43"
+      "sha256": "eb8edc16b4c8d29fcfc515860481c55a2c7ebb2fb92029eb51c295b8c21aee32"
     },
     {
       "path": "docs/reviews/2026-10-24-main-workflows.md",
