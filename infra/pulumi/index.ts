@@ -27,6 +27,9 @@ const config = new pulumi.Config();
 const accountId = config.require("cloudflareAccountId");
 const scriptName = config.get("scriptName") ?? "yinyangeq-staging";
 const maintenanceMode = config.getBoolean("maintenanceMode") ?? true;
+const ownerOnlyMaintenance = config.getBoolean("ownerOnlyMaintenance") ?? false;
+const ownerOnlyMaintenanceMessage = config.get("ownerOnlyMaintenanceMessage");
+if (ownerOnlyMaintenanceMessage !== undefined && (!ownerOnlyMaintenanceMessage.trim() || ownerOnlyMaintenanceMessage.length > 500)) throw new Error("ownerOnlyMaintenanceMessage must contain 1–500 characters");
 const canonicalOrigin = config.get("canonicalOrigin") ?? "https://yinyangeq.com";
 const canonicalUrl = new URL(canonicalOrigin);
 if(canonicalUrl.protocol !== "https:" || canonicalUrl.pathname !== "/" || canonicalUrl.username || canonicalUrl.password || canonicalUrl.search || canonicalUrl.hash) throw new Error("canonicalOrigin must be an HTTPS origin");
@@ -133,7 +136,7 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     directory: clientDir,
     // Keep the value list-typed: the bridge cannot diff Boolean -> list (#3122).
     // Rollback is ["/*"], never false or asset-first (private music lives here).
-    config: { runWorkerFirst: ["/*", ...publicAssetBypassPatterns] },
+    config: { runWorkerFirst: ownerOnlyMaintenance ? ["/*"] : ["/*", ...publicAssetBypassPatterns] },
   },
   bindings: [
     ...abuseBindings,
@@ -141,6 +144,8 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     { name: "DB", type: "d1", databaseId: database.uuid },
     { name: "CANONICAL_ORIGIN", type: "plain_text", text: canonicalUrl.origin },
     { name: "MAINTENANCE_MODE", type: "plain_text", text: String(maintenanceMode) },
+    { name: "OWNER_ONLY_MAINTENANCE", type: "plain_text", text: String(ownerOnlyMaintenance) },
+    ...(ownerOnlyMaintenanceMessage ? [{ name: "OWNER_ONLY_MAINTENANCE_MESSAGE", type: "plain_text", text: ownerOnlyMaintenanceMessage }] : []),
     { name: "ABUSE_RATE_SECRET", type: "secret_text", text: requiredSecret("abuseRateSecret") },
     { name: "OWNER_ANALYTICS_TOKEN", type: "secret_text", text: requiredSecret("ownerAnalyticsToken") },
     { name: "PRIVATE_ACCESS_PASSWORD", type: "secret_text", text: requiredSecret("privateAccessPassword") },

@@ -35,7 +35,12 @@
       "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005"
     },
     "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged.",
-    "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment."
+    "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment.",
+    "ownerOnlyMaintenance": {
+      "status": "Prepared local maintenance-only source; not deployed. Requires explicit ownerOnlyMaintenance=true in the existing staging configuration.",
+      "baseCommit": "787bf67d4dfa286202cd7694a87449f4e6085c08",
+      "documentation": "docs/OWNER_ONLY_MAINTENANCE.md"
+    }
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -837,7 +842,7 @@
     },
     {
       "path": "components/service-warning.tsx",
-      "sha256": "98524cfd6aa2c218cd5ce7847d45e9a70b886e0b7358cd2c8996048a520364be"
+      "sha256": "2a5fc5ad358951bac471a6b77d546fd1482fade6bc64f5edae9f1ee37fba40cd"
     },
     {
       "path": "components/setup-auto-hide-note.tsx",
@@ -1284,6 +1289,10 @@
       "sha256": "c4517841d16f1b9eb49f7e66baf92ba81bb6c3d6a50bfa1aba5b5960d332878f"
     },
     {
+      "path": "docs/OWNER_ONLY_MAINTENANCE.md",
+      "sha256": "699b1286dd1d743cefc06935ca02260413e36110255e414ddeb079db1a27eceb"
+    },
+    {
       "path": "docs/REBUILD.md",
       "sha256": "d57de5df16b46eda67befae5d3473d7ff7f40041840a8e105a450867e5075e1b"
     },
@@ -1641,7 +1650,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "a885397673dd9a0d1660ff78a9fa332c87827e0056a80a69af285c9e20724db6"
+      "sha256": "47a942c59afad1a76ca57a6eb0c80b863df7ba396ccf069c2e94465b34402052"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1653,7 +1662,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "2221509e7dd0848b21cf9dec35a2fc06f164140f1bd46b5211d9deacc33e8f91"
+      "sha256": "13c1236938a3f9a67ff7e694b690651a20953bacaba3899ef71a4501ced3c48d"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1921,7 +1930,7 @@
     },
     {
       "path": "lib/maintenance-options.ts",
-      "sha256": "2114da146cfeb0dec0977c1f3934b057fe0a338151c45a9391f8ba08f4e07f56"
+      "sha256": "adec610c6a08db19e9b99d4476e76c81776894076d3a8521fbc2e003d84f3bbd"
     },
     {
       "path": "lib/maintenance.ts",
@@ -2498,6 +2507,10 @@
     {
       "path": "scripts/check_open_music_source.mjs",
       "sha256": "0beb5ff58e0a4f57990217a71e5fba68872e29e54b43e454028492260697ff07"
+    },
+    {
+      "path": "scripts/check_owner_only_maintenance.mjs",
+      "sha256": "003eb37067fe9a4f3eb4e7b1492260e10e6aee48b7210479ad5750661aeee957"
     },
     {
       "path": "scripts/check_participant_device_sync.mjs",

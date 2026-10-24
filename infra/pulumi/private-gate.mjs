@@ -2,7 +2,7 @@ import { serveWorkerMedia } from "./media-route.mjs";
 import { withMediaLength } from "./media-response.mjs";
 import app from "./index.js";
 import {readServiceStatus} from "./service-status.mjs";
-import {featureMaintenanceResponse} from "./maintenance-options.mjs";
+import {featureMaintenanceResponse,ownerOnlyMaintenanceResponse} from "./maintenance-options.mjs";
 import { preDatabaseGuard, listenerGuard, boundedBody } from "./abuse-controls.mjs";
 import { isPublicAsset } from "./public-assets.mjs";
 import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
@@ -172,6 +172,13 @@ async function admin(request, env, path) {
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
+    // Evaluate before public pages, crawler previews, shared shootouts and media.
+    // Only the existing signed, host-only admin cookie grants the exception.
+    if (["true", "1"].includes(String(env.OWNER_ONLY_MAINTENANCE)) && !["/admin-login", "/owner-login"].includes(path)) {
+      const secret = env.PRIVATE_ACCESS_PASSWORD;
+      const owner = typeof secret === "string" && secret.length >= 32 && await validOwnerSession(request, secret);
+      if (!owner) return ownerOnlyMaintenanceResponse(request, env.OWNER_ONLY_MAINTENANCE_MESSAGE);
+    }
     // Link-preview crawlers (Discord, Slack, iMessage...) cannot sign in, so gated
     // pages would redirect them to a generic page. Answer with public copy only:
     // no session, no database, no app content.
@@ -375,7 +382,7 @@ export default {
     headers.set("X-YinYang-Worker", "1");
     headers.set("X-Content-Type-Options", "nosniff");
     // Only the chrome-less shootout page may be framed by other sites.
-    const embeddable = request.method === "GET" && /^\/embed\/[a-z0-9]{10}$/.test(new URL(request.url).pathname);
+    const embeddable = response.headers.get("X-YinYang-Service") !== "owner-only-maintenance" && request.method === "GET" && /^\/embed\/[a-z0-9]{10}$/.test(new URL(request.url).pathname);
     if (!embeddable) headers.set("X-Frame-Options", "DENY");
     if (!headers.has("Referrer-Policy")) headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
