@@ -21,7 +21,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Agent | Area / files | Started | Status |
 |-------|--------------|---------|--------|
-| Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | active; original canonical drafts preserved |
+| Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; publication pending |
 | Claude | Read-only review of blind EQ comparison | 2026-10-24 | done; see docs/reviews/2026-10-24-blind-eq-compare.md |
 
 ## Baseline snapshot (2026-10-24)
@@ -45,3 +45,7 @@ Read shared workflow and Claude review. Canonical HEAD `86c60c0`, 84 dirty/untra
 Optional repeat-consistency trials, K-weighted matching, loop seam changes and a three-step redesign are deferred: this release retains honest RMS/personal-preference limits and focuses on reviewed functional defects. Header links remain full navigations so beforeunload protects unsaved results. No automatic Claude messaging is enabled.
 
 Final integration finding accepted: standalone private EQ routing prevents internal sidebar navigation and cross-tab Sync effects from discarding unsaved memory-only results. Both private-route isolation and ordinary-route shell preservation are exercised by the actual component test. Initial locked rollout is preserved privately; a corrected build is verified before release closeout.
+
+Deployment verified as update119 from `43010598186d97bec4ba560dc68e2b4b9cc5d13f`. Admin-only maintenance remains enabled. Source-only recovery closeout/publication are in progress; no new data export. Open PR review results remain local/shared and the four independent PRs were not mutated.
+
+Update119 source-only metadata registration, independent reconstruction and hosted validation passed; prior data snapshots/timestamps unchanged. No fresh data export. Four independent PRs remain open; live REST recheck found them clean/mergeable despite the earlier stale connector status. Public push/PR was stopped by automatic approval review while saved owner authorization is checked; no publication claimed.

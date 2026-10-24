@@ -1,0 +1,94 @@
+{
+  "update": 119,
+  "deploymentVerification": {
+    "at": "2026-10-24T09:11:39.290565+00:00",
+    "revision": "43010598186d97bec4ba560dc68e2b4b9cc5d13f",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "c5d03c97-2575-42af-ba7f-e4787fe28e36",
+    "versions": [
+      {
+        "version_id": "a08691f5-967d-4c5b-9782-a7228136fc80",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 18,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 876,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true
+  },
+  "initialRollout": {
+    "at": "2026-10-24T09:08:37.323195+00:00",
+    "revision": "614307e552a71c739cbe0f478e29d88378d5ba15",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "8d646b0e-9ae4-4291-a3fd-66883bb821d4",
+    "versions": [
+      {
+        "version_id": "0028cd70-8ce4-4ef8-b87f-7a6855bf377c",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 18,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 863,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": true,
+    "sourceOnlyRecoveryRegistrationPending": true,
+    "blindEqAdminRouteVerified": true
+  },
+  "focusedChecks": 85,
+  "browserVerification": {
+    "widths": [
+      1280,
+      360
+    ],
+    "syntheticOnly": true,
+    "webAudioPassed": true,
+    "presetRenamePassed": true,
+    "dirtyDraftFeedbackPassed": true,
+    "presetRestorationPassed": true,
+    "voteLockAndNextSongResetPassed": true,
+    "earlyRevealCancellationPassed": true,
+    "resultDownloadVersion2Passed": true,
+    "dropdownClosedExpandedKeyboardPassed": true,
+    "darkOptionComputedColorsPassed": true,
+    "nativePopupPixelsNotCaptured": true,
+    "retainedPreviousClientFiles": 763
+  },
+  "migrations": [],
+  "newDataSnapshot": false,
+  "recoveryRegistrationPending": false,
+  "publicationPending": true,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "finalPreview": {
+    "same": 4
+  }
+}

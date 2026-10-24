@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 118,
-  "implementationCommit": "1aa1330818ceac51e7d5cb12ecaded8c3fd9bc5f",
-  "runtimeParity": "Verified deployed maintenance-only update118; blind EQ excluded. Deployment source/build fingerprints retain original provenance.",
+  "liveUpdate": 119,
+  "implementationCommit": "43010598186d97bec4ba560dc68e2b4b9cc5d13f",
+  "runtimeParity": "Verified private blind EQ update119 behind the unchanged owner-only maintenance lock; immutable deployed/recovery source retains original fingerprints.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,19 +66,19 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "c663f0e69e983d3acaa0aded3e4b78a7634fd5fb076362ac78ba6b5496042b1e"
+      "sha256": "7329d141a29343d4e39d5d3b4ec4ed5bfeb6ef03ed589c4453a91a99ca350784"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "2ad41af88ad62043ef50eb83ca49c4c48a2d0e0bb50664d6d230cea9709722d1"
+      "sha256": "8666174cd57e3f19f2161dc4628305562ae8aee34d858aa98586de6b6b9d3a3d"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "fbfb46b7dc6a0ef6f0e16e953c0bb3e0e216fe3bd28acffeccc549afe53a8e6e"
+      "sha256": "57a48272a1461b7ac13bcdcc0356bf05062ba29395b46885d068d6f8a9f60610"
     },
     {
       "path": "README.md",
-      "sha256": "5db64eba6dccb80833d2fa1c77c7a04d7dc8b2f9546338b04921e4ff43ffb02e"
+      "sha256": "5ca6af32cf199c2e26568174b9247071ad3f68648032a4c7848b7ffbdb940dd2"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "dfe3b9e7cbbc9216f3ebcc18aa96c9ca945ebfcc056d82825d2309e1ffd95375"
+      "sha256": "bd9fd320b0e37763442641ca0a15aeca15ae1751e799c5d6d0bcaea8ae7ff062"
     },
     {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
@@ -1306,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ebb7003e9e47c40848b7036c74da8dcd2f8803d40ee088f6eaebcce8b99c21aa"
+      "sha256": "c3d3fa7b44b28c59f5feb1e5fe89849475068de821c83959460c5be9987fa362"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
