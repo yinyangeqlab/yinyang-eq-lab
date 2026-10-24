@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
-const {adjustComparisonPassage:adjust}=module.exports;
+const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+const {adjustComparisonPassage:adjust}=fixtureModule.exports;
 for(const duration of [5,5.05,6,8,20,180])for(const mode of ['move','start','end'])for(const delta of [-10000,-8,-.5,0,.5,8,10000]){
  const result=adjust({start:Math.max(0,duration/2-4),end:Math.min(duration,duration/2+4)},mode,delta,duration);
  assert.ok(result.start>=0);assert.ok(result.end<=duration+.001);assert.ok(Math.abs(result.end-result.start-5)<.001,'Every selection must stay exactly five seconds');

@@ -75,7 +75,7 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   useEffect(() => {
     if (active || !graph.current) return;
     const audio = audioRef.current;
-    restorePosition.current = audio?.ended ? 0 : audio?.currentTime ?? position;
+    restorePosition.current = audio?.ended ? 0 : audio?.currentTime ?? 0;
     if (audio) audio.pause();
     const retired = graph.current;
     graph.current = null;

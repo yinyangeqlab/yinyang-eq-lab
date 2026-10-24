@@ -38,9 +38,11 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
     input.current?.focus();
     setOpen(true); setEditingQuery(true); setQuery(""); setDatabaseOnly(true); void load(); input.current?.scrollIntoView({block:"center",behavior:"smooth"});
   }
+  const browseLatest=useRef(browseDatabase);
+  useEffect(()=>{browseLatest.current=browseDatabase;});
   useEffect(() => {
     if (!browseRequest) return;
-    const frame=requestAnimationFrame(browseDatabase);
+    const frame=requestAnimationFrame(()=>browseLatest.current());
     return () => cancelAnimationFrame(frame);
   }, [browseRequest]);
   const selected = rows.find(row => row.id === selectedId);

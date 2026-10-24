@@ -15,6 +15,7 @@ export default function MaintenanceGate({ children }: { children: React.ReactNod
     }
   }, []);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Start the access check immediately; its loading state must close the protected UI.
     void check();
     const timer = window.setInterval(() => void check(), 60_000);
     return () => window.clearInterval(timer);

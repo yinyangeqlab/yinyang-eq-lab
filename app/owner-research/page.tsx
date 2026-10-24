@@ -66,6 +66,7 @@ export default function OwnerResearch() {
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not load private research."); }
     finally { setLoading(false); }
   }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(() => { void load(); }, [load]);
   async function downloadFile(id: string, kind: string, name: string) {
     setError("");

@@ -62,6 +62,7 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       leftLevelDb: leftText ? at(parseCurve(leftText, false), 1000) : isRemoved("left") ? undefined : editing?.leftLevelDb,
       rightLevelDb: rightText ? at(parseCurve(rightText, false), 1000) : isRemoved("right") ? undefined : editing?.rightLevelDb,
       researchContributionId: editing?.researchContributionId,
+      // eslint-disable-next-line react-hooks/purity -- Time/randomness is sampled inside a user action handler, never while rendering.
       adminTestOnly:adminTestOnly||editing?.adminTestOnly===true,createdAt: editing?.createdAt ?? Date.now(),
     };
     if (!row.name || !row.device || !row.rig) throw new Error("Name, headphone model, and measuring device are required.");

@@ -14,6 +14,7 @@ export default function AdminReview({ data, reload }: { data: ReviewData; reload
   const [erasing, setErasing] = useState(false), [eraseConfirmed, setEraseConfirmed] = useState(false);
   const [selected, setSelected] = useState<Row | null>(null), [reason, setReason] = useState(""), [busy, setBusy] = useState(false), [message, setMessage] = useState("");
   const [browserTrials, setBrowserTrials] = useState<Trial[]>([]), [browserLog, setBrowserLog] = useState<ModerationEvent[]>([]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(() => { try { setBrowserTrials((JSON.parse(localStorage.getItem("target-lab-trials") || "[]") as Trial[]).map(trialDisplayLabels)); setBrowserLog(JSON.parse(localStorage.getItem("target-lab-browser-reviews") || "[]")); } catch { setMessage("Browser history could not be read."); } }, []);
   const names = new Map(data.targets.map(target => [target.id, target.name]));
   const latest = useMemo(() => moderationIndex(data.moderationEvents), [data]);
@@ -38,6 +39,7 @@ export default function AdminReview({ data, reload }: { data: ReviewData; reload
     if (note === null) return;
     if (note.trim().length < 3 || note.trim().length > 1000) { setMessage("Enter a reason of 3–1000 characters."); return; }
     const action = moderationIndex(browserLog).get(`browser:${row.id}`)?.action === "remove" ? "restore" : "remove";
+    // eslint-disable-next-line react-hooks/purity -- Time/randomness is sampled inside a user action handler, never while rendering.
     const next = [...browserLog, { sequence: browserLog.length + 1, recordKind: "browser", recordId: row.id, action, reason: note.trim(), actor: "admin on this browser", createdAt: Date.now() }];
     try { localStorage.setItem("target-lab-browser-reviews", JSON.stringify(next)); setBrowserLog(next); setMessage("Browser tally updated. Server submissions must be reviewed separately above."); } catch { setMessage("Browser storage failed; the tally was not changed."); }
   }

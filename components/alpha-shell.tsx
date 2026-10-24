@@ -67,6 +67,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const compact = window.matchMedia("(max-width: 800px)");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate the browser media-query state after SSR and subscribe to changes.
     setNarrow(compact.matches);
     try {
       const saved = localStorage.getItem("yinyang-navigation-layout");
@@ -131,6 +132,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
     <button className={`alpha-menu-backdrop${mobileOpen ? " is-open" : ""}`} type="button" aria-label="Close navigation" onClick={closeMenu} tabIndex={-1} inert={!mobileOpen} aria-hidden={!mobileOpen}/>
     <div ref={panel} className="alpha-navigation-frame" role={mobileOpen ? "dialog" : undefined} aria-label={mobileOpen ? "Main navigation" : undefined} aria-modal={mobileOpen ? true : undefined} inert={modalOpen}>
     <aside id="alpha-navigation" className={`alpha-navigation${mobileOpen ? " alpha-mobile-open" : ""}`} aria-label="Main navigation" inert={layout === "hidden"} aria-hidden={layout === "hidden"}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
       <Link className="alpha-brand" href="/" prefetch={false} aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt=""/><span>YinYang EQ<small>LET YOUR EARS DECIDE</small></span></Link>
 
       <nav aria-label="Main destinations">{destinations.map(d => <Link key={d.id} href={d.href} prefetch={false} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={() => { if (narrow) setLayout("icons"); window.scrollTo(0,0); }}><DestinationIcon kind={d.id}/><span>{d.label}</span></Link>)}</nav>

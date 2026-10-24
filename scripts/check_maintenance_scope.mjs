@@ -22,7 +22,7 @@ assert.deepEqual(options.maintenanceLocks(true),['shootouts']);
 for(const invalid of ['shootouts',{},['unknown'],['shootouts','shootouts']])assert.equal(options.validMaintenanceLocks(invalid),false);
 // Exercise the real API validation and storage parser without touching live state.
 let clock=1800000000000,stored={revision:'legacy',message:'Current one-hour notice',pause_submissions:1,expires_at:clock+3600000},writes=0,owner=true;
-const env={DB:{prepare(sql){return{bind(...args){return{async run(){writes++;stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async run(){writes++;stored=null;},async first(){return stored}}}}};
+const env={DB:{prepare(_sql){return{bind(...args){return{async run(){writes++;stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async run(){writes++;stored=null;},async first(){return stored}}}}};
 function load(path,deps){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},Response,Request,URL,crypto,Date:class extends Date{static now(){return clock;}}});return exports;}
 const service=load('lib/service-status.ts',{'cloudflare:workers':{env},'@/lib/maintenance-options':options});
 const read=await service.readServiceStatus(true);assert.equal(read.expiresAt,clock+3600000);assert.deepEqual([...read.lockedFeatures],['shootouts']);assert.equal(writes,0,'Reading a legacy active pause must not restart its timer or rewrite it');

@@ -41,7 +41,7 @@ export default function Welcome() {
   }, []);
   return <main className="welcome-shell">
     <section ref={hero} className="welcome-hero" data-motion={motion && inView && visible} aria-labelledby="welcome-title">
-      <picture className="welcome-art" aria-hidden="true"><source media="(min-width: 761px)" srcSet="/brand-landscape.webp" /><img src="/brand-amoled-aligned.webp" alt="" /></picture>
+      <picture className="welcome-art"><source media="(min-width: 761px)" srcSet="/brand-landscape.webp" /><img src="/brand-amoled-aligned.webp" alt="" /></picture>
       <svg className="welcome-sound-field" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
         <path className="welcome-signal signal-a" pathLength="100" d="M-80 560C100 660 170 410 330 530S540 680 710 570 1020 680 1280 620"/>
         <path className="welcome-signal signal-b" pathLength="100" d="M1280 430C1110 260 1070 660 890 550S620 500 470 650 140 600-80 680"/>
@@ -49,6 +49,7 @@ export default function Welcome() {
       </svg>
       <div className="welcome-shade" aria-hidden="true" />
       <header className="welcome-nav">
+        {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
         <a className="welcome-brand" href="/home" aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ</em></span></a>
         <nav aria-label="Welcome navigation">
           <a className="welcome-tool-link" data-effect="shootout" href="/shootout"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3M4 12H3v7h4v-7H4Zm16 0h1v7h-4v-7h3Z" /></svg><span className="welcome-tool-label">Listen</span><WelcomeLinkEffect kind="shootout" /></a>

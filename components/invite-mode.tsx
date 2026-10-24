@@ -4,6 +4,7 @@ const InviteMode = createContext(false);
 export const useInvitesEnabled = () => useContext(InviteMode);
 export function InviteModeProvider({enabled, children}: {enabled: boolean; children: React.ReactNode}) {
   const [current, setCurrent] = useState(enabled);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- A new server-provided access mode supersedes the previous polled mode.
   useEffect(() => {setCurrent(enabled);}, [enabled]);
   useEffect(() => {
     let active = true;

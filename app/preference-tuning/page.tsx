@@ -4,7 +4,7 @@ import "@/components/alpha-audio-workbench.css";
 import { recordAdminTestIfNeeded } from "@/lib/admin-test-store";
 import {musicDisplayTitle} from "@/lib/music-display";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { BookOpen, Pause, Play, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Undo2, Upload, Volume2, VolumeX, X } from "lucide-react";
 import { parseCurve, type Point } from "@/lib/curves";
 import { packRegionLabels, placeMarkerLabels } from "@/lib/curve-label-layout";
@@ -189,6 +189,7 @@ function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { ana
   return <canvas ref={canvas} className="pt-spectrum" aria-label="Live music spectrum across the labeled frequency regions" role="img"/>;
 }
 type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: BiquadFilterNode[]; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode };
+function sameEdit(a: EditSnapshot, b: EditSnapshot) { return a.selected === b.selected && a.expanded === b.expanded && (Object.keys(defaults) as (keyof Settings)[]).every(key => a.settings[key] === b.settings[key]); }
 export default function PreferenceTuning() {
   const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
   const [targets, setTargets] = useState<Target[]>([fallback]);
@@ -246,15 +247,25 @@ export default function PreferenceTuning() {
   const [finalized, setFinalized] = useState<{ key: string; variants: FinalizedVariant[]; curve: Point[] } | null>(null);
   const [exportBand, setExportBand] = useState<10 | 15 | 20>(10);
   const graph = useRef<AudioGraph | null>(null);
+  const [analyser,setAnalyser]=useState<AnalyserNode | null>(null);
   const media = useRef<HTMLAudioElement>(null);
   const objectUrl = useRef("");
   const [bypass, setBypass] = useState(false);
+  const showEdit = useCallback((next: EditSnapshot) => { editRef.current = next; setSettings(next.settings); setSelected(next.selected); setExpanded(next.expanded); }, []);
+  const applyEdit = useCallback((next: EditSnapshot) => {
+    const previous = editRef.current;
+    if (sameEdit(next, previous)) return;
+    if (!gestureRef.current) { setPast(rows => [...rows, previous]); setFuture([]); }
+    showEdit(next);
+  }, [showEdit]);
+
   useEffect(() => {
     try {
       const savedText = localStorage.getItem("personal-tuning-v1");
       hadSavedSelection.current = Boolean(savedText);
       const saved = JSON.parse(savedText || "{}");
       const restored = { settings: saved.settings ? { ...defaults, ...saved.settings } : defaults, selected: typeof saved.selected === "string" ? saved.selected : "flat", expanded: saved.expanded === true };
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate browser-only tuning, measurements and saved settings after SSR.
       editRef.current = restored; setSettings(restored.settings); setSelected(restored.selected); setExpanded(restored.expanded);
     } catch {}
     try {
@@ -316,7 +327,7 @@ export default function PreferenceTuning() {
     }
     void load();
     return () => { stopped = true; generationRef.current++; intentRef.current++; requestRef.current?.abort(); audio?.pause(); stopRankingRefresh(); if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
-  }, []);
+  }, [applyEdit]);
   // A failed external storage write needs immediate visible feedback; editing remains available.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (!axisLoaded) return; try { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [settings, selected, expanded, axisLoaded]);
@@ -387,7 +398,7 @@ export default function PreferenceTuning() {
     });
     graph.current.output.gain.setTargetAtTime(previewGain(filters, bypass) * 10 ** ((fit?.preamp || 0) / 20), graph.current.context.currentTime, .03);
   }, [filters, bypass, fit]);
-  function ensureGraph() {
+  const ensureGraph = useCallback(() => {
     if (graph.current) return graph.current;
     const context = new AudioContext();
     const input = context.createGain();
@@ -405,14 +416,15 @@ export default function PreferenceTuning() {
     const spectrum = context.createAnalyser(); spectrum.fftSize = 8192; spectrum.smoothingTimeConstant = .78;
     output.connect(spectrum); spectrum.connect(context.destination);
     graph.current = { context, input, filters: nodes, fit: fitNodes, output, spectrum };
+    setAnalyser(spectrum);
     return graph.current;
-  }
-  function updateDynamicRange(value: number) {
+  }, [settings, bypass, fit]);
+  const updateDynamicRange = useCallback((value: number) => {
     const amount = Math.max(-1, Math.min(1, value));
     dynamicRangeRef.current = amount; setDynamicRange(amount);
     graph.current?.dynamics?.port.postMessage({ amount });
-  }
-  function setupDynamics(current: AudioGraph) {
+  }, []);
+  const setupDynamics = useCallback((current: AudioGraph) => {
     if (!current.context.audioWorklet) return;
     void current.context.audioWorklet.addModule("/dynamic-range-worklet.js").then(() => {
       if (graph.current !== current || !current.media) return;
@@ -426,13 +438,13 @@ export default function PreferenceTuning() {
       current.media.disconnect(current.input); current.media.connect(node); node.connect(current.input);
       current.dynamics = node; setDynamicsReady(true);
     }).catch(() => { setDynamicsReady(false); setDynamicSliderEnabled(false); updateDynamicRange(0); });
-  }
+  }, [updateDynamicRange]);
   function stop() {
     playbackIntent.current++;
     media.current?.pause();
     setPlaying(false);
   }
-  async function play() {
+  const play = useCallback(async () => {
     const audio = media.current;
     if (!audio || !(audio.currentSrc || audio.src)) return;
     const intent = ++playbackIntent.current;
@@ -444,7 +456,7 @@ export default function PreferenceTuning() {
       if (intent !== playbackIntent.current || source !== sourceGeneration.current) return;
       setPlaying(!audio.paused); setMessage("");
     } catch { if (intent === playbackIntent.current && source === sourceGeneration.current) setMessage("Playback could not start. Choose another track or check browser audio permissions."); }
-  }
+  }, [ensureGraph, setupDynamics]);
   async function loadAudio(file: File | undefined) {
     if (!file) return;
     const generation = ++sourceGeneration.current; analysisRequest.current?.abort();
@@ -487,13 +499,6 @@ export default function PreferenceTuning() {
       setTargets(current => [...current.filter(t => t.id !== "imported"), custom]); changeTarget("imported"); setMessage("Curve imported for this session.");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not read curve."); }
   }
-  function sameEdit(a: EditSnapshot, b: EditSnapshot) { return a.selected === b.selected && a.expanded === b.expanded && (Object.keys(defaults) as (keyof Settings)[]).every(key => a.settings[key] === b.settings[key]); }
-  function showEdit(next: EditSnapshot) { editRef.current = next; setSettings(next.settings); setSelected(next.selected); setExpanded(next.expanded); }
-  function applyEdit(next: EditSnapshot) {
-    if (sameEdit(next, editRef.current)) return;
-    if (!gestureRef.current) { setPast(rows => [...rows, editRef.current]); setFuture([]); }
-    showEdit(next);
-  }
   function beginGesture() { if (!gestureRef.current) gestureRef.current = editRef.current; }
   function endGesture() { const start = gestureRef.current; gestureRef.current = null; if (start && !sameEdit(start, editRef.current)) { setPast(rows => [...rows, start]); setFuture([]); } }
   function finishSliderPointer() { requestAnimationFrame(endGesture); }
@@ -505,8 +510,8 @@ export default function PreferenceTuning() {
     applyEdit({ ...editRef.current, expanded: next, settings: limited });
   }
   function changeTarget(id: string) { hadSavedSelection.current = true; applyEdit({ ...editRef.current, selected: id }); }
-  function undo() { if (!past.length) return; const previous = past[past.length - 1]; setPast(past.slice(0, -1)); setFuture([editRef.current, ...future]); showEdit(previous); }
-  function redo() { if (!future.length) return; const next = future[0]; setPast([...past, editRef.current]); setFuture(future.slice(1)); showEdit(next); }
+  const undo = useCallback(() => { if (!past.length) return; const previous = past[past.length - 1]; setPast(past.slice(0, -1)); setFuture([editRef.current, ...future]); showEdit(previous); }, [past, future, showEdit]);
+  const redo = useCallback(() => { if (!future.length) return; const next = future[0]; setPast([...past, editRef.current]); setFuture(future.slice(1)); showEdit(next); }, [past, future, showEdit]);
   function closeReset() { setResetOpen(false); resetButton.current?.focus(); }
   function confirmReset() {
     gestureRef.current = null;
@@ -516,7 +521,7 @@ export default function PreferenceTuning() {
     setMessage("Tuning reset. Undo and redo history cleared.");
     closeReset();
   }
-  useEffect(() => { const keydown = (event: KeyboardEvent) => { if (resetOpen || instructionsOpen) return; if (!(event.ctrlKey || event.metaKey) || event.altKey) return; const target = event.target; if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement && ["text", "search", "url"].includes(target.type)) return; if (event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) redo(); else undo(); } else if (event.key.toLowerCase() === "y") { event.preventDefault(); redo(); } }; window.addEventListener("keydown", keydown); return () => window.removeEventListener("keydown", keydown); }, [past, future, resetOpen, instructionsOpen]);
+  useEffect(() => { const keydown = (event: KeyboardEvent) => { if (resetOpen || instructionsOpen) return; if (!(event.ctrlKey || event.metaKey) || event.altKey) return; const target = event.target; if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement && ["text", "search", "url"].includes(target.type)) return; if (event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) redo(); else undo(); } else if (event.key.toLowerCase() === "y") { event.preventDefault(); redo(); } }; window.addEventListener("keydown", keydown); return () => window.removeEventListener("keydown", keydown); }, [undo, redo, resetOpen, instructionsOpen]);
   useEffect(() => {
     if (!audioUrl || resetOpen || instructionsOpen) return;
     const toggleWithSpace = (event: KeyboardEvent) => {
@@ -527,7 +532,7 @@ export default function PreferenceTuning() {
     };
     window.addEventListener("keydown", toggleWithSpace, true);
     return () => window.removeEventListener("keydown", toggleWithSpace, true);
-  }, [audioUrl, resetOpen, instructionsOpen, settings, bypass, fit]);
+  }, [audioUrl, resetOpen, instructionsOpen, play]);
   useEffect(() => {
     if (!resetOpen) return;
     resetNoButton.current?.focus();
@@ -556,6 +561,7 @@ export default function PreferenceTuning() {
     <label className="pt-control" key={key} title={detail}><span><strong>{title}</strong><small>{detail}</small></span><input type="range" min={min} max={max} step={step} value={settings[key]} style={color ? { accentColor: color } : undefined} onPointerDown={beginGesture} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={e => set(key, Number(e.target.value))} aria-label={title} /><output style={color ? { color } : undefined}>{settings[key] > 0 && unit === "dB" ? "+" : ""}{settings[key]} {unit}</output></label>;
   return <main className="pt-shell alpha-tuning">
     {storageNotice && <p role="status" className="pt-message">{storageNotice}</p>}
+    {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Use full-document navigation so access checks and unsaved-listening beforeunload guards run. */}
     <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/music-library">Listening Pool</a><span aria-current="page">Preference Tuning</span></nav></header>
     <div className="pt-content">
       <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>
@@ -563,7 +569,7 @@ export default function PreferenceTuning() {
         <section className="pt-chart-card"><div className="pt-card-heading"><div><span className="pt-step">SHAPE</span><h2>Drag the curve. Hear the change.</h2></div><div className="pt-chart-meta"><span className="pt-chart-badge">{formatHzWithUnit(axis.freqMin)} – {formatHzWithUnit(axis.freqMax)}</span><button type="button" className="pt-axis-button" aria-expanded={axisOpen} aria-controls="pt-axis-panel" onClick={() => setAxisOpen(open => !open)}><SlidersHorizontal size={13}/> Axis & size</button><label className="pt-range-toggle" title="Allow all five gain sliders to reach ±20 dB"><input type="checkbox" checked={expanded} onChange={toggleExpanded}/> ±20 dB range</label><span className="pt-fit-label">{measurement ? "Fitted to " + measurement.name : "Preference EQ preview"}</span></div></div>
           {axisOpen && <div className="pt-axis-panel" id="pt-axis-panel" aria-label="Chart axis and size controls"><div className="pt-axis-fields"><label>Frequency start <span>Hz</span><input type="number" min="20" max="10000" step="10" value={axis.freqMin} onChange={e => setAxis(current => ({ ...current, freqMin: Math.min(current.freqMax / 1.25, Math.max(20, Number(e.target.value) || 20)) }))}/></label><label>Frequency end <span>Hz</span><input type="number" min="40" max={MAX_VIEW_HZ} step="10" value={axis.freqMax} onChange={e => setAxis(current => ({ ...current, freqMax: Math.max(current.freqMin * 1.25, Math.min(MAX_VIEW_HZ, Number(e.target.value) || defaultAxis.freqMax)) }))}/></label><label>Bottom <span>dB</span><input type="number" min="-20" max="110" step="1" value={axis.dbMin} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMin: Math.min(current.dbMax - 5, Math.max(-20, Number(e.target.value) || 0)) }))}/></label><label>Top <span>dB</span><input type="number" min="-10" max="120" step="1" value={axis.dbMax} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMax: Math.max(current.dbMin + 5, Math.min(120, Number(e.target.value) || 90)) }))}/></label><label>Width <span>%</span><input type="number" min="65" max="100" step="1" value={axis.width} onChange={e => setAxis(current => ({ ...current, width: Math.max(65, Math.min(100, Number(e.target.value) || 100)) }))}/></label><label>Height · 0 = auto <span>px</span><input type="number" min="0" max="520" step="10" value={axis.height} onChange={e => setAxis(current => ({ ...current, height: Math.max(0, Math.min(520, Number(e.target.value) || 0)) }))}/></label></div><div className="pt-axis-actions"><label><input type="checkbox" checked={axis.autoDb} onChange={e => setAxis(current => ({ ...current, autoDb: e.target.checked }))}/> Auto-fit dB to curve</label><button type="button" onClick={() => setAxis(defaultAxis)}>Reset view</button></div></div>}
           <div className="pt-current-target" aria-live="polite"><span>Selected baseline</span><strong>{target.name}</strong><small>by {target.creator}</small></div>
-          <CurveChart points={normalized} settings={settings} expanded={expanded} axis={axis} analyser={graph.current?.spectrum || null} playing={playing} regionDrag={regionDrag} onDragStart={beginGesture} onDrag={(key,value) => { set(key,value); if (["bass", "body", "ear", "air", "treble"].includes(key)) setActiveBand(key === "bass" ? 1 : key === "body" ? 2 : key === "ear" ? 3 : key === "air" ? 4 : 5); }} onDragEnd={endGesture}/>
+          <CurveChart points={normalized} settings={settings} expanded={expanded} axis={axis} analyser={analyser} playing={playing} regionDrag={regionDrag} onDragStart={beginGesture} onDrag={(key,value) => { set(key,value); if (["bass", "body", "ear", "air", "treble"].includes(key)) setActiveBand(key === "bass" ? 1 : key === "body" ? 2 : key === "ear" ? 3 : key === "air" ? 4 : 5); }} onDragEnd={endGesture}/>
           <div className="pt-gesture-guide"><span>Drag the curve at your pointer · drag BT / EGC / TT sideways to place transitions.</span><label><input type="checkbox" checked={regionDrag} onChange={event => setRegionDrag(event.target.checked)}/> Move by region gain <span>(or hold Shift)</span></label></div>
           <div className="pt-gain-controls">{GAIN_CONTROLS.map(control => <div className="pt-gain-item" style={{ borderTopColor: control.color }} key={control.key}>{slider(control.key, control.name, control.hint, -(expanded ? EXPANDED_GAIN_LIMIT : control.limit), expanded ? EXPANDED_GAIN_LIMIT : control.limit, .5, "dB", control.color)}</div>)}</div>
           <div className="pt-region-guide"><div className="pt-region-tabs" role="group" aria-label="Frequency region guide">{BANDS.map((band, index) => <button type="button" aria-pressed={activeBand === index} key={band.name} onClick={() => setActiveBand(index)} style={{ borderTopColor: band.color }}><strong style={{ color: band.color }}>{band.name}</strong><small>{band.range}</small></button>)}</div><p><strong style={{ color: BANDS[activeBand].color }}>{BANDS[activeBand].name}:</strong> {BANDS[activeBand].example}. {BANDS[activeBand].effect}</p></div>

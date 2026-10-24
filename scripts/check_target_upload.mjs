@@ -7,10 +7,10 @@ import ts from 'typescript';
 // and controlled network responses. React effects are covered by browser QA.
 const file=process.argv[2]||'app/shootout/page.tsx';
 const ast=ts.createSourceFile('page.tsx',readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),handlers=new Map();
-function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)handlers.set(n.name.text,n.getText(ast));ts.forEachChild(n,visit);}visit(ast);
+function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)handlers.set(n.name.text,n.getText(ast));if(ts.isVariableDeclaration(n)&&n.initializer&&ts.isCallExpression(n.initializer)&&n.initializer.expression.getText(ast)==='useCallback'){const callback=n.initializer.arguments[0];handlers.set(n.name.getText(ast),'const '+n.name.getText(ast)+'='+callback.getText(ast)+';');}ts.forEachChild(n,visit);}visit(ast);
 const names=['upload','submitTarget','withdrawTarget','loadRemovals','requestRemoval','cancelRemoval','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
 const code=ts.transpileModule(names.map(n=>handlers.get(n)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function load(path){const module={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,Error});return module.exports;}
+function load(path){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,Error});return fixtureModule.exports;}
 const {parseCurve}=load('lib/curves.ts'),{compareTargets}=load('lib/target-review.ts'),{screenTargetName}=load('lib/target-name-policy.ts'),{targetHeadphoneType}=load('lib/target-type.ts');
 const points=Array.from({length:20},(_,i)=>[20*1000**(i/19),i/10]);
 const target=(id,type='ie')=>({id,name:`Reference ${id}`,points,status:'approved',measurement:{type}});

@@ -14,7 +14,7 @@ const context = vm.createContext({ exports: {}, crypto, Request, Response, Heade
  serveWorkerMedia: async () => {appReads++; return new Response('media');}, withMediaLength: (_,r) => r,
  app: {fetch:async () => {appReads++;return new Response('APPLICATION CONTENT');}}
 });
-vm.runInContext(source.replace(/^import .*;\n/gm,'').replace('export default {','exports.handler = {')+'\nexports.makeOwnerSession=makeOwnerSession; dataSession=async()=>null;', context);
+vm.runInContext(source.replace(/^import .*;\n/gm,'').replace('export default worker;','exports.handler = worker;')+'\nexports.makeOwnerSession=makeOwnerSession; dataSession=async()=>null;', context);
 const secret = 'synthetic-maintenance-key-'.repeat(3);
 const env = {OWNER_ONLY_MAINTENANCE:'true',PRIVATE_ACCESS_PASSWORD:secret,DB:{prepare(){databaseCalls++;throw Error('Unexpected DB access');}},ASSETS:{fetch:async()=>{appReads++;return new Response('ASSET CONTENT');}}};
 const cookie = await context.exports.makeOwnerSession(secret);

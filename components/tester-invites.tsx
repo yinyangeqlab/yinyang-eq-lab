@@ -5,6 +5,9 @@ type Invite = { id: string; label: string; created_at: number; code_expires_at: 
 type Created = { label: string; code: string; codeExpiresAt: number };
 
 export function TesterInvites() {
+ const [clock,setClock]=useState(Date.now);
+ useEffect(()=>{const tick=()=>setClock(Date.now());const timer=window.setInterval(tick,1000);return()=>window.clearInterval(timer);},[]);
+
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [invites, setInvites] = useState<Invite[]>([]);
   const [label, setLabel] = useState("");
@@ -23,6 +26,7 @@ export function TesterInvites() {
     if (!response.ok) throw new Error(data.error || "Could not load tester invitations.");
     setInvites(data.invites || []);
   }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(() => { void refresh().catch(cause => setError(cause instanceof Error ? cause.message : "Could not load invitations.")); }, [refresh]);
   async function toggle() {
     setBusy(true); setError("");
@@ -69,7 +73,7 @@ export function TesterInvites() {
     } catch (cause) { setError(cause instanceof Error ? cause.message : "Could not delete the entry."); }
     finally { setBusy(false); }
   }
-  const now = Date.now() / 1000;
+  const now = clock / 1000;
   function status(row: Invite) {
     if (row.revoked_at) return "Revoked";
     if (row.redeemed_at) return row.session_expires_at && row.session_expires_at > now ? "Active browser" : "Expired browser";

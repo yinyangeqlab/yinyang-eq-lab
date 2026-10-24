@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const load=path=>{const module={exports:{}};const alias={'@/lib/target-type':'lib/target-type.ts'};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports,require:id=>load(alias[id]||id)});return module.exports;};
+const load=path=>{const fixtureModule={exports:{}};const alias={'@/lib/target-type':'lib/target-type.ts'};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:id=>load(alias[id]||id)});return fixtureModule.exports;};
 const {parsePoolChoice,parseLocalTargets,personalPool,poolHasLocalTargets,MAX_SHARED_POOL}=load('lib/personal-target-pool.ts');
 const pts=[[20,0],[1000,1],[20000,0]];
 const pub=[{id:'p1',name:'Public one',points:pts},{id:'p2',name:'Public two',points:pts},{id:'p3',name:'Public IE',points:pts,headphoneType:'ie'}];

@@ -3,9 +3,9 @@ import {intervalStats,selectedPassageIntervals,selectedPassageProgress} from '..
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const module={exports:{}};
-vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module,exports:module.exports});
-const {chooseComparisonPassage,comparisonOrder}=module.exports;
+const fixtureModule={exports:{}};
+vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+const {chooseComparisonPassage,comparisonOrder}=fixtureModule.exports;
 for(const duration of [NaN,Infinity,0,3,4.99])assert.equal(chooseComparisonPassage(duration),null);
 for(const duration of [5,5.05,6,8,20,120,7200])for(const random of [0,.3,.5,.9999,1]){const p=chooseComparisonPassage(duration,undefined,()=>random);assert.ok(p.start>=0);assert.ok(p.end<=duration);assert.ok(p.end-p.start>=4.999);assert.ok(p.end-p.start<=5.001);}
 const original=chooseComparisonPassage(120,undefined,()=>.5);const replacement=chooseComparisonPassage(120,undefined,()=>.5,original);assert.notEqual(replacement.start,original.start,'New passage should change the selection');

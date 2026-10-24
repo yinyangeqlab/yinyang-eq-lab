@@ -11,6 +11,7 @@ export default function StatisticsArchivePanel(){
     const response=await fetch("/api/owner-research/archive",{cache:"no-store"});const data=await response.json() as {archives:StatisticsArchive[];planning:{rows:ResearchSummaryRow[]};error?:string};
     if(!response.ok)throw new Error(data.error||"Could not load research summaries.");setArchives(data.archives);setRows(data.planning.rows);
   }catch(cause){setError(cause instanceof Error?cause.message:"Could not load research summaries.");}finally{setBusy(false);}},[]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(()=>{void load();},[load]);
   function download(archive:StatisticsArchive){const url=URL.createObjectURL(new Blob([JSON.stringify(archive,null,2)],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download=`yinyang-legacy-statistics-${archive.year}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   const percent=(n:number)=>`${(n*100).toFixed(1)}%`;

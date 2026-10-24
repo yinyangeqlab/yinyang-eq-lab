@@ -81,7 +81,7 @@ export async function runGuard(env, {now = new Date(), fetcher = fetch, dryRun =
   return {status: 'tripped', changed: true, metrics, reasons: decision.reasons};
 }
 
-export default {
+const worker = {
   // No public administrative endpoint. workers.dev, previews and routes must
   // remain disabled, with only the one-minute Cloudflare Cron Trigger enabled.
   async fetch() { return new Response('Not found', {status: 404}); },
@@ -90,3 +90,4 @@ export default {
     console.log(JSON.stringify({event: 'cost-guard', ...result}));
   },
 };
+export default worker;

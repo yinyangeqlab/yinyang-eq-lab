@@ -4,7 +4,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {validateSyncPayload} from '../lib/browser-sync.mjs';
-import {linkedTester,browserPairing} from '../lib/browser-pairing.mjs';
+
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 const db={prepare(query){if((query.match(/\bUNION\b/gi)||[]).length>=9)throw Error('D1 fixture rejects the observed wide compound SELECT');const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
@@ -13,7 +13,7 @@ const input=load('lib/request-json.ts'),account=load('lib/yinyangeq-account.ts',
 
 const records=load('lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':{parseCurve:()=>[]},'@/lib/research-measurement-files':{measurementFileHash:async()=>''}});
 const history=load('lib/yinyangeq-history.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload},'@/lib/legacy-notice':{LEGACY_CUTOFF:Date.parse('2026-10-18T07:47:46.750Z')},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'2026-10-18-v7'},'@/lib/yinyangeq-account':account,'@/lib/yinyangeq-records':records});
-const profile=await account.createProfileAccount(db),browser=crypto.randomUUID(),otherBrowser=crypto.randomUUID(),a=crypto.randomUUID(),b=crypto.randomUUID(),vote=crypto.randomUUID(),run=crypto.randomUUID(),session='a'.repeat(64),dest='b'.repeat(64),at=1000;
+const profile=await account.createProfileAccount(db),browser=crypto.randomUUID(),_otherBrowser=crypto.randomUUID(),a=crypto.randomUUID(),b=crypto.randomUUID(),vote=crypto.randomUUID(),run=crypto.randomUUID(),session='a'.repeat(64),dest='b'.repeat(64),at=1000;
 for(const subject of ['owner',profile.subject_id,'other']){sqlite.prepare("INSERT OR IGNORE INTO privacy_accounts(subject_id) VALUES(?)").run(subject);sqlite.prepare("UPDATE privacy_accounts SET submissions_enabled=1,agreement_version='2026-10-18-v7' WHERE subject_id=?").run(subject);}
 sqlite.prepare("INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,'owner',?)").run(session,Date.now()+1000000);sqlite.prepare('INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,?,?)').run(dest,profile.subject_id,Date.now()+1000000);
 for(const [id,name]of [[a,'Alpha'],[b,'Beta']])sqlite.prepare("INSERT INTO targets(id,name,creator,points,status,created_at) VALUES(?,?,'Fixture','[[20,0],[20000,0]]','approved',?)").run(id,name,at);

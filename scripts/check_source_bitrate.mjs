@@ -15,5 +15,5 @@ const vbri=fixture('none');vbri.set(new TextEncoder().encode('VBRI'),36);const v
 const wav=new Uint8Array(44),wv=new DataView(wav.buffer);wav.set(new TextEncoder().encode('RIFF'));wav.set(new TextEncoder().encode('WAVE'),8);wav.set(new TextEncoder().encode('fmt '),12);wv.setUint32(16,16,true);wv.setUint32(24,44100,true);wv.setUint32(28,176400,true);assert.equal(label(parse(wav.buffer,'WAV'),null,{size:100},1,false),'1411 kb/s · WAV header byte rate');
 for(let n=0;n<417;n++){const b=fixture().slice(0,n);assert.doesNotThrow(()=>parse(b.buffer,'MP3'));}
 const id3=new Uint8Array(427);id3.set([73,68,51,4,0,0,0,0,0,0]);id3.set(fixture(),10);assert.equal(parse(id3.buffer,'MP3').mode,'VBR');
-assert.equal((panel.match(/sourceBitrateLabel\(bitrateDetails/g)||[]).length,2,'Shared and Personal render identical bitrate descriptions');
+assert.equal((panel.match(/sourceBitrateLabel\(bitrateDetails/g)||[]).length,3,'Shared deck, Personal details and shared details use the same bitrate description helper');
 console.log('Bitrate descriptions: Xing/Info/LAME CBR/VBR/ABR, VBRI averages, unknown mode, file/container average, WAV byte rate, ID3, all truncated prefixes, both player displays passed.');

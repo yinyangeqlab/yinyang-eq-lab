@@ -18,8 +18,10 @@ let subjectId='browser:first',authenticated=true;
 class RequestInputError extends Error{constructor(message,status){super(message);this.status=status;}}
 const source=readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export async function/g,'async function');
+const policy={exports:{}};
+vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../lib/admin-contributions.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports:policy.exports,require:()=>({RequestInputError})});
 const route=vm.runInNewContext(js+';({PATCH})',{
- Response,URL,RequestInputError,normalizeListenerNickname,listenerNicknameError,
+ Response,URL,RequestInputError,normalizeListenerNickname,listenerNicknameError,...policy.exports,
  dataIdentity:async()=>{if(!authenticated)throw new RequestInputError('Expired',401);return {subjectId};},readJsonObject:r=>r.json(),
  requestInputResponse:e=>e instanceof RequestInputError?Response.json({error:e.message},{status:e.status}):null,
  env:{DB:{prepare(sql){return{bind(...args){return{run:async()=>db.prepare(sql).run(...args)}}}}}},
@@ -35,6 +37,7 @@ for(const subject of ['browser:first','invite:reserved-profile-fixture']){subjec
 subjectId='browser:first';
 assert.equal((await route.PATCH(request('a@b.com'))).status,400);assert.equal((await route.PATCH(request('Nope','https://evil.test'))).status,403);assert.equal(own('browser:first'),'Linked Owl');
 authenticated=false;assert.equal((await route.PATCH(request('Nope'))).status,401);authenticated=true;
+subjectId=policy.exports.LAYOUT_TEST_SUBJECT;assert.equal((await route.PATCH(request('Synthetic test'))).status,403,'Hidden review account remains isolated');
 subjectId='owner';assert.equal((await route.PATCH(request('Owner'))).status,400);
 subjectId='browser:first';assert.equal((await route.PATCH(request(''))).status,200);assert.equal(own(subjectId),undefined);
 await route.PATCH(request('Delete me'));db.prepare('DELETE FROM privacy_accounts WHERE subject_id=?').run(subjectId);assert.equal(own(subjectId),undefined,'Account deletion cascades nickname erasure');

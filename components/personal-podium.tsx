@@ -71,6 +71,7 @@ function ArcadeScores({rows,favorite}:{rows:ReturnType<typeof personalStandings>
 
 export default function PersonalPodium({ run, compact = false, afterWinners }: { run: PersonalRun; compact?: boolean; afterWinners?: ReactNode }) {
   const [theme,setTheme] = useState<PodiumTheme>("sport"), [allHistory,setAllHistory] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(()=>{try{const saved=localStorage.getItem(THEME_KEY);if(saved === "sport" || saved === "game" || saved === "grove")setTheme(saved);}catch{}},[]);
   const standings = useMemo(()=>personalStandings(run),[run]);
   const active = standings.filter(row=>row.heard>0&&!run.excluded.includes(row.id));

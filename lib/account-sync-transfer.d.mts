@@ -7,5 +7,6 @@ export function describeValues(values:Record<string,string>):Promise<Record<stri
 export function valueParts(values:Record<string,string>,manifest:Record<string,Section>):Generator<Part>;
 export function partPackets(values:Record<string,string>,manifest:Record<string,Section>):Generator<Part[]>;
 export function assembleValues(manifest:Record<string,Section>,parts:Part[]):Promise<Record<string,string>>;
-export function readAccountState(endpoint?:string,fetcher?:typeof fetch,progress?:(message:string)=>void,known?:{epoch:string;revision:number;accountKey?:string;values:Record<string,string>}|null):Promise<any>;
-export function writeAccountState(state:any,values:Record<string,string>,fetcher?:typeof fetch,progress?:(message:string)=>void,storage?:Pick<Storage,'getItem'|'setItem'|'removeItem'>|null):Promise<any>;
+export type AccountTransferState={epoch:string;revision:number;accountKey?:string;initialized:boolean;values:Record<string,string>;sections?:Record<string,Section>;[key:string]:unknown};
+export function readAccountState(endpoint?:string,fetcher?:typeof fetch,progress?:(message:string)=>void,known?:{epoch:string;revision:number;accountKey?:string;values:Record<string,string>}|null):Promise<AccountTransferState>;
+export function writeAccountState(state:Pick<AccountTransferState,"epoch"|"revision"|"accountKey"|"sections">,values:Record<string,string>,fetcher?:typeof fetch,progress?:(message:string)=>void,storage?:Pick<Storage,'getItem'|'setItem'|'removeItem'>|null):Promise<AccountTransferState>;

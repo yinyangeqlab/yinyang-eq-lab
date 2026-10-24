@@ -17,7 +17,7 @@ function visit(node) {
     const expression = node.expression;
     if (expression && ts.isBinaryExpression(expression)) finishVisibility = expression.left.getText(ast);
   }
-  ts.forEachChild(node, visit);
+  if(ts.isVariableDeclaration(node)&&node.initializer&&ts.isCallExpression(node.initializer)&&node.initializer.expression.getText(ast)==='useCallback'){const callback=node.initializer.arguments[0];handlers.set(node.name.getText(ast),'const '+node.name.getText(ast)+'='+callback.getText(ast)+';');}ts.forEachChild(node, visit);
 }
 visit(ast);
 assert.ok(finishVisibility, "Results button must exist");

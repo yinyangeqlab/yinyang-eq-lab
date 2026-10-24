@@ -3,7 +3,7 @@ import { useConsentPrompt } from "@/components/use-consent-prompt";
 import { adminMusicChoices, saveAdminMusicChoice } from "@/lib/admin-test-store";
 
 import {musicDisplayTitle,isAnalysisNote} from "@/lib/music-display";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { musicCandidates as tracks, type MusicCandidate as Track } from "@/lib/music-catalog";
 import { rankMusic, musicReview, playbackTarget, type MusicCounts } from "@/lib/music-preferences";
 import { cancelMediaRecovery } from "@/lib/media-recovery";
@@ -16,6 +16,9 @@ import "./style.css";
 
 type MusicSnapshot = { testOnly?:boolean; byTrack?: MusicCounts; signedIn: boolean; totals: { keep: number; pass: number }; mine: Record<string, "keep" | "pass">; error?: string };
 
+  const families = new Map<string, Track[]>();
+  tracks.forEach(track => { const key = track.songFamily || track.url; const versions = families.get(key) ?? []; versions.push(track); families.set(key, versions); });
+const familyEntries = [...families.entries()];
 function licenseName(url: string) {
   if (url.includes("publicdomain/zero")) return "CC0 1.0";
   if (url.includes("publicdomain/mark")) return "Public Domain Mark 1.0";
@@ -39,7 +42,7 @@ export default function MusicLibraryPage() {
   const consent = useConsentPrompt("Browsing the library needs no agreement. Rating a song is saved with your account choices, so we ask once, here.");
   const [libraryView,setLibraryView] = useState<"recordings"|"suggestions">("recordings");
   const [suggestionsOpened,setSuggestionsOpened] = useState(false);
-  useEffect(()=>{if(libraryView === "suggestions")setSuggestionsOpened(true);},[libraryView]);
+  const changeView=useCallback((value:"recordings"|"suggestions")=>{setLibraryView(value);if(value==="suggestions")setSuggestionsOpened(true);},[]);
   const [active, setActive] = useState<number | null>(null);
   const [decisions, setDecisions] = useState<Record<string, "keep" | "pass">>({});
   const [ready, setReady] = useState(false);
@@ -61,8 +64,6 @@ export default function MusicLibraryPage() {
   const [eq, setEq] = useState<LibraryEq | null>(null);
   const root = useRef<HTMLElement>(null);
   const [matchLoudness, setMatchLoudness] = useState(true);
-  const families = new Map<string, Track[]>();
-  tracks.forEach(track => { const key = track.songFamily || track.url; const versions = families.get(key) ?? []; versions.push(track); families.set(key, versions); });
   const ranked = rankMusic(tracks.filter(t => (byTrack[t.url]?.keep ?? 0) + (byTrack[t.url]?.pass ?? 0) > 0), byTrack);
   const groupRank = (track: Track) => { const index = ranked.findIndex(t => t.url === track.url); return index < 0 ? null : index + 1; };
   const newCount = tracks.filter(track => !decisions[track.url]).length;
@@ -133,7 +134,6 @@ export default function MusicLibraryPage() {
     const term=query.trim().toLocaleLowerCase();
     return (filter === "all" || (filter === "review" ? musicReview(byTrack[track.url]).flagged : filter === "unrated" ? !decisions[track.url] : decisions[track.url] === filter)) && (!term || [track.title,track.artist,track.genre,track.focus].some(value=>value.toLocaleLowerCase().includes(term)));
   }
-  const familyEntries = [...families.entries()];
   const matchingFamilies = familyEntries.filter(([, versions]) => versions.some(matchesTrack));
   const visibleCount = tracks.filter(matchesTrack).length;
   const pageFamilies = matchingFamilies.slice(0, familyLimit);
@@ -142,16 +142,17 @@ export default function MusicLibraryPage() {
   const remainingFamilies = Math.max(0, matchingFamilies.length - pageFamilies.length);
   const activeTrack = active === null ? null : tracks[active];
   const activeOffPage = !!activeTrack && !visibleUrls.has(activeTrack.url);
-  function showTrack(track: Track) {
+  const showTrack=useCallback((track: Track) => {
     const familyIndex = familyEntries.findIndex(([, versions]) => versions.some(version => version.url === track.url));
     setQuery(""); setFilter("all"); setFamilyLimit(Math.max(PAGE_SIZE, Math.ceil((familyIndex + 1) / PAGE_SIZE) * PAGE_SIZE));
     setReveal({ index: tracks.indexOf(track) });
-  }
+  }, []);
   useEffect(() => {
     const match = /^#candidate-(\d+)$/.exec(window.location.hash);
     const index = match ? Number(match[1]) - 1 : -1;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
     if (Number.isInteger(index) && index >= 0 && index < tracks.length) showTrack(tracks[index]);
-  }, []);
+  }, [showTrack]);
   useEffect(() => {
     if (reveal) document.getElementById(`candidate-${reveal.index + 1}`)?.scrollIntoView({ block: "center" });
   }, [reveal]);
@@ -170,10 +171,11 @@ export default function MusicLibraryPage() {
 </details><div className="library-source-links"><a href={track.sourceUrl || track.url} target="_blank" rel="noreferrer">Source ↗</a>{track.permissionOnly ? <span>Used with permission · All rights reserved</span> : <a href={track.license} target="_blank" rel="noreferrer">{licenseName(track.license)}</a>}</div></div>
     </article>)}</div> : <p className="library-empty">No tracks match this filter in this group.</p>;
   }
-  return <main className="library-page" ref={root}><Suspense fallback={null}><QueryLibraryView onChange={setLibraryView}/></Suspense>
+  return <main className="library-page" ref={root}><Suspense fallback={null}><QueryLibraryView onChange={changeView}/></Suspense>
+    {/* eslint-disable-next-line @next/next/no-img-element, @next/next/no-html-link-for-pages -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. Use full-document navigation so access checks and unsaved-listening beforeunload guards run. */}
     <header className="library-header"><a href="/home" className="library-back" aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt="" /> YinYang EQ</a><nav className="library-nav" aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/preference-tuning">Preference Tuning</a><span aria-current="page">Listening Pool</span></nav></header>
     {adminTestOnly&&<p className="admin-test-notice" role="status">Private Test Mode · song ratings are saved only in this browser and never affect community rankings.</p>}<section className="library-hero"><div className="library-kicker">MUSIC USED UNDER LICENSE OR WITH PERMISSION</div><h1>Music library</h1><p>Find music for comparisons, explore recordings, or suggest a song.</p><details className="library-pool-explainer"><summary>About the listening pool</summary><p>Explore the music used in Personal Tournament, Blind Research and Open Comparison. Every eligible song stays in the pool, regardless of votes or review flags. Alternate masters are grouped by song; vocal and instrumental mixes are labeled separately. Use Your Music plays a file from your device.</p></details><div className="library-counts"><span><strong>{tracks.length}</strong> versions</span><span><strong>{families.size}</strong> songs</span><span><strong>{newCount}</strong> undecided</span></div></section>
-    <nav className="library-view-tabs" aria-label="Music library sections"><button type="button" aria-pressed={libraryView === "recordings"} onClick={()=>setLibraryView("recordings")}>Listening pool</button><button type="button" aria-pressed={libraryView === "suggestions"} onClick={()=>setLibraryView("suggestions")}>Song suggestions</button></nav>
+    <nav className="library-view-tabs" aria-label="Music library sections"><button type="button" aria-pressed={libraryView === "recordings"} onClick={()=>changeView("recordings")}>Listening pool</button><button type="button" aria-pressed={libraryView === "suggestions"} onClick={()=>changeView("suggestions")}>Song suggestions</button></nav>
     <div hidden={libraryView !== "recordings"}>
     <div className="library-option-groups"><details className="library-option"><summary>Listening EQ <span>{eq ? "On" : "Off · optional"}</span></summary><LibraryEqPanel onChange={setEq} /></details><details className="library-option"><summary>Community song ratings <span>Top 10 &amp; method</span></summary>    <section className="library-shortlist" aria-label="Listening pool preferences"><div><span className="library-section-label">COMMUNITY SONG RATINGS</span><h2>Top 10 preferred</h2><p>The community’s highest-rated versions so far. Early rankings can change as more people vote. This list never changes which songs play or how often you hear them.</p></div>
     {ranked.length ? <ol className="library-top-ten">{ranked.slice(0,10).map(track => <li key={track.url}><a href={`#candidate-${tracks.indexOf(track)+1}`} onClick={event => { event.preventDefault(); showTrack(track); }}>{musicDisplayTitle(track.title)} · {track.artist}{track.versionLabel ? ` · ${track.versionLabel}` : ""}</a><small>{byTrack[track.url].keep} up / {byTrack[track.url].pass} down · {musicReview(byTrack[track.url]).total} account rating{musicReview(byTrack[track.url]).total===1?"":"s"}</small></li>)}</ol> : <p>{!ready ? "Loading community preferences…" : !votesLoaded ? "Community preferences could not be loaded." : "No ratings yet. The top 10 will appear as people vote."}</p>}
@@ -189,7 +191,7 @@ export default function MusicLibraryPage() {
       return <div hidden={!pageKeys.has(key)} className={`library-family ${versions.length > 1 ? "has-versions" : ""}`} key={key}>{versions.length > 1 && <div className="library-family-heading"><h3>{musicDisplayTitle(versions[0].title)} · {versions.length} versions</h3><p>{versions[0].artist} · {versions.some(t => t.songFamily === "jmhbm-dreams") ? "Same performance, alternate mastering" : "Vocal / instrumental arrangement comparison"}</p></div>}{cards(versions)}</div>;
     })}</div>{loadMore}</section>
     <section className="library-method"><h2>Dynamics measurements</h2><p>The three provisional categories are dense / flattened peaks, preserved peaks, and exceptional dynamics. They use loud-passage crest, peak-to-short-term-loudness contrast and repeated high-peak plateaus, rather than integrated loudness or LRA alone. Borderline cases and recordings awaiting this analysis remain unclassified and eligible. A category does not prove how a recording was mastered or establish its sound quality.</p><p>Loudness matching applies constant gain without compression or limiting when EQ is off. A shared song-family target may fall below −16 LUFS to leave 1 dB of true-peak headroom; the player shows the actual target. Optional EQ retains its existing protective processing and changes the signal. Original downloads remain unchanged. Source and license links accompany each version.</p><a href="/shootout" className="library-return">Return to listening →</a></section>
-  </div><div hidden={libraryView !== "suggestions"}>{activeTrack && <aside className="library-active-player" aria-label="Current library playback"><div><strong>{activePlaying ? "Playing" : "Paused"} · {musicDisplayTitle(activeTrack.title)}</strong><small>{activeTrack.artist} · playback position is kept.</small></div><button type="button" onClick={()=>{const audio=activeAudio.current;if(!audio)return;if(audio.paused)void audio.play().catch(()=>setVoteMessage("Playback could not resume. Open the track and try Play."));else audio.pause();}}>{activePlaying ? "Pause track" : "Resume track"}</button><button type="button" onClick={()=>{setLibraryView("recordings");showTrack(activeTrack);}}>Show recording</button></aside>}{suggestionsOpened && <SongSuggestions testOnly={adminTestOnly} ready={ready && votesLoaded} />}</div>
+  </div><div hidden={libraryView !== "suggestions"}>{activeTrack && <aside className="library-active-player" aria-label="Current library playback"><div><strong>{activePlaying ? "Playing" : "Paused"} · {musicDisplayTitle(activeTrack.title)}</strong><small>{activeTrack.artist} · playback position is kept.</small></div><button type="button" onClick={()=>{const audio=activeAudio.current;if(!audio)return;if(audio.paused)void audio.play().catch(()=>setVoteMessage("Playback could not resume. Open the track and try Play."));else audio.pause();}}>{activePlaying ? "Pause track" : "Resume track"}</button><button type="button" onClick={()=>{changeView("recordings");showTrack(activeTrack);}}>Show recording</button></aside>}{suggestionsOpened && <SongSuggestions testOnly={adminTestOnly} ready={ready && votesLoaded} />}</div>
   {consent.dialog}
   </main>;
 }

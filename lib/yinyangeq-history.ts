@@ -2,7 +2,7 @@ import { RequestInputError } from "@/lib/request-json";
 import { validateSyncPayload } from "@/lib/browser-sync.mjs";
 import { LEGACY_CUTOFF } from "@/lib/legacy-notice";
 import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
-import { profileHash,profileSecret,PROFILE_SLUG,requireProfileAccount,type ProfileAccount } from "@/lib/yinyangeq-account";
+import { profileHash, profileSecret, PROFILE_SLUG, requireProfileAccount } from "@/lib/yinyangeq-account";
 import { profileTables,profileProjection,projectionContext,type ProfileKind } from "@/lib/yinyangeq-records";
 type Kind=Exclude<ProfileKind,"history">|"trial";
 type Ref={kind:Kind;id:string};

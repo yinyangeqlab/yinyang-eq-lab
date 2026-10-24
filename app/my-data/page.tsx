@@ -32,6 +32,7 @@ export default function MyDataPage() {
     finally { if (alive.current && version === requestVersion.current) setLoading(false); }
   }, []);
   useEffect(() => { const requests = requestVersion; alive.current = true; return () => { alive.current = false; requests.current++; }; }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(() => { const trial = new URLSearchParams(window.location.search).get("trial"); if (trial) setQuery(trial); void load(); loadLocal(); }, [load,loadLocal]);
   useEffect(()=>{const refresh=()=>{void load();loadLocal();};window.addEventListener('yinyang-data-changed',refresh);window.addEventListener('focus',refresh);window.addEventListener('storage',refresh);return()=>{window.removeEventListener('yinyang-data-changed',refresh);window.removeEventListener('focus',refresh);window.removeEventListener('storage',refresh);};},[load,loadLocal]);
   function choose(row: typeof pending) {setOwnerConfirmation("");setPending(row);setConfirmation("");setError("");setMessage("");}
