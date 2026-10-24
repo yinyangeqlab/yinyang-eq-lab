@@ -20,19 +20,23 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
+**Current access — update119:** the site is closed for private testing. Only existing admin sign-in and authenticated admin sessions have app access. The lock stays enabled until the owner explicitly requests reopening. [Current live state](LIVE_STATE.md).
+
+The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
+
 ## What it is
 
 Headphone EQ targets are easy to find and hard to choose between. Online, the choice often leans on a target's name or someone's reputation. YinYang EQ asks a simpler question: *which of these do you prefer, on your headphones, with music you know, when you don't know which is which?*
 
-- **Blind, and fitted to your headphones.** In the blind modes, target names are hidden and A/B order is randomized. Each target is fitted to *your* headphone measurement, so you hear the EQ that would actually be applied.
-- **You leave with something usable.** Personal Tournament narrows many targets to a shortlist of favorites. Preference Tuning lets you shape a curve and export it as a target or preset.
+- **Blind, and fitted to your headphones.** In the target-based blind modes, target names are hidden and A/B order is randomized. Each target is fitted to *your* headphone measurement, so you hear the EQ that would actually be applied.
+- **You leave with something usable.** Personal Tournament narrows many targets to a shortlist of favorites. Private blind EQ compares two supplied presets without a headphone measurement. Preference Tuning lets you shape a curve and export it as a target or preset.
 - **Your listening can also be evidence, if you choose.** Optional, consented comparisons feed exploratory rankings and a longer-term question: how consistent are listeners with themselves, how much do they agree with one another, and does that depend on headphones, music, or experience?
 
 YinYang EQ is a **free, noncommercial public beta and an exploratory research project**. It is not a validated measure of sound quality, and no findings from this data have been published. [What is established, what is only a question, and what is not claimed](#what-this-project-can-and-cannot-claim) is set out below.
 
 ## Why take part
 
-**For you:** a blind answer to "which do I prefer?" on your own headphones, a saved shortlist, and a tunable curve you can download. All of this works without sharing anything for research.
+**For you:** a blind answer to "which do I prefer?" on your own headphones and a saved shortlist. Personal Tournament can keep its choices local when optional research sharing is off; the private blind EQ tool keeps presets and choices in the tab. Preference Tuning can also produce a downloadable curve or preset, but those exports require the participation agreement and are recorded for private research, including the exported file and tuning settings.
 
 **For the project (only if you opt in):** most public discussion of headphone targets is anecdotal. A pooled set of blind, loudness-matched, fitted comparisons could help show where listeners agree on a target and where they split, how repeatable individual preferences are, and whether differences track measurable context such as headphone type or music. Those are open questions, not findings. The data is self-selected and uncontrolled, so it can describe the people who took part, not listeners in general, and each contribution is only as useful as the methodology around it. That is why the limits are stated here.
 
@@ -46,6 +50,7 @@ YinYang EQ is a **free, noncommercial public beta and an exploratory research pr
 | **Blind Research · Listening Pool** | Compare hidden targets using a site-selected stereo track. | Eligible comparisons contribute to Research Rankings. |
 | **Blind Research · Bring Your Own** | Compare hidden targets using a stereo song from your device. | Eligible comparisons contribute to Research Rankings. Audio stays on your device; sharing song tags and fingerprints is optional. |
 | **Open Comparison · Unranked** | Pick two named targets, including your own private curves, and explore freely. | Approved-target comparisons can enter private admin research under the participation agreement; comparisons involving private targets stay local. Never counted in public Research Rankings. |
+| **Private blind EQ comparison** | Import or enter two presets, compare a playlist with independent per-song A/B assignments, then reveal and download your results. No headphone measurement is required. | Presets, local audio and choices stay in this tab, outside research, rankings and Sync. |
 | **Preference Tuning** | Start from a reference and shape bass, body, ear gain, presence and treble on an interactive curve, with undo/redo, exact value entry and bypass. Generate EQ fits and download a target or preset. | Exports are recorded for private research, including the downloaded file and tuning settings (see [Privacy](#participation-privacy-and-your-data)). |
 | **[Shareable shootouts](https://yinyangeq.com/share-shootout)** | Pick two to four targets and share a blind A/B by link or embed. | Anonymous; see [below](#shareable-shootouts). |
 
@@ -100,7 +105,7 @@ If the data eventually supports a finding, it would be reported with its limits,
 
 ## Participation, privacy, and your data
 
-You can browse the site without being asked for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
+During maintenance, only authenticated admins can use the app. The following describes the ordinary access policy when the owner reopens the site: browsing does not ask for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
 
 - tags and fingerprints of music from your own device
 - identifiable activity monitoring
@@ -123,11 +128,11 @@ The notice also describes a protected public-archive release (rounded, uncertain
 
 ### Shareable shootouts
 
-Anyone can build a blind A/B for two to four targets and share a link (`/s/<id>`), an iframe snippet (`/embed/<id>`) and a private results link whose manage key lives in the URL fragment. Runs store only the picks, an hour bucket, an optional setup answer, whether curves were viewed and which sound played: no IP address, cookie, account or exact time. Shootouts are deleted 180 days after results were last opened, or when the sharer deletes them. Only built-in targets with a redistribution-compatible license (currently MIT or CC BY 4.0) can be used. See [docs/SHAREABLE_SHOOTOUTS.md](docs/SHAREABLE_SHOOTOUTS.md).
+When the owner reopens the site, the shareable tool lets anyone build a blind A/B for two to four targets and share a link (`/s/<id>`), an iframe snippet (`/embed/<id>`) and a private results link whose manage key lives in the URL fragment. Runs store only the picks, an hour bucket, an optional setup answer, whether curves were viewed and which sound played: no IP address, cookie, account or exact time. Shootouts are deleted 180 days after results were last opened, or when the sharer deletes them. Only built-in targets with a redistribution-compatible license (currently MIT or CC BY 4.0) can be used. See [docs/SHAREABLE_SHOOTOUTS.md](docs/SHAREABLE_SHOOTOUTS.md).
 
 ## Current status
 
-- **Live release:** 0.2.0-beta.1 / update117 (October 23, 2026), recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update117-verification.json).
+- **Live release:** 0.2.0-beta.1 / update119 (October 24, 2026), under owner-only maintenance, recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update119-verification.json).
 - **Not verified:** physical headphone output, and real Safari/iOS interruption and recovery.
 - **Beta:** some features may be unfinished and bugs may appear.
 - **Free and noncommercial:** the site has no advertising, payments or paid features, and its [privacy notice](https://yinyangeq.com/privacy) states that data is not sold or used for advertising.
@@ -149,7 +154,7 @@ npm run dev
 The public repository is a **clean source release**. It excludes production data, credentials, deployment state, numerical target seed curves, **all music recordings** and participant records. In a fresh clone:
 
 - Comparisons need target records, which `setup:local` does not install.
-- The Music Library lists tracks with their waveforms, credits and license links, but **no recording will play**. Pressing Play on any card, not only the Shantae tracks, shows only a generic “This browser could not play this preview.”; the real cause is that the audio file is absent. Supply audio files you are entitled to use at the paths the catalog expects (for example `public/music/shantae/<id>.<ext>`) to restore playback.
+- The Music Library lists tracks with their waveforms, credits and license links, but **no recording will play**. In the reviewed local-playback change, a same-origin check on loopback hosts explains a confirmed missing recording; other failures retain the generic playback message. This applies to all absent recordings, not only the Shantae tracks. Supply audio files you are entitled to use at the paths the catalog expects (for example `public/music/shantae/<id>.<ext>`) to restore playback.
 
 Use `npm run build` then `node scripts/package-static-assets.mjs --public-only` for a clone preview; public-only packages cannot be deployed. Full `--snapshot` verification needs the owner's private release inputs.
 

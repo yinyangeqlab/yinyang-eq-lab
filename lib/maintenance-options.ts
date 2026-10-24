@@ -5,6 +5,19 @@ export const MAINTENANCE_FEATURES = [
   {id:"contributions",label:"Shared uploads & suggestions",description:"Submitting public targets, contributed measurements and song suggestions. Their forms also need the Shootout page unlocked."},
 ] as const;
 export type MaintenanceFeature = typeof MAINTENANCE_FEATURES[number]["id"];
+export const OWNER_ONLY_MAINTENANCE_MESSAGE = "We’re testing updates to YinYang EQ. The site is temporarily unavailable while we check that everything works as intended. Thank you for your patience.";
+
+/** Whole-site closure. No app content, credentials, or visitor state is read. */
+export function ownerOnlyMaintenanceResponse(request: Request, message = OWNER_ONLY_MAINTENANCE_MESSAGE): Response {
+  const headers = { "Cache-Control": "private, no-store, max-age=0", "Retry-After": "300", "X-YinYang-Service": "owner-only-maintenance", "X-Robots-Tag": "noindex, nofollow", "Vary": "Cookie" };
+  const status = { id: "owner-only-maintenance", active: true, enabled: true, ownerOnly: true, message, pauseSubmissions: true, lockedFeatures: MAINTENANCE_FEATURES.map(feature => feature.id) };
+  // Existing open tabs can read only this operational notice, not application data.
+  if (new URL(request.url).pathname === "/api/maintenance" && ["GET", "HEAD"].includes(request.method)) return new Response(request.method === "HEAD" ? null : JSON.stringify(status), { headers: { ...headers, "Content-Type": "application/json; charset=utf-8" } });
+  if (new URL(request.url).pathname.startsWith("/api/") || !["GET", "HEAD"].includes(request.method)) return new Response(request.method === "HEAD" ? null : JSON.stringify({ error: message, ownerOnly: true }), { status: 503, headers: { ...headers, "Content-Type": "application/json; charset=utf-8" } });
+  const escaped = message.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Maintenance | YinYang EQ</title><style>html{color-scheme:dark;background:#081411}*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at top,#18362e,transparent 65%);color:#e2f5ed;font:18px/1.65 system-ui,sans-serif}main{width:100%;max-width:720px;padding:clamp(24px,6vw,56px);border:1px solid #416b59;border-radius:20px;background:#10251d}p{margin:18px 0 0;overflow-wrap:anywhere}small{color:#b3d6c5;font-size:12px;letter-spacing:.15em}h1{margin:18px 0;font-size:clamp(30px,7vw,48px);line-height:1.15;letter-spacing:-.025em}</style></head><body><main><small>YINYANG EQ · MAINTENANCE</small><h1>We’ll be back after testing.</h1><p>${escaped}</p></main></body></html>`;
+  return new Response(request.method === "HEAD" ? null : html, { status: 503, headers: { ...headers, "Content-Type": "text/html; charset=utf-8" } });
+}
 export function validMaintenanceLocks(value:unknown):value is MaintenanceFeature[] {
   return Array.isArray(value) && value.every(v=>MAINTENANCE_FEATURES.some(f=>f.id===v)) && new Set(value).size===value.length;
 }

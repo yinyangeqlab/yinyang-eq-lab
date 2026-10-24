@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 117,
-  "implementationCommit": "06318b114767a0282880721f27168443306f29b4",
-  "runtimeParity": "Verified update117: 24 unchanged AAC recordings, permission credits, fresh analysis and accurate music link previews, on update116; no schema change. Exact runtime snapshot and compiled assets verified. Matching encrypted recovery point and daily validation verified.",
+  "liveUpdate": 119,
+  "implementationCommit": "43010598186d97bec4ba560dc68e2b4b9cc5d13f",
+  "runtimeParity": "Verified private blind EQ update119 behind the unchanged owner-only maintenance lock; immutable deployed/recovery source retains original fingerprints.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -35,7 +35,12 @@
       "implementationCommit": "9d896daacb7a28702fecae2ab9352e1cfe125005"
     },
     "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged.",
-    "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment."
+    "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment.",
+    "ownerOnlyMaintenance": {
+      "status": "Prepared local maintenance-only source; not deployed. Requires explicit ownerOnlyMaintenance=true in the existing staging configuration.",
+      "baseCommit": "787bf67d4dfa286202cd7694a87449f4e6085c08",
+      "documentation": "docs/OWNER_ONLY_MAINTENANCE.md"
+    }
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
   "files": [
@@ -61,19 +66,19 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "03b1b470c1da8c7083539d75097c20920631805148638ee923cff45d5514210f"
+      "sha256": "c84255952f855ff3698c983d771d0bad417c1f9cfa0615db69e1d7808812d307"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "8bf6233c22347ac342d5311022acb4e31f7499b478fcd9540ec4f13fdd768e76"
+      "sha256": "b8a9bcada7715a6fbdb1ecc6cfb08639d5274fcc97e332389b5a90fb9e7a0fe8"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "7d2aa8e269321bb84ac85a39a48514551aa13f4bfccc26b9c4fdcd6e8ad90691"
+      "sha256": "b3516bbcac7a8e6a8ad422efe568a8a3200666424b8c0d00b288acd1648d211f"
     },
     {
       "path": "README.md",
-      "sha256": "442b6c284becbaf8e975b10330d40f110704a56000edd7ae0f43dd1efcb397fe"
+      "sha256": "02640e5cefa15e03822e91b3db7f7ecb6805244ac45b6ebd36604244c70d24a6"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -322,6 +327,18 @@
     {
       "path": "app/embed/[id]/page.tsx",
       "sha256": "4e6457719d9de8dc9ec6436911c64936cc845f0523d408bd1ae9d5004468f6c2"
+    },
+    {
+      "path": "app/eq-compare/layout.tsx",
+      "sha256": "dca4cfcf1dc4fe027879cb34368b28baf189091b58d57404c63a2f288bcf3c10"
+    },
+    {
+      "path": "app/eq-compare/page.tsx",
+      "sha256": "d8a939316138d051e7278ff63aa3fe6b6fe2d990a9c171dabdbc00ddcc2a360d"
+    },
+    {
+      "path": "app/eq-compare/style.css",
+      "sha256": "ebb1042dbccaeb07cd63e05a3c0fbded9ba6301d059792cdef65b15a84563cfe"
     },
     {
       "path": "app/globals.css",
@@ -612,6 +629,14 @@
       "sha256": "f319dad4be07345a19d2c4888e89a2837d7a5d43e29eb007f270b2b39a961e27"
     },
     {
+      "path": "components/blind-eq-editor.tsx",
+      "sha256": "6165a1f98fb9e7776e43008e07a235eebd4812371a0c4ba51b7c564ff0979164"
+    },
+    {
+      "path": "components/blind-eq-listener.tsx",
+      "sha256": "b47848a86fcb40fe6d81254a6bcb18eca9cb98d3c5827ec4263b8e3e62952957"
+    },
+    {
       "path": "components/community-method.tsx",
       "sha256": "3fcbe2fa34f4d1cda777174551834a79e749b918f33285bef1d26bafed462fed"
     },
@@ -837,7 +862,7 @@
     },
     {
       "path": "components/service-warning.tsx",
-      "sha256": "98524cfd6aa2c218cd5ce7847d45e9a70b886e0b7358cd2c8996048a520364be"
+      "sha256": "2a5fc5ad358951bac471a6b77d546fd1482fade6bc64f5edae9f1ee37fba40cd"
     },
     {
       "path": "components/setup-auto-hide-note.tsx",
@@ -865,7 +890,7 @@
     },
     {
       "path": "components/site-chrome.tsx",
-      "sha256": "d71c5b70c06c9348a0e197f0937f6ee0292c0cc01f7bd2517cef72e777054e4c"
+      "sha256": "9db2adb6b949f9763848ae38235db5a42eed64c08ae6dc481abe3bdaa6c4fbb7"
     },
     {
       "path": "components/site-data-footer.tsx",
@@ -909,11 +934,11 @@
     },
     {
       "path": "components/tournament-mode-tabs.css",
-      "sha256": "1c1d8cbd2ecb6d49ea31e78ad28d59d6d84497bbd5cf9c372b6662f45158c27b"
+      "sha256": "ce4daf83842772390bb8b0b4a9d7dba0c49a23769f04bbcd7490f67739a6a267"
     },
     {
       "path": "components/tournament-mode-tabs.tsx",
-      "sha256": "aa741cba2705102acef7a00b821c3dc5f07e9537dd5e54082e239e57c494ff59"
+      "sha256": "939fe67d770cd2edd010a2408ef45058cc75fd75f12e474864e16c68d0d259c0"
     },
     {
       "path": "components/track-waveform.tsx",
@@ -1260,6 +1285,14 @@
       "sha256": "7a9c347a5000316ff6a287c4ea3d5c4ef3cc31e100f313aab1449819ac06ce29"
     },
     {
+      "path": "docs/BLIND_EQ_COMPARISON.md",
+      "sha256": "bd9fd320b0e37763442641ca0a15aeca15ae1751e799c5d6d0bcaea8ae7ff062"
+    },
+    {
+      "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
+      "sha256": "5c7d2ab6003dfe500f39364e0893cb6abda5d7983a281dcf397b814b72543cee"
+    },
+    {
       "path": "docs/CONSENT_UI_REVIEW_2026-10-19.md",
       "sha256": "38bd964a2ef9c942ac21a09c1df0cdd84b6273219e81fd7fa25eecb2b37243ce"
     },
@@ -1273,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a89f9a7578c05fc15d67bcd4951fe6c6bdd68601eaba1644259181d627dc0c5c"
+      "sha256": "471f289129217b6c6c10fa301830c4a9e732820bc05914e573bec7e751b1cf54"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1282,6 +1315,10 @@
     {
       "path": "docs/LINK_PREVIEWS.md",
       "sha256": "c4517841d16f1b9eb49f7e66baf92ba81bb6c3d6a50bfa1aba5b5960d332878f"
+    },
+    {
+      "path": "docs/OWNER_ONLY_MAINTENANCE.md",
+      "sha256": "e7dc6433760c84607e9c1fb6d64e240541beeb0712b7043a425ad91993d1a9c0"
     },
     {
       "path": "docs/REBUILD.md",
@@ -1641,7 +1678,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "a885397673dd9a0d1660ff78a9fa332c87827e0056a80a69af285c9e20724db6"
+      "sha256": "47a942c59afad1a76ca57a6eb0c80b863df7ba396ccf069c2e94465b34402052"
     },
     {
       "path": "infra/pulumi/package-lock.json",
@@ -1653,7 +1690,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "2221509e7dd0848b21cf9dec35a2fc06f164140f1bd46b5211d9deacc33e8f91"
+      "sha256": "13c1236938a3f9a67ff7e694b690651a20953bacaba3899ef71a4501ced3c48d"
     },
     {
       "path": "infra/pulumi/public-assets.d.mts",
@@ -1758,6 +1795,14 @@
     {
       "path": "lib/autoeq.ts",
       "sha256": "c843baf3c20279a48c45d870c2082417f8af34c0955526f5abcb9397345fd442"
+    },
+    {
+      "path": "lib/blind-eq-audio.ts",
+      "sha256": "a5f78dea1e40aa3fd3d1a0ca8474e87032c12679a3a9812c3080677b51722815"
+    },
+    {
+      "path": "lib/blind-eq.ts",
+      "sha256": "63f9ebc70a8174a49d149600ebd1ffec18ef2b2b251fde32ed8a9aa1898bf371"
     },
     {
       "path": "lib/browser-data.ts",
@@ -1921,7 +1966,7 @@
     },
     {
       "path": "lib/maintenance-options.ts",
-      "sha256": "2114da146cfeb0dec0977c1f3934b057fe0a338151c45a9391f8ba08f4e07f56"
+      "sha256": "adec610c6a08db19e9b99d4476e76c81776894076d3a8521fbc2e003d84f3bbd"
     },
     {
       "path": "lib/maintenance.ts",
@@ -2093,7 +2138,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "cc793808018c6cfc244308219c5b56cd07aceaf90a094bd85e258ea10aee5a26"
+      "sha256": "ff8f650e47ae0fb9dc712da89a666bea11078b3e1e77fcf51be16279f477b455"
     },
     {
       "path": "lib/song-match.ts",
@@ -2384,6 +2429,10 @@
       "sha256": "a3455991434ad9d694e984a869cf10d406a00dbb730a6a3e09ca1eb96bcd5a59"
     },
     {
+      "path": "scripts/check_blind_eq.mjs",
+      "sha256": "f8b83011e6330de6b4a44aaed6b53e3ec084c225184276417440ca21c6e058da"
+    },
+    {
       "path": "scripts/check_browser_pairing.mjs",
       "sha256": "3de5f3bfa1f0e1e482704285fdd64bbcfd700b6b3d3af2a47722bd15eb5e6c62"
     },
@@ -2498,6 +2547,10 @@
     {
       "path": "scripts/check_open_music_source.mjs",
       "sha256": "0beb5ff58e0a4f57990217a71e5fba68872e29e54b43e454028492260697ff07"
+    },
+    {
+      "path": "scripts/check_owner_only_maintenance.mjs",
+      "sha256": "003eb37067fe9a4f3eb4e7b1492260e10e6aee48b7210479ad5750661aeee957"
     },
     {
       "path": "scripts/check_participant_device_sync.mjs",
