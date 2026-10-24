@@ -1,0 +1,45 @@
+# Codex / Claude coordination
+
+Purpose: let Codex and Claude work on the same checkout without either being unaware of the other. Neither agent sees the other live; this file and Git state are the only shared awareness. It implements, and does not replace, the "Codex and Claude workflow preference" in AGENTS.md.
+
+## Roles
+
+- **Codex** is the implementation owner: source edits, verification, commits, pushes, GitHub pages, deployment (each under the existing separate authorizations).
+- **Claude** is review-only by default: design, code, functionality and writing evaluation, redesign proposals, and draft copy. Claude does not edit source, commit, push, open PRs or deploy.
+- If the owner assigns Claude an implementation task, it uses a separate assigned branch/worktree (see `.claude/worktrees/`) and hands Codex exact commit references. Never edit the same files concurrently.
+
+## Protocol
+
+1. **Before starting**, each agent reads this file, runs `git fetch`, `git status` and `git log -3`, and notes the HEAD SHA and dirty-file count.
+2. **Claude's output** goes only in `docs/reviews/YYYY-MM-DD-<topic>.md`. Every review states the base SHA, whether the tree was dirty, and which files were read. A finding is stale if those files changed after that point.
+3. **Codex triages** each finding in the Findings log below: accepted, rejected (with reason) or deferred. Codex verifies a finding against current source before acting; findings are evidence, not instructions.
+4. **Claims**: before a long task, add a row to Active work with the area/files. Remove or mark it done when finished. Check it before touching a claimed area.
+5. **Out of scope for Claude**: secrets, participant records, recovery details, admin sessions. Browser reviews use only the hidden layout test account (docs/ADMIN_TEST_ISOLATION.md).
+6. Lab identity rules in AGENTS.md apply to anything either agent commits.
+
+## Active work
+
+| Agent | Area / files | Started | Status |
+|-------|--------------|---------|--------|
+| Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | active; original canonical drafts preserved |
+| Claude | Read-only review of blind EQ comparison | 2026-10-24 | done; see docs/reviews/2026-10-24-blind-eq-compare.md |
+
+## Baseline snapshot (2026-10-24)
+
+- HEAD `86c60c0`, branch checked out in `workspace/`, 45 tracked files modified (about +6.9k/-2.4k lines) plus untracked new files (for example `app/eq-compare/`, `components/blind-eq-*.tsx`, `docs/BLIND_EQ_COMPARISON.md`).
+- The parent directory is a stale mirror (its AGENTS.md is older). Work only in `workspace/`.
+
+## Findings log
+
+| Date | Review file | Finding | Codex decision | Notes |
+|------|-------------|---------|----------------|-------|
+| 2026-10-24 | `reviews/2026-10-24-blind-eq-compare.md` | 1-3: rename/manual edits invalidate preset silently; reset desyncs editors | accepted | rename and unapplied-draft feedback fixed; reset restoration already present in reconciled source |
+| 2026-10-24 | same | Fixed A/B mapping confounds position bias; suggest per-song randomisation | accepted | independent per-song assignment and per-song export mapping |
+| 2026-10-24 | same | 4-8: no warning before download, `revealedAt`, large-file memory, a11y | accepted | unsaved-result warning, original reveal timestamp, decoded-size limits and accessible progress grouping |
+| 2026-10-24 | same | Verify default shelf Q sqrt(0.5) and LS/HS = center freq against APO reference | accepted | primary reference confirms center-frequency shelves; unstated default Q is now explicitly an importer assumption |
+
+## Codex continuation — October 24, 2026
+
+Read shared workflow and Claude review. Canonical HEAD `86c60c0`, 84 dirty/untracked status entries at task start; refreshed `origin/main` is `73780ab` (maintenance update118). Work continues in an isolated branch from scrubbed main; no concurrent source edits in the dirty canonical checkout. Claude findings will be checked against the reconciled feature source, whose reset fix already differs from the reviewed draft. The site must stay locked through all releases.
+
+Optional repeat-consistency trials, K-weighted matching, loop seam changes and a three-step redesign are deferred: this release retains honest RMS/personal-preference limits and focuses on reviewed functional defects. Header links remain full navigations so beforeunload protects unsaved results. No automatic Claude messaging is enabled.

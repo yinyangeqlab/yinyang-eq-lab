@@ -334,7 +334,7 @@
     },
     {
       "path": "app/eq-compare/page.tsx",
-      "sha256": "5ff8f13662925cdb509068115c1c57e621801f732254eb7e2786778f2f33c59b"
+      "sha256": "d8a939316138d051e7278ff63aa3fe6b6fe2d990a9c171dabdbc00ddcc2a360d"
     },
     {
       "path": "app/eq-compare/style.css",
@@ -630,11 +630,11 @@
     },
     {
       "path": "components/blind-eq-editor.tsx",
-      "sha256": "7614d6b77ce5d6562999dd5d7c0001306bbc33be21e7628282f3db0e661d6439"
+      "sha256": "6165a1f98fb9e7776e43008e07a235eebd4812371a0c4ba51b7c564ff0979164"
     },
     {
       "path": "components/blind-eq-listener.tsx",
-      "sha256": "ac70a5c7c98915a98e767c50d6fc7bb3c958f4056742804651e3023593ffab4d"
+      "sha256": "b47848a86fcb40fe6d81254a6bcb18eca9cb98d3c5827ec4263b8e3e62952957"
     },
     {
       "path": "components/community-method.tsx",
@@ -1286,7 +1286,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "efe865eeecf80d67331e314ff62a896591f198df142c69d249cc051b10820525"
+      "sha256": "d783907e97836adc261870a17f5c897bc74af988bd1ce57fa3c8e50e933cf605"
     },
     {
       "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
@@ -1802,7 +1802,7 @@
     },
     {
       "path": "lib/blind-eq.ts",
-      "sha256": "755e894cc521d0c8ae6e5d76e654ba53f6ea40ed80eaf6153ea386117c9afcb3"
+      "sha256": "63f9ebc70a8174a49d149600ebd1ffec18ef2b2b251fde32ed8a9aa1898bf371"
     },
     {
       "path": "lib/browser-data.ts",
@@ -2430,7 +2430,7 @@
     },
     {
       "path": "scripts/check_blind_eq.mjs",
-      "sha256": "959c00d40f2dbab547ab1bd2bb974b8a15b56e717508a0cddafeb07b201afa5f"
+      "sha256": "01855acfdf6ec5bc15ce81652b9b66aa1d66b427528a151f3f5e8f507a849857"
     },
     {
       "path": "scripts/check_browser_pairing.mjs",

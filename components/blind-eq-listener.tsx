@@ -48,7 +48,7 @@ export default function BlindEqListener({ song, presets, match, onEvidence }: { 
   }
   async function load() {
     const token = ++generation.current;
-    setError(""); setBusy(true); setReady(false); resetEvidence(); pause();
+    setError(""); setBusy(true); setReady(false); resetEvidence(); pause(); source.current = null; prepared.current = null;
     try {
       player.current ??= new BlindEqPlayer();
       // Resume in the user gesture before any asynchronous fetch/decode.
@@ -63,8 +63,11 @@ export default function BlindEqListener({ song, presets, match, onEvidence }: { 
         data = await response.arrayBuffer();
       }
       if (data.byteLength > 100_000_000) throw Error("Choose a recording under 100 MB.");
-      const decoded = await player.current.context.decodeAudioData(data);
+      let decoded: AudioBuffer;
+      try { decoded = await player.current.context.decodeAudioData(data); }
+      catch { throw Error("This browser could not decode the audio. Try a shorter WAV or MP3 file; long or compressed files can need substantial memory, especially on mobile."); }
       if (token !== generation.current) return;
+      if (decoded.duration > 1200 || decoded.length * decoded.numberOfChannels * 4 > 200_000_000) throw Error("Choose audio under 20 minutes and 200 MB of decoded samples. Use a shorter excerpt on mobile.");
       if (decoded.duration < 5) throw Error("Choose a recording at least five seconds long.");
       source.current = decoded; setDuration(decoded.duration);
       const at = Math.min(Math.floor(decoded.duration * .3), Math.max(0, decoded.duration - 15));
@@ -101,7 +104,7 @@ export default function BlindEqListener({ song, presets, match, onEvidence }: { 
       <div className="eq-ab" role="group" aria-label="Choose the EQ to hear">{([0, 1] as const).map(value => <button type="button" key={value} aria-pressed={side === value} onClick={() => switchSide(value)}><strong>{value === 0 ? "A" : "B"}</strong><span>{side === value ? "Selected" : "Switch to this EQ"}</span></button>)}</div>
       <div className="eq-actions"><button type="button" className="eq-primary" onClick={() => playing ? pause() : void play()}>{playing ? "Pause" : `Play ${side === 0 ? "A" : "B"}`}</button><button type="button" onClick={() => { const wasPlaying = player.current?.playing; player.current?.restart(); setPosition(0); if (wasPlaying) void play(); }}>Restart passage</button><span>{clock(start + position)} / {clock(start + Math.min(15, duration))} · loops</span></div>
       <label className="eq-volume">Listening volume<input aria-label="Listening volume" type="range" min={0} max={1} step={.01} value={volume} onChange={event => { const value = Number(event.target.value); volumeRef.current = value; setVolume(value); player.current?.setVolume(value); lastTime.current = player.current?.elapsed || 0; }} /><span>{Math.round(volume * 100)}%</span></label>
-      <div className="eq-heard" aria-label="Listening progress">{heard.map((value, index) => <span key={index}>{index === 0 ? "A" : "B"}: {value >= 5 ? "ready" : `${(Math.floor(value * 10) / 10).toFixed(1)} / 5 s`}</span>)}</div>
+      <div className="eq-heard" role="group" aria-label="Listening progress">{heard.map((value, index) => <span key={index}>{index === 0 ? "A" : "B"}: {value >= 5 ? "ready" : `${(Math.floor(value * 10) / 10).toFixed(1)} / 5 s`}</span>)}</div>
       <label className="eq-passage">Passage start · {clock(draftStart)}<input type="range" aria-label="Passage start" min={0} max={Math.max(0, duration - Math.min(15, duration))} step={.1} value={draftStart} onChange={event => setDraftStart(Number(event.target.value))} /></label>
       <button type="button" disabled={!changed} onClick={() => void changePassage()}>Use this passage</button>
       <p className="eq-muted">{changed ? "The player still uses the previous passage until you apply this change. " : ""}Both EQs use the same {Math.min(15, duration).toFixed(0)} seconds. {match ? "Rendered stereo RMS levels are matched for this passage; perceived loudness can still differ." : "Preset preamp differences are preserved."} Common headroom protects sample peaks. Start at a comfortable volume with other EQ disabled.</p>

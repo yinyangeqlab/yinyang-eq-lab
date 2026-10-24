@@ -16,7 +16,7 @@ production mutation and backup exports remain separate. Live update117 and its i
    tab; browser codec support applies. Listening Pool keeps existing access
    controls. EQ does not require a headphone measurement.
 3. Starting removes the editors from the rendered page and randomly assigns a
-   fixed A/B mapping for the entire session. Names, filenames and filter values
+   fresh A/B mapping independently for each song. Names, filenames and filter values
    are hidden during listening. This is listening blinding, not protection from
    someone inspecting the browser's memory or developer tools.
 4. Prepare each song, listen and switch between synchronized looping passages.
@@ -26,7 +26,7 @@ production mutation and backup exports remain separate. Live update117 and its i
 5. Finish to reveal identities and per-song results. Early reveal explicitly
    ends the session and leaves remaining songs unanswered. Revealed sessions
    cannot accept further choices. An explicit JSON download includes presets,
-   revealed mapping, settings and choices, but no audio bytes.
+   per-song revealed mappings, settings, choices and the original reveal timestamp, but no audio bytes.
 
 Presets, audio buffers and choices live only in component memory. They are not
 written to browser storage, research, ranks, music votes, profiles or Sync.
@@ -40,7 +40,7 @@ status checks remain subject to the site's normal controls.
 
 - Equalizer APO / Peace parametric TXT: `Preamp:`, enabled/disabled numbered or
   unnumbered filters, PK/PEQ, LS/LSC and HS/HSC, with frequency/gain/Q. Shelves
-  without Q use the default Q of sqrt(0.5). Plain LS/HS use center frequency.
+  without Q use this importer’s assumed Q of sqrt(0.5); specify Q explicitly for an exact transfer. The reference marks shelf Q optional but does not state its default. Plain LS/HS use center frequency.
 - Qudelix / PEQdB parametric TXT: `CH: 0` and `CH: 1`, `TYPE: PEQ`, per-channel
   preamps and filters. Both channel sections are required.
 - APO `Channel: ALL`, `L`, `R`, `L R`, and equivalent stereo channel numbers.
@@ -50,7 +50,7 @@ status checks remain subject to the site's normal controls.
 
 Limits: 200 KB TXT, 32 enabled filters/channel, 10–24,000 Hz, ±30 dB filter gain,
 Q 0.1–20, ±40 dB accumulated channel preamp. Local songs are limited to 100 MB
-each. Filters at or above the decoded recording's Nyquist frequency are refused
+each; decoded audio is capped at 20 minutes / 200 MB of sample data. Decoding itself can temporarily require more memory; shorter excerpts are recommended on mobile. Filters at or above the decoded recording's Nyquist frequency are refused
 rather than silently moved. Unsupported processing commands fail with a line
 number. Native `.peace`, GraphicEQ, convolution, includes, slope/corner shelf
 modifiers and bandwidth-in-octaves require a supported export or manual entry.
@@ -130,3 +130,7 @@ Physical headphone audition and Safari/iOS remain unverified.
 
 This branch is a source preview, not a deployment package. Immutable
 LIVE_RELEASE.json, production deployment and recovery provenance are unchanged.
+
+## Reviewed locked-release candidate — October 24, 2026
+
+Reconciled onto update118 with the owner-only maintenance gate unchanged. Preset rename/readiness, original reveal time, leave-page protection through download, accessible progress, decoded-audio bounds and independent per-song randomization are covered by 83 focused checks. Desktop1280px/narrow360px synthetic browser interaction and actual Web Audio rendering passed. Browser-native dropdown expansion and keyboard selection passed with explicit dark computed option colors; popup pixel capture remains unavailable. No production browser admin/participant session or physical headphone/Safari/iOS certification is claimed. Deployment remains separate until the exact locked plan passes verification.

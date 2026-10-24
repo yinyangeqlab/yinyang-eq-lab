@@ -65,12 +65,16 @@ for (const random of [() => 0, () => .99]) {
   check(JSON.stringify(session.order) === (random() === 0 ? '[0,1]' : '[1,0]'), 'Both A/B assignments reachable');
   rejects(() => revealBlindSession(session), /at least one/);
   rejects(() => recordBlindRound(session, { ...round, heard: [5, 4.99] }), /five seconds/);
-  session = recordBlindRound(session, round);
+  session = recordBlindRound(session, round, () => random() === 0 ? .99 : 0);
+  check(JSON.stringify(session.rounds[0].order) === JSON.stringify(original.order), "Each recorded song keeps its actual hidden assignment");
+  check(JSON.stringify(session.order) !== JSON.stringify(original.order), "The next song can reverse A/B independently");
   session = recordBlindRound(session, { ...round, song: 'Second', choice: 'tie' });
   session = recordBlindRound(session, { ...round, song: 'Third', choice: 'skip', heard: [0, 0] });
-  check(session.rounds.length === 3 && JSON.stringify(session.order) === JSON.stringify(original.order), 'Multiple songs preserve fixed mapping');
+  check(session.rounds.length === 3 && session.rounds.every(round => round.order.length === 2), 'Every song retains its own mapping');
   check(original.rounds.length === 0, 'Recording is immutable');
   session = revealBlindSession(session);
+  check(Number.isFinite(Date.parse(session.revealedAt)), "Reveal time is captured before download");
+  check(revealBlindSession(session).revealedAt === session.revealedAt, "Repeated reveal retains the original timestamp");
   rejects(() => recordBlindRound(session, round), /already revealed/);
 }
 const storage = new Map([['private-blind-eq-fixture', JSON.stringify({ presets: [mono, stereo], choices: [round] })]]);
@@ -93,8 +97,8 @@ check(restored.includes('value="' + stereo.channels[0].preampDb + '"') && restor
 const ast = ts.createSourceFile('editor.tsx', editorSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX), handlers = new Map();
 function visit(node) { if (ts.isFunctionDeclaration(node) && node.name) handlers.set(node.name.text, node.getText(ast)); ts.forEachChild(node, visit); }
 visit(ast);
-const handlerCode = ts.transpileModule(handlers.get('dirty') + '\n' + handlers.get('upload'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
-const state = { name: 'Synthetic import', parseEqPresetText: parse, onChange: preset => { state.preset = preset; }, setMessage() {}, setError() {}, setBusy() {}, setRows: value => { state.rows = value; }, setPreamps: value => { state.preamps = value; }, setSeparatePreamps: value => { state.separate = value; } };
+const handlerCode = ts.transpileModule(handlers.get('dirty') + '\n' + handlers.get('rename') + '\n' + handlers.get('upload'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+const state = { name: 'Synthetic import', initialPreset: stereo, validateEqPreset, setName: value => { state.name = value; }, parseEqPresetText: parse, onChange: preset => { state.preset = preset; }, setMessage() {}, setError() {}, setBusy() {}, setRows: value => { state.rows = value; }, setPreamps: value => { state.preamps = value; }, setSeparatePreamps: value => { state.separate = value; } };
 const context = vm.createContext(state); vm.runInContext(handlerCode, context);
 for (const [text, separate] of [[txt, false], ['CH: 0\nPreamp: -2 dB\nCH: 1\nPreamp: -3 dB', true]]) {
   state.file = { size: text.length, text: async () => text };
@@ -102,4 +106,8 @@ for (const [text, separate] of [[txt, false], ['CH: 0\nPreamp: -2 dB\nCH: 1\nPre
   check(state.separate === separate, 'Import chooses shared versus independent preamps without changing values');
   check(state.preset.channels.every((channel, index) => String(channel.preampDb) === state.preamps[index]), 'Imported preamp values survive form population');
 }
+state.newName = 'Renamed imported EQ'; vm.runInContext('rename(newName)', context);
+check(state.preset.name === state.newName && JSON.stringify(state.preset.channels) === JSON.stringify(stereo.channels), 'Renaming an applied preset keeps it ready and preserves every filter');
+state.initialPreset = null; state.preset = null; vm.runInContext('rename("Unapplied draft")', context);
+check(state.preset === null, 'Renaming a dirty draft cannot accidentally apply stale settings');
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

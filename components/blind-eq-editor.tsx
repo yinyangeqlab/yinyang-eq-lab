@@ -19,7 +19,13 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
   const [separatePreamps, setSeparatePreamps] = useState(() => Boolean(initialPreset && initialPreset.channels[0].preampDb !== initialPreset.channels[1].preampDb));
   const [rows, setRows] = useState<Row[]>(() => filterRows(initialPreset)), [manual, setManual] = useState(false);
   const [message, setMessage] = useState(initialPreset ? "Ready · previous preset restored. Review or edit below." : ""), [error, setError] = useState(""), [busy, setBusy] = useState(false);
-  function dirty() { onChange(null); setMessage(""); setError(""); }
+  function dirty() { onChange(null); setMessage("Not applied yet · choose Use these settings to make this preset ready."); setError(""); }
+  function rename(value: string) {
+    setName(value); setError("");
+    if (!initialPreset) return;
+    try { onChange(validateEqPreset({ ...initialPreset, name: value.trim() })); setMessage("Ready · preset name updated."); }
+    catch (cause) { onChange(null); setMessage("Not applied yet · enter a valid name and choose Use these settings."); setError(cause instanceof Error ? cause.message : "Check the preset name."); }
+  }
   function update(index: number, change: Partial<Row>) { dirty(); setRows(current => current.map((row, i) => i === index ? { ...row, ...change } : row)); }
   async function upload(file?: File) {
     if (!file) return;
@@ -48,7 +54,7 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
   return <section className="eq-card eq-editor" aria-labelledby={`${id}-title`}>
     <h2 id={`${id}-title`}>{title}</h2>
     <label htmlFor={`${id}-name`}>Name to reveal at the end</label>
-    <input id={`${id}-name`} maxLength={100} value={name} disabled={busy} onChange={event => { dirty(); setName(event.target.value); }} />
+    <input id={`${id}-name`} maxLength={100} value={name} disabled={busy} onChange={event => rename(event.target.value)} />
     <label className="eq-upload">{busy ? "Reading preset…" : "Upload preset TXT"}<input type="file" accept=".txt,text/plain" disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>
     <details open={manual} onToggle={event => setManual(event.currentTarget.open)}>
       <summary>Manual entry / review imported filters</summary>
@@ -66,8 +72,9 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
         <label>Q<input type="number" min={.1} max={20} step="any" value={row.q} disabled={!row.enabled} onChange={event => update(index, { q: event.target.value })} /></label>
         <button type="button" className="eq-remove" aria-label={`Remove filter ${index + 1}`} onClick={() => { dirty(); setRows(current => current.filter((_, i) => i !== index)); }}>Remove</button>
       </fieldset>)}</div>
-      <div className="eq-actions"><button type="button" disabled={busy || rows.length >= 64} onClick={() => { dirty(); setRows(current => [...current, emptyRow()]); }}>Add filter</button><button type="button" disabled={busy} onClick={save}>Use these settings</button></div>
+      <div className="eq-actions"><button type="button" disabled={busy || rows.length >= 64} onClick={() => { dirty(); setRows(current => [...current, emptyRow()]); }}>Add filter</button></div>
     </details>
+    <button type="button" disabled={busy} onClick={save}>Use these settings</button>
     {message && <p className="eq-success" role="status">{message}</p>}
     {error && <p className="eq-error" role="alert">{error}</p>}
   </section>;

@@ -3,8 +3,8 @@ export type EqFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q
 export type EqChannel = { preampDb: number; filters: EqFilter[] };
 export type EqPreset = { name: string; channels: [EqChannel, EqChannel] };
 export type BlindChoice = "A" | "B" | "tie" | "skip";
-export type BlindRound = { song: string; artist: string; start: number; seconds: number; choice: BlindChoice; heard: [number, number] };
-export type BlindSession = { presets: [EqPreset, EqPreset]; order: [0 | 1, 0 | 1]; rounds: BlindRound[]; revealed: boolean };
+export type BlindRound = { order: [0 | 1, 0 | 1]; song: string; artist: string; start: number; seconds: number; choice: BlindChoice; heard: [number, number] };
+export type BlindSession = { presets: [EqPreset, EqPreset]; order: [0 | 1, 0 | 1]; rounds: BlindRound[]; revealed: boolean; revealedAt: string | null };
 
 export function validateEqPreset(preset: EqPreset): EqPreset {
   if (!preset.name.trim() || preset.name.length > 100) throw Error("Give this preset a name of 1–100 characters.");
@@ -101,14 +101,16 @@ export function comparisonGains(stats: [{ rms: number; peak: number }, { rms: nu
 }
 
 export function createBlindSession(presets: [EqPreset, EqPreset], random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32): BlindSession {
-  return { presets: presets.map(validateEqPreset) as [EqPreset, EqPreset], order: random() < .5 ? [0, 1] : [1, 0], rounds: [], revealed: false };
+  return { presets: presets.map(validateEqPreset) as [EqPreset, EqPreset], order: random() < .5 ? [0, 1] : [1, 0], rounds: [], revealed: false, revealedAt: null };
 }
-export function recordBlindRound(session: BlindSession, round: BlindRound): BlindSession {
+export function recordBlindRound(session: BlindSession, round: Omit<BlindRound, "order">, random = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32): BlindSession {
   if (session.revealed) throw Error("This comparison is already revealed. Start a new session.");
+  if (!["A", "B", "tie", "skip"].includes(round.choice) || round.heard.length !== 2 || !Number.isFinite(round.start) || round.start < 0 || !Number.isFinite(round.seconds) || round.seconds < 5) throw Error("Invalid comparison result.");
   if (round.choice !== "skip" && round.heard.some(seconds => !Number.isFinite(seconds) || seconds < 5)) throw Error("Listen to at least five seconds of both A and B first.");
-  return { ...session, rounds: [...session.rounds, structuredClone(round)] };
+  return { ...session, order: random() < .5 ? [0, 1] : [1, 0], rounds: [...session.rounds, { ...structuredClone(round), order: [...session.order] }] };
 }
 export function revealBlindSession(session: BlindSession): BlindSession {
+  if (session.revealed) return session;
   if (!session.rounds.some(round => round.choice !== "skip")) throw Error("Complete at least one comparison before revealing.");
-  return { ...session, revealed: true };
+  return { ...session, revealed: true, revealedAt: new Date().toISOString() };
 }
