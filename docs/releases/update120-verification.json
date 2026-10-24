@@ -1,0 +1,102 @@
+{
+  "update": 120,
+  "deploymentVerification": {
+    "at": "2026-10-24T09:38:45.909069+00:00",
+    "revision": "00799c6b978f8a69283c00e5a7724ae8382f5240",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": true,
+    "deploymentId": "a0748bb7-1393-4ed0-8650-3fed048b37b8",
+    "versions": [
+      {
+        "version_id": "01537cc7-b39d-4f98-998c-0c63e4af192f",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 18,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 889,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true,
+    "versionPageAdminRouteVerified": true
+  },
+  "mergedPullRequests": [
+    {
+      "number": 7,
+      "head": "e3ae02c2da0c437b7d13a3011584365df89cf8c3",
+      "mergeCommit": "70c1452d842f4911c2e949131f10af25ce298571",
+      "merged": true,
+      "labAuthorAndCommitterVerified": true
+    },
+    {
+      "number": 8,
+      "head": "b66a5e8b62a2454642b25a8169bd9164cd64837e",
+      "mergeCommit": "62f584fc60b04440a9fcebbde5ff2e8862588b98",
+      "merged": true,
+      "labAuthorAndCommitterVerified": true
+    },
+    {
+      "number": 9,
+      "head": "9db851475b88cde1b0ed20d00dadd2b916dd8da1",
+      "mergeCommit": "b99388405fe5630b97a1596d7b78f8672d0f7234",
+      "merged": true,
+      "labAuthorAndCommitterVerified": true
+    },
+    {
+      "number": 10,
+      "head": "d1b995d9c02e53408a6619c38a4309fb461b234e",
+      "mergeCommit": "00799c6b978f8a69283c00e5a7724ae8382f5240",
+      "merged": true,
+      "labAuthorAndCommitterVerified": true
+    }
+  ],
+  "candidateVerification": {
+    "sourceRevision": "00799c6b978f8a69283c00e5a7724ae8382f5240",
+    "localAudioComponentChecks": 32,
+    "blindEqChecks": 85,
+    "maintenanceDenials": 672,
+    "perFeatureMaintenanceCases": 544,
+    "typeScriptPassed": true,
+    "productionBuildPassed": true,
+    "listeningPoolRegressionPassed": true,
+    "protectedMediaHeadRangePassed": true,
+    "browserSyntheticOnly": true,
+    "missingAudioMessageAndRecoveryPassed": true,
+    "versionHistoryWordingPassed": true,
+    "browserWidths": [
+      1280,
+      360
+    ],
+    "readmeLocalLinksPassed": true,
+    "thirdPartyCatalogCountsPassed": true,
+    "lintErrors": 0,
+    "preExistingLintWarnings": [
+      "LibraryWavePlayer active effect intentionally omits position dependency; unchanged by these fixes."
+    ]
+  },
+  "migrations": [],
+  "newDataSnapshot": false,
+  "recoveryRegistrationPending": false,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true
+  },
+  "finalPreview": {
+    "same": 4
+  }
+}

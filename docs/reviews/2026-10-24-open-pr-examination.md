@@ -1,3 +1,7 @@
+# Resolution — update120, October 24, 2026
+
+The owner authorized fixes and all four merges. PR #7 now narrows the research-free promise and states current maintenance/private-EQ access. PR #10 cancels and ignores stale audio probes across retries, success, recovery and cleanup, with 32 actual-component regression checks. PRs #7–10 are merged with verified lab author and committer identities, and the combined runtime is deployed under the unchanged admin-only maintenance lock. The original examination below is retained as historical evidence.
+
 # Open PR examination — October 24, 2026
 
 Reviewer: Codex. Baseline scrubbed main `73780ab5623810ef4e0dc77c2c35af2a98c4dfd3`. Original dirty canonical checkout preserved; blind EQ work is isolated. Exact GitHub heads were fetched through the yinyangeqlab connector. None of these independent PRs is merged or deployed by this examination.

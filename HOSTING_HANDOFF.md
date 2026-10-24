@@ -1,3 +1,17 @@
+# Current live release — 0.2.0-beta.1 / update120, October 24, 2026
+
+PRs #7, #8, #9 and #10 are merged with verified lab author and committer identities. The README now separates local/private listening from research-recorded tuning exports and states the maintenance access policy. Third-party notices reflect the existing catalogs and reserved project names. The version page identifies update103 as the original beta baseline and links to current deployment records. Loopback-only missing-audio checks are tied to the failed source/element/attempt and cancelled on retry, success, recovery, timeout and cleanup; stale responses cannot overwrite current playback. Hosted and cross-origin errors retain the existing behavior.
+
+The runtime changes are deployed from `00799c6b978f8a69283c00e5a7724ae8382f5240`. The entire site remains closed except existing admin sign-in at https://yinyangeq.com/admin-login and valid signed admin sessions. The lock has no automatic expiry and must remain enabled until the owner explicitly requests reopening. Private blind EQ remains available only to authenticated admins; none of these PRs reopens public pages, shared links, APIs, media or direct assets.
+
+Validation passed: 32 actual-component local-audio regression checks, 85 blind EQ checks, 672 maintenance denials, 544 per-feature maintenance cases, listening-pool regressions, protected-media HEAD/ranges, app/infra TypeScript, targeted lint with zero errors, production build and complete224-recording packaging. Synthetic desktop/narrow browser review confirmed the missing-file message, successful-playback cleanup and historical release wording. One pre-existing LibraryWavePlayer effect-dependency lint warning remains. Physical headphones, Safari/iOS and production browser account sessions were not certified.
+
+Exactly one existing Worker updated, with three resources unchanged. Live checks denied 18 anonymous page/API/media/asset paths, verified real admin sign-in and authenticated private EQ/version access, matched all 889 JS/CSS files byte for byte and matched the deployed gate/helper modules. Schema220, CPU5000ms, six abuse bindings, protected D1/media, disabled public Worker URLs and the untouched independent edge/cost controls remain. No migration, participant import/export or fresh data snapshot occurred.
+
+Source/build `work/four-pr-release-20261024`; infrastructure `work/four-pr-infra-20261024`. Source-only recovery registration, independent reconstruction and hosted validation passed. All prior data snapshots and original timestamps are unchanged; daily scheduling remains active. The merged PR sources are already on main; release-record publication is separate and does not redeploy the site. Existing canonical drafts/index and previous immutable release provenance are preserved. See docs/releases/update120-verification.json.
+
+## Previous release records (historical)
+
 # Current live release — 0.2.0-beta.1 / update119, October 24, 2026
 
 Private blind EQ comparison is deployed at `/eq-compare` for authenticated admins. The entire site remains closed to everyone else, including listener sessions, shared links, APIs, media and direct assets. Existing admin sign-in remains available at https://yinyangeq.com/admin-login. Owner-only maintenance has no automatic expiry and must remain enabled until the owner explicitly requests reopening.

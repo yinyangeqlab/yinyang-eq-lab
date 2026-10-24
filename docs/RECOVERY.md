@@ -1,3 +1,9 @@
+# Update120 verified — October 24, 2026
+
+PRs #7–10 are merged and their runtime changes are deployed under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed; all prior data snapshots and original timestamps remain unchanged. No migration, data export or new snapshot. See LIVE_STATE.md and docs/releases/update120-verification.json.
+
+## Earlier records (historical)
+
 # Update117 matching encrypted recovery point verified — October 23, 2026
 
 One owner-approved matching encrypted off-device recovery point was verified before rollout, using a current SELECT-only export from update116 with the unchanged schema220 and the exact prepared update117 source/build/media. All 365 recovery files were independently reconstructed and verified. All 340 prior media objects were reused; only 24 new AAC assets were added. Prior snapshots, timestamps and encrypted object records were preserved. The point was activated only after deployment verification; hosted validation passed and daily03:00 America/Los_Angeles scheduling is active. No second data export or snapshot was made during finalization. Additional encrypted storage: 144,847,044 bytes. No private storage identifiers or recovery key are published.

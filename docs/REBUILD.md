@@ -1,3 +1,9 @@
+# Update120 verified — October 24, 2026
+
+PRs #7–10 are merged and their runtime changes are deployed under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed; all prior data snapshots and original timestamps remain unchanged. No migration, data export or new snapshot. See LIVE_STATE.md and docs/releases/update120-verification.json.
+
+## Earlier records (historical)
+
 # Update117 deployed — October 23, 2026
 
 24 unchanged artist-authorized AAC recordings are deployed on the verified update116 source. Schema remains220 /42 migrations plus db/service-status.sql. Matching encrypted recovery, exact deployment verification and daily scheduling passed. See docs/releases/update117-verification.json. Existing immutable deployment provenance is unchanged.

@@ -22,6 +22,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 | Agent | Area / files | Started | Status |
 |-------|--------------|---------|--------|
 | Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; recovery passed; published through PR #12 |
+| Codex | Fix PRs #7/#10; test/merge #7–10; deploy runtime under persistent lock in isolated worktrees | 2026-10-24 | done: all four PRs merged; update120 deployed under lock; recovery passed |
 | Claude | Read-only review of blind EQ comparison | 2026-10-24 | done; see docs/reviews/2026-10-24-blind-eq-compare.md |
 
 ## Baseline snapshot (2026-10-24)
@@ -49,3 +50,11 @@ Final integration finding accepted: standalone private EQ routing prevents inter
 Deployment verified as update119 from `43010598186d97bec4ba560dc68e2b4b9cc5d13f`. Admin-only maintenance remains enabled. Source-only recovery closeout passed and source/records are published through PR #12; no new data export. Open PR review results remain local/shared and the four independent PRs were not mutated.
 
 Update119 source-only metadata registration, independent reconstruction and hosted validation passed; prior data snapshots/timestamps unchanged. No fresh data export. Four independent PRs remain open; live REST recheck found them clean/mergeable despite the earlier stale connector status. Source and final records are published through PR #12 under the saved owner authorization, verified lab identities and passed public-path/credential scans.
+
+## Four-PR completion — October 24, 2026
+
+Owner explicitly authorized fixes, testing, all four PR merges and runtime deployment with owner-only maintenance retained. Refreshed main `9e9ed09`; canonical HEAD `86c60c0` and unrelated dirty files remain preserved. Codex owns the PR fixes and integration; Claude remains read-only under the existing shared protocol.
+
+Runtime deployment verified as update120 from `00799c6b978f8a69283c00e5a7724ae8382f5240`. PR #7/#10 findings are fixed; all four PRs are merged. Public access remains blocked by owner-only maintenance; actual admin sign-in, private EQ/version access, 889 JS/CSS files and deployed gate/helper modules verified. No migration or fresh data export. Source-only recovery registration, independent reconstruction and hosted validation passed; prior data snapshots and timestamps are unchanged.
+
+Completion: source/build `work/four-pr-release-20261024`, revision `00799c6b978f8a69283c00e5a7724ae8382f5240`; all requested PRs merged. 32 local-audio component regressions, 85 private EQ checks and both maintenance suites passed, plus build/type checks and synthetic browser checks. The owner-only lock remains enabled. Original canonical drafts/index are preserved. No fresh data export.

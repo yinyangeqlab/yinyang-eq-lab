@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 119,
-  "implementationCommit": "43010598186d97bec4ba560dc68e2b4b9cc5d13f",
-  "runtimeParity": "Verified private blind EQ update119 behind the unchanged owner-only maintenance lock; immutable deployed/recovery source retains original fingerprints.",
+  "liveUpdate": 120,
+  "implementationCommit": "00799c6b978f8a69283c00e5a7724ae8382f5240",
+  "runtimeParity": "Verified update120 contains the four reviewed/merged PRs with owner-only maintenance unchanged. Immutable deployment/recovery fingerprints retain original provenance; release documentation is updated separately.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -66,19 +66,19 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "c84255952f855ff3698c983d771d0bad417c1f9cfa0615db69e1d7808812d307"
+      "sha256": "1c9d95b046f326afefbb18c24d75422cc6c8af1a6bcf586d73c6bdea79aa9941"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "b8a9bcada7715a6fbdb1ecc6cfb08639d5274fcc97e332389b5a90fb9e7a0fe8"
+      "sha256": "97751dc86e86b42de5b0cd6bb135dbfc3ade2d3172113a8559b637c611e2691c"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "b3516bbcac7a8e6a8ad422efe568a8a3200666424b8c0d00b288acd1648d211f"
+      "sha256": "ad752af4f12b0f21bef4b77d465eba48f86277a0e9d54431c2b58586e78deaed"
     },
     {
       "path": "README.md",
-      "sha256": "02640e5cefa15e03822e91b3db7f7ecb6805244ac45b6ebd36604244c70d24a6"
+      "sha256": "e97978cc3f21fb8b0841361ac3bae1bd353ae85a28e75168c41b97e340693091"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -1306,7 +1306,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "471f289129217b6c6c10fa301830c4a9e732820bc05914e573bec7e751b1cf54"
+      "sha256": "d813f958280c5b72c9f4cbc8915df0b79e14f486ccff190481189191209e10d9"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1322,11 +1322,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "d57de5df16b46eda67befae5d3473d7ff7f40041840a8e105a450867e5075e1b"
+      "sha256": "113755c46759bebe714a049e4b59dfa71023d092db77b3dbeedc4180e1989526"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "a40de74e05094d7052c9f141da95c172a9de5661aa6b89ffe55c987816492dab"
+      "sha256": "1eab13777940d1974adf23b19448d3ebba973a386e68a4f99bf9a9905d4107d8"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",
