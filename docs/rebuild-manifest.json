@@ -506,7 +506,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "90237e5cddeecd872c64ebb4eff1dbfa30b121935bd3fe73fe77a517f73a61b2"
+      "sha256": "84cb8461d2745c88488b4db7808ac4c67fb2743631e9ef8f95ab4efdedf28798"
     },
     {
       "path": "app/welcome.css",
@@ -2106,7 +2106,7 @@
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "f302d1e0428572a4ae69fc3afa047acf559052bcb9e8b69b79921c1d83d8bb8f"
+      "sha256": "367ad910369cc16f83da4040909ab7941ecfaa809c734f42207258768ee22280"
     },
     {
       "path": "lib/request-json.ts",

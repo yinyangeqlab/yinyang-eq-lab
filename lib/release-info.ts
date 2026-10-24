@@ -3,6 +3,7 @@ export const releaseInfo = {
   version: "0.2.0-beta.1",
   channel: "Public beta",
   published: true,
+  // Original beta baseline (historical). The currently deployed update is recorded in LIVE_RELEASE.json.
   baseline: {
     label: "update103",
     commit: "dae6526b753309c9837c6ff2fc8f2b2ad772b059",
