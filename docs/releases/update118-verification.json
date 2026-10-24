@@ -23,13 +23,13 @@
     "publicWorkerUrls": false,
     "newDataExport": false,
     "newBackupSnapshot": false,
-    "releaseRecordsPending": true,
-    "sourceOnlyRecoveryRegistrationPending": true
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false
   },
   "migrations": [],
   "newDataSnapshot": false,
   "recoveryRegistrationPending": false,
-  "publicationPending": true,
+  "publicationPending": false,
   "recoveryVerification": {
     "sourceOnlyHandoverPassed": true,
     "priorDataSnapshotsExactlyUnchanged": true,
@@ -51,5 +51,10 @@
     ],
     "maintenanceNoticeReadable": true,
     "adminBrowserSessionUsed": false
+  },
+  "publication": {
+    "account": "yinyangeqlab",
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/11",
+    "branch": "release/owner-only-maintenance-records-20261024"
   }
 }

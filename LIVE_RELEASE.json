@@ -2525,15 +2525,15 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2ec8cdc96c4f61d3ba34f64a309270007fe35f078562a69a9d5ffe9fcecfaf19"
+      "sha256": "dddc01b4e4ad302623d8ad845c3a16dcaad0147ced7e45dbd8b1b445ec058abb"
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "88ca6fc559c87e2c9e5fbef2e63ed471207b76ced5534f003f6f7c7cd60dc9d5"
+      "sha256": "a4d605a6e37afe1a17c27e5739bf916023cca6785b38ff79cfbbe7c405d6af81"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "037ac7055c8fa9fb3f318daf2d44f8ab78efd9b9aa6449b9aced65f099f399b5"
+      "sha256": "e1063ad0540f1f5db0b0254fa0d384092bfb89f83094663bd91fca0f755ee047"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2549,7 +2549,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c46711d6490880bb656413c721af5c4ad2035ba3f782fd267303283cd40a022d"
+      "sha256": "c5bff66f5276de698ef5f8521c82ca88ab4f852688ab58fd7197520672c18326"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -11631,8 +11631,8 @@
   },
   "taskClosure": {
     "at": "2026-10-24T07:06:05.732943+00:00",
-    "status": "Maintenance closure and source-only recovery verified; publication authorized and prepared",
-    "remainingWorkForThisTask": true
+    "status": "Maintenance closure and recovery verified; source and records published through PR #11",
+    "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
     "verifiedAt": "2026-10-18T14:51:51.827Z",
@@ -11687,7 +11687,7 @@
     "branch": "fix/owner-only-maintenance-20261023",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
@@ -11696,7 +11696,10 @@
       "path": "docs/rebuild-manifest.json",
       "immutableSourceSha256": "d37622c61175fc702e8299ab082b17789835ed726b20efbabc709cb01dd7daa2",
       "reason": "Immutable deployment/recovery source remains unchanged; publication records update clone-safe documentation hashes separately."
-    }
+    },
+    "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/11",
+    "publicationBranch": "release/owner-only-maintenance-records-20261024",
+    "publicationState": "Published through PR #11; GitHub records merge state"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",
