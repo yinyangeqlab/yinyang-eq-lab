@@ -9,6 +9,8 @@ import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
 import { browserPairing, linkedTester } from "./browser-pairing.mjs";
 import { sharePageFor, shareHtml, isUnfurlCrawler } from "./share-pages.mjs";
 
+// These exact engine/source files are served only after access and maintenance checks.
+const peqdbAssetPaths = new Set(["autoeq-wasm.mjs", "autoeq-wasm.wasm", "LICENSE", "COPYING", "RUNTIME-NOTICES.txt", "source.tar.gz"].map(name => "/vendor/peqdb-autoeq/" + name));
 const encoder = new TextEncoder();
 const ownerCookie = "__Host-yinyangeq_owner";
 const testerCookie = "__Host-yinyangeq_tester";
@@ -351,7 +353,7 @@ const privateGate = {
           if (cached) { const hit=rankingResponse(cached, "HIT"); if(data?.setCookie) hit.headers.append("Set-Cookie",data.setCookie); return hit; }
         } catch { console.warn("ranking_cache_read_failed"); }
       }
-      const response = path.startsWith("/api/listening-audio/") ? await serveWorkerMedia(request, env) : path.startsWith("/_next/static/") || path.startsWith("/music/shantae/") ? await env.ASSETS.fetch(request) : await app.fetch(appRequest, env, context);
+      const response = path.startsWith("/api/listening-audio/") ? await serveWorkerMedia(request, env) : path.startsWith("/_next/static/") || path.startsWith("/music/shantae/") || peqdbAssetPaths.has(path) ? await env.ASSETS.fetch(request) : await app.fetch(appRequest, env, context);
       if (cacheRanking && response.status === 200 && rankingCache) {
         const cached = new Response(response.clone().body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=30" } });
         context.waitUntil(rankingCache.put(rankingKey, cached).catch(() => console.warn("ranking_cache_write_failed")));
