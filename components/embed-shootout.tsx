@@ -1,4 +1,6 @@
 "use client";
+import { shortcutDecision } from "@/lib/playback-shortcuts";
+import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Audition, type SourceKind } from "@/lib/embed-audio";
@@ -229,19 +231,24 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     } catch { setError("Your picks could not be sent. Check your connection and try again."); setPhase("listen"); }
   }
 
+  const shortcutContext = usePlaybackShortcutContext(".es-card");
   useEffect(() => {
     if (phase !== "listen") return;
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
-      if (event.ctrlKey || event.metaKey || event.altKey || target?.matches("input, select, textarea")) return;
+      if (event.defaultPrevented || event.repeat || event.isComposing || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (!["1", "2", "a", "b", "s", " "].includes(event.key.toLowerCase())) return;
+      const decision = shortcutDecision(target, event, shortcutContext());
+      if (!decision.run) return;
+      if (decision.blurTarget) target?.blur();
       const key = event.key.toLowerCase();
       if (key === "1" || key === "a") { event.preventDefault(); listen("a"); }
       else if (key === "2" || key === "b") { event.preventDefault(); listen("b"); }
-      else if (key === " " && !target?.matches("button, a")) { event.preventDefault(); listen(side === "a" ? "b" : "a"); }
+      else if (key === " " || key === "s") { event.preventDefault(); listen(side === "a" ? "b" : "a"); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [phase, listen, side]);
+  }, [phase, listen, side, shortcutContext]);
 
   async function chooseFile(file: File | undefined) {
     if (!file) return;
@@ -283,7 +290,8 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
       {phase === "intro" && config && <section className="es-intro">
         <p className="es-eyebrow">Blind shootout · {config.bands.length} targets · about {Math.max(1, Math.round(roundCount * 0.75))} min</p>
         <h1>{config.title}</h1>
-        <p className="es-lead">You will hear short loops through hidden EQ curves and pick the one that sounds better. Levels are matched, sides are shuffled, and the names appear only after your last pick.</p>
+        <p className="es-lead">You will hear short loops through hidden EQ curves and pick the one that sounds better. Sides are shuffled, and the names appear only after your last pick.</p>
+        <p>Target curves are adjusted to the same mean band power across 125 Hz–8 kHz. This is an approximation, not a measurement of perceived playback loudness. No headphone correction is applied, so you hear the target differences on top of your own headphones.</p>
         <ul className="es-tips"><li>Best on headphones. <strong>Start the volume low</strong> and raise it gently.</li><li>Switch between <b className="es-a">A</b> and <b className="es-b">B</b> as often as you like. The music keeps playing.</li><li>No right answers. Trust what you prefer.</li></ul>
         <fieldset className="es-field"><legend>How are you listening? <small>(optional)</small></legend>
           <div className="es-chips">{EMBED_LISTENER_KINDS.map(option => <label key={option} className={kind === option ? "on" : ""}><input type="radio" name="kind" checked={kind === option} onChange={() => setKind(option)} />{KIND_LABELS[option]}</label>)}</div>
@@ -315,7 +323,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
         <div className="es-controls">
           <button type="button" className="es-mini" onClick={() => void togglePlay()}>{playing ? "Pause" : "Play"}</button>
           <label className="es-volume">Volume<input type="range" min="0" max="1" step="0.01" value={volume} onChange={event => { const v = Number(event.target.value); setVolume(v); audition.current?.setVolume(v); }} aria-label="Volume" /></label>
-          <span className="es-hint">Space switches A/B</span>
+          <span className="es-hint">Space or S switches A/B (shared shootout)</span>
         </div>
         <div className="es-vote" role="group" aria-label="Which sounds better?">
           <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("a")} className="es-vote-a">A sounds better</button>

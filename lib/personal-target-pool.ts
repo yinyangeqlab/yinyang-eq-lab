@@ -6,12 +6,12 @@ export const PRIVATE_TARGETS_KEY = "target-lab-private-targets";
 /** Which targets the Personal tournament compares. Absent means every public target, as before. */
 export const TARGET_POOL_KEY = "target-lab-personal-target-pool-v1";
 export const MIN_CUSTOM_POOL = 2;
-/** Largest pool whose choices the research/community endpoints accept (they reject longer candidate lists). Bigger pools work fully, but stay on this device. */
+/** Transport bound for research/community sharing. Personal run creation has its own smaller candidate limit. */
 export const MAX_SHARED_POOL = 256;
-/** Sanity bound on a stored selection only; the person can use as many targets as they like. */
+/** Sanity bound on an imported/stored selection. Run creation independently validates the candidate count. */
 const MAX_STORED_SELECTION = 20000;
 
-export type PoolTarget = { id: string; name: string; points: Point[]; parentTargetId?: string | null; headphoneType?: HeadphoneType; measurement?: { type?: unknown } | null };
+export type PoolTarget = { id: string; name: string; creator?: string; points: Point[]; parentTargetId?: string | null; headphoneType?: HeadphoneType; measurement?: { type?: unknown } | null };
 export type LocalPoolTarget = PoolTarget & { local: true; pending: boolean };
 export type PoolChoice = { mode: "all" } | { mode: "custom"; ids: string[] };
 

@@ -5,10 +5,10 @@
 .measurement-entry-actions button:focus-visible,.browse-measurement-button:focus-visible,.measurement-management summary:focus-visible{outline:2px solid #99eed1;outline-offset:3px}
 .shootout-content .measurement-picker{display:flex;flex-wrap:wrap;gap:10px;align-items:center;min-width:0}
 .shootout-content .measurement-picker .headphone-search{flex:1 1 300px;min-width:200px}
-.shootout-content .measurement-picker .headphone-search>input{padding-right:85px}
+.shootout-content .measurement-picker .headphone-search>input{padding-right:12px}
 .shootout-content .measurement-picker .add-measurement-button,.shootout-content .browse-measurement-button{flex:0 1 auto;min-height:44px;white-space:normal;font-size:13px}
-.measurement-management{position:absolute;right:7px;top:3px;z-index:12}
-.measurement-management>summary{display:flex;align-items:center;min-height:38px;padding:6px 9px;border-radius:6px;background:#19312e;color:#d2eee3;font-size:12px;cursor:pointer;list-style:none}
+.measurement-management{position:relative;flex:0 0 auto;z-index:12}
+.measurement-management>summary{display:flex;align-items:center;min-height:44px;padding:6px 9px;border-radius:6px;background:#19312e;color:#d2eee3;font-size:12px;cursor:pointer;list-style:none}
 .measurement-management>div{position:absolute;right:0;top:100%;width:min(290px,75vw);display:grid;gap:7px;padding:12px;border:1px solid #4b7065;border-radius:8px;background:#11211c;box-shadow:0 10px 30px #0009}
 .measurement-management strong{font-size:13px;overflow-wrap:anywhere}
 .measurement-management button{min-height:40px;border:1px solid #48665a;border-radius:6px;background:#1b3027;color:#e2f2ea;font-size:13px;cursor:pointer}
@@ -24,3 +24,23 @@
  .shootout-content .measurement-picker .browse-measurement-button,.shootout-content .measurement-picker .add-measurement-button{flex:1 1 130px;width:auto;justify-content:center}
  .sound-check-measurements .measurement-entry-actions{flex-direction:row}.sound-check-measurements .measurement-entry-actions button{flex-basis:100%}
 }
+
+.measurement-selected-name{display:block;margin-top:6px;color:#bcd4ce;overflow-wrap:anywhere}
+.measurement-management hr{width:100%;border:0;border-top:1px solid #48665a}
+.measurement-management .measurement-danger{border-color:#a56153;color:#ffd2c6}
+
+.personal-shootout select{color-scheme:dark;background:#102029;color:#edf3f7}
+.personal-shootout select option,.personal-shootout select optgroup{background:#101c25;color:#edf3f7}
+.personal-shootout select option:disabled{color:#9aaeb8}
+.measurement-file-intent{display:grid;gap:10px;padding:14px;border:1px solid #33565d;border-radius:10px}
+.measurement-file-intent label{display:flex;align-items:center;gap:10px}
+.measurement-file-intent input[type=radio]{width:18px;height:18px;flex:none}
+.measurement-file-intent p{margin:0;line-height:1.5}
+.upload-form .channel-file-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.upload-form input[type=file]:disabled{opacity:.55}
+@media(max-width:600px){.upload-form .channel-file-row{grid-template-columns:minmax(0,1fr)}}
+
+@media(max-width:600px){.measurement-management>div{left:0;right:auto;width:min(290px,calc(100vw - 96px));max-height:65vh;overflow:auto}}
+/* Match the compact loudness control's more-specific legacy selector. */
+.shell.personal-shootout .loudness-control select,
+.shell.personal-shootout .personal-channel-settings select{background-color:#102026;color:#deeeed;color-scheme:dark}

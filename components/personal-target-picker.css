@@ -1,12 +1,9 @@
-.target-pool{margin:10px 0 0;border:1px solid #223a43;border-radius:12px;background:rgba(10,24,30,.55)}
-.target-pool>summary{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;padding:10px 14px;cursor:pointer;list-style:none}
-.target-pool>summary::-webkit-details-marker{display:none}
-.target-pool>summary::after{content:"Change ▾";color:#8cf0e0;font-size:12px;font-weight:700}
-.target-pool[open]>summary::after{content:"Done ▴"}
+.target-pool{min-width:0;margin:10px 0 0;border:1px solid #223a43;border-radius:12px;background:rgba(10,24,30,.55)}
+.target-pool-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 12px;padding:10px 14px}
 .target-pool-label{color:#dbe9ec;font-size:13px;font-weight:700}
 .target-pool-summary{margin-right:auto;color:#9fb4bd;font-size:13px}
-.target-pool>summary:focus-visible{outline:2px solid #e6fff6;outline-offset:2px;border-radius:12px}
-.target-pool-body{display:grid;gap:10px;padding:2px 14px 14px;border-top:1px solid rgba(70,110,120,.3)}
+.target-pool-body>*{min-width:0}
+.target-pool-body{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding:2px 14px 14px;border-top:1px solid rgba(70,110,120,.3)}
 .target-pool-modes{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px}
 .target-pool-modes label{display:flex;align-items:flex-start;gap:10px;margin:0;padding:10px 12px;border:1px solid #2a4650;border-radius:10px;cursor:pointer}
 .target-pool-modes label.is-on{border-color:#5fd8bf;background:rgba(18,52,46,.5)}
@@ -16,7 +13,8 @@
 .target-pool-modes strong{color:#eef7f8;font-size:14px}
 .target-pool-modes small{color:#9fb4bd;font-size:12px;line-height:1.45}
 .target-pool-tools{display:flex;flex-wrap:wrap;gap:8px}
-.target-pool-tools input{flex:1 1 180px;min-width:0;min-height:36px;padding:0 12px;border:1px solid #33565d;border-radius:9px;background:#0b1a20;color:#eef7f8;color-scheme:dark}
+.target-pool-actions{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+.target-pool-tools input{flex:1 1 180px;width:100%;min-width:0;min-height:36px;padding:0 12px;border:1px solid #33565d;border-radius:9px;background:#0b1a20;color:#eef7f8;color-scheme:dark}
 .target-pool-tools button{min-height:36px;padding:0 12px;border:1px solid #33565d;border-radius:9px;background:#0e232b;color:#cfe9e5;font:600 12.5px/1 inherit;cursor:pointer}
 .target-pool-tools button:disabled{opacity:.45;cursor:not-allowed}
 .target-pool-count{margin:0;color:#b9ccd3;font-size:13px}

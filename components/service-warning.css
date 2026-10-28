@@ -1,0 +1,14 @@
+/* Compact notices remain readable without covering short listening views. */
+.service-warning-details{display:none}
+@media(max-height:480px),(max-width:600px){
+ .service-warning-popup{right:8px;bottom:8px;padding:6px 8px;max-width:calc(100vw - 16px);gap:8px}
+ .service-warning-popup .service-warning-icon{width:24px;height:24px;flex:none}
+ .service-warning-popup .service-warning-content{display:flex;align-items:center;flex-wrap:wrap;gap:4px 12px}
+ .service-warning-popup .service-warning-message{display:none}
+ .service-warning-popup .service-warning-details{display:block;font-size:12px}
+ .service-warning-popup .service-warning-details summary{cursor:pointer;min-height:28px;display:flex;align-items:center}
+ .service-warning-popup .service-warning-details[open]{flex-basis:100%}
+}
+
+
+@media(max-height:480px){.service-warning-popup{position:static!important;width:auto;max-width:none;margin:8px;transform:none!important}}

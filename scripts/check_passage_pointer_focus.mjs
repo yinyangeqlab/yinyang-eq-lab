@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import ts from 'typescript';
+const path='components/track-waveform.tsx',source=readFileSync(path,'utf8'),ast=ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),found=new Map();
+function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)found.set(n.name.text,n.getText(ast));if(ts.isVariableDeclaration(n)&&ts.isIdentifier(n.name))found.set(n.name.text,'const '+n.getText(ast)+';');ts.forEachChild(n,visit)}visit(ast);
+const names=['seekTo','seekAtPointer','beginPassageDrag','endPassageDrag','passageKey'];for(const name of names)assert.ok(found.has(name),name);
+const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+function fixture(){let focused='elsewhere',seek=null;const canvas={getBoundingClientRect:()=>({left:0,width:200}),focus:()=>focused='canvas'},captures=new Set(),button={focus:()=>focused='handle',setPointerCapture:id=>captures.add(id),hasPointerCapture:id=>captures.has(id),releasePointerCapture:id=>captures.delete(id)};
+ const state={canvasRef:{current:canvas},keyboardSeekPosition:{current:0},duration:20,displayOnly:false,start:0,span:20,passage:{start:10,end:15},resizablePassage:true,passageDrag:{current:null},onSeek:value=>seek=value,...fixtureModule.exports};state.onPassageChange=value=>state.passage=value;
+ const context=vm.createContext(state);vm.runInContext(ts.transpileModule(names.map(n=>found.get(n)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';globalThis.handlers={seekAtPointer,beginPassageDrag,endPassageDrag,passageKey}',context);
+ const event=(type,extra={})=>({type,currentTarget:button,pointerId:1,pointerType:'mouse',clientX:120,preventDefault(){},stopPropagation(){},...extra});
+ return {state,event,handlers:context.handlers,focused:()=>focused,seek:()=>seek,captures};}
+for(const pointerType of ['mouse','touch','pen']){const f=fixture();f.handlers.beginPassageDrag(f.event('pointerdown',{pointerType}),'start');assert.equal(f.focused(),'handle');f.handlers.endPassageDrag(f.event('pointerup',{pointerType}));assert.equal(f.focused(),'handle','tap seek must not redirect focus to the canvas');assert.equal(f.seek(),12,'tap still seeks as before');assert.equal(f.captures.size,0);f.handlers.passageKey(f.event('keydown',{key:'ArrowLeft',shiftKey:false}),'start');assert.equal(f.state.passage.start,9.5);f.handlers.passageKey(f.event('keydown',{key:'ArrowRight',shiftKey:false}),'start');assert.equal(f.state.passage.start,10);f.handlers.passageKey(f.event('keydown',{key:'ArrowLeft',shiftKey:false}),'end');assert.equal(f.state.passage.end-f.state.passage.start,5,'five-second minimum unchanged');}
+let f=fixture();f.handlers.seekAtPointer(50);assert.equal(f.focused(),'canvas','ordinary waveform click still focuses seek canvas');assert.equal(f.seek(),5);
+f=fixture();f.handlers.beginPassageDrag(f.event('pointerdown'),'move');f.state.passageDrag.current.dragged=true;f.handlers.endPassageDrag(f.event('pointerup'));assert.equal(f.focused(),'handle');assert.equal(f.seek(),null,'a drag is not a tap seek');
+f=fixture();f.handlers.beginPassageDrag(f.event('pointerdown'),'move');f.handlers.endPassageDrag(f.event('pointercancel'));assert.equal(f.seek(),null,'pointer cancellation never seeks');
+f=fixture();f.state.onPassageChange=null;f.handlers.beginPassageDrag(f.event('pointerdown'),'start');assert.equal(f.focused(),'elsewhere','unavailable editing does not steal focus');
+console.log('PASS actual passage pointer/keyboard handlers: mouse/touch/pen focus, tap seek without focus theft, arrows and minimum duration, ordinary waveform focus, drag/cancel and unavailable editing.');

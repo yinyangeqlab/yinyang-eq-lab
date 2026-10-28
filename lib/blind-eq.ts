@@ -22,7 +22,15 @@ export function validateEqPreset(preset: EqPreset): EqPreset {
   return structuredClone(preset);
 }
 
-/** Equalizer APO / Peace parametric TXT, plus Qudelix / PEQdB CH: 0 / CH: 1 TXT.
+/** Validate before names are hidden; the context rate, not the file rate, sets Nyquist. */
+export function validateEqSampleRate(presets: readonly EqPreset[], sampleRate: number) {
+  if (!Number.isFinite(sampleRate) || sampleRate <= 0) throw Error("The playback sample rate is unavailable. Try starting again.");
+  presets.forEach((preset, p) => preset.channels.forEach((channel, c) => channel.filters.forEach((filter, f) => {
+    if (filter.hz >= sampleRate / 2) throw Error(`Preset ${p + 1}, ${c === 0 ? "Left" : "Right"} filter ${f + 1}: ${filter.hz} Hz must be below this device’s playback limit (${sampleRate / 2} Hz). Edit the filter before starting.`);
+  })));
+}
+
+/** Equalizer APO / Peace parametric TXT, plus the supported CH: 0 / CH: 1 dialect.
  * Fail closed on signal-processing commands that cannot be reproduced here.
  * LS/HS without slope modifiers are center-frequency shelves (APO reference).
  */
@@ -72,7 +80,7 @@ export function parseEqPresetText(text: string, name: string): EqPreset {
 
 /** RBJ biquads, with explicit shelf Q (Web Audio's shelf nodes ignore Q). */
 export function eqCoefficients(filter: EqFilter, sampleRate: number) {
-  if (filter.hz >= sampleRate / 2) throw Error(`A ${filter.hz} Hz filter is above this recording’s Nyquist limit. Use a higher sample-rate recording or edit the preset.`);
+  if (filter.hz >= sampleRate / 2) throw Error("These presets cannot be prepared at this device’s playback rate. Return to setup to review them; no choice was saved.");
   const omega = 2 * Math.PI * filter.hz / sampleRate, c = Math.cos(omega);
   const alpha = Math.sin(omega) / (2 * filter.q), A = 10 ** (filter.gain / 40), root = Math.sqrt(A);
   let b: number[], a: number[];

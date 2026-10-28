@@ -16,6 +16,7 @@ export type PersonalStartInput = {
   /** Targets in the chosen pool and the smallest allowed pool; omitted by callers that do not offer a custom pool. */
   poolSize?: number;
   minPool?: number;
+  maxPool?: number;
 };
 
 export type PersonalStartBlock = { kind: "storage" | "headphones" | "channel" | "music" | "pool" | "sharing-unavailable" | "checking"; message: string };
@@ -24,6 +25,7 @@ export function personalStartBlock(input: PersonalStartInput): PersonalStartBloc
   if (input.storageError) return { kind: "storage", message: `Browser storage is unavailable, so progress cannot be saved. ${input.storageError}` };
   if (input.hasHeadphones === false) return { kind: "headphones", message: "Pick your headphones in step 1 to start." };
   if (input.poolSize !== undefined && input.minPool !== undefined && input.poolSize < input.minPool) return { kind: "pool", message: `Choose at least ${input.minPool} targets under Targets to compare (${input.poolSize} chosen).` };
+  if (input.maxPool !== undefined && (input.poolSize ?? 0) > input.maxPool) return { kind: "pool", message: `Choose up to ${input.maxPool} targets under Choose my own pool before starting. All public targets currently exceeds this run limit.` };
   if (!input.playbackReady) return { kind: "channel", message: "Channel matching is set to Uploaded, but this measurement has no channel-match preset. Choose Auto or Off, or add a preset in My space." };
   if (!input.musicChosen) return { kind: "music", message: "Choose at least one song under Music source to start." };
   if (input.setupReady) return null;

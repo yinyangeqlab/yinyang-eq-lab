@@ -19,5 +19,5 @@ export function isStandalonePath(pathname: string | null): boolean {
 
 export default function SiteChrome({ children }: { children: ReactNode }) {
   if (isStandalonePath(usePathname())) return <>{children}</>;
-  return <><ServiceWarningPopup /><PrivacyEvents /><AlphaShell>{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></>;
+  return <><PrivacyEvents /><AlphaShell><ServiceWarningPopup />{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></>;
 }

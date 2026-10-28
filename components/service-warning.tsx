@@ -1,15 +1,16 @@
 "use client";
+import "./service-warning.css";
 import {MAINTENANCE_FEATURES,maintenanceLocks} from "@/lib/maintenance-options";
 
 import { useEffect, useRef, useState } from "react";
 import { SERVICE_WARNING_EVENT, warningFor, type ServiceWarning } from "@/lib/service-warning";
 
 export function ServiceWarningCard({ warning, onDismiss }: { warning: ServiceWarning; onDismiss: () => void }) {
-  return <aside className="service-warning-popup" role="alert" aria-label={warning.title}>
+  return <div className="service-warning-popup" role="alert" aria-label={warning.title}>
     <span className="service-warning-icon" aria-hidden="true">♡</span>
-    <div><strong>{warning.title}</strong><p>{warning.detail}</p>{warning.retry && <p className="service-warning-retry">{warning.retry}</p>}</div>
+    <div className="service-warning-content"><strong>{warning.title}</strong><div className="service-warning-message"><p>{warning.detail}</p>{warning.retry && <p className="service-warning-retry">{warning.retry}</p>}</div><details className="service-warning-details"><summary>Details</summary><p>{warning.detail}</p>{warning.retry && <p className="service-warning-retry">{warning.retry}</p>}</details></div>
     <button type="button" aria-label="Dismiss service warning" onClick={onDismiss}>×</button>
-  </aside>;
+  </div>;
 }
 
 export default function ServiceWarningPopup() {
@@ -25,9 +26,14 @@ export default function ServiceWarningPopup() {
       try{
         const r=await fetch("/api/maintenance",{cache:"no-store",signal:AbortSignal.timeout(8000)});
         if(!r.ok)return;
-        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean;lockedFeatures?:unknown;ownerOnly?:boolean};
+        const status=await r.json() as {id?:string;active?:boolean;message?:string;pauseSubmissions?:boolean;lockedFeatures?:unknown;ownerOnly?:boolean;viewerHasAccess?:boolean};
         if(stopped)return;
-        if(status.ownerOnly){window.location.reload();return;}
+        if(status.ownerOnly){
+          if(status.viewerHasAccess!==true){window.location.reload();return;}
+          const id=status.id||"owner-only-maintenance";currentNotice.current=id;
+          if(dismissed.current!==id)setNotice({kind:"maintenance",title:"Closed for private testing",detail:status.message||"The site remains closed to visitors while updates are checked.",retry:"Your current session has access. This does not reopen the site."});
+          return;
+        }
         if(!status.active||!status.id){setNotice(null);currentNotice.current="";dismissed.current="";return;}
         currentNotice.current=status.id;
         const locked=maintenanceLocks(!!status.pauseSubmissions,status.lockedFeatures);

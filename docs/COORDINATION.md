@@ -21,6 +21,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Agent | Area / files | Started | Status |
 |-------|--------------|---------|--------|
+| Codex | Final design/accessibility release candidate from scrubbed main | 2026-10-26 | prepared: 98 suites, lint/types/build/package and read-only deployment preview pass; no commit, push or deployment; maintenance remains on |
 | Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; recovery passed; published through PR #12 |
 | Codex | Fix PRs #7/#10; test/merge #7–10; deploy runtime under persistent lock in isolated worktrees | 2026-10-24 | done: all four PRs merged; update120 deployed under lock; recovery passed |
 | Codex | Full blind EQ workflow audit/fixes; isolated current-main worktree; persistent maintenance lock | 2026-10-24 | done: update121 deployed under lock; recovery passed; PR #13 |
@@ -37,6 +38,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Date | Review file | Finding | Codex decision | Notes |
 |------|-------------|---------|----------------|-------|
+| 2026-10-26 | reviews/2026-10-26-design-release-readiness.md | Accumulated accepted UI/accessibility and final artwork changes | prepared for release | Preserve originals and unrelated drafts; current live remains update123; publication and recovery conditions documented |
 | 2026-10-24 | `reviews/2026-10-24-blind-eq-compare.md` | 1-3: rename/manual edits invalidate preset silently; reset desyncs editors | accepted | rename and unapplied-draft feedback fixed; reset restoration already present in reconciled source |
 | 2026-10-24 | same | Fixed A/B mapping confounds position bias; suggest per-song randomisation | accepted | independent per-song assignment and per-song export mapping |
 | 2026-10-24 | same | 4-8: no warning before download, `revealedAt`, large-file memory, a11y | accepted | unsaved-result warning, original reveal timestamp, decoded-size limits and accessible progress grouping |

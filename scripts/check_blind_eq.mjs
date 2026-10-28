@@ -49,7 +49,7 @@ for (const gain of [-12, 0, 8]) {
   check(Math.abs(response({ type: 'HSC', hz: 1000, gain, q: .8 }, 1000) - gain / 2) < 1e-8, 'High shelf center has half its asymptotic gain');
 }
 check(Math.abs(response({ type: 'LSC', hz: 100, gain: 6, q: .5 }, 200) - response({ type: 'LSC', hz: 100, gain: 6, q: 2 }, 200)) > .5, 'Shelf Q changes response');
-rejects(() => eqCoefficients({ type: 'PK', hz: 24000, gain: 0, q: 1 }, 48000), /Nyquist/);
+rejects(() => eqCoefficients({ type: 'PK', hz: 24000, gain: 0, q: 1 }, 48000), /playback rate/);
 for (const match of [true, false]) {
   const stats = [{ rms: .2, peak: 2 }, { rms: .1, peak: .8 }], gains = comparisonGains(stats, match);
   check(stats.every((stat, index) => stat.peak * gains[index] <= 10 ** (-3 / 20) + 1e-10), 'Common 3 dB sample-peak headroom');

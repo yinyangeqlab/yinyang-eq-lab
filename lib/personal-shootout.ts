@@ -1,6 +1,7 @@
 import type { PersonalPlayback } from "@/lib/personal-playback";
 // Local discovery policy v1. These are scheduling heuristics, not a calibrated
 // best-arm identification procedure or a population preference estimator.
+export const MAX_PERSONAL_CANDIDATES = 200;
 export const PERSONAL_KEY = "target-lab-personal-shootouts-v1";
 export type Candidate = { id: string; name: string; family: string };
 export type PersonalChoice = {
@@ -22,6 +23,7 @@ export function targetFamily(target: { id: string; name: string; parentTargetId?
   return target.parentTargetId || target.id;
 }
 export function createPersonalRun(context: string, label: string, candidates: Candidate[], budget = 20): PersonalRun {
+  if (candidates.length < 2 || candidates.length > MAX_PERSONAL_CANDIDATES) throw Error(`Choose 2–${MAX_PERSONAL_CANDIDATES} targets before starting. Your saved runs are unchanged.`);
   return { version: 1, context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
 }
 const pairKey = (pair: string[]) => [...pair].sort().join("|");
@@ -151,7 +153,7 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
   if (!Array.isArray(runs) || runs.length > 8) throw Error("Personal progress could not be read. Export or clear the saved data before starting again.");
   for (const value of runs) {
     const r = value as PersonalRun;
-    if (!r || r.version !== 1 || typeof r.context !== "string" || typeof r.label !== "string" || !Number.isFinite(r.updatedAt) || !Array.isArray(r.candidates) || r.candidates.length < 2 || r.candidates.length > 200 || !Array.isArray(r.choices) || r.choices.length > 500 || !Array.isArray(r.excluded) || !Array.isArray(r.restored) || !Array.isArray(r.finalists) || ![10,20,40].includes(r.budget) || !Number.isInteger(r.checkpoint) || r.checkpoint < 0 || !["explore", "confirm"].includes(r.phase)) throw Error("Invalid saved personal run.");
+    if (!r || r.version !== 1 || typeof r.context !== "string" || typeof r.label !== "string" || !Number.isFinite(r.updatedAt) || !Array.isArray(r.candidates) || r.candidates.length < 2 || r.candidates.length > MAX_PERSONAL_CANDIDATES || !Array.isArray(r.choices) || r.choices.length > 500 || !Array.isArray(r.excluded) || !Array.isArray(r.restored) || !Array.isArray(r.finalists) || ![10,20,40].includes(r.budget) || !Number.isInteger(r.checkpoint) || r.checkpoint < 0 || !["explore", "confirm"].includes(r.phase)) throw Error("Invalid saved personal run.");
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
     if (r.playback && (!["-14","-16","-18","off"].includes(r.playback.loudnessTarget)||!["auto","uploaded","off"].includes(r.playback.channelMode))) throw Error("Invalid saved playback settings.");

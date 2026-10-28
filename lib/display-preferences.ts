@@ -3,11 +3,12 @@ export type DisplayPreferences = { motion: "auto" | "reduced"; singleKeyShortcut
 
 const KEY = "yinyang-display-preferences";
 export const DISPLAY_PREFERENCES_EVENT = "yinyang-display-preferences";
+let volatileSnapshot: string | null = null;
 const defaults: DisplayPreferences = { motion: "auto", singleKeyShortcuts: true, shortcutScope: "everywhere" };
 
 /** Raw stored string; a stable primitive snapshot for useSyncExternalStore. */
 export function displayPreferencesSnapshot() {
-  try { return localStorage.getItem(KEY) || "{}"; } catch { return "{}"; }
+  try { return volatileSnapshot ?? localStorage.getItem(KEY) ?? "{}"; } catch { return volatileSnapshot ?? "{}"; }
 }
 
 export function parseDisplayPreferences(raw: string): DisplayPreferences {
@@ -21,7 +22,7 @@ export function readDisplayPreferences(): DisplayPreferences { return parseDispl
 
 export function writeDisplayPreferences(change: Partial<DisplayPreferences>) {
   const next = { ...readDisplayPreferences(), ...change };
-  try { localStorage.setItem(KEY, JSON.stringify(next)); } catch { /* Storage can be unavailable; the current page still applies the choice. */ }
+  try { localStorage.setItem(KEY, JSON.stringify(next)); volatileSnapshot = null; } catch { volatileSnapshot = JSON.stringify(next); /* Apply this tab’s choice even when persistence is blocked. */ }
   applyMotionPreference(next.motion);
   window.dispatchEvent(new Event(DISPLAY_PREFERENCES_EVENT));
   return next;

@@ -15,8 +15,8 @@ export type ShortcutDecision = { run: boolean; blurTarget?: boolean };
 const TYPING = "input:not([type=button]):not([type=submit]):not([type=reset]):not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]), textarea, select, [contenteditable]:not([contenteditable=false]), [role='textbox'], [role='combobox'], [role='listbox'], [role='spinbutton'], [role='searchbox'], [role='dialog']";
 /** Controls that use the arrow keys (and Space) themselves. */
 const ARROW_USERS = "input[type=range], input[type=radio], [role='slider'], [role='radio'], [role='tab'], [role='menuitem'], [role='option']";
-/** Controls where Space already selects (sliders ignore Space, so it still toggles playback there). */
-const SPACE_USERS = "input[type=radio], [role='radio'], [role='tab'], [role='menuitem'], [role='option']";
+/** Controls where Space already selects or toggles a disclosure (sliders keep playback Space). */
+const SPACE_USERS = "summary, input[type=radio], [role='radio'], [role='tab'], [role='menuitem'], [role='option']";
 /** Controls that Space or Enter activates. */
 const ACTIVATABLE = "button, a[href], summary, [role='button'], input[type=checkbox], input[type=button], input[type=submit], input[type=file]";
 /** Parts of the page the "player area only" scope treats as the playback region. */

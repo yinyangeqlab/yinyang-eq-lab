@@ -98,3 +98,7 @@ const limitedResponse = new Response('slow down', { status: 429 });
 assert.equal(await run('/api/embed-shootouts', { method: 'POST', body: '{}' }, async () => limitedResponse), limitedResponse, 'edge burst protection runs before the app');
 assert.equal(forwarded, null);
 console.log('PASS share previews: every page route has a preview, cards exist, crawlers get public copy only, shootout routes are public yet guarded and stripped of identity, and other routes stay gated.');
+
+assert.equal(sharePageFor('/eq-compare').private,true);
+assert.match(shareHtml(sharePageFor('/eq-compare')),/noindex,nofollow/);
+console.log('PASS private EQ metadata remains noindex.');

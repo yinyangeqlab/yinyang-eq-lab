@@ -5,7 +5,8 @@ import DataChoicesEditor from "@/components/data-choices-editor";
 import { useRef, useState } from "react";
 import { parseCurve } from "@/lib/curves";
 import { isImportedMeasurement, type HeadphoneMeasurement } from "@/lib/measurement";
-import { at, averageChannels } from "@/lib/channel-balance";
+import { measurementResponses, type MeasurementUploadMode } from "@/lib/measurement-upload";
+import { at } from "@/lib/channel-balance";
 import { parseChannelMatchPreset } from "@/lib/peq-preset";
 import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
 
@@ -14,6 +15,7 @@ type Attachment = "single" | "left" | "right" | "preset";
 export default function MeasurementManager({ rows, selectedId, editId, onAdd, onUpdate, onDelete, onSelect, adminTestOnly=false, embedded=false }: {
   embedded?:boolean;adminTestOnly?:boolean;rows: HeadphoneMeasurement[]; selectedId: string; editId?: string | null; onAdd: (row: HeadphoneMeasurement) => void; onUpdate: (row: HeadphoneMeasurement) => void; onDelete: (id: string) => void; onSelect: (id: string) => void;
 }) {
+  const [uploadMode, setUploadMode] = useState<MeasurementUploadMode>(editId ? "keep" : "shared");
   const [error, setError] = useState("");
   const [contribute, setContribute] = useState(false),[rights,setRights]=useState(false);
   const formRef=useRef<HTMLFormElement>(null),revision=useRef(0);
@@ -25,7 +27,7 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
   const [editorOpen, setEditorOpen] = useState(!rows.length || !!editId);
   const [removed, setRemoved] = useState<Attachment[]>([]);
   const isRemoved = (kind: Attachment) => removed.includes(kind);
-  function beginEdit(row: HeadphoneMeasurement | null) { setEditorOpen(!!row || !rows.length); invalidateApproval();setReview(null); setEditing(row); setRemoved([]); setError(""); setContribute(false); setContributionStatus(""); }
+  function beginEdit(row: HeadphoneMeasurement | null) { setUploadMode(row ? "keep" : "shared"); setEditorOpen(!!row || !rows.length); invalidateApproval();setReview(null); setEditing(row); setRemoved([]); setError(""); setContribute(false); setContributionStatus(""); }
   async function saveFromForm(form: HTMLFormElement) {
     const data = new FormData(form);
     const file = data.get("file"), leftFile = data.get("leftFile"), rightFile = data.get("rightFile"), presetFile = data.get("channelMatchFile");
@@ -36,10 +38,10 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
     const rightText = rightFile instanceof File && rightFile.size ? await rightFile.text() : undefined;
     const presetText = presetFile instanceof File && presetFile.size ? await presetFile.text() : undefined;
     const oldSingle = editing?.singlePoints ?? (editing && !editing.leftPoints && !editing.rightPoints ? editing.points : undefined);
-    const singlePoints = primaryText ? parseCurve(primaryText) : isRemoved("single") ? undefined : oldSingle;
-    const leftPoints = leftText ? parseCurve(leftText) : isRemoved("left") ? undefined : editing?.leftPoints;
-    const rightPoints = rightText ? parseCurve(rightText) : isRemoved("right") ? undefined : editing?.rightPoints;
-    if (!singlePoints && !leftPoints && !rightPoints) throw new Error("Keep or attach at least one response before saving.");
+    const single = primaryText ? parseCurve(primaryText) : isRemoved("single") || uploadMode === "paired" ? undefined : oldSingle;
+    const left = leftText ? parseCurve(leftText) : isRemoved("left") || uploadMode === "shared" ? undefined : editing?.leftPoints;
+    const right = rightText ? parseCurve(rightText) : isRemoved("right") || uploadMode === "shared" ? undefined : editing?.rightPoints;
+    const { singlePoints, leftPoints, rightPoints, points } = measurementResponses(uploadMode, single, left, right, Boolean(primaryText || leftText || rightText || removed.some(kind => kind !== "preset")));
     const channelMatchPreset = presetText ? parseChannelMatchPreset(presetText) : isRemoved("preset") ? undefined : editing?.channelMatchPreset;
     const requestedMode = data.get("channelMatchMode") === "custom" ? "custom" : "auto";
     if (requestedMode === "custom" && !channelMatchPreset && !isRemoved("preset")) throw new Error("Attach a two-channel CH: 0 / CH: 1 preset or choose automatic matching.");
@@ -52,11 +54,11 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       origin: editing?.origin ?? (editing && isImportedMeasurement(editing) ? "imported" : "upload"),
       driverType: String(data.get("driverType") ?? "").trim(),
       nozzleDiameterMm: data.get("nozzleDiameterMm") ? Number(data.get("nozzleDiameterMm")) : undefined,
-      points: leftPoints && rightPoints ? averageChannels(leftPoints, rightPoints) : singlePoints ?? leftPoints ?? rightPoints!,
+      points,
       singlePoints, leftPoints, rightPoints,
-      responseFileName: primaryText ? (file as File).name : isRemoved("single") ? undefined : editing?.responseFileName,
-      leftFileName: leftText ? (leftFile as File).name : isRemoved("left") ? undefined : editing?.leftFileName,
-      rightFileName: rightText ? (rightFile as File).name : isRemoved("right") ? undefined : editing?.rightFileName,
+      responseFileName: !singlePoints ? undefined : primaryText ? (file as File).name : isRemoved("single") ? undefined : editing?.responseFileName,
+      leftFileName: !leftPoints ? undefined : leftText ? (leftFile as File).name : isRemoved("left") ? undefined : editing?.leftFileName,
+      rightFileName: !rightPoints ? undefined : rightText ? (rightFile as File).name : isRemoved("right") ? undefined : editing?.rightFileName,
       channelMatchFileName: presetText ? (presetFile as File).name : isRemoved("preset") ? undefined : editing?.channelMatchFileName,
       channelMatchMode, channelMatchPreset,
       leftLevelDb: leftText ? at(parseCurve(leftText, false), 1000) : isRemoved("left") ? undefined : editing?.leftLevelDb,
@@ -126,10 +128,17 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
       <label>Source or measurer <span>optional</span><input name="source" maxLength={500} defaultValue={editing?.source} placeholder="Your measurement or a credited source URL" /></label>
       <label>Driver type <span>optional</span><input name="driverType" maxLength={80} defaultValue={editing?.driverType} placeholder="Dynamic, planar, BA, hybrid…" /></label>
       <label>Nozzle diameter, mm <span>optional; in-ear</span><input name="nozzleDiameterMm" type="number" min="0.1" max="30" step="0.1" defaultValue={editing?.nozzleDiameterMm} placeholder="e.g. 5.5" /></label>
-      <label className="file-label">Single response CSV / TXT <span>or use both channel files</span><input name="file" type="file" accept=".csv,.txt,text/csv,text/plain" /><span className="drop-zone">↥<strong>Choose one raw response</strong><small>Frequency (Hz), level (dB) · up to 4 MB; dense REW files accepted</small></span></label>
-      <div className="channel-file-row"><label>Left channel CSV / TXT<input name="leftFile" type="file" accept=".csv,.txt,text/csv,text/plain" /></label><label>Right channel CSV / TXT<input name="rightFile" type="file" accept=".csv,.txt,text/csv,text/plain" /></label></div>
+      {editing && uploadMode === "keep" && <p>Saved response arrangement: {editing.leftPoints && editing.rightPoints ? "Left and Right; listening uses their average" : editing.singlePoints ? "one shared response" : editing.leftPoints ? "Left only; this response is used for both ears" : editing.rightPoints ? "Right only; this response is used for both ears" : "one shared response"}. {editing.singlePoints && editing.leftPoints && editing.rightPoints && "An additional shared response is retained but the paired responses take precedence."}</p>}
+      <fieldset className="measurement-file-intent"><legend>Response files</legend>
+        {editing && <label><input type="radio" name="responseMode" checked={uploadMode === "keep"} onChange={()=>setUploadMode("keep")}/>Keep existing response attachments</label>}
+        <label><input type="radio" name="responseMode" checked={uploadMode === "shared"} onChange={()=>setUploadMode("shared")}/>One response for both ears</label>
+        <label><input type="radio" name="responseMode" checked={uploadMode === "paired"} onChange={()=>setUploadMode("paired")}/>Separate Left and Right responses</label>
+        <p>{uploadMode === "keep" ? "Existing responses stay unchanged. Choose a file mode before replacing or removing responses." : uploadMode === "paired" ? "Both ears are required. Listening fits the average response; Left/Right responses also support automatic channel matching." : "Listening uses this response for both ears."} {editing && uploadMode !== "keep" && "Saving replaces the existing response arrangement with the selected mode; removed attachments cannot be recovered here."}</p>
+      </fieldset>
+      <label className="file-label">Single response CSV / TXT <span>or use both channel files</span><input name="file" type="file" disabled={uploadMode !== "shared"} accept=".csv,.txt,text/csv,text/plain" /><span className="drop-zone">↥<strong>Choose one raw response</strong><small>Frequency (Hz), level (dB) · up to 4 MB; dense REW files accepted</small></span></label>
+      <div className="channel-file-row"><label>Left channel CSV / TXT<input name="leftFile" type="file" disabled={uploadMode !== "paired"} accept=".csv,.txt,text/csv,text/plain" /></label><label>Right channel CSV / TXT<input name="rightFile" type="file" disabled={uploadMode !== "paired"} accept=".csv,.txt,text/csv,text/plain" /></label></div>
       {editing && <section className="saved-measurement-files" aria-label="Saved measurement attachments"><strong>Saved attachments</strong><p>These responses and presets are stored with this measurement. Removing an attachment takes effect when you save.</p>{attachments.map(item=><div className={`saved-measurement-file ${isRemoved(item.kind) ? "pending-removal" : ""}`} key={item.kind}><span><b>{item.label}</b><small>{item.filename} · {item.detail}</small></span><button type="button" onClick={()=>{invalidateApproval();setRemoved(current=>isRemoved(item.kind)?current.filter(kind=>kind!==item.kind):[...current,item.kind]);}}>{isRemoved(item.kind)?"Undo":"Remove"}</button></div>)}</section>}
-      <fieldset className="channel-match-settings"><legend>Saved channel-matching preset</legend><p>Open Comparison can use these saved settings. Personal Tournament lets you choose Auto, Uploaded or Off in its setup. Blind Research always uses Auto Match.</p><label><input type="radio" name="channelMatchMode" value="auto" defaultChecked={editing?.channelMatchMode !== "custom"} /><span><b>Auto Match</b><small>Uses your saved Left and Right responses when both are attached.</small></span></label><label><input type="radio" name="channelMatchMode" value="custom" defaultChecked={editing?.channelMatchMode === "custom"} /><span><b>My channel-match preset</b><small>Use a two-channel PEQdB/Qudelix export with CH: 0 and CH: 1 sections.</small></span></label><label className="channel-match-file">Channel-match preset TXT<input name="channelMatchFile" type="file" accept=".txt,text/plain" /></label></fieldset>
+      <fieldset className="channel-match-settings"><legend>Channel balance preset (EQ file, optional)</legend><p>Open Comparison can use these saved settings. Personal Tournament lets you choose Auto, Uploaded or Off in its setup. Blind Research always uses Auto Match.</p><label><input type="radio" name="channelMatchMode" value="auto" defaultChecked={editing?.channelMatchMode !== "custom"} /><span><b>Auto Match</b><small>Uses your saved Left and Right responses when both are attached.</small></span></label><label><input type="radio" name="channelMatchMode" value="custom" defaultChecked={editing?.channelMatchMode === "custom"} /><span><b>My channel-match preset</b><small>Use the supported two-channel TXT syntax with CH: 0 and CH: 1 sections. This is an EQ preset, not a measured response.</small></span></label><label className="channel-match-file">Channel-match preset TXT<input name="channelMatchFile" type="file" accept=".txt,text/plain" /></label></fieldset>
       <input type="hidden" name="rights" value={contribute&&rights?'yes':'no'}/><p>{contribute&&rights?'Contribution approved for the currently selected files. Saving uploads a research copy. Any edit clears approval.':'Private listening copy only. No research files will be uploaded.'}</p>{!adminTestOnly&&<button type="button" onClick={reviewContribution}>Review file contribution in data choices</button>}
       <button className="primary">{editing ? "Save changes →" : "Save measurement →"}</button>{editing && <button type="button" className="export-button" onClick={() => beginEdit(null)}>Cancel edit</button>}{error && <p role="alert">{error}</p>}
       {contributionStatus && <p role="status">{contributionStatus}</p>}

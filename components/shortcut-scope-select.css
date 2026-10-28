@@ -1,5 +1,5 @@
-.alpha-playback-shortcuts .shortcut-scope{display:inline-flex;align-items:center;gap:6px;margin-left:10px;color:#c3d3da;font-size:12px;white-space:nowrap}
-.shortcut-scope select{min-height:26px;padding:0 24px 0 8px;border:1px solid #33565d;border-radius:7px;background-color:#0b1a20;color:#dbe9ec;font:600 12px/1 inherit;color-scheme:dark;cursor:pointer}
+.alpha-playback-shortcuts .shortcut-scope{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 0;max-width:100%;box-sizing:border-box;color:#c3d3da;font-size:12px;white-space:normal}
+.shortcut-scope select{min-height:26px;padding:0 24px 0 8px;border:1px solid #33565d;border-radius:7px;background-color:#0b1a20;color:#dbe9ec;font-family:inherit;font-size:14px;font-weight:600;line-height:1.4;min-width:0;max-width:100%;color-scheme:dark;cursor:pointer}
 .shortcut-scope select option{background:#0b1a20;color:#dbe9ec}
 .shortcut-scope select:focus-visible{outline:2px solid #e6fff6;outline-offset:2px}
 .alpha-playback-shortcuts .shortcut-scope>span{margin:0;color:#c3d3da}

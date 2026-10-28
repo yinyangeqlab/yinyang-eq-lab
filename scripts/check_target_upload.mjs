@@ -8,7 +8,7 @@ import ts from 'typescript';
 const file=process.argv[2]||'app/shootout/page.tsx';
 const ast=ts.createSourceFile('page.tsx',readFileSync(file,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),handlers=new Map();
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name)handlers.set(n.name.text,n.getText(ast));if(ts.isVariableDeclaration(n)&&n.initializer&&ts.isCallExpression(n.initializer)&&n.initializer.expression.getText(ast)==='useCallback'){const callback=n.initializer.arguments[0];handlers.set(n.name.getText(ast),'const '+n.name.getText(ast)+'='+callback.getText(ast)+';');}ts.forEachChild(n,visit);}visit(ast);
-const names=['upload','submitTarget','withdrawTarget','loadRemovals','requestRemoval','cancelRemoval','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial'];
+const names=['upload','submitTarget','withdrawTarget','loadRemovals','requestRemoval','cancelRemoval','savePrivate','beginTestMode','resetFeedback','openFeedbackId','advancePair','nextPair','applyOpenPair','vote','saveTrial','changeSection'];
 const code=ts.transpileModule(names.map(n=>handlers.get(n)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function load(path){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,Error});return fixtureModule.exports;}
 const {parseCurve}=load('lib/curves.ts'),{compareTargets}=load('lib/target-review.ts'),{screenTargetName}=load('lib/target-name-policy.ts'),{targetHeadphoneType}=load('lib/target-type.ts');
@@ -19,7 +19,7 @@ function harness(extra={}){
  const state={sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
  name:'Warm reference',creator:'QA',description:'Synthetic',targetCategory:'ie',referenceSystem:'Unknown',submissionKind:'target',targetMeasurementId:'',measurements:[],csv:points.map(p=>p.join(',')).join('\n'),fileName:'curve.csv',curveKind:'original',parentTargetId:'',
  selectedMeasurement:{id:'measurement',name:'QA',type:'ie',points},headphoneType:'ie',rankType:'ie',targets:[target('a')],localTargets:[],testMode:'blind',sessionExpired:false,sessionFinished:false,sessionTrials:[],sessionId:'old',pair:['old-a','old-b'],trialId:'old-trial',revealed:true,busy:false,submissionsEnabled:true,voteDataAccepted:true,
- feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},
+ feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},nextComparisonFocusPending:{current:false},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},router:{replace(){}},
  localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},
  musicPanelRef:{current:{reset(){},stop(){state.stopped=true;},heard:()=>[6,6],isHashing:()=>false,snapshot:()=>({overlapSeconds:6}),finish:()=>({heardA:6,heardB:6,overlapSeconds:6,intervals:[]})}},
  fitAutoEq:(_raw,p)=>({filters:[{hz:100,q:1,gain:p[0][1]}],rms:0,preamp:0}),
@@ -27,7 +27,7 @@ function harness(extra={}){
  fetch:async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({ok:true})};},
  ...extra};
  Object.defineProperties(state,{allTargets:{get:()=>[...state.targets,...state.localTargets]},testPool:{get:()=>[...state.targets,...(state.testMode==='open'?state.localTargets:[])].filter(t=>targetHeadphoneType(t)===state.headphoneType)}});
- for(const key of ['removalRequests','targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
+ for(const key of ['removalRequests','targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','selectedChoice','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
  state.URL=URL;state.window={location:{href:"http://local.test/shootout"},history:{replaceState(){}},requestAnimationFrame:fn=>fn()};state.document={querySelector:()=>null};
  const context=vm.createContext(state);vm.runInContext(code,context);
  return {state,stored,calls,run:code=>vm.runInContext(code,context)};

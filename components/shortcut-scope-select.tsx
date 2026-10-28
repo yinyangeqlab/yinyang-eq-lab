@@ -12,8 +12,8 @@ export default function ShortcutScopeSelect() {
   const scope = raw === null ? "everywhere" : parseDisplayPreferences(raw).shortcutScope;
   return <label className="shortcut-scope"><span>Shortcuts</span>
     <select aria-label="Where keyboard shortcuts work" value={scope} disabled={raw === null} onChange={event => writeDisplayPreferences({ shortcutScope: event.target.value as "everywhere" | "player" | "off" })}>
-      <option value="everywhere">Everywhere</option>
-      <option value="player">Player area only</option>
+      <option value="everywhere">Anywhere on this page</option>
+      <option value="player">After using the player</option>
       <option value="off">Off</option>
     </select></label>;
 }

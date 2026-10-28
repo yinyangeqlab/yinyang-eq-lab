@@ -37,7 +37,7 @@ for(const actor of actors)for(const path of paths)for(const method of ['GET','HE
 }
 assert.equal(databaseCalls,0);assert.equal(appReads,0,'The lock runs before static, crawler, data and media handlers');
 const status=await context.exports.handler.fetch(new Request('https://fixture.test/api/maintenance'),env,{});
-assert.equal(status.status,200);assert.equal((await status.json()).ownerOnly,true);assert.equal(appReads,0);
+assert.equal(status.status,200);const visitorStatus=await status.json();assert.equal(visitorStatus.ownerOnly,true);assert.notEqual(visitorStatus.viewerHasAccess,true,'Visitor status must never claim admission');assert.equal(appReads,0);
 for(const path of ['/admin-login','/owner-login']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path),env,{});
  assert.equal(response.status,200);assert.match(await response.text(),/Admin sign in/);
@@ -50,6 +50,7 @@ const normal=await context.exports.handler.fetch(new Request('https://fixture.te
 for(const config of [{...env,PRIVATE_ACCESS_PASSWORD:''},{...env,PRIVATE_ACCESS_PASSWORD:undefined}])assert.equal((await context.exports.handler.fetch(new Request('https://fixture.test/'),config,{})).status,503);
 const escaped=await ownerOnlyMaintenanceResponse(new Request('https://fixture.test/'),'<script>alert(1)</script> & test').text();assert.doesNotMatch(escaped,/<script>/);assert.match(escaped,/&lt;script&gt;/);assert.match(escaped,/min-height:100svh/);assert.match(escaped,/name="viewport"/);assert.doesNotMatch(escaped,/<a |<form|<input/);
 const infra=readFileSync('infra/pulumi/index.ts','utf8');assert.match(infra,/ownerOnlyMaintenance \? \["\/\*"\] : \["\/\*", \.\.\.publicAssetBypassPatterns\]/);assert.match(infra,/config.getBoolean\("ownerOnlyMaintenance"\) \?\? false/);
-assert.match(readFileSync('components/service-warning.tsx','utf8'),/status.ownerOnly\)\{window.location.reload\(\)/);
+// Admitted/denied client reload behavior is exercised by check_main_workflows.mjs.
+assert.match(readFileSync('components/service-warning.tsx','utf8'),/status.viewerHasAccess!==true\)\{window.location.reload\(\)/);
 assert.match(OWNER_ONLY_MAINTENANCE_MESSAGE,/Thank you for your patience/);
 console.log(`PASS owner-only maintenance: ${cases} route/method/identity denials; real HMAC admin access, expired/future/forged rejection, login availability, no DB/app reads before denial, static-first override, escaped full-screen HTML, operational status, and normal-mode restoration. Synthetic fixtures only.`);

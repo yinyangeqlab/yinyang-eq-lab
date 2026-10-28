@@ -1,5 +1,5 @@
 /* Comparison-passage selection on the waveform: region, move grip, edge handles and the time chip.
-   New class names (wf-*) replace two older designs; hit areas, roles and keyboard behavior are unchanged. */
+   New class names (wf-*) replace two older designs; roles and keyboard behavior are unchanged. */
 .wf-passage{position:absolute;top:2px;bottom:2px;pointer-events:none;border-radius:7px;background:linear-gradient(180deg,rgba(120,240,190,.17),rgba(100,225,205,.07));box-shadow:inset 0 0 0 1px rgba(150,245,215,.5),0 0 16px rgba(100,225,205,.14);overflow:visible;transition:background .14s ease,box-shadow .14s ease}
 .wf-passage.is-editable{pointer-events:auto}
 .wf-passage.is-active,.wf-passage:hover{background:linear-gradient(180deg,rgba(130,245,200,.24),rgba(100,225,205,.1));box-shadow:inset 0 0 0 1px rgba(170,250,225,.85),0 0 20px rgba(100,225,205,.28)}
@@ -10,7 +10,9 @@
 /* Personal (resizable) keeps its original hit model: only a band at the grip moves the passage; the rest of the selection still seeks. */
 .wf-passage.is-resizable.is-editable{pointer-events:none}
 .wf-passage.is-resizable .wf-move{inset:auto;left:0;right:0;top:28%;width:100%;height:30px;transform:translateY(-50%);border-radius:999px;pointer-events:auto}
-.wf-passage.is-resizable .wf-edge{pointer-events:auto}
+.wf-passage.is-resizable .wf-edge{top:50%;height:50%;pointer-events:auto}
+.wf-passage.is-resizable .wf-edge::before{top:-100%;pointer-events:none}
+.wf-passage.is-resizable .wf-edge-knob{top:32%}
 .wf-passage.is-resizable .wf-grip{top:50%}
 /* Grip rides the upper part of the selection and the edge knobs the lower part, so they never overlap on short passages. */
 .wf-move:disabled{cursor:default;pointer-events:none}
@@ -23,11 +25,11 @@
 /* The seek tooltip appears at the top of the waveform, so the time chip lives at the bottom of the selection. */
 .wf-move:disabled .wf-grip{display:none}
 
-/* Edges: a bright line with a grab knob; the 20px hit area is unchanged. */
-.wf-edge{position:absolute;top:0;bottom:0;width:20px;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;cursor:ew-resize;touch-action:none;z-index:3}
-.wf-edge-start{left:-10px}
-.wf-edge-end{right:-10px}
-.wf-edge::before{content:"";position:absolute;top:0;bottom:0;left:9px;width:2px;border-radius:2px;background:#9ff6df;box-shadow:0 0 6px rgba(120,240,205,.5)}
+/* Edges: a bright line with a grab knob; 24px pointer targets keep the line centered. */
+.wf-edge{position:absolute;top:0;bottom:0;width:24px;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;cursor:ew-resize;touch-action:none;z-index:3}
+.wf-edge-start{left:-12px}
+.wf-edge-end{right:-12px}
+.wf-edge::before{content:"";position:absolute;top:0;bottom:0;left:11px;width:2px;border-radius:2px;background:#9ff6df;box-shadow:0 0 6px rgba(120,240,205,.5)}
 .wf-edge-knob{position:absolute;top:66%;left:50%;width:10px;height:24px;transform:translate(-50%,-50%);border-radius:5px;background:rgba(7,22,22,.92);border:1.5px solid #9ff6df;box-shadow:0 2px 8px rgba(0,0,0,.55);pointer-events:none;transition:transform .12s ease,border-color .12s ease}
 .wf-edge-knob::before{content:"";position:absolute;left:50%;top:50%;width:2px;height:2px;margin:-1px 0 0 -1px;border-radius:50%;background:#c9fbe9;box-shadow:0 -5px 0 #c9fbe9,0 5px 0 #c9fbe9}
 .wf-passage.is-fixed .wf-edge-knob{display:none}

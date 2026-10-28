@@ -28,7 +28,7 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,pa
   const stored = new Map();
   const calls = [];
   const state = {
-    setResearchComparisonId:value=>{state.researchComparisonId=value;},openFeedbackIdRef:{current:"old"},setFeedbackNonce(){},setDescribeOpen(){},sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
+    setResearchComparisonId:value=>{state.researchComparisonId=value;},setSelectedChoice:value=>{state.selectedChoice=value;},openFeedbackIdRef:{current:"old"},setFeedbackNonce(){},setDescribeOpen(){},sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
     trialId: "trial", testMode: mode, headphoneType: "ie", sessionId: "session", trials: [],
     selectedMeasurement: { points: [[20, 0], [20000, 0]] },
     allTargets: [{ id: "a", name: "Alpha", status: "approved", points: [[20, 1]] }, { id: "b", name: "Beta", status: "approved", points: [[20, 2]] }],
@@ -63,6 +63,7 @@ for (const mode of ["blind", "bring"]) {
   for (const scenario of [{}, { voteStatus: 429 }, { voteStatus: 409 }, { voteStatus: 500 }, { failure: "/api/votes" }, { failure: "json" }, { runStatus: 500 }, { failure: "/api/listening-runs" }]) {
     const { state, context, stored } = harness({ mode, ...scenario });
     await vm.runInContext("vote(0)", context);
+    assert.equal(state.selectedChoice, 0, "The completed answer stays selected even if submission fails");
     assert.equal(state.revealed, true, JSON.stringify(scenario));
     assert.equal(state.busy, false);
     assert.equal(state.trials[0].researchRecorded,!scenario.runStatus&&!scenario.failure?.includes("listening-runs"),"Research-save status is independent of ranked-vote success");

@@ -8,7 +8,7 @@ export type EqSong = { id: string; title: string; artist: string; url?: string; 
 export type ListeningEvidence = { heard: [number, number]; start: number; seconds: number };
 const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
-export default function BlindEqListener({ song, presets, match, onEvidence, initialVolume = .25, onVolumeChange }: { initialVolume?: number; onVolumeChange?: (volume: number) => void; song: EqSong; presets: [EqPreset, EqPreset]; match: boolean; onEvidence: (evidence: ListeningEvidence) => void }) {
+export default function BlindEqListener({ song, presets, match, context, onEvidence, initialVolume = .25, onVolumeChange }: { context?: AudioContext; initialVolume?: number; onVolumeChange?: (volume: number) => void; song: EqSong; presets: [EqPreset, EqPreset]; match: boolean; onEvidence: (evidence: ListeningEvidence) => void }) {
   const player = useRef<BlindEqPlayer | null>(null), source = useRef<AudioBuffer | null>(null), prepared = useRef<PreparedComparison | null>(null);
   const playRequest = useRef(0), generation = useRef(0), controller = useRef<AbortController | null>(null), heardRef = useRef<[number, number]>([0, 0]);
   const sideRef = useRef<0 | 1>(0), volumeRef = useRef(initialVolume), lastTime = useRef(0), passageRef = useRef({ start: 0, seconds: 15 });
@@ -52,7 +52,7 @@ export default function BlindEqListener({ song, presets, match, onEvidence, init
     controller.current?.abort(); const abort = new AbortController(); controller.current = abort;
     setError(""); setNeedsAdminSignIn(false); setBusy(true); setReady(false); setDuration(0); setStart(0); setDraftStart(0); resetEvidence(); pause(); source.current = null; prepared.current = null;
     try {
-      player.current ??= new BlindEqPlayer();
+      player.current ??= new BlindEqPlayer(context);
       // Resume in the user gesture before any asynchronous fetch/decode.
       const current = player.current; current.setVolume(volumeRef.current);
       await current.resume();

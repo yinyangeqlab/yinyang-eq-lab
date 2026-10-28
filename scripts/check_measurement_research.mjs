@@ -48,6 +48,9 @@ function load(path) {
   return context.exports;
 }
 deps['@/lib/owner-access']=load('../lib/owner-access.ts');
+deps['./peq-preset']=load('../lib/peq-preset.ts');
+deps['@/lib/channel-balance']=load('../lib/channel-balance.ts');
+const {measurementResponses}=load('../lib/measurement-upload.ts');
 const upload=load('../app/api/research-measurements/route.ts');
 const download=load('../app/api/owner-research-measurement/route.ts');
 const responseText=Array.from({length:20},(_,i)=>`${20+i*1000},${i/10}`).join('\r\n')+'\r\n';
@@ -96,7 +99,7 @@ const ast=ts.createSourceFile('measurement.tsx',source,ts.ScriptTarget.Latest,tr
 let save;
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='saveFromForm')save=node.getText(ast);ts.forEachChild(node,visit);}visit(ast);
 let locallySaved=null,status='';
-const client=vm.createContext({Error,FormData,File,crypto:webcrypto,parseCurve,adminTestOnly:false,recordAdminTestIfNeeded:async()=>{throw Error("Offline");},contribute:true,editing:null,isRemoved:()=>false,VOTE_DATA_NOTICE_VERSION:'test',localStorage:{getItem:()=>null,setItem(){}},fetch:async()=>{throw Error('Offline');},onAdd:row=>{locallySaved=row;},onUpdate(){},beginEdit(){},setContributionStatus:message=>{status=message;},at(){},averageChannels(){},parseChannelMatchPreset(){},isImportedMeasurement(){return false;}});
+const client=vm.createContext({Error,FormData,File,crypto:webcrypto,parseCurve,measurementResponses,uploadMode:"shared",removed:[],adminTestOnly:false,recordAdminTestIfNeeded:async()=>{throw Error("Offline");},contribute:true,editing:null,isRemoved:()=>false,VOTE_DATA_NOTICE_VERSION:'test',localStorage:{getItem:()=>null,setItem(){}},fetch:async()=>{throw Error('Offline');},onAdd:row=>{locallySaved=row;},onUpdate(){},beginEdit(){},setContributionStatus:message=>{status=message;},at(){},averageChannels(){},parseChannelMatchPreset(){},isImportedMeasurement(){return false;}});
 vm.runInContext(ts.transpileModule(save,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,client);
 const form=await request().formData();
 // Browser FormData(formElement) is modeled by a constructor returning the fields.

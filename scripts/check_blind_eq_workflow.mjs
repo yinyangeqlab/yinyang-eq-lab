@@ -10,6 +10,7 @@ const flat = name => ({ name, channels: [{ preampDb: 0, filters: [] }, { preampD
 const compile = path => ts.transpileModule(readFileSync(new URL('../' + path, import.meta.url), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 const baseGlobals = { Error, URL, Blob, AbortController, structuredClone, crypto, console };
 function load(path, require, globals = {}) { const mod = { exports: {} }; vm.runInNewContext(compile(path), { ...baseGlobals, ...globals, require, module: mod, exports: mod.exports }); return mod.exports; }
+const search = load('lib/search.ts', id => { throw Error(id); });
 const model = load('lib/blind-eq.ts', id => { throw Error(id); });
 const text = node => node == null || typeof node === 'boolean' ? '' : typeof node === 'string' || typeof node === 'number' ? String(node) : Array.isArray(node) ? node.map(text).join('') : text(node.props?.children);
 function all(node, predicate, found = []) { if (node && typeof node === 'object') { if (!Array.isArray(node) && predicate(node)) found.push(node); for (const child of Array.isArray(node) ? node : [node.props?.children]) all(child, predicate, found); } return found; }
@@ -27,14 +28,14 @@ function mount(path, imports, globals, props) {
   render();
   return { render, focus, get tree() { return tree; }, get lateUpdates() { return lateUpdates; }, find(predicate) { const values = all(tree, predicate); assert.equal(values.length, 1, 'Expected one matching rendered element'); return values[0]; }, button(name) { return this.find(n => n.type === 'button' && text(n) === name); }, unmount() { active = false; for (const h of hooks) h?.cleanup?.(); } };
 }
-function pageFixture() {
+function pageFixture(sampleRate = 48000) {
   const listeners = new Map(); let blob, failDownload = false, clicks = 0;
   function Editor() {} function Listener() {}
   const window = { addEventListener(name, fn) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(fn); }, removeEventListener(name, fn) { listeners.get(name)?.delete(fn); }, setTimeout() {} };
   const document = { body: { appendChild() {} }, createElement() { return { click() { clicks++; }, remove() {} }; } };
   const URL = { createObjectURL(value) { if (failDownload) throw Error('Downloads unavailable'); blob = value; return 'blob:fixture'; }, revokeObjectURL() {} };
   const pool = Array.from({ length: 35 }, (_, i) => ({ title: 'Synthetic ' + i, artist: 'Fixture', fileUrl: '/tone.wav' }));
-  const h = mount('app/eq-compare/page.tsx', { '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL }, {});
+  const h = mount('app/eq-compare/page.tsx', { '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
   return Object.assign(h, { listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
     apply() { all(h.tree, n => n.type === Editor).forEach(n => n.props.onChange(flat('Same preset name'))); h.render(); },
     songs() { return all(h.tree, n => n.type === 'label' && n.props.className === 'eq-song').map(n => all(n, child => child.type === 'input')[0]); },
@@ -148,3 +149,14 @@ for (const action of ['hide', 'unmount', 'change-passage']) {
   await assert.rejects(dsp.prepareComparison(buffer, [flat('one'), flat('two')], 0, 5, true, controller.signal), /cancelled/); check(instances === 1, 'An already-cancelled preparation creates no new audio context');
 }
 console.log(`PASS ${checks} actual blind EQ workflow checks: mixed playlist limits/removal, volume persistence, confirmation focus/Escape, private export completeness, failed downloads/leave guards, silent-passage recovery, stale async work, hidden/muted playback and DSP cancellation.`);
+
+for (const rate of [44100, 48000]) {
+ const h = pageFixture(rate); h.apply();
+ const preset=flat('High filter');preset.channels[0].filters=[{type:'PK',hz:23000,gain:2,q:1}];
+ all(h.tree,n=>n.type===h.Editor)[1].props.onChange(preset);h.render();h.songs()[0].props.onChange();h.render();
+ h.button('Hide presets & start').props.onClick();h.render();
+ if(rate===44100){check(text(h.tree).includes('Preset 2, Left filter 1'),'Rate failure identifies preset/channel/row before blinding');check(!h.listeners.get('beforeunload')?.size,'Invalid rate cannot enter a blinded session');}
+ else {check(h.listener().props.context.sampleRate===48000,'Listener receives the same context validated at setup');}
+ h.unmount();
+}
+console.log('PASS setup-time sample-rate boundaries and validated context handoff.');

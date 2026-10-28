@@ -4,6 +4,7 @@ import "./welcome.css";
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import ModeIllustration from "@/components/mode-illustration";
+import WelcomeLandscape from "@/components/welcome-landscape";
 import { useInvitesEnabled } from "@/components/invite-mode";
 import AdminAccountLink from "@/components/admin-account-link";
 import { readDisplayPreferences, subscribeDisplayPreferences, writeDisplayPreferences } from "@/lib/display-preferences";
@@ -41,12 +42,7 @@ export default function Welcome() {
   }, []);
   return <main className="welcome-shell">
     <section ref={hero} className="welcome-hero" data-motion={motion && inView && visible} aria-labelledby="welcome-title">
-      <picture className="welcome-art"><source media="(min-width: 761px)" srcSet="/brand-landscape.webp" /><img src="/brand-amoled-aligned.webp" alt="" /></picture>
-      <svg className="welcome-sound-field" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
-        <path className="welcome-signal signal-a" pathLength="100" d="M-80 560C100 660 170 410 330 530S540 680 710 570 1020 680 1280 620"/>
-        <path className="welcome-signal signal-b" pathLength="100" d="M1280 430C1110 260 1070 660 890 550S620 500 470 650 140 600-80 680"/>
-        <path className="welcome-signal signal-center" pathLength="100" d="M-80 720C180 610 200 750 450 700S750 520 930 650 1130 700 1280 630"/>
-      </svg>
+      <WelcomeLandscape running={motion && inView && visible}/>
       <div className="welcome-shade" aria-hidden="true" />
       <header className="welcome-nav">
         {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
@@ -70,7 +66,7 @@ export default function Welcome() {
     </section>
 
     <section className="welcome-fair" aria-labelledby="welcome-fair-title"><h2 id="welcome-fair-title">How the comparison stays fair</h2><ul>
-      <li><strong>Same loudness</strong><span>Blind Research locks tracks to −16 LUFS. Personal and Open Comparison let you choose a loudness target, so level does not decide the vote.</span></li>
+      <li><strong>Source level adjustment</strong><span>Blind Research uses a −16 LUFS source target; Personal and Open Comparison let you choose or disable normalisation. Target EQ can still change playback loudness. Perceived loudness is not matched between targets.</span></li>
       <li><strong>Same passage</strong><span>Controlled Blind Research rounds require hearing the shared passage on both targets before you can vote.</span></li>
       <li><strong>Hidden names</strong><span>Personal keeps target names hidden while it narrows your shortlist; Blind Research reveals them after you choose.</span></li>
       <li><strong>Your headphones</strong><span>Targets are applied through your own measurement, with optional left/right channel matching.</span></li>
@@ -83,11 +79,11 @@ export default function Welcome() {
       <div className="welcome-section-head"><span className="welcome-eyebrow">THREE STEPS</span><h2 id="welcome-how-title">A simple way to compare sound.</h2><p>Blind rounds put two EQ targets through the same headphones and track. Listen first. Personal keeps names hidden while you narrow your shortlist; Blind Research reveals them after your choice.</p></div>
       <div className="welcome-steps">
         <article><div className="welcome-step-visual visual-headphones" aria-hidden="true"><svg viewBox="0 0 160 100" fill="none"><path d="M31 57V48a49 49 0 0 1 98 0v9" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/><rect x="24" y="55" width="24" height="32" rx="8" fill="currentColor"/><rect x="112" y="55" width="24" height="32" rx="8" fill="currentColor"/><path d="M55 76l10-9 10 7 11-18 10 8 9-15" stroke="#a6fff0" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/></svg><span>YOUR HEADPHONES</span></div><span className="welcome-step-number">01 / SETUP</span><h3>Choose your headphones</h3><p>Select a saved measurement or add one for your pair. The site uses it to apply the two EQ targets.</p></article>
-        <article><div className="welcome-step-visual visual-compare" aria-hidden="true"><div><strong>A</strong><svg viewBox="0 0 120 32"><polyline points="0,17 8,17 13,8 19,26 25,12 31,19 42,19 48,6 53,27 60,15 68,18 79,18 83,9 90,24 97,15 104,18 120,18" /></svg></div><div><strong>B</strong><svg viewBox="0 0 120 32"><polyline points="0,17 9,17 14,11 20,23 27,15 34,18 43,18 49,7 54,26 62,14 68,19 78,19 84,11 90,23 98,15 105,18 120,18" /></svg></div><span>SAME TRACK · SAME LEVEL</span></div><span className="welcome-step-number">02 / LISTEN</span><h3>Switch between A and B</h3><p>Play the same track through both targets. Switch as often as you like before choosing; blind rounds hide the target names.</p></article>
+        <article><div className="welcome-step-visual visual-compare" aria-hidden="true"><div><strong>A</strong><svg viewBox="0 0 120 32"><polyline points="0,17 8,17 13,8 19,26 25,12 31,19 42,19 48,6 53,27 60,15 68,18 79,18 83,9 90,24 97,15 104,18 120,18" /></svg></div><div><strong>B</strong><svg viewBox="0 0 120 32"><polyline points="0,17 9,17 14,11 20,23 27,15 34,18 43,18 49,7 54,26 62,14 68,19 78,19 84,11 90,23 98,15 105,18 120,18" /></svg></div><span>SAME TRACK · TWO TARGETS</span></div><span className="welcome-step-number">02 / LISTEN</span><h3>Switch between A and B</h3><p>Play the same track through both targets. Switch as often as you like before choosing; blind rounds hide the target names.</p></article>
         <article><div className="welcome-step-visual visual-vote" aria-hidden="true"><div><span>A</span><span>B</span><span>TIE</span></div><svg viewBox="0 0 160 46" fill="none"><path d="M5 29C28 18 39 33 57 22S89 8 109 20s28 2 46-8" stroke="#ff526f" strokeWidth="3"/><path d="M5 36C27 31 37 16 57 30S89 38 109 26s28-17 46-10" stroke="#48b8ff" strokeWidth="3"/></svg><span>CHOOSE · THEN REVEAL</span></div><span className="welcome-step-number">03 / DECIDE</span><h3>Pick A, B, or a tie</h3><p>Choose what sounds better to you, or pick a tie if you have no preference. Personal uses your choices to refine a shortlist. Eligible Blind Research comparisons contribute to Research Rankings; identical-filter checks remain diagnostic.</p></article>
       </div>
       <div className="welcome-last-call"><div><span className="welcome-eyebrow">{invites ? "INVITED LISTENERS" : "LISTENERS"}</span><h2>Ready to hear the difference?</h2>{invites && <p>Have your invitation code handy.</p>}</div><a className="welcome-primary" href="/shootout/personal">Find my target <span aria-hidden="true">→</span></a></div>
     </section>
-    <footer className="welcome-footer"><span>YinYang EQ · by Yin Yang EQ Lab</span><span>Built for curious ears. Blind votes shape the rankings.</span><div className="welcome-footer-links"><a href="/listeners/yinyangeq">YinYangEQ’s published listening history</a><a href="/privacy">Privacy notice</a><a href="/my-data">My data</a><a href="/sync">Sync browsers</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div><AdminAccountLink placement="welcome"/></footer>
+    <footer className="welcome-footer"><span>YinYang EQ · by Yin Yang EQ Lab</span><span>Built for curious ears. Eligible Blind Research votes shape the research rankings.</span><div className="welcome-footer-links"><a href="/listeners/yinyangeq">YinYangEQ’s published listening history</a><a href="/privacy">Privacy notice</a><a href="/my-data">My data</a><a href="/sync">Sync browsers</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div><AdminAccountLink placement="welcome"/></footer>
   </main>;
 }

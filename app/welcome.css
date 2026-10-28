@@ -295,18 +295,14 @@
 @media(min-width:1050px){.welcome-mode-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(min-width:761px) and (max-width:1049px){.welcome-mode-grid>.welcome-mode:last-child{grid-column:1/-1}}
 
-/* Decorative energy travelling through the original landscape; never simulated live audio. */
-.welcome-hero .welcome-art img{animation:welcome-landscape-breathe 24s ease-in-out infinite;transform-origin:60% 50%;will-change:transform}
-.welcome-sound-field{position:absolute;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none;opacity:.65}
-.welcome-signal{stroke-width:1.4;stroke-linecap:round;stroke-dasharray:5 95;animation:welcome-signal-flow 15s linear infinite;filter:drop-shadow(0 0 5px currentColor)}
-.signal-a{stroke:#ff526f;color:#ff526f;animation-delay:-3s}.signal-b{stroke:#48b8ff;color:#48b8ff;animation-direction:reverse;animation-duration:18s}.signal-center{stroke:#8ce9dd;color:#8ce9dd;opacity:.6;stroke-width:.9;animation-delay:-8s;animation-duration:22s}
-.welcome-hero[data-motion=false] .welcome-signal,.welcome-hero[data-motion=false] .welcome-art img{animation-play-state:paused}
+/* Motion deforms the original mountain/water artwork, keeping its composition. */
+.welcome-art picture{display:block;width:100%;height:100%}
+.welcome-landscape-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;pointer-events:none}
+.welcome-art[data-rendered=true] .welcome-landscape-canvas{opacity:1}
+.welcome-art[data-rendered=true] picture{opacity:0}
 .welcome-motion-control{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:6px 9px;border:1px solid #56778070;border-radius:6px;background:#07171bbf;color:#a9c3c8;font-size:10px;letter-spacing:0;font-weight:400;cursor:pointer;transition:background .2s,border-color .2s}
 .welcome-motion-control:hover{background:#163035;border-color:#86b4bd}
-@keyframes welcome-landscape-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-@keyframes welcome-signal-flow{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}
-@media(max-width:700px){.welcome-hero-foot{flex-wrap:wrap;gap:10px}.welcome-hero-foot .welcome-foot-line{display:none}.welcome-motion-control{min-height:36px}.welcome-sound-field{opacity:.4}}
-@media(prefers-reduced-motion:reduce){.welcome-hero .welcome-art img,.welcome-signal{animation:none!important;transform:none!important;will-change:auto}.welcome-sound-field{opacity:.2}}
+@media(max-width:700px){.welcome-hero-foot{flex-wrap:wrap;gap:10px}.welcome-hero-foot .welcome-foot-line{display:none}.welcome-motion-control{min-height:36px}}
 
 /* Keep the product name intact beside data controls in the narrow shell. */
 .welcome-brand>span{white-space:nowrap}
@@ -355,7 +351,7 @@
  }
  .alpha-route-content .welcome-settings-panel a { min-height:56px; }
  .alpha-route-content .welcome-settings-panel span { font-size:14px;line-height:1.5; }
- .alpha-route-content :is(.welcome-art,.welcome-sound-field,.welcome-shade) {
+ .alpha-route-content :is(.welcome-art,.welcome-shade) {
   grid-area:artwork;
   position:relative;
   inset:auto;
@@ -364,7 +360,6 @@
  }
  .alpha-route-content .welcome-art { z-index:0; }
  .alpha-route-content .welcome-art img { object-position:center 45%; }
- .alpha-route-content .welcome-sound-field { z-index:1;opacity:.35; }
  .alpha-route-content .welcome-shade {
   z-index:2;
   background:linear-gradient(180deg,#06101500 55%,#061015 100%);
@@ -481,3 +476,15 @@
 .welcome-fair strong{color:#eef7f8;font-size:15px}
 .welcome-fair span{color:#a7bac5;font-size:14px;line-height:1.65}
 @media(max-width:760px){.welcome-fair{padding:28px 20px 0}}
+
+/* Keep mode calls to action aligned without shortening their explanations. */
+.welcome-mode{display:flex;flex-direction:column}
+.welcome-mode>a{align-self:flex-start;margin-top:auto}
+
+/* Keep navigation and mode cards readable when text is enlarged. */
+.alpha-route-content .welcome-sync-button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.welcome-sync-button>span{min-width:0}
+.welcome-hero-foot .welcome-tagline{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.welcome-mode{min-width:0;overflow-wrap:anywhere}
+.welcome-last-call>div,.welcome-footer-links{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.welcome-shell{overflow-wrap:anywhere}

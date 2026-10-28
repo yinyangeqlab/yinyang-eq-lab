@@ -55,16 +55,17 @@ export async function prepareComparison(source: AudioBuffer, presets: [EqPreset,
 
 /** Both branches run at the same playhead. Switching changes only their gains. */
 export class BlindEqPlayer {
-  readonly context = new AudioContext();
+  readonly context: AudioContext;
   private sources: AudioBufferSourceNode[] = [];
   private branches: GainNode[] = [];
-  private master = this.context.createGain();
+  private master: GainNode;
+  private ownsContext: boolean;
   private began = 0;
   private offset = 0;
   private length = 1;
   private side: 0 | 1 = 0;
   private running = false;
-  constructor() { this.master.gain.value = .25; this.master.connect(this.context.destination); }
+  constructor(context?: AudioContext) { this.context = context ?? new AudioContext(); this.ownsContext = !context; this.master = this.context.createGain(); this.master.gain.value = .25; this.master.connect(this.context.destination); }
   get playing() { return this.running && this.context.state === "running"; }
   get time() { return this.running ? (this.offset + this.context.currentTime - this.began) % this.length : this.offset; }
   get elapsed() { return this.context.currentTime; }
@@ -97,5 +98,5 @@ export class BlindEqPlayer {
     this.sources = []; this.branches = []; this.running = false;
   }
   restart() { this.pause(); this.offset = 0; }
-  async close() { this.pause(); if (this.context.state !== "closed") await this.context.close(); }
+  async close() { this.pause(); this.master.disconnect(); if (this.ownsContext && this.context.state !== "closed") await this.context.close(); }
 }

@@ -16,6 +16,17 @@
 
 .personal-full-standings .podium-history-table{max-height:440px;overflow:auto}.personal-full-standings thead{position:sticky;top:0;background:var(--podium-back);z-index:1}
 
+/* A narrow results card needs readable rows rather than three squeezed columns. */
+.personal-results .personal-podium{container-type:inline-size;container-name:personal-results-podium}
+@container personal-results-podium (max-width:26rem){
+ .personal-podium .podium-stage{grid-template-columns:minmax(0,1fr);align-items:stretch}
+ .personal-podium .podium-stage .podium-place{grid-column:1;grid-row:auto;min-height:0;padding:14px 6px}
+ .personal-podium .podium-stage .podium-place h3{font-size:14px}
+ .personal-podium .podium-stage .podium-place p{font-size:12px!important}
+ .personal-podium .podium-stage .podium-place small{font-size:12px}
+ .personal-podium .podium-stage .podium-step{height:12px}
+}
+
 @media(max-width:600px){
  .personal-podium{padding:12px}
  .personal-podium .podium-heading select{min-height:44px;font-size:16px;width:100%;min-width:0}

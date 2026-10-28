@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { isImportedMeasurement, type HeadphoneMeasurement } from "@/lib/measurement";
 import type { CatalogMeasurement } from "@/lib/public-measurements";
+import { searchRows } from "@/lib/search";
 import "./shootout-organization.css";
 
 export type { CatalogMeasurement } from "@/lib/public-measurements";
@@ -25,6 +26,8 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
   responsiveUploadLabel?: boolean;
   browseRequest?: number;
 }) {
+  const resultsId = useId();
+  const [limit, setLimit] = useState(30);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [editingQuery, setEditingQuery] = useState(false);
@@ -66,22 +69,28 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
     } catch (error) { setStatus(error instanceof Error ? error.message : "Public index unavailable."); }
     finally { catalogRequest.current = false; }
   }
-  const needle = (editingQuery ? query : "").trim().toLowerCase();
-  const matches = (name: string, source: string) => !needle || `${name} ${source}`.toLowerCase().includes(needle);
-  const own = rows.filter(row => matches(row.name, `${row.device} ${row.source} ${row.rig}`));
+  const needle = editingQuery ? query : "";
+  const own = searchRows(rows.filter(row => !headphoneType || row.type === headphoneType), needle, row => [row.name, row.device, row.source, row.rig]);
   const uploaded = own.filter(row => !isImportedMeasurement(row));
   const imported = own.filter(isImportedMeasurement);
   const sourceLabel = (row: HeadphoneMeasurement) => {
     if (!isImportedMeasurement(row)) return row.source || "Your upload";
     try { return `Imported from ${new URL(row.source).hostname}`; } catch { return "Imported measurement"; }
   };
-  const publicRows = catalog.filter(row => matches(row.name, `${row.source} ${row.rig ?? ""}`)).slice(0, 30);
+  const eligibleCatalog = catalog.filter(row => !headphoneType || row.type === headphoneType);
+  const publicMatches = searchRows(eligibleCatalog, needle, row => [row.name, row.source, row.rig ?? ""]);
+  const publicRows = publicMatches.slice(0, limit);
+  function closeResults(restoreFocus = true) {
+    // Focus first: onFocus opens search, so close it afterward in the same update.
+    if (restoreFocus) input.current?.focus();
+    setOpen(false); setEditingQuery(false); setQuery("");
+  }
   function savedSection(rowsForSection: HeadphoneMeasurement[], sectionLabel: "uploaded" | "imported") {
-    return rowsForSection.length ? rowsForSection.map(row => <div className="saved-search-row" key={row.id}><button type="button" role="option" aria-selected={row.id === selectedId} onClick={() => { onSelect(row.id); setOpen(false); setEditingQuery(false); setQuery(""); }}><b>{row.name}</b><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {sourceLabel(row)} · {row.rig}</small></button><button type="button" className="search-row-action" aria-label={`Edit ${row.name}`} title="Edit measurement" onClick={() => { setOpen(false); onEdit(row.id); }}>✎</button><button type="button" className="search-row-action" aria-label={`Delete ${row.name}`} title="Delete measurement" onClick={() => { if (window.confirm(`Delete ${row.name} from this browser?`)) onDelete(row.id); }}>×</button></div>) : <p>No {sectionLabel} measurements match.</p>;
+    return rowsForSection.length ? rowsForSection.map(row => <div className="saved-search-row" key={row.id}><button type="button" data-measurement-option aria-pressed={row.id === selectedId} onClick={() => { onSelect(row.id); closeResults(); }}><b>{row.name}</b><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {sourceLabel(row)} · {row.rig}</small></button><button type="button" className="search-row-action" aria-label={`Edit ${row.name}`} title="Edit measurement" onClick={() => { setOpen(false); onEdit(row.id); }}>✎</button><button type="button" className="search-row-action" aria-label={`Delete ${row.name}`} title="Delete measurement" onClick={() => { if (window.confirm(`Delete ${row.name} from this browser?`)) onDelete(row.id); }}>×</button></div>) : <p>No {sectionLabel} measurements match.</p>;
   }
   async function importRow(entry: CatalogMeasurement) {
     setBusyPath(entry.path);
-    try { await onImport(entry); setOpen(false); setQuery(""); setStatus(`${entry.name} imported from ${entry.source}.`); }
+    try { await onImport(entry); closeResults(host.current?.contains(document.activeElement) || document.activeElement === document.body); setStatus(`${entry.name} imported from ${entry.source}.`); }
     catch (error) { setStatus(error instanceof Error ? error.message : "Could not import measurement."); }
     finally { setBusyPath(""); }
   }
@@ -93,20 +102,24 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
       <button type="button" data-headphone-type="oe" className={headphoneType === "oe" ? "active" : ""} aria-pressed={headphoneType === "oe"} onClick={() => onType("oe")} aria-label="Over-Ear"><span>Over-</span><span>Ear</span></button>
     </div>
     <div className="headphone-search" ref={host}>
-      <input ref={input} type="search" role="combobox" title={selected?.name} aria-label="Search headphone measurements" aria-expanded={open} aria-controls="headphone-search-results" aria-autocomplete="list" autoComplete="off" spellCheck={false} placeholder="Search model or measurement source" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); setEditingQuery(false); } if(event.key==="ArrowDown"){event.preventDefault();host.current?.querySelector<HTMLButtonElement>('[role="option"]')?.focus();} }} />
-      {selected && <details className="measurement-management"><summary>Manage</summary><div><strong>{selected.name}</strong><button type="button" onClick={()=>onEdit(selected.id)}>Edit measurement</button><button type="button" onClick={()=>{setOpen(false);setEditingQuery(false);setQuery("");onClear();}}>Remove selection</button><button type="button" onClick={()=>{if(window.confirm(`Delete ${selected.name} from this browser?`))onDelete(selected.id);}}>Delete measurement</button></div></details>}
+      <input ref={input} type="search" title={selected?.name} aria-label="Search headphone measurements" aria-controls={open ? resultsId : undefined} aria-describedby={`${resultsId}-help`} autoComplete="off" spellCheck={false} placeholder="Search model or measurement source" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); setLimit(30); setOpen(true); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); setEditingQuery(false); } if(event.key==="ArrowDown"){event.preventDefault();if(open)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();else{setOpen(true);requestAnimationFrame(()=>{if(document.activeElement===input.current)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();});}} }} />
 
-      {open && <div id="headphone-search-results" className="headphone-search-results" role="listbox">
+
+      <span id={`${resultsId}-help`} className="sr-only">Press Down to enter measurement results, Tab to move through their actions, and Escape to close results.</span>
+      {selected && <small className="measurement-selected-name">Selected: {selected.name}</small>}
+      {open && <div id={resultsId} className="headphone-search-results" role="region" aria-label="Measurement search results" onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); input.current?.focus(); setOpen(false); setEditingQuery(false); } }}>
         {databaseOnly&&<button type="button" className="measurement-show-all" onClick={()=>setDatabaseOnly(false)}>Include my saved measurements</button>}
         {!databaseOnly&&<><strong>Your uploaded measurements</strong>
         {savedSection(uploaded, "uploaded")}
         <strong>Imported measurements</strong>
         {savedSection(imported, "imported")}</>}
         <strong>Public measurement index · creator sources</strong>
-        {publicRows.length ? publicRows.map(row => <button type="button" role="option" aria-selected={false} disabled={!!busyPath} key={row.path} onClick={() => void importRow(row)}><b>{row.name}</b><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {row.source}{row.rig ? ` · Rig: ${row.rig}` : " · Rig not listed"}</small></button>) : <p>{catalog.length ? "No public measurements match." : status || "Loading…"}</p>}
-        {catalog.length > 0 && <p>{status} Showing the first {publicRows.length} matching public results.</p>}
+        {publicRows.length ? publicRows.map(row => <button type="button" data-measurement-option disabled={!!busyPath} key={row.path} onClick={() => void importRow(row)}><b>{row.name}</b><small>{row.type === "ie" ? "In-Ear" : "Over-Ear"} · {row.source}{row.rig ? ` · Rig: ${row.rig}` : " · Rig not listed"}</small></button>) : <p role={catalog.length ? undefined : "status"}>{catalog.length ? "No public measurements match." : status || "Loading…"}</p>}
+        {catalog.length > 0 && <p role="status">{status} {publicMatches.length} of {eligibleCatalog.length} match; {publicRows.length} shown.</p>}
+        {publicRows.length < publicMatches.length && <button type="button" onClick={()=>setLimit(value=>value+30)}>Show more measurements</button>}
       </div>}
     </div>
+      {selected && <details className="measurement-management" onToggle={event => { if (event.currentTarget.open) { setOpen(false); setEditingQuery(false); } }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}><summary>Manage</summary><div><strong>{selected.name}</strong><button type="button" onClick={event=>{event.currentTarget.closest("details")?.removeAttribute("open");onEdit(selected.id);}}>Edit measurement</button><button type="button" onClick={()=>{onClear();closeResults();}}>Remove selection</button><hr/><button type="button" className="measurement-danger" onClick={()=>{if(window.confirm(`Delete ${selected.name} from this browser?`))onDelete(selected.id);}}>Delete measurement</button></div></details>}
     <button type="button" className="browse-measurement-button" onClick={browseDatabase}>Browse database</button>
     <button type="button" className="add-measurement-button" onClick={onUpload}><span className="upload-plus" aria-hidden="true">+</span><span className={responsiveUploadLabel ? "pt-upload-long" : undefined}>Upload measurement</span>{responsiveUploadLabel && <span className="pt-upload-short">Upload headphone</span>}</button>
   </div>;

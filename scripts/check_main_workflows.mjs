@@ -16,15 +16,16 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
  const hooks=[],effects=[],events=new Map(),timers=[],updates=[];let index=0,tree,live=true,late=0;
  const React={
   useState(initial){const i=index++;if(!hooks[i])hooks[i]={value:typeof initial==='function'?initial():initial};return[hooks[i].value,next=>{if(!live)late++;if(queueFunctional&&typeof next==='function')updates.push(()=>{hooks[i].value=next(hooks[i].value);});else hooks[i].value=typeof next==='function'?next(hooks[i].value):next;}];},
+  useId(){const i=index++;if(!hooks[i])hooks[i]={value:"fixture-"+i};return hooks[i].value;},
   useRef(initial){const i=index++;if(!hooks[i])hooks[i]={current:initial};return hooks[i];},
   useMemo(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j])))hooks[i]={value:fn(),deps};return hooks[i].value;},
   useCallback(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j])))hooks[i]={value:fn,deps};return hooks[i].value;},
-  useEffect(fn,deps){const i=index++;if(!hooks[i]||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j]))){const cleanup=hooks[i]?.cleanup;hooks[i]={deps};effects.push(()=>{cleanup?.();hooks[i].cleanup=fn();});}},
+  useEffect(fn,deps){const i=index++;if(!hooks[i]||!deps||deps.some((v,j)=>!Object.is(v,hooks[i].deps[j]))){const cleanup=hooks[i]?.cleanup;hooks[i]={deps};effects.push(()=>{cleanup?.();hooks[i].cleanup=fn();});}},
  };
  const jsx=(type,props)=>{if(props?.ref&&typeof type==='string')props.ref.current=type==='audio'?audio:{focus(){}};return{type,props};};
  const storage=new Map();
- const window={location:{search:''},addEventListener(n,fn){if(!events.has(n))events.set(n,new Set());events.get(n).add(fn);},removeEventListener(n,fn){events.get(n)?.delete(fn);},setInterval(fn,delay){timers.push({fn,delay});return timers.length;},clearInterval(){}};
- const env={console,Error,URL,Blob,AbortController,Date,JSON,URLSearchParams,queueMicrotask,setTimeout(){},clearTimeout(){},window,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},...globals};
+ const window={location:{search:'',reload(){globals.onReload?.();}},addEventListener(n,fn){if(!events.has(n))events.set(n,new Set());events.get(n).add(fn);},removeEventListener(n,fn){events.get(n)?.delete(fn);},setInterval(fn,delay){timers.push({fn,delay});return timers.length;},clearInterval(){}};
+ const env={document:{querySelector:()=>null,addEventListener:(n,fn)=>window.addEventListener(n,fn),removeEventListener:(n,fn)=>window.removeEventListener(n,fn)},console,Error,URL,Blob,AbortController,Date,JSON,URLSearchParams,queueMicrotask,setTimeout(){},clearTimeout(){},clearInterval(){},window,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},...globals};
  const cache=new Map();
  function load(file){if(cache.has(file))return cache.get(file);const mod={exports:{}};cache.set(file,mod.exports);const req=id=>{
   if(id==='react')return React;if(id==='react/jsx-runtime')return{jsx,jsxs:jsx,Fragment:'fragment'};if(id in imports)return imports[id];if(id.endsWith('.css'))return{};
@@ -38,11 +39,12 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
  const Component=load(path).default;
  const h={render(){while(updates.length)updates.shift()();index=0;tree=Component(props);while(effects.length)effects.shift()();return tree;},find(fn){const nodes=all(tree,fn);assert.equal(nodes.length,1,'One rendered element expected');return nodes[0];},button(label){return this.find(n=>n.type==='button'&&text(n).trim()===label);},get tree(){return tree;},events,timers,storage,get late(){return late;},unmount(){live=false;for(const hook of hooks)hook?.cleanup?.();},load};h.render();return h;
 }
+class PlaybackTarget { constructor(inside=false){this.inside=inside;} closest(selector){return selector===".pt-listen"&&this.inside?{}:null;} }
 function tuning({blocked=false,queueFunctional=false}={}){
  const jobs=[],requests=[],play=deferred();const node=()=>({connect(){},disconnect(){},frequency:{value:0},gain:{value:0},Q:{value:0}});
  const audio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},play(){this.paused=false;return play.promise;}};
  class AudioContext {state='running';destination={};createGain=node;createBiquadFilter=node;createMediaElementSource=node;createAnalyser(){return{...node(),fftSize:0};}resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}}
- const h=mount('app/preference-tuning/page.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
+ const h=mount('app/preference-tuning/page.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{Element:PlaybackTarget,HTMLElement:PlaybackTarget,AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
  h.render();return Object.assign(h,{audio,jobs,requests,play,choose(name){h.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[{name}]}});h.render();},wave(){return h.find(n=>n.type==='@/components/track-waveform').props;}});
 }
 {
@@ -101,3 +103,38 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const h=mount('components/yinyangeq-account-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({created:true,devices:[],snapshots:[],captures:[],grants:[{id:'fixture',label:'Synthetic expiry grant',expires_at:101000}]})})}});await flush();h.render();check(text(h.tree).includes('Synthetic expiry grant'),'A current sign-in grant is displayed');now=102000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(!text(h.tree).includes('Synthetic expiry grant'),'Expired sign-in grant disappears without interaction');h.unmount();
 }
 console.log(`PASS ${checks} main workflow regressions: actual Tuning, music votes, private links, profile pagination and data erasure handlers; synthetic fixtures only.`);
+
+{
+ let picked='',focusReturned=false;
+ const rows=[{id:'own',name:'Sennheiser HD 600',device:'HD 600',source:'Synthetic',rig:'Fixture',type:'oe',origin:'upload'}];
+ const h=mount('components/headphone-picker.tsx',{props:{rows,selectedId:'own',headphoneType:'oe',onType(){},onSelect:id=>{picked=id},onClear(){},onImport:async()=>{},onUpload(){},onEdit(){},onDelete(){}},globals:{fetch:async()=>({ok:true,json:async()=>({entries:[]})})}});
+ const input=()=>h.find(n=>n.type==='input'&&n.props.type==='search');
+ input().props.onFocus({currentTarget:{select(){}}});await flush();h.render();input().props.onChange({target:{value:'hd600'}});h.render();
+ const result=h.find(n=>n.type==='button'&&n.props['data-measurement-option']!==undefined);result.props.onClick();h.render();check(picked==='own','Actual picker matches compact model text and selects the original measurement identity');
+ input().props.onFocus({currentTarget:{select(){}}});h.render();
+ const details=h.find(n=>n.type==='details'&&n.props.className==='measurement-management');details.props.onToggle({currentTarget:{open:true}});h.render();check(!all(h.tree,n=>n.props?.className==='headphone-search-results').length,'Opening Manage from the keyboard closes search results');const element={open:true,querySelector:()=>({focus(){focusReturned=true;}})};
+ details.props.onKeyDown({key:'Escape',preventDefault(){},currentTarget:element});check(!element.open&&focusReturned,'Manage Escape closes the disclosure and returns focus');
+ check(!all(h.tree,n=>n.props?.role==='combobox'||n.props?.role==='listbox').length,'Mixed-action measurement search uses honest native search and labelled results semantics');h.unmount();
+}
+console.log('PASS actual measurement picker compact search, Manage Escape/focus and honest native semantics.');
+
+{
+ const h=tuning();await flush();h.render();h.choose('scope.wav');h.jobs[0].resolve({id:'scope'});await flush();h.render();
+ let handled=0;const inside=new PlaybackTarget(true);
+ const press=()=>{const event={code:'Space',key:' ',target:inside,repeat:false,isComposing:false,altKey:false,ctrlKey:false,metaKey:false,shiftKey:false,preventDefault(){handled++;},stopPropagation(){}};for(const fn of [...h.events.get('keydown')])fn(event);};
+ h.storage.set('yinyang-display-preferences',JSON.stringify({shortcutScope:'off'}));press();await flush();h.render();check(handled===0&&h.audio.paused,'Tuning Off disables playback keys in the actual page handler');
+ h.storage.set('yinyang-display-preferences',JSON.stringify({shortcutScope:'player'}));press();await flush();check(handled===0,'Tuning player scope waits until the playback region is used');
+ for(const fn of h.events.get('pointerdown'))fn({target:inside});press();await flush();h.render();check(handled===1&&!h.audio.paused,'Tuning player scope works after pointer interaction in its player');h.unmount();
+}
+console.log('PASS Tuning Off and player-region scope through actual keyboard handlers.');
+
+for (const viewerHasAccess of [true, false]) {
+ let reloads=0;
+ const h=mount('components/service-warning.tsx',{globals:{onReload:()=>reloads++,AbortSignal,fetch:async()=>({ok:true,json:async()=>({id:'synthetic-owner-closure',active:true,ownerOnly:true,viewerHasAccess,message:'Synthetic closure'})})}});
+ await flush();h.render();
+ if(viewerHasAccess)check(reloads===0&&h.tree?.props?.warning?.title==='Closed for private testing','An admitted viewer sees owner-only closure without a reload loop');
+ else check(reloads===1,'A visitor denied by owner-only maintenance still reloads into the gate');
+ h.unmount();
+}
+
+console.log("PASS owner-closure admission and visitor reload regression checks.");

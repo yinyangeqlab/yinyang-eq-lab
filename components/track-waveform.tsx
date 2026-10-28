@@ -44,11 +44,11 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
   };
   const currentSeek = useRef(seekTo);
   useEffect(() => { currentSeek.current = seekTo; });
-  const seekAtPointer = (clientX: number) => {
+  const seekAtPointer = (clientX: number, focusCanvas = true) => {
     const canvas = canvasRef.current, rect = canvas?.getBoundingClientRect();
     if (!canvas || !rect?.width || !duration || displayOnly) return;
     seekTo(start + (clientX - rect.left) / rect.width * span);
-    canvas.focus({ preventScroll: true });
+    if (focusCanvas) canvas.focus({ preventScroll: true });
   };
   const [internalZoom, setInternalZoom] = useState(1);
   const zoom = controlledZoom ?? internalZoom;
@@ -62,6 +62,7 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
   function beginPassageDrag(event: ReactPointerEvent<HTMLButtonElement>, mode: "move" | "start" | "end") {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!passage || !onPassageChange || !rect?.width) return;
+    event.currentTarget.focus({ preventScroll: true });
     event.preventDefault(); event.stopPropagation();
     passageDrag.current = { pointerId: event.pointerId, x: event.clientX, secondsPerPixel: span / rect.width, range: passage, mode, dragged: false, threshold: event.pointerType === "touch" ? 8 : 4 };
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -81,7 +82,7 @@ export default function TrackWaveform({ analysis, position, duration, onSeek, dy
     passageDrag.current = null;
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     // A tap on even overlapping handles seeks; only deliberate horizontal drags edit.
-    if (event.type === "pointerup" && !drag.dragged) seekAtPointer(event.clientX);
+    if (event.type === "pointerup" && !drag.dragged) seekAtPointer(event.clientX, false);
   }
   function passageKey(event: ReactKeyboardEvent<HTMLButtonElement>, mode: "move" | "start" | "end") {
     if (!passage || !onPassageChange) return;

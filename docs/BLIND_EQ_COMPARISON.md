@@ -1,3 +1,7 @@
+# Pending local corrections — not committed or deployed
+
+The isolated design-corrections checkout validates both presets against the retained playback AudioContext rate before blinding. Listening-phase rate errors omit filter details. TXT support describes syntax rather than unverified producer compatibility; CH:0/CH:1 is not a claim that every Qudelix/PEQdB export is supported. Download names are timestamped, and progress separates compared, skipped and unanswered songs. The exported heard values remain five-second eligibility counters, not total listening duration. The deployment records below are historical and do not establish deployment of these corrections.
+
 # Private blind EQ — deployed under owner-only maintenance, update121
 
 Deployed and verified October 24, 2026. The site remains closed except existing admin sign-in and valid signed admin sessions. Read LIVE_STATE.md for current access and verification limits. The historical draft notes below retain their original context.
@@ -45,7 +49,7 @@ status checks remain subject to the site's normal controls.
 - Equalizer APO / Peace parametric TXT: `Preamp:`, enabled/disabled numbered or
   unnumbered filters, PK/PEQ, LS/LSC and HS/HSC, with frequency/gain/Q. Shelves
   without Q use this importer’s assumed Q of sqrt(0.5); specify Q explicitly for an exact transfer. The reference marks shelf Q optional but does not state its default. Plain LS/HS use center frequency.
-- Qudelix / PEQdB parametric TXT: `CH: 0` and `CH: 1`, `TYPE: PEQ`, per-channel
+- Two-channel parametric TXT dialect (producer compatibility unverified): `CH: 0` and `CH: 1`, `TYPE: PEQ`, per-channel
   preamps and filters. Both channel sections are required.
 - APO `Channel: ALL`, `L`, `R`, `L R`, and equivalent stereo channel numbers.
   Sequential APO preamps sum on their selected channels.
@@ -54,7 +58,7 @@ status checks remain subject to the site's normal controls.
 
 Limits: 200 KB TXT, 32 enabled filters/channel, 10–24,000 Hz, ±30 dB filter gain,
 Q 0.1–20, ±40 dB accumulated channel preamp. Local songs are limited to 100 MB
-each; decoded audio is capped at 20 minutes / 200 MB of sample data. Decoding itself can temporarily require more memory; shorter excerpts are recommended on mobile. Filters at or above the decoded recording's Nyquist frequency are refused
+each; decoded audio is capped at 20 minutes / 200 MB of sample data. Decoding itself can temporarily require more memory; shorter excerpts are recommended on mobile. Presets are checked before blinding against the playback AudioContext sample rate. Filters at or above that context’s Nyquist frequency are refused
 rather than silently moved. Unsupported processing commands fail with a line
 number. Native `.peace`, GraphicEQ, convolution, includes, slope/corner shelf
 modifiers and bandwidth-in-octaves require a supported export or manual entry.

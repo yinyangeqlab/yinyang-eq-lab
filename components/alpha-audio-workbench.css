@@ -266,7 +266,7 @@
 .shell.alpha-listening .alpha-audio-deck :is(.music-details,.audio-stats)>p{display:block!important;margin:5px 0 10px;color:#9cafb8;font-size:12px;line-height:1.7;max-width:110ch}
 .shell.alpha-listening .alpha-audio-deck .playback-privacy-label{color:#7ec9bd;font-weight:600}
 .shell.alpha-listening .alpha-audio-deck .playback-privacy summary{color:#99afb9;font-size:11px}
-.shell.alpha-listening .alpha-audio-deck .personal-track-details{gap:0}
+.shell.alpha-listening .alpha-audio-deck .personal-track-details{gap:8px 18px}
 .shell.alpha-listening .alpha-audio-deck .live-audio-stats{padding:10px 12px;border:1px solid #ffffff13;border-radius:8px;background:#030708}
 .shell.alpha-listening .alpha-audio-deck .live-stats-heading{gap:6px 14px;color:#a6bbc4}
 .shell.alpha-listening .alpha-audio-deck .live-stats-heading strong{font-size:11px;font-weight:600}
@@ -440,18 +440,18 @@
 .shell.alpha-listening .shootout-content .shootout-setup.is-collapsed .shootout-setup-content{margin:0;padding:0;border-width:0}
 .shell.alpha-listening .shootout-content .shootout-heading-row{margin-bottom:8px;gap:6px 14px}
 .shell.alpha-listening .shootout-heading-row h1{font-size:clamp(20px,2vw,26px)}
-.shell.alpha-listening .shootout-content .pair-picker{grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;margin:6px 0;padding:6px 0}
-.shell.alpha-listening .shootout-content .alpha-target-fields{gap:6px}
+.shell.alpha-listening .shootout-content .pair-picker{display:flex;flex-wrap:wrap;align-items:end;gap:8px 12px;margin:6px 0;padding:6px 0}
+.shell.alpha-listening .shootout-content .alpha-target-fields{flex:1 1 32rem;gap:8px}
 .shell.alpha-listening .shootout-content .pair-picker .target-search-field{min-width:0;font-size:10px;line-height:1.3}
 .shell.alpha-listening .shootout-content .pair-picker .target-search{margin-top:3px}
 .shell.alpha-listening .shootout-content .pair-picker .target-search-input{min-height:34px;height:34px;margin:0;padding:6px 8px;font-size:12px}
-.shell.alpha-listening .shootout-content .alpha-target-actions{padding:0;gap:5px;flex-wrap:nowrap}
-.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{position:relative;overflow:visible;flex:0 0 auto;min-width:0;min-height:34px;padding:6px 7px;font-size:10px;white-space:nowrap}
+.shell.alpha-listening .shootout-content .alpha-target-actions{flex:0 1 auto;max-width:100%;padding:0;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{position:relative;overflow:visible;flex:0 1 auto;min-width:0;min-height:40px;padding:8px 10px;font-size:12px;white-space:nowrap}
 .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .action-icon{width:17px}
 .shell.alpha-listening .shootout-content .pair-picker .randomize-button:has(.pending-indicator){display:grid;grid-template-columns:17px auto;gap:2px 5px}
 .shell.alpha-listening .shootout-content .pair-picker .randomize-button .pending-indicator{position:static;grid-column:1/-1;transform:none;margin:0;padding:0;border:0;border-radius:0;background:none;line-height:1.2;font-size:9px;text-align:center}
-.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button{border-color:#7bcbd3;background:linear-gradient(115deg,#173e49 0%,#243b4a 54%,#3b304c 100%);color:#e5faff;box-shadow:inset 0 1px 0 #ffffff18,0 0 9px #56c8cf22}
-.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button:hover{border-color:#a4eef0;background:linear-gradient(115deg,#205563 0%,#304b5b 54%,#524064 100%);color:#fff;box-shadow:0 0 13px #66d5dc55}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button{border-color:#3a555e;background:#0d1a20;color:#c7dfe5;box-shadow:none}
+.shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button:hover{border-color:#7bcbd3;background:#17353d;color:#e5faff;box-shadow:none}
 .shell.alpha-listening .listen-card .curve-frame{height:clamp(152px,23vh,240px)}
 .shell.alpha-listening .listen-card .card-bottom{min-height:38px;padding:6px 10px}
 .shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row{display:grid;grid-template-columns:auto minmax(0,180px) 4ch;align-items:center;justify-content:center;gap:8px;flex:1 1 100%;grid-column:1/-1;grid-row:3;width:100%;min-width:0;min-height:30px;margin:0;color:#9eafb8;font-size:11px;line-height:1.3}
@@ -466,8 +466,8 @@
  .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-copy :is(.tournament-mode-suggestion,.tournament-mode-status){align-self:flex-start}
  .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-label{font-size:12px}
  .shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact,.shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact>svg{width:44px;height:33px}
- .shell.alpha-listening .shootout-content .measurement-picker{grid-template-columns:24px 125px minmax(0,1fr) 124px;gap:6px}
- .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:125px;height:36px}
+ .shell.alpha-listening .shootout-content .measurement-picker{grid-template-columns:24px minmax(125px,max-content) minmax(0,1fr) 124px;gap:6px}
+ .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:180px;min-width:125px;max-width:100%;height:36px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{font-size:10px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-mark svg{width:24px;height:24px}
  .shell.alpha-listening .shootout-content .measurement-picker .add-measurement-button{grid-column:4;grid-row:1;min-height:38px;max-width:100%;padding:5px 6px;font-size:10px;line-height:1.25}
@@ -481,7 +481,7 @@
  .shell.alpha-listening .shootout-content .pair-picker{grid-template-columns:minmax(0,1fr)}
  .shell.alpha-listening .shootout-content .pair-picker .target-search-input{font-size:16px;min-height:38px;height:38px}
  .shell.alpha-listening .shootout-content .alpha-target-actions{justify-content:stretch}
- .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{flex:1 1 auto;min-height:38px;padding-inline:5px}
+ .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button{flex:1 1 auto;min-height:44px;padding-inline:8px}
 }
 
 /* Tuning uses its original player and curve editor, with the same desk controls. */
@@ -540,3 +540,7 @@
  .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions button:last-child{flex-basis:100%}
  .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .action-icon{flex-shrink:0}
 }
+
+/* Keep both headphone-type labels visible when users enlarge text. */
+.shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{height:auto;min-height:36px}
+.shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{height:auto;min-height:36px;white-space:normal;overflow-wrap:normal}

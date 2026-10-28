@@ -25,5 +25,5 @@ for(const entry of ['async function playPassage() {','async function replayPassa
  const body=panel.slice(panel.indexOf(entry)+entry.length).trimStart();assert.ok(body.startsWith('if(beforePlayback&&!beforePlayback())return'),entry+' must check reminder before playback');
 }
 assert.match(panel,/if\(autoPlay&&beforePlayback&&!beforePlayback\(\)\)return false/);
-assert.match(panel,/if\(audio.paused&&beforePlayback&&!beforePlayback\(\)\)return/);
+assert.match(panel,/if\s*\(\s*audio\.paused\s*&&\s*beforePlayback\s*&&\s*!beforePlayback\(\)\s*\)\s*return/);
 console.log('PASS reminder acknowledgement, new-test repeat, saved opt-out, manual re-enable and all playback entry guards. No audio, storage outside fixtures or network used.');

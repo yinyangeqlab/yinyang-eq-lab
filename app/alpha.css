@@ -136,3 +136,16 @@
 .measurement-editor{margin:20px 0;border-top:1px solid #33484d;padding-top:8px}.measurement-editor>summary{display:flex;align-items:center;gap:10px;min-height:48px;color:#cce5dd;font-size:15px;font-weight:600;cursor:pointer;list-style:none}.measurement-editor>summary::before{content:"+";display:grid;place-items:center;border:1px solid #53746b;border-radius:6px;width:28px;height:28px;font-size:20px;font-weight:400}.measurement-editor[open]>summary::before{content:"−"}.measurement-editor summary::-webkit-details-marker{display:none}.measurement-editor .upload-form{scroll-margin-top:80px}.alpha-route-content #saved-measurements{margin-top:14px}.alpha-route-content #saved-measurements .private-row{min-width:0;flex-wrap:wrap}.alpha-route-content #saved-measurements .private-row>span{min-width:130px;flex:1;overflow-wrap:anywhere}
 .privacy-contents{display:flex;flex-wrap:wrap;gap:8px 18px;padding:16px;border:1px solid #30474e;border-radius:8px;background:#0a161b;margin-block:20px}.privacy-contents a{font-size:12px;line-height:1.5;max-width:100%;text-underline-offset:3px}.my-data section[id]{scroll-margin-top:75px}
 #admin-local-tests pre{max-height:340px;overflow:auto;padding:14px;border:1px solid #32434b;border-radius:6px;background:#050b0e;font-size:12px;line-height:1.6}
+
+.alpha-display-preferences .alpha-shortcut-scope-choice{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,230px);align-items:start}
+.alpha-shortcut-scope-choice select{box-sizing:border-box;min-width:0;max-width:100%;width:100%;min-height:44px;padding:8px;border:1px solid #33565d;border-radius:7px;background:#0b1a20;color:#dbe9ec;font:inherit;font-size:13px;color-scheme:dark}
+.alpha-shortcut-scope-choice select option{background:#0b1a20;color:#dbe9ec}
+@media(max-width:720px){.alpha-display-preferences .alpha-shortcut-scope-choice{grid-template-columns:minmax(0,1fr)}}
+
+/* Shortcut names and descriptions must wrap independently at larger text sizes. */
+.alpha-help-table{table-layout:fixed}
+.alpha-help-table th,.alpha-help-table td{overflow-wrap:anywhere}
+.alpha-help-table th:first-child{width:38%}
+.alpha-help-table kbd{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+
+.alpha-collection-panel :is(h2,h3){overflow-wrap:anywhere}
