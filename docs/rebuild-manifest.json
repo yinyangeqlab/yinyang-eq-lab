@@ -59,7 +59,18 @@
       "sourceOnlyRecoveryVerified": true,
       "newDataExport": false,
       "sourceOwnedArtworkAndShareCardsHashVerified": true,
-      "originalDraftsPreserved": true
+      "originalDraftsPreserved": true,
+      "publication": {
+        "verifiedAt": "2026-10-28T08:07:47.399370+00:00",
+        "reviewedMainCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af",
+        "implementationCommit": "c9d6cc0e66804710f1948a71bbc568d75cfe7642",
+        "handoffCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af",
+        "githubLogin": "yinyangeqlab",
+        "authorAndCommitterVerified": true,
+        "ownerExplicitlyAuthorized": true,
+        "websiteRedeployed": false,
+        "newDataExport": false
+      }
     }
   },
   "excludedPrivateInputs": "Recordings, numerical target seeds, participant data, secrets, stack configuration/state and immutable build output. See docs/REBUILD.md.",
@@ -86,11 +97,11 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "ec80daa38bd33ce7e8016d8f1f88111e7ba3e99a28442a048e0d7028466dcf29"
+      "sha256": "90ee8ebb24978f33138a0a1b96cc6d014bae84fbfef65eb5143417d53eabd0c8"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "be5001f8516e93b2c38b23b5d7ad3b6f19660851e7ebd0008ac461abb8c203cc"
+      "sha256": "da661b5c30c396e117b488800e7231897212c59836d9d186ef4adfd4fb1f58e8"
     },
     {
       "path": "LICENSE_SCOPE.md",
@@ -98,7 +109,7 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "12f5b1d5654059f76e0a1e58c90a0ae98b74c583c64e5f4cb5d3348532bd4b91"
+      "sha256": "be9108f6c4ed73966e6e76377fdf4feb393e14e7c945dc72929bf79c96c0cd19"
     },
     {
       "path": "README.md",
@@ -1346,7 +1357,7 @@
     },
     {
       "path": "docs/COORDINATION.md",
-      "sha256": "de2ea4e83b65c212c139fa03833417880b68c9cb63ef1ce2d46989800a0ebc8c"
+      "sha256": "4b5f0e365b216251d2575152003e9079990638ded657c76a1d95d196b325efd3"
     },
     {
       "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
@@ -1354,11 +1365,11 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "ef0b2666b674bae790428827e3f3793765e85de9cfa95509ae9ba89773f9bd1b"
+      "sha256": "12caf8397f64c9f63fc5b610fd03369a3f68ba0decab94653263169bf58191b4"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "d3472b726bed15800570e931030de06734eb3ceb51c7195ce4a2d73bcba5fbca"
+      "sha256": "744adb7ded10f8d84e5f8e9dba5307641aa16d6094860191b3ffbbbea8b2bdcb"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1386,11 +1397,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "298db1047e3679e7648b003bb523942c3742e0840eb126af5f3350bd2732d0c2"
+      "sha256": "edd815df603574af08d744b7800ec47fcbc969d68a5e05c30ac72f2ce9bb85c4"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "78720c358446e67b40d031974da1818bb2e865e3668a3c01b9e798b3f750334a"
+      "sha256": "ada7e7785f9f1d219105673761232ba19e210c8aa7dc85587af7980f7244b537"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",

@@ -170,5 +170,16 @@
     "existingDataSnapshotsUnchanged": true,
     "newDataExport": false,
     "newDataSnapshots": 0
+  },
+  "publication": {
+    "verifiedAt": "2026-10-28T08:07:47.399370+00:00",
+    "reviewedMainCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af",
+    "implementationCommit": "c9d6cc0e66804710f1948a71bbc568d75cfe7642",
+    "handoffCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af",
+    "githubLogin": "yinyangeqlab",
+    "authorAndCommitterVerified": true,
+    "ownerExplicitlyAuthorized": true,
+    "websiteRedeployed": false,
+    "newDataExport": false
   }
 }

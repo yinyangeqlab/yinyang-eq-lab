@@ -1,5 +1,5 @@
 
-Update125: PEQdB/fallback, LGPL source delivery and Safari fixes deployed; source-only recovery and hosted validation passed. Owner-only maintenance stays enabled. Implementation published on lab release branch/PR #19; main publication is separately tracked.
+Update125: PEQdB/fallback, LGPL source delivery and Safari fixes deployed; source-only recovery and hosted validation passed. Owner-only maintenance stays enabled. Implementation published on lab release branch/PR #19; reviewed release and handoff published on main after explicit owner authorization.
 # Codex / Claude coordination
 
 Purpose: let Codex and Claude work on the same checkout without either being unaware of the other. Neither agent sees the other live; this file and Git state are the only shared awareness. It implements, and does not replace, the "Codex and Claude workflow preference" in AGENTS.md.

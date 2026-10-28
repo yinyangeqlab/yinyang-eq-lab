@@ -2841,15 +2841,15 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "ec80daa38bd33ce7e8016d8f1f88111e7ba3e99a28442a048e0d7028466dcf29"
+      "sha256": "90ee8ebb24978f33138a0a1b96cc6d014bae84fbfef65eb5143417d53eabd0c8"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "be5001f8516e93b2c38b23b5d7ad3b6f19660851e7ebd0008ac461abb8c203cc"
+      "sha256": "da661b5c30c396e117b488800e7231897212c59836d9d186ef4adfd4fb1f58e8"
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "12f5b1d5654059f76e0a1e58c90a0ae98b74c583c64e5f4cb5d3348532bd4b91"
+      "sha256": "be9108f6c4ed73966e6e76377fdf4feb393e14e7c945dc72929bf79c96c0cd19"
     },
     {
       "path": "PULUMI_DEPLOYMENT.md",
@@ -2865,15 +2865,15 @@
     },
     {
       "path": "docs/COORDINATION.md",
-      "sha256": "a3b153abfc06f0300c05f3ed25adf867c270697518af42e3f2039ad29b311dfb"
+      "sha256": "4f33610c50c674715ea0104a7c45cf5a5f94edc2786c39dee52e307ec73933fa"
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "ef0b2666b674bae790428827e3f3793765e85de9cfa95509ae9ba89773f9bd1b"
+      "sha256": "12caf8397f64c9f63fc5b610fd03369a3f68ba0decab94653263169bf58191b4"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "d3472b726bed15800570e931030de06734eb3ceb51c7195ce4a2d73bcba5fbca"
+      "sha256": "744adb7ded10f8d84e5f8e9dba5307641aa16d6094860191b3ffbbbea8b2bdcb"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -2889,11 +2889,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "298db1047e3679e7648b003bb523942c3742e0840eb126af5f3350bd2732d0c2"
+      "sha256": "edd815df603574af08d744b7800ec47fcbc969d68a5e05c30ac72f2ce9bb85c4"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "78720c358446e67b40d031974da1818bb2e865e3668a3c01b9e798b3f750334a"
+      "sha256": "ada7e7785f9f1d219105673761232ba19e210c8aa7dc85587af7980f7244b537"
     },
     {
       "path": "docs/SOURCE_SYNC.md",
@@ -2905,7 +2905,7 @@
     },
     {
       "path": "docs/rebuild-manifest.json",
-      "sha256": "d648c13c861fb1218e37c368dabd324e0414bda574983c305d05843ec8ee3284"
+      "sha256": "0b9fa6933298e88058f6dd0b4ac45cd03c32bb4248d62a5edde3a7339f01a0ac"
     },
     {
       "path": "docs/releases/update117-verification.json",
@@ -2917,7 +2917,7 @@
     },
     {
       "path": "docs/releases/update125-verification.json",
-      "sha256": "9f78c516cc0c448fc68b670ed1defdfda85b4fdb2dc2bfb637d63d4b09776fa6"
+      "sha256": "edd507316593517df2064c90d1422cad75693f425e6f86a6df44c82b7cf1a744"
     },
     {
       "path": "docs/reviews/2026-10-26-design-release-readiness.md",
@@ -12858,10 +12858,9 @@
     "canonicalCheckoutOnly": true
   },
   "taskClosure": {
-    "at": "2026-10-28T07:33:13.928653+00:00",
-    "status": "Update125 PEQdB/Safari release verified under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed. Final records are a separate documentation-only publication; no website redeployment or data export.",
-    "remainingWorkForThisTask": true,
-    "remaining": "Default-branch publication awaits explicit authorization; final handoff records are prepared for a separate lab commit."
+    "at": "2026-10-28T08:07:47.399370+00:00",
+    "status": "Update125 deployed, committed and published on main with verified source-only recovery and hosted validation. Owner-only maintenance remains enabled. Publication closeout is documentation-only.",
+    "remainingWorkForThisTask": false
   },
   "targetCatalogRelease": {
     "verifiedAt": "2026-10-18T14:51:51.827Z",
@@ -12923,13 +12922,15 @@
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "baseMain": "a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a",
     "pullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/19",
-    "publicationState": "Exact reviewed commit published on the lab release branch; default-branch publication awaits explicit approval.",
+    "publicationState": "Reviewed implementation and handoff commits fast-forwarded to main after explicit owner authorization; lab author and committer verified.",
     "releaseRecordDocumentationVariant": {
       "path": "docs/rebuild-manifest.json",
       "immutableSourceSha256": "8ede37d55c2ef1bf6a210dc57b0eb41e5e21aff8798de1e0713ac05130feaf66",
       "reason": "The immutable deployed source retains its original readiness manifest. Final documentation-only publication records actual deployment and recovery results separately.",
-      "publishedSourceManifestSha256": "d648c13c861fb1218e37c368dabd324e0414bda574983c305d05843ec8ee3284"
-    }
+      "publishedSourceManifestSha256": "0b9fa6933298e88058f6dd0b4ac45cd03c32bb4248d62a5edde3a7339f01a0ac"
+    },
+    "reviewedMainCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af",
+    "handoffCommit": "bbbe85f3e9a4592529d987b69b7d1c35be0c22af"
   },
   "abuseControls": {
     "infra": "work/abuse-controls-infra-20261018",

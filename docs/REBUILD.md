@@ -20,7 +20,8 @@ hardware/audio remain untested; WebKit desktop/iPhone/iPad checks are synthetic.
 Source/build: `work/peqdb-release-final-20261028`; infrastructure:
 `work/peqdb-infra-20261028`. Existing immutable media inventory is
 byte-identical. All 381 public files are accounted for. Source is published
-on lab release branch and PR #19; default-branch publication awaits explicit approval.
+on main through PR #19 after explicit owner approval; reviewed release/handoff head
+is `bbbe85f3e9a4592529d987b69b7d1c35be0c22af`. Publication did not redeploy the website.
 
 Source-only encrypted off-device recovery registration, independent source/build
 reconstruction and the exact matching hosted validation-only job passed. Existing
