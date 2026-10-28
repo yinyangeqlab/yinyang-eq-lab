@@ -1,54 +1,52 @@
+# Current release — update124, October 27, 2026
+
+Accepted responsive listening controls, music-picker, keyboard/accessibility,
+search/upload/status corrections and final animated artwork are deployed from
+`8c36be0aa4352f668f6cfbb351bc187713042191`. Desktop keeps the original landscape; mobile uses the smooth
+monochrome AMOLED moon. Both offer remembered Pause and respect reduced motion.
+EQ formulas, listening requirements, scoring and consent policy are unchanged.
+
+Owner-only maintenance remains enabled without expiry. Anonymous page, API,
+media and asset requests remain blocked; existing admin sign-in is available.
+Do not reopen maintenance without a new explicit owner instruction.
+
+All 98 regression suites, zero-warning lint, app/infra types, production build
+and the full 224-recording package passed. One existing Worker updated; three
+other resources, schema220, CPU5000ms, six abuse bindings, disabled public
+Worker URLs and independent protections remain unchanged. Live checks matched
+all 1003 selected deployed JS/CSS/artwork files
+and every compiled server module, plus exact gate/helper modules. Physical
+audio and real Safari/iOS remain unverified.
+
+Source/build: `work/design-release-20261026`; infrastructure:
+`work/design-release-infra-20261026`. Existing immutable media inventory is
+byte-identical. The new checked-in UI artwork is hash-verified in the exact Git
+source and compiled build, and is backed as a source/build input. No existing
+asset is removed or reclassified. All 381 public files are accounted for.
+
+Source-only encrypted off-device recovery registration, independent source/build
+reconstruction and the exact matching hosted validation-only job passed. Existing
+data snapshots and their original timestamps are unchanged. No database export,
+new data snapshot, duplicate immutable media upload or retention run occurred.
+Daily scheduling is active with the matching source baseline. This source/build
+metadata registration is not a new data recovery point. Exact source and compiled
+build hashes, including source-owned artwork, were independently reconstructed. See docs/releases/update124-verification.json.
+Original drafts, previous immutable releases and current local previews remain
+preserved. Publication and deployment were separately authorized.
+
+## Previous records (historical)
+
 # Update123 source-only recovery registration verified — October 24, 2026
 
 The owner approved this release’s encrypted source/build registration to the existing encrypted off-device recovery destination. Registration, independent reconstruction and the exact hosted validation-only run passed. Existing data snapshots and original timestamps are unchanged: no fresh participant-data export, new data snapshot or retention run. Daily scheduling is active with the matching update123 source baseline; metadata registration is not a new data recovery point. Production remains on the same verified deployment behind non-expiring owner-only maintenance. This documentation-only closeout does not deploy or reopen the website. Read LIVE_STATE.md and docs/releases/update123-verification.json. Immutable deployed/recovery source and original provenance are preserved.
 
-## Earlier records (historical)
-
-# Update122 main workflow fixes verified — October 24, 2026
-
-Main workflow fixes are deployed under persistent owner-only maintenance. Owner-approved source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update122-verification.json; prior immutable provenance is preserved.
-
-## Earlier records (historical)
-
-# Update121 workflow fixes verified — October 24, 2026
-
-Private blind EQ workflow fixes are deployed under persistent owner-only maintenance. Source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update121-verification.json; prior immutable provenance is preserved.
-
-## Earlier records (historical)
-
-# Update120 verified — October 24, 2026
-
-PRs #7–10 are merged and their runtime changes are deployed under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed; all prior data snapshots and original timestamps remain unchanged. No migration, data export or new snapshot. See LIVE_STATE.md and docs/releases/update120-verification.json.
-
-## Earlier records (historical)
+## Earlier canonical records (preserved)
 
 # Update117 deployed — October 23, 2026
 
 24 unchanged artist-authorized AAC recordings are deployed on the verified update116 source. Schema remains220 /42 migrations plus db/service-status.sql. Matching encrypted recovery, exact deployment verification and daily scheduling passed. See docs/releases/update117-verification.json. Existing immutable deployment provenance is unchanged.
 
-# Update116 deployed — October 23, 2026
-
-Release `92a8c50` (anonymous shareable shootouts) with additive migration 0041; see docs/HANDOFF.md and docs/SHAREABLE_SHOOTOUTS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 116). A fresh database now uses all 42 migrations plus db/service-status.sql (220 definitions). The update116 encrypted recovery baseline, full reconstruction, hosted validation and first subsequent scheduled nightly backup are verified; see docs/releases/update116-recovery-verification.json. PRs #3 and #4 are merged into main.
-
-## Earlier rebuild notes (historical)
-
-# Update115 deployed — October 22, 2026
-
-Release `5561af4` (per-page link previews, source-only on top of update114, no migration); see docs/HANDOFF.md and docs/LINK_PREVIEWS.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 115). A fresh database still uses all 41 migrations plus db/service-status.sql (216 definitions). Recovery handover registration is pending for updates 113, 114 and 115 (docs/HANDOFF.md).
-
-## Earlier rebuild notes (historical)
-
-# Update114 deployed — October 22, 2026
-
-Release `12c6b88` with additive migration 0040; see docs/HANDOFF.md. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies the files in docs/rebuild-manifest.json (live update 114). A fresh database now uses all 41 migrations plus db/service-status.sql (216 definitions). Recovery handover registration is pending (docs/HANDOFF.md).
-
-## Earlier rebuild notes (historical)
-
-# Update113 deployed — October 22, 2026
-
-Code-only release `5ff9a79`; see docs/HANDOFF.md and docs/releases/update113-verification.json. Rebuild inputs: `node scripts/check-live-source.mjs --source-only` verifies 624+ files against docs/rebuild-manifest.json (live update 113). A fresh database still uses all 40 migrations plus db/service-status.sql (213 definitions); no migration was added. Recovery handover registration is pending (see HANDOFF.md).
-
-## Earlier rebuild notes (historical)
+## Earlier canonical rebuild notes (preserved)
 
 # Update112 recovery registration verified — October 22, 2026
 

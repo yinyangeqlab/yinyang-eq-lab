@@ -21,7 +21,7 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Agent | Area / files | Started | Status |
 |-------|--------------|---------|--------|
-| Codex | Final design/accessibility release candidate from scrubbed main | 2026-10-26 | prepared: 98 suites, lint/types/build/package and read-only deployment preview pass; no commit, push or deployment; maintenance remains on |
+| Codex | Final design/accessibility release candidate from scrubbed main | 2026-10-26 | done: update124 source published and deployed; exact live verification, source-only recovery, independent reconstruction and hosted validation pass; owner-only maintenance remains on |
 | Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; recovery passed; published through PR #12 |
 | Codex | Fix PRs #7/#10; test/merge #7–10; deploy runtime under persistent lock in isolated worktrees | 2026-10-24 | done: all four PRs merged; update120 deployed under lock; recovery passed |
 | Codex | Full blind EQ workflow audit/fixes; isolated current-main worktree; persistent maintenance lock | 2026-10-24 | done: update121 deployed under lock; recovery passed; PR #13 |

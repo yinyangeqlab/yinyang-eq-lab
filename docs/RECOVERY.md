@@ -1,39 +1,53 @@
+# Current release — update124, October 27, 2026
+
+Accepted responsive listening controls, music-picker, keyboard/accessibility,
+search/upload/status corrections and final animated artwork are deployed from
+`8c36be0aa4352f668f6cfbb351bc187713042191`. Desktop keeps the original landscape; mobile uses the smooth
+monochrome AMOLED moon. Both offer remembered Pause and respect reduced motion.
+EQ formulas, listening requirements, scoring and consent policy are unchanged.
+
+Owner-only maintenance remains enabled without expiry. Anonymous page, API,
+media and asset requests remain blocked; existing admin sign-in is available.
+Do not reopen maintenance without a new explicit owner instruction.
+
+All 98 regression suites, zero-warning lint, app/infra types, production build
+and the full 224-recording package passed. One existing Worker updated; three
+other resources, schema220, CPU5000ms, six abuse bindings, disabled public
+Worker URLs and independent protections remain unchanged. Live checks matched
+all 1003 selected deployed JS/CSS/artwork files
+and every compiled server module, plus exact gate/helper modules. Physical
+audio and real Safari/iOS remain unverified.
+
+Source/build: `work/design-release-20261026`; infrastructure:
+`work/design-release-infra-20261026`. Existing immutable media inventory is
+byte-identical. The new checked-in UI artwork is hash-verified in the exact Git
+source and compiled build, and is backed as a source/build input. No existing
+asset is removed or reclassified. All 381 public files are accounted for.
+
+Source-only encrypted off-device recovery registration, independent source/build
+reconstruction and the exact matching hosted validation-only job passed. Existing
+data snapshots and their original timestamps are unchanged. No database export,
+new data snapshot, duplicate immutable media upload or retention run occurred.
+Daily scheduling is active with the matching source baseline. This source/build
+metadata registration is not a new data recovery point. Exact source and compiled
+build hashes, including source-owned artwork, were independently reconstructed. See docs/releases/update124-verification.json.
+Original drafts, previous immutable releases and current local previews remain
+preserved. Publication and deployment were separately authorized.
+
+## Previous records (historical)
+
 # Update123 source-only recovery registration verified — October 24, 2026
 
 The owner approved this release’s encrypted source/build registration to the existing encrypted off-device recovery destination. Registration, independent reconstruction and the exact hosted validation-only run passed. Existing data snapshots and original timestamps are unchanged: no fresh participant-data export, new data snapshot or retention run. Daily scheduling is active with the matching update123 source baseline; metadata registration is not a new data recovery point. Production remains on the same verified deployment behind non-expiring owner-only maintenance. This documentation-only closeout does not deploy or reopen the website. Read LIVE_STATE.md and docs/releases/update123-verification.json. Immutable deployed/recovery source and original provenance are preserved.
 
-## Earlier records (historical)
-
-# Update122 main workflow fixes verified — October 24, 2026
-
-Main workflow fixes are deployed under persistent owner-only maintenance. Owner-approved source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update122-verification.json; prior immutable provenance is preserved.
-
-## Earlier records (historical)
-
-# Update121 workflow fixes verified — October 24, 2026
-
-Private blind EQ workflow fixes are deployed under persistent owner-only maintenance. Source-only recovery metadata, independent reconstruction and hosted validation passed with existing data snapshots/timestamps unchanged. No migration, fresh export or new data snapshot. Read LIVE_STATE.md and docs/releases/update121-verification.json; prior immutable provenance is preserved.
-
-## Earlier records (historical)
-
-# Update120 verified — October 24, 2026
-
-PRs #7–10 are merged and their runtime changes are deployed under persistent owner-only maintenance. Source-only recovery registration, independent reconstruction and hosted validation passed; all prior data snapshots and original timestamps remain unchanged. No migration, data export or new snapshot. See LIVE_STATE.md and docs/releases/update120-verification.json.
-
-## Earlier records (historical)
+## Earlier canonical records (preserved)
 
 # Update117 matching encrypted recovery point verified — October 23, 2026
 
 One owner-approved matching encrypted off-device recovery point was verified before rollout, using a current SELECT-only export from update116 with the unchanged schema220 and the exact prepared update117 source/build/media. All 365 recovery files were independently reconstructed and verified. All 340 prior media objects were reused; only 24 new AAC assets were added. Prior snapshots, timestamps and encrypted object records were preserved. The point was activated only after deployment verification; hosted validation passed and daily03:00 America/Los_Angeles scheduling is active. No second data export or snapshot was made during finalization. Additional encrypted storage: 144,847,044 bytes. No private storage identifiers or recovery key are published.
 
 
-## Earlier recovery records (historical)
-
-# Update116 encrypted recovery baseline verified — October 23, 2026
-
-**Recovery completed October 23, 2026.** One owner-approved encrypted off-device export established the update116 baseline (schema 220), including the deployed changes from updates113–115. All 341 recovery files passed independent download, decryption and reconstruction with matching source/schema; synthetic recovery checks and all 56 backup safety tests passed. All 340 media files reused existing encrypted objects. Independent checks after publication confirmed all four prior snapshots, their original timestamps and encrypted-object hashes/owner-only permissions unchanged. Exact deployed source/build and original Git history are preserved, including the documented source-manifest variant; original migration fingerprints are unchanged. Hosted validation passed, daily scheduling is active at 03:00 America/Los_Angeles, and the first subsequent scheduled data backup succeeded. The manual repair made exactly one snapshot; the subsequent scheduled run followed the normal daily cadence. No production writes, application import or website deployment occurred. See docs/releases/update116-recovery-verification.json.
-
-## Earlier recovery notes (historical)
+## Earlier canonical recovery notes (preserved)
 
 # Update112 source-only recovery handover repaired — October 22, 2026
 
