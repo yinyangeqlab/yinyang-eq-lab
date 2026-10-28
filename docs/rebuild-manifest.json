@@ -1,7 +1,7 @@
 {
-  "liveUpdate": 124,
-  "implementationCommit": "8c36be0aa4352f668f6cfbb351bc187713042191",
-  "runtimeParity": "Update124 responsive listening/accessibility and final desktop/mobile artwork deployed and verified under non-expiring owner-only maintenance. Source-only recovery registration, independent source/build reconstruction and matching hosted validation passed. Existing data snapshots/timestamps unchanged; no export.",
+  "liveUpdate": 125,
+  "implementationCommit": "c9d6cc0e66804710f1948a71bbc568d75cfe7642",
+  "runtimeParity": "Update125 unsmoothed PEQdB AutoEQ/fallback, LGPL source delivery and Safari fixes deployed and verified under non-expiring owner-only maintenance. Source-only recovery registration, independent source/build reconstruction and matching hosted validation passed. Existing data snapshots/timestamps unchanged; no export.",
   "sourceVariants": {
     "portableTests": [
       "scripts/check_activity_monitoring.mjs",
@@ -37,7 +37,7 @@
     "recoveryPublication": "Documentation-only reconciliation after PRs #3 and #4 merged; update116 encrypted baseline, independent reconstruction and successful scheduled nightly run recorded. Immutable deployed snapshots and private backup source/migration fingerprints unchanged.",
     "publicationPresentation": "Owner-authorized publication-only cleanup: historical demo media retired and AI development assistance credited in README. Immutable private deployment and recovery provenance is unchanged; no application deployment.",
     "ownerOnlyMaintenance": {
-      "status": "Deployed, verified and retained without expiry through update124; reopening requires explicit owner authorization.",
+      "status": "Deployed, verified and retained without expiry through update125; reopening requires explicit owner authorization.",
       "baseCommit": "787bf67d4dfa286202cd7694a87449f4e6085c08",
       "documentation": "docs/OWNER_ONLY_MAINTENANCE.md"
     },
@@ -45,6 +45,16 @@
       "update": 124,
       "implementationCommit": "8c36be0aa4352f668f6cfbb351bc187713042191",
       "sourcePullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/17",
+      "maintenanceEnabled": true,
+      "sourceOnlyRecoveryVerified": true,
+      "newDataExport": false,
+      "sourceOwnedArtworkAndShareCardsHashVerified": true,
+      "originalDraftsPreserved": true
+    },
+    "peqdbAutoEqRelease": {
+      "update": 125,
+      "implementationCommit": "c9d6cc0e66804710f1948a71bbc568d75cfe7642",
+      "sourcePullRequest": "https://github.com/yinyangeqlab/yinyang-eq-lab/pull/19",
       "maintenanceEnabled": true,
       "sourceOnlyRecoveryVerified": true,
       "newDataExport": false,
@@ -76,11 +86,11 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "2987451ef54d066844b272a2947b5540118a2f81503492c4f6a8311e81c72183"
+      "sha256": "ec80daa38bd33ce7e8016d8f1f88111e7ba3e99a28442a048e0d7028466dcf29"
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "3ef20b5afa906affdead6e69b85549ccf86817722a0450a81c989c75b6550eeb"
+      "sha256": "be5001f8516e93b2c38b23b5d7ad3b6f19660851e7ebd0008ac461abb8c203cc"
     },
     {
       "path": "LICENSE_SCOPE.md",
@@ -88,7 +98,7 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "03d6e8f18c3361f1283b8c2c262cb4d602ce2ee82cd79a8a55b3a8c0023bed82"
+      "sha256": "12f5b1d5654059f76e0a1e58c90a0ae98b74c583c64e5f4cb5d3348532bd4b91"
     },
     {
       "path": "README.md",
@@ -1336,7 +1346,7 @@
     },
     {
       "path": "docs/COORDINATION.md",
-      "sha256": "2275e7dd2ef383079e5063cf8d8c7d1a12ddb94a0566323833666937d3dcc22b"
+      "sha256": "de2ea4e83b65c212c139fa03833417880b68c9cb63ef1ce2d46989800a0ebc8c"
     },
     {
       "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
@@ -1344,11 +1354,11 @@
     },
     {
       "path": "docs/ENCRYPTED_BACKUP.md",
-      "sha256": "c843105baa87a320cd0803b9fbb8b9fb7e37457b8197391a8f6b54b7442d2d16"
+      "sha256": "ef0b2666b674bae790428827e3f3793765e85de9cfa95509ae9ba89773f9bd1b"
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "181f54f476a6e1ad6a1fe6dbaa1d0910ccba140a024573dce8ca2f84367f78d4"
+      "sha256": "d3472b726bed15800570e931030de06734eb3ceb51c7195ce4a2d73bcba5fbca"
     },
     {
       "path": "docs/JASON_MUSIC_IMPORT_2026-10-23.md",
@@ -1376,11 +1386,11 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "6f19b2f4286ece5808680a4e5be0aa37f68a1098681073256d459858c50d7652"
+      "sha256": "298db1047e3679e7648b003bb523942c3742e0840eb126af5f3350bd2732d0c2"
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "1db5a2d39164b098ca4f48f62b0a479c9db0a4b4ca741f18569ef96e22d5ff3d"
+      "sha256": "78720c358446e67b40d031974da1818bb2e865e3668a3c01b9e798b3f750334a"
     },
     {
       "path": "docs/SHAREABLE_SHOOTOUTS.md",

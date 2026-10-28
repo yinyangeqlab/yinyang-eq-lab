@@ -1,3 +1,39 @@
+# Current release — update125, October 28, 2026
+
+Unsmoothed PEQdB AutoEQ fitting, automatic original-fitter fallback, shelf-aware
+playback/export provenance and Safari gesture/volume/interruption fixes are deployed
+from `c9d6cc0e66804710f1948a71bbc568d75cfe7642`. Complete LGPL/GPL texts, runtime notices and the matching engine and
+application source archive accompany the separate WASM module. See docs/PEQDB_AUTOEQ.md.
+
+Owner-only maintenance remains enabled without expiry. Anonymous page, API,
+media and asset requests remain blocked; existing admin sign-in is available.
+Do not reopen maintenance without a new explicit owner instruction.
+
+All 99 regression suites, zero-warning lint, app types, production build,
+WebKit/iPhone checks and full 224-recording packaging passed. One existing Worker
+updated; three other resources, schema220, CPU5000ms, six abuse bindings,
+disabled public Worker URLs and independent protections remain unchanged.
+Live checks matched all 1037 selected deployed assets,
+every compiled server module and exact gate/helper modules. Physical Apple
+hardware/audio remain untested; WebKit desktop/iPhone/iPad checks are synthetic.
+
+Source/build: `work/peqdb-release-final-20261028`; infrastructure:
+`work/peqdb-infra-20261028`. Existing immutable media inventory is
+byte-identical. All 381 public files are accounted for. Source is published
+on lab release branch and PR #19; default-branch publication awaits explicit approval.
+
+Source-only encrypted off-device recovery registration, independent source/build
+reconstruction and the exact matching hosted validation-only job passed. Existing
+data snapshots and their original timestamps are unchanged. No database export,
+new data snapshot, duplicate immutable media upload or retention run occurred.
+Daily scheduling is active with the matching source baseline. This source/build
+metadata registration is not a new data recovery point. Exact source and compiled
+build hashes, including source-owned artwork, were independently reconstructed. See docs/releases/update125-verification.json.
+Original drafts, previous immutable releases and current local previews remain
+preserved.
+
+## Previous records (historical)
+
 # Current release — update124, October 27, 2026
 
 Accepted responsive listening controls, music-picker, keyboard/accessibility,
