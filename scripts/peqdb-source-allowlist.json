@@ -1,0 +1,19 @@
+[
+  "app/software-licenses/page.tsx",
+  "build/peqdb-local-assets.mjs",
+  "docs/PEQDB_AUTOEQ.md",
+  "lib/autoeq-client.ts",
+  "lib/autoeq-export.ts",
+  "lib/autoeq-fit.ts",
+  "lib/autoeq.worker.ts",
+  "lib/eq-playback.ts",
+  "lib/peqdb-engine.ts",
+  "lib/peqdb-wasm.d.ts",
+  "scripts/check_peqdb_autoeq.mjs",
+  "scripts/check_peqdb_browser.mjs",
+  "scripts/check_peqdb_built.mjs",
+  "scripts/check_peqdb_package.mjs",
+  "scripts/peqdb-assets.mjs",
+  "scripts/peqdb-source-allowlist.json",
+  "scripts/prepare-peqdb-autoeq.py"
+]

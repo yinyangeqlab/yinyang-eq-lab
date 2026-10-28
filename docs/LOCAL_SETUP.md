@@ -51,3 +51,7 @@ The repository supplies application source, local configuration and audited cred
 The application's public write gate rate-limits and bounds measurement contributions; the production invitation gate provides participant access. The standalone development preview does not install that invitation system; the tracked production gate wraps the built app. Do not expose an unprotected replacement while assuming these local development conveniences provide production authentication.
 
 Build with `npm run build` and package public-clone assets with `node scripts/package-static-assets.mjs --public-only`. This marks output as nondeployable until authorized protected media is restored and full packaging succeeds. Publishing code to GitHub does not deploy a Worker, install recordings or apply a migration. Existing production databases need their own reviewed migration operation before using new attachment storage.
+
+## PEQdB AutoEQ source package
+
+The AutoEQ worker uses a separately prepared LGPL engine package, with the original TypeScript fitter retained as fallback. Follow [PEQDB_AUTOEQ.md](PEQDB_AUTOEQ.md) to build the pinned WASM and its corresponding source/notices outside Git. Development previews can use fallback when the package is absent; packaging a PEQdB-enabled build requires the complete verified binary/source/license package. No deployment is implied.

@@ -7,13 +7,14 @@ const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTa
 let checks = 0;
 const check = (condition, message) => { assert.ok(condition, message); checks++; };
 const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
-function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src = 'http://localhost:5173/music/missing.mp3' } = {}) {
+function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src = 'http://localhost:5173/music/missing.mp3', resume = () => Promise.resolve() } = {}) {
+  const calls = [];
   const refs = [], states = [], effects = [], requests = [], timers = new Map(); let timerId = 0, recoveryOptions;
   const jsx = (type, props) => ({ type, props });
   const node = () => ({ connect() {}, disconnect() {}, gain: { value: 1, setTargetAtTime() {} }, frequency: {}, Q: {}, threshold: {}, knee: {}, ratio: {}, attack: {}, release: {} });
   class AudioContext {
     state = 'running'; currentTime = 0; destination = node();
-    resume() { return Promise.resolve(); } close() { this.state = 'closed'; return Promise.resolve(); }
+    resume() { calls.push('resume'); return resume(); } close() { this.state = 'closed'; return Promise.resolve(); }
     createMediaElementSource() { return node(); } createGain() { return node(); }
     createBiquadFilter() { return node(); } createDynamicsCompressor() { return node(); } createWaveShaper() { return node(); }
   }
@@ -33,6 +34,7 @@ function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src
       if (id === '@/lib/media-recovery') return { attachMediaRecovery(audio, options) { recoveryOptions = options; return { retry: () => false, handleError: () => false, dispose() {} }; } };
       if (id === '@/lib/curated-waveforms') return { curatedWaveform: () => null };
       if (id === '@/lib/music-preferences') return { playbackGain: () => 1 };
+      if (id === '@/lib/eq-playback') return { replaceEqStage: () => ({ dispose() {} }), safeGain() {}, watchAudioInterruptions: () => () => {} };
       if (id === '@/components/track-waveform') return { __esModule: true, default() {} };
       throw Error('Unexpected dependency: ' + id);
     },
@@ -45,10 +47,17 @@ function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src
     return null;
   };
   const media = find(tree, element => element.type === 'audio'), button = find(tree, element => element.type === 'button');
-  const audio = { src, paused: true, currentTime: 0, error: { code: 4 }, pause() { this.paused = true; }, async play() { this.paused = false; media.props.onPlay({ currentTarget: this }); media.props.onPlaying(); } };
+  const audio = { src, paused: true, currentTime: 0, error: { code: 4 }, pause() { this.paused = true; }, async play() { calls.push('play'); this.paused = false; media.props.onPlay({ currentTarget: this }); media.props.onPlaying(); } };
   media.props.ref.current = audio;
   const cleanups = effects.map(effect => effect()).filter(Boolean);
-  return { requests, timers, audio, media, button, get error() { return states[6]; }, get recovery() { return recoveryOptions; }, fail() { media.props.onError({ currentTarget: audio }); }, succeed() { audio.paused = false; media.props.onPlay({ currentTarget: audio }); media.props.onPlaying(); }, cleanup() { for (const fn of cleanups) fn(); } };
+  return { calls, requests, timers, audio, media, button, get error() { return states[6]; }, get recovery() { return recoveryOptions; }, fail() { media.props.onError({ currentTarget: audio }); }, succeed() { audio.paused = false; media.props.onPlay({ currentTarget: audio }); media.props.onPlaying(); }, cleanup() { for (const fn of cleanups) fn(); } };
+}
+{
+  let release; const resumed = new Promise(resolve => { release = resolve; });
+  const h = fixture({ resume: () => resumed }); h.button.props.onClick();
+  assert.deepEqual(h.calls, ['resume', 'play'], 'Library resume and play must both start inside the tap, before resume settles');
+  h.button.props.onClick(); release(); await flush();
+  check(h.audio.paused, 'Resolving an interrupted resume cannot undo an explicit Pause'); h.cleanup();
 }
 for (const status of [404, 503]) {
   const h = fixture(); h.fail(); check(h.requests.length === 1, 'Real component probes a local failed recording');

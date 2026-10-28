@@ -1,9 +1,12 @@
 import type { Point } from "@/lib/curves";
 import { response, type PeqFilter } from "@/lib/autoeq";
 
-export type FitMethod = "standard" | "precise";
+export type FitMethod = "standard" | "precise" | "peqdb";
 export type FitPriority = "smooth" | "close";
 export type FinalizedVariant = {
+  engine?: "peqdb" | "legacy";
+  engineVersion?: string;
+  fallbackReason?: string;
   bands: 10 | 15 | 20;
   method: FitMethod;
   priority: FitPriority;
@@ -122,6 +125,7 @@ export function peakBoost(filters: PeqFilter[]) {
 }
 
 export function finalizeVariant(raw: Point[], desired: Point[], bands: 10 | 15 | 20, method: FitMethod, priority: FitPriority): FinalizedVariant {
+  if (method === "peqdb") throw Error("Use the asynchronous PEQdB export service.");
   if (raw.length < 2 || desired.length < 2) throw new Error("Choose a headphone measurement and a target curve first.");
   const rawAt1k = at(raw, 1000), desiredAt1k = at(desired, 1000);
   const correction = fitGrid.map(hz => at(desired, hz) - desiredAt1k - (at(raw, hz) - rawAt1k));
@@ -136,16 +140,25 @@ export function finalizeVariant(raw: Point[], desired: Point[], bands: 10 | 15 |
   const peak = peakBoost(filters);
   const preamp = -Math.ceil((Math.max(0, peak) + .5) * 10) / 10;
   const rms = Math.sqrt(loss(correction, filters) / fitGrid.reduce((sum, hz) => sum + weightAt(hz), 0));
-  return { bands, method, priority, filters, preamp, peakBoost: peak, rms };
+  return { bands, method, priority, filters, preamp, peakBoost: peak, rms, engine: 'legacy', engineVersion: `yinyang-${method}-${priority}@update124;metrics=export-rms-v1` };
 }
 
+/** Same weighted, 241-point error for every card in the export comparison. */
+export function exportFitRms(raw: Point[], desired: Point[], filters: PeqFilter[]) {
+  const rawAt1k = at(raw, 1000), desiredAt1k = at(desired, 1000);
+  const correction = fitGrid.map(hz => at(desired, hz) - desiredAt1k - (at(raw, hz) - rawAt1k));
+  return Math.sqrt(loss(correction, filters) / fitGrid.reduce((sum, hz) => sum + weightAt(hz), 0));
+}
+
+const versionFor = (variant: FinalizedVariant) => variant.engineVersion ?? `yinyang-${variant.method}-${variant.priority}@update124;metrics=export-rms-v1`;
+
 export function exportPeq(variant: FinalizedVariant) {
-  const heading = `# Preference Tuning Lab · ${variant.bands} bands · ${variant.method} · ${variant.priority}\n# Frequency-domain headroom checked at 44.1, 48 and 96 kHz, with 0.5 dB margin.`;
-  return `${heading}\nPreamp: ${variant.preamp.toFixed(1)} dB\n${variant.filters.map((filter, i) => `Filter ${i + 1}: ON PK Fc ${filter.hz} Hz Gain ${filter.gain.toFixed(2)} dB Q ${filter.q.toFixed(2)}`).join("\n")}\n`;
+  const heading = `# Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\n# Preference Tuning Lab · ${variant.bands} bands · ${variant.method} · ${variant.priority}\n# Frequency-domain headroom checked at 44.1, 48 and 96 kHz, with 0.5 dB margin.`;
+  return `${heading}\nPreamp: ${variant.preamp.toFixed(1)} dB\n${variant.filters.map((filter, i) => `Filter ${i + 1}: ON ${filter.type ?? "PK"} Fc ${filter.hz} Hz Gain ${filter.gain.toFixed(6)} dB Q ${filter.q.toFixed(6)}`).join("\n")}\n`;
 }
 
 export function exportEqualizerApo(variant: FinalizedVariant) {
-  return `# Preference Tuning Lab · ${variant.bands} bands · ${variant.method} · ${variant.priority}\nPreamp: ${variant.preamp.toFixed(1)} dB\n${variant.filters.map((filter, i) => `Filter ${i + 1}: ON PK Fc ${filter.hz} Hz Gain ${filter.gain.toFixed(2)} dB Q ${filter.q.toFixed(2)}`).join("\n")}\n`;
+  return `# Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\n# Preference Tuning Lab · ${variant.bands} bands · ${variant.method} · ${variant.priority}\nPreamp: ${variant.preamp.toFixed(1)} dB\n${variant.filters.map((filter, i) => `Filter ${i + 1}: ON ${filter.type ?? "PK"} Fc ${filter.hz} Hz Gain ${filter.gain.toFixed(6)} dB Q ${filter.q.toFixed(6)}`).join("\n")}\n`;
 }
 
 export function exportEasyEffects(variant: FinalizedVariant) {
@@ -153,5 +166,5 @@ export function exportEasyEffects(variant: FinalizedVariant) {
 }
 
 export function exportQudelixGuide(variant: FinalizedVariant) {
-  return `Preference Tuning Lab · Qudelix 5K entry guide\n${variant.bands} bands · ${variant.method} · ${variant.priority}\nSet PRE GAIN to ${variant.preamp.toFixed(1)} dB. Use a PEQ mode with at least ${variant.bands} bands. Enter each filter as a Peak (PK) filter; this is a manual-entry guide, not a native preset import.\n\nBand\tType\tFrequency (Hz)\tGain (dB)\tQ\n${variant.filters.map((filter, i) => `${i + 1}\tPK\t${filter.hz}\t${filter.gain.toFixed(2)}\t${filter.q.toFixed(2)}`).join("\n")}\n`;
+  return `Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\nPreference Tuning Lab · Qudelix 5K entry guide\n${variant.bands} bands · ${variant.method} · ${variant.priority}\nSet PRE GAIN to ${variant.preamp.toFixed(1)} dB. Use a PEQ mode with at least ${variant.bands} bands. Enter the listed Peak (PK), Low Shelf (LSC), or High Shelf (HSC) type with its Q; this is a manual-entry guide, not a native preset import.\n\nBand\tType\tFrequency (Hz)\tGain (dB)\tQ\n${variant.filters.map((filter, i) => `${i + 1}\t${filter.type ?? "PK"}\t${filter.hz}\t${filter.gain.toFixed(6)}\t${filter.q.toFixed(6)}`).join("\n")}\n`;
 }

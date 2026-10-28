@@ -11,7 +11,10 @@ import { BookOpen, Pause, Play, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Un
 import { parseCurve, type Point } from "@/lib/curves";
 import { packRegionLabels, placeMarkerLabels } from "@/lib/curve-label-layout";
 import { presetFilterResponse, type PresetFilter } from "@/lib/peq-preset";
-import { fitAutoEq } from "@/lib/autoeq";
+import { fitAutoEqAsync } from "@/lib/autoeq-client";
+import { finalizePeqdb } from "@/lib/autoeq-export";
+import type { AutoEqFit } from "@/lib/autoeq-fit";
+import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from "@/lib/eq-playback";
 import { finalizeVariant, exportPeq, exportEqualizerApo, exportEasyEffects, exportQudelixGuide, type FinalizedVariant } from "@/lib/preference-finalize";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import HeadphonePicker, { type CatalogMeasurement } from "@/components/headphone-picker";
@@ -190,7 +193,7 @@ function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { ana
   }, [analyser, playing, size.width, size.height, plot.left, plot.right, plot.top, plot.bottom, freqMin, freqMax]);
   return <canvas ref={canvas} className="pt-spectrum" aria-label="Live music spectrum across the labeled frequency regions" role="img"/>;
 }
-type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: BiquadFilterNode[]; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode };
+type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: EqStage; fitKey?: string; fitAbort?: AbortController; fitPromise?: Promise<AutoEqFit[]>; prepared?: AutoEqFit; fitReady?: boolean; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode; dynamicsLoading?: boolean; playbackInitialized?: boolean; stopInterruptions?: () => void; volumeGain: GainNode };
 function sameEdit(a: EditSnapshot, b: EditSnapshot) { return a.selected === b.selected && a.expanded === b.expanded && (Object.keys(defaults) as (keyof Settings)[]).every(key => a.settings[key] === b.settings[key]); }
 export default function PreferenceTuning() {
   const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
@@ -246,6 +249,7 @@ export default function PreferenceTuning() {
   const instructionsClose = useRef<HTMLButtonElement>(null);
   const [finalizing, setFinalizing] = useState(false);
   const [finalProgress, setFinalProgress] = useState(0);
+  const finalizeAbort = useRef<AbortController | null>(null);
   const [finalized, setFinalized] = useState<{ key: string; variants: FinalizedVariant[]; curve: Point[] } | null>(null);
   const [exportBand, setExportBand] = useState<10 | 15 | 20>(10);
   const graph = useRef<AudioGraph | null>(null);
@@ -253,6 +257,7 @@ export default function PreferenceTuning() {
   const media = useRef<HTMLAudioElement>(null);
   const objectUrl = useRef("");
   const [bypass, setBypass] = useState(false);
+  useEffect(() => { const current = graph.current; if (current) current.volumeGain.gain.setTargetAtTime(volume, current.context.currentTime, .01); }, [volume]);
   const showEdit = useCallback((next: EditSnapshot) => { editRef.current = next; setSettings(next.settings); setSelected(next.selected); setExpanded(next.expanded); }, []);
   const applyEdit = useCallback((next: EditSnapshot) => {
     const previous = editRef.current;
@@ -328,7 +333,7 @@ export default function PreferenceTuning() {
       } catch { setMessage("Shared targets are unavailable right now. You can still use a flat reference or import a curve."); }
     }
     void load();
-    return () => { stopped = true; generationRef.current++; intentRef.current++; requestRef.current?.abort(); audio?.pause(); stopRankingRefresh(); if (graph.current) void graph.current.context.close(); graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
+    return () => { stopped = true; generationRef.current++; intentRef.current++; requestRef.current?.abort(); audio?.pause(); stopRankingRefresh(); if (graph.current) { graph.current.fitAbort?.abort(); graph.current.stopInterruptions?.(); void graph.current.context.close(); } graph.current = null; if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); };
   }, [applyEdit]);
   // A failed external storage write needs immediate visible feedback; editing remains available.
   // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -342,29 +347,33 @@ export default function PreferenceTuning() {
   const targetOptions = useMemo(() => [...targets].sort((a, b) => (curatedRanks.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (curatedRanks.get(b.id) ?? Number.MAX_SAFE_INTEGER)), [targets, curatedRanks]);
   const filters = useMemo(() => filtersFor(settings), [settings]);
   const measurement = measurements.find(row => row.id === measurementId);
-  const fit = useMemo(() => measurement?.points?.length && normalized.length ? fitAutoEq(measurement.points, normalized) : null, [measurement, normalized]);
+  const [fit, setFit] = useState<AutoEqFit | null>(null);
   const preferenceCurve = useMemo<Point[]>(() => Array.from({ length: 241 }, (_, i) => {
     const hz = 20 * 1000 ** (i / 240);
     return [hz, at(normalized, hz) - at(normalized, 1000) + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, 48000), 0)];
   }), [normalized, filters]);
-  const finalizeKey = JSON.stringify({ selected, settings, measurementId });
+  const finalizeKey = useMemo(() => JSON.stringify({ selected, settings, measurementId, raw: measurement?.points, target: normalized }), [selected, settings, measurementId, measurement?.points, normalized]);
+  useEffect(() => () => { finalizeAbort.current?.abort(); }, [finalizeKey]);
   const finalIsCurrent = finalized?.key === finalizeKey;
   /** Tuning itself needs no agreement. Viewing the finished EQ or exporting it keeps the file, curve and settings for private research, so that step asks once. */
   async function finalizeCurve() { await consent.ask(runFinalize); }
   async function runFinalize() {
     if (!measurement?.points?.length || finalizing) return;
+    finalizeAbort.current?.abort(); const request = new AbortController(); finalizeAbort.current = request;
     setFinalizing(true); setFinalProgress(0); setFinalized(null);
     const curve = preferenceCurve;
     const variants: FinalizedVariant[] = [];
     try {
       for (const bands of [10, 15, 20] as const) for (const method of ["standard", "precise"] as const) for (const priority of ["smooth", "close"] as const) {
         await new Promise<void>(resolve => setTimeout(resolve, 0));
+        if (request.signal.aborted) return;
         variants.push(finalizeVariant(measurement.points, curve, bands, method, priority));
         setFinalProgress(variants.length);
       }
-      setFinalized({ key: finalizeKey, variants, curve });
-    } catch (error) { setMessage(error instanceof Error ? error.message : "Could not generate EQ filters."); }
-    finally { setFinalizing(false); }
+      for (const bands of [10, 15, 20] as const) { variants.push(await finalizePeqdb(measurement.points, curve, bands, request.signal)); setFinalProgress(variants.length); }
+      if (!request.signal.aborted) setFinalized({ key: finalizeKey, variants, curve });
+    } catch (error) { if (!request.signal.aborted) setMessage(error instanceof Error ? error.message : "Could not generate EQ filters."); }
+    finally { if (finalizeAbort.current === request) setFinalizing(false); }
   }
   async function downloadText(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) { await consent.ask(() => void runDownload(filename, contents, type, variant)); }
   async function runDownload(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) {
@@ -393,13 +402,8 @@ export default function PreferenceTuning() {
       node.Q.setTargetAtTime(filters[i].q, graph.current!.context.currentTime, .025);
       node.gain.setTargetAtTime(bypass ? 0 : filters[i].gain, graph.current!.context.currentTime, .025);
     });
-    graph.current.fit.forEach((node, i) => {
-      const peq = fit?.filters[i]; node.frequency.setTargetAtTime(peq?.hz || 1000, graph.current!.context.currentTime, .03);
-      node.Q.setTargetAtTime(peq?.q || 1, graph.current!.context.currentTime, .03);
-      node.gain.setTargetAtTime(peq?.gain || 0, graph.current!.context.currentTime, .03);
-    });
-    graph.current.output.gain.setTargetAtTime(previewGain(filters, bypass) * 10 ** ((fit?.preamp || 0) / 20), graph.current.context.currentTime, .03);
-  }, [filters, bypass, fit]);
+    safeGain(graph.current.output, measurement && !graph.current.fitReady ? 0 : previewGain(filters, bypass) * 10 ** ((fit?.preamp || 0) / 20), graph.current.context.currentTime);
+  }, [filters, bypass, fit, measurement]);
   const ensureGraph = useCallback(() => {
     if (graph.current) return graph.current;
     const context = new AudioContext();
@@ -410,24 +414,58 @@ export default function PreferenceTuning() {
       node.frequency.value = filter.hz; node.gain.value = bypass ? 0 : filter.gain; node.Q.value = filter.q;
       return node;
     });
-    const fitNodes = Array.from({ length: 10 }, () => { const node = context.createBiquadFilter(); node.type = "peaking"; return node; });
-    fitNodes.forEach((node, i) => { const peq = fit?.filters[i]; node.frequency.value = peq?.hz || 1000; node.Q.value = peq?.q || 1; node.gain.value = peq?.gain || 0; });
     const output = context.createGain();
-    output.gain.value = previewGain(filtersFor(settings), bypass) * 10 ** ((fit?.preamp || 0) / 20);
-    input.connect(fitNodes[0]); fitNodes.forEach((node, i) => node.connect(fitNodes[i + 1] || nodes[0])); nodes.forEach((node, i) => node.connect(nodes[i + 1] || output));
+    output.gain.value = measurement ? 0 : previewGain(filtersFor(settings), bypass);
+    const fitStage = replaceEqStage(context, input, nodes[0], []);
+    nodes.forEach((node, i) => node.connect(nodes[i + 1] || output));
     const spectrum = context.createAnalyser(); spectrum.fftSize = 8192; spectrum.smoothingTimeConstant = .78;
-    output.connect(spectrum); spectrum.connect(context.destination);
-    graph.current = { context, input, filters: nodes, fit: fitNodes, output, spectrum };
+    const volumeGain = context.createGain(); volumeGain.gain.value = volume;
+    output.connect(spectrum); spectrum.connect(volumeGain); volumeGain.connect(context.destination);
+    const stopInterruptions = watchAudioInterruptions(context, () => graph.current?.context === context ? media.current : null, () => {
+      playbackIntent.current++; setPlaying(false); setMessage("Audio was interrupted. Press Play music to resume.");
+    });
+    const source = media.current ? context.createMediaElementSource(media.current) : undefined;
+    source?.connect(input);
+    graph.current = { context, input, filters: nodes, fit: fitStage, output, spectrum, stopInterruptions, volumeGain, media: source };
     setAnalyser(spectrum);
     return graph.current;
-  }, [settings, bypass, fit]);
+  }, [settings, bypass, measurement, volume]);
+  const preparePreviewFit = useCallback(async (current: AudioGraph) => {
+    const raw = measurement?.points;
+    const key = JSON.stringify([raw, normalized, current.context.sampleRate]);
+    if (!raw?.length) {
+      current.fitAbort?.abort(); current.fitKey = key; current.fitReady = true;
+      current.fit = replaceEqStage(current.context, current.input, current.filters[0], [], current.fit);
+      current.prepared = undefined; setFit(null);
+      safeGain(current.output, previewGain(filters, bypass), current.context.currentTime);
+      return true;
+    }
+    if (current.fitKey !== key || current.fitAbort?.signal.aborted) {
+      current.fitAbort?.abort(); current.fitAbort = new AbortController(); current.fitKey = key; current.fitReady = false;
+      media.current?.pause(); current.output.gain.cancelScheduledValues(current.context.currentTime); current.output.gain.setValueAtTime(0, current.context.currentTime);
+      current.fitPromise = fitAutoEqAsync({ raw, targets: [normalized], kind: "shootout", bands: 10, sampleRate: current.context.sampleRate }, current.fitAbort.signal);
+    }
+    try {
+      const [prepared] = await current.fitPromise!;
+      if (graph.current !== current || current.fitKey !== key || current.fitAbort?.signal.aborted) return false;
+      if (current.prepared !== prepared) current.fit = replaceEqStage(current.context, current.input, current.filters[0], prepared.filters, current.fit);
+      current.prepared = prepared; current.fitReady = true; setFit(prepared);
+      safeGain(current.output, previewGain(filters, bypass) * 10 ** (prepared.preamp / 20), current.context.currentTime);
+      return true;
+    } catch (error) {
+      if (graph.current !== current || current.fitKey !== key || current.fitAbort?.signal.aborted || error instanceof Error && error.name === "AbortError") return false;
+      setMessage(error instanceof Error ? error.message : "Could not prepare headphone EQ."); return false;
+    }
+  }, [measurement, normalized, filters, bypass]);
+  useEffect(() => { if (measurement?.points?.length || graph.current) try { void preparePreviewFit(ensureGraph()); } catch { /* Report unsupported audio on Play. */ } }, [measurement, preparePreviewFit, ensureGraph]);
   const updateDynamicRange = useCallback((value: number) => {
     const amount = Math.max(-1, Math.min(1, value));
     dynamicRangeRef.current = amount; setDynamicRange(amount);
     graph.current?.dynamics?.port.postMessage({ amount });
   }, []);
   const setupDynamics = useCallback((current: AudioGraph) => {
-    if (!current.context.audioWorklet) return;
+    if (!current.context.audioWorklet || current.dynamics || current.dynamicsLoading) return;
+    current.dynamicsLoading = true;
     void current.context.audioWorklet.addModule("/dynamic-range-worklet.js").then(() => {
       if (graph.current !== current || !current.media) return;
       const node = new AudioWorkletNode(current.context, "target-dynamic-range", { outputChannelCount: [2] });
@@ -439,7 +477,7 @@ export default function PreferenceTuning() {
       };
       current.media.disconnect(current.input); current.media.connect(node); node.connect(current.input);
       current.dynamics = node; setDynamicsReady(true);
-    }).catch(() => { setDynamicsReady(false); setDynamicSliderEnabled(false); updateDynamicRange(0); });
+    }).catch(() => { if (graph.current !== current) return; setDynamicsReady(false); setDynamicSliderEnabled(false); updateDynamicRange(0); }).finally(() => { current.dynamicsLoading = false; });
   }, [updateDynamicRange]);
   function stop() {
     playbackIntent.current++;
@@ -453,18 +491,38 @@ export default function PreferenceTuning() {
     const source = sourceGeneration.current;
     try {
       const current = ensureGraph();
-      if (!current.media) { current.media = current.context.createMediaElementSource(audio); current.media.connect(current.input); setupDynamics(current); }
+      if (!current.media) { current.media = current.context.createMediaElementSource(audio); current.media.connect(current.input); }
+      setupDynamics(current);
+      const key = JSON.stringify([measurement?.points, normalized, current.context.sampleRate]);
+      if (measurement && (!current.fitReady || current.fitKey !== key)) { void preparePreviewFit(current); setMessage("Preparing headphone EQ. Press Play when it is ready."); return; }
+      current.playbackInitialized = true;
       await Promise.all([current.context.resume(), audio.play()]);
       if (intent !== playbackIntent.current || source !== sourceGeneration.current) return;
       setPlaying(!audio.paused); setMessage("");
     } catch { if (intent === playbackIntent.current && source === sourceGeneration.current) setMessage("Playback could not start. Choose another track or check browser audio permissions."); }
-  }, [ensureGraph, setupDynamics]);
+  }, [ensureGraph, setupDynamics, preparePreviewFit, measurement, normalized]);
+  function handleMediaPlay() {
+    const current = graph.current, audio = media.current;
+    if (!audio) return;
+    if (!current?.media || !current.playbackInitialized) {
+      audio.pause(); setPlaying(false); setMessage("Press Play music to initialize audio processing."); return;
+    }
+    const key = JSON.stringify([measurement?.points, normalized, current.context.sampleRate]);
+    if (measurement && (!current.fitReady || current.fitKey !== key)) {
+      audio.pause(); setPlaying(false); void preparePreviewFit(current); setMessage("Preparing headphone EQ. Press Play music when it is ready."); return;
+    }
+    const intent = playbackIntent.current, source = sourceGeneration.current;
+    if (current.context.state !== "running") void current.context.resume().catch(() => {
+      if (graph.current === current && intent === playbackIntent.current && source === sourceGeneration.current) { audio.pause(); setPlaying(false); setMessage("Audio was interrupted. Press Play music to resume."); }
+    });
+    setPlaying(true);
+  }
   async function loadAudio(file: File | undefined) {
     if (!file) return;
     const generation = ++sourceGeneration.current; analysisRequest.current?.abort();
     stop(); if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = URL.createObjectURL(file);
-    if (media.current) { media.current.src = objectUrl.current; media.current.load(); }
+    if (media.current) { try { ensureGraph(); } catch { /* Play reports unsupported audio initialization. */ } media.current.src = objectUrl.current; media.current.load(); }
     setAudioUrl(objectUrl.current); setAudioName(file.name); setAudioAnalysis(null);
     setPosition(0); setDuration(0); setWaveZoom(1); setMessage("Track ready. Press Play music to hear changes live.");
     void analyzeTrack(file).then(result => { if (generation === sourceGeneration.current) setAudioAnalysis(result); }).catch(() => { if (generation === sourceGeneration.current) setMessage("Track ready; source waveform analysis is unavailable for this format."); });
@@ -475,7 +533,7 @@ export default function PreferenceTuning() {
     const controller = new AbortController(); analysisRequest.current = controller;
     lastCuratedIndex.current = index;
     stop(); if (objectUrl.current) { URL.revokeObjectURL(objectUrl.current); objectUrl.current = ""; }
-    if (media.current) { media.current.src = track.fileUrl; media.current.load(); }
+    if (media.current) { try { ensureGraph(); } catch { /* Play reports unsupported audio initialization. */ } media.current.src = track.fileUrl; media.current.load(); }
     setAudioUrl(track.fileUrl); setAudioName(musicDisplayTitle(track.title) + " · " + track.artist); setAudioAnalysis(null); setPosition(0); setDuration(0); setWaveZoom(1);
     setMessage(autoPlay ? "Starting random curated track…" : "Curated track ready. Press Play music.");
     if (autoPlay) void play();
@@ -586,27 +644,27 @@ export default function PreferenceTuning() {
           <div className="pt-headphones"><div className="pt-setup-label"><span className="pt-step">HEADPHONES</span><strong>Playback fit</strong></div><div className="shootout-content pt-picker"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div></div>
         </section>
         {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}
-      <section className="pt-listen"><p className="alpha-tuning-shortcuts"><kbd>Space</kbd> play / pause · <kbd>←</kbd> / <kbd>→</kbd> seek 0.25s · <kbd>Shift</kbd> + arrow seek 1s</p><div className="pt-card-heading"><div><span className="pt-step">LISTEN</span><h2>Play your music</h2></div><label className="pt-bypass"><input type="checkbox" checked={bypass} onChange={e => setBypass(e.target.checked)}/> Bypass adjustments</label></div>
+      <section className="pt-listen">{fit?.fallbackReason && <p role="status">Using the original headphone EQ fitter.</p>}<p className="alpha-tuning-shortcuts"><kbd>Space</kbd> play / pause · <kbd>←</kbd> / <kbd>→</kbd> seek 0.25s · <kbd>Shift</kbd> + arrow seek 1s</p><div className="pt-card-heading"><div><span className="pt-step">LISTEN</span><h2>Play your music</h2></div><label className="pt-bypass"><input type="checkbox" checked={bypass} onChange={e => setBypass(e.target.checked)}/> Bypass adjustments</label></div>
       <div className={`pt-source-row${queue.length ? " pt-has-folder" : ""}`}><button className="pt-track-play" onClick={playRandomCurated}><Shuffle size={16}/> Random curated track</button><select aria-label="Choose a curated track" value="" onChange={e => loadCurated(Number(e.target.value))}><option value="" disabled>Choose curated music</option>{curatedMusic.map((track, index) => <option key={index} value={index}>{track.title} · {track.artist}{track.versionLabel ? ` · ${track.versionLabel}` : ""}</option>)}</select><label className="pt-file"><Upload size={16}/> Choose a file<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" onChange={e => void loadAudio(e.target.files?.[0])}/></label><label className="pt-file"><Upload size={16}/> Choose a folder<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" multiple {...{ webkitdirectory: "" }} onChange={e => { const files = Array.from(e.target.files || []).filter(file => /\.(mp3|m4a|flac|wav|ogg|opus|aac)$/i.test(file.name)); setQueue(files); if (files[0]) void loadAudio(files[0]); }}/></label>{queue.length > 0 && <><button type="button" className="pt-track-play pt-folder-shuffle" onClick={shuffleFolder}><Shuffle size={14}/> Shuffle folder</button><select aria-label="Choose a track from the folder" value="" onChange={e => e.target.value === "shuffle" ? shuffleFolder() : void loadAudio(queue[Number(e.target.value)])}><option value="" disabled>{queue.length} folder tracks</option><option value="shuffle">↝ Shuffle folder tracks</option>{queue.map((file, index) => <option key={index} value={index}>{file.name}</option>)}</select></>}</div>
       <div className={`pt-playback-deck${playing ? " is-playing" : ""}`} role="group" aria-label="Music playback controls">
         <div className="pt-deck-toolbar"><div className="pt-deck-heading"><strong>Local Playback</strong><span className="pt-deck-time">{formatTime(position)} <i>/</i> {formatTime(duration)}</span><small>L / R · pre-EQ · click to seek</small></div>
           <div className="pt-deck-actions"><button type="button" className="pt-deck-dynamics" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} disabled={!dynamicsReady || !duration} onClick={() => setDynamicSliderEnabled(enabled => !enabled)} title="Adjust dynamic range on the waveform"><SlidersHorizontal size={19}/></button><button type="button" className="pt-deck-dynamics" aria-label="Reset track dynamics" disabled={!dynamicsReady || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19}/></button>
           <button type="button" className="pt-deck-play" aria-label={playing ? "Pause music" : "Play music"} aria-keyshortcuts="Space" disabled={!audioUrl} onClick={() => void (media.current?.paused ? play() : stop())}>{playing ? <Pause size={20} fill="currentColor"/> : <Play size={20} fill="currentColor"/>}</button>
           <div className="pt-deck-zoom" role="group" aria-label="Waveform zoom"><button type="button" aria-label="Zoom waveform out" disabled={!audioAnalysis || waveZoom === 1} onClick={() => setWaveZoom(value => Math.max(1, value / 2))}>−</button><span>{waveZoom}×</span><button type="button" aria-label="Zoom waveform in" disabled={!audioAnalysis || waveZoom === 8} onClick={() => setWaveZoom(value => Math.min(8, value * 2))}>+</button></div>
-          <div className="pt-deck-volume"><button type="button" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(open => !open)}>{volume === 0 ? <VolumeX size={21}/> : <Volume2 size={21}/>}</button><input aria-label="Volume" type="range" min="0" max="1" step="0.01" value={volume} hidden={!volumeOpen} onChange={e => { const value = Number(e.target.value); setVolume(value); if (media.current) media.current.volume = value; }}/></div></div><ScrollingTrackTitle title={audioName}/></div>
+          <div className="pt-deck-volume"><button type="button" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(open => !open)}>{volume === 0 ? <VolumeX size={21}/> : <Volume2 size={21}/>}</button><input aria-label="Volume" type="range" min="0" max="1" step="0.01" value={volume} hidden={!volumeOpen} onChange={e => { const value = Number(e.target.value); setVolume(value); }}/></div></div><ScrollingTrackTitle title={audioName}/></div>
         <TrackWaveform compact hideZoom zoom={waveZoom} onZoom={setWaveZoom} analysis={audioAnalysis} position={position} duration={duration} onSeek={seconds => { if (media.current) media.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={dynamicSliderEnabled} dynamicRangeDisabled={!dynamicsReady} placeholder={audioUrl ? "Track ready · waveform analysis in progress" : "Choose music to view its waveform"}/>
       </div>
-      <audio ref={media} crossOrigin="anonymous" preload="metadata" onLoadedMetadata={() => { setDuration(media.current?.duration || 0); if (media.current) media.current.volume = volume; }} onTimeUpdate={() => setPosition(media.current?.currentTime || 0)} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} onError={() => setMessage("This track could not be played in your browser. Try another format or file.")}/></section>
+      <audio ref={media} crossOrigin="anonymous" preload="metadata" onLoadedMetadata={() => { setDuration(media.current?.duration || 0); if (media.current) media.current.volume = 1; }} onTimeUpdate={() => setPosition(media.current?.currentTime || 0)} onPlay={handleMediaPlay} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} onError={() => setMessage("This track could not be played in your browser. Try another format or file.")}/></section>
         <section className="pt-finalize" aria-label="Finalize preference curve">
-          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Finalize preference curve</h2><p>Generate 10, 15, and 20 band EQs with Standard and Precise fits, each tuned for a smoother shape or a closer match.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Generating ${finalProgress} / 12…` : !measurement?.points?.length ? "Choose headphone to finalize" : finalIsCurrent ? "Regenerate 12 EQs" : "Finalize preference curve"}</button></div></div>
+          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Finalize preference curve</h2><p>Generate 10, 15, and 20 band EQs with PEQdB unsmoothed, plus the original Standard and Precise options.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Generating ${finalProgress} / 15…` : !measurement?.points?.length ? "Choose headphone to finalize" : finalIsCurrent ? "Regenerate 15 EQs" : "Finalize preference curve"}</button></div></div>
           <p id="pt-export-disclosure" className="pt-export-disclosure">For participating listener accounts, downloads are recorded in admin-only research with the selected target, adjusted curve, settings and exported file. Admin and hidden test accounts save local tests instead. Music files and raw headphone measurements are not collected here.</p>
           <div className="pt-export-downloads" role="group" aria-label="Target curve downloads" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText("original-target.csv", `frequency_hz,level_db\n${normalized.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Original Target</button><button type="button" onClick={() => void downloadText("preference-target.csv", `frequency_hz,level_db\n${preferenceCurve.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Preference Target</button></div>
 
           {finalized && !finalIsCurrent && <p className="pt-finalize-hint">The curve or headphone changed. Finalize again for current settings.</p>}
           {finalized && finalIsCurrent && <>
-            <div className="pt-finalize-results-heading"><div><strong>12 EQ options for {measurement?.name}</strong><span>Choose a band count, then compare Standard / Precise and Smooth / Close.</span></div></div>
-            <div className="pt-export-band-tabs" role="group" aria-label="EQ band count">{([10, 15, 20] as const).map(bands => <button type="button" key={bands} aria-pressed={exportBand === bands} onClick={() => setExportBand(bands)}><b>{bands} bands</b><small>4 options</small></button>)}</div>
-            <div className="pt-finalize-grid">{finalized.variants.filter(variant => variant.bands === exportBand).map(variant => { const base = `preference-${variant.bands}band-${variant.method}-${variant.priority}`; return <div className="pt-finalize-option" key={base}><div className="pt-option-top"><strong>{variant.method === "standard" ? "Standard" : "Precise"}</strong><span className={`pt-priority pt-${variant.priority}`}>{variant.priority === "smooth" ? "Smooth" : "Close"}</span></div><p>Fit error <b>{variant.rms.toFixed(2)} dB</b><span aria-hidden="true">·</span> Preamp <b>{variant.preamp.toFixed(1)} dB</b></p><details><summary>View {variant.bands} filters</summary><div className="pt-filter-list">{variant.filters.map((filter, index) => <span key={index}>{index + 1}. {filter.hz} Hz · {filter.gain > 0 ? "+" : ""}{filter.gain.toFixed(2)} dB · Q {filter.q.toFixed(2)}</span>)}</div></details><div className="pt-export-actions" aria-label="Download EQ formats" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText(`${base}.txt`, exportPeq(variant), "text/plain", variant)}>TXT</button><button type="button" onClick={() => void downloadText(`${base}-equalizerapo.txt`, exportEqualizerApo(variant), "text/plain", variant)}>Equalizer APO</button><button type="button" onClick={() => void downloadText(`${base}-easyeffects.txt`, exportEasyEffects(variant), "text/plain", variant)}>EasyEffects</button><button type="button" onClick={() => void downloadText(`${base}-qudelix5k.txt`, exportQudelixGuide(variant), "text/plain", variant)}>Qudelix 5K</button><button type="button" onClick={() => { saveLibraryEq({ id: crypto.randomUUID(), name: `${measurement?.device || measurement?.name} → ${target.name}`, source: `Preference Tuning · ${variant.bands} bands · ${variant.method} · ${variant.priority}`, filters: variant.filters, preamp: variant.preamp }); setMessage("EQ saved for Listening Pool playback in this browser."); }}>Save listening EQ</button></div></div>; })}</div>
+            <div className="pt-finalize-results-heading"><div><strong>15 EQ options for {measurement?.name}</strong><span>Choose a band count, then compare PEQdB unsmoothed with Standard / Precise and Smooth / Close.</span></div></div>
+            <div className="pt-export-band-tabs" role="group" aria-label="EQ band count">{([10, 15, 20] as const).map(bands => <button type="button" key={bands} aria-pressed={exportBand === bands} onClick={() => setExportBand(bands)}><b>{bands} bands</b><small>5 options</small></button>)}</div>
+            <div className="pt-finalize-grid">{finalized.variants.filter(variant => variant.bands === exportBand).map(variant => { const base = `preference-${variant.bands}band-${variant.method}-${variant.priority}`; return <div className="pt-finalize-option" key={base}><div className="pt-option-top"><strong>{variant.method === "peqdb" ? (variant.engine === "peqdb" ? "PEQdB" : "Original fallback") : variant.method === "standard" ? "Standard" : "Precise"}</strong><span className={`pt-priority pt-${variant.priority}`}>{variant.method === "peqdb" && variant.engine === "peqdb" ? "Unsmoothed" : variant.priority === "smooth" ? "Smooth" : "Close"}</span></div>{variant.fallbackReason && <p role="status">Original fitter used because PEQdB was unavailable.</p>}<p>Fit error <b>{variant.rms.toFixed(2)} dB</b><span aria-hidden="true">·</span> Preamp <b>{variant.preamp.toFixed(1)} dB</b></p><details><summary>View {variant.bands} filters</summary><div className="pt-filter-list">{variant.filters.map((filter, index) => <span key={index}>{index + 1}. {filter.type ?? "PK"} · {filter.hz} Hz · {filter.gain > 0 ? "+" : ""}{filter.gain.toFixed(2)} dB · Q {filter.q.toFixed(2)}</span>)}</div></details><div className="pt-export-actions" aria-label="Download EQ formats" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText(`${base}.txt`, exportPeq(variant), "text/plain", variant)}>TXT</button><button type="button" onClick={() => void downloadText(`${base}-equalizerapo.txt`, exportEqualizerApo(variant), "text/plain", variant)}>Equalizer APO</button><button type="button" onClick={() => void downloadText(`${base}-easyeffects.txt`, exportEasyEffects(variant), "text/plain", variant)}>EasyEffects</button><button type="button" onClick={() => void downloadText(`${base}-qudelix5k.txt`, exportQudelixGuide(variant), "text/plain", variant)}>Qudelix 5K</button><button type="button" onClick={() => { saveLibraryEq({ id: crypto.randomUUID(), name: `${measurement?.device || measurement?.name} → ${target.name}`, engine: variant.engine, engineVersion: variant.engineVersion, source: `${variant.method === "peqdb" ? variant.engine === "peqdb" ? "PEQdB unsmoothed" : "Original fitter fallback" : "Preference Tuning"} · ${variant.bands} bands · ${variant.priority}`, filters: variant.filters, preamp: variant.preamp }); setMessage("EQ saved for Listening Pool playback in this browser."); }}>Save listening EQ</button></div></div>; })}</div>
             <p className="pt-export-help">EasyEffects uses its Import APO action; set its input gain to the listed preamp if needed. The Qudelix 5K file is a manual-entry guide.</p>
             <p className="pt-finalize-note">Preamp is rounded down from the highest calculated EQ boost over 20 Hz–20 kHz at 44.1, 48, and 96 kHz, plus 0.5 dB headroom. Keep additional player or device headroom for intersample peaks and other processing.</p>
           </>}

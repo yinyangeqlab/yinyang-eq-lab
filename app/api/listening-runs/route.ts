@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     for (const key of ["sampleRate","bitrate","duration"]) if(typeof context[key]==="number" && Number.isFinite(context[key]) && Number(context[key])>=0) cleanContext[key]=context[key];
     if (!shareSong) for (const key of ["recordingId","sha256","audioFormat","sampleRate","bitrate","duration"]) delete cleanContext[key];
     const fits=Array.isArray(context.eqFits)?context.eqFits:[];
-    cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return Object.fromEntries(["bands","rms","preamp"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]]));});
+    cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return {...Object.fromEntries(["bands","rms","preamp","sampleRate"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]])),...Object.fromEntries(["engine","engineVersion"].filter(k=>typeof f?.[k]==="string").map(k=>[k,String(f[k]).slice(0,160)]))};});
     const targetRows=await db.select().from(targets).where(publicTargetPredicate);
     if ((testMode === "open" || !matchedPassageRequired) && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
     if ([targetAId,targetBId].some(id=>{const target=targetRows.find(t=>t.id===id);if(!target)return true;const type=targetHeadphoneType(target);return type!==null&&type!==headphoneType;})) return Response.json({error:"Target headphone category does not match this comparison."},{status:400});

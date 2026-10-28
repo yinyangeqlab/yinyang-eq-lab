@@ -10,6 +10,15 @@ const deferred = () => { let resolve,reject; const promise=new Promise((a,b)=>{r
 const flush=async()=>{for(let i=0;i<40;i++)await Promise.resolve();};
 let checks=0;
 const check=(value,message)=>{assert.ok(value,message);checks++;};
+{
+ const source=fs.readFileSync('app/preference-tuning/page.tsx','utf8'),ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
+ const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='preparePreviewFit')initializer=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(initializer);
+ const jobs=[],messages=[],current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},filters:[{}]};
+ const state={AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:[[20,0],[20000,0]]},normalized:[[20,0],[20000,0]],filters:[],bypass:false,graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage:()=>({}),safeGain(){},setFit(){},setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){const job=deferred();jobs.push(job);signal.addEventListener('abort',()=>job.reject(new DOMException('EQ request cancelled.','AbortError')),{once:true});return job.promise;}};
+ const prepare=vm.runInNewContext(ts.transpileModule('('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
+ const old=prepare(current);state.measurement={points:[[20,5],[20000,-2]]};const next=prepare(current);await flush();
+ check(messages.length===0,'Superseded Tuning fits never display cancellation errors');jobs[1].resolve([{filters:[],preamp:-1}]);check(await next,'Replacement Tuning fit can succeed');check(await old===false,'Obsolete Tuning fit cannot apply');
+}
 const text=n=>n==null||typeof n==='boolean'?'':typeof n!=='object'?String(n):Array.isArray(n)?n.map(text).join(''):text(n.props?.children);
 const all=(n,fn)=>!n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(x=>all(x,fn)):[...(fn(n)?[n]:[]),...all(n.props?.children,fn)];
 function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}={}){
@@ -29,6 +38,8 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
  const cache=new Map();
  function load(file){if(cache.has(file))return cache.get(file);const mod={exports:{}};cache.set(file,mod.exports);const req=id=>{
   if(id==='react')return React;if(id==='react/jsx-runtime')return{jsx,jsxs:jsx,Fragment:'fragment'};if(id in imports)return imports[id];if(id.endsWith('.css'))return{};
+  // Worker execution has its own real-engine suite; these tests defer transports.
+  if(id==='@/lib/autoeq-client'||id==='./autoeq-client')return{fitAutoEqAsync:async()=>[]};
   if(id==='@/components/embed-common')return load('components/embed-common.ts');
   if(id.startsWith('@/components/')||id==='next/link')return{default:id,useInvitesEnabled:()=>false,useConsentPrompt:()=>({ask:async fn=>fn(),prompt:null})};
   if(id==='lucide-react')return new Proxy({},{get:(_,k)=>String(k)});
@@ -41,11 +52,47 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
 }
 class PlaybackTarget { constructor(inside=false){this.inside=inside;} closest(selector){return selector===".pt-listen"&&this.inside?{}:null;} }
 function tuning({blocked=false,queueFunctional=false}={}){
- const jobs=[],requests=[],play=deferred();const node=()=>({connect(){},disconnect(){},frequency:{value:0},gain:{value:0},Q:{value:0}});
- const audio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},play(){this.paused=false;return play.promise;}};
- class AudioContext {state='running';destination={};createGain=node;createBiquadFilter=node;createMediaElementSource=node;createAnalyser(){return{...node(),fftSize:0};}resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}}
+ const jobs=[],requests=[],play=deferred(),actions=[];const node=()=>({connect(){},disconnect(){},frequency:{value:0},gain:{value:0},Q:{value:0}});
+ const audio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){actions.push('load');},pause(){this.paused=true;},play(){this.paused=false;return play.promise;}};
+ class AudioContext extends EventTarget {state='running';destination={};createGain=node;createBiquadFilter=node;createMediaElementSource(){actions.push('media-source');return node();}createAnalyser(){return{...node(),fftSize:0};}resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}}
  const h=mount('app/preference-tuning/page.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{Element:PlaybackTarget,HTMLElement:PlaybackTarget,AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
- h.render();return Object.assign(h,{audio,jobs,requests,play,choose(name){h.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[{name}]}});h.render();},wave(){return h.find(n=>n.type==='@/components/track-waveform').props;}});
+ h.render();return Object.assign(h,{audio,jobs,requests,play,actions,choose(name){h.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[{name}]}});h.render();},wave(){return h.find(n=>n.type==='@/components/track-waveform').props;}});
+}
+{
+ const h=tuning();await flush();h.render();h.choose('native-control.wav');
+ check(h.actions.indexOf('media-source')>=0&&h.actions.indexOf('media-source')<h.actions.indexOf('load'),'Tuning connects the processed media source before metadata prerolls in WebKit');
+ h.audio.paused=false;h.find(n=>n.type==='audio').props.onPlay();h.render();
+ check(h.audio.paused,'An initial native/OS media Play cannot bypass the Tuning graph and headroom');
+ check(text(h.tree).includes('Press Play music'),'Native playback before initialization gives an actionable gesture prompt');
+ h.find(n=>n.type==='button'&&n.props['aria-label']==='Play music').props.onClick();
+ check(!h.audio.paused,'The explicit Play gesture initializes the graph and starts playback');h.play.resolve();await flush();h.unmount();
+}
+{
+ const measurement={id:'same-id',name:'Synthetic',type:'oe',points:[[20,0],[20000,0]]};
+ const store=new Map([['target-lab-measurements',JSON.stringify([measurement])],['target-lab-active-measurement',measurement.id]]);
+ const jobs=[],variant=(bands,method='peqdb',priority='close')=>({bands,method,priority,engine:'peqdb',filters:[{hz:1000,gain:0,q:1}],preamp:-1,rms:0,peakBoost:0});
+ const h=mount('app/preference-tuning/page.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]},'@/lib/preference-finalize':{finalizeVariant:(_raw,_curve,bands,method,priority)=>variant(bands,method,priority)},'@/lib/autoeq-export':{finalizePeqdb(_raw,_curve,bands,signal){const job=deferred();jobs.push({...job,bands,signal});return job.promise;}}},globals:{setTimeout:fn=>queueMicrotask(fn),localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
+ await flush();h.render();
+ const edit=points=>{h.find(n=>n.type==='@/components/headphone-picker').props.onEdit(measurement.id);h.render();h.find(n=>n.type==='@/components/measurement-manager').props.onUpdate({...measurement,points});h.render();};
+ h.button('Finalize preference curve').props.onClick();await flush();
+ for(let i=0;i<3;i++){jobs[i].resolve(variant(jobs[i].bands));await flush();}
+ h.render();check(all(h.tree,n=>n.props?.['aria-label']==='Download EQ formats').length===5,'Finalization exposes five current variants per band');
+ check(text(h.tree).includes('15 EQ options'),'Finalization reports all fifteen options');
+ edit([[20,5],[20000,-3]]);
+ check(all(h.tree,n=>n.props?.['aria-label']==='Download EQ formats').length===0,'Editing measurement points under the same ID invalidates finished exports');
+ h.button('Finalize preference curve').props.onClick();await flush();const pending=jobs[3];
+ edit([[20,8],[20000,-4]]);check(pending.signal.aborted,'Same-ID measurement edits cancel pending finalization');
+ pending.reject(new DOMException('Cancelled','AbortError'));await flush();h.render();
+ check(all(h.tree,n=>n.props?.['aria-label']==='Download EQ formats').length===0,'Cancelled finalization cannot restore stale downloads');h.unmount();
+}
+{
+ const measurement={id:'same-id',name:'Synthetic',points:[[20,0],[20000,0]]},store=new Map([['target-lab-measurements',JSON.stringify([measurement])]]),job=deferred(),saved=[];let signal;
+ const h=mount('components/library-eq-panel.tsx',{props:{onChange(){}},imports:{'@/lib/autoeq-export':{finalizePeqdb(_raw,_curve,_bands,currentSignal){signal=currentSignal;return job.promise;}},'@/lib/music-library-eq':{readLibraryEqs:()=>[],saveLibraryEq:eq=>saved.push(eq)}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null},fetch:async()=>({ok:true,json:async()=>[]})}});
+ await flush();h.render();h.find(n=>n.props?.id==='library-headphone').props.onChange({target:{value:measurement.id}});h.render();h.button('Create EQ').props.onClick();
+ store.set('target-lab-measurements',JSON.stringify([{...measurement,points:[[20,5],[20000,-3]]}]));h.events.get('storage').forEach(fn=>fn());h.render();
+ check(signal.aborted,'Storage refresh with same-ID measurement edits cancels library generation');
+ job.resolve({engine:'peqdb',filters:[],preamp:-1,rms:0});await flush();h.render();
+ check(saved.length===0,'Late library generation cannot save the stale measurement fit');check(!h.button('Create EQ').props.disabled,'Cancelled library generation releases the busy state');h.unmount();
 }
 {
  const h=tuning();await flush();h.render();h.choose('old.wav');h.choose('new.wav');h.jobs[1].resolve({id:'new'});await flush();h.render();h.jobs[0].resolve({id:'old'});await flush();h.render();check(h.wave().analysis.id==='new','Late waveform cannot replace the current local track');

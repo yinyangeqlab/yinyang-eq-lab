@@ -21,6 +21,8 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Agent | Area / files | Started | Status |
 |-------|--------------|---------|--------|
+| Codex | Safari/iOS compatibility of local PEQdB integration and playback | 2026-10-28 | done locally: WebKit desktop/iPhone/iPad full three-mode/audio/touch suites, Chromium, typed build and packaged production-worker checks pass; gesture, preloading, volume, interruption/progress and narrow select fixes verified; uncommitted; no deployment |
+| Codex | Local PEQdB unsmoothed integration, fallback, shelf playback, LGPL packaging; isolated work/peqdb-wasm-local | 2026-10-27 | done locally: approved read-only Claude review complete; all eight numbered findings resolved plus input/cancellation fixes; 14 suites, types/lint/build, full browser and real local production-worker/package checks pass; uncommitted; no deployment |
 | Codex | Final design/accessibility release candidate from scrubbed main | 2026-10-26 | done: update124 source published and deployed; exact live verification, source-only recovery, independent reconstruction and hosted validation pass; owner-only maintenance remains on |
 | Codex | Blind EQ review/fixes, open PR examination, locked deployment; isolated `work/blind-eq-maintenance-20261024` | 2026-10-24 | done: update119 deployed/verified under lock; recovery passed; published through PR #12 |
 | Codex | Fix PRs #7/#10; test/merge #7–10; deploy runtime under persistent lock in isolated worktrees | 2026-10-24 | done: all four PRs merged; update120 deployed under lock; recovery passed |
@@ -38,6 +40,8 @@ Purpose: let Codex and Claude work on the same checkout without either being una
 
 | Date | Review file | Finding | Codex decision | Notes |
 |------|-------------|---------|----------------|-------|
+| 2026-10-28 | reviews/2026-10-28-peqdb-webkit.md | Safari gesture ordering, late-source stall, native bypass, volume, interruptions and native select overflow | fixed locally | Real WebKit desktop/iPhone/iPad profiles plus Chromium; physical Apple hardware remains unverified; no deployment |
+| 2026-10-27 | reviews/2026-10-27-peqdb-claude.md | 1–8: rates, stale analysis/cancellation/metadata, repeated failure waits, metric/provenance and source packaging | accepted and fixed locally | Actual regressions, full local build/browser/package checks; no publication/deployment |
 | 2026-10-26 | reviews/2026-10-26-design-release-readiness.md | Accumulated accepted UI/accessibility and final artwork changes | prepared for release | Preserve originals and unrelated drafts; current live remains update123; publication and recovery conditions documented |
 | 2026-10-24 | `reviews/2026-10-24-blind-eq-compare.md` | 1-3: rename/manual edits invalidate preset silently; reset desyncs editors | accepted | rename and unapplied-draft feedback fixed; reset restoration already present in reconciled source |
 | 2026-10-24 | same | Fixed A/B mapping confounds position bias; suggest per-song randomisation | accepted | independent per-song assignment and per-song export mapping |

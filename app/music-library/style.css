@@ -98,3 +98,9 @@
 .library-recording-footer{flex-wrap:wrap}
 .library-recording-details{flex:1 1 12rem}
 .library-recording-details[open]{flex-basis:100%}
+/* WebKit's native select text must not enlarge a narrow EQ grid track. */
+.library-eq-grid select{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Clip native selected-value overflow with room for keyboard focus; search popovers stay outside this wrapper. */
+.library-eq-select{display:block;min-width:0;overflow:hidden;margin:-6px;padding:6px}
+.library-eq-select select{display:block}

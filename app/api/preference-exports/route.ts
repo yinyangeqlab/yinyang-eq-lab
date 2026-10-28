@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const preamp = exportKind === "eq" ? Number(fit?.preamp) : null;
     const rms = exportKind === "eq" ? Number(fit?.rms) : null;
     const filters = exportKind === "eq" ? fit?.filters : null;
-    if (exportKind === "eq" && (![10, 15, 20].includes(bands!) || !["standard", "precise"].includes(method!) || !["smooth", "close"].includes(priority!) || !Number.isFinite(preamp) || !Number.isFinite(rms) || !Array.isArray(filters) || filters.length !== bands || JSON.stringify(filters).length > 10_000))
+    if (exportKind === "eq" && (![10, 15, 20].includes(bands!) || !["standard", "precise", "peqdb"].includes(method!) || !["smooth", "close"].includes(priority!) || method === "peqdb" && priority !== "close" || !Number.isFinite(preamp) || !Number.isFinite(rms) || !Array.isArray(filters) || filters.length !== bands || JSON.stringify(filters).length > 10_000 || preamp! > 0 || rms! < 0 || filters.some(f => !f || typeof f !== "object" || !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || ![f.hz, f.gain, f.q].every(v => typeof v === "number" && Number.isFinite(v)) || f.hz < 20 || f.hz > 20000 || Math.abs(f.gain) > 24 || f.q < .1 || f.q > 20)))
       return Response.json({ error: "Invalid EQ export." }, { status: 400 });
 
     const db = getDb();

@@ -7,7 +7,7 @@ import ts from 'typescript';
 // that a local, instantly buffered audio fixture cannot reliably reproduce.
 const source = fs.readFileSync('components/music-panel.tsx', 'utf8');
 const ast = ts.createSourceFile('music-panel.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-const names = ['playContinuous', 'cancelPassage', 'markPlaybackStopped', 'startPlayback', 'listenToSide', 'toggleMusicPlayback', 'clearMusicSource'];
+const names = ['playContinuous', 'cancelPassage', 'markPlaybackStopped', 'startPlayback', 'listenToSide', 'toggleMusicPlayback', 'clearMusicSource', 'processFileData', 'fitMetadata', 'playPassageSide'];
 const bodies = new Map();
 function visit(node) {
   if (ts.isFunctionDeclaration(node) && names.includes(node.name?.text)) bodies.set(node.name.text, node.getText(ast));
@@ -27,7 +27,7 @@ function fixture() {
   const audio = { paused: true, play() { calls.push('play'); this.paused = false; const p = deferred(); plays.push(p); return p.promise; }, pause() { this.paused = true; }, removeAttribute() {}, load() {} };
   const state = {
     audioRef: { current: audio }, playbackRequestRef: { current: 0 }, sourceSerialRef: { current: 1 }, folderSerialRef: { current: 0 }, passageRunRef: { current: null },
-    beforePlayback: undefined, file: { name: 'synthetic.wav' }, setupEngine() {}, applyFit() {}, selectSide() {},
+    beforePlayback: undefined, file: { name: 'synthetic.wav' }, setupEngine() {}, applyFit() {}, preparePlaybackFit() { return true; }, selectSide() {},
     setPassageRun() {}, setSourceError: value => errors.push(value), mediaRecovery: { current: { retry: () => false } },
     engine: { current: { context: { currentTime: 0, resume() { calls.push('resume'); const p = deferred(); resumes.push(p); return p.promise; } }, transitionGain: { gain: { cancelScheduledValues() {}, setValueAtTime() {}, linearRampToValueAtTime() {} } } } },
     testModeRef: { current: 'open' }, openMusicSourceRef: { current: 'own' }, isPlaying: true, notified: null,
@@ -40,6 +40,39 @@ function fixture() {
   return { state, errors, calls, plays, resumes, audio };
 }
 let checks = 0;
+{
+  const f = fixture(), run = { order: [0, 1], step: 0, range: { start: 2, end: 4 } };
+  f.state.closeInterval = () => {}; f.state.setPosition = () => {}; f.state.passageRunRef.current = run;
+  const pending = f.state.playPassageSide(run);
+  assert.deepEqual(f.calls, ['resume', 'play'], 'Passage resume and play must both start inside the initial tap');
+  f.state.cancelPassage(); f.audio.pause(); f.resumes[0].resolve(); f.plays[0].resolve(); await pending;
+  assert.equal(f.audio.paused, true, 'Delayed passage resume cannot restart cancelled playback'); checks++;
+}
+{
+  const f = fixture(), job = deferred(); let refits = 0;
+  f.state.analyzeTrack = () => job.promise; f.state.sourceDetails = () => ({}); f.state.applyFit = () => { refits++; };
+  f.state.processFileData({ name: 'synthetic.wav', size: 300_000_001, slice: () => ({ arrayBuffer: async () => new ArrayBuffer(0) }) }, 1, 0);
+  f.state.engine.current.fitKey = 'replacement pair';
+  job.resolve({ integratedLufs: -18 }); await settle();
+  assert.equal(refits, 0, 'Delayed analysis delegates fitting to the current render effect');
+  assert.equal(f.state.engine.current.fitKey, 'replacement pair');
+  assert.equal(f.state.measuredLufsRef.current, -18); checks++;
+}
+{
+  const f = fixture(), points = [[20, 0], [20000, 0]], fit = { filters: [{}], rms: .5, preamp: -2, engine: 'peqdb', engineVersion: 'test', sampleRate: 48000 };
+  f.state.measurement = { points }; f.state.pairTargets = [{ points }, { points }];
+  Object.assign(f.state.engine.current, { fits: [fit, fit], fitReady: false }); f.state.engine.current.context.sampleRate = 48000;
+  assert.equal(f.state.fitMetadata().length, 0, 'Pending setup never reports the previous fits');
+  f.state.engine.current.fitReady = true; f.state.engine.current.fitKey = 'old pair';
+  assert.equal(f.state.fitMetadata().length, 0, 'A ready but mismatched pair never enters vote metadata');
+  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], 48000]);
+  assert.equal(f.state.fitMetadata().length, 2); checks++;
+}
+{
+  const f = fixture(); let side;
+  f.state.preparePlaybackFit = () => false; f.state.selectSide = next => { side = next; };
+  assert.equal(await f.state.listenToSide(1, true), false); assert.equal(side, 1, 'A pending fit must still retain the selected side'); checks++;
+}
 for (const handler of ['startPlayback', 'listenToSide', 'toggleMusicPlayback']) {
   for (const mutation of ['replace', 'pause', 'unmount', 'new-request']) {
     const f = fixture();

@@ -7,6 +7,7 @@ import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import TrackWaveform from "@/components/track-waveform";
 import { curatedWaveform } from "@/lib/curated-waveforms";
 import { playbackGain } from "@/lib/music-preferences";
+import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from "@/lib/eq-playback";
 import type { LibraryEq } from "@/lib/music-library-eq";
 
 type TrackSource = { title: string; artist: string; fileUrl: string; duration: number; integrated_lufs?: number };
@@ -16,7 +17,7 @@ function clock(seconds: number) {
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
 }
 
-type EqGraph = { context: AudioContext; normalization: GainNode; preamp: GainNode; filters: BiquadFilterNode[]; safety: DynamicsCompressorNode; ceiling: WaveShaperNode };
+type EqGraph = { context: AudioContext; normalization: GainNode; preamp: GainNode; stage: EqStage; safety: DynamicsCompressorNode; ceiling: WaveShaperNode; stopInterruptions: () => void; volumeGain: GainNode };
 const ceilingCurve = new Float32Array(65537);
 for (let index = 0; index < ceilingCurve.length; index++) {
   const input = index / (ceilingCurve.length - 1) * 2 - 1;
@@ -52,25 +53,24 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   const [duration, setDuration] = useState(track.duration);
   const [volume, setVolume] = useState(1);
   const [error, setError] = useState("");
+  useEffect(() => { const current = graph.current; if (current) current.volumeGain.gain.setTargetAtTime(volume, current.context.currentTime, .01); }, [volume]);
 
   useEffect(() => {
     const current = graph.current;
     if (!current) return;
     const now = current.context.currentTime;
     current.normalization.gain.setTargetAtTime(matchLoudness ? playbackGain(track.integrated_lufs, targetLufs) : 1, now, .025);
-    current.filters[current.filters.length - 1].disconnect();
-    current.filters[current.filters.length - 1].connect(eq ? current.safety : current.context.destination);
-    current.preamp.gain.setTargetAtTime(eq ? 10 ** (eq.preamp / 20) : 1, now, .025);
+  }, [matchLoudness, targetLufs, track.integrated_lufs]);
+  useEffect(() => {
+    const current = graph.current;
+    if (!current) return;
+    const now = current.context.currentTime;
+    safeGain(current.preamp, eq ? 10 ** (eq.preamp / 20) : 1, now, false);
     current.safety.threshold.setTargetAtTime(eq ? -1.5 : 0, now, .025);
     current.ceiling.curve = eq ? ceilingCurve : null;
-    current.filters.forEach((node, index) => {
-      const filter = eq?.filters[index];
-      node.frequency.setTargetAtTime(filter?.hz || 1000, now, .025);
-      node.Q.setTargetAtTime(filter?.q || 1, now, .025);
-      node.gain.setTargetAtTime(filter?.gain || 0, now, .025);
-    });
-  }, [eq, matchLoudness, targetLufs, track.integrated_lufs]);
-  useEffect(() => () => { if (graph.current && graph.current.context.state !== "closed") void graph.current.context.close(); }, []);
+    current.stage = replaceEqStage(current.context, current.preamp, eq ? current.safety : current.volumeGain, eq?.filters ?? [], current.stage);
+  }, [eq]);
+  useEffect(() => () => { graph.current?.stopInterruptions(); if (graph.current && graph.current.context.state !== "closed") void graph.current.context.close(); }, []);
 
   useEffect(() => {
     if (active || !graph.current) return;
@@ -79,6 +79,7 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     if (audio) audio.pause();
     const retired = graph.current;
     graph.current = null;
+    retired.stopInterruptions();
     if (retired.context.state !== "closed") void retired.context.close();
     // A media element can be attached to only one source node. Replace it before the next Play.
     setAudioGeneration(value => value + 1);
@@ -87,34 +88,30 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   function ensureGraph(audio: HTMLAudioElement) {
     if (graph.current) return graph.current;
     const context = new AudioContext();
+    audio.volume = 1;
     const source = context.createMediaElementSource(audio);
+    const volumeGain = context.createGain(); volumeGain.gain.value = volume; volumeGain.connect(context.destination);
     const preamp = context.createGain();
     preamp.gain.value = eq ? 10 ** (eq.preamp / 20) : 1;
     const normalization = context.createGain();
     normalization.gain.value = matchLoudness ? playbackGain(track.integrated_lufs, targetLufs) : 1;
     source.connect(normalization); normalization.connect(preamp);
-    const filters = Array.from({ length: 20 }, (_, index) => {
-      const node = context.createBiquadFilter();
-      const filter = eq?.filters[index];
-      node.type = "peaking"; node.frequency.value = filter?.hz || 1000;
-      node.Q.value = filter?.q || 1; node.gain.value = filter?.gain || 0;
-      return node;
-    });
-    let previous: AudioNode = preamp;
-    filters.forEach(node => { previous.connect(node); previous = node; });
     const safety = context.createDynamicsCompressor();
     safety.threshold.value = eq ? -1.5 : 0;
     safety.knee.value = 0;
     safety.ratio.value = 20;
     safety.attack.value = .003;
     safety.release.value = .08;
-    previous.connect(eq ? safety : context.destination);
+    const stage = replaceEqStage(context, preamp, eq ? safety : volumeGain, eq?.filters ?? []);
     const ceiling = context.createWaveShaper();
     ceiling.curve = eq ? ceilingCurve : null;
     ceiling.oversample = "4x";
     safety.connect(ceiling);
-    ceiling.connect(context.destination);
-    graph.current = { context, normalization, preamp, filters, safety, ceiling };
+    ceiling.connect(volumeGain);
+    const stopInterruptions = watchAudioInterruptions(context, () => graph.current?.context === context ? audioRef.current : null, () => {
+      playbackAttempt.current++; setPlaying(false); setBuffering(false); setError("Audio was interrupted. Press Play to resume.");
+    });
+    graph.current = { context, normalization, preamp, stage, safety, ceiling, stopInterruptions, volumeGain };
     return graph.current;
   }
 
@@ -126,9 +123,9 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     if (!audio.paused) { audio.pause(); return; }
     setError("");
     try {
-      await ensureGraph(audio).context.resume();
+      // Do not move the media play call past the initiating Safari/iOS gesture.
+      await Promise.all([ensureGraph(audio).context.resume(), mediaRecovery.current?.retry() ? Promise.resolve() : audio.play()]);
       if (attempt !== playbackAttempt.current || audioRef.current !== audio || audio.src !== sourceUrl) return;
-      if (!mediaRecovery.current?.retry()) await audio.play();
     } catch {
       if (attempt !== playbackAttempt.current || audioRef.current !== audio || audio.src !== sourceUrl || !audio.paused) return;
       setError("This browser could not play this preview."); void explainMissingAudio(audio);
@@ -166,12 +163,12 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     <div className="library-player-controls">
       <button type="button" className="library-play" aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`} onClick={togglePlayback}>{playing ? <Pause size={19} fill="currentColor" aria-hidden="true" /> : <Play size={19} fill="currentColor" aria-hidden="true" />}</button>
       <span className="library-player-time" aria-live="off">{clock(position)} <span aria-hidden="true">/</span> {clock(duration)}</span>
-      <label className="library-volume"><span className="sr-only">Volume for {track.title}</span>{volume === 0 ? <VolumeX size={17} aria-hidden="true" /> : <Volume2 size={17} aria-hidden="true" />}<input type="range" min="0" max="1" step="0.01" value={volume} aria-label={`Volume for ${track.title}`} onChange={event => { const next = Number(event.target.value); setVolume(next); if (audioRef.current) audioRef.current.volume = next; }} /></label>
+      <label className="library-volume"><span className="sr-only">Volume for {track.title}</span>{volume === 0 ? <VolumeX size={17} aria-hidden="true" /> : <Volume2 size={17} aria-hidden="true" />}<input type="range" min="0" max="1" step="0.01" value={volume} aria-label={`Volume for ${track.title}`} onChange={event => { const next = Number(event.target.value); setVolume(next); }} /></label>
     </div>
     <TrackWaveform compact hideZoom hideHeading analysis={waveform} placeholder="Waveform unavailable" position={position} duration={duration} onSeek={seconds => { if (audioRef.current) { audioRef.current.currentTime = seconds; setPosition(seconds); } }} dynamicRange={0} onDynamicRangeChange={() => {}} />
     {matchLoudness && <small className="library-match-status">{Number.isFinite(track.integrated_lufs) ? `${targetLufs.toFixed(1)} LUFS target · ${(20 * Math.log10(playbackGain(track.integrated_lufs, targetLufs))).toFixed(1)} dB gain` : "Loudness not measured; original level"}</small>}
     {buffering && <p className="library-player-buffering" role="status">Buffering audio…</p>}
     {error && <p className="library-player-error" role="alert">{error}</p>}
-    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { cancelMissingAudioProbe(); setError(""); setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => { cancelMissingAudioProbe(); setError(""); setBuffering(false); }} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = volume; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={event => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); void explainMissingAudio(event.currentTarget); }} />
+    <audio key={audioGeneration} ref={audioRef} src={track.fileUrl} preload="none" crossOrigin="anonymous" onPlay={event => { cancelMissingAudioProbe(); setError(""); setPlaying(true); onPlay(event.currentTarget); }} onPlaying={() => { cancelMissingAudioProbe(); setError(""); setBuffering(false); }} onWaiting={() => setBuffering(true)} onSeeking={() => setBuffering(true)} onSeeked={event => { if (event.currentTarget.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setBuffering(false); }} onPause={event => { setPlaying(false); setBuffering(false); onPause?.(event.currentTarget); }} onEnded={event => { setPlaying(false); setBuffering(false); setPosition(0); onPause?.(event.currentTarget); }} onTimeUpdate={event => setPosition(event.currentTarget.currentTime)} onLoadedMetadata={event => { if (restorePosition.current !== null) { event.currentTarget.currentTime = Math.min(restorePosition.current, Number.isFinite(event.currentTarget.duration) ? event.currentTarget.duration : restorePosition.current); event.currentTarget.volume = 1; restorePosition.current = null; } const seconds = event.currentTarget.duration; if (Number.isFinite(seconds) && seconds > 0) setDuration(seconds); }} onError={event => { if (mediaRecovery.current?.handleError()) return; setBuffering(false); setError(audioRef.current?.error?.code === 2 ? "The audio connection was interrupted. Press Play to try again." : "This preview could not be loaded."); void explainMissingAudio(event.currentTarget); }} />
   </div>;
 }

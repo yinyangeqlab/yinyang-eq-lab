@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import { importCatalogEntry, type CatalogMeasurement } from "@/lib/public-measurements";
-import { finalizeVariant } from "@/lib/preference-finalize";
+import { finalizePeqdb } from "@/lib/autoeq-export";
 import { LIBRARY_EQ_KEY, parseLibraryEq, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
 
 type Target = { id: string; name: string; creator: string; points: Point[] };
@@ -24,6 +24,11 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
   const [headphoneSearch, setHeadphoneSearch] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const fitRequest = useRef<AbortController | null>(null);
+  const headphone = measurements.find(row => row.id === measurementId);
+  const target = targets.find(row => row.id === targetId);
+  const fitKey = useMemo(() => JSON.stringify([measurementId, targetId, headphone?.points, target?.points]), [measurementId, targetId, headphone?.points, target?.points]);
+  useEffect(() => () => { fitRequest.current?.abort(); }, [fitKey]);
 
   useEffect(() => {
     const refresh = () => {
@@ -75,18 +80,17 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     finally { setBusy(false); }
   }
   async function generate() {
-    const headphone = measurements.find(row => row.id === measurementId);
-    const target = targets.find(row => row.id === targetId);
     if (!headphone?.points?.length || !target?.points?.length) { setMessage("Choose a headphone measurement and target first."); return; }
-    setBusy(true); setMessage("Fitting a smooth, precise EQ…");
+    fitRequest.current?.abort(); const request = new AbortController(); fitRequest.current = request;
+    setBusy(true); setMessage("Preparing headphone EQ…");
     try {
-      await new Promise(resolve => setTimeout(resolve, 0));
-      const result = finalizeVariant(headphone.points, target.points, 15, "precise", "smooth");
-      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, source: "Smooth precise fit · 15 bands", filters: result.filters, preamp: result.preamp };
+      const result = await finalizePeqdb(headphone.points, target.points, 15, request.signal, "smooth");
+      if (request.signal.aborted || fitRequest.current !== request) return;
+      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, engine: result.engine, engineVersion: result.engineVersion, source: `${result.engine === "peqdb" ? "PEQdB unsmoothed" : "Original fitter fallback"} · 15 bands`, filters: result.filters, preamp: result.preamp };
       saveLibraryEq(eq); setSelectedId(eq.id); setEnabled(true);
-      setMessage(`EQ ready · ${result.rms.toFixed(2)} dB fit error · ${readLibraryEqs()[0]?.preamp.toFixed(1)} dB safe preamp.`);
-    } catch (error) { setMessage(error instanceof Error ? error.message : "EQ fitting failed."); }
-    finally { setBusy(false); }
+      setMessage(`${result.fallbackReason ? "Original fitter used. " : ""}EQ ready · ${result.rms.toFixed(2)} dB fit error · ${readLibraryEqs()[0]?.preamp.toFixed(1)} dB safe preamp.`);
+    } catch (error) { if (request.signal.aborted) return; setMessage(error instanceof Error ? error.message : "EQ fitting failed."); }
+    finally { if (fitRequest.current === request) { setBusy(false); if (request.signal.aborted) setMessage("Headphone or target changed. Create EQ again for the current selection."); } }
   }
   const matches = headphoneSearch.trim().toLowerCase();
   const catalogMatches = matches.length >= 2 ? catalog.filter(row => `${row.name} ${row.source}`.toLowerCase().includes(matches)).slice(0, 8) : [];
@@ -95,9 +99,9 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
   const shownTargets = targets.filter(row => row.id === targetId || `${row.name} ${row.creator}`.toLowerCase().includes(targetSearch.trim().toLowerCase()));
   return <section className="library-eq" aria-labelledby="library-eq-title">
     <div className="library-eq-heading"><div><span className="library-section-label">OPTIONAL LISTENING EQ</span><h2 id="library-eq-title">Hear it through your headphones.</h2><p>Apply one EQ to site-hosted track previews. EQ starts off. Turn off any EQ on your device before listening here.</p></div><label className={`library-eq-switch${enabled ? " is-on" : ""}${!selected ? " is-unavailable" : ""}`}><input type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.checked)} disabled={!selected} /><span className="library-eq-switch-copy"><strong>Use EQ</strong><small>{enabled ? "ON · processing previews" : selected ? "OFF · original audio" : "Choose an EQ first"}</small></span></label></div>
-    <div className="library-eq-grid"><div><label htmlFor="library-eq-preset">Saved EQs</label><select id="library-eq-preset" value={selectedId} onChange={event => setSelectedId(event.target.value)}><option value="">No EQ selected</option>{shownPresets.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select><input type="search" aria-label="Search saved EQs" placeholder="Search saved EQs" value={presetSearch} onChange={event => setPresetSearch(event.target.value)} /><small>{selected ? `${selected.source} · preamp ${selected.preamp.toFixed(1)} dB · ${selected.filters.length} bands` : presets.length && !shownPresets.length ? "No saved EQs match this search." : "Presets saved in this browser appear here."}</small>{selected && <button type="button" className="library-eq-remove" onClick={() => { const next = presets.filter(item => item.id !== selected.id); localStorage.setItem(LIBRARY_EQ_KEY, JSON.stringify(next)); setPresets(next); setSelectedId(""); setEnabled(false); setMessage("Saved EQ removed from this browser."); }}>Remove selected EQ</button>}<label className="library-eq-upload">Upload a downloaded EQ TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label></div>
-    <div><label htmlFor="library-headphone">Choose a headphone measurement</label><select id="library-headphone" value={measurementId} onChange={event => setMeasurementId(event.target.value)}><option value="">Select saved measurement</option>{measurements.map(row => <option value={row.id} key={row.id}>{row.name}</option>)}</select><input type="search" aria-label="Search public headphones" placeholder="Search public headphones" value={headphoneSearch} onFocus={() => void loadCatalog()} onChange={event => { setHeadphoneSearch(event.target.value); void loadCatalog(); }} />{catalogMatches.length > 0 && <div className="library-eq-catalog">{catalogMatches.map(row => <button type="button" disabled={busy} key={row.path} onClick={() => void importHeadphone(row)}>{row.name} <small>{row.source}</small></button>)}</div>}<small>For your own raw measurement, <a href="/preference-tuning">upload it in Preference Tuning</a>, then return here.</small></div>
-    <div><label htmlFor="library-target">Choose a target</label><select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}>{shownTargets.map(row => <option value={row.id} key={row.id}>{row.name} · {row.creator}</option>)}</select><input type="search" aria-label="Search targets" placeholder="Search targets" value={targetSearch} onChange={event => setTargetSearch(event.target.value)} /><button type="button" className="library-eq-generate" onClick={() => void generate()} disabled={busy || !measurementId}>{busy ? "Working…" : "Create smooth EQ"}</button><small>Uses Preference Tuning’s precise smooth fit and lowers preamp for headroom. Audio is processed only in this browser.</small></div></div>
+    <div className="library-eq-grid"><div><label htmlFor="library-eq-preset">Saved EQs</label><span className="library-eq-select"><select id="library-eq-preset" value={selectedId} onChange={event => setSelectedId(event.target.value)}><option value="">No EQ selected</option>{shownPresets.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></span><input type="search" aria-label="Search saved EQs" placeholder="Search saved EQs" value={presetSearch} onChange={event => setPresetSearch(event.target.value)} /><small>{selected ? `${selected.source} · preamp ${selected.preamp.toFixed(1)} dB · ${selected.filters.length} bands` : presets.length && !shownPresets.length ? "No saved EQs match this search." : "Presets saved in this browser appear here."}</small>{selected && <button type="button" className="library-eq-remove" onClick={() => { const next = presets.filter(item => item.id !== selected.id); localStorage.setItem(LIBRARY_EQ_KEY, JSON.stringify(next)); setPresets(next); setSelectedId(""); setEnabled(false); setMessage("Saved EQ removed from this browser."); }}>Remove selected EQ</button>}<label className="library-eq-upload">Upload a downloaded EQ TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label></div>
+    <div><label htmlFor="library-headphone">Choose a headphone measurement</label><span className="library-eq-select"><select id="library-headphone" value={measurementId} onChange={event => setMeasurementId(event.target.value)}><option value="">Select saved measurement</option>{measurements.map(row => <option value={row.id} key={row.id}>{row.name}</option>)}</select></span><input type="search" aria-label="Search public headphones" placeholder="Search public headphones" value={headphoneSearch} onFocus={() => void loadCatalog()} onChange={event => { setHeadphoneSearch(event.target.value); void loadCatalog(); }} />{catalogMatches.length > 0 && <div className="library-eq-catalog">{catalogMatches.map(row => <button type="button" disabled={busy} key={row.path} onClick={() => void importHeadphone(row)}>{row.name} <small>{row.source}</small></button>)}</div>}<small>For your own raw measurement, <a href="/preference-tuning">upload it in Preference Tuning</a>, then return here.</small></div>
+    <div><label htmlFor="library-target">Choose a target</label><span className="library-eq-select"><select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}>{shownTargets.map(row => <option value={row.id} key={row.id}>{row.name} · {row.creator}</option>)}</select></span><input type="search" aria-label="Search targets" placeholder="Search targets" value={targetSearch} onChange={event => setTargetSearch(event.target.value)} /><button type="button" className="library-eq-generate" onClick={() => void generate()} disabled={busy || !measurementId}>{busy ? "Working…" : "Create EQ"}</button><small>Fits the selected target and lowers preamp for headroom. Audio is processed only in this browser.</small></div></div>
     <p className="library-eq-note">{enabled && selected ? `EQ on: ${selected.name}.` : "EQ off: no EQ processing. Loudness matching is controlled below."} EQ works on all site-hosted previews, including the Shantae soundtrack. EQ approximates the selected measurement and target; fit, seal and device processing still affect what you hear.</p>{message && <p className="library-eq-message" role="status">{message}</p>}
   </section>;
 }

@@ -8,8 +8,11 @@ export const releaseInfo = {
     label: "update103",
     commit: "e5399cb869d1b7626f2abf779083d3b1f8c9a50a",
   },
-  notesThrough: { update: 124, date: "27 October 2026" },
+  notesThrough: { update: 125, date: "28 October 2026" },
   changes: [
+    "Added: Unsmoothed PEQdB AutoEQ fitting, with the original fitter available as an automatic fallback.",
+    "Improved: EQ shelf playback, export provenance and Safari/iOS playback recovery.",
+    "Added: Software license notices and downloadable corresponding source for the PEQdB engine.",
     "Redesigned: Music selection, track search and source controls stay together beside the listening player.",
     "Improved: Player, target selection and Personal Tournament layouts fit narrow screens and shorter windows.",
     "Improved: Keyboard focus, passage handles, control labels and accessibility feedback are clearer without changing listening requirements.",

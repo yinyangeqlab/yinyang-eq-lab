@@ -12,3 +12,5 @@ The following are also outside the Apache code grant unless a file or accompanyi
 - Third-party code, fonts, media, and other materials, which retain their own licenses and ownership notices.
 
 No separate license is granted for material in these categories unless a specific file or notice expressly provides one. A repository copy, screenshot, or demo does not itself grant rights to reuse excluded material. When reusing the Apache-licensed code, replace reserved branding and excluded assets with material you have rights to use.
+
+PEQdB autoeq-c and modifications to that library retain LGPL-3.0-or-later. The application permits modification/replacement of its library portions, recombination with an interface-compatible library, and reverse engineering for debugging those modifications. No reserved-brand or other application term restricts those LGPL rights. See THIRD_PARTY.md and /software-licenses for the accompanying source and license package.

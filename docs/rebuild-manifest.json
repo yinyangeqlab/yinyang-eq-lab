@@ -83,12 +83,20 @@
       "sha256": "3ef20b5afa906affdead6e69b85549ccf86817722a0450a81c989c75b6550eeb"
     },
     {
+      "path": "LICENSE_SCOPE.md",
+      "sha256": "d9dac3c3b2bf3572f7b428ebd178aa241c967a460703ba9eca583bb850262c53"
+    },
+    {
       "path": "LIVE_STATE.md",
       "sha256": "03d6e8f18c3361f1283b8c2c262cb4d602ce2ee82cd79a8a55b3a8c0023bed82"
     },
     {
       "path": "README.md",
       "sha256": "bc90c577127392851ae4c3d67566ba7b3027d385eaa1441981cc32006f1836e6"
+    },
+    {
+      "path": "THIRD_PARTY.md",
+      "sha256": "8488909ab39e2275a67f161765db497a18affef35fe6ae0dea55b25bac75eb67"
     },
     {
       "path": "app/account-sync/layout.tsx",
@@ -152,7 +160,7 @@
     },
     {
       "path": "app/api/listening-runs/route.ts",
-      "sha256": "d2cd7bf6577af258a2afd4c8e58dac471a38d40ffa7bb32ccf60e06fe77cce2b"
+      "sha256": "a80a9ac2aef23cb96825900466f3c584a973d6b82b650190c67e9466c230aeeb"
     },
     {
       "path": "app/api/maintenance/route.ts",
@@ -256,7 +264,7 @@
     },
     {
       "path": "app/api/preference-exports/route.ts",
-      "sha256": "f9aa75dd8efc215bb1ae9998f6ffc3a82bf727e2d2d62d148cd48b335491e336"
+      "sha256": "c544ebd44abb56426431ab0eeb8d1b1d3841dca6fa35ac5b4c20754a3fbf90a2"
     },
     {
       "path": "app/api/profile-access/route.ts",
@@ -380,7 +388,7 @@
     },
     {
       "path": "app/music-library/style.css",
-      "sha256": "198928930428ddd88f861bbb79f5873506bf92fc794ab84aa566a1b3ad61ee94"
+      "sha256": "3bd103b0d387776934d6185668d125f5709a83c20aadca619220c12731db5d41"
     },
     {
       "path": "app/my-data/layout.tsx",
@@ -436,7 +444,7 @@
     },
     {
       "path": "app/preference-tuning/page.tsx",
-      "sha256": "3058742457211fe5acbc964b8fce39fc1e42629c665b6db57a0801731a038438"
+      "sha256": "95192a46bf1052f19f01ef9dd44e87ec702a3e2a3979a127fc1555a569e96375"
     },
     {
       "path": "app/preference-tuning/style.css",
@@ -484,7 +492,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "98541a27182850c0e3761e56e7f9dc06c231f2fadc8fe2f75028bcfeced0618d"
+      "sha256": "edc931f5bb2c3025f0817e4d1e30f6979f6454ae3b89ea2fbf165c1a05e120d8"
     },
     {
       "path": "app/shootout/personal/layout.tsx",
@@ -505,6 +513,10 @@
     {
       "path": "app/shortcuts/page.tsx",
       "sha256": "89575948cfec9ba5f695604378068cb63f06ff6471eef2d815ec82e43e2cae2f"
+    },
+    {
+      "path": "app/software-licenses/page.tsx",
+      "sha256": "3ffed2a7498b55a3bf3a0ca417cd872813eccd3246f7d235131d8fc88f061a94"
     },
     {
       "path": "app/test-history/layout.tsx",
@@ -529,6 +541,10 @@
     {
       "path": "build/connector-preview-worker.mjs",
       "sha256": "c1b6b2c420cb67d9e28f8f4ae440f578c0dfd4cb840a12cfe4b58076629a17ba"
+    },
+    {
+      "path": "build/peqdb-local-assets.mjs",
+      "sha256": "3e5a84e7d8a2df9761a6046a0f06df7d40de69f630adab4b024637e0a71db1c5"
     },
     {
       "path": "build/sites-vite-plugin.LICENSE",
@@ -736,11 +752,11 @@
     },
     {
       "path": "components/library-eq-panel.tsx",
-      "sha256": "93917c7038e9d27dcd073443c03e271b6028c96a114777bcf3126476ea5ee67f"
+      "sha256": "c96eae291078fce4882e3315f5b228147ac0a9e64fc9b18fd381f5b7e7af810e"
     },
     {
       "path": "components/library-wave-player.tsx",
-      "sha256": "eb8eb7bfc936c864423e913e146113241485038f43a25c6bb21fd230b405d529"
+      "sha256": "d7aaa92ab50ee84be77a350f30b80a9a64496015a66a5781e47a7ebea52ee0ad"
     },
     {
       "path": "components/listener-nickname-panel.tsx",
@@ -772,7 +788,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "8cfaef51446a7957ff9cd3964cd5be2e873586fa528c22bc608f9e415fc59e6e"
+      "sha256": "aa29b9749b6d26ca42961edb692a951e55c576769928fb41bfa67a051a45e80d"
     },
     {
       "path": "components/name-filter-lab.tsx",
@@ -912,7 +928,7 @@
     },
     {
       "path": "components/site-data-footer.tsx",
-      "sha256": "8dca8a402ae22cf3514d7e0dbc7c7eaf44fac598cd88e0521c06661dcd5f963b"
+      "sha256": "2689867ecbe762ea9e1ba63b017fb9dcb96f2e133b573e75568400fcf6c65592"
     },
     {
       "path": "components/site-utility-links.tsx",
@@ -1319,6 +1335,10 @@
       "sha256": "38bd964a2ef9c942ac21a09c1df0cdd84b6273219e81fd7fa25eecb2b37243ce"
     },
     {
+      "path": "docs/COORDINATION.md",
+      "sha256": "2275e7dd2ef383079e5063cf8d8c7d1a12ddb94a0566323833666937d3dcc22b"
+    },
+    {
       "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
       "sha256": "03682bd31c73f15f763b61ec87deacab131780a085476c0781bfe228eb0e1805"
     },
@@ -1343,8 +1363,16 @@
       "sha256": "416b35ec981bc49ea18fb1a17a7b36642c1ce6e84e6ce8d5c94b9c512453df2b"
     },
     {
+      "path": "docs/LOCAL_SETUP.md",
+      "sha256": "e2439a2018bcd6d0eeb09a2523f7ba883fab19a3cd033dd5ac7ef6f620fccd73"
+    },
+    {
       "path": "docs/OWNER_ONLY_MAINTENANCE.md",
       "sha256": "e7dc6433760c84607e9c1fb6d64e240541beeb0712b7043a425ad91993d1a9c0"
+    },
+    {
+      "path": "docs/PEQDB_AUTOEQ.md",
+      "sha256": "123bd8559da14ba6b95d9efbb1356348e85729f8f830a466dc1a0ab9e4cc4df2"
     },
     {
       "path": "docs/REBUILD.md",
@@ -1421,6 +1449,18 @@
     {
       "path": "docs/reviews/2026-10-24-main-workflows.md",
       "sha256": "6375d122d1d8f399d497926dbd7890b9ad5ae8b879db49c9b2f75a1bec756f6a"
+    },
+    {
+      "path": "docs/reviews/2026-10-27-peqdb-claude.md",
+      "sha256": "21317f72806de51caae5170c7533134cbb08251ba62ef1a856784320e0c42c8d"
+    },
+    {
+      "path": "docs/reviews/2026-10-27-peqdb-local.md",
+      "sha256": "c1402c311f787a673aad5d7efdddb4a0738d8355ee9ab7295d1a5a0fee694ba0"
+    },
+    {
+      "path": "docs/reviews/2026-10-28-peqdb-webkit.md",
+      "sha256": "3bb8a9dfd42784828d66e643a88d3f7d87468cbbd25ee950713f45b1d14c683f"
     },
     {
       "path": "drizzle.config.ts",
@@ -1695,6 +1735,58 @@
       "sha256": "2587550154d8691cc7f4dfc0bf8adfe4c1dd74772c484c84249032f36bd89e61"
     },
     {
+      "path": "experiments/autoeq/README.md",
+      "sha256": "cca2c5df98a50f5abedadf932d7bb69c9ea5b2cecb7932dd32b741d8abdf08ae"
+    },
+    {
+      "path": "experiments/autoeq/check-browser.mjs",
+      "sha256": "7bd6374a1c198a95e6f818e674f29e63d6b669ec5004dc82d0d094cb6117d076"
+    },
+    {
+      "path": "experiments/autoeq/check-engine.mjs",
+      "sha256": "bdf638b8ae57622b7ad1ecdcad174d95d1ae50d8026c5f379a24ca6376a271d5"
+    },
+    {
+      "path": "experiments/autoeq/compare.ts",
+      "sha256": "f98c606357d353b621397dcec4b344dd6fbd06b2d8889a63e4124c971b39106f"
+    },
+    {
+      "path": "experiments/autoeq/engine.ts",
+      "sha256": "e7f56ba0dc668a74d02faa4926eec386117148f6e2411c7d34f3aaaecffce5c8"
+    },
+    {
+      "path": "experiments/autoeq/index.html",
+      "sha256": "092a08b73ad802f3eed7f89a1234ea4fecd004bb7d9465ddad6f3ae9f1fa5c98"
+    },
+    {
+      "path": "experiments/autoeq/integration.html",
+      "sha256": "f2e98aeacb22baf1e494b15fa989e3f5836962023f622e52988d6d03a57eee18"
+    },
+    {
+      "path": "experiments/autoeq/integration.tsx",
+      "sha256": "e403f63b462c415702c6d5d2c005162be04855a81061c3e3fcdf586a3c46f0bc"
+    },
+    {
+      "path": "experiments/autoeq/main.tsx",
+      "sha256": "da4e0b56f2bf31dd51324e7693edd4800ca62f9b50a8d894d07ae28d86749c9a"
+    },
+    {
+      "path": "experiments/autoeq/prepare.py",
+      "sha256": "018509cdfd8d96653a8d130be78cc95f882ec509ec5fee170b093d4ce20b5875"
+    },
+    {
+      "path": "experiments/autoeq/style.css",
+      "sha256": "7a872d1c8dad23dfcfd6fb759c7da114ec3baea38b2908688f0b59a0e030a6b3"
+    },
+    {
+      "path": "experiments/autoeq/vite.config.ts",
+      "sha256": "8f0ee028eb5bb4b81017ddd6eec4d6c687ff0a5576728f8cf3f1b100b2fb8b9b"
+    },
+    {
+      "path": "experiments/autoeq/worker.ts",
+      "sha256": "be2482100c8e446b85f745572be0d88c71c4b52e26ba17239228206a8a45fc88"
+    },
+    {
       "path": "hooks/use-mobile.ts",
       "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b"
     },
@@ -1835,8 +1927,24 @@
       "sha256": "0d17100e8d6c502b9f8f2b76330ec77760ae0f66c9b16d5b30c8af948cc0ba7f"
     },
     {
+      "path": "lib/autoeq-client.ts",
+      "sha256": "0d205169b24602cada2c602fa536509d1d1bc3d9aac84ecaec0adec7cedae600"
+    },
+    {
+      "path": "lib/autoeq-export.ts",
+      "sha256": "26c53984157eed50189141a4454bb450fd3c1f4e3468e4f46b2dd6a682b076be"
+    },
+    {
+      "path": "lib/autoeq-fit.ts",
+      "sha256": "5a1ae62493dde229d96d89d85fbb2e61c0d2713c891b1691ff5a1cb83dd10ab3"
+    },
+    {
       "path": "lib/autoeq.ts",
-      "sha256": "c843baf3c20279a48c45d870c2082417f8af34c0955526f5abcb9397345fd442"
+      "sha256": "d3c7c1384d097981a840af24f144611175b5fe6f634befd77b53da856858e80c"
+    },
+    {
+      "path": "lib/autoeq.worker.ts",
+      "sha256": "67036b252b5e313e3932585a2cb3a5e094c7f47e4e278fc7adf9aa08e63c7fb6"
     },
     {
       "path": "lib/blind-eq-audio.ts",
@@ -1971,6 +2079,10 @@
       "sha256": "579ab0267d9fe0777b92edb17cedeae1ba46845247e3aed757d3ce182c54e427"
     },
     {
+      "path": "lib/eq-playback.ts",
+      "sha256": "819e22f5529452927d4fbcf42e12c943661dc88e4f4dc7f0941a27a51050d279"
+    },
+    {
       "path": "lib/feedback.ts",
       "sha256": "59e25f3f06755b992188f17c73677da4c08e02f6bab60a13c5bbd0a5cfaa1ddf"
     },
@@ -2052,7 +2164,7 @@
     },
     {
       "path": "lib/music-library-eq.ts",
-      "sha256": "50cb0cfdf9f61fba86c791f22705d21ff1561abbb4d327c89f61064882adee68"
+      "sha256": "5c12ba73f796e29f23594c9c1697e86cd66aaa7d3ba5a56222c194787ab58dba"
     },
     {
       "path": "lib/music-preferences.ts",
@@ -2073,6 +2185,14 @@
     {
       "path": "lib/peq-preset.ts",
       "sha256": "0a3ad6d66420a7bf38beae267965f3873d6177fb9ffeee0a49d114802cbcc99a"
+    },
+    {
+      "path": "lib/peqdb-engine.ts",
+      "sha256": "bf8938a998030c1fc523419e2f62d6cabe9db1dc31ab25b87f20df8258fcca33"
+    },
+    {
+      "path": "lib/peqdb-wasm.d.ts",
+      "sha256": "2e64c9fb2b5cddd63ad3878acbc30febcc3cbf1d6b2ead4e8f522f2137966a15"
     },
     {
       "path": "lib/personal-contribution-status.ts",
@@ -2120,7 +2240,7 @@
     },
     {
       "path": "lib/preference-finalize.ts",
-      "sha256": "9c8e5407eb614e86dc55ba95136e430e36e144818f0b43ac5603981aded74059"
+      "sha256": "b2b415b1a478e6c1221b37d5f43c75e7054891851dfa5f599e28b7f815e8b82c"
     },
     {
       "path": "lib/preference-ranking.ts",
@@ -2160,7 +2280,7 @@
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "bda4a1e2dbc0b9ac8fea892b32548b46f53c867d3737eb1988b3801fd482528d"
+      "sha256": "d7211cee36fa5fe3d93b56eacd3b7303a75a0a2234435c15fab1c34f0c72e1fd"
     },
     {
       "path": "lib/request-json.ts",
@@ -2196,7 +2316,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "7e7ace591b0807f208974870884c9b1057598cb3e464a5c46f94a389e93125c2"
+      "sha256": "57ac45d3fdfb64fb56999237c088c1fc59ef87243534650da4a0303ae14bfd78"
     },
     {
       "path": "lib/song-match.ts",
@@ -2528,7 +2648,7 @@
     },
     {
       "path": "scripts/check_comparison_passage.mjs",
-      "sha256": "19242cf588a2eae023f3e287f25cb6563b03bd7ad61d28a0b609c221feaa93e4"
+      "sha256": "cffc67715aedd67e18f0508e9869fd6ab687812e43ffd7f6fe2d49041fce840f"
     },
     {
       "path": "scripts/check_consent_choices.mjs",
@@ -2592,11 +2712,11 @@
     },
     {
       "path": "scripts/check_local_audio_error.mjs",
-      "sha256": "28c044a9def863db1f1b24017731f3eb17e8f9129dd452ef018743c20a694400"
+      "sha256": "453c29c37bd4b172d23394b3d048fa1b7850915e87f8f72703b7643be91ea249"
     },
     {
       "path": "scripts/check_main_workflows.mjs",
-      "sha256": "4511cb4635230021c182637d9e8a387d76e5b69c2035f44f3b80015530d794f3"
+      "sha256": "cc35d5b7bf3bac0cb7dd3851dd857236a072186fa52ab559a19feb6a24dc68d5"
     },
     {
       "path": "scripts/check_maintenance_dependencies.cjs",
@@ -2624,7 +2744,7 @@
     },
     {
       "path": "scripts/check_music_playback_requests.mjs",
-      "sha256": "7b3d48340c189d32f26d5f103e97933ee24756372f22548c420030d07b8124fd"
+      "sha256": "27f2b4aa82f32a597f0c97177a28734458c53eef40dcd6295c31c43ae0132b26"
     },
     {
       "path": "scripts/check_music_preferences.cjs",
@@ -2681,6 +2801,22 @@
     {
       "path": "scripts/check_passage_shuffle.mjs",
       "sha256": "ad69b05dca88e7f1f85c47411d190b11374a43396c0d8f1d8305e8bda56e9126"
+    },
+    {
+      "path": "scripts/check_peqdb_autoeq.mjs",
+      "sha256": "3d737155c3505a31962a4352cfb5c3d7f6e313f54ed3cb5f451d48a6ec1f66af"
+    },
+    {
+      "path": "scripts/check_peqdb_browser.mjs",
+      "sha256": "5a076e308e57e304e405995ba1382aa079502dca5e40375e049c60d6da38ab5a"
+    },
+    {
+      "path": "scripts/check_peqdb_built.mjs",
+      "sha256": "41b1e4ced8a82fb27c739d891defb7739e31633881bf4dc9a375e2b15818a216"
+    },
+    {
+      "path": "scripts/check_peqdb_package.mjs",
+      "sha256": "53e39f717837794fe97ee8092390cc8aab49d38781d5de3b8102b83b8a0a2656"
     },
     {
       "path": "scripts/check_permission_music.mjs",
@@ -2772,7 +2908,7 @@
     },
     {
       "path": "scripts/check_selected_passage_timing.mjs",
-      "sha256": "e4164e7a94fa346279f20251764320cf181302011fb8be3f0fdc30c1ffda16ef"
+      "sha256": "a9d4511f0b864aaed7d629cc4532d4021e87623f6fd36a7804c1ee312260f3d9"
     },
     {
       "path": "scripts/check_service_warning.mjs",
@@ -2892,11 +3028,23 @@
     },
     {
       "path": "scripts/package-static-assets.mjs",
-      "sha256": "b0fd5b543c416e7d41a5759cb79142e49eedf25448f2e0bb7d9a095e85dbc964"
+      "sha256": "0b8ca3f403fdfbf5eb576063799feda046fce98080a6c60890ee938453e16c38"
+    },
+    {
+      "path": "scripts/peqdb-assets.mjs",
+      "sha256": "4e1b76b94106193c0b508b6d466369688961d1f120e7ddf68d2348cce0d88a96"
+    },
+    {
+      "path": "scripts/peqdb-source-allowlist.json",
+      "sha256": "2aae65f779043a3b66c26813fbf35fd8650ac9a4906a413c408afa21b5e552a9"
     },
     {
       "path": "scripts/pnpm-install.mjs",
       "sha256": "a83164e344c1947053def83b546be8115deaa827314bbaead7afe6b6451c5cdf"
+    },
+    {
+      "path": "scripts/prepare-peqdb-autoeq.py",
+      "sha256": "b7675166c2ed9cfaaacb4d051ae92911b0639f33886b671a71b198bef2295f0e"
     },
     {
       "path": "scripts/read-schema-columns.mjs",
@@ -2972,7 +3120,7 @@
     },
     {
       "path": "vite.config.ts",
-      "sha256": "41f7e1e3223c7119bf3dfe93177e5af2476a6dfda17e00db9500d909614609f1"
+      "sha256": "ba683343bc49282626c02679e788ac37dea8d9a1fb12900dad7fb72d86fa55f8"
     },
     {
       "path": "wrangler.local.json",

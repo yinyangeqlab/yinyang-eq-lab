@@ -14,7 +14,7 @@ function visit(node){if(ts.isFunctionDeclaration(node)&&node.name)handlers.set(n
 const names=['closeInterval','startInterval','snapshotIntervals','heardNow','resetHeard'];
 const code=ts.transpileModule(names.map(name=>handlers.get(name)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function harness(required){
-  const state={required,intervalStats,selectedPassageIntervals,selectedPassageProgress,
+  const state={required,intervalStats,selectedPassageIntervals,selectedPassageProgress,engine:{current:{context:{state:'running'}}},
     audioRef:{current:{paused:false,seeking:false,currentTime:0,playbackRate:1}},
     intervalsRef:{current:[]},activeRef:{current:null},sideRef:{current:0},heardRef:{current:[0,0]},
     lastPlaybackPosition:{current:0},passageRunRef:{current:null},passageRef:{current:{start:10,end:15}},
@@ -22,6 +22,12 @@ function harness(required){
   const context=vm.createContext(state);
   vm.runInContext(code,context);
   return {state,audio:state.audioRef.current,run:expression=>{const value=vm.runInContext(expression,context);return value===undefined?undefined:JSON.parse(JSON.stringify(value));}};
+}
+{
+ const h=harness(false);h.state.engine.current.context.state='interrupted';h.audio.currentTime=10;h.run('startInterval()');h.audio.currentTime=12;
+ assert.deepEqual(h.run('heardNow()'),[0,0],'A moving native media clock cannot earn listening credit while the context is interrupted');
+ h.state.engine.current.context.state='running';h.run('startInterval()');h.audio.currentTime=14;
+ assert.deepEqual(h.run('heardNow()'),[2,0],'Listening credit starts at the actual resumed media position');
 }
 for(const required of [false,true]){
   const h=harness(required);

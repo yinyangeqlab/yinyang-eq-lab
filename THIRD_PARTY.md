@@ -14,6 +14,10 @@ The top-level Apache 2.0 license covers only original software source code. It d
 - `data/jaysaudio-catalog.json` is a file-name and hash index of [Jay’s Audio](https://github.com/JaysAudio/JaysAudio.github.io), which is 0BSD licensed. The index has no measurement points.
 - Both indexes link to external measurements. Measurement creators retain their rights; raw measurements are not included.
 
-No PEQdB application code, target curves, or preset exports are included. The working project's PEQdB and other outside-contributor curve seeds were excluded because this package does not establish redistribution rights for them.
+No PEQdB target curves or preset exports are included. The separate LGPL AutoEQ engine described below is the only PEQdB code used by this integration. The working project's PEQdB and other outside-contributor curve seeds were excluded because this package does not establish redistribution rights for them.
 
 The names-only [live target inventory](docs/TARGET_INVENTORY.md) credits the target families used or added on the separate live service, including Tryptify, AutoEq and MrChillStorm sources. No numerical target data is included, including the MIT-licensed experimental curves. Their inclusion on the live service does not relicense this repository or imply creator endorsement. New live imports require explicit redistribution terms; the earlier pool's licensing audit remains incomplete.
+
+## PEQdB autoeq-c engine
+
+The application uses PEQdB autoeq-c, Copyright (C) 2026 PEQdB Inc., LGPL-3.0-or-later, pinned to fdc0db772164387c2df8739742594197c6851fc3. This library is separate from PEQdB target curves and presets. Its exact engine source, modifications, LGPLv3/GPLv3 texts, original application code and rebuild/recombination instructions accompany each prepared engine package through /software-licenses. The generated WASM, library source inputs and source package stay outside Git. See docs/PEQDB_AUTOEQ.md and scripts/prepare-peqdb-autoeq.py.

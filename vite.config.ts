@@ -1,3 +1,4 @@
+import { peqdbLocalAssets } from "./build/peqdb-local-assets.mjs";
 import vinext from "vinext";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
@@ -52,6 +53,7 @@ export default defineConfig(async ({ command }) => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    worker: { plugins: () => [peqdbLocalAssets()] },
     build: { copyPublicDir: false },
     server: {
       ...(managedLinux
@@ -62,6 +64,7 @@ export default defineConfig(async ({ command }) => {
         : {}),
     },
     plugins: [
+      peqdbLocalAssets(),
       vinext(),
       sites({ mockAuth: !managedLinux }),
       connectorPreview(),
