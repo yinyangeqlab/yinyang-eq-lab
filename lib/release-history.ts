@@ -32,6 +32,7 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
+  { update: 134, date: "2026-11-08", title: "Peak & Dip Finder", changes: candidateChanges },
   { update: 133, date: "2026-11-07", title: "Direct GitHub release link", changes: update133Changes },
   { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: update132Changes,
     github: { commit: "dd5062c8d49986a59d582e604d94614e3c0f2c3e", releaseTag: "update132" } },

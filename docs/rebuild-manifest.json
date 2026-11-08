@@ -1,21 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+  "baseRevision": "bfa19fe2f37e257cd6a2f306e23f934ef6e5c3c9",
   "recordedLiveUpdate": 133,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [
-    "app/ear-tuning/frequency-navigator.css",
-    "app/ear-tuning/frequency-navigator.tsx",
-    "app/ear-tuning/guide.css",
-    "app/ear-tuning/guide.tsx",
-    "docs/releases/update133-recovery-verification.json",
-    "docs/releases/update133-verification.json"
-  ],
+  "reviewedUntrackedFiles": [],
   "files": [
     {
       "path": ".gitignore",
@@ -1984,7 +1977,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "c6ecf0fde701307b801476ce98813a22d9ed367deb3bb9b7765deaab45e4ea1c",
+      "sha256": "db8508ce376b4ab492439357659d06e16df3f8fcd1b3111b8d7c94de65760562",
       "executable": false
     },
     {
@@ -3664,12 +3657,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "1b266697cabedbdbfcca362feaab0f6c71bf0f63dadce44ecf661aab8bd27992",
+      "sha256": "aae5cee108c9cbcb236f6e0cf428c6de2d1dace1836cedb50f3a73f388dc4631",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "bd0315100403a253747e7885a4709ff1cdd6862d9ee0fd9d2b7d2b2ebfa2ceda",
+      "sha256": "91231a67591eabd77b3f9f0e12340983cd1119dfe20b2d49f01fef385fb5263b",
       "executable": false
     },
     {
