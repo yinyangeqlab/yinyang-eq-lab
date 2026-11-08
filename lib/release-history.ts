@@ -7,6 +7,10 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Added a direct link to the update132 GitHub release from the version page.",
+] as const;
+
+const update132Changes = [
   "Added Tune by ear with sine and harmonic sweeps, pink noise, library and local music, and an output meter. Mark peaks or dips and compare the adjustments live.",
   "Save manual adjustments by themselves or combine them with a target fit. Saved EQs use the existing Account Sync collection.",
   "Generated EQ results stay available in the same browser for matching inputs. Overlay individual fits or show them all, view deviation from the gray dotted target, and compare fit error and preamp.",
@@ -21,7 +25,8 @@ export const candidateChanges = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: candidateChanges,
+  { update: 133, date: "2026-11-07", title: "Direct GitHub release link", changes: candidateChanges },
+  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: update132Changes,
     github: { commit: "dd5062c8d49986a59d582e604d94614e3c0f2c3e", releaseTag: "update132" } },
   { update: 131, date: "2026-10-31", title: "Unified Tuning and saved EQ playback", changes: [
     "Restored the interactive Tuning curve with raw and predicted overlays, compact tone controls and integrated frequency markers.",

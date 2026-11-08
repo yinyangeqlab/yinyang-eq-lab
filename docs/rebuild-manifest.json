@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "dd5062c8d49986a59d582e604d94614e3c0f2c3e",
+  "baseRevision": "a6fe8c0f460d09d8a09be4d8f0c8a0978558682f",
   "recordedLiveUpdate": 132,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -692,7 +692,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "e3eafdabf8588765a0d43d6f4c13bd53120dbc5e06260bdec6f583c29cced038",
+      "sha256": "fb0a5f7ebd0a2d9633a00eb00bfeaf0b8d297e2054b6a4cc05a4c14a88917bdd",
       "executable": false
     },
     {
@@ -1957,7 +1957,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "bd0dd7370b9ca861468698dee03976aca8f026f11ee14daafc4a2a7974b303cb",
+      "sha256": "5921a3c017dce88f87a24ddd75a4cd42dc203d217157bc3ac962ad48c50d684f",
       "executable": false
     },
     {
@@ -3627,12 +3627,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "738eec0079d214803e5693eb3c7617471435b71d6ded67a0792b75ed401ba1a3",
+      "sha256": "de5960a6413b95b86bd91466d87192713b20460048554eaa52e390140b62b8c6",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "d33c246e20727355c916f04e22295e55c3abe64acb75e599d45e5fa36f43db01",
+      "sha256": "78d64bbff6e87e3f31dfe58f319f46ecebb6c660d0c4f5c2bc74213af21b9fc3",
       "executable": false
     },
     {
