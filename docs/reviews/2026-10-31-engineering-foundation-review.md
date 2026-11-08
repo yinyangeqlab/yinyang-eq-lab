@@ -1,8 +1,6 @@
-# Engineering foundation: independent review and disposition
+# Engineering foundation review
 
-Claude Opus 5.5, high effort, reviewed the uncommitted foundation at base `08ede015c438e743f371fcf679058b5c27dcb3a1`, input tree SHA-256 `f7e6acb8da230ce6572d6da464eb4cde83c66c554fd7022a5c725c74d48e4b9d`. The read-only review completed in 60 turns with Read/Glob/Grep only and no permission denials. Claude ran no tests. Its original response is retained in the local review evidence with SHA-256 `582bda27b0974ea7c2c568cac5743658ffe58e705e96263795b4b57015e369a8`.
-
-Codex checked each finding against source and observed public records. This review and its fixes authorize no commit, push, deployment, production data action or recovery registration. The current release record and update131 receipt remain unchanged.
+This review assessed the engineering foundation against development revision `08ede015c438e743f371fcf679058b5c27dcb3a1`. The table records the findings, scope corrections and regression coverage.
 
 | Finding | Disposition and evidence |
 | --- | --- |
@@ -17,7 +15,7 @@ Codex checked each finding against source and observed public records. This revi
 
 A remaining README sentence that implied the site was waiting to reopen was also corrected. It now points to the generated live state; participation/consent policy is unchanged.
 
-Claude's phrase “generation is atomic” was broader than the implementation: validation and marker errors are detected before writes, but the refresh is not a filesystem transaction across all files. No such transaction guarantee is made. Its 11-file documentation-drift estimate also omitted inherited owner/public differences and intentionally unavailable owner-only paths; the checker reports the actual set.
+Release view generation detects validation and marker errors before writing. The refresh does not provide an atomic transaction across files. The checker reports the actual set of documentation differences, including inherited differences and unavailable private inputs.
 
 ## Verification and remaining limits
 

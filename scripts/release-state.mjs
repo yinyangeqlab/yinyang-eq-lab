@@ -118,7 +118,7 @@ The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json
 
 The deployment receipt records ${receipt.candidateVerification.regressionSuitesPassed} regression suites passed and ${receipt.candidateVerification.regressionSuitesFailed} failed for its source; these are historical deployment results, not results for this working tree. Physical audio is ${browser?.physicalAudioQualityVerified === true ? 'recorded as verified' : 'not certified'}; native expanded-menu pixels are ${browser?.expandedNativeMenuPixelsCertified === true ? 'recorded as certified' : 'not certified'}. Read the receipt and review record for browser/device limits.
 
-Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). Older handoffs are [preserved history](docs/history/foundation-20261031/README.md), not deployment instructions.
+Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.
 `;
 }
 

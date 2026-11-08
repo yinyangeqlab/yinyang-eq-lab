@@ -19,4 +19,4 @@ The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json
 
 The deployment receipt records 120 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
 
-Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). Older handoffs are [preserved history](docs/history/foundation-20261031/README.md), not deployment instructions.
+Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.

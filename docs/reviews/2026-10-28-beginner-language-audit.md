@@ -8,7 +8,7 @@ The concern is well supported by the current source. The site repeatedly asks pe
 
 This is both a **language problem and an order-of-steps problem**. Replacing a few acronyms will help, but it will not resolve missing next actions, unexplained choices, inconsistent names or unclear saving. The beginner route needs fewer decisions and a clear explanation at each step. Experienced users should retain the detailed controls and methods.
 
-Three Astra reviews (`gpt-6-astra`, ultra reasoning) covered separate areas, with Codex integrating the findings and reviewing tuning/access. An independent Claude Fable 5.1 review also completed at maximum effort; its 80 suggestions were individually assessed before inclusion. The detailed reports record exact wording, source locations, proposed replacements, consequences to preserve and coverage limits.
+The review covered entry and setup, listening and results, privacy and trust, and tuning and access. The detailed reports identify affected wording, source locations, proposed replacements and coverage limits.
 
 These are source-based assessments of likely difficulty. They are not claims that real beginners were observed failing, or that every device/browser state was exercised.
 
@@ -152,10 +152,14 @@ The release has 26 `page.tsx` routes, including the legacy Tuning redirect. All 
 - [Data choices, privacy, account sync, community and owner-only pages](2026-10-28-novice-data-and-trust.md) — 18 entries plus owner-only notes.
 - [Tuning, private preset comparison, access and special routes](2026-10-28-novice-tuning-and-access.md) — 38 entries.
 
-- [Claude Fable 5.1 independent report](2026-10-28-novice-language-claude.md) — 80 additional review entries, many overlapping; raw proposals include wording that was not accepted.
-- [Decisions on all 80 Claude entries](2026-10-28-novice-language-claude-decisions.md) — accepted directions, corrections, deferred decisions and rejected claims.
-
 The 118 entries in the four integrated area reports retain cross-page overlaps so an implementer can see each place a problem occurs. They should not be presented as 118 independent defects. Each file has a coverage inventory, positive patterns and accuracy caveats.
+
+## Follow-up review decisions
+
+- Introduce the listening goal before explaining targets, measurements or export formats. State the measurement and supported-output requirements at the point where users choose them.
+- Describe audio processing and research data by mode. The explanation should distinguish file audio, comparison records, optional tags and Sync rather than making a blanket claim about what stays on the device.
+- Offer a clear way to load existing Sync data on a new browser. Use destination labels that distinguish this browser, private account storage and public results.
+- Keep match requirements and research eligibility visible. Explain rate-limit and save errors with a concrete recovery step and avoid unsupported estimates of how long a comparison takes.
 
 ## What to preserve
 

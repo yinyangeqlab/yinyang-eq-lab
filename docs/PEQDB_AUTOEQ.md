@@ -1,6 +1,6 @@
 # PEQdB AutoEQ local integration
 
-Prepared October 27, 2026 from scrubbed main `a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a`, which records live update124 implementation `8c36be0aa4352f668f6cfbb351bc187713042191`. Work is isolated in `work/peqdb-wasm-local`, branch `work/peqdb-wasm-local-20261027`. Original canonical drafts and live/recovery manifests are preserved. The owner authorized deployment, commit and handoff on October 28, 2026. Release update125 retains owner-only maintenance. No production migration, account change or research-record rewrite is included.
+The integration was prepared against revision `a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a`, following update124, and deployed in update125 under restricted admin access.
 
 ## Application behavior
 

@@ -1,6 +1,6 @@
 # Local WebKit / Safari compatibility review
 
-Reviewed October 28, 2026 UTC, on dirty branch `work/peqdb-wasm-local-20261027`, base/HEAD `a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a`. Origin was fetched anonymously and remained even with HEAD. Lab identity and original canonical drafts were preserved. This continues the local PEQdB integration; it does not publish or deploy anything. Live remains update124.
+Reviewed October 28, 2026 UTC, as part of the PEQdB integration based on revision `a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a`. The results describe the local verification environment.
 
 ## Test scope
 

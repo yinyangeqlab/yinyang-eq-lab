@@ -1,10 +1,10 @@
 # Compare selected generated EQ results
 
-Local follow-up on `work/listening-controls-20261104`, HEAD `28291111370bd035dfd0d0f29e73cd123bd8a654`. Lab origin fetch succeeded before edits; this branch was29 commits ahead and0 behind origin/main. Lab author and committer were verified. The earlier listening-controls candidate and canonical drafts are preserved. This work does not authorize commit, push, deployment, research submission or a production data operation.
+November 4, 2026. This review covers the generated EQ comparison workflow.
 
 ## Scope and wording
 
-The owner approved a blind audition of the generated EQ results, with explicit wording that the selected result set is being compared. Entry: **Compare12 generated EQ results** (actual count is dynamic). Setup: **EQ results to include**, selectable checkboxes, and **Hide names & compare N selected results**. Every screen names the headphones, target and compared-set size. Results say **Leading result from these N compared EQs**, or **No confirmed leading result within this set**. The supported set size is2–20; the current generator produces12. The comparison is available in Tuning and the shared post-shootout results panel.
+The blind audition compares the generated EQ results selected for the session. Entry: **Compare12 generated EQ results** (actual count is dynamic). Setup: **EQ results to include**, selectable checkboxes, and **Hide names & compare N selected results**. Every screen names the headphones, target and compared-set size. Results say **Leading result from these N compared EQs**, or **No confirmed leading result within this set**. The supported set size is2–20; the current generator produces12. The comparison is available in Tuning and the shared post-shootout results panel.
 
 The result belongs to this exact generated set and subset. It does not alter target rankings, numerical recommendation badges, fitting engines, generated filters, permissions or independent Community reference protocols. Choosing a revealed result selects that generated EQ in the existing graph/export panel; saving/downloading the EQ retains the existing consent behavior.
 

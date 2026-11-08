@@ -1,27 +1,10 @@
 {
   "baseRevision": "08ede015c438e743f371fcf679058b5c27dcb3a1",
-  "purpose": "Public subset of historical documents preserved byte for byte before the engineering foundation.",
+  "purpose": "Published source inventory preserved byte for byte from the engineering foundation.",
   "files": [
-    {
-      "originalPath": "AGENTS.md",
-      "sha256": "aec3cec59f1a073ec84a1dabdc15da6908fcf58cf8af24b634050fe34a625728"
-    },
-    {
-      "originalPath": "docs/HANDOFF.md",
-      "sha256": "98d7a07728efc9214938a7932e7a832e46587c9c32c872895eb8d7222e3bd69c"
-    },
-    {
-      "originalPath": "docs/REBUILD.md",
-      "sha256": "479ac0e54b0e84b63c688057e72a10f0ca8068ceefce8c3f73005a38a3b24c04"
-    },
     {
       "originalPath": "docs/rebuild-manifest.json",
       "sha256": "7475deec3be9ffdc4da380acef8c76e6bcb5aba721eb8d85f1a0a95aa5760d96"
-    },
-    {
-      "originalPath": "README.md",
-      "archivedPath": "README.original.md",
-      "sha256": "bc90c577127392851ae4c3d67566ba7b3027d385eaa1441981cc32006f1836e6"
     }
   ]
 }

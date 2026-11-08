@@ -1,12 +1,10 @@
 # Listening controls and Personal Tournament candidate
 
-Local implementation in `work/listening-controls-20261104`, based on foundation `28291111370bd035dfd0d0f29e73cd123bd8a654` carrying deployed update131 source `08ede015c438`. No commit, publication, deployment, production-data operation or backup export is included. Live release records remain unchanged.
+November 4, 2026. The candidate was based on foundation revision `28291111370bd035dfd0d0f29e73cd123bd8a654` for update131.
 
-## Workspace and earlier testing
+## Earlier device testing
 
-The root and checkout instruction tree, current handoff/recovery/rebuild and live release records were read before editing. Lab origin was fetched; the canonical checkout remained at `86c60c0`, with origin/main `3ecad7342063` (+139/-235), 46 modified tracked and 55 untracked entries preserved. The worktree is isolated from those original drafts and descends from scrubbed main. Actual author and committer resolve to the required lab identity; the yinyangeqlab connector was verified. No contribution was published. The owner root snapshot check passed 3,421 files before candidate edits; that result is not a candidate snapshot claim.
-
-The earlier Bose testing chat reported very quiet playback, ineffective EQ bypass in Tuning/Library and missing normalization controls; the owner identifies the device as a Windows PC. The Bose model is unknown. The owner now reports failed sidebar animations and non-working EQ/Tuning buttons on a friend's iPhone; the device is unavailable and its model/browser are unknown. No physical iPhone retest is claimed.
+Exploratory listening on a Windows PC with Bose headphones found quiet playback, ineffective EQ bypass in Tuning and Library, and missing normalization controls. Testing on an iPhone found sidebar animation failures and unresponsive EQ and Tuning buttons. The exact models and iPhone browser version were unavailable. No physical iPhone retest was completed.
 
 ## Changed behavior
 
@@ -43,7 +41,7 @@ The waveform renderer previously reduced its original reference for expansion, e
 
 The coverage-first scheduler could spend the whole initial budget on disjoint pairs in a large pool, producing many1/1 rows. New runs use `personal-v2`: newcomers face known contenders, every third discovery decision compares already-heard contenders, and likely leaders meet each other more often after coverage. Existing manual exclusions, conservative bench criteria, rescue opportunities and confirmation across distinct recordings remain.
 
-The owner approved an optional short starter: up to12 targets, spread across known target families before filling remaining slots. It is clearly a subset, not a full-pool result. Early results say Early contenders; they do not declare a favorite after one win. Confirmation requires pool coverage, at least3 appearances and enough distinct opponents for each prospective finalist, and no exact third/fourth boundary tie. A new-run favorite requires completed finalist confirmation and positive direct margins against the other finalists. Ties and cycles can remain unresolved. Legacy runs retain the earlier scheduler/provenance; no saved records are rewritten.
+An optional short starter uses up to 12 targets, spread across known target families before filling remaining slots. It is clearly a subset, not a full-pool result. Early results say Early contenders; they do not declare a favorite after one win. Confirmation requires pool coverage, at least3 appearances and enough distinct opponents for each prospective finalist, and no exact third/fourth boundary tie. A new-run favorite requires completed finalist confirmation and positive direct margins against the other finalists. Ties and cycles can remain unresolved. Legacy runs retain the earlier scheduler/provenance; no saved records are rewritten.
 
 Regression checks cover60-target early contender meetings,12-target coverage/revisits, ties, old-run behavior and starter parsing. Seeded clear/close/cyclic simulations are diagnostics, not a human preference accuracy guarantee. The algorithm is a practical discovery procedure, not a definitive statistical ranking estimator.
 

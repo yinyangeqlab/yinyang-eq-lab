@@ -1,8 +1,6 @@
-# Local PEQdB integration review
+# PEQdB integration review
 
-Reviewed October 27, 2026. Repository `yinyangeqlab/yinyang-eq-lab`; isolated branch `work/peqdb-wasm-local-20261027`; base/HEAD `a0dad354fc62a5ac2f702b8a6fc8ee71348cc73a`, with uncommitted local changes. Live remains update124. Canonical drafts, lab identity guards and original historical provenance are preserved. No commit, push, deployment, production migration, live account action or participant-data operation occurred.
-
-Codex owns implementation and verification. The owner explicitly approved sending the prepared code-only packet to Anthropic for read-only Claude review. That review completed with tools and workspace access disabled; see `2026-10-27-peqdb-claude.md` for the exact packet hash, scope and original findings. No credentials, numerical datasets, recordings, participant records or private recovery configuration were sent. Codex validated the findings and made the local fixes below. No deployment is authorized.
+October 27, 2026. The review covered the PEQdB fitting Worker, legacy fallback, playback, exports and corresponding source packaging. The findings below were checked against the implementation and recorded with their validation results.
 
 ## Changes reviewed
 
@@ -32,9 +30,9 @@ Codex owns implementation and verification. The owner explicitly approved sendin
 
 Evidence is ignored under `artifacts/peqdb-autoeq/review/`; generated engine/source artifacts are under `artifacts/peqdb-autoeq/`. Raw third-party inputs and Emscripten remain outside Git. LGPL implementation and rebuild/recombination instructions: `docs/PEQDB_AUTOEQ.md`. No legal certification is claimed.
 
-## Claude findings and Codex triage
+## Independent review findings
 
-All eight numbered findings were accepted and fixed locally, with these scopes:
+The review identified eight issues. The table records the verified corrections.
 
 | Finding | Verified correction |
 | --- | --- |
@@ -63,11 +61,7 @@ PEQdB's ±16 dB / shelf-Q-3 bounds are explicitly documented as a policy differe
 - Final production build succeeds. The real packaged worker passes on both a bare static fixture and the loopback Cloudflare production preview, including correct module/WASM MIME types. The same worker returns legacy fits at 384 kHz and subsequently real PEQdB fits at 48 kHz. Application APIs are intercepted in the disposable review context. This does not verify the future live edge configuration.
 - Source/binary/notice hashes and build/source correspondence pass. Unreviewed code/data probes fail both Python preparation and JavaScript verification; modified assets and mismatched build stamps are rejected. Temporary probes were removed/restored. Independent archive reading verifies all 662 application entries, portable relative build commands, and dated notices on each changed C file.
 - Final corresponding source archive SHA-256: `99242d6ea7a498f1d1ceb64a6913cfadd84c82c435203d8decd94c9850fef784`. Public-only packaging succeeds with all 260 client dependency imports checked. `dist/.public-only-package` remains present; protected recordings were neither copied nor verified for release.
-- Live/recovery release metadata is unchanged. No commit, push, deployment, production migration, account action or participant-data mutation occurred. Original canonical drafts remain preserved.
-
-The optional Claude review is complete and all demonstrated integration findings are resolved locally. Physical headphone listening and Safari/iOS remain unverified. The temporary production verification server is stopped after review; the main development preview remains available at `http://127.0.0.1:5200/preference-tuning`.
-
 
 ## Safari/WebKit follow-up — October 28 UTC
 
-The owner requested local Safari/iOS compatibility checks and fixes without deployment. See `2026-10-28-peqdb-webkit.md` for the verified gesture, Tuning preloading/native-play, output-volume, interruption/progress and select-overflow corrections. Complete WebKit desktop/iPhone/iPad and Chromium emulation suites pass, as do the final typed build, matching LGPL package and real local production-preview worker checks. Actual Apple hardware remains unverified. The newer corresponding source archive is `9fa8a24bc72703761afda421a636caf3b6d17f30ca45baf1fb52f1714e989f75`; earlier archive hashes above remain historical checkpoints. No commit, publication or deployment occurred.
+The [Safari/WebKit review](2026-10-28-peqdb-webkit.md) covers gesture handling, Tuning preloading and native play, volume, interruption recovery and select overflow. Desktop and emulated mobile WebKit and Chromium checks, the typed build, the matching source package and the local production-preview Worker passed. Testing on physical Apple devices remains open. The corresponding source archive SHA-256 is `9fa8a24bc72703761afda421a636caf3b6d17f30ca45baf1fb52f1714e989f75`.

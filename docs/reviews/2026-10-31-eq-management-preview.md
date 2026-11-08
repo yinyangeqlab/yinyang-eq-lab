@@ -1,6 +1,6 @@
 # Saved EQ management follow-up — October 31, 2026
 
-Local preview only, based on verified live update130 / source `56ca7e46ccdeebc4eecf7e8b0732e17818ce252d`. Branch `work/eq-management-20261031` uses the existing unsealed preview worktree `work/saved-eq-channel-match-20261031`. Origin was fetched and divergence inspected; the canonical update130 immutable snapshot check passed before editing. Sealed release/build/infrastructure snapshots and unrelated canonical drafts remain untouched. No commit, push, deployment, production data change or backup operation occurred for this follow-up.
+The preview was based on update130, source `56ca7e46ccdeebc4eecf7e8b0732e17818ce252d`. This review records the implementation and local checks.
 
 The deletion delay came from repeated full headroom analysis in `safeLibraryEq`: three sample rates, 4097 frequency points per rate, per-filter response calculations and peak refinement, repeated for every remaining EQ during deletion and refresh. A bounded process-local cache now reuses the result only for identical validated filter coefficients. Preamp limits are still enforced on every read; changed filters receive fresh analysis. Bulk removal reads the freshest stored collection once, preserves surviving values, writes once, and notifies listeners once. Removal performs no frequency sweeps. Both listening panels and My space also refresh when account updates are applied in the same tab.
 

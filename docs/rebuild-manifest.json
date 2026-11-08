@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "a6fe8c0f460d09d8a09be4d8f0c8a0978558682f",
+  "baseRevision": "37b1cbca250c6870e0702dffa83963081b631bbe",
   "recordedLiveUpdate": 132,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -47,12 +47,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "a575e9e8158a0457f4ac9c45056fd1a34077413f669074aa55e22243a5510864",
+      "sha256": "94e8bfa9b687c83df146ebdf2004452c5baf78d2f92d33d1ce362825606b05d4",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "cb2098171dc34eebc3736b0dfdb64646506a99bb36fcc7f4b6867994e082cb3f",
+      "sha256": "d66513c4b03b452ac53bfd403968edc0c684be604f658f98e4673fd1ad4ef07c",
       "executable": false
     },
     {
@@ -72,7 +72,7 @@
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "ff595bcd7c28fe493ba2d21f726200a7327200c3ba99c442472c424595fc1d4a",
+      "sha256": "23c406635645230f02f4dc81677cbf8463fc7d992391530cd2858d6d81a6ddfc",
       "executable": false
     },
     {
@@ -1872,7 +1872,7 @@
     },
     {
       "path": "docs/ADMIN_TEST_ISOLATION.md",
-      "sha256": "6b757112d64961a78b478642a2b7044cce3f4d1719346dbaba1946968cab5822",
+      "sha256": "c32190aeb2a445365e595203ba91474c89d86d1ff1eb8295a199cb5f45f7e6d8",
       "executable": false
     },
     {
@@ -1921,11 +1921,6 @@
       "executable": false
     },
     {
-      "path": "docs/DRAFT_RECONCILIATION_2026-10-22.md",
-      "sha256": "03682bd31c73f15f763b61ec87deacab131780a085476c0781bfe228eb0e1805",
-      "executable": false
-    },
-    {
       "path": "docs/ENCRYPTED_BACKUP.md",
       "sha256": "4ec65645f75d57042ec9b219ebcef16fb8c577c915776e5483d02fc723e94f12",
       "executable": false
@@ -1942,7 +1937,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "e7eae8763d75eaaf54b6941cb4d23863b1a0f7e76fb548dd35301e699a0cfa69",
+      "sha256": "ff8363cfbea89b6a699517d57a066122db0f7594e7632f9b3b1b3507e3b7ef8e",
       "executable": false
     },
     {
@@ -1986,11 +1981,6 @@
       "executable": false
     },
     {
-      "path": "docs/LOCAL_REVIEW_HANDOFF_2026-10-19.md",
-      "sha256": "91a7359b125beb8d9ad8799536fbde89dbab42e563edf38c5bec36b1667ae148",
-      "executable": false
-    },
-    {
       "path": "docs/LOCAL_SETUP.md",
       "sha256": "e2439a2018bcd6d0eeb09a2523f7ba883fab19a3cd033dd5ac7ef6f620fccd73",
       "executable": false
@@ -2012,7 +2002,7 @@
     },
     {
       "path": "docs/PEQDB_AUTOEQ.md",
-      "sha256": "123bd8559da14ba6b95d9efbb1356348e85729f8f830a466dc1a0ab9e4cc4df2",
+      "sha256": "481c500a01c0d6361c27588995b23129052938d4f09dacad7a6ab3fef7c4cf45",
       "executable": false
     },
     {
@@ -2032,7 +2022,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "28f537cb245089cb986bb896c79a33c2af69b2eb2c55d63e7f99b91589d19d65",
+      "sha256": "ee2a52a88cad2cf3a264b28751d31370a621b8860a6d2a1444346aecc296c44d",
       "executable": false
     },
     {
@@ -2071,11 +2061,6 @@
       "executable": false
     },
     {
-      "path": "docs/TOURNAMENT_CHECKPOINT_2026-10-19.md",
-      "sha256": "d389a3b39697aab0f8bf7bc1cb245c04af399590f097dcacf46f57a752f38c75",
-      "executable": false
-    },
-    {
       "path": "docs/TOURNAMENT_REVIEW_2026-10-19.md",
       "sha256": "74b521f53ef65e340411c30844a1f9d5d55248fb994d64227f51e6aa9a5e84a4",
       "executable": false
@@ -2091,33 +2076,8 @@
       "executable": false
     },
     {
-      "path": "docs/history/HANDOFF-through-update73.md",
-      "sha256": "4918e2c77139ea12aadbff2e0bf59d90c38d121ae889636350f1e00a51c2ecc4",
-      "executable": false
-    },
-    {
-      "path": "docs/history/foundation-20261031/AGENTS.md",
-      "sha256": "aec3cec59f1a073ec84a1dabdc15da6908fcf58cf8af24b634050fe34a625728",
-      "executable": false
-    },
-    {
       "path": "docs/history/foundation-20261031/README.md",
-      "sha256": "bea35d479e6bcf1fe984d0d48bc26b5be3b46a8d9b358a9d8c6672924117b09b",
-      "executable": false
-    },
-    {
-      "path": "docs/history/foundation-20261031/README.original.md",
-      "sha256": "bc90c577127392851ae4c3d67566ba7b3027d385eaa1441981cc32006f1836e6",
-      "executable": false
-    },
-    {
-      "path": "docs/history/foundation-20261031/docs/HANDOFF.md",
-      "sha256": "98d7a07728efc9214938a7932e7a832e46587c9c32c872895eb8d7222e3bd69c",
-      "executable": false
-    },
-    {
-      "path": "docs/history/foundation-20261031/docs/REBUILD.md",
-      "sha256": "479ac0e54b0e84b63c688057e72a10f0ca8068ceefce8c3f73005a38a3b24c04",
+      "sha256": "cf4238684d6191fa6097d6cd42171e0399740c98d26c4eaaa8a04f3678b227c2",
       "executable": false
     },
     {
@@ -2127,7 +2087,7 @@
     },
     {
       "path": "docs/history/foundation-20261031/index.json",
-      "sha256": "4a34f7cbdd34a791acb72877bda7d29456ee91ec15cc406e0ac9659bb618f76a",
+      "sha256": "a73c0261535d5d84da753e234cd2face5e41356f7ba81c8d024da9562ee2aa87",
       "executable": false
     },
     {
@@ -2397,7 +2357,7 @@
     },
     {
       "path": "docs/reviews/2026-10-24-open-pr-examination.md",
-      "sha256": "070d1b7c4d8bb7777f062c7cf43badfe49989fd509c9cde8980fc95ac73632ab",
+      "sha256": "7f4e842819160917e5d1d90c30d0641ff5a4cdd0fa582944b4c907da96de3ff7",
       "executable": false
     },
     {
@@ -2406,18 +2366,13 @@
       "executable": false
     },
     {
-      "path": "docs/reviews/2026-10-27-peqdb-claude.md",
-      "sha256": "21317f72806de51caae5170c7533134cbb08251ba62ef1a856784320e0c42c8d",
-      "executable": false
-    },
-    {
       "path": "docs/reviews/2026-10-27-peqdb-local.md",
-      "sha256": "c1402c311f787a673aad5d7efdddb4a0738d8355ee9ab7295d1a5a0fee694ba0",
+      "sha256": "0fef980568535f5880a42cd0a79c0a40bed31b405986c900486f68a5e634cc10",
       "executable": false
     },
     {
       "path": "docs/reviews/2026-10-28-beginner-language-audit.md",
-      "sha256": "3db266100343de7aee1baff57d1fbb347dedd670fe7a3c08cf351a7ea182123b",
+      "sha256": "ab7a6fdad92397ae7106521df19246681783e69aa48dce0a461fc447b80b847c",
       "executable": false
     },
     {
@@ -2428,16 +2383,6 @@
     {
       "path": "docs/reviews/2026-10-28-novice-entry-and-library.md",
       "sha256": "f4d460c5d973ebe82020865c748e35210cca62973bed69ba15d798017a83f2b9",
-      "executable": false
-    },
-    {
-      "path": "docs/reviews/2026-10-28-novice-language-claude-decisions.md",
-      "sha256": "b4ef93010b404d55dc9ab682a219d5d2c088873101f88dfedb36f7986ce59cb6",
-      "executable": false
-    },
-    {
-      "path": "docs/reviews/2026-10-28-novice-language-claude.md",
-      "sha256": "7e7098f0c58e5aaf812d3dd55e895d0b3eb8860464fe2a735ca2913aa0de3f1c",
       "executable": false
     },
     {
@@ -2452,7 +2397,7 @@
     },
     {
       "path": "docs/reviews/2026-10-28-peqdb-webkit.md",
-      "sha256": "3bb8a9dfd42784828d66e643a88d3f7d87468cbbd25ee950713f45b1d14c683f",
+      "sha256": "3c359f065fb59d847832f8ed25b4b7dbe293d0d5d4aa8dfc2fcb759ba225415f",
       "executable": false
     },
     {
@@ -2462,7 +2407,7 @@
     },
     {
       "path": "docs/reviews/2026-10-29-compact-listening.md",
-      "sha256": "6ffe9cab62c7b7cab8c5e6a35291c23aab855de4e2921a327139038c525fc165",
+      "sha256": "ba99926ad66bdd8262f6c473917136a5991e1e825d36171c97ff6ef779f91fc5",
       "executable": false
     },
     {
@@ -2471,18 +2416,13 @@
       "executable": false
     },
     {
-      "path": "docs/reviews/2026-10-29-request-audit.md",
-      "sha256": "b50036b390d521069934cae270954fa520207af1db75eae12f5ba0a1d7d2d888",
-      "executable": false
-    },
-    {
       "path": "docs/reviews/2026-10-29-walkthrough-fixes.md",
-      "sha256": "748edd03e11efb50898d7a916fbc730694a08fecdb4370dbd71c7650867396d0",
+      "sha256": "77c9982bf78f10874656cb3b7ee8e778ef09fe657409835fd6bfa06919a09815",
       "executable": false
     },
     {
       "path": "docs/reviews/2026-10-30-glossary-search-library.md",
-      "sha256": "91bb6c74612683fca0038b6c223b85db07927eff2d49f4da3ea0379d4b43aabf",
+      "sha256": "ddd80c9594c895cb84392bb0d5998545a6be5cf450f4df2fb782ffddcf9aaaab",
       "executable": false
     },
     {
@@ -2502,12 +2442,12 @@
     },
     {
       "path": "docs/reviews/2026-10-31-engineering-foundation-review.md",
-      "sha256": "c5eb39257c0afc3fa7cb48f54f65e8822da5601918a7c1e4e996663544bbf3ea",
+      "sha256": "32ac838c94d702cb76126bcb802eb59d6b4077bec2f9454d9e460085692cfa73",
       "executable": false
     },
     {
       "path": "docs/reviews/2026-10-31-eq-management-preview.md",
-      "sha256": "0dec93adbb0eeb17b1c0e368db1eae8591e26e25d1a4904af17840091c57a8fb",
+      "sha256": "4aad8924afe20f3dcf0ed146277bf1798429c12208c657b3d5d4620a4a31e0d1",
       "executable": false
     },
     {
@@ -2517,17 +2457,17 @@
     },
     {
       "path": "docs/reviews/2026-10-31-tuning-unified-preview.md",
-      "sha256": "83733e2fd7de85d32049632d9698dfe355be5f67929949e9c05ff27311d19322",
+      "sha256": "05ce799d7b56d4da55166bc85991061b4e1d216a566ef387cd37606814f9a980",
       "executable": false
     },
     {
       "path": "docs/reviews/2026-11-04-generated-eq-comparison.md",
-      "sha256": "81697fea9faf5c46c74b76d9fbe321564ee43c8bb4d857bced6540d5b33cd14e",
+      "sha256": "fbcf1b097df8db6a9fd180f3f78e893c38feebdf83440b4a2f01a0cb97194152",
       "executable": false
     },
     {
       "path": "docs/reviews/2026-11-04-listening-controls.md",
-      "sha256": "9485ebadee14cb89fd31378b280fc9334171a90b307ce2c0ff552c63b4722193",
+      "sha256": "c3e750a0aa042fdbca88454067765d9635768a7c69a2565f224e4f58eef5ae32",
       "executable": false
     },
     {
@@ -4752,7 +4692,7 @@
     },
     {
       "path": "scripts/release-state.mjs",
-      "sha256": "532d341cb9a3791fb40ff560c8c035f897114af639deaf4fc9235ac4ba652aaa",
+      "sha256": "83d1ca42a4cf0786dc5d2bdc3b32540918a755349ce20c5c41087474cebf408f",
       "executable": false
     },
     {
