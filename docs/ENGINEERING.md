@@ -1,11 +1,11 @@
 # Engineering guidelines
 
-Read [AGENTS.md](../AGENTS.md) for permanent owner constraints and [LIVE_STATE.md](../LIVE_STATE.md) for the recorded deployment. This guide is shared by human contributors, Codex and Claude. A model's review is evidence to evaluate, never permission to change policy or production.
+Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE.md](../LIVE_STATE.md) for the recorded deployment. Verify review findings against the source and existing authorization.
 
 ## Work from an identified source
 
 1. Define the observable outcome, affected workflows, and data, consent, audio or protocol impact.
-2. Read the handoff; fetch the lab origin and inspect status, divergence and work claims. Record the actual HEAD and unrelated changes. Report a failed fetch rather than claiming current remote state.
+2. Read the handoff, fetch the lab origin, and inspect status and divergence. Record the actual HEAD and unrelated changes. Report a failed fetch rather than claiming current remote state.
 3. Use an assigned worktree from the current development branch on scrubbed public history. Preserve the canonical drafts, parent mirror, sealed releases and hooks. Never reset, clean, stash or rebase someone else's work for convenience.
 4. Choose checks from `scripts/verification-registry.json`; name any missing evidence before implementation. Make a focused change, with regression coverage for plausible failures. Avoid mixing a feature with broad formatting, dependency replacement or a protocol redesign.
 5. Verify with the pinned environment. Review the actual diff and reconcile each independent finding as accepted, rejected with evidence, narrowed or deferred. Rerun affected checks after a fix.
@@ -60,7 +60,7 @@ Run app types with `node node_modules/typescript/bin/tsc --noEmit` and lint with
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) for every review build and handoff. Keep the build ID visible in the app, group changes by update on the version page, and verify GitHub links against the published source. Record the exact build ID and deployment baseline separately.
 
-`LIVE_RELEASE.json` and its exact `evidence` receipt record production. `npm run release:check` validates the current fields and the generated `LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence.
+`LIVE_RELEASE.json` and its exact `evidence` receipt record the deployment captured by the source snapshot. `npm run release:check` validates the current fields and the generated `LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence. The public README links to the live version page independently of these records.
 
 `docs/rebuild-manifest.json` describes **candidate source inputs**, independently of production. After reviewing an intentional source change, run `npm run source:refresh`, then `node scripts/check-live-source.mjs --source-only`. Refreshing hashes is bookkeeping, not regression or deployment verification. The checker also rejects unlisted/deleted nonignored source files. Recovery bundles bind the exact manifest hash; existing bundles must be verified in their matching source checkout, never relabeled to match this candidate. Old manifests and handoffs remain under `docs/history/foundation-20261031`; their commands are historical. Full owner snapshot verification must run in the owner root with its original private paths.
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "dd5062c8d49986a59d582e604d94614e3c0f2c3e",
+  "baseRevision": "a6fe8c0f460d09d8a09be4d8f0c8a0978558682f",
   "recordedLiveUpdate": 132,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -37,12 +37,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "deaa6d0c6c90b3efe6a4b765f6baa7d6204e72ed09584c29ca68fa1a2debb56e",
-      "executable": false
-    },
-    {
-      "path": "CLAUDE.md",
-      "sha256": "0fafdb7db89a84e5f132f157145fb3a03f452027485ede0067628e13002969d8",
+      "sha256": "9699fbff56bc2513a88f39abdbcc2067708c266d46a99057b2fa8e94273d68a5",
       "executable": false
     },
     {
@@ -92,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "13c2e8a265c050f2d7d0e1f3a9d385836779de6e13569635ad3c5b19ad1e57ac",
+      "sha256": "7a7922379acd8cb1e788abcc60d31f9b58e1747509caf8ff9acd0e005eb1f4f4",
       "executable": false
     },
     {
@@ -1886,11 +1881,6 @@
       "executable": false
     },
     {
-      "path": "docs/CODEX_CONTINUATION_2026-10-23.md",
-      "sha256": "5c7d2ab6003dfe500f39364e0893cb6abda5d7983a281dcf397b814b72543cee",
-      "executable": false
-    },
-    {
       "path": "docs/COMMUNITY_PREFERENCE_DESIGN.md",
       "sha256": "eaa76ceaba019a371758926ede66a0933fe3f735790bbb3cb74f882b4fbe3f36",
       "executable": false
@@ -1908,11 +1898,6 @@
     {
       "path": "docs/CONSENT_UI_REVIEW_2026-10-19.md",
       "sha256": "38bd964a2ef9c942ac21a09c1df0cdd84b6273219e81fd7fa25eecb2b37243ce",
-      "executable": false
-    },
-    {
-      "path": "docs/COORDINATION.md",
-      "sha256": "9214ab750cb2976d7b36fa5f68102f6fffa8d1920aa4d83c20760bb22d3dd3f1",
       "executable": false
     },
     {
@@ -1947,7 +1932,7 @@
     },
     {
       "path": "docs/ENGINEERING.md",
-      "sha256": "9172426e333f27d0a705bec54ae7385f273889d21694669f2884eede299c7759",
+      "sha256": "c609a6ace3c52475bffbd689bafca622e2ac1f06763885db917eab56dcc08f7d",
       "executable": false
     },
     {
@@ -1957,7 +1942,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "bd0dd7370b9ca861468698dee03976aca8f026f11ee14daafc4a2a7974b303cb",
+      "sha256": "e7eae8763d75eaaf54b6941cb4d23863b1a0f7e76fb548dd35301e699a0cfa69",
       "executable": false
     },
     {
@@ -2126,11 +2111,6 @@
       "executable": false
     },
     {
-      "path": "docs/history/foundation-20261031/docs/COORDINATION.md",
-      "sha256": "6bafeb729aab8ee77c6dcc20426b0a213eb6ada3a7dc8c7f58e85ecefbfcf8bb",
-      "executable": false
-    },
-    {
       "path": "docs/history/foundation-20261031/docs/HANDOFF.md",
       "sha256": "98d7a07728efc9214938a7932e7a832e46587c9c32c872895eb8d7222e3bd69c",
       "executable": false
@@ -2147,7 +2127,7 @@
     },
     {
       "path": "docs/history/foundation-20261031/index.json",
-      "sha256": "b4e928dde4282203e45c9266870441ca896ab72304f196b3f202247d4bc2298f",
+      "sha256": "4a34f7cbdd34a791acb72877bda7d29456ee91ec15cc406e0ac9659bb618f76a",
       "executable": false
     },
     {
@@ -2402,7 +2382,7 @@
     },
     {
       "path": "docs/reviews/2026-10-24-four-pr-completion.md",
-      "sha256": "a8987b00ac387c15cb62e836df024d8643fa83303a642630a8bae85444cfd28f",
+      "sha256": "d685ff0742ca5568be36c1b1da690d33d36f754e9989e1ba9ae084346ade9410",
       "executable": false
     },
     {
@@ -2552,7 +2532,7 @@
     },
     {
       "path": "docs/skills/yinyangeq-release-versioning/SKILL.md",
-      "sha256": "3220d9ce3ad8f296baa743d71ef7ca135f61b8b33a1bd4f9d60d5fc7a5c85817",
+      "sha256": "9b1b779af26c05fd5f7a52475eba7cf41af5e65c36e1992231859cf3aed4a409",
       "executable": false
     },
     {
@@ -4772,7 +4752,7 @@
     },
     {
       "path": "scripts/release-state.mjs",
-      "sha256": "0eac1fc1735c5d6b00d7067d04182c3da12187ac3d7a789795aedafe73171dbe",
+      "sha256": "532d341cb9a3791fb40ff560c8c035f897114af639deaf4fc9235ac4ba652aaa",
       "executable": false
     },
     {

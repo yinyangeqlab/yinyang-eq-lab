@@ -2,7 +2,7 @@
 
 Owner requirement: use ONLY the `yinyangeqlab` GitHub account for all project contributions, commits, pushes, pull requests, and publication. NEVER use a personal GitHub account, personal email, or the inherited global Git identity. Set Git author AND committer to `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>`; GitHub connector commits must use the yinyangeqlab connection. Verify both actual identities before every commit/publication, including in temporary clones, worktrees, scripts, and tools. Repository ownership alone does not control attribution. Preserve local identity guards and never bypass them. Never republish pre-scrub history: use the scrubbed main history for publication, while preserving original historical release provenance. Stop if the lab identity cannot be verified. This is a permanent owner instruction for every future session.
 
-Read [docs/ENGINEERING.md](docs/ENGINEERING.md) for shared engineering guidelines and verification. Follow the [release versioning skill](docs/skills/yinyangeq-release-versioning/SKILL.md) for version labels, changelog updates, and handoffs. Read [docs/COORDINATION.md](docs/COORDINATION.md) before claiming work. Codex owns implementation; Claude is review-only unless the owner explicitly assigns implementation in a separate worktree. Review findings require source verification and triage.
+Read [docs/ENGINEERING.md](docs/ENGINEERING.md) for shared engineering guidelines and verification. Follow the [release versioning skill](docs/skills/yinyangeq-release-versioning/SKILL.md) for version labels, changelog updates, and handoffs. Verify review findings against source before acting on them.
 
 # Canonical GitHub repository — renamed October 21, 2026
 

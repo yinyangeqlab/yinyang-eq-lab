@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-export const handoffs = ['README.md', 'HANDOFF.md', 'HOSTING_HANDOFF.md', 'docs/HANDOFF.md', 'docs/REBUILD.md', 'docs/RECOVERY.md'];
+export const handoffs = ['HANDOFF.md', 'HOSTING_HANDOFF.md', 'docs/HANDOFF.md', 'docs/REBUILD.md', 'docs/RECOVERY.md'];
 const start = '<!-- release-state:start -->', end = '<!-- release-state:end -->';
 const check = (condition, message) => assert.ok(condition, `Release state: ${message}`);
 const boolean = (value, name) => check(typeof value === 'boolean', `${name} must be boolean`);

@@ -15,10 +15,6 @@
       "sha256": "479ac0e54b0e84b63c688057e72a10f0ca8068ceefce8c3f73005a38a3b24c04"
     },
     {
-      "originalPath": "docs/COORDINATION.md",
-      "sha256": "6bafeb729aab8ee77c6dcc20426b0a213eb6ada3a7dc8c7f58e85ecefbfcf8bb"
-    },
-    {
       "originalPath": "docs/rebuild-manifest.json",
       "sha256": "7475deec3be9ffdc4da380acef8c76e6bcb5aba721eb8d85f1a0a95aa5760d96"
     },

@@ -8,22 +8,18 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Public beta · 0.2.0-beta.1** — [About this version](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Live beta · update135** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
 [![Source code license: Apache 2.0](https://img.shields.io/badge/source_code_license-Apache_2.0_code_only-59d9ce?style=flat-square)](LICENSE_SCOPE.md)
-**Development assistance: OpenAI Codex and Anthropic Claude.**
 
 </div>
 
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-<!-- release-state:start -->
-Recorded deployment: **update132**, source `f33b8fb2906e3005a50f06e3fc436b1b145c2e79`.
-Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
-<!-- release-state:end -->
+Update135 links the [published update134 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update134) from the live version page. Update134 introduced [Peak & Dip Finder](https://yinyangeq.com/ear-tuning) with guided listening practice, a frequency playhead, exact Hz entry, and an optional saved headphone or IEM measurement.
 
 The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
 
@@ -108,7 +104,7 @@ If the data eventually supports a finding, it would be reported with its limits,
 
 ## Participation, privacy, and your data
 
-See [the recorded live state](LIVE_STATE.md) for maintenance and access status. Under the ordinary participation policy, browsing does not ask for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
+See the [live version page](https://yinyangeq.com/version) for current availability. Under the ordinary participation policy, browsing does not ask for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
 
 - tags and fingerprints of music from your own device
 - identifiable activity monitoring
@@ -135,7 +131,7 @@ The shareable tool lets participants with app access build a blind A/B for two t
 
 ## Current status
 
-- **Release, access and recovery status:** see the generated [live state](LIVE_STATE.md), backed by [LIVE_RELEASE.json](LIVE_RELEASE.json) and its exact verification receipt.
+- **Live release and access:** see the [live version page](https://yinyangeq.com/version). The [recorded release state](LIVE_STATE.md) describes this checkout’s source snapshot and its verification receipts.
 - **Not verified:** physical headphone output, and real Safari/iOS interruption and recovery.
 - **Beta:** some features may be unfinished and bugs may appear.
 - **Free and noncommercial:** the site has no advertising, payments or paid features, and its [privacy notice](https://yinyangeq.com/privacy) states that data is not sold or used for advertising.
@@ -175,12 +171,12 @@ Music, target curves, measurements and datasets keep their own licenses and are 
 - **Waveform data:** `data/music-waveforms.json` and `data/listening-pool-waveforms.json` hold cached waveform summaries, which are peak envelopes and not audio. They are outside the Apache grant and describe recordings that carry their own licenses; see [THIRD_PARTY.md](THIRD_PARTY.md).
 - **Targets and measurements:** numerical target seed data is excluded because redistribution rights are not established for all of it. No PEQdB curves, preset exports or application code are included; PEQdB is referenced as a target creator and for its TXT preset format. The [target inventory](docs/TARGET_INVENTORY.md) lists names and categories only.
 
-## Acknowledgments and how this was built
+## Acknowledgments
 
 - Headphone measurement indexes: [AutoEq](https://github.com/jaakkopasanen/AutoEq) (MIT) and [Jay’s Audio](https://github.com/JaysAudio/JaysAudio.github.io) (0BSD). Target credits include Tryptify, AutoEq and MrChillStorm sources; see [TARGET_INVENTORY](docs/TARGET_INVENTORY.md) and [THIRD_PARTY](THIRD_PARTY.md). Credit does not imply endorsement.
 - UI components adapted from [shadcn/ui](https://github.com/shadcn-ui/ui) (MIT). Sites integration code retains OpenAI’s MIT notice. Installed packages keep their own licenses.
 - Trailer soundtrack: “Discovery” by [Scott Buckley](https://www.scottbuckley.com.au/library/discovery/), CC BY 4.0. Mobile walkthrough: “The Funk” by Hotham, CC BY 4.0. Full media credits: [DEMO](docs/DEMO.md), [MOBILE_DEMO](docs/MOBILE_DEMO.md), [VIDEOS](docs/VIDEOS.md).
-- **Yin Yang EQ Lab directs and maintains this project, with assistance from OpenAI Codex and Anthropic Claude.** Both tools have assisted with code, documentation and review. Yin Yang EQ Lab remains responsible for project decisions and releases. Third-party components and data keep their original credits and licenses. Stack: TypeScript, React, Next.js/Vinext, the Web Audio API, Cloudflare Workers and D1.
+- Development assisted by OpenAI Codex and Anthropic Claude.
 
 ## Bugs, ideas, and contact
 

@@ -8,4 +8,4 @@ All four PRs (#7, #8, #9, #10) are merged with verified lab author and committer
 
 The entire site remains under owner-only maintenance. Only existing admin sign-in and valid authenticated admin sessions have application access. Final live assets/modules and private EQ/version pages passed verification; the final infrastructure preview has four unchanged resources. Source-only recovery registration, independent reconstruction and hosted validation passed without a migration, data export or new data snapshot. Existing data timestamps are unchanged. Physical headphones and Safari/iOS are not newly certified.
 
-This resolves the actionable findings in the earlier open-PR examination; that examination remains a historical source review. See LIVE_STATE.md, docs/COORDINATION.md and docs/releases/update120-verification.json.
+This resolves the actionable findings in the earlier open-PR examination, which remains a historical source review. See [the update120 verification receipt](../releases/update120-verification.json).

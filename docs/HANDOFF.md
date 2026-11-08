@@ -12,11 +12,9 @@ The deployed source is recorded in [the verification receipt](releases/update132
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 
 
-Read [AGENTS.md](../AGENTS.md), [ENGINEERING.md](ENGINEERING.md), [COORDINATION.md](COORDINATION.md), [REBUILD.md](REBUILD.md) and [RECOVERY.md](RECOVERY.md). `LIVE_RELEASE.json` with its receipt is production evidence. The generated state is a view, not a claim that the current checkout matches it.
+Read [AGENTS.md](../AGENTS.md), [ENGINEERING.md](ENGINEERING.md), [REBUILD.md](REBUILD.md) and [RECOVERY.md](RECOVERY.md). `LIVE_RELEASE.json` and its receipt document the deployment captured by this source snapshot. See the [live version page](https://yinyangeq.com/version) for the build currently served.
 
 The owner development root is `workspace/`; the parent is an old live mirror. Fetch the lab origin and inspect status/divergence before choosing a baseline. The canonical main contains preserved drafts and old history: do not reset, stash, clean or publish it. Use an assigned isolated worktree on scrubbed public lineage, carrying forward the current development source deliberately. Keep sealed source/build and infrastructure snapshots unchanged. A worktree's relative private snapshot paths need not exist: full snapshot checks belong in the owner root.
-
-The engineering foundation is local work on `work/engineering-foundation-20261031`, based on development revision `08ede015c438e743f371fcf679058b5c27dcb3a1`. Its scope is shared guidelines, consistent release views and verification orchestration. It changes no runtime behavior. Commit, push and deploy were explicitly excluded. See [COORDINATION.md](COORDINATION.md) for the claim; status of production/publication/recovery always comes from the generated state.
 
 Use `npm run verify:list` to inspect scope and prerequisites, then `npm run verify` for public/source/synthetic checks. Missing prerequisites or failed checks fail the run. App/infra types, lint, build, browser and owner checks remain separately declared. Neither a passing public profile nor a manifest refresh is a release approval.
 
