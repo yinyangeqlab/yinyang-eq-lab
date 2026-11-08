@@ -11,6 +11,10 @@
 .ear-tool h1, .ear-tool h2 { margin: 0; }
 .ear-intro { display: grid; gap: 8px; margin-bottom: 2px; }
 .ear-intro h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.04; letter-spacing: -.04em; }
+.ear-safety { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: 8px; }
+.ear-tool .ear-safety p { flex: 1 1 290px; color: #ffdfaf; font-size: 13px; }
+.ear-focus { display: grid; gap: 4px; }
+.ear-focus small, .ear-card p.ear-help { color: #b7cdd1; font-size: 12px; line-height: 1.5; }
 .ear-kicker, .ear-step, .ear-legend { display: flex; align-items: center; gap: 8px; }
 .ear-kicker { color: #89decb; font-size: 13px; font-weight: 700; }
 .ear-step { color: #9ae8d5; }
@@ -59,9 +63,8 @@
   gap: 8px;
 }
 .ear-add, .ear-save-actions { align-items: center; }
-.ear-range, .ear-volume, .ear-transport label, .ear-adjustment label, .ear-base label, .ear-name { display: grid; gap: 5px; }
-.ear-range span { display: flex; justify-content: space-between; gap: 8px; }
-.ear-range strong { color: #ffe3a8; font-variant-numeric: tabular-nums; }
+.ear-measurement, .ear-volume, .ear-transport label, .ear-adjustment label, .ear-base label, .ear-name { display: grid; gap: 5px; }
+.ear-measurement { max-width: 380px; }
 .ear-volume { flex: 1 1 145px; margin-inline-start: 8px; }
 .ear-check, .ear-mode label { display: flex; align-items: center; gap: 7px; }
 .ear-setup { padding: 8px 10px; border: 1px solid #36545c; border-radius: 8px; }

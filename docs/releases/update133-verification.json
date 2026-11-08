@@ -1,0 +1,48 @@
+{
+  "update": 133,
+  "sourceCommit": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+  "deploymentVerification": {
+    "at": "2026-11-08T06:48:16.657151+00:00",
+    "update": 133,
+    "revision": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "operationalNoticePreserved": true,
+    "nonAppResourcesUnchanged": true,
+    "anonymousMediaProtectionVerified": true,
+    "directGitHubReleaseLinkVerified": true,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "exactServerModulesVerified": 318,
+    "publicPagesVerified": 6,
+    "publicAssetsVerified": 1350,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "productionAdminSessionUsed": false
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 120,
+    "regressionSuitesFailed": 0,
+    "sourceRevision": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1228,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1"
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false
+  },
+  "migrations": [],
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "sourceOnlyRecoveryRegistrationPending": true
+}

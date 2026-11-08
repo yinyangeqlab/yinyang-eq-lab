@@ -1,14 +1,21 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "a6fe8c0f460d09d8a09be4d8f0c8a0978558682f",
-  "recordedLiveUpdate": 132,
+  "baseRevision": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+  "recordedLiveUpdate": 133,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [],
+  "reviewedUntrackedFiles": [
+    "app/ear-tuning/frequency-navigator.css",
+    "app/ear-tuning/frequency-navigator.tsx",
+    "app/ear-tuning/guide.css",
+    "app/ear-tuning/guide.tsx",
+    "docs/releases/update133-recovery-verification.json",
+    "docs/releases/update133-verification.json"
+  ],
   "files": [
     {
       "path": ".gitignore",
@@ -52,12 +59,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "a575e9e8158a0457f4ac9c45056fd1a34077413f669074aa55e22243a5510864",
+      "sha256": "4065dd6e57115a848c5e9e0d185ecac419ba0388aa5b3d455218c9bcc1705fca",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "cb2098171dc34eebc3736b0dfdb64646506a99bb36fcc7f4b6867994e082cb3f",
+      "sha256": "93b4e02e45e000dcbbdbe49511a8cd7ec776959bd752715c1d671139d2691049",
       "executable": false
     },
     {
@@ -72,12 +79,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "553b8fc11da4a2a885f9c52d1c969511e8b30a5a05a0b29a79b43353e33b710b",
+      "sha256": "27b130e655de9d12e5914acec5c5e37cd11e52fc9f36d854f8357c682b474cb0",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "ff595bcd7c28fe493ba2d21f726200a7327200c3ba99c442472c424595fc1d4a",
+      "sha256": "774bd66d74310aae601ff255cc10fed75a43a70ed76134099256c6e6b553a849",
       "executable": false
     },
     {
@@ -92,7 +99,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "13c2e8a265c050f2d7d0e1f3a9d385836779de6e13569635ad3c5b19ad1e57ac",
+      "sha256": "0165c697c513a5dc19e46a2834275caf40af61aa52b4c268d89f60811b42766c",
       "executable": false
     },
     {
@@ -421,18 +428,38 @@
       "executable": false
     },
     {
+      "path": "app/ear-tuning/frequency-navigator.css",
+      "sha256": "f3042a2f174f85fc7ed6a1b56cbb473c8476d76cc49363e0e46e07743c451ec7",
+      "executable": false
+    },
+    {
+      "path": "app/ear-tuning/frequency-navigator.tsx",
+      "sha256": "0f8fdc98be353036326ee68152d6d3d7014ddbbdc6a7b0d98f7578e81e591092",
+      "executable": false
+    },
+    {
+      "path": "app/ear-tuning/guide.css",
+      "sha256": "1a939fc34b44893e2da5b9bb2102c46613620b95ca04751e644d91c89b81ae67",
+      "executable": false
+    },
+    {
+      "path": "app/ear-tuning/guide.tsx",
+      "sha256": "cf6674b39067ce7b8ba60b9cf68c0c17eb0484e5a75de5e271bcb50175f4ad2d",
+      "executable": false
+    },
+    {
       "path": "app/ear-tuning/layout.tsx",
       "sha256": "f3c4d40d75c230c5cf411cc2bd83a62115100ff9ea4abb43035f7a4b17e60ac2",
       "executable": false
     },
     {
       "path": "app/ear-tuning/page.tsx",
-      "sha256": "4959ce18c30f1c10ab44e2bf3c734f6c797b0f494675d3c77d7380ba2100e339",
+      "sha256": "b1f02f3028dbfe9109c11d072eab485adbf11da1b51bc7ded2e19aae6662e557",
       "executable": false
     },
     {
       "path": "app/ear-tuning/style.css",
-      "sha256": "2121108235d86ab83c6977284146119ae90b1d7d0e4d9805ec837adac9e7c025",
+      "sha256": "c99544d4ff74e1a9810523bdf3c1f5400b4764c8e6bd0901fcd00294845960d7",
       "executable": false
     },
     {
@@ -562,7 +589,7 @@
     },
     {
       "path": "app/page.tsx",
-      "sha256": "4b94774f21998ae2466af61df3d6b2aee8eaccf09cc6247ac5c4bed77bbbbf3c",
+      "sha256": "26064c0d08edd8508a723b9e122920ad45a5b53779222598532c6632867ab373",
       "executable": false
     },
     {
@@ -692,7 +719,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "fb0a5f7ebd0a2d9633a00eb00bfeaf0b8d297e2054b6a4cc05a4c14a88917bdd",
+      "sha256": "8e7e4894c71816c76644682dcd1b32b4f20e60e0e9dbe4aa4edba99b4a3894e2",
       "executable": false
     },
     {
@@ -852,7 +879,7 @@
     },
     {
       "path": "components/action-hover.css",
-      "sha256": "6ef242563e3e76b39a7c68a29d3977ec379932823308250ef474d4a76c0bb75a",
+      "sha256": "1c329d2fe54162a0fdb4fe5518bb8217ba550bd806589c602929414f2d93610a",
       "executable": false
     },
     {
@@ -897,7 +924,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "3709a0d57bb215a6300dcc506d647a08b629ed9372af96734094629bdcbf488d",
+      "sha256": "c81f207817a74756031e86f4ca5aa0e61ffa263901e1f7485782441b4db7d29e",
       "executable": false
     },
     {
@@ -912,7 +939,7 @@
     },
     {
       "path": "components/before-you-listen.tsx",
-      "sha256": "ad88056ebd7bd22663a20be374a4c6414b81d01958e2792e7a7cfbd4caa360d7",
+      "sha256": "20713f5edef863e65f9bda617a1a5c9efaac996a0b74aa4a3c614d9f530caa28",
       "executable": false
     },
     {
@@ -1912,7 +1939,7 @@
     },
     {
       "path": "docs/COORDINATION.md",
-      "sha256": "9214ab750cb2976d7b36fa5f68102f6fffa8d1920aa4d83c20760bb22d3dd3f1",
+      "sha256": "2e5726ecba4871fbb5331fe096ce7fa1cb1f03993b8f1af94df51a57a50ea957",
       "executable": false
     },
     {
@@ -1957,7 +1984,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "5921a3c017dce88f87a24ddd75a4cd42dc203d217157bc3ac962ad48c50d684f",
+      "sha256": "c6ecf0fde701307b801476ce98813a22d9ed367deb3bb9b7765deaab45e4ea1c",
       "executable": false
     },
     {
@@ -2047,7 +2074,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "28f537cb245089cb986bb896c79a33c2af69b2eb2c55d63e7f99b91589d19d65",
+      "sha256": "0a3f1509a059bb5bb9680be6b42d9f3f08ed58e8a1e83a1bc1fc4b17b46bdb6e",
       "executable": false
     },
     {
@@ -2057,7 +2084,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "9c96fe698640ff67c2083c681fd2edeb0b4f07f1d9323e52b54935f16622c456",
+      "sha256": "ea9333957cd9fa9524c4f33b4303e125f5bba1abe781b57345918ab1b6b7929d",
       "executable": false
     },
     {
@@ -2363,6 +2390,16 @@
     {
       "path": "docs/releases/update132-verification.json",
       "sha256": "17ac14ec4c8f08bcbde48ffb88b05d07b108feb51508608b159a9d6bfdf28aeb",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update133-recovery-verification.json",
+      "sha256": "45eaef1d5728c74a37f47b2136d175919299e867464f6e0cf21fe96a4a18d088",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update133-verification.json",
+      "sha256": "e24e24b9b0fb12e6485bbd1474953cb2eedacf1746757cd972896b8b121ed546",
       "executable": false
     },
     {
@@ -3312,7 +3349,7 @@
     },
     {
       "path": "lib/ear-tuning-audio.ts",
-      "sha256": "fc77eafc27b00c20a7d3564afe4305a43c28dfe0fd1d35f8e952b657c037c585",
+      "sha256": "2857bc5f2d63ae5caaa59cf87f0792c7bb08a4723e24e81c6b2d8ce08df74213",
       "executable": false
     },
     {
@@ -3427,7 +3464,7 @@
     },
     {
       "path": "lib/maintenance-options.ts",
-      "sha256": "5df84427070c0c2cff1f84ec8f8eb7ced014db7db29c6b7f79ca5710e30d60a2",
+      "sha256": "7e899a90af63b592ebb1c58f1ced4f591315363bf92079cf9b3209b6523020ac",
       "executable": false
     },
     {
@@ -3627,12 +3664,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "de5960a6413b95b86bd91466d87192713b20460048554eaa52e390140b62b8c6",
+      "sha256": "1b266697cabedbdbfcca362feaab0f6c71bf0f63dadce44ecf661aab8bd27992",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "78d64bbff6e87e3f31dfe58f319f46ecebb6c660d0c4f5c2bc74213af21b9fc3",
+      "sha256": "bd0315100403a253747e7885a4709ff1cdd6862d9ee0fd9d2b7d2b2ebfa2ceda",
       "executable": false
     },
     {
@@ -3687,7 +3724,7 @@
     },
     {
       "path": "lib/share-pages.mjs",
-      "sha256": "11034f3f801ee09036a97cbb3afee4251f43a59077866481c1bea09481730b5d",
+      "sha256": "a6e9eaddd21c3f42af4fa1bf86cc04a00bb703f0be3e36ab2030aecae36136c5",
       "executable": false
     },
     {
@@ -4252,7 +4289,7 @@
     },
     {
       "path": "scripts/check_main_workflows.mjs",
-      "sha256": "728d82f0f5617d25be4812136182d4149e4de9480a1615495f8cb0cb1c33b0dd",
+      "sha256": "b736cd836236a72aab6813131282bed3b5cad405c80d32436b10208d052579ea",
       "executable": false
     },
     {

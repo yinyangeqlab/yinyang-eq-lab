@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioLines, Headphones, Pause, Play, Plus, Save, SlidersHorizontal, Trash2 } from "lucide-react";
+import BeforeYouListen from "@/components/before-you-listen";
 import MusicTrackPicker from "@/components/music-track-picker";
 import { type PeqFilter, response } from "@/lib/autoeq";
 import { fitAutoEqAsync } from "@/lib/autoeq-client";
@@ -14,6 +15,8 @@ import { DEFAULT_FITTER } from "@/lib/fitter-settings";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import { listeningPool } from "@/lib/music-catalog";
 import { safeLibraryEq, saveLibraryEq } from "@/lib/music-library-eq";
+import FrequencyNavigator from "./frequency-navigator";
+import EarTuningGuide from "./guide";
 import "./style.css";
 
 type MarkKind = "peak" | "dip";
@@ -22,12 +25,18 @@ type Target = { id: string; name: string; points: Point[] };
 type Base = { key: string; fit: AutoEqFit };
 const flat: Target = { id: "flat", name: "Flat reference", points: [[20, 0], [20000, 0]] };
 const emptyFilters: PeqFilter[] = [];
+const INITIAL_LISTENING_LEVEL = .10;
 const stimuli = [
-  { id: "sine", name: "Sine tone", help: "A single pitch for locating a peak or dip." },
-  { id: "pink", name: "Pink noise", help: "A steady noise for hearing the balance across frequencies." },
-  { id: "harmonics", name: "Harmonic tone", help: "A pitched sound with overtones, closer to a musical note." },
-  { id: "music", name: "Music", help: "Use a familiar passage to decide if the change helps." },
+  { id: "sine", name: "Sine tone", help: "Hear one pitch at a time to locate a peak or dip." },
+  { id: "pink", name: "Pink noise", help: "Hear steady noise across a wide range. Focus on a frequency region to check it in isolation." },
+  { id: "harmonics", name: "Harmonic tone", help: "Hear the selected pitch with overtones, closer to a musical note." },
+  { id: "music", name: "Music", help: "Play a familiar passage to decide if the change helps." },
 ] as const;
+const pitchOffsets = [
+  { label: "Lower", octaves: -1 / 6 },
+  { label: "Center", octaves: 0 },
+  { label: "Higher", octaves: 1 / 6 },
+];
 const sweepRanges = [
   { name: "Bass · 40–250 Hz", from: 40, to: 250 },
   { name: "Mids · 250 Hz–2 kHz", from: 250, to: 2000 },
@@ -52,7 +61,7 @@ function AdjustmentGraph({ filters, base, hz }: { filters: PeqFilter[]; base: Pe
   const path = (key: "start" | "end") => rows.map((row, i) =>
     `${i ? "L" : "M"}${x(row.frequency).toFixed(1)} ${y(row[key]).toFixed(1)}`).join(" ");
   return <div className="ear-plot">
-    <svg viewBox="0 0 560 200" role="img" aria-label="EQ gain across frequencies. Gray shows the starting EQ. Teal shows the EQ with your changes.">
+    <svg viewBox="0 0 560 200" role="img" aria-label="EQ gain across frequencies. Gray shows the EQ before adjustments. Teal shows the EQ after adjustments.">
       <line x1="42" x2="539" y1={y(0)} y2={y(0)} stroke="#4e636a"/>
       <text x="35" y={y(0) + 4} textAnchor="end">0 dB</text>
       {[40, 100, 500, 2000, 8000, 16000].map(tick => <g key={tick}>
@@ -63,20 +72,25 @@ function AdjustmentGraph({ filters, base, hz }: { filters: PeqFilter[]; base: Pe
       <path d={path("end")} stroke="#84e8ce" strokeWidth="2.4" fill="none" vectorEffect="non-scaling-stroke"/>
       <line x1={x(hz)} x2={x(hz)} y1="18" y2="163" stroke="#efc480" opacity=".8"/>
     </svg>
-    <div className="ear-legend"><span><i/> Starting EQ</span><span><i/> With your changes</span><span><i/> Current frequency</span></div>
+    <div className="ear-legend"><span><i/> Before adjustments</span><span><i/> After adjustments</span><span><i/> Current frequency</span></div>
   </div>;
 }
 
 export default function EarTuningPage() {
   const audio = useRef<HTMLAudioElement>(null);
   const engine = useRef<EarTuningAudio | null>(null);
+  const stopPracticeRef = useRef<(() => void) | null>(null);
+  const warningAcknowledged = useRef(false);
+  const pendingListening = useRef<(() => void) | null>(null);
+  const [warningOpen, setWarningOpen] = useState(false);
   const fileUrl = useRef("");
   const fitRequest = useRef<AbortController | null>(null);
   const [signal, setSignal] = useState<EarSignal>("sine");
   const [hz, setHz] = useState(2400);
+  const [pitchAnchor, setPitchAnchor] = useState<number | null>(null);
   const [rangeIndex, setRangeIndex] = useState(2);
-  const [volume, setVolume] = useState(.18);
-  const volumeRef = useRef(.18);
+  const [volume, setVolume] = useState(INITIAL_LISTENING_LEVEL);
+  const volumeRef = useRef(INITIAL_LISTENING_LEVEL);
   const [bandFocus, setBandFocus] = useState(false);
   const [bypass, setBypass] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -108,6 +122,7 @@ export default function EarTuningPage() {
   const canPlay = canAudition && (signal !== "music" || !!chosenSong?.url);
   const canSave = canAudition && adjustments.some(row => row.gain !== 0);
   const sweepAvailable = signal === "sine" || signal === "harmonics";
+  const pitchReference = pitchAnchor ?? hz;
 
   useEffect(() => {
     try {
@@ -163,15 +178,18 @@ export default function EarTuningPage() {
   useEffect(() => () => fitRequest.current?.abort(), [setupKey, mode]);
   useEffect(() => {
     engine.current?.configure({ base: baseFilters, preamp: currentBase?.preamp ?? 0, adjustments, bypass,
-      focus: bandFocus && (signal === "music" || signal === "pink"), hz });
-  }, [baseFilters, currentBase?.preamp, adjustments, bypass, bandFocus, signal, hz]);
+      focus: bandFocus && (signal === "music" || signal === "pink") });
+  }, [baseFilters, currentBase?.preamp, adjustments, bypass, bandFocus, signal]);
   useEffect(() => {
     if (!sweeping) return;
-    const timer = window.setInterval(() => {
+    let frame: number;
+    const followSweep = () => {
       const current = engine.current?.sweepPosition;
       if (current != null) setHz(boundHz(current));
-    }, 50);
-    return () => window.clearInterval(timer);
+      frame = window.requestAnimationFrame(followSweep);
+    };
+    frame = window.requestAnimationFrame(followSweep);
+    return () => window.cancelAnimationFrame(frame);
   }, [sweeping]);
 
   function stop() {
@@ -180,8 +198,59 @@ export default function EarTuningPage() {
     setPlaying(false); setStarting(false); setSweeping(false);
   }
 
+  function requestListening(action: () => void) {
+    if (warningAcknowledged.current) {
+      action();
+      return;
+    }
+    pendingListening.current = action;
+    setWarningOpen(true);
+  }
+
+  function acknowledgeWarning() {
+    warningAcknowledged.current = true;
+    const action = pendingListening.current;
+    pendingListening.current = null;
+    setWarningOpen(false);
+    action?.();
+  }
+
+  function dismissWarning() {
+    pendingListening.current = null;
+    setWarningOpen(false);
+  }
+
+  function continueGenerated(next: Exclude<EarSignal, "music">, frequency: number) {
+    try {
+      if (!engine.current?.switchGenerated(next, frequency)) return false;
+      setSweeping(false);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function chooseSignal(next: EarSignal) {
+    if (signal === next) return;
+    const frequency = boundHz(engine.current?.sweepPosition ?? hz);
+    setMessage("");
+    if (playing && signal !== "music" && next !== "music") {
+      if (!continueGenerated(next, frequency)) {
+        stop();
+        setMessage("This sound could not start. Press Play sound to try again.");
+      }
+    } else {
+      stop();
+    }
+    if (sweeping) setPitchAnchor(null);
+    engine.current?.setFrequency(frequency);
+    setHz(frequency);
+    setSignal(next);
+  }
+
   async function play(scan = false) {
     if (!canPlay || !audio.current) return;
+    stopPracticeRef.current?.();
     const intent = ++playIntent.current;
     setMessage("");
     setStarting(true);
@@ -192,13 +261,18 @@ export default function EarTuningPage() {
       });
       const player = engine.current;
       player.configure({ base: baseFilters, preamp: currentBase?.preamp ?? 0, adjustments, bypass,
-        focus: bandFocus && (signal === "music" || signal === "pink"), hz });
-      const started = await player.play(signal, hz, () => volumeRef.current, scan ? sweepRanges[rangeIndex] : undefined);
+        focus: bandFocus && (signal === "music" || signal === "pink") });
+      player.setFrequency(hz);
+      const started = await player.play(signal, () => volumeRef.current, scan ? sweepRanges[rangeIndex] : undefined);
       if (intent !== playIntent.current) return;
       setPlaying(started);
       setSweeping(started && scan);
+      if (started && scan) setPitchAnchor(null);
     } catch {
-      if (intent === playIntent.current) setMessage("Playback could not start. Check your audio output or try a different file.");
+      if (intent === playIntent.current) {
+        stop();
+        setMessage("Playback could not start. Check your audio output or try a different file.");
+      }
     } finally {
       if (intent === playIntent.current) setStarting(false);
     }
@@ -210,10 +284,18 @@ export default function EarTuningPage() {
     return () => window.clearInterval(timer);
   }, [playing]);
 
+  function seekFrequency(value: number, anchor: number | null = null) {
+    if (!Number.isFinite(value)) return;
+    const frequency = boundHz(value);
+    if (engine.current?.sweepPosition != null && (signal === "music" || !continueGenerated(signal, frequency))) stop();
+    engine.current?.setFrequency(frequency);
+    setHz(frequency);
+    setPitchAnchor(anchor);
+  }
+
   function mark(kind: MarkKind) {
     const frequency = boundHz(engine.current?.sweepPosition ?? hz);
-    if (sweeping) stop();
-    setHz(frequency);
+    seekFrequency(frequency, frequency);
     const adjustment: Adjustment = { id: crypto.randomUUID(), kind, hz: frequency, gain: kind === "peak" ? -3 : 2, q: 4, type: "PK" };
     setAdjustments(rows => rows.length < EAR_ADJUSTMENT_LIMIT ? [...rows, adjustment] : rows);
     setBypass(false);
@@ -254,7 +336,7 @@ export default function EarTuningPage() {
         ...DEFAULT_FITTER, sampleRate: engine.current?.context.sampleRate ?? 48000 }, controller.signal);
       if (!controller.signal.aborted) {
         setBase({ key: setupKey, fit });
-        setMessage("Starting EQ ready. Compare it with your changes using the same sound.");
+        setMessage("Reference EQ ready. Compare before and after adjustments using the same sound.");
       }
     } catch (error) {
       if (!controller.signal.aborted) setMessage(errorMessage(error, "Could not prepare this target."));
@@ -266,9 +348,9 @@ export default function EarTuningPage() {
   function output(download = false) {
     if (!canSave) return;
     try {
-      const presetName = name.trim() || (currentBase ? `${target.name} · by ear` : "Tune by ear · manual adjustments");
+      const presetName = name.trim() || (currentBase ? `${target.name} · peak and dip adjustments` : "Peak & Dip Finder · manual adjustments");
       const eq = safeLibraryEq({
-        id: crypto.randomUUID(), name: presetName, source: currentBase ? "Tune by ear · target and manual adjustments" : "Tune by ear · manual adjustments",
+        id: crypto.randomUUID(), name: presetName, source: currentBase ? "Peak & Dip Finder · target and manual adjustments" : "Peak & Dip Finder · manual adjustments",
         filters: [...baseFilters, ...adjustments.filter(row => row.gain !== 0).map(({ hz, q, gain }) => ({ type: "PK" as const, hz, q, gain }))],
         preamp: 0,
         ...(currentBase && measurement ? { measurementId: measurement.id, headphone: measurement.device || measurement.name,
@@ -285,18 +367,23 @@ export default function EarTuningPage() {
     } catch (error) { setSaveMessage(errorMessage(error, "Could not save this EQ.")); }
   }
 
-  return <main className="ear-tool">
+  return <><main className="ear-tool">
     <header className="ear-intro">
       <span className="ear-kicker"><Headphones size={16} aria-hidden="true"/> Listening tools</span>
-      <h1>Tune by ear</h1>
+      <h1>Peak &amp; Dip Finder</h1>
       <p>Find peaks that sound too strong and dips that sound too quiet. Try an adjustment and check it with music you know.</p>
+      <div className="ear-safety">
+        <p><strong>Start low and listen briefly.</strong> Consider skipping the sound tests if you have tinnitus, sound sensitivity, or an elevated risk of hearing damage.</p>
+        <button type="button" onClick={() => { stop(); stopPracticeRef.current?.(); setWarningOpen(true); }}>Before you listen</button>
+      </div>
     </header>
+    <EarTuningGuide volume={volume} requestListening={requestListening} onBeforePractice={stop} stopPracticeRef={stopPracticeRef}/>
     <section className="ear-card" aria-labelledby="ear-listen">
       <div className="ear-step"><AudioLines size={19} aria-hidden="true"/><h2 id="ear-listen">1. Find a peak or dip</h2></div>
       <details className="ear-setup">
-        <summary>Starting sound · {mode === "manual" ? "Manual adjustments only" : currentBase ? target.name : "Target setup"}</summary>
+        <summary>Reference sound · {mode === "manual" ? "Manual adjustments only" : currentBase ? target.name : "Target setup"}</summary>
       <fieldset className="ear-mode">
-        <legend>Starting sound</legend>
+        <legend>Reference sound</legend>
         <label><input type="radio" name="ear-base" checked={mode === "manual"} onChange={() => { changeSetup(); setMode("manual"); }}/> Manual adjustments only</label>
         <label><input type="radio" name="ear-base" checked={mode === "target"} onChange={() => { changeSetup(); setMode("target"); }}/> Fit a target, then add my changes</label>
       </fieldset>
@@ -308,16 +395,15 @@ export default function EarTuningPage() {
         <label>Target<select value={targetId} onChange={event => { changeSetup(); setTargetId(event.target.value); }}>
           {targets.map(row => <option key={row.id} value={row.id}>{row.name}</option>)}
         </select></label>
-        <button type="button" disabled={!measurement || fitting} onClick={() => void fitTarget()}>{fitting ? "Fitting target…" : currentBase ? "Rebuild starting EQ" : "Prepare starting EQ"}</button>
+        <button type="button" disabled={!measurement || fitting} onClick={() => void fitTarget()}>{fitting ? "Fitting target…" : currentBase ? "Rebuild reference EQ" : "Prepare reference EQ"}</button>
         {!measurement && <p><Link href="/preference-tuning">Add a headphone measurement in Tuning</Link> to fit a target.</p>}
-        {currentBase && <p>Starting sound follows {target.name} for {measurement?.name}.</p>}
+        {currentBase && <p>The reference follows {target.name} for {measurement?.name}.</p>}
         {targetStatus && <p role="status">{targetStatus}</p>}
       </div>}
       </details>
       <div className="ear-sources" role="group" aria-label="Sound source">
-        {stimuli.map(item => <button type="button" aria-pressed={signal === item.id} key={item.id} onClick={() => {
-          if (signal !== item.id) { stop(); setSignal(item.id); setMessage(""); }
-        }}>{item.name}</button>)}
+        {stimuli.map(item => <button type="button" aria-pressed={signal === item.id} key={item.id}
+          onClick={() => chooseSignal(item.id)}>{item.name}</button>)}
       </div>
       <p>{stimuli.find(item => item.id === signal)?.help} Start with a low listening level.</p>
       {signal === "music" && <div className="ear-music">
@@ -339,14 +425,28 @@ export default function EarTuningPage() {
           stop(); setMessage("This recording could not be played. Try another song or audio file.");
         }
       }}/>
-      <label className="ear-range">
-        <span>Frequency <strong>{prettyHz(hz)}</strong></span>
-        <input type="range" min={0} max={1000} value={Math.round(logPosition(hz) * 1000)} aria-valuetext={prettyHz(hz)}
-          disabled={sweeping} onChange={event => setHz(boundHz(sweepFrequency({ from: EAR_LOW_HZ, to: EAR_HIGH_HZ }, Number(event.target.value) / 1000)))}/>
-      </label>
-      {(signal === "music" || signal === "pink") && <label className="ear-check"><input type="checkbox" checked={bandFocus} onChange={event => setBandFocus(event.target.checked)}/> Focus on this frequency region</label>}
+      {mode === "manual" && measurements.length > 0 && <label className="ear-measurement">Graph measurement
+        <select value={measurement?.id ?? ""} onChange={event => setMeasurementId(event.target.value)}>
+          <option value="">Flat guide</option>
+          {measurements.map(row => <option key={row.id} value={row.id}>{row.name}</option>)}
+        </select>
+      </label>}
+      {mode === "manual" && measurements.length === 0 && <p className="ear-help"><Link href="/preference-tuning">Add a headphone measurement in Tuning</Link> to show its response here.</p>}
+      <FrequencyNavigator frequency={hz} points={measurement?.points} onSeek={seekFrequency}/>
+      {sweepAvailable && <div className="ear-sources" role="group" aria-label="Check nearby pitches">
+        {pitchOffsets.map(({ label, octaves }) => {
+          const frequency = boundHz(pitchReference * 2 ** octaves);
+          const outOfRange = octaves !== 0 && frequency === pitchReference;
+          return <button type="button" key={label} disabled={sweeping || outOfRange}
+            aria-pressed={!sweeping && !outOfRange && hz === frequency} onClick={() => seekFrequency(frequency, pitchReference)}>{label} · {prettyHz(frequency)}</button>;
+        })}
+      </div>}
+      {(signal === "music" || signal === "pink") && <div className="ear-focus">
+        <label className="ear-check"><input type="checkbox" aria-describedby="ear-focus-help" checked={bandFocus} onChange={event => setBandFocus(event.target.checked)}/> Focus on this frequency region</label>
+        <small id="ear-focus-help">Turn this on to hear a band around the playhead with the rest turned down. This affects listening only. Turn it off to check the full sound before saving.</small>
+      </div>}
       <div className="ear-transport">
-        <button type="button" className="ear-primary" disabled={!canPlay && !playing && !starting} onClick={() => playing || starting ? stop() : void play()}>
+        <button type="button" className="ear-primary" disabled={!canPlay && !playing && !starting} onClick={() => playing || starting ? stop() : requestListening(() => void play())}>
           {playing || starting ? <Pause size={16} aria-hidden="true"/> : <Play size={16} aria-hidden="true"/>}
           {starting ? "Cancel playback" : playing ? "Stop" : "Play sound"}
         </button>
@@ -354,7 +454,7 @@ export default function EarTuningPage() {
           <label>Sweep region<select value={rangeIndex} disabled={sweeping} onChange={event => setRangeIndex(Number(event.target.value))}>
             {sweepRanges.map((range, index) => <option key={range.name} value={index}>{range.name}</option>)}
           </select></label>
-          <button type="button" disabled={!canPlay || starting || sweeping} onClick={() => void play(true)}>Sweep · {EAR_SWEEP_SECONDS} s</button>
+          <button type="button" disabled={!canPlay || starting || sweeping} onClick={() => requestListening(() => void play(true))}>Sweep · {EAR_SWEEP_SECONDS} s</button>
         </>}
         <label className="ear-volume">Listening level · {Math.round(volume * 100)}%
           <input type="range" min={0} max={1} step={.01} value={volume} onChange={event => {
@@ -365,6 +465,7 @@ export default function EarTuningPage() {
           }}/>
         </label>
       </div>
+      <p className="ear-help">The listening level starts at 10% each visit and follows your adjustments while this page is open.</p>
       {playing && <div className="ear-signal">
         <meter min={0} max={100} value={Math.max(0, 100 + 20 * Math.log10(Math.max(outputPeak, .00001)))} aria-label="Browser audio output level"/>
         <span>{outputPeak > .0001 ? "Browser audio signal detected" : "No output signal"}</span>
@@ -374,6 +475,7 @@ export default function EarTuningPage() {
         <button type="button" disabled={adjustments.length >= EAR_ADJUSTMENT_LIMIT} onClick={() => mark("dip")}><Plus size={16} aria-hidden="true"/> Mark dip at {prettyHz(hz)}</button>
         <a href="#ear-adjust">{adjustments.length} of {EAR_ADJUSTMENT_LIMIT} adjustments</a>
       </div>
+      <p className="ear-help">Start with one or two changes you can hear repeatedly. This tool allows up to {EAR_ADJUSTMENT_LIMIT} manual adjustments.</p>
       {message && <p className="ear-status" role="status">{message}</p>}
     </section>
     <section className="ear-card" aria-labelledby="ear-adjust">
@@ -381,8 +483,8 @@ export default function EarTuningPage() {
       <p>Peaks start with a small cut and dips start with a small boost. Check the result with full music and the headphones seated as you normally wear them.</p>
       <AdjustmentGraph filters={adjustments} base={baseFilters} hz={hz}/>
       <div className="ear-sources ear-compare" role="group" aria-label="Compare before and after adjustments">
-        <button type="button" disabled={!adjustments.length} aria-pressed={bypass} onClick={() => setBypass(true)}>Starting sound</button>
-        <button type="button" disabled={!adjustments.length} aria-pressed={!bypass} onClick={() => setBypass(false)}>With your changes</button>
+        <button type="button" disabled={!adjustments.length} aria-pressed={bypass} onClick={() => setBypass(true)}>Before adjustments</button>
+        <button type="button" disabled={!adjustments.length} aria-pressed={!bypass} onClick={() => setBypass(false)}>After adjustments</button>
       </div>
       {adjustments.length === 0 && <p>Mark a peak or dip to edit its frequency, strength, and width here.</p>}
       {adjustments.map((row, index) => {
@@ -417,5 +519,7 @@ export default function EarTuningPage() {
       <p>Saved EQs are available in Tuning and the Music library. They sync when Account Sync is enabled on an approved browser.</p>
       {saveMessage && <p className="ear-status" role="status">{saveMessage}</p>}
     </section>
-  </main>;
+  </main>
+    {warningOpen && <BeforeYouListen earTuning onReady={acknowledgeWarning} onCancel={dismissWarning}/>}
+  </>;
 }

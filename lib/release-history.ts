@@ -7,6 +7,13 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Renamed Tune by ear to Peak & Dip Finder and added interactive practice for hearing peaks and dips.",
+  "Added a frequency playhead, exact Hz entry and fine dragging, with an optional saved headphone or IEM measurement.",
+  "Added a hearing-safety prompt and a low starting level per visit. Sine, harmonic tones and pink noise switch during playback.",
+  "Clarified the reference EQ, frequency focus and before-and-after comparison. The version page leads with the build ID.",
+] as const;
+
+const update133Changes = [
   "Added a direct link to the update132 GitHub release from the version page.",
 ] as const;
 
@@ -25,7 +32,7 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 133, date: "2026-11-07", title: "Direct GitHub release link", changes: candidateChanges },
+  { update: 133, date: "2026-11-07", title: "Direct GitHub release link", changes: update133Changes },
   { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: update132Changes,
     github: { commit: "dd5062c8d49986a59d582e604d94614e3c0f2c3e", releaseTag: "update132" } },
   { update: 131, date: "2026-10-31", title: "Unified Tuning and saved EQ playback", changes: [

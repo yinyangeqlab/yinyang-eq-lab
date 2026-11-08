@@ -6,15 +6,21 @@ export const EAR_LOW_HZ = 40;
 export const EAR_HIGH_HZ = 16000;
 export const EAR_SWEEP_SECONDS = 12;
 export type EarSignal = "sine" | "harmonics" | "pink" | "music";
+type GeneratedSignal = Exclude<EarSignal, "music">;
 export type EarSweep = { from: number; to: number };
+type GeneratedVoice = {
+  source: OscillatorNode | AudioBufferSourceNode;
+  level: GainNode;
+  tone?: OscillatorNode;
+};
+const SOURCE_FADE_SECONDS = .035;
 
 export function sweepFrequency({ from, to }: EarSweep, progress: number) {
   return from * (to / from) ** Math.min(1, Math.max(0, progress));
 }
 
-function pinkNoise(context: AudioContext) {
-  const seconds = 4;
-  const buffer = context.createBuffer(1, context.sampleRate * seconds, context.sampleRate);
+export function pinkNoise(context: AudioContext, seconds = 4) {
+  const buffer = context.createBuffer(1, Math.round(context.sampleRate * seconds), context.sampleRate);
   const samples = buffer.getChannelData(0);
   const bands = new Float64Array(16);
   let sum = 0, peak = 0;
@@ -38,6 +44,7 @@ function pinkNoise(context: AudioContext) {
 export class EarTuningAudio {
   readonly context = new AudioContext();
   private readonly gate = this.context.createGain();
+  private readonly mediaLevel = this.context.createGain();
   private readonly headroom = this.context.createGain();
   private readonly adjustmentInput = this.context.createGain();
   private readonly adjustments: BiquadFilterNode[] = [];
@@ -49,16 +56,19 @@ export class EarTuningAudio {
   private stage: EqStage | undefined;
   private appliedBase: PeqFilter[] | undefined;
   private noise: AudioBuffer | undefined;
-  private signalNode: OscillatorNode | AudioBufferSourceNode | null = null;
-  private tone: OscillatorNode | null = null;
-  private toneLevel: GainNode | null = null;
+  private harmonics: PeriodicWave | undefined;
+  private readonly voices = new Set<GeneratedVoice>();
+  private voice: GeneratedVoice | undefined;
   private scan: (EarSweep & { at: number }) | undefined;
+  private mediaActive = false;
   private request = 0;
+  private frequency = EAR_LOW_HZ;
 
   constructor(private readonly media: HTMLAudioElement, private readonly stopped: () => void) {
     const context = this.context;
     this.gate.gain.value = 0;
-    context.createMediaElementSource(media).connect(this.gate);
+    this.mediaLevel.gain.value = 0;
+    context.createMediaElementSource(media).connect(this.mediaLevel).connect(this.gate);
     this.gate.connect(this.headroom);
     this.focusFilter.type = "bandpass";
     this.focusFilter.Q.value = 1.4;
@@ -75,7 +85,7 @@ export class EarTuningAudio {
     end.connect(this.full).connect(this.output);
     end.connect(this.focusFilter).connect(this.focused).connect(this.output);
     this.output.connect(context.destination);
-    this.media.addEventListener("ended", this.finish);
+    this.media.addEventListener("ended", this.onMediaEnded);
     context.addEventListener("statechange", this.onState);
   }
 
@@ -88,8 +98,12 @@ export class EarTuningAudio {
     this.stopped();
   };
 
-  configure({ base, preamp, adjustments, bypass, focus, hz }: {
-    base: PeqFilter[]; preamp: number; adjustments: PeqFilter[]; bypass: boolean; focus: boolean; hz: number;
+  private onMediaEnded = () => {
+    if (this.mediaActive) this.finish();
+  };
+
+  configure({ base, preamp, adjustments, bypass, focus }: {
+    base: PeqFilter[]; preamp: number; adjustments: PeqFilter[]; bypass: boolean; focus: boolean;
   }) {
     const now = this.context.currentTime;
     const limit = (frequency: number) => Math.min(frequency, this.context.sampleRate * .45);
@@ -109,14 +123,24 @@ export class EarTuningAudio {
       }
       node.gain.setTargetAtTime(bypass ? 0 : filter?.gain ?? 0, now, .012);
     });
-    this.focusFilter.frequency.setTargetAtTime(limit(hz), now, .015);
     this.focused.gain.setTargetAtTime(focus ? 1 : 0, now, .015);
     this.full.gain.setTargetAtTime(focus ? 0 : 1, now, .015);
-    if (!this.scan) this.tone?.frequency.setTargetAtTime(limit(hz), now, .015);
+  }
+
+  setFrequency(hz: number) {
+    const now = this.context.currentTime;
+    const frequency = Math.min(hz, this.context.sampleRate * .45);
+    this.frequency = frequency;
+    this.focusFilter.frequency.setTargetAtTime(frequency, now, .008);
+    const tone = this.voice?.tone;
+    if (tone && !this.scan) {
+      tone.frequency.cancelScheduledValues(now);
+      tone.frequency.setTargetAtTime(frequency, now, .008);
+    }
   }
 
   volume(value: number) {
-    safeGain(this.gate, .65 * value, this.context.currentTime);
+    safeGain(this.gate, .65 * value, this.context.currentTime, false);
   }
 
   get outputPeak() {
@@ -130,54 +154,102 @@ export class EarTuningAudio {
     return this.scan ? sweepFrequency(this.scan, (this.context.currentTime - this.scan.at) / EAR_SWEEP_SECONDS) : null;
   }
 
-  async play(signal: EarSignal, hz: number, volume: () => number, sweep?: EarSweep) {
+  switchGenerated(signal: GeneratedSignal, hz: number, sweep?: EarSweep) {
+    if (!this.voice || this.context.state !== "running") return false;
+    this.startGenerated(signal, hz, sweep);
+    return true;
+  }
+
+  private startGenerated(signal: GeneratedSignal, hz: number, sweep?: EarSweep) {
+    const context = this.context;
+    let tone: OscillatorNode | undefined;
+    let source: GeneratedVoice["source"];
+    if (signal === "pink") {
+      const noise = context.createBufferSource();
+      noise.buffer = this.noise ??= pinkNoise(context);
+      noise.loop = true;
+      source = noise;
+    } else {
+      tone = context.createOscillator();
+      if (signal === "harmonics") {
+        this.harmonics ??= context.createPeriodicWave(new Float32Array(6), Float32Array.of(0, 1, .35, .23, .12, .08));
+        tone.setPeriodicWave(this.harmonics);
+      }
+      source = tone;
+    }
+
+    const now = context.currentTime;
+    const fadeEnd = now + SOURCE_FADE_SECONDS;
+    const top = context.sampleRate * .45;
+    const range = tone && sweep ? { from: Math.min(sweep.from, top), to: Math.min(sweep.to, top), at: now } : undefined;
+    tone?.frequency.setValueAtTime(Math.min(range?.from ?? hz, top), now);
+    const level = context.createGain();
+    const amplitude = tone ? .16 : 1;
+    level.gain.setValueAtTime(0, now);
+    level.gain.linearRampToValueAtTime(amplitude, fadeEnd);
+    if (range && tone) {
+      const end = now + EAR_SWEEP_SECONDS;
+      tone.frequency.exponentialRampToValueAtTime(range.to, end);
+      level.gain.setValueAtTime(amplitude, end - .05);
+      level.gain.linearRampToValueAtTime(0, end);
+    }
+
+    const voice = { source, level, tone };
+    source.connect(level).connect(this.gate);
+    source.onended = () => {
+      this.disposeVoice(voice);
+      if (this.voice === voice) this.finish();
+    };
+    source.start(now);
+    if (range) source.stop(now + EAR_SWEEP_SECONDS);
+    this.voice = voice;
+    this.scan = range;
+    this.voices.add(voice);
+    // Fade any voices still audible, including a previous crossfade interrupted
+    // by another selection. The listening level stays on the common gate.
+    for (const previous of this.voices) {
+      if (previous === voice) continue;
+      const gain = previous.level.gain;
+      if (typeof gain.cancelAndHoldAtTime === "function") {
+        gain.cancelAndHoldAtTime(now);
+      } else {
+        const value = gain.value;
+        gain.cancelScheduledValues(now);
+        gain.setValueAtTime(value, now);
+      }
+      gain.linearRampToValueAtTime(0, fadeEnd);
+      previous.source.stop(fadeEnd);
+    }
+  }
+
+  private disposeVoice(voice: GeneratedVoice) {
+    this.voices.delete(voice);
+    voice.source.disconnect();
+    voice.level.disconnect();
+  }
+
+  async play(signal: EarSignal, volume: () => number, sweep?: EarSweep) {
+    if (signal !== "music" && this.switchGenerated(signal, this.frequency, sweep)) return true;
     this.stop();
     const token = this.request;
-    const resume = this.context.resume();
     try {
+      const resume = this.context.resume();
       if (signal === "music") {
         await Promise.all([resume, this.media.play()]);
         if (token !== this.request) return false;
+        if (this.media.ended) {
+          this.stop();
+          return false;
+        }
+        this.mediaActive = true;
+        this.mediaLevel.gain.setValueAtTime(1, this.context.currentTime);
         this.volume(volume());
         return true;
       }
       await resume;
       if (token !== this.request) return false;
-      const at = this.context.currentTime + .02;
-      if (signal === "pink") {
-        const source = this.context.createBufferSource();
-        source.buffer = this.noise ??= pinkNoise(this.context);
-        source.loop = true;
-        source.connect(this.gate);
-        source.start(at);
-        this.signalNode = source;
-      } else {
-        const source = this.context.createOscillator();
-        const toneLevel = this.context.createGain();
-        this.toneLevel = toneLevel;
-        toneLevel.gain.value = .16;
-        source.connect(toneLevel).connect(this.gate);
-        if (signal === "harmonics") {
-          // A compact harmonic spectrum gives a second way to listen to the same center.
-          source.setPeriodicWave(this.context.createPeriodicWave(new Float32Array(6), Float32Array.of(0, 1, .35, .23, .12, .08)));
-        }
-        const top = this.context.sampleRate * .45;
-        source.frequency.setValueAtTime(Math.min(sweep?.from ?? hz, top), at);
-        if (sweep) {
-          const range = { from: Math.min(sweep.from, top), to: Math.min(sweep.to, top) };
-          this.scan = { ...range, at };
-          source.frequency.exponentialRampToValueAtTime(range.to, at + EAR_SWEEP_SECONDS);
-          source.onended = this.finish;
-        }
-        source.start(at);
-        if (sweep) {
-          toneLevel.gain.setValueAtTime(.16, at + EAR_SWEEP_SECONDS - .05);
-          toneLevel.gain.linearRampToValueAtTime(0, at + EAR_SWEEP_SECONDS);
-          source.stop(at + EAR_SWEEP_SECONDS);
-        }
-        this.tone = source;
-        this.signalNode = source;
-      }
+      // AudioContext can resume after the user has already moved the playhead.
+      this.startGenerated(signal, this.frequency, sweep);
       this.volume(volume());
       return true;
     } catch (error) {
@@ -189,23 +261,23 @@ export class EarTuningAudio {
 
   stop() {
     this.request++;
-    this.volume(0);
+    const now = this.context.currentTime;
+    safeGain(this.gate, 0, now);
+    this.mediaLevel.gain.setValueAtTime(0, now);
+    this.mediaActive = false;
     this.media.pause();
-    if (this.signalNode) {
-      this.signalNode.onended = null;
-      this.signalNode.stop();
-      this.signalNode.disconnect();
+    this.voice = undefined;
+    for (const voice of this.voices) {
+      voice.source.onended = null;
+      voice.source.stop();
+      this.disposeVoice(voice);
     }
-    this.toneLevel?.disconnect();
-    this.toneLevel = null;
-    this.signalNode = null;
-    this.tone = null;
     this.scan = undefined;
   }
 
   close() {
     this.stop();
-    this.media.removeEventListener("ended", this.finish);
+    this.media.removeEventListener("ended", this.onMediaEnded);
     this.context.removeEventListener("statechange", this.onState);
     this.stage?.dispose();
     if (this.context.state !== "closed") void this.context.close();

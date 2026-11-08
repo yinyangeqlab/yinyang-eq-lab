@@ -16,7 +16,7 @@ export default function VersionPage() {
     <span className="alpha-version-eyebrow">YinYang EQ</span>
     <h1>About this version</h1>
     <div className="alpha-release-summary"><strong>{buildLabel}</strong><span>{releaseInfo.build.preview ? "Preview" : "Release build"}</span></div>
-    <p>Beta version {releaseInfo.version} · based on update{releaseInfo.build.basedOn} · <time dateTime={releaseInfo.build.date}>{releaseInfo.build.date}</time></p>
+    <p>Based on update{releaseInfo.build.basedOn} · <time dateTime={releaseInfo.build.date}>{releaseInfo.build.date}</time></p>
     <ReleaseAvailability/>
     <section className="alpha-help-card" aria-labelledby="version-beta"><h2 id="version-beta">What beta means</h2><p>The beta includes listening, tuning and account tools. Access follows the current testing restrictions shown above. Some features may still be unfinished.</p><p>Found a problem? Include what happened, how to reproduce it, and your browser and device. GitHub reports are public; leave out personal data and private account information.</p><a href={bugReportUrl} target="_blank" rel="noopener noreferrer">Report a bug on GitHub ↗</a></section>
     <section className="alpha-help-card version-build-notes" aria-labelledby="build-notes">

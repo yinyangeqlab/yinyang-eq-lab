@@ -1,0 +1,20 @@
+{
+  "update": 133,
+  "sourceCommit": "3bed26e06939de3f4b91d53fa5a289dc571ff057",
+  "sourceOnlyHandoverPassed": true,
+  "priorDataSnapshotsExactlyUnchanged": true,
+  "priorDataTimestampUnchanged": true,
+  "newDataSnapshots": 0,
+  "databaseExportPerformed": false,
+  "remoteIndexAuthenticated": true,
+  "liveDeploymentUnchanged": true,
+  "applicationInputsReconstructed": 970,
+  "compiledBuildFilesReconstructed": 2336,
+  "sourceOwnedPublicAssetsReconstructed": 18,
+  "externalFontFilesReconstructed": 2,
+  "newEncryptedObjects": 3,
+  "newEncryptedObjectBytes": 670768064,
+  "verifiedAt": "2026-11-08T07:01:09.408350+00:00",
+  "hostedValidationPassed": true,
+  "dailyWorkflowActive": true
+}

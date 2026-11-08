@@ -15,7 +15,7 @@ const destinations: { id: Destination; label: string; href: string }[] = [
   { id: "home", label: "Home", href: "/" },
   { id: "listen", label: "Listen", href: "/listen" },
   { id: "tune", label: "Tune", href: "/preference-tuning" },
-  { id: "ear", label: "Tune by ear", href: "/ear-tuning" },
+  { id: "ear", label: "Peak & Dip Finder", href: "/ear-tuning" },
   { id: "space", label: PERSONAL_AREA_TITLE, href: "/shootout?tab=profile" },
   { id: "rankings", label: "Research", href: "/shootout?tab=rankings" },
   { id: "library", label: "Music library", href: "/music-library" },

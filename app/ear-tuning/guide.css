@@ -1,0 +1,70 @@
+.ear-guide > summary {
+  color: #c1f4e9;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 4px 0;
+}
+.ear-guide > summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  vertical-align: middle;
+}
+.ear-guide-content {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+.ear-guide-response {
+  margin: 0;
+  padding: 8px 12px 12px;
+  border: 1px solid #31505a;
+  border-radius: 9px;
+  background: #061219;
+}
+.ear-guide-response svg {
+  display: block;
+  width: 100%;
+  max-width: 470px;
+  height: auto;
+  margin-inline: auto;
+}
+.ear-guide-response svg text { fill: #c0d4d8; font-size: 12px; }
+.ear-guide-response svg path { fill: none; vector-effect: non-scaling-stroke; }
+.ear-guide-grid { stroke: #31505a; }
+.ear-guide-reference { stroke: #9cb4ba; stroke-dasharray: 4 4; }
+.ear-guide-peak, .ear-guide-dip { stroke-width: 2; }
+.ear-guide-peak { stroke: #8ce5cf; }
+.ear-guide-dip { stroke: #efc480; }
+.ear-guide-response svg .ear-guide-peak-label { fill: #8ce5cf; }
+.ear-guide-response svg .ear-guide-dip-label { fill: #efc480; }
+.ear-guide-response figcaption { color: #b7cdd1; font-size: 13px; line-height: 1.45; }
+.ear-guide-practice {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: clamp(12px, 2.5vw, 18px);
+  border: 1px solid #36545c;
+  border-radius: 9px;
+  background: #0f232b;
+}
+.ear-guide-practice-heading, .ear-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.ear-guide-practice-heading { justify-content: space-between; }
+.ear-guide-practice-heading h2, .ear-guide-method { font-size: 17px; }
+.ear-guide-practice-heading span { color: #b7cdd1; font-size: 13px; }
+.ear-guide-practice p.ear-guide-status { color: #b8f4e3; }
+.ear-guide-next { justify-self: start; }
+.ear-guide-steps {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  color: #b7cdd1;
+  line-height: 1.55;
+}
+.ear-guide :is(p, li) strong { color: #e8f8f4; }

@@ -1,0 +1,158 @@
+.ear-frequency-navigator {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.ear-frequency-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.ear-frequency-heading strong {
+  color: #e8f8f4;
+  font-size: 15px;
+}
+
+.ear-frequency-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 7px;
+  margin-top: 4px;
+  color: #b7cdd1;
+  font-size: 12px;
+}
+
+.ear-frequency-legend i {
+  width: 15px;
+  border-top: 2px dashed #8da6ad;
+}
+
+.ear-frequency-legend i[data-measured="true"] {
+  border-top: 2px solid #84e8ce;
+}
+
+.ear-frequency-outside {
+  color: #ffdfaf;
+}
+
+.ear-frequency-entry {
+  display: grid;
+  gap: 4px;
+  color: #c7dddf;
+  white-space: nowrap;
+}
+
+.ear-frequency-entry input {
+  width: 7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ear-frequency-chart {
+  min-width: 0;
+  padding: 8px 13px 4px;
+  border: 1px solid #36545c;
+  border-radius: 9px;
+  background: #061219;
+}
+
+.ear-frequency-plot {
+  position: relative;
+  height: clamp(112px, 19vw, 155px);
+  border-radius: 4px;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.ear-frequency-plot:active {
+  cursor: grabbing;
+}
+
+.ear-frequency-plot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ear-frequency-grid {
+  stroke: #2b434b;
+}
+
+.ear-frequency-reference {
+  stroke: #8da6ad;
+  stroke-dasharray: 4 5;
+  opacity: .8;
+}
+
+.ear-frequency-curve {
+  fill: none;
+  stroke: #84e8ce;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.ear-frequency-playhead {
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+  background: #efc480;
+  pointer-events: none;
+}
+
+.ear-frequency-marker,
+.ear-frequency-sample {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ear-frequency-marker {
+  border: 2px solid #061219;
+  background: #ffda95;
+  box-shadow: 0 0 0 1px #efc480;
+}
+
+.ear-frequency-sample {
+  width: 7px;
+  height: 7px;
+  background: #84e8ce;
+}
+
+.ear-frequency-axis {
+  position: relative;
+  height: 20px;
+  margin-top: 6px;
+  color: #b7cdd1;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ear-frequency-axis span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ear-frequency-axis span:first-child {
+  transform: none;
+}
+
+.ear-frequency-axis span:last-child {
+  transform: translateX(-100%);
+}
+
+.ear-frequency-navigator .ear-frequency-hint {
+  color: #b7cdd1;
+  font-size: 12px;
+}

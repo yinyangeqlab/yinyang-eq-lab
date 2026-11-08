@@ -1,7 +1,7 @@
 export const MAINTENANCE_FEATURES = [
   {id:"shootouts",label:"Shootouts",description:"Shootout pages, new tests, comparisons, votes and feedback."},
   {id:"listeningPool",label:"Listening Pool",description:"Listening Pool page and music votes. Shared audio stays available to other enabled tools."},
-  {id:"preferenceTuning",label:"Preference Tuning",description:"Preference Tuning, Tune by ear, and target/EQ downloads."},
+  {id:"preferenceTuning",label:"Preference Tuning",description:"Preference Tuning, Peak & Dip Finder, and target/EQ downloads."},
   {id:"contributions",label:"Shared uploads & suggestions",description:"Submitting public targets, contributed measurements and song suggestions. Their forms also need the Shootout page unlocked."},
 ] as const;
 export type MaintenanceFeature = typeof MAINTENANCE_FEATURES[number]["id"];
