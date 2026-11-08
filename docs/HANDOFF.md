@@ -7,7 +7,7 @@ Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_ST
 
 The **update132** release build is based on the committed **update132-preview.1** on `work/listening-controls-20261104`. The version page lists the generated EQ graphs and restored results, free listening, gentler EQ, Tune by ear, and the music search. The scoped preview passed all 120 selected public, Worker, prepared-engine and built-package suites. Physical iPhone playback, the user's audio output and native select popup rendering remain unverified.
 
-The deployed source is recorded in [the verification receipt](releases/update132-verification.json). The public snapshot contains the matching application source and reviewed deployment files. The owner retains the complete deployment and recovery records. [Recovery verification](releases/update132-recovery-verification.json)
+The deployed source is recorded in [the verification receipt](releases/update132-verification.json). The matching application source is published as [GitHub release update132](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update132). [Publication verification](releases/update132-publication.json) The owner retains the complete deployment and recovery records. [Recovery verification](releases/update132-recovery-verification.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

@@ -27,7 +27,11 @@ assert.ok(candidateChanges.length && new URL(bugReportUrl).searchParams.get('bod
 assert.equal(releaseHistory[0].update, build.preview ? live.update : build.update);
 assert.ok(releaseHistory.every((entry, i) =>
   entry.changes.length && (i === 0 || entry.update < releaseHistory[i - 1].update) &&
-  (!entry.github || /^[a-f0-9]{40}$/.test(entry.github.commit))));
+  (!entry.github || (/^[a-f0-9]{40}$/.test(entry.github.commit) &&
+    (!entry.github.releaseTag || entry.github.releaseTag === `update${entry.update}`)))));
+if (live.gitSource.publishedSourceCommit) {
+  assert.equal(releaseHistory.find(entry => entry.update === live.update)?.github?.commit, live.gitSource.publishedSourceCommit);
+}
 for (let update = 103; update <= live.update; update++) {
   assert.ok(releaseHistory.some(entry => entry.update === update), `Missing version notes for update${update}`);
 }

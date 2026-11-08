@@ -16191,11 +16191,13 @@
     "branch": "work/listening-controls-20261104",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "3ecad7342063f1f228456967c71d17560e729043"
+    "baseMain": "3ecad7342063f1f228456967c71d17560e729043",
+    "publishedSourceCommit": "dd5062c8d49986a59d582e604d94614e3c0f2c3e",
+    "publicationEvidence": "docs/releases/update132-publication.json"
   },
   "releaseChanges": {
     "baseUpdate": 131,
@@ -16332,6 +16334,10 @@
     {
       "path": "docs/releases/update132-verification.json",
       "sha256": "17ac14ec4c8f08bcbde48ffb88b05d07b108feb51508608b159a9d6bfdf28aeb"
+    },
+    {
+      "path": "docs/releases/update132-publication.json",
+      "sha256": "2cce56050084d92081299a92df72398e5d388e8eeeaadc10608cd90c5c156608"
     }
   ],
   "recoveryProcess": {

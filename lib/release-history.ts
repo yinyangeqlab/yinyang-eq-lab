@@ -3,7 +3,7 @@ export type ReleaseNotes = {
   date: string;
   title: string;
   changes: readonly string[];
-  github?: { commit: string; pull?: number };
+  github?: { commit: string; pull?: number; releaseTag?: string };
 };
 
 export const candidateChanges = [
@@ -21,7 +21,8 @@ export const candidateChanges = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: candidateChanges },
+  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: candidateChanges,
+    github: { commit: "dd5062c8d49986a59d582e604d94614e3c0f2c3e", releaseTag: "update132" } },
   { update: 131, date: "2026-10-31", title: "Unified Tuning and saved EQ playback", changes: [
     "Restored the interactive Tuning curve with raw and predicted overlays, compact tone controls and integrated frequency markers.",
     "Grouped headphone setup, song search, source actions, volume and Dynamics around one player.",

@@ -1,0 +1,13 @@
+{
+  "update": 132,
+  "deployedSourceCommit": "f33b8fb2906e3005a50f06e3fc436b1b145c2e79",
+  "publishedSourceCommit": "dd5062c8d49986a59d582e604d94614e3c0f2c3e",
+  "tag": "update132",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update132",
+  "publishedAt": "2026-11-08T06:12:50Z",
+  "githubLogin": "yinyangeqlab",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "ownerRecordsExcluded": true
+}
