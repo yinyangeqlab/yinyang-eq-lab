@@ -1,16 +1,30 @@
 import { peqCoefficients, type PeqFilter } from './autoeq';
-export type EqStage = { input: GainNode; nodes: IIRFilterNode[]; dispose: () => void };
+import { channelBalance, type ChannelMatch } from './channel-balance';
+export type EqStage = { input: GainNode; nodes: IIRFilterNode[]; boostDb: number; dispose: () => void };
 
 /** Explicit IIR coefficients retain variable-Q shelves; native shelf nodes ignore Q. */
-export function replaceEqStage(context: AudioContext, upstream: AudioNode, output: AudioNode, filters: PeqFilter[], previous?: EqStage): EqStage {
+export function replaceEqStage(context: AudioContext, upstream: AudioNode, output: AudioNode, filters: PeqFilter[], previous?: EqStage, match?: ChannelMatch): EqStage {
   const coefficients = filters.map(filter => peqCoefficients(filter, context.sampleRate));
   const input = context.createGain();
   const nodes = coefficients.map(({ b, a }) => context.createIIRFilter(b, a));
   let end: AudioNode = input;
   for (const node of nodes) { end.connect(node); end = node; }
+  const balance = channelBalance(match, context.sampleRate);
+  const matchNodes: AudioNode[] = [];
+  if (balance) {
+    const splitter = context.createChannelSplitter(2), merger = context.createChannelMerger(2);
+    end.connect(splitter); matchNodes.push(splitter, merger);
+    balance.impulses.forEach((impulse, channel) => {
+      const convolver = context.createConvolver(); convolver.normalize = false;
+      const buffer = context.createBuffer(1, impulse.length, context.sampleRate);
+      buffer.copyToChannel(Float32Array.from(impulse, value => value * 10 ** (-Math.max(0, balance.maxBoostDb) / 20)), 0); convolver.buffer = buffer;
+      splitter.connect(convolver, channel); convolver.connect(merger, 0, channel); matchNodes.push(convolver);
+    });
+    end = merger;
+  }
   end.connect(output);
   let disposed = false;
-  const stage = { input, nodes, dispose: () => { if (disposed) return; disposed = true; try { upstream.disconnect(input); } catch {} input.disconnect(); nodes.forEach(node => node.disconnect()); } };
+  const stage = { input, nodes, boostDb: Math.max(0, balance?.maxBoostDb ?? 0), dispose: () => { if (disposed) return; disposed = true; try { upstream.disconnect(input); } catch {} input.disconnect(); nodes.forEach(node => node.disconnect()); matchNodes.forEach(node => node.disconnect()); } };
   input.gain.value = previous ? 0 : 1;
   upstream.connect(input);
   if (previous) {

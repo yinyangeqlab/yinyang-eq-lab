@@ -1,0 +1,81 @@
+{
+  "update": 131,
+  "sourceCommit": "08ede015c438e743f371fcf679058b5c27dcb3a1",
+  "deploymentVerification": {
+    "at": "2026-10-31T22:15:15.803914+00:00",
+    "update": 131,
+    "revision": "08ede015c438e743f371fcf679058b5c27dcb3a1",
+    "deploymentVerified": true,
+    "deployment": {
+      "id": "89be81da-92aa-4cea-b001-16ff3e6a5c5c",
+      "versions": [
+        {
+          "version_id": "9ba48ecf-ab5d-4b09-b7fa-14612495f8a0",
+          "percentage": 100
+        }
+      ]
+    },
+    "deploymentId": "89be81da-92aa-4cea-b001-16ff3e6a5c5c",
+    "versions": [
+      {
+        "version_id": "9ba48ecf-ab5d-4b09-b7fa-14612495f8a0",
+        "percentage": 100
+      }
+    ],
+    "migrations": [],
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "operationalNoticePreserved": true,
+    "nonAppResourcesUnchanged": true,
+    "exactServerModulesVerified": 308,
+    "exactGateAndShareHelpersVerified": true,
+    "publicPagesVerified": 6,
+    "publicAssetsVerified": 1282,
+    "anonymousMediaProtectionVerified": true,
+    "protectedHttpVerificationPending": false,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "protectedHttpVerificationScope": "Anonymous gates and exact deployed modules verified; no production admin session used.",
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "recoveryRegistrationPending": true
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 111,
+    "regressionSuitesFailed": 0,
+    "sourceRevision": "08ede015c438e743f371fcf679058b5c27dcb3a1",
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "appTypesPassed": true,
+    "infraTypesPassed": true,
+    "productionBuildPassed": true,
+    "sourceBinaryLicensePackageMatched": true,
+    "protectedRecordings": 224,
+    "publicInputs": 384,
+    "retainedPreviousClientFiles": 1170,
+    "publicOnlyPackage": false,
+    "ownPinnedDependencies": true,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1"
+  },
+  "browserVerification": {
+    "syntheticPreviewReviewed": true,
+    "dedicatedHiddenTestAccountOnly": true,
+    "productionBrowserSessionUsed": false,
+    "productionAdminSessionUsed": false,
+    "desktopAndNarrowReviewed": true,
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "reviewRecord": "docs/reviews/2026-10-31-tuning-unified-preview.md"
+  },
+  "migrations": [],
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "implementationRecord": "docs/reviews/2026-10-31-tuning-unified-preview.md",
+  "sourceOnlyRecoveryRegistrationPending": true
+}

@@ -44,19 +44,19 @@ export default function EmbedCreate() {
     finally { setBusy(false); }
   }
 
-  const copy = async (label: string, text: string) => { if (await copyText(text)) { setCopied(label); setTimeout(() => setCopied(""), 1800); } };
+  const copy = async (label: string, text: string) => { if (await copyText(text)) { setCopied(label); setTimeout(() => setCopied(""), 1800); } else { setCopied("failed"); } };
   const resultsUrl = created ? `${origin}/s/${created.id}/results#key=${created.manageKey}` : "";
   const shareUrl = created ? `${origin}/s/${created.id}` : "";
 
   return <div className="em-root">
     <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/privacy">Privacy</a></header>
-    <main className="em-wrap">
+    <main className="em-wrap">{copied === "failed" && <p role="status">Couldn’t copy automatically. Select the link text and copy it yourself.</p>}
       {!created && <>
         <section className="em-card em-hero">
           <p className="es-eyebrow">Shareable shootout</p>
           <h1>Let your friends ear-test targets, blind.</h1>
           <p className="es-lead">Pick two to four headphone targets and get one link. Anyone can open it, listen through loudness-matched A/B comparisons and vote. You see the combined results privately, and you decide whether the lab owner sees them too.</p>
-          <ul className="em-points"><li><b>Works in Discord.</b> Paste the link and a preview card appears. It opens the interactive shootout in the browser.</li><li><b>Embeddable.</b> You also get an iframe snippet for sites that allow it.</li><li><b>Anonymous.</b> No accounts, cookies or tracking IDs. Voters send only their picks.</li></ul>
+          <ul className="em-points"><li><b>Works in Discord.</b> Paste the link and a preview card appears. It opens the interactive shootout in the browser.</li><li><b>Embeddable.</b> You also get an iframe snippet for sites that allow it.</li><li><b>Anonymous.</b> No accounts, cookies or tracking IDs. Listeners send their choices and the run details explained below.</li></ul>
         </section>
 
         <section className="em-card" aria-labelledby="em-pick">
@@ -93,7 +93,7 @@ export default function EmbedCreate() {
         <h1>Share it.</h1>
         <div className="em-links">
           <div><span className="em-label">Share link (public)</span><div className="em-copy"><input readOnly value={shareUrl} aria-label="Share link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("link", shareUrl)}>{copied === "link" ? "Copied" : "Copy"}</button></div></div>
-          <div><span className="em-label">Embed code</span><div className="em-copy"><input readOnly value={embedSnippet(created.id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(created.id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
+          <div><span className="em-label">Add to a website · embed code (advanced)</span><div className="em-copy"><input readOnly value={embedSnippet(created.id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(created.id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
           <div className="em-private"><span className="em-label">Private results link. Keep this to yourself.</span><div className="em-copy"><input readOnly value={resultsUrl} aria-label="Private results link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("results", resultsUrl)}>{copied === "results" ? "Copied" : "Copy"}</button></div>
             <p className="em-note">This link is the only way to see your results or delete the shootout, and it cannot be recovered. {keySaved ? "It is saved in this browser; bookmark it too." : "Browser storage could not save this key. Copy or bookmark the private results link before leaving this page."}</p></div>
         </div>

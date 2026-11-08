@@ -63,3 +63,7 @@
  .mode-illustration *{animation:none!important;transition:none!important}
  .mode-illustration :is(.mode-art-orbit,.mode-art-swing,.mode-art-blind-wave){transform:none!important}
 }
+
+.mode-art-eq-swirl{transform-box:fill-box;transform-origin:center;animation:mode-eq-swirl 12s linear infinite}
+@keyframes mode-eq-swirl{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.mode-art-eq-swirl{animation:none!important}}

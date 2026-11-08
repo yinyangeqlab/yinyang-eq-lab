@@ -1,0 +1,187 @@
+{
+  "update": 127,
+  "deploymentVerification": {
+    "at": "2026-10-29T09:24:02.372686+00:00",
+    "revision": "f9dbe87f71513f30e18551042fe5a329709f63cd",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": false,
+    "maintenanceDisabled": true,
+    "adminMaintenanceOffVerified": true,
+    "deploymentId": "604459b2-a8e4-465c-b549-3493bb8e5767",
+    "versions": [
+      {
+        "version_id": "5eb08155-71be-4b41-b1ed-46698966c3fa",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 5,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 1102,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true,
+    "versionPageAdminRouteVerified": true,
+    "changedAdminRoutesVerified": [
+      "/preference-tuning",
+      "/my-data",
+      "/my-profile",
+      "/music-library",
+      "/share-shootout"
+    ]
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 100,
+    "regressionSuitesFailed": 0,
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "appTypesPassed": true,
+    "infraTypesPassed": true,
+    "productionBuildPassed": true,
+    "protectedRecordings": 224,
+    "previousClientFilesRetained": 987,
+    "publicOnlyPackage": false
+  },
+  "browserVerification": {
+    "syntheticOnly": true,
+    "productionBrowserAccountUsed": false,
+    "viewports": [
+      360,
+      1360
+    ],
+    "views": [
+      "maintenance admin: whole-site live",
+      "maintenance admin: indefinite feature pause",
+      "maintenance admin: cleared"
+    ],
+    "horizontalOverflow": false,
+    "keyboardFocusChecked": true,
+    "nativeSelectIntroduced": false,
+    "limits": [
+      "Synthetic admin transport only; no production admin browser session.",
+      "Physical Apple hardware, physical audio, screen-reader speech and real novice usability remain unverified."
+    ]
+  },
+  "implementationRecord": "docs/reviews/2026-10-29-maintenance-window.md",
+  "migrations": [],
+  "newDataSnapshot": false,
+  "candidateAttempts": {
+    "deployments": 1,
+    "preflightOnlyCorrection": "Pulumi encrypted binding representation handled before the deployment attempt; exact private config diff and live non-maintenance bindings verified."
+  },
+  "recoveryRegistrationPending": false,
+  "publicAssetCoverage": {
+    "allPublicFiles": 381,
+    "immutableSnapshotFiles": 364,
+    "sourceOwnedFiles": 17,
+    "allFilesHashVerified": true,
+    "sourceOwnedFilesInExactGitRevisionAndVerifiedBuild": true,
+    "existingImmutableInventoryUnchanged": true,
+    "note": "Checked-in UI artwork and share cards are verified as application inputs and compiled assets, preserved in source/build archives. This includes the new AMOLED image and 16 existing source-owned share cards. Every existing immutable snapshot asset stays in its original inventory unchanged."
+  },
+  "sourceOwnedPublicAssetFiles": [
+    {
+      "path": "public/brand-amoled-smooth-moon-v1.webp",
+      "sha256": "63954023853be83617938f4122c5b0f6e7ff352a14543648907af045b9406562"
+    },
+    {
+      "path": "public/share/blind-research.jpg",
+      "sha256": "76e83a07f1e936494922cb35f3c3c80ca89d584e07ffb4817aea20eb3d15d58d"
+    },
+    {
+      "path": "public/share/community.jpg",
+      "sha256": "81cf4f398424d9e85e79ef5c1faa2ae52c1580821b4c613b393c7e94acafc464"
+    },
+    {
+      "path": "public/share/curve-credits.jpg",
+      "sha256": "2ff80fc1a788b2ed62c6922c19ee1d1ce0302c3c019513ae0d76d1d5288378df"
+    },
+    {
+      "path": "public/share/discover.jpg",
+      "sha256": "2d23eb75f1b40269fc2d99d44290bdf080b7a1f9148cfe0f7c8a8974d596227f"
+    },
+    {
+      "path": "public/share/journal.jpg",
+      "sha256": "98d4b16e911c75a4ab95c842ae7bdfe5338fd92efc284d271f063e7a8495d857"
+    },
+    {
+      "path": "public/share/music-library.jpg",
+      "sha256": "c330b10fd7195dc024f83c66b0b5578959cf6fdb801dc2dfd5d32c5c6ca4eaba"
+    },
+    {
+      "path": "public/share/open-comparison.jpg",
+      "sha256": "d7658d091fe463e43419732bdb98d52386291cd7934cbe17b1feb9ce70a48fb2"
+    },
+    {
+      "path": "public/share/personal.jpg",
+      "sha256": "20db6628689d1ecac4fadc915e62453f10c4e10fd3cab4b29a003866627d3139"
+    },
+    {
+      "path": "public/share/preference-tuning.jpg",
+      "sha256": "ee9ce725ba8223d2201cab1aba8ce4197ce6f655147db744855393bbcd37c429"
+    },
+    {
+      "path": "public/share/privacy.jpg",
+      "sha256": "005c63d78215f3a09f2f46022e1d913c85961ee2c311a4662fbc57d550ec3bcf"
+    },
+    {
+      "path": "public/share/private.jpg",
+      "sha256": "38a33ef464ee958d7bf567149a49d4652cfd8e7a90ea9d374c0ae586a4aae504"
+    },
+    {
+      "path": "public/share/rankings.jpg",
+      "sha256": "912ff94f04aa9a09130ea0114ae7c53a54437c58ba254ecef53ea6ddafd7d803"
+    },
+    {
+      "path": "public/share/share-shootout.jpg",
+      "sha256": "479d0ad5afd0535d87a528888db3c90d32750e27e0233d1ab1abcede73516778"
+    },
+    {
+      "path": "public/share/shootout.jpg",
+      "sha256": "1aba0468e852e7c4796ffe81dd8d38862c1f649119e3b43f97a4ff72861a0191"
+    },
+    {
+      "path": "public/share/shortcuts.jpg",
+      "sha256": "f79879818aa46a5a6515ceeff608be093476c122b33668e7ed95d80f27399150"
+    },
+    {
+      "path": "public/share/version.jpg",
+      "sha256": "f7557ca916aa0ec8310ef08275bc34f24cb6ddf1bd476c48c35f80ea826c5fe2"
+    }
+  ],
+  "recoveryOwnerApproved": true,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "applicationInputsReconstructed": 695,
+    "compiledBuildFilesReconstructed": 1819,
+    "sourceOwnedPublicAssetsReconstructed": 17,
+    "newEncryptedObjects": 3,
+    "newEncryptedObjectBytes": 51412225,
+    "verifiedAt": "2026-10-29T09:29:03.768923+00:00",
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "hostedValidationReadOnly": true,
+    "completedAt": "2026-10-29T09:30:13.473456+00:00"
+  },
+  "recoveryCloseout": {
+    "verifiedAt": "2026-10-29T09:30:13.473456+00:00",
+    "documentationOnly": true,
+    "websiteRedeployed": false,
+    "existingDataSnapshotsUnchanged": true,
+    "newDataExport": false,
+    "newDataSnapshots": 0
+  }
+}

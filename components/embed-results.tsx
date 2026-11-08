@@ -71,7 +71,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
     finally { setBusy(false); }
   }
 
-  const copy = async (label: string, text: string) => { if (await copyText(text)) { setCopied(label); setTimeout(() => setCopied(""), 1800); } };
+  const copy = async (label: string, text: string) => { if (await copyText(text)) { setCopied(label); setTimeout(() => setCopied(""), 1800); } else { setCopied("failed"); } };
 
   const rows = useMemo(() => {
     if (!data) return [];
@@ -80,7 +80,8 @@ export default function EmbedResultsView({ id }: { id: string }) {
   }, [data]);
 
   const shareUrl = `${origin}/s/${id}`;
-  if (deleted) return <div className="em-root"><main className="em-card em-center"><h1>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
+  const privateResultsUrl = `${origin}/s/${id}/results#key=${encodeURIComponent(key)}`;
+  if (deleted) return <div className="em-root"><main className="em-card em-center">{copied === "failed" && <p role="status">Couldn’t copy automatically. Select the link text and copy it yourself.</p>}<h1>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
 
   return <div className="em-root">
     <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/share-shootout">Make another shootout</a></header>
@@ -101,23 +102,23 @@ export default function EmbedResultsView({ id }: { id: string }) {
           <p className="es-eyebrow">Your private results</p>
           <h1>{data.title}</h1>
           <p className="em-muted">{data.targets.length} targets · created {day(data.createdAt)} · kept until {day(data.expiresAt)} (opening this page extends it)</p>
-          <div className="em-links">
+          <div className="em-links"><div><span className="em-label">Keep this private results link</span><p>Anyone with this link can view results or delete this comparison. Save the complete link below; the address bar may omit its access key.</p><div className="em-copy"><input readOnly value={privateResultsUrl} aria-label="Private results access link" onFocus={event => event.currentTarget.select()}/><button className="es-button" type="button" onClick={() => void copy("private",privateResultsUrl)}>{copied === "private" ? "Copied" : "Copy private results link"}</button></div></div>
             <div><span className="em-label">Share link</span><div className="em-copy"><input readOnly value={shareUrl} aria-label="Share link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("link", shareUrl)}>{copied === "link" ? "Copied" : "Copy"}</button></div></div>
-            <div><span className="em-label">Embed code</span><div className="em-copy"><input readOnly value={embedSnippet(id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
+            <div><span className="em-label">Add to a website · embed code (advanced)</span><div className="em-copy"><input readOnly value={embedSnippet(id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
           </div>
           <p className="em-note">Paste the share link in Discord, Slack or a message and a preview card appears. Discord cannot play interactive embeds, so the card opens the shootout in the browser; the embed code works on pages that allow iframes.</p>
         </section>
 
         <section className="em-kpis" aria-label="Totals">
-          <div><strong>{data.summary.runs}</strong><span>blind listeners</span></div>
+          <div><strong>{data.summary.runs}</strong><span>completed blind runs</span></div>
           <div><strong>{data.summary.decided}</strong><span>decided rounds</span></div>
           <div><strong>{data.summary.sightedRuns}</strong><span>sighted runs (excluded)</span></div>
-          <div><strong>{data.summary.repeatAgreement && data.summary.repeatAgreement.total ? pct(data.summary.repeatAgreement.agree / data.summary.repeatAgreement.total) : "–"}</strong><span>listeners consistent across rounds</span></div>
+          <div><strong>{data.summary.repeatAgreement && data.summary.repeatAgreement.total ? pct(data.summary.repeatAgreement.agree / data.summary.repeatAgreement.total) : "–"}</strong><span>agreement on repeated choices</span></div>
         </section>
 
         {data.summary.runs === 0 ? <section className="em-card"><h2>Waiting for the first listener</h2><p>Share the link above. Results appear here as soon as someone finishes. Only completed runs are counted; people who leave halfway send nothing.</p></section> : <>
           <section className="em-card"><h2>How the targets rank</h2>
-            <p className="em-muted">Score is the share of rounds a target won (a tie counts half). Whiskers show a 95% range; wide whiskers mean more votes are needed before trusting the order.</p>
+            <p className="em-muted">Score is the share of rounds a target won (a tie counts half). Whiskers show a 95% range; wide bars indicate an uncertain order in this model. These are descriptive results from completed runs, not a verified sample of distinct people; more runs alone do not guarantee a trustworthy population ranking.</p>
             <ol className="em-bars">{[...data.summary.targets].sort((a, b) => b.score - a.score).map(stat => <li key={stat.index}>
               <div className="em-bar-label"><span className="es-dot" style={{ background: TARGET_COLORS[stat.index] }} aria-hidden="true" /><strong>{data.targets[stat.index]?.name}</strong><span>{pct(stat.score)} · {stat.wins}W {stat.losses}L {stat.ties}T</span></div>
               <div className="em-track" role="img" aria-label={`${data.targets[stat.index]?.name}: score ${pct(stat.score)}, 95% range ${pct(stat.low)} to ${pct(stat.high)}`}>
@@ -125,7 +126,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
                 <b style={{ left: pct(stat.low), width: `${Math.max(0.5, (stat.high - stat.low) * 100)}%` }} />
                 <u />
               </div>
-              <small>Chosen as favorite by {pct(data.summary.runs ? stat.favorite / data.summary.runs : 0)} of listeners</small>
+              <small>Chosen as favorite by {pct(data.summary.runs ? stat.favorite / data.summary.runs : 0)} of completed runs</small>
             </li>)}</ol>
           </section>
 
@@ -141,18 +142,18 @@ export default function EmbedResultsView({ id }: { id: string }) {
           <section className="em-grid">
             <div className="em-card"><h2>Position bias</h2>
               <p className="em-big">{data.summary.sideBias.decided ? pct(data.summary.sideBias.pickedFirstShown / data.summary.sideBias.decided) : "–"}</p>
-              <p className="em-muted">of decided picks were the option shown as <b>A</b>. Sides are shuffled every round, so this should sit near 50%.</p></div>
+              <p className="em-muted">of decided picks were the option shown as <b>A</b>. Sides are shuffled every round. Small or repeated samples can differ from 50%; this is a descriptive check, not a pass/fail score.</p></div>
             <div className="em-card"><h2>Activity</h2>
               {data.summary.timeline.length ? <div className="em-spark" role="img" aria-label={`Completed runs per day, ${data.summary.timeline.length} days`}>{data.summary.timeline.map(point => <i key={point.day} title={`${new Date(point.day * 86400000).toLocaleDateString()}: ${point.runs}`} style={{ height: `${Math.max(8, point.runs / Math.max(...data.summary.timeline.map(p => p.runs)) * 100)}%` }} />)}</div> : null}
               <p className="em-muted">Completed runs per day (UTC).</p></div>
           </section>
 
           <section className="em-card"><h2>By listening setup</h2>
-            <table className="em-table"><thead><tr><th scope="col">Setup</th><th scope="col">Listeners</th><th scope="col">Top scoring target</th></tr></thead><tbody>
+            <table className="em-table"><thead><tr><th scope="col">Setup</th><th scope="col">Completed runs</th><th scope="col">Top scoring target</th></tr></thead><tbody>
               {EMBED_LISTENER_KINDS.flatMap(kind => { const tally = data.summary.byKind[kind]; if (!tally) return []; const best = tally.scores.indexOf(Math.max(...tally.scores)); return [<tr key={kind}><th scope="row">{KIND_LABELS[kind]}</th><td>{tally.runs}</td><td>{data.targets[best]?.name}</td></tr>]; })}
             </tbody></table>
             <h2 className="em-sub">By sound</h2>
-            <table className="em-table"><thead><tr><th scope="col">Sound</th><th scope="col">Listeners</th><th scope="col">Top scoring target</th></tr></thead><tbody>
+            <table className="em-table"><thead><tr><th scope="col">Sound</th><th scope="col">Completed runs</th><th scope="col">Top scoring target</th></tr></thead><tbody>
               {EMBED_SIGNAL_CODES.flatMap(signal => { const tally = data.summary.bySignal[signal]; if (!tally) return []; const best = tally.scores.indexOf(Math.max(...tally.scores)); return [<tr key={signal}><th scope="row">{SIGNAL_LABELS[signal]}</th><td>{tally.runs}</td><td>{data.targets[best]?.name}</td></tr>]; })}
             </tbody></table>
           </section>
@@ -162,8 +163,8 @@ export default function EmbedResultsView({ id }: { id: string }) {
           <p>Each run is stored as the hour it finished, the A/B picks, the optional setup the listener chose, whether they peeked at the curves, and which sound played. Nothing else: no IP address, cookie, account, device or exact time. The site&rsquo;s general abuse protection counts hashed requests briefly to limit spam, as it does everywhere on the site.</p>
           <p className="em-note">Because nothing identifies listeners, one person could vote more than once by clearing their browser data. Treat small counts with care.</p>
           <div className="es-actions">
-            <button className="es-button" type="button" disabled={!data.runs.length} onClick={() => download(`shootout-${id}.csv`, "text/csv", ["hour_utc,setup,sighted,round,option_a,option_b,winner,a_shown_second,sound", ...rows.flat().map(r => [new Date(r.hour * 3600000).toISOString(), r.kind, r.sighted, r.round, r.a, r.b, r.result, r.aShownSecond, r.sound].map(cell => `"${String(cell).replaceAll('"', '""')}"`).join(","))].join("\n"))}>Download CSV</button>
-            <button className="es-button" type="button" onClick={() => download(`shootout-${id}.json`, "application/json", JSON.stringify({ id, title: data.title, targets: data.targets.map(({ id: targetId, name, credit, license }) => ({ id: targetId, name, credit, license })), summary: data.summary, runs: data.runs }, null, 2))}>Download JSON</button>
+            <button className="es-button" type="button" disabled={!data.runs.length} onClick={() => download(`shootout-${id}.csv`, "text/csv", ["hour_utc,setup,sighted,round,option_a,option_b,winner,a_shown_second,sound", ...rows.flat().map(r => [new Date(r.hour * 3600000).toISOString(), r.kind, r.sighted, r.round, r.a, r.b, r.result, r.aShownSecond, r.sound].map(cell => `"${String(cell).replaceAll('"', '""')}"`).join(","))].join("\n"))}>Download spreadsheet (CSV)</button>
+            <button className="es-button" type="button" onClick={() => download(`shootout-${id}.json`, "application/json", JSON.stringify({ id, title: data.title, targets: data.targets.map(({ id: targetId, name, credit, license }) => ({ id: targetId, name, credit, license })), summary: data.summary, runs: data.runs }, null, 2))}>Download full data (JSON)</button>
           </div>
         </section>
 

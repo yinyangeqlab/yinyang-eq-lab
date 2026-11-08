@@ -1,5 +1,6 @@
 import type { Point } from "@/lib/curves";
-import { response, type PeqFilter } from "@/lib/autoeq";
+import type { FitBands } from "./fitter-settings";
+import { autoEqReferenceOffset, response, type PeqFilter } from "@/lib/autoeq";
 
 export type FitMethod = "standard" | "precise" | "peqdb";
 export type FitPriority = "smooth" | "close";
@@ -7,7 +8,8 @@ export type FinalizedVariant = {
   engine?: "peqdb" | "legacy";
   engineVersion?: string;
   fallbackReason?: string;
-  bands: 10 | 15 | 20;
+  reducedBoost?: boolean;
+  bands: FitBands;
   method: FitMethod;
   priority: FitPriority;
   filters: PeqFilter[];
@@ -49,7 +51,7 @@ function loss(target: number[], filters: PeqFilter[]) {
   }, 0);
 }
 
-function standardFit(target: number[], bands: 10 | 15 | 20, qDivisor: number) {
+function standardFit(target: number[], bands: FitBands, qDivisor: number) {
   const q = bands / qDivisor;
   const filters: PeqFilter[] = Array.from({ length: bands }, (_, i) => ({ hz: Math.round(20 * 1000 ** ((i + .5) / bands)), gain: 0, q: +q.toFixed(2) }));
   const basis = filters.map(filter => fitGrid.map(hz => response(hz, { ...filter, gain: 1 })));
@@ -69,7 +71,7 @@ function standardFit(target: number[], bands: 10 | 15 | 20, qDivisor: number) {
   return filters.map(filter => ({ ...filter, gain: +filter.gain.toFixed(2) }));
 }
 
-function preciseFit(target: number[], bands: 10 | 15 | 20, priority: FitPriority) {
+function preciseFit(target: number[], bands: FitBands, priority: FitPriority) {
   const filters: PeqFilter[] = [];
   const residual = [...target];
   const qChoices = priority === "smooth" ? [.45, .65, .9, 1.2, 1.7, 2.4] : [.55, .8, 1.2, 1.8, 2.8, 4.2, 6.5, 9];
@@ -124,11 +126,12 @@ export function peakBoost(filters: PeqFilter[]) {
   return peak;
 }
 
-export function finalizeVariant(raw: Point[], desired: Point[], bands: 10 | 15 | 20, method: FitMethod, priority: FitPriority): FinalizedVariant {
+export function finalizeVariant(raw: Point[], desired: Point[], bands: FitBands, method: FitMethod, priority: FitPriority, reference: "1khz" | "shootout" = "1khz"): FinalizedVariant {
   if (method === "peqdb") throw Error("Use the asynchronous PEQdB export service.");
   if (raw.length < 2 || desired.length < 2) throw new Error("Choose a headphone measurement and a target curve first.");
   const rawAt1k = at(raw, 1000), desiredAt1k = at(desired, 1000);
-  const correction = fitGrid.map(hz => at(desired, hz) - desiredAt1k - (at(raw, hz) - rawAt1k));
+  const offset = reference === "shootout" ? autoEqReferenceOffset(raw, desired) : desiredAt1k - rawAt1k;
+  const correction = fitGrid.map(hz => at(desired, hz) - at(raw, hz) - offset);
   const fitTarget = smooth(correction, priority === "smooth" ? 5.5 : 1.2);
   let filters: PeqFilter[];
   if (method === "standard") {
@@ -166,5 +169,6 @@ export function exportEasyEffects(variant: FinalizedVariant) {
 }
 
 export function exportQudelixGuide(variant: FinalizedVariant) {
+  if (variant.bands > 20) throw Error("Qudelix 5K supports up to 20 bands. Choose a 10-, 15- or 20-band fit.");
   return `Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\nPreference Tuning Lab · Qudelix 5K entry guide\n${variant.bands} bands · ${variant.method} · ${variant.priority}\nSet PRE GAIN to ${variant.preamp.toFixed(1)} dB. Use a PEQ mode with at least ${variant.bands} bands. Enter the listed Peak (PK), Low Shelf (LSC), or High Shelf (HSC) type with its Q; this is a manual-entry guide, not a native preset import.\n\nBand\tType\tFrequency (Hz)\tGain (dB)\tQ\n${variant.filters.map((filter, i) => `${i + 1}\t${filter.type ?? "PK"}\t${filter.hz}\t${filter.gain.toFixed(6)}\t${filter.q.toFixed(6)}`).join("\n")}\n`;
 }

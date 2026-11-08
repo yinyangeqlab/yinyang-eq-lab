@@ -1,0 +1,23 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
+import ts from "typescript";
+
+const mod = { exports: {} };
+const source = readFileSync("lib/glossary.ts", "utf8");
+vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { module: mod, exports: mod.exports });
+const { glossaryTerms, searchGlossary } = mod.exports;
+const ids = query => Array.from(searchGlossary(query), term => term.id);
+assert.equal(glossaryTerms.length, 12);
+assert.deepEqual(Array.from(glossaryTerms, term => term.title), Array.from(glossaryTerms, term => term.title).sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" })));
+assert.equal(new Set(ids("")).size, 12, "blank search shows every term once");
+assert.deepEqual(ids("bass"), ["eq", "frequency-response", "target"], "related words find multiple useful definitions");
+assert.ok(ids("volume").includes("lufs"), "a plain word finds an abbreviation");
+assert.ok(ids("variable bitrate").includes("bitrate"), "full acronym expansions are searchable");
+assert.ok(ids("48 kHz").includes("sample-rate"), "a sample-rate example finds its definition");
+assert.ok(ids("fit seal").includes("measurement"), "all query words can match a definition");
+assert.ok(ids("EQUALIZER").includes("preset"), "search ignores letter case");
+assert.ok(ids("  EQ / equalization  ").includes("eq"), "suggestion labels are valid queries");
+assert.deepEqual(ids("no-such-term-xyz"), [], "unmatched query returns no false success");
+assert.equal(searchGlossary(" ").length, 12);
+console.log("PASS: alphabetical, complete glossary results; titles, definitions, aliases, multiple words and empty/no-result queries.");

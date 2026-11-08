@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const shootout = await getShootout(id).catch(() => null);
   if (!shootout) return { title: "Shootout not found | YinYang EQ", robots: { index: false, follow: false } };
   const count = shootout.targetIds.length;
-  const description = `A blind A/B shootout of ${count} headphone targets. Put on headphones, pick the one that sounds better, then see which was which. Anonymous: only your picks are sent.`;
+  const description = `A blind A/B shootout of ${count} headphone targets. Put on headphones, pick the one that sounds better, then see which was which. No account needed. Completed runs include your choices, optional setup and whether curves were shown.`;
   const image = { url: `/s/${id}/card.png`, width: 1200, height: 630, alt: "A and B waveforms around a yin-yang" };
   return {
     title: `${shootout.title} | YinYang EQ`,

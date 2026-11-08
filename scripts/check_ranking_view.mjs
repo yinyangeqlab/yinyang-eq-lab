@@ -1,3 +1,4 @@
+import {MAIN_FITTER_COHORT} from "../lib/fitter-settings.ts";
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -13,10 +14,10 @@ const rankingBranches=[];
 function findRanking(node){if(ts.isJsxExpression(node)&&node.expression&&ts.isBinaryExpression(node.expression)&&node.expression.left.getText(pageAst)==='tab === "rankings"'&&node.expression.right.getText(pageAst).includes('const view='))rankingBranches.push(node.expression.right.getText(pageAst));ts.forEachChild(node,findRanking);}
 findRanking(pageAst);assert.equal(rankingBranches.length,1,'Find the actual ranking body rather than a navigation/eyebrow branch');
 const expression=rankingBranches[0];
-const source=`export function ranking({research,rankProtocol,rankMode,rankType}) { const setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{}; return (${expression}); }`;
+const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError=""}) { const refresh=()=>{},setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}; return (${expression}); }`;
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
-const context=vm.createContext({exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default,ArrowRight:createRequire(import.meta.url)("lucide-react").ArrowRight});
+const context=vm.createContext({MAIN_FITTER_COHORT,exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default,ArrowRight:createRequire(import.meta.url)("lucide-react").ArrowRight});
 vm.runInContext(compiled,context);
 const modes=['all','random','bring','verified'];
 function rows(preferences,ties){
@@ -53,7 +54,7 @@ assert.ok(singular.includes('1 QUALIFIED COMPARISON</span>'));
 assert.ok(singular.includes('Same file across listeners · 1 comparison</button>'));
 const loading=renderToStaticMarkup(context.exports.ranking({research:null,rankProtocol:'current',rankMode:'all',rankType:'oe'}));
 assert.ok(loading.includes('0 QUALIFIED COMPARISONS'));
-assert.ok(loading.includes('No votes meet this ranking'));
+assert.ok(loading.includes('Loading research results'));
 console.log(`Ranking view: ${cases} actual page renders verify protocol/headphone filters, main and same-file counters including ties; tie-only singular and loading states passed.`);
 
 // Exercise the actual saved-view restoration branch for old curated selections.
@@ -63,3 +64,5 @@ for(const [savedMode,expected] of [['curated','all'],['verified','verified'],['r
  let restored;vm.runInNewContext(restore,{saved:{rankMode:savedMode},localStorage:{getItem:()=> 'true'},setRankMode:value=>{restored=value;}});assert.equal(restored,expected);
 }
 console.log('Removed historical view safely restores to All blind votes; valid saved views remain available.');
+
+const failed=renderToStaticMarkup(context.exports.ranking({research:null,rankProtocol:'current',rankMode:'all',rankType:'oe',researchLoading:false,researchError:'Synthetic unavailable'}));assert.ok(failed.includes('Synthetic unavailable')&&failed.includes('Try again')&&!failed.includes('No comparisons match'),'Failed reads never pretend research is empty');

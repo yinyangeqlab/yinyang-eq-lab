@@ -9,7 +9,6 @@ import { getDb } from "@/db";
 import { listeningRuns, rankedTrials, targets, votes } from "@/db/schema";
 import { intervalStats, parseIntervals } from "@/lib/listening";
 import { cleanFeedback } from "@/lib/feedback";
-import { targetHeadphoneType } from "@/lib/target-type";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
 
@@ -63,9 +62,6 @@ export async function POST(request: Request) {
     const other = await db.select().from(targets).where(and(eq(targets.id, loserId),publicTargetPredicate));
     if (!pair[0] || !other[0]) return Response.json({ error: "Target not found." }, { status: 404 });
     if (pair[0].status !== "approved" || other[0].status !== "approved") return Response.json({ error: "Both targets need owner approval before votes can be collected." }, { status: 403 });
-    const pairType = targetHeadphoneType({ name: pair[0].name, measurement: pair[0].measurement });
-    const otherType = targetHeadphoneType({ name: other[0].name, measurement: other[0].measurement });
-    if ((pairType && pairType !== data.headphoneType) || (otherType && otherType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
     if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Submit a tie through its completed listening record; this endpoint accepts decisive votes." }, { status: 400 });
     const safeNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
     const intervals = parseIntervals(JSON.parse(completed.intervals));

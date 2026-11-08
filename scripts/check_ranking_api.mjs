@@ -1,3 +1,4 @@
+import * as fitters from "../lib/fitter-settings.ts";
 import * as fingerprints from "../lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -15,8 +16,11 @@ const deps={'@/lib/admin-contributions':{isTestSubject:subject=>subject==='owner
 deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2',MIN_SIDE_SECONDS:5,MIN_COMMON_SECONDS:5};
 deps['@/lib/listening']={intervalStats,parseIntervals};
 const evidenceCode=ts.transpileModule(readFileSync(new URL('../lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
-const evidenceContext=vm.createContext({exports:{},require:name=>deps[name]});vm.runInContext(evidenceCode,evidenceContext);deps['@/lib/ranking-evidence']=evidenceContext.exports;
-const context=vm.createContext({exports:{},require:name=>deps[name],Response});vm.runInContext(code,context);
+const evidenceContext=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name]});vm.runInContext(evidenceCode,evidenceContext);deps['@/lib/ranking-evidence']=evidenceContext.exports;
+const context=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name],Response});vm.runInContext(code,context);
+const rawGET=context.exports.GET;
+const first=await(await rawGET()).json();assert.equal(first.all.voteCount,0,'Historical unrecorded fitters never enter the new main reference');assert.equal(first.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
+context.exports.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
 const response=await context.exports.GET();assert.equal(response.status,200);
 const data=await response.json();assert.equal(data.methodology,'participant-balanced-fractional-bt-v2');
 for(const mode of ['all','random','curated','verified']) {
@@ -77,3 +81,12 @@ owners.push({recordKind:'run',recordId:'layout-test-tie',subjectId:'invite:layou
 assert.equal((await(await context.exports.GET()).json()).all.voteCount,beforeTest,'Private review identity cannot enter any public ranking');
 votes.splice(0,votes.length,...savedVotes);owners=savedOwners;runs=savedRuns;
 console.log('PASS private layout-test decisive votes and ties excluded from public ranking evidence.');
+
+// New fitter cohorts are separate in the actual endpoint, including decisive linked runs and ties.
+const priorVotes=votes.slice(),priorRuns=runs.slice();const config={method:'standard',bands:10,filterCount:10,engine:'legacy',engineVersion:'yinyang-standard-close@listening-fitter-v1',sampleRate:48000,rms:.3,preamp:-4};
+votes.push({...base,id:'new-main',winnerId:'a',loserId:'b',voterId:'new-main-browser'});
+runs.push({...base,id:'new-main-run',trialId:'new-main',result:'a',targetAId:'a',targetBId:'b',researchContext:JSON.stringify({eqFits:[config,config]})});
+const precise={...config,method:'precise',engineVersion:'yinyang-precise-close@listening-fitter-v1'};
+runs.push({...base,id:'precise-tie',trialId:null,result:'tie',targetAId:'a',targetBId:'b',researchContext:JSON.stringify({eqFits:[precise,precise]})});
+const split=await(await rawGET()).json();assert.equal(split.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key.startsWith('precise:10:')).view.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
+votes.splice(0,votes.length,...priorVotes);runs=priorRuns;console.log('PASS main Standard/10, Precise/10 and unrecorded historical cohorts never mix.');

@@ -25,7 +25,7 @@ const failure = name => Object.assign(new Error(name), { name });
 function fixture() {
   const errors = [], calls = [], plays = [], resumes = [];
   const audio = { paused: true, play() { calls.push('play'); this.paused = false; const p = deferred(); plays.push(p); return p.promise; }, pause() { this.paused = true; }, removeAttribute() {}, load() {} };
-  const state = {
+  const state = {fitter:{method:"standard",bands:10},
     audioRef: { current: audio }, playbackRequestRef: { current: 0 }, sourceSerialRef: { current: 1 }, folderSerialRef: { current: 0 }, passageRunRef: { current: null },
     beforePlayback: undefined, file: { name: 'synthetic.wav' }, setupEngine() {}, applyFit() {}, preparePlaybackFit() { return true; }, selectSide() {},
     setPassageRun() {}, setSourceError: value => errors.push(value), mediaRecovery: { current: { retry: () => false } },
@@ -34,7 +34,7 @@ function fixture() {
     setIsPlaying: value => { state.isPlaying = value; }, onPlaybackChange: value => { state.notified = value; },
     curatedFetchRef: { current: 0 }, hashSerialRef: { current: 0 }, candidateUrlRef: { current: null }, measuredLufsRef: { current: null }, sourceKindRef: { current: 'uploaded' }, urlRef: { current: null }, resetHeard() {},
   };
-  for (const name of ['SampleStatus', 'Meta', 'BitrateDetails', 'ChooserOpen', 'Duration', 'PassageOverride', 'Position', 'CandidateUrl', 'MusicVoteMessage', 'File', 'Analysis', 'CuratedPreview', 'Hashing', 'WaveformZoom', 'WaveformFocus', 'LoudnessStatus']) state['set' + name] = value => { state[name] = value; };
+  for (const name of ['SampleStatus', 'Meta', 'BitrateDetails', 'ChooserOpen', 'Duration', 'PassageOverride', 'LoopSection', 'Position', 'CandidateUrl', 'MusicVoteMessage', 'File', 'Analysis', 'CuratedPreview', 'Hashing', 'WaveformZoom', 'WaveformFocus', 'LoudnessStatus']) state['set' + name] = value => { state[name] = value; };
   vm.createContext(state);
   vm.runInContext(ts.transpileModule([...bodies.values()].join('\n'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText, state);
   return { state, errors, calls, plays, resumes, audio };
@@ -65,7 +65,7 @@ let checks = 0;
   assert.equal(f.state.fitMetadata().length, 0, 'Pending setup never reports the previous fits');
   f.state.engine.current.fitReady = true; f.state.engine.current.fitKey = 'old pair';
   assert.equal(f.state.fitMetadata().length, 0, 'A ready but mismatched pair never enters vote metadata');
-  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], 48000]);
+  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], {method:"standard",bands:10}, 48000]);
   assert.equal(f.state.fitMetadata().length, 2); checks++;
 }
 {

@@ -1,3 +1,4 @@
+import * as fitters from "../lib/fitter-settings.ts";
 import assert from 'node:assert/strict';
 import{readFileSync}from'node:fs';
 import vm from'node:vm';
@@ -6,7 +7,7 @@ import * as options from'../lib/maintenance-options.ts';
 import{validNoticeMinutes}from'../lib/notice-duration.ts';
 const ids=options.MAINTENANCE_FEATURES.map(f=>f.id),routes=[
  ['/shootout','GET','shootouts'],['/shootout/','HEAD','shootouts'],['/shootout/personal','GET','shootouts'],['/api/trials','POST','shootouts'],['/api/votes','POST','shootouts'],['/api/listening-runs','POST','shootouts'],['/api/comparison-choices','POST','shootouts'],['/api/feedback','POST','shootouts'],
- ['/music-library','GET','listeningPool'],['/api/music-votes','POST','listeningPool'],['/preference-tuning','GET','preferenceTuning'],['/personal-tuning','GET','preferenceTuning'],['/api/preference-exports','POST','preferenceTuning'],['/api/targets','POST','contributions'],['/api/research-measurements','POST','contributions'],['/api/suggestions','POST','contributions'],
+ ['/music-library','GET','listeningPool'],['/api/music-votes','POST','listeningPool'],['/preference-tuning','GET','preferenceTuning'],['/personal-tuning','GET','preferenceTuning'],['/ear-tuning','GET','preferenceTuning'],['/api/preference-exports','POST','preferenceTuning'],['/api/targets','POST','contributions'],['/api/research-measurements','POST','contributions'],['/api/suggestions','POST','contributions'],
  ['/api/community-preferences/reference','POST','shootouts'],['/api/community-preferences/personal','POST','shootouts'],['/api/community-preferences/personal','PATCH',null],['/api/community-preferences/personal','GET',null],['/community-preferences','GET',null],['/api/personal-research','POST','shootouts'],
  ['/api/listening-audio/file','GET',null],['/music/source.flac','GET',null],['/api/targets','GET',null],['/api/research','GET',null],['/participation','GET',null],['/my-data','GET',null],['/api/my-data','PATCH',null],['/api/my-data','DELETE',null],['/owner-research','GET',null],['/api/owner-research/service-status','POST',null],['/privacy','GET',null],['/sync','GET',null]
 ];
@@ -23,7 +24,7 @@ for(const invalid of ['shootouts',{},['unknown'],['shootouts','shootouts']])asse
 // Exercise the real API validation and storage parser without touching live state.
 let clock=1800000000000,stored={revision:'legacy',message:'Current one-hour notice',pause_submissions:1,expires_at:clock+3600000},writes=0,owner=true;
 const env={DB:{prepare(_sql){return{bind(...args){return{async run(){writes++;stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async run(){writes++;stored=null;},async first(){return stored}}}}};
-function load(path,deps){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},Response,Request,URL,crypto,Date:class extends Date{static now(){return clock;}}});return exports;}
+function load(path,deps){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;assert.ok(name in deps,name);return deps[name];},Response,Request,URL,crypto,Date:class extends Date{static now(){return clock;}}});return exports;}
 const service=load('lib/service-status.ts',{'cloudflare:workers':{env},'@/lib/maintenance-options':options});
 const read=await service.readServiceStatus(true);assert.equal(read.expiresAt,clock+3600000);assert.deepEqual([...read.lockedFeatures],['shootouts']);assert.equal(writes,0,'Reading a legacy active pause must not restart its timer or rewrite it');
 const route=load('app/api/owner-research/service-status/route.ts',{'@/lib/owner-access':{ownerAccessResponse:async()=>owner?null:new Response(null,{status:403})},'@/lib/request-json':{readJsonObject:r=>r.json(),requestInputResponse:()=>null},'@/lib/service-status':service,'@/lib/notice-duration':{validNoticeMinutes},'@/lib/maintenance-options':options});
@@ -35,3 +36,12 @@ assert.equal((await route.POST(request({active:true,message:'Do not save',pauseS
 const legacy=await route.POST(request({active:true,message:'Old admin client',pauseSubmissions:true,hours:1}));assert.equal(legacy.status,200);assert.deepEqual((await legacy.json()).lockedFeatures,['shootouts']);clock+=3600001;const expired=await service.readServiceStatus(true);assert.equal(expired.active,false);assert.deepEqual([...expired.lockedFeatures],[]);assert.equal(options.featureMaintenanceResponse(new Request('https://example.test/shootout'),expired),null);
 await route.POST(request({active:false,message:'Clear',pauseSubmissions:false,lockedFeatures:[],durationMinutes:60}));assert.equal((await service.readServiceStatus(true)).active,false);
 console.log(`Per-feature maintenance: ${checks} route/method cases across all16 lock combinations passed; API round trips, legacy timer preservation, invalid/auth/origin rejection, automatic expiry and clearing verified. Synthetic calls only.`);
+
+const forever=await route.POST(request({active:true,message:'Until cleared',pauseSubmissions:true,lockedFeatures:['shootouts'],indefinite:true}));
+assert.equal(forever.status,200);assert.equal(stored.expires_at,0);assert.equal((await forever.json()).expiresAt,null);
+clock+=400*86400000;const stillLive=await service.readServiceStatus(true);assert.equal(stillLive.active,true);assert.equal(stillLive.expiresAt,null);assert.ok(options.featureMaintenanceResponse(new Request('https://example.test/shootout'),stillLive));
+for(const indefinite of ['true',1,null])assert.equal((await route.POST(request({active:true,message:'Invalid',pauseSubmissions:false,indefinite}))).status,400);
+await route.POST(request({active:false,message:'Clear',pauseSubmissions:false,indefinite:true}));assert.equal((await service.readServiceStatus(true)).active,false);
+env.OWNER_ONLY_MAINTENANCE='true';const forced=await service.readServiceStatus(true);assert.equal(forced.active,true);assert.equal(forced.enabled,true);assert.equal(forced.ownerOnly,true);assert.equal(forced.expiresAt,null);assert.deepEqual([...forced.lockedFeatures],ids);
+delete env.OWNER_ONLY_MAINTENANCE;assert.equal((await service.readServiceStatus(true)).active,false);
+console.log('Indefinite pauses survive 400 days, clear explicitly, reject malformed flags, and report deployment whole-site maintenance as live.');

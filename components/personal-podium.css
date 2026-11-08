@@ -94,3 +94,9 @@
 
 /* A shortlist without a clear favorite has no unequal podium or award object. */
 .podium-contender-mark{width:76px;height:76px;stroke:#bcd3c6;stroke-width:1.5;margin:auto auto 12px;filter:drop-shadow(0 0 10px #bcd3c620)}.podium-contender-mark circle:first-child{opacity:.35}.podium-contender-mark path{stroke-width:2}.podium-place-neutral{--award-main:#b7c8be;--award-light:#d1ddd4;--award-shadow:#80968a;align-self:end!important;margin-top:0!important}.podium-unresolved .podium-place{padding-top:20px}.podium-unresolved .podium-step{height:26px!important;background:linear-gradient(#71958c,#385a53);border-color:#9eb7ac}.podium-unresolved .podium-award{color:#d4e6dc}.podium-unresolved .podium-place h3{color:#e9f3ec}
+
+/* Keep empty-state guidance above the illustration on a solid contrasting surface. */
+.personal-podium .podium-stage.podium-empty-stage{min-height:200px;align-items:start;padding:14px}
+.podium-stage .podium-empty{grid-column:1/-1;justify-self:center;position:relative;z-index:1;max-width:420px;margin:0;padding:12px 18px;border:1px solid #7294a3;border-radius:8px;background:#102c38;color:#f1f7fa;font-size:16px;line-height:1.5;text-align:center}
+.podium-empty strong,.podium-empty span{display:block}.podium-empty strong{font-weight:700;margin-bottom:3px}.podium-empty span{color:#dfebf0}
+@media(max-width:600px){.personal-podium .podium-stage.podium-empty-stage{min-height:176px;padding:14px 10px}.podium-stage .podium-empty{padding:10px 12px;font-size:14px}}

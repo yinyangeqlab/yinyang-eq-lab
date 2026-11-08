@@ -13,8 +13,8 @@ const ast=ts.createSourceFile('panel.tsx',source,ts.ScriptTarget.Latest,true,ts.
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name)handlers.set(node.name.text,node.getText(ast));ts.forEachChild(node,visit);}visit(ast);
 const names=['closeInterval','startInterval','snapshotIntervals','heardNow','resetHeard'];
 const code=ts.transpileModule(names.map(name=>handlers.get(name)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function harness(required){
-  const state={required,intervalStats,selectedPassageIntervals,selectedPassageProgress,engine:{current:{context:{state:'running'}}},
+function harness(required,freeListening=false){
+  const state={required,freeListening,volume:1,document:{visibilityState:'visible'},intervalStats,selectedPassageIntervals,selectedPassageProgress,engine:{current:{context:{state:'running'}}},
     audioRef:{current:{paused:false,seeking:false,currentTime:0,playbackRate:1}},
     intervalsRef:{current:[]},activeRef:{current:null},sideRef:{current:0},heardRef:{current:[0,0]},
     lastPlaybackPosition:{current:0},passageRunRef:{current:null},passageRef:{current:{start:10,end:15}},
@@ -66,6 +66,16 @@ for(const required of [false,true]){
   h.state.passageRef.current=null;
   assert.deepEqual(h.run('heardNow()'),[0,0]);
   h.run('resetHeard()');assert.deepEqual(h.run('intervalsRef.current'),[]);assert.deepEqual(h.state.display,[0,0]);
+}
+{
+ const h=harness(false,true);
+ h.run('startInterval()');h.audio.currentTime=2;h.run('closeInterval()');
+ h.state.sideRef.current=1;h.run('startInterval()');h.audio.currentTime=3;
+ assert.deepEqual(h.run('heardNow()'),[0,0],'Selected-passage meters still exclude playback outside the selection');
+ assert.deepEqual(h.run('snapshotIntervals(true)'),[
+   {side:0,start:0,end:2,rate:1},
+   {side:1,start:2,end:3,rate:1},
+ ],'Free listening credits both versions outside the selected passage');
 }
 // Longer Personal selections still have a five-second meter, but matched source
 // overlap is evaluated within that selection, never elsewhere in the song.

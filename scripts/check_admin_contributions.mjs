@@ -1,3 +1,4 @@
+import * as fitters from "../lib/fitter-settings.ts";
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
@@ -15,7 +16,7 @@ let identity='owner';const session='a'.repeat(64);
 for(const subject of ['owner','invite:layout-test-only','browser:participant'])sql.prepare('INSERT INTO privacy_accounts(subject_id,submissions_enabled,agreement_version,agreed_at) VALUES(?,1,?,0)').run(subject,VOTE_DATA_NOTICE_VERSION);
 sql.prepare('INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,?,?)').run(session,identity,Date.now()+60000);
 const deps={'cloudflare:workers':{env:{DB:db}},'next/headers':{headers:async()=>new Headers({'x-yinyang-data-session':session})},'@/db':{getDb:fail},'@/db/schema':unexpected,'drizzle-orm':unexpected,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/activity-monitoring':{ACTIVITY_MONITORING_NOTICE_VERSION},'@/app/chatgpt-auth':{getChatGPTUser:async()=>({userId:identity,displayName:'Test admin',email:''})},'@/lib/music-catalog':{musicCandidates:[],listeningPool:[]}};
-function load(file){const exports={};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;vm.runInNewContext(code,{exports,require:name=>deps[name]||unexpected,Response,Request,Headers,URL,Date,crypto,TextEncoder,TextDecoder,Buffer,console});return exports;}
+function load(file){const exports={};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;vm.runInNewContext(code,{exports,require:name=>name==="@/lib/fitter-settings"?fitters:deps[name]||unexpected,Response,Request,Headers,URL,Date,crypto,TextEncoder,TextDecoder,Buffer,console});return exports;}
 deps['@/lib/request-json']=load('lib/request-json.ts');
 deps['@/lib/profile-api']=load('lib/profile-api.ts');
 deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');

@@ -1,3 +1,4 @@
+@font-face{font-family:"Public Sans Vote";src:url("/fonts/public-sans/bold-latin-dace7416.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap}
 /* Shared measurement entry across Tournament modes. */
 .measurement-entry-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .measurement-entry-actions button,.browse-measurement-button,.measurement-show-all{min-height:44px;padding:10px 14px;border:1px solid #42615e;border-radius:8px;background:#122521;color:#def1eb;font:inherit;font-size:13px;cursor:pointer}
@@ -44,3 +45,168 @@
 /* Match the compact loudness control's more-specific legacy selector. */
 .shell.personal-shootout .loudness-control select,
 .shell.personal-shootout .personal-channel-settings select{background-color:#102026;color:#deeeed;color-scheme:dark}
+
+/* One aligned entry row; saved items are not filtered by the catalog type switch. */
+.shootout-content .measurement-picker{align-items:center;gap:12px}.shootout-content .measurement-picker .headphone-search{position:relative;flex:1 1 260px;min-width:0}.shootout-content .measurement-picker .headphone-search>input{box-sizing:border-box;min-height:48px;margin:0;width:100%;padding-right:44px}.measurement-clear-selection{position:absolute;right:6px;top:4px;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:6px;background:transparent;color:#c6e8e0;font-size:25px;cursor:pointer}.measurement-clear-selection:focus-visible{outline:2px solid #a2f5df;outline-offset:1px}.shootout-content .measurement-picker>.add-measurement-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin:0;align-self:center}.shootout-content .measurement-picker .headphone-type-switch{min-height:48px;margin:0}.measurement-picker>.measurement-saved-note{flex:1 0 100%;margin:0;color:#a8c7c3;font-size:13px;line-height:1.5}.pt-shell .pt-setup .measurement-picker .headphone-search>input{min-height:48px;padding-right:44px}.pt-shell .pt-setup .measurement-picker .headphone-type-switch{min-height:48px}.pt-shell .pt-setup .measurement-picker .headphone-type-switch button{min-height:46px}.pt-shell .pt-setup .measurement-picker>.add-measurement-button{min-height:48px}@media(max-width:600px){.shootout-content .measurement-picker .headphone-search{flex-basis:100%}.shootout-content .measurement-picker>.add-measurement-button{width:100%;flex-basis:100%}}
+
+/* Preserve the original plates and artwork, with labels above decorative layers. */
+.shootout-content .choice-controls .vote-button-label{position:relative;z-index:3;display:inline-block;max-width:100%;white-space:normal;text-align:center;color:inherit;text-shadow:0 1px 2px #000,1px 0 1px #000,-1px 0 1px #000}
+.shell.alpha-listening .comparison-votes-first .choice-controls{align-items:stretch}
+
+/* Compact vote plates retain the original decorative SVGs. */
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b),
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled{display:flex;align-items:center;justify-content:center;min-height:56px;height:56px;padding:6px 0;font-size:15px;line-height:1.2;white-space:normal;color:#fff;opacity:1}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::before{inset:50% auto auto 50%;width:26px;height:29px;transform:translate(-50%,-50%)}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::after{height:100%;background-size:100% 100%;background-position:center}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:4px 10px;border-radius:5px;background:#081015f5;color:#fff;font-weight:750;line-height:1.25;text-shadow:none;box-shadow:0 0 0 1px #ffffff20,0 1px 3px #0009}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .alpha-session-utilities{gap:6px;margin:6px 0 0}
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .alpha-session-utilities button{min-height:34px;padding:5px 12px}
+.shell.alpha-listening.personal-shootout .compare-strip{gap:6px;padding:8px 10px;margin-bottom:6px}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-copy{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-tag{padding:1px 5px;letter-spacing:0;text-transform:none;font-size:11px}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-copy strong{font-size:12px;line-height:1.4}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-times{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 9px;padding:5px 8px;border-radius:6px;font-size:12px;white-space:normal;color:#cce6e1}
+.shell.alpha-listening.personal-shootout .compare-strip .passage-duration{font-size:13px;font-weight:750;line-height:1.3;color:#effffb}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-btn{min-height:34px;padding:0 12px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-meter progress{height:6px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-meter b{width:20px;height:20px;border-radius:5px}
+@media(max-width:600px){.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:4px 6px;font-size:13px}.shell.alpha-listening.personal-shootout .compare-strip .strip-times{flex-basis:100%;justify-content:space-between}.shell.alpha-listening.personal-shootout .compare-strip .strip-copy{flex-basis:100%}}
+@media(pointer:coarse){.shell.alpha-listening.personal-shootout .compare-strip .strip-btn,.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .alpha-session-utilities button{min-height:44px}}
+
+/* Softer text halo leaves the original centered lock visible. */
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:2px 5px;border:0;background:none;box-shadow:none;font-size:18px;line-height:1.15;color:#fff8fa;font-family:"Public Sans Vote","Public Sans",Arial,sans-serif;letter-spacing:.025em;text-transform:uppercase;-webkit-text-stroke:.7px #05090e;paint-order:stroke fill;text-shadow:0 1px 1px #0007;font-weight:700}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::before{width:32px;height:36px}
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck{padding:0;gap:4px}
+.shell.alpha-listening.personal-shootout .comparison-votes-first{margin:0 0 4px}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .alpha-session-utilities{padding:0;margin:4px 0;gap:6px}
+.shell.alpha-listening.personal-shootout .personal-duel{gap:6px}
+.shell.alpha-listening.personal-shootout .personal-top{margin-bottom:10px;gap:10px}
+.shell.alpha-listening.personal-shootout .personal-setup{gap:8px}
+.shell.alpha-listening .sound-guide{padding:8px 12px;margin-block:8px;border-radius:6px}
+.shell.alpha-listening .sound-guide summary{padding:6px 0;min-height:32px}
+.shell.alpha-listening .sound-guide p{margin:8px 0;line-height:1.55}
+.shell.alpha-listening .sound-guide ol{margin:8px 0;padding-left:24px}
+.shell.alpha-listening .sound-guide li{margin:6px 0;line-height:1.5}
+.segment-time-editor{order:4;display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px;margin-left:auto;min-width:0;font-size:12px;color:#c6ddd9}
+.segment-time-editor label{display:flex;align-items:center;gap:5px;margin:0;min-width:0}
+.segment-time-editor input{width:86px;min-width:0;min-height:30px;padding:4px 6px;border:1px solid #49756f;border-radius:4px;background:#0a1b20;color:#eafff7;font:600 12px/1.2 ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.segment-time-editor .passage-duration{flex:0 0 120px;min-width:0;white-space:nowrap;font-size:12px}
+.segment-time-editor button{min-height:30px;margin:0;padding:4px 8px;border:1px solid #49756f;border-radius:4px;background:#173831;color:#ddfff3;font-size:12px}
+.segment-time-editor button:disabled{opacity:.45;cursor:default}
+/* Keep the detailed accessible error out of flex sizing; the duration slot shows the visible hint. */
+.segment-time-error{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.segment-time-editor[data-invalid="true"] label,.shell.alpha-listening.personal-shootout .segment-time-editor[data-invalid="true"] .passage-duration{color:#ffb8c1}
+.segment-time-editor[data-invalid="true"] input{border-color:#ed7b8d;background:#28151d;color:#ffd0d7}
+.segment-time-editor[data-invalid="true"] button{border-color:#ed7b8d;background:#44212c;color:#ffd0d7}
+.segment-time-editor[data-invalid="true"] :is(input,button):focus-visible{outline:2px solid #ff98aa;outline-offset:2px}
+@media(max-width:600px){.segment-time-editor{flex-basis:100%;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.segment-time-editor label{min-width:0}.segment-time-editor input{width:100%;max-width:none}.segment-time-editor .passage-duration{grid-column:1;min-width:0;align-self:center;margin:0}.segment-time-editor button{grid-column:2;justify-self:end}.segment-time-editor .segment-time-error{margin:0}}
+@media(pointer:coarse){.segment-time-editor input,.segment-time-editor button{min-height:44px}}
+/* Square cards and consistent inner clearance keep the meter parallel to its frame. */
+.shell.alpha-listening.personal-shootout .personal-ab .listen-card{border-radius:0;box-shadow:none;border-color:#ba4862}
+.shell.alpha-listening.personal-shootout .personal-ab .listen-card:nth-child(2){border-color:#339dce}
+.shell.alpha-listening.personal-shootout .personal-ab .chart{padding:10px 8px 0;gap:4px}
+.shell.alpha-listening.personal-shootout .personal-ab .level-meter{margin-bottom:8px;border-radius:1px;border-color:#567782}
+/* One connected surface groups the waveform, current song and recording rating. */
+.shell.alpha-listening.personal-shootout .playback-audio-surface{grid-column:1/-1;display:flex;flex-direction:column;gap:0;min-width:0;border:1px solid #2e4852;border-radius:6px;background:#081217}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .player-row{border:0!important;border-radius:5px 5px 0 0!important;margin:0!important}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .waveform-time-row{padding:4px 8px;background:#081217}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .playback-topbar.song-panel{border:0;border-top:1px solid #29404a;border-radius:0;margin:0;padding:9px 12px;box-shadow:none;background:#0c1a21}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote{display:flex;align-items:center;flex-wrap:wrap;gap:6px 9px;margin:0;padding:8px 12px;border:0;border-top:1px solid #29404a;font-size:12px}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote .pool-community-rank{flex:1 0 100%;margin:0;font-size:11px}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote button{min-height:32px;padding:5px 10px;margin:0;font-size:12px}
+.shell.alpha-listening.personal-shootout .playback-audio-surface .music-vote-explanation{flex-basis:100%;margin:0;font-size:11px;line-height:1.5}
+.shell.alpha-listening.personal-shootout .personal-listen-status{margin:2px 0 0}
+.shell.alpha-listening.personal-shootout .playback-hotkey-row{gap:6px 10px;margin:4px 0;align-items:center}
+.shell.alpha-listening.personal-shootout .playback-hotkey-row .shortcut-scope{display:flex;gap:8px;align-items:center;margin:0;font-size:12px}
+.shell.alpha-listening.personal-shootout .playback-hotkey-row .shortcut-scope select{min-height:32px;border-radius:5px;font-size:13px;font-weight:500}
+.shell.alpha-listening.personal-shootout .playback-key-guide>summary{display:flex;gap:6px;align-items:center;justify-content:center;min-height:32px;padding:4px 10px;border:1px solid #38525a;border-radius:5px;background:#0b1d23;list-style:none;font-size:13px;line-height:1.2}
+.playback-key-guide>summary::-webkit-details-marker{display:none}
+.playback-key-guide>summary::before{content:"⌄";font-size:14px}
+.playback-key-guide[open]>summary::before{rotate:180deg}
+.playback-key-guide>summary:focus:not(:focus-visible){outline:none}
+@media(pointer:coarse){.shell.alpha-listening.personal-shootout .playback-key-guide>summary,.shell.alpha-listening.personal-shootout .playback-hotkey-row .shortcut-scope select,.shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote button{min-height:44px}}
+
+.shell.alpha-listening.personal-shootout .personal-listen-status{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2px 12px;font-size:11px;line-height:1.5}.personal-visual-caption{color:#b9ced4}
+@media(max-width:600px){
+ .shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote .music-vote-question{flex-basis:100%}
+ .shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote .music-vote-meta{order:3}
+ .shell.alpha-listening.personal-shootout .playback-audio-surface .shootout-music-vote>a{order:4;flex-basis:100%}
+ .shell.alpha-listening.personal-shootout .playback-audio-surface .music-vote-explanation{order:5}
+ .shell.alpha-listening.personal-shootout .playback-hotkey-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px;width:100%;max-width:400px;margin-inline:auto}
+ .shell.alpha-listening.personal-shootout .playback-hotkey-row .shortcut-scope{display:contents}
+ .shell.alpha-listening.personal-shootout .playback-hotkey-row .shortcut-scope select{width:100%;font-size:12px}
+ .shell.alpha-listening.personal-shootout .playback-key-guide>summary{padding-inline:7px;font-size:12px;white-space:nowrap}
+ .shell.alpha-listening.personal-shootout .playback-key-guide[open]{grid-column:1/-1}
+}
+
+/* Remove legacy row margins rather than merely shrinking their contents. */
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls{width:100%;margin:0;gap:6px}
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b),.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked=true]:disabled{height:48px;min-height:48px}
+.shell.alpha-listening.personal-shootout .music-panel-host,.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck{margin:0}
+.shell.alpha-listening.personal-shootout .compare-group{padding:0}
+.shell.alpha-listening.personal-shootout .compare-strip{margin-bottom:0}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-copy:empty{display:none}
+
+@media(max-width:600px){.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{font-size:14px;letter-spacing:.01em;padding-inline:3px}}
+
+/* Each diagonal reaches opposite corners without stretching the original links. */
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button{container-type:inline-size}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::after{display:none}
+.vote-chain-strands{display:none;position:absolute;inset:0;z-index:1;pointer-events:none}
+button[data-locked="true"]>.vote-chain-strands{display:block}
+.vote-chain-strands::before,.vote-chain-strands::after{content:"";position:absolute;left:50%;top:50%;width:hypot(100cqw,46px);height:16px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%22-10%20-8%2026%2016%22%20width%3D%2226%22%20height%3D%2216%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22metal%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%22.2%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23e2eaf2%22%20%2F%3E%3Cstop%20offset%3D%22.16%22%20stop-color%3D%22%23bbc9d5%22%20%2F%3E%3Cstop%20offset%3D%22.38%22%20stop-color%3D%22%235c6e80%22%20%2F%3E%3Cstop%20offset%3D%22.56%22%20stop-color%3D%22%23394957%22%20%2F%3E%3Cstop%20offset%3D%22.77%22%20stop-color%3D%22%23b1c0ce%22%20%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23526576%22%20%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22edge%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23d8e4ef%22%20%2F%3E%3Cstop%20offset%3D%22.3%22%20stop-color%3D%22%238b9dad%22%20%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23334251%22%20%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%3E%3Crect%20x%3D%22-36%22%20y%3D%22-4%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%2305090f%22%20stroke%3D%22%23070a0f%22%20stroke-width%3D%224.8%22%20%2F%3E%3Crect%20x%3D%22-36%22%20y%3D%22-5%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23111923%22%20stroke%3D%22url%28%23metal%29%22%20stroke-width%3D%223.5%22%20%2F%3E%3Crect%20x%3D%22-34.8%22%20y%3D%22-3.8%22%20width%3D%2217.6%22%20height%3D%227.6%22%20rx%3D%223.8%22%20fill%3D%22none%22%20stroke%3D%22%2315212e%22%20opacity%3D%22.55%22%20stroke-width%3D%22.65%22%20%2F%3E%3Cpath%20d%3D%22M-31%20-5.5h10M-34.5%20-3.3l1.8-1.6%22%20fill%3D%22none%22%20stroke%3D%22%23f3f7fb%22%20stroke-width%3D%22.7%22%20opacity%3D%22.75%22%20stroke-linecap%3D%22round%22%20%2F%3E%3Cpath%20d%3D%22M-30.2%20-4.1l.7-.4M-23%20-5l.8.2M-18.2%202.2l-.8.9%22%20stroke%3D%22%23e4edf5%22%20opacity%3D%22.3%22%20stroke-width%3D%22.45%22%20%2F%3E%3Crect%20x%3D%22-19%22%20y%3D%22-1%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23060b12%22%20stroke%3D%22%23060a10%22%20stroke-width%3D%224%22%20%2F%3E%3Crect%20x%3D%22-19%22%20y%3D%22-2%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23263545%22%20stroke%3D%22url%28%23edge%29%22%20stroke-width%3D%222.3%22%20%2F%3E%3Cpath%20d%3D%22M-16%20-2.6h6%22%20stroke%3D%22%23f1f6fb%22%20stroke-width%3D%22.55%22%20opacity%3D%22.65%22%20stroke-linecap%3D%22round%22%20%2F%3E%3Crect%20x%3D%22-10%22%20y%3D%22-4%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%2305090f%22%20stroke%3D%22%23070a0f%22%20stroke-width%3D%224.8%22%20%2F%3E%3Crect%20x%3D%22-10%22%20y%3D%22-5%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23111923%22%20stroke%3D%22url%28%23metal%29%22%20stroke-width%3D%223.5%22%20%2F%3E%3Crect%20x%3D%22-8.8%22%20y%3D%22-3.8%22%20width%3D%2217.6%22%20height%3D%227.6%22%20rx%3D%223.8%22%20fill%3D%22none%22%20stroke%3D%22%2315212e%22%20opacity%3D%22.55%22%20stroke-width%3D%22.65%22%20%2F%3E%3Cpath%20d%3D%22M-5%20-5.5h10M-8.5%20-3.3l1.8-1.6%22%20fill%3D%22none%22%20stroke%3D%22%23f3f7fb%22%20stroke-width%3D%22.7%22%20opacity%3D%22.75%22%20stroke-linecap%3D%22round%22%20%2F%3E%3Cpath%20d%3D%22M-4.2%20-4.1l.7-.4M3%20-5l.8.2M7.8%202.2l-.8.9%22%20stroke%3D%22%23e4edf5%22%20opacity%3D%22.3%22%20stroke-width%3D%22.45%22%20%2F%3E%3Crect%20x%3D%227%22%20y%3D%22-1%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23060b12%22%20stroke%3D%22%23060a10%22%20stroke-width%3D%224%22%20%2F%3E%3Crect%20x%3D%227%22%20y%3D%22-2%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23263545%22%20stroke%3D%22url%28%23edge%29%22%20stroke-width%3D%222.3%22%20%2F%3E%3Cpath%20d%3D%22M10%20-2.6h6%22%20stroke%3D%22%23f1f6fb%22%20stroke-width%3D%22.55%22%20opacity%3D%22.65%22%20stroke-linecap%3D%22round%22%20%2F%3E%3Crect%20x%3D%2216%22%20y%3D%22-4%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%2305090f%22%20stroke%3D%22%23070a0f%22%20stroke-width%3D%224.8%22%20%2F%3E%3Crect%20x%3D%2216%22%20y%3D%22-5%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%225%22%20fill%3D%22%23111923%22%20stroke%3D%22url%28%23metal%29%22%20stroke-width%3D%223.5%22%20%2F%3E%3Crect%20x%3D%2217.2%22%20y%3D%22-3.8%22%20width%3D%2217.6%22%20height%3D%227.6%22%20rx%3D%223.8%22%20fill%3D%22none%22%20stroke%3D%22%2315212e%22%20opacity%3D%22.55%22%20stroke-width%3D%22.65%22%20%2F%3E%3Cpath%20d%3D%22M21%20-5.5h10M17.5%20-3.3l1.8-1.6%22%20fill%3D%22none%22%20stroke%3D%22%23f3f7fb%22%20stroke-width%3D%22.7%22%20opacity%3D%22.75%22%20stroke-linecap%3D%22round%22%20%2F%3E%3Cpath%20d%3D%22M21.8%20-4.1l.7-.4M29%20-5l.8.2M33.8%202.2l-.8.9%22%20stroke%3D%22%23e4edf5%22%20opacity%3D%22.3%22%20stroke-width%3D%22.45%22%20%2F%3E%3Crect%20x%3D%2233%22%20y%3D%22-1%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23060b12%22%20stroke%3D%22%23060a10%22%20stroke-width%3D%224%22%20%2F%3E%3Crect%20x%3D%2233%22%20y%3D%22-2%22%20width%3D%2212%22%20height%3D%224%22%20rx%3D%222%22%20fill%3D%22%23263545%22%20stroke%3D%22url%28%23edge%29%22%20stroke-width%3D%222.3%22%20%2F%3E%3Cpath%20d%3D%22M36%20-2.6h6%22%20stroke%3D%22%23f1f6fb%22%20stroke-width%3D%22.55%22%20opacity%3D%22.65%22%20stroke-linecap%3D%22round%22%20%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / 26px 16px repeat-x;transform:translate(-50%,-50%) rotate(atan2(46px,100cqw))}
+.vote-chain-strands::after{transform:translate(-50%,-50%) rotate(atan2(-46px,100cqw))}
+
+/* Fit the passage actions and times into deliberate compact rows. */
+.shell.alpha-listening.personal-shootout .compare-strip{padding:7px 10px;gap:5px;border-radius:9px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-passage{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);gap:6px 8px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-copy{display:none}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-passage.running .strip-copy{display:block;grid-column:1/-1;grid-row:2;font-size:11px}
+.shell.alpha-listening.personal-shootout .compare-strip .segment-time-editor{justify-self:end;margin:0;gap:4px 6px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-btn{height:32px;min-height:32px;padding:0 11px;border-radius:6px;font-size:12px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-passage:not(.running) .strip-play{background:linear-gradient(180deg,#9aeddd,#62cdbf);border-color:#a2f3e3;color:#03191b;box-shadow:inset 0 1px 0 #ffffff50,0 1px 4px #0005}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-passage:not(.running) .strip-play:focus:not(:focus-visible){outline:none;box-shadow:inset 0 1px 0 #ffffff50,0 1px 4px #0005}
+.shell.alpha-listening.personal-shootout .compare-strip-meters{gap:8px}
+.shell.alpha-listening.personal-shootout .compare-strip .strip-switch{min-height:28px;padding:3px 9px;border-radius:5px;box-shadow:none;font-size:12px}
+.shell.alpha-listening.personal-shootout .compare-strip-status{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 12px;align-items:center}
+.shell.alpha-listening.personal-shootout .compare-strip-message{gap:5px;font-size:11px}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-copy{gap:5px;flex-wrap:nowrap}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-copy strong{font-size:11px;font-weight:500}
+.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-tag{padding:0;background:none;font-size:11px;white-space:nowrap}
+.shell.alpha-listening.personal-shootout .compare-strip-icon{width:18px;height:22px;border:0;border-radius:0;background:none;color:#d8c28d}
+.shell.alpha-listening.personal-shootout .is-ready .compare-strip-icon{color:#8de1ca}
+.shell.alpha-listening.personal-shootout .compare-strip-toggle{min-height:28px;gap:5px;font-size:11px;white-space:nowrap}
+.shell.alpha-listening.personal-shootout .compare-strip-track{width:30px;height:18px}
+.shell.alpha-listening.personal-shootout .compare-strip-toggle input{width:30px;height:22px}
+.shell.alpha-listening.personal-shootout .compare-strip-track::after{top:2px;left:2px;width:12px;height:12px}
+.shell.alpha-listening.personal-shootout .compare-strip-toggle input:checked+.compare-strip-track::after{transform:translateX(12px)}
+.shell.alpha-listening.personal-shootout .compare-strip-help summary{min-height:28px;padding:0;font-size:11px;white-space:nowrap}
+.shell.alpha-listening.personal-shootout .compare-strip-help[open]{grid-column:1/-1;width:100%}
+@media(max-width:1050px){.shell.alpha-listening.personal-shootout .compare-strip-status{grid-template-columns:minmax(0,1fr) auto}.shell.alpha-listening.personal-shootout .compare-strip-message{grid-column:1/-1}.shell.alpha-listening.personal-shootout .compare-strip .compare-strip-copy{flex-wrap:wrap}}
+@media(max-width:850px){.shell.alpha-listening.personal-shootout .compare-strip .strip-passage{grid-template-columns:repeat(2,minmax(0,1fr))}.shell.alpha-listening.personal-shootout .compare-strip .segment-time-editor{grid-column:1/-1;justify-self:stretch}.shell.alpha-listening.personal-shootout .compare-strip .strip-btn{width:100%}.shell.alpha-listening.personal-shootout .compare-strip-meters{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}}
+@media(max-width:600px){.shell.alpha-listening.personal-shootout .compare-strip .strip-meter{gap:4px}.shell.alpha-listening.personal-shootout .compare-strip .strip-meter>span>span{font-size:10px}.shell.alpha-listening.personal-shootout .compare-strip .strip-meter progress{min-width:16px}.shell.alpha-listening.personal-shootout .compare-strip .strip-switch{min-width:58px;padding-inline:6px}.shell.alpha-listening.personal-shootout .compare-strip-status{grid-template-columns:minmax(0,1fr)}.shell.alpha-listening.personal-shootout .compare-strip-message,.shell.alpha-listening.personal-shootout .compare-strip-help{grid-column:1/-1}.shell.alpha-listening.personal-shootout .compare-strip-toggle{white-space:normal}}
+@media(pointer:coarse){.shell.alpha-listening.personal-shootout .compare-strip .strip-btn,.shell.alpha-listening.personal-shootout .compare-strip .strip-switch,.shell.alpha-listening.personal-shootout .compare-strip-toggle,.shell.alpha-listening.personal-shootout .compare-strip-help summary{min-height:44px}}
+
+/* Bring the active comparison closer to the top of the page. */
+.alpha-app:has(.personal-shootout) .alpha-topbar{min-height:42px;padding-block:7px}
+.shell.alpha-listening.personal-shootout .personal-page-heading{margin:0 0 6px;gap:9px}
+.shell.alpha-listening.personal-shootout .personal-page-heading .personal-heading-art{width:42px;height:40px}
+.shell.alpha-listening.personal-shootout .personal-page-heading h1{font-size:clamp(21px,2.2vw,29px);margin-top:2px}
+.shell.alpha-listening.personal-shootout [data-active-listening=true]>.personal-sharing-status{padding:2px 0;margin:3px 0;font-size:11px}
+.shell.alpha-listening.personal-shootout .personal-session-bar{padding:4px 0 6px;margin:3px 0 7px;gap:5px 10px}
+.shell.alpha-listening.personal-shootout .personal-session-bar>button{min-height:30px;padding:4px 9px;font-size:11px}
+.shell.alpha-listening.personal-shootout .personal-duel>h2{margin:7px 0 3px}
+.shell.alpha-listening.personal-shootout .personal-duel-progress{margin:0 0 4px}
+.shell.alpha-listening.personal-shootout .personal-duel>.personal-listen-status{margin-block:2px}
+.shell.alpha-listening.personal-shootout .shootout-setup.is-collapsed{margin-bottom:3px}
+.shell.alpha-listening.personal-shootout .shootout-setup-control{margin-bottom:2px}
+@media(pointer:coarse){.shell.alpha-listening.personal-shootout .personal-session-bar>button{min-height:44px}}
+
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .choice-tie:not(:disabled) .vote-button-label{color:#17232d;-webkit-text-stroke:.45px #05090e;text-shadow:0 1px 0 #ffffff70}
+
+/* Keep the lock reason beside the votes without enlarging the controls. */
+.personal-vote-availability{display:inline-flex;align-items:center;flex-wrap:wrap;gap:4px 6px;min-width:0}
+.personal-vote-availability[data-locked="true"]{color:#d4dee2}
+.personal-vote-availability svg{flex:none;color:#e2ebee}
+.personal-vote-availability strong{font-weight:700;color:#edf4f6}
+.personal-vote-availability[data-locked="true"]>span{color:#a8bec7}

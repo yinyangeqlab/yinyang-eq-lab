@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 
 root = Path(__file__).resolve().parents[1]
-fixtures = ["scripts/check_target_context_and_changes.mjs", "scripts/check_yinyangeq_history.mjs"]
+fixtures = ["scripts/check_community_reference.mjs", "scripts/check_target_context_and_changes.mjs", "scripts/check_yinyangeq_history.mjs"]
 with tempfile.TemporaryDirectory(prefix="yinyang-lint-release-") as directory:
     checkout = Path(directory)
     def git(*args):

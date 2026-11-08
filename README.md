@@ -20,7 +20,10 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-**Current access — update124:** the site is closed for private testing. Only existing admin sign-in and authenticated admin sessions have app access. The lock stays enabled until the owner explicitly requests reopening. [Current live state](LIVE_STATE.md).
+<!-- release-state:start -->
+Recorded deployment: **update132**, source `f33b8fb2906e3005a50f06e3fc436b1b145c2e79`.
+Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
+<!-- release-state:end -->
 
 The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
 
@@ -105,7 +108,7 @@ If the data eventually supports a finding, it would be reported with its limits,
 
 ## Participation, privacy, and your data
 
-During maintenance, only authenticated admins can use the app. The following describes the ordinary access policy when the owner reopens the site: browsing does not ask for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
+See [the recorded live state](LIVE_STATE.md) for maintenance and access status. Under the ordinary participation policy, browsing does not ask for consent. The participation agreement is requested **once, when an action would record data**: starting a test (Listen, Personal Tournament, a Community check), rating a song, sharing a target for review, or finalizing or exporting an EQ in Preference Tuning. Closing the box leaves you where you are. These are **optional, off by default and changed independently** in **My data**:
 
 - tags and fingerprints of music from your own device
 - identifiable activity monitoring
@@ -128,11 +131,11 @@ The notice also describes a protected public-archive release (rounded, uncertain
 
 ### Shareable shootouts
 
-When the owner reopens the site, the shareable tool lets anyone build a blind A/B for two to four targets and share a link (`/s/<id>`), an iframe snippet (`/embed/<id>`) and a private results link whose manage key lives in the URL fragment. Runs store only the picks, an hour bucket, an optional setup answer, whether curves were viewed and which sound played: no IP address, cookie, account or exact time. Shootouts are deleted 180 days after results were last opened, or when the sharer deletes them. Only built-in targets with a redistribution-compatible license (currently MIT or CC BY 4.0) can be used. See [docs/SHAREABLE_SHOOTOUTS.md](docs/SHAREABLE_SHOOTOUTS.md).
+The shareable tool lets participants with app access build a blind A/B for two to four targets and share a link (`/s/<id>`), an iframe snippet (`/embed/<id>`) and a private results link whose manage key lives in the URL fragment. Runs store only the picks, an hour bucket, an optional setup answer, whether curves were viewed and which sound played: no IP address, cookie, account or exact time. Shootouts are deleted 180 days after results were last opened, or when the sharer deletes them. Only built-in targets with a redistribution-compatible license (currently MIT or CC BY 4.0) can be used. See [docs/SHAREABLE_SHOOTOUTS.md](docs/SHAREABLE_SHOOTOUTS.md).
 
 ## Current status
 
-- **Live release:** 0.2.0-beta.1 / update124 (October 27, 2026), under owner-only maintenance, recorded in [LIVE_RELEASE.json](LIVE_RELEASE.json) and [LIVE_STATE.md](LIVE_STATE.md); see the [release verification](docs/releases/update124-verification.json).
+- **Release, access and recovery status:** see the generated [live state](LIVE_STATE.md), backed by [LIVE_RELEASE.json](LIVE_RELEASE.json) and its exact verification receipt.
 - **Not verified:** physical headphone output, and real Safari/iOS interruption and recovery.
 - **Beta:** some features may be unfinished and bugs may appear.
 - **Free and noncommercial:** the site has no advertising, payments or paid features, and its [privacy notice](https://yinyangeq.com/privacy) states that data is not sold or used for advertising.
@@ -140,7 +143,7 @@ When the owner reopens the site, the shareable tool lets anyone build a blind A/
 
 ## Run locally
 
-Requires **Node.js 22.13 or newer** (and Python 3 for the release check). The commands below were last run end to end on a fresh export of this repository with Node.js 26.12.0 and npm 12.2.1.
+Use the pinned Node version in `.node-version` and npm version in `package.json`. Verification also uses Python 3 and NumPy. See [the rebuild guide](docs/REBUILD.md) for candidate source checks, preparation requirements and owner-only limits; [shared engineering guidelines](docs/ENGINEERING.md) describe the workflow.
 
 ```sh
 npm ci

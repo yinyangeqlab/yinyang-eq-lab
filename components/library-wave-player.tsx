@@ -3,7 +3,7 @@
 import { attachMediaRecovery } from "@/lib/media-recovery";
 
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+import PlaybackTransport, { PlaybackTime, NowPlaying } from "@/components/playback-transport";
 import TrackWaveform from "@/components/track-waveform";
 import { curatedWaveform } from "@/lib/curated-waveforms";
 import { playbackGain } from "@/lib/music-preferences";
@@ -11,11 +11,6 @@ import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from 
 import type { LibraryEq } from "@/lib/music-library-eq";
 
 type TrackSource = { title: string; artist: string; fileUrl: string; duration: number; integrated_lufs?: number };
-
-function clock(seconds: number) {
-  const whole = Math.max(0, Math.floor(seconds));
-  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
-}
 
 type EqGraph = { context: AudioContext; normalization: GainNode; preamp: GainNode; stage: EqStage; safety: DynamicsCompressorNode; ceiling: WaveShaperNode; stopInterruptions: () => void; volumeGain: GainNode };
 const ceilingCurve = new Float32Array(65537);
@@ -46,6 +41,7 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   }, [audioGeneration, track.fileUrl]);
 
   const graph = useRef<EqGraph | null>(null);
+  const processing = !!eq && (eq.filters.length > 0 || !!eq.channelMatch);
   const waveform = curatedWaveform(track.fileUrl);
   const [playing, setPlaying] = useState(false);
   const [buffering, setBuffering] = useState(false);
@@ -65,11 +61,12 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     const current = graph.current;
     if (!current) return;
     const now = current.context.currentTime;
+
+    current.safety.threshold.setTargetAtTime(processing ? -1.5 : 0, now, .025);
+    current.ceiling.curve = processing ? ceilingCurve : null;
+    current.stage = replaceEqStage(current.context, current.preamp, processing ? current.safety : current.volumeGain, eq?.filters ?? [], current.stage, eq?.channelMatch);
     safeGain(current.preamp, eq ? 10 ** (eq.preamp / 20) : 1, now, false);
-    current.safety.threshold.setTargetAtTime(eq ? -1.5 : 0, now, .025);
-    current.ceiling.curve = eq ? ceilingCurve : null;
-    current.stage = replaceEqStage(current.context, current.preamp, eq ? current.safety : current.volumeGain, eq?.filters ?? [], current.stage);
-  }, [eq]);
+  }, [eq, processing]);
   useEffect(() => () => { graph.current?.stopInterruptions(); if (graph.current && graph.current.context.state !== "closed") void graph.current.context.close(); }, []);
 
   useEffect(() => {
@@ -97,14 +94,15 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
     normalization.gain.value = matchLoudness ? playbackGain(track.integrated_lufs, targetLufs) : 1;
     source.connect(normalization); normalization.connect(preamp);
     const safety = context.createDynamicsCompressor();
-    safety.threshold.value = eq ? -1.5 : 0;
+    safety.threshold.value = processing ? -1.5 : 0;
     safety.knee.value = 0;
     safety.ratio.value = 20;
     safety.attack.value = .003;
     safety.release.value = .08;
-    const stage = replaceEqStage(context, preamp, eq ? safety : volumeGain, eq?.filters ?? []);
+    const stage = replaceEqStage(context, preamp, processing ? safety : volumeGain, eq?.filters ?? [], undefined, eq?.channelMatch);
+    preamp.gain.value = eq ? 10 ** (eq.preamp / 20) : 1;
     const ceiling = context.createWaveShaper();
-    ceiling.curve = eq ? ceilingCurve : null;
+    ceiling.curve = processing ? ceilingCurve : null;
     ceiling.oversample = "4x";
     safety.connect(ceiling);
     ceiling.connect(volumeGain);
@@ -160,12 +158,9 @@ export default function LibraryWavePlayer({ track, onPlay, onPause, active = fal
   }
 
   return <div className="library-player" role="group" aria-label={`Preview ${track.title} by ${track.artist}`}>
-    <div className="library-player-controls">
-      <button type="button" className="library-play" aria-label={playing ? `Pause ${track.title}` : `Play ${track.title}`} onClick={togglePlayback}>{playing ? <Pause size={19} fill="currentColor" aria-hidden="true" /> : <Play size={19} fill="currentColor" aria-hidden="true" />}</button>
-      <span className="library-player-time" aria-live="off">{clock(position)} <span aria-hidden="true">/</span> {clock(duration)}</span>
-      <label className="library-volume"><span className="sr-only">Volume for {track.title}</span>{volume === 0 ? <VolumeX size={17} aria-hidden="true" /> : <Volume2 size={17} aria-hidden="true" />}<input type="range" min="0" max="1" step="0.01" value={volume} aria-label={`Volume for ${track.title}`} onChange={event => { const next = Number(event.target.value); setVolume(next); }} /></label>
-    </div>
-    <TrackWaveform compact hideZoom hideHeading analysis={waveform} placeholder="Waveform unavailable" position={position} duration={duration} onSeek={seconds => { if (audioRef.current) { audioRef.current.currentTime = seconds; setPosition(seconds); } }} dynamicRange={0} onDynamicRangeChange={() => {}} />
+    <PlaybackTransport playing={playing} onToggle={() => void togglePlayback()} volume={volume} onVolume={setVolume} playLabel={`Play ${track.title}`} pauseLabel={`Pause ${track.title}`}/>
+    <TrackWaveform playing={playing&&!buffering} getPlaybackPosition={()=>audioRef.current?.currentTime??position} deferDetail compact hideZoom hideHeading analysis={waveform} sourceUrl={track.fileUrl} placeholder="Waveform unavailable" position={position} duration={duration} onSeek={seconds => { if (audioRef.current) { audioRef.current.currentTime = seconds; setPosition(seconds); } }} dynamicRange={0} onDynamicRangeChange={() => {}} />
+    <PlaybackTime position={position} duration={duration}/><NowPlaying title={track.title} artist={track.artist} source="Music library" playing={playing}/>
     {matchLoudness && <small className="library-match-status">{Number.isFinite(track.integrated_lufs) ? `${targetLufs.toFixed(1)} LUFS target · ${(20 * Math.log10(playbackGain(track.integrated_lufs, targetLufs))).toFixed(1)} dB gain` : "Loudness not measured; original level"}</small>}
     {buffering && <p className="library-player-buffering" role="status">Buffering audio…</p>}
     {error && <p className="library-player-error" role="alert">{error}</p>}

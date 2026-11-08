@@ -25,10 +25,10 @@ export default function TargetLineagePicker({ targets, kind, parentId, onKind, o
   }, [open]);
 
   return <fieldset className="target-lineage">
-    <legend>Curve origin</legend>
+    <legend>How was this target made?</legend>
     <div className="target-lineage-options">
       <label><input type="radio" name="curveKind" checked={kind === "original"} onChange={() => { onKind("original"); onParent(""); setOpen(false); }} />Original curve</label>
-      <label><input type="radio" name="curveKind" checked={kind === "preference"} onChange={() => onKind("preference")} />Preference based on another target</label>
+      <label><input type="radio" name="curveKind" checked={kind === "preference"} onChange={() => onKind("preference")} />Modified from an existing target</label>
     </div>
     {kind === "preference" && <div className="target-parent-field" ref={host}>
       <label htmlFor="parent-target-search">Based on target</label>

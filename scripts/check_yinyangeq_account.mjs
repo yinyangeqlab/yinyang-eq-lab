@@ -18,7 +18,7 @@ assert.equal(sqlite.prepare('SELECT COUNT(*) total FROM private_tester_devices')
 const preview=await account.profileGrantPreview(db,claim.secret);assert.equal(preview.snapshot,null);
 const device=await account.completeProfileGrant(db,claim.secret,false);const repeat=await account.completeProfileGrant(db,claim.secret,false);assert.equal(device.access,repeat.access);assert.equal(device.data,repeat.data);assert.equal(sqlite.prepare('SELECT COUNT(*) total FROM private_tester_devices').get().total,1);
 const request=new Request('https://fixture.invalid/sync',{headers:{Cookie:`__Host-yinyangeq_tester=${device.access}`}});const tester=await linkedTester(request,db);assert.equal(tester.id,profile.invite_id);
-assert.equal((await browserPairing(request,{DB:db},tester,false,false)).status,403,'the participant account must not approve additional devices itself');
+assert.equal((await browserPairing(request,{DB:db},tester,false,false)).status,200,'an approved participant device uses normal two-sided device linking');
 const id=sqlite.prepare('SELECT id FROM owner_profile_devices').get().id;await account.revokeProfileDevice(db,id);assert.equal(await linkedTester(request,db),null);
 await assert.rejects(()=>account.completeProfileGrant(db,claim.secret,false),/revoked/);assert.equal(sqlite.prepare('SELECT COUNT(*) total FROM private_tester_devices').get().total,0,'old complete requests must never reactivate a revoked device');
 assert.equal(sqlite.prepare('SELECT COUNT(*) total FROM privacy_sessions').get().total,0);
@@ -32,4 +32,4 @@ await assert.rejects(()=>account.completeProfileGrant(db,recoveryClaim.secret,fa
 await account.completeProfileGrant(db,recoveryClaim.secret,true,recoveryPreview.snapshotDigest);
 const expired=await account.createProfileGrant(db,'Expired');sqlite.prepare('UPDATE owner_profile_grants SET expires_at=0 WHERE id=?').run(expired.id);await assert.rejects(()=>account.claimProfileGrant(db,expired.code),/expired/);
 const cancelled=await account.createProfileGrant(db,'Cancelled');sqlite.prepare('UPDATE owner_profile_grants SET cancelled_at=1 WHERE id=?').run(cancelled.id);await assert.rejects(()=>account.claimProfileGrant(db,cancelled.code),/cancelled/);
-console.log('PASS reserved non-admin account, no implicit consent, one-use codes, review before activation, idempotent completion, exclusive admin device approval, revoke/replay protection, fresh recovery and deletion-safe private snapshots. Synthetic SQLite only.');sqlite.close();
+console.log('PASS reserved non-admin account, no implicit consent, one-use codes, review before activation, idempotent completion, initial owner-only recovery approval and ordinary trusted-device linking, revoke/replay protection, fresh recovery and deletion-safe private snapshots. Synthetic SQLite only.');sqlite.close();

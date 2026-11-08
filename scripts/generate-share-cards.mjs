@@ -1,5 +1,5 @@
 // Renders the 1200x630 link-preview cards in public/share from lib/share-pages.mjs.
-// Re-run after editing page copy:  node scripts/generate-share-cards.mjs
+// Re-run after editing page copy: node scripts/generate-share-cards.mjs [--slug=discover]
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -103,7 +103,10 @@ const done = new Set();
 const entries = [...sharePages];
 // Query variants of /shootout have their own cards.
 for (const search of ["?mode=blind", "?mode=open", "?tab=rankings"]) entries.push(sharePageFor("/shootout", search));
+const selectedSlug = process.argv.find(arg => arg.startsWith("--slug="))?.slice(7);
+if (selectedSlug !== undefined && !entries.some(page => page.slug === selectedSlug && !page.image)) throw new Error("Unknown generated share-card slug.");
 for (const page of entries) {
+  if (selectedSlug && page.slug !== selectedSlug) continue;
   if (page.image || done.has(page.slug)) continue;
   done.add(page.slug);
   const svg = Buffer.from(cardSvg(page));

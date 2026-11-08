@@ -3,60 +3,65 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
-import { importCatalogEntry, type CatalogMeasurement } from "@/lib/public-measurements";
-import { finalizePeqdb } from "@/lib/autoeq-export";
-import { LIBRARY_EQ_KEY, parseLibraryEq, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
+import HeadphonePicker, { type CatalogMeasurement } from "@/components/headphone-picker";
+import SoundSetup, { type SoundMode } from "@/components/sound-setup";
+import { importCatalogEntry } from "@/lib/public-measurements";
+import { fitAutoEqAsync } from "@/lib/autoeq-client";
+import { useFitterSettings } from "@/lib/use-fitter-settings";
+import FitterControls from "@/components/fitter-controls";
+import { fitterLabel } from "@/lib/fitter-settings";
+import { measurementChannelMatch, removeLibraryEq, parseLibraryEq, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
 
 type Target = { id: string; name: string; creator: string; points: Point[] };
 const flat: Target = { id: "flat", name: "Flat reference", creator: "Reference", points: [[20, 0], [20000, 0]] };
 
 export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq | null) => void }) {
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
+  const [matchEnabled, setMatchEnabled] = useState(true);
   const [presets, setPresets] = useState<LibraryEq[]>([]);
   const [selectedId, setSelectedId] = useState("");
-  const [presetSearch, setPresetSearch] = useState("");
+  const [soundMode, setSoundMode] = useState<SoundMode>("target");
+  const [generated, setGenerated] = useState<{ key: string; eq: LibraryEq } | null>(null);
+  const [headphoneType, setHeadphoneType] = useState<"ie" | "oe" | null>(null);
+  const {fitter,setFitter,defaultFitter,saveDefault,notice:fitterNotice}=useFitterSettings();
   const [measurements, setMeasurements] = useState<HeadphoneMeasurement[]>([]);
   const [measurementId, setMeasurementId] = useState("");
   const [targets, setTargets] = useState<Target[]>([flat]);
-  const [targetId, setTargetId] = useState("flat");
-  const [targetSearch, setTargetSearch] = useState("");
-  const [catalog, setCatalog] = useState<CatalogMeasurement[]>([]);
-  const [headphoneSearch, setHeadphoneSearch] = useState("");
+  const [targetId, setTargetId] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const fitRequest = useRef<AbortController | null>(null);
-  const headphone = measurements.find(row => row.id === measurementId);
+  const savedSelection = presets.find(row => row.id === selectedId);
+  const headphone = measurements.find(row => row.id === (soundMode === "saved" ? savedSelection?.measurementId : measurementId));
   const target = targets.find(row => row.id === targetId);
-  const fitKey = useMemo(() => JSON.stringify([measurementId, targetId, headphone?.points, target?.points]), [measurementId, targetId, headphone?.points, target?.points]);
-  useEffect(() => () => { fitRequest.current?.abort(); }, [fitKey]);
+  const fitKey = useMemo(() => JSON.stringify([measurementId, targetId, headphone?.points, target?.points, fitter]), [measurementId, targetId, headphone?.points, target?.points, fitter]);
+  useEffect(() => () => { fitRequest.current?.abort(); }, [fitKey, soundMode]);
 
   useEffect(() => {
     const refresh = () => {
-      setPresets(readLibraryEqs());
+      const next = readLibraryEqs(); setPresets(next); setSelectedId(id => next.some(eq => eq.id === id) ? id : "");
       try { const rows = JSON.parse(localStorage.getItem("target-lab-measurements") || "[]"); if (Array.isArray(rows)) setMeasurements(rows); } catch {}
     };
     refresh();
     window.addEventListener("library-eqs-changed", refresh);
     window.addEventListener("storage", refresh);
+    window.addEventListener("yinyang-data-changed", refresh);
     void fetch("/api/targets").then(async response => {
       if (!response.ok) throw new Error();
       const rows = await response.json() as Target[];
       let privateRows: Target[] = [];
       try { privateRows = JSON.parse(localStorage.getItem("target-lab-private-targets") || "[]"); } catch {}
       setTargets([flat, ...rows, ...privateRows].filter(row => Array.isArray(row.points) && row.points.length >= 2));
-    }).catch(() => setMessage("Shared targets are unavailable; saved presets and the flat reference still work."));
-    return () => { window.removeEventListener("library-eqs-changed", refresh); window.removeEventListener("storage", refresh); };
+    }).catch(() => setMessage("Shared targets are unavailable; saved EQs and the flat reference still work."));
+    return () => { window.removeEventListener("library-eqs-changed", refresh); window.removeEventListener("storage", refresh); window.removeEventListener("yinyang-data-changed", refresh); };
   }, []);
-  useEffect(() => { onChange(enabled ? presets.find(item => item.id === selectedId) || null : null); }, [enabled, presets, selectedId, onChange]);
+  const activeEq = useMemo(() => soundMode === "target" ? generated?.key === fitKey ? presets.find(item => item.id === generated.eq.id) : undefined : presets.find(item => item.id === selectedId), [soundMode, generated, fitKey, presets, selectedId]);
+  useEffect(() => { onChange(activeEq ? { ...activeEq, filters: enabled ? activeEq.filters : [], channelMatch: matchEnabled ? activeEq.channelMatch : undefined } : null); }, [enabled, matchEnabled, activeEq, onChange]);
 
-  async function loadCatalog() {
-    if (catalog.length) return;
-    try {
-      const response = await fetch("/api/headphone-catalog");
-      if (!response.ok) throw new Error();
-      const data = await response.json() as { entries: CatalogMeasurement[] };
-      setCatalog(data.entries);
-    } catch { setMessage("The public headphone index is unavailable. Saved measurements still work."); }
+  function chooseHeadphone(id: string) {
+    setMeasurementId(id);
+    const row = measurements.find(item => item.id === id);
+    if (row) setHeadphoneType(row.type);
   }
   async function importHeadphone(entry: CatalogMeasurement) {
     setBusy(true); setMessage("Importing headphone measurement…");
@@ -64,7 +69,7 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
       const row = await importCatalogEntry(entry);
       const next = [...measurements, row];
       localStorage.setItem("target-lab-measurements", JSON.stringify(next));
-      setMeasurements(next); setMeasurementId(row.id); setHeadphoneSearch(""); setMessage(`${row.name} is ready.`);
+      setMeasurements(next); setMeasurementId(row.id); setHeadphoneType(row.type); setMessage(`${row.name} is ready.`);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not import this measurement."); }
     finally { setBusy(false); }
   }
@@ -74,8 +79,8 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     try {
       if (file.size > 100_000) throw new Error("Choose an EQ TXT file under 100 KB.");
       const eq = parseLibraryEq(await file.text(), file.name.replace(/\.txt$/i, ""));
-      saveLibraryEq(eq); setSelectedId(eq.id); setEnabled(true);
-      setMessage(`Saved ${eq.name}. Safe playback preamp: ${eq.preamp.toFixed(1)} dB.`);
+      saveLibraryEq(eq); setSelectedId(eq.id); setSoundMode("saved"); setEnabled(true);
+      setMessage(`Saved ${eq.name}. Starting volume adjustment: ${eq.preamp.toFixed(1)} dB.`);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not read this EQ file."); }
     finally { setBusy(false); }
   }
@@ -84,24 +89,29 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     fitRequest.current?.abort(); const request = new AbortController(); fitRequest.current = request;
     setBusy(true); setMessage("Preparing headphone EQ…");
     try {
-      const result = await finalizePeqdb(headphone.points, target.points, 15, request.signal, "smooth");
+      const [result] = await fitAutoEqAsync({raw:headphone.points,targets:[target.points],kind:"export",...fitter,sampleRate:48000},request.signal);
       if (request.signal.aborted || fitRequest.current !== request) return;
-      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, engine: result.engine, engineVersion: result.engineVersion, source: `${result.engine === "peqdb" ? "PEQdB unsmoothed" : "Original fitter fallback"} · 15 bands`, filters: result.filters, preamp: result.preamp };
-      saveLibraryEq(eq); setSelectedId(eq.id); setEnabled(true);
-      setMessage(`${result.fallbackReason ? "Original fitter used. " : ""}EQ ready · ${result.rms.toFixed(2)} dB fit error · ${readLibraryEqs()[0]?.preamp.toFixed(1)} dB safe preamp.`);
+      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, engine: result.engine, engineVersion: result.engineVersion, fitter, source: `${fitterLabel(fitter)}${result.fallbackReason ? " · fallback" : ""}`, filters: result.filters, preamp: result.preamp, measurementId: headphone.id, headphone: headphone.device || headphone.name, channelMatch: measurementChannelMatch(headphone), target: { id: target.id, name: target.name, points: target.points } };
+      saveLibraryEq(eq); setSelectedId(eq.id); setGenerated({ key: fitKey, eq }); setEnabled(true);
+      setMessage(`${result.fallbackReason ? "Original fitter used. " : ""}EQ ready · ${result.rms.toFixed(2)} dB fit error · ${readLibraryEqs()[0]?.preamp.toFixed(1)} dB starting volume adjustment.`);
     } catch (error) { if (request.signal.aborted) return; setMessage(error instanceof Error ? error.message : "EQ fitting failed."); }
     finally { if (fitRequest.current === request) { setBusy(false); if (request.signal.aborted) setMessage("Headphone or target changed. Create EQ again for the current selection."); } }
   }
-  const matches = headphoneSearch.trim().toLowerCase();
-  const catalogMatches = matches.length >= 2 ? catalog.filter(row => `${row.name} ${row.source}`.toLowerCase().includes(matches)).slice(0, 8) : [];
-  const selected = presets.find(item => item.id === selectedId);
-  const shownPresets = presets.filter(item => item.id === selectedId || `${item.name} ${item.source}`.toLowerCase().includes(presetSearch.trim().toLowerCase()));
-  const shownTargets = targets.filter(row => row.id === targetId || `${row.name} ${row.creator}`.toLowerCase().includes(targetSearch.trim().toLowerCase()));
-  return <section className="library-eq" aria-labelledby="library-eq-title">
-    <div className="library-eq-heading"><div><span className="library-section-label">OPTIONAL LISTENING EQ</span><h2 id="library-eq-title">Hear it through your headphones.</h2><p>Apply one EQ to site-hosted track previews. EQ starts off. Turn off any EQ on your device before listening here.</p></div><label className={`library-eq-switch${enabled ? " is-on" : ""}${!selected ? " is-unavailable" : ""}`}><input type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.checked)} disabled={!selected} /><span className="library-eq-switch-copy"><strong>Use EQ</strong><small>{enabled ? "ON · processing previews" : selected ? "OFF · original audio" : "Choose an EQ first"}</small></span></label></div>
-    <div className="library-eq-grid"><div><label htmlFor="library-eq-preset">Saved EQs</label><span className="library-eq-select"><select id="library-eq-preset" value={selectedId} onChange={event => setSelectedId(event.target.value)}><option value="">No EQ selected</option>{shownPresets.map(item => <option value={item.id} key={item.id}>{item.name}</option>)}</select></span><input type="search" aria-label="Search saved EQs" placeholder="Search saved EQs" value={presetSearch} onChange={event => setPresetSearch(event.target.value)} /><small>{selected ? `${selected.source} · preamp ${selected.preamp.toFixed(1)} dB · ${selected.filters.length} bands` : presets.length && !shownPresets.length ? "No saved EQs match this search." : "Presets saved in this browser appear here."}</small>{selected && <button type="button" className="library-eq-remove" onClick={() => { const next = presets.filter(item => item.id !== selected.id); localStorage.setItem(LIBRARY_EQ_KEY, JSON.stringify(next)); setPresets(next); setSelectedId(""); setEnabled(false); setMessage("Saved EQ removed from this browser."); }}>Remove selected EQ</button>}<label className="library-eq-upload">Upload a downloaded EQ TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label></div>
-    <div><label htmlFor="library-headphone">Choose a headphone measurement</label><span className="library-eq-select"><select id="library-headphone" value={measurementId} onChange={event => setMeasurementId(event.target.value)}><option value="">Select saved measurement</option>{measurements.map(row => <option value={row.id} key={row.id}>{row.name}</option>)}</select></span><input type="search" aria-label="Search public headphones" placeholder="Search public headphones" value={headphoneSearch} onFocus={() => void loadCatalog()} onChange={event => { setHeadphoneSearch(event.target.value); void loadCatalog(); }} />{catalogMatches.length > 0 && <div className="library-eq-catalog">{catalogMatches.map(row => <button type="button" disabled={busy} key={row.path} onClick={() => void importHeadphone(row)}>{row.name} <small>{row.source}</small></button>)}</div>}<small>For your own raw measurement, <a href="/preference-tuning">upload it in Preference Tuning</a>, then return here.</small></div>
-    <div><label htmlFor="library-target">Choose a target</label><span className="library-eq-select"><select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}>{shownTargets.map(row => <option value={row.id} key={row.id}>{row.name} · {row.creator}</option>)}</select></span><input type="search" aria-label="Search targets" placeholder="Search targets" value={targetSearch} onChange={event => setTargetSearch(event.target.value)} /><button type="button" className="library-eq-generate" onClick={() => void generate()} disabled={busy || !measurementId}>{busy ? "Working…" : "Create EQ"}</button><small>Fits the selected target and lowers preamp for headroom. Audio is processed only in this browser.</small></div></div>
-    <p className="library-eq-note">{enabled && selected ? `EQ on: ${selected.name}.` : "EQ off: no EQ processing. Loudness matching is controlled below."} EQ works on all site-hosted previews, including the Shantae soundtrack. EQ approximates the selected measurement and target; fit, seal and device processing still affect what you hear.</p>{message && <p className="library-eq-message" role="status">{message}</p>}
-  </section>;
+  const selected = activeEq;
+  return <SoundSetup mode={soundMode} onMode={mode => { setSoundMode(mode); setEnabled(true); }} presets={presets} presetId={selectedId} onPreset={id => {
+    setSelectedId(id); setEnabled(true);
+    const eq = presets.find(row => row.id === id);
+    if (eq?.measurementId && measurements.some(row => row.id === eq.measurementId)) chooseHeadphone(eq.measurementId);
+  }}
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Full navigation runs access checks and unsaved-listening guards.
+    headphones={<div className="shootout-content"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); setMeasurementId(""); }} onSelect={chooseHeadphone} onClear={() => setMeasurementId("")} onImport={importHeadphone} onUpload={() => { window.location.href = "/shootout?tab=measurements"; }} onEdit={() => { window.location.href = "/shootout?tab=measurements"; }} onDelete={id => { const rows = measurements.filter(row => row.id !== id); try { localStorage.setItem("target-lab-measurements", JSON.stringify(rows)); setMeasurements(rows); if (measurementId === id) setMeasurementId(""); } catch { setMessage("Could not remove this measurement."); } }}/></div>}
+    target={<><label htmlFor="library-target">Target curve<select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}><option value="">Choose a target</option>{targets.map(row => <option key={row.id} value={row.id}>{row.name} · {row.creator}</option>)}</select></label><FitterControls value={fitter} defaultValue={defaultFitter} onChange={setFitter} onDefault={saveDefault} notice={fitterNotice}/><button type="button" className="library-eq-generate" disabled={busy || !measurementId || !targetId} onClick={() => void generate()}>{busy ? "Preparing EQ…" : "Create EQ"}</button><p>{selected ? "Target EQ ready for the selected headphones." : "Choose headphones and a target, then create their EQ."}</p></>}
+    savedExtra={<details className="sound-import-eq"><summary>Import an EQ file</summary><label>EQ settings TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/></label></details>}>
+      {soundMode === "saved" && selected && !headphone && <p>{selected.measurementId ? "The linked measurement is unavailable here. The saved filters and channel correction still work." : "This EQ has no linked headphone measurement. It plays the saved filters directly."}</p>}
+      <div className="sound-playback-options"><label><input type="checkbox" aria-label="Enable EQ" checked={enabled && !!selected} disabled={!selected} onChange={event => setEnabled(event.target.checked)}/>EQ {enabled && selected ? "on" : "off"}</label><label><input type="checkbox" aria-label="Enable channel match" checked={matchEnabled && !!selected?.channelMatch} disabled={!selected?.channelMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && selected?.channelMatch ? "on" : "off"}</label><span className="sound-state">{enabled && selected ? `EQ: ${selected.name}` : "EQ off · original sound"}{matchEnabled && selected?.channelMatch ? " · channel match on" : ""}</span></div>
+      <p>{selected?.channelMatch ? "Channel match uses the Left/Right correction saved with this EQ." : "Channel matching needs paired headphone responses or a saved two-channel correction."} Turn off other EQ on your device before listening.</p>
+      {selected && soundMode === "saved" && <p>Stored base EQ: {selected.fitter ? fitterLabel(selected.fitter) : "fitter unrecorded"} · {selected.filters.length} stored filters</p>}
+      {selected && soundMode === "saved" && <button type="button" className="library-eq-remove" onClick={() => { try { removeLibraryEq(selected.id); setSelectedId(""); setEnabled(false); setMessage("EQ removed from My space, Tuning and Music library."); } catch { setMessage("Could not remove this EQ. Browser storage may be unavailable."); } }}>Remove selected EQ</button>}
+      {message && <p role="status">{message}</p>}
+  </SoundSetup>;
 }

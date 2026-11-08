@@ -12,8 +12,8 @@ export function warningFor(response: Response, path = ""): ServiceWarning | null
       : "Please take a break and come back again later.";
     const audio=path.includes('/api/listening-audio/')||path.startsWith('/music/');
     const signIn=['/access','/admin-login','/owner-login'].includes(path);
-    const reason=audio?'Audio requests are temporarily rate limited. Please pause seeking and wait before pressing Play again.':signIn?'Sign-in attempts are temporarily rate limited. Please wait before trying again.':'Requests are temporarily rate limited to protect the site. This request wasn’t accepted.';
-    return { kind:"rate-limit", title: "Thanks for listening!", detail: reason+" Your earlier saved results are still available.", retry };
+    const reason=audio?'Audio requests are temporarily rate limited. Please pause seeking and wait before pressing Play again.':signIn?'Sign-in attempts are temporarily rate limited. Please wait before trying again.':'The site is receiving too many requests right now. This request wasn’t accepted. Please wait before trying again.';
+    return { kind:"rate-limit", title: "Please wait before trying again", detail: reason+" Your earlier saved results are still available.", retry };
   }
   if(response.status===503&&response.headers.get("X-YinYang-Service")==="maintenance")return {kind:"maintenance",title:"Maintenance in progress",detail:"This feature is temporarily unavailable during maintenance. Your saved data is preserved. Please use another available tool.",retry:"Please return after the maintenance notice clears."};
   if (response.status >= 500 && response.status <= 599) {

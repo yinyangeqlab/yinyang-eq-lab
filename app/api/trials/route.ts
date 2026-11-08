@@ -6,7 +6,7 @@ import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { rankedTrials, targets, votes } from "@/db/schema";
-import { targetHeadphoneType, type HeadphoneType } from "@/lib/target-type";
+import { type HeadphoneType } from "@/lib/target-type";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
 
@@ -31,13 +31,8 @@ export async function POST(request: Request) {
       return Response.json({ error: "Please wait a moment before starting another pairing." }, { status: 429 });
     }
     const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement, points:targets.points }).from(targets).where(and(eq(targets.status, "approved"),publicTargetPredicate));
-    const approved = approvedRows.filter(target => {
-      let measurement: unknown = null;
-      try { measurement = target.measurement ? JSON.parse(target.measurement) : null; } catch {}
-      const kind = targetHeadphoneType({ name: target.name, measurement: measurement && typeof measurement === "object" ? measurement as { type?: unknown } : null });
-      return !kind || kind === headphoneType;
-    });
-    if (approved.length < 2) return Response.json({ error: `At least two approved ${headphoneType === "ie" ? "In-Ear" : "Over-Ear"} targets are needed.` }, { status: 503 });
+    const approved = approvedRows;
+    if (approved.length < 2) return Response.json({ error: "At least two approved targets are needed." }, { status: 503 });
     const previous = await db.select({ winnerId: votes.winnerId, loserId: votes.loserId }).from(votes)
       .where(and(eq(votes.voterId, data.voterId), eq(votes.testMode, data.testMode)));
     const seen = new Set(previous.map(row => [row.winnerId, row.loserId].sort().join("|")));

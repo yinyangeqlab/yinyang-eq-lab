@@ -4,29 +4,33 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { releaseInfo } from "@/lib/release-info";
+import { buildLabel, releaseInfo, updateLabel } from "@/lib/release-info";
+import { isPersonalAreaSection, PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import AccountAutoSync from "@/components/account-auto-sync";
 import { applyMotionPreference, readDisplayPreferences, subscribeDisplayPreferences } from "@/lib/display-preferences";
 
-type Destination = "home" | "listen" | "tune" | "explore" | "library" | "results" | "rankings" | "space";
+type Destination = "home" | "listen" | "tune" | "ear" | "library" | "rankings" | "space" | "terms";
 type Layout = "full" | "icons" | "hidden";
 const destinations: { id: Destination; label: string; href: string }[] = [
   { id: "home", label: "Home", href: "/" },
-  { id: "listen", label: "Listen", href: "/shootout?tab=shootout" },
+  { id: "listen", label: "Listen", href: "/listen" },
   { id: "tune", label: "Tune", href: "/preference-tuning" },
-  { id: "results", label: "My results", href: "/shootout?tab=profile" },
-  { id: "rankings", label: "Rankings", href: "/shootout?tab=rankings" },
+  { id: "ear", label: "Tune by ear", href: "/ear-tuning" },
+  { id: "space", label: PERSONAL_AREA_TITLE, href: "/shootout?tab=profile" },
+  { id: "rankings", label: "Research", href: "/shootout?tab=rankings" },
   { id: "library", label: "Music library", href: "/music-library" },
-  { id: "explore", label: "Discover", href: "/discover" },
-  { id: "space", label: "My space", href: "/shootout?tab=measurements" },
+  { id: "terms", label: "Terms & definitions", href: "/glossary" },
 ];
 
 function destinationFor(path: string, tab: string | null): Destination | null {
+  if (path === "/glossary" || path === "/glossary/") return "terms";
+  if (path === "/listen") return "listen";
   if (path.startsWith("/shootout/personal")) return "listen";
-  if (path.startsWith("/shootout")) return tab === "profile" ? "results" : tab === "rankings" ? "rankings" : tab === "music" ? "library" : tab === "upload" || tab === "measurements" ? "space" : "listen";
+  if (path.startsWith("/shootout")) return isPersonalAreaSection(tab) ? "space" : tab === "rankings" ? "rankings" : tab === "music" ? "library" : "listen";
   if (path.startsWith("/music-library")) return "library";
+  if (path === "/ear-tuning") return "ear";
   if (path.includes("tuning")) return "tune";
-  if (["/discover", "/community-preferences", "/curve-credits", "/listeners"].some(p => path.startsWith(p))) return "explore";
+  if (["/discover", "/community-preferences", "/curve-credits", "/listeners"].some(p => path.startsWith(p))) return "rankings";
   return path === "/" || path === "/home" ? "home" : null;
 }
 
@@ -35,11 +39,11 @@ function DestinationIcon({ kind }: { kind: Destination }) {
     {kind === "home" ? <><path d="m5 15 11-9 11 9M8 13v13h6v-8h4v8h6V13"/><circle className="alpha-home-orbit" cx="16" cy="16" r="14"/></> :
       kind === "listen" ? <><path d="M5 18v-3a11 11 0 0 1 22 0v3"/><rect x="3" y="15" width="5" height="11" rx="2"/><rect x="24" y="15" width="5" height="11" rx="2"/><path className="alpha-room-wave room-wave-one" d="M12 15v6"/><path className="alpha-room-wave" d="M16 12v12"/><path className="alpha-room-wave room-wave-three" d="M20 15v6"/></> :
       kind === "tune" ? <><path d="M3 25h26M6 5v20"/><path className="alpha-tune-curve" d="M3 17c6 0 6 3 10 3s4-13 8-13 3 10 8 10"/></> :
-      kind === "library" ? <><path d="M4 8v19M8 5v22" opacity=".5"/><rect x="12" y="3" width="17" height="25" rx="2"/><g className="alpha-explore-disc"><circle cx="20.5" cy="12" r="5"/><circle cx="20.5" cy="12" r="1"/><path d="M17.3 12a3.2 3.2 0 0 1 3.2-3.2M23.7 12a3.2 3.2 0 0 1-3.2 3.2" opacity=".45"/></g><path className="alpha-explore-wave wave-one" d="M15 23h2l1.5-3 2 5 1.5-3h3"/></> :
-      kind === "explore" ? <><circle cx="16" cy="16" r="12"/><path d="M16 2v3m0 22v3M2 16h3m22 0h3" opacity=".4"/><g className="alpha-discover-needle"><path d="m21 10-3 9-7 3 3-9Z"/><path d="m14 13 4 6"/></g></> :
-      kind === "results" ? <><path d="M8 3h12l5 5v21H8Z"/><path d="M20 3v6h5M12 14h9M12 19h9" opacity=".6"/><path d="m12 24 2 2 5-5"/></> :
+      kind === "ear" ? <><path d="M4 17h4l3-6 4 13 4-16 3 9h6"/><circle cx="19" cy="8" r="1.6"/></> :
+      kind === "library" ? <><path d="M4 8v19M8 5v22" opacity=".5"/><rect x="12" y="3" width="17" height="25" rx="2"/><g className="alpha-explore-disc"><circle cx="20.5" cy="12" r="5"/><circle cx="20.5" cy="12" r="1"/><path d="M17.3 12a3.2 3.2 0 0 1 3.2-3.2M23.7 12a3.2 3.2 0 0 1-3.2 3.2" opacity=".45"/></g><path className="alpha-explore-wave wave-one" d="M15 23C17 23 17 21 19 22C21 23 21 25 23 24C24 23 25 23 26 23"/></> :
       kind === "rankings" ? <><path d="M4 28h25" opacity=".5"/><rect x="5" y="16" width="6" height="12" rx="1"/><rect x="13" y="7" width="6" height="21" rx="1"/><rect x="21" y="20" width="6" height="8" rx="1"/><path d="m14 3 2-2 2 2"/></> :
-      <><circle cx="16" cy="16" r="3"/><ellipse className="alpha-space-orbit orbit-one" cx="16" cy="16" rx="14" ry="7" transform="rotate(-35 16 16)"/><ellipse className="alpha-space-orbit orbit-two" cx="16" cy="16" rx="14" ry="7" transform="rotate(35 16 16)"/><circle className="alpha-space-satellite" cx="26" cy="8" r="2"/></>}
+      kind === "terms" ? <><path d="M16 8C12 5 7 5 3 6v19c4-1 9-1 13 2 4-3 9-3 13-2V6c-4-1-9-1-13 2Zm0 0v19"/><path d="m7 11 5 1m-5 4 5 1m8-5 5-1m-5 6 5-1" opacity=".65"/></> :
+      <><path d="M3 10V7a2 2 0 0 1 2-2h7l3 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10Zm0 0h26"/><path d="m10 20 4 4 8-9"/></>}
   </svg>;
 }
 
@@ -62,7 +66,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   const menu = useRef<HTMLButtonElement>(null);
   const restoreMenuFocus = useRef(false);
   const keepSavedLayout = useRef(false);
-  const utilityTitles: Record<string,string> = {"/shortcuts":"Shortcuts & help","/version":"About this version","/privacy":"Privacy notice","/my-data":"My data & sharing","/participation":"Data choices","/account-sync":"Devices & Sync","/my-profile":"My profile","/profile-access":"Profile access","/test-history":"Private test history","/owner-research":"Research administration"};
+  const utilityTitles: Record<string,string> = {"/shortcuts":"Help & hotkeys","/glossary":"Terms & definitions","/version":"About this version","/privacy":"Privacy notice","/my-data":"My data & sharing","/participation":"Data choices","/account-sync":"Devices & sync","/my-profile":"My profile","/profile-access":"Profile access","/test-history":"Private test history","/owner-research":"Research administration"};
   const title = destinations.find(d => d.id === active)?.label || utilityTitles[pathname] || "YinYang EQ";
 
   useEffect(() => {
@@ -136,17 +140,17 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
       <Link className="alpha-brand" href="/" prefetch={false} aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt=""/><span>YinYang EQ<small>LET YOUR EARS DECIDE</small></span></Link>
 
       <nav aria-label="Main destinations">{destinations.map(d => <Link key={d.id} href={d.href} prefetch={false} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={() => { if (narrow) setLayout("icons"); window.scrollTo(0,0); }}><DestinationIcon kind={d.id}/><span>{d.label}</span></Link>)}</nav>
-      <nav className="alpha-secondary-navigation" aria-label="Data and help"><Link href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} prefetch={false} title="Devices and Sync"><span aria-hidden="true">⇄</span><span>Devices &amp; Sync</span></Link><Link href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} prefetch={false} title="Keyboard shortcuts"><span aria-hidden="true">⌨</span><span>Shortcuts &amp; help</span></Link><Link href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} prefetch={false} title="Privacy notice"><span aria-hidden="true">◇</span><span>Privacy &amp; data</span></Link></nav>
+      <nav className="alpha-secondary-navigation" aria-label="Data and help"><Link href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} prefetch={false} title="Devices and Sync"><span aria-hidden="true">⇄</span><span>Devices &amp; Sync</span></Link><Link href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} prefetch={false} title="Help and playback hotkeys"><span aria-hidden="true">⌨</span><span>Help &amp; hotkeys</span></Link><Link href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} prefetch={false} title="Privacy notice"><span aria-hidden="true">◇</span><span>Privacy &amp; data</span></Link></nav>
     </aside>
     <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded={layout !== "hidden"} aria-describedby="alpha-navigation-state" title={`${nextAction} · Full → Icons → Hidden`} data-next-layout={nextLayout}>
-      <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6"/></svg></span>
+      <span className="alpha-divider-grip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 6-6 6 6 6"/></svg></span>
     </button>
     <span id="alpha-navigation-state" hidden>{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
     </div>
     <div className="alpha-workspace">
       <header className="alpha-topbar" inert={modalOpen || mobileOpen}>
         <div className="alpha-topbar-start"><span className="alpha-breadcrumb">{title}<span>YinYang EQ</span></span></div>
-        <Link className="alpha-version" href="/version" prefetch={false} aria-label={`About version ${releaseInfo.version}, ${releaseInfo.channel}`} title="About this version, changes and licensing">{releaseInfo.version}<span>{releaseInfo.published ? "BETA" : "LOCAL"}</span></Link>
+        <Link className="alpha-version" href="/version" prefetch={false} aria-label={`About version ${buildLabel}`} title="About this version, changes and licensing">{updateLabel}<span>{releaseInfo.build.preview ? `PREVIEW ${releaseInfo.build.preview}` : "BETA"}</span></Link>
       </header>
       <div className="alpha-sync-region" inert={modalOpen || mobileOpen}><AccountAutoSync /></div>
       <div id="alpha-content" className="alpha-route-content" tabIndex={-1} inert={mobileOpen}>{children}</div>

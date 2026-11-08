@@ -1,0 +1,1585 @@
+{
+  "schemaVersion": 1,
+  "suites": [
+    {
+      "id": "release-state",
+      "path": "scripts/release-state.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 10000,
+      "requires": [],
+      "owner": "release",
+      "scope": "Current release receipt/schema and all generated handoff views"
+    },
+    {
+      "id": "recovery-environment",
+      "path": "scripts/recovery/check-environment.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 15000,
+      "requires": [],
+      "owner": "recovery",
+      "scope": "Pinned Node and npm environment"
+    },
+    {
+      "id": "recovery-safety",
+      "path": "scripts/recovery/test-recovery.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "recovery",
+      "scope": "Existing synthetic bundle/sanitize/restore safety tests; no user data or production operations"
+    },
+    {
+      "id": "recovery-local",
+      "path": "scripts/recovery/check-local.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "manual",
+      "timeoutMs": 180000,
+      "requires": [],
+      "owner": "recovery",
+      "scope": "Full loopback Worker recovery rehearsal",
+      "reason": "Requires an explicitly prepared owner restore and private inputs, fresh local credentials and disposable hidden fixtures; follow RECOVERY.md."
+    },
+    {
+      "id": "owner-snapshot",
+      "path": "scripts/check-live-source.mjs",
+      "runtime": "node",
+      "args": [
+        "--snapshot"
+      ],
+      "profile": "manual",
+      "timeoutMs": 180000,
+      "requires": [
+        "LIVE_RELEASE.json"
+      ],
+      "owner": "release",
+      "scope": "Immutable recorded application/infra/build/documentation/configuration hashes",
+      "reason": "Run only in the owner root with its private immutable snapshot paths; --assets adds asset coverage. The public source-only mode does not cover this."
+    },
+    {
+      "id": "client-assets",
+      "path": "scripts/check-client-assets.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "built",
+      "timeoutMs": 180000,
+      "requires": [
+        "dist/client",
+        "dist/server"
+      ],
+      "owner": "build",
+      "scope": "Built client imports and server preload references"
+    },
+    {
+      "id": "live-source",
+      "path": "scripts/check-live-source.mjs",
+      "runtime": "node",
+      "args": [
+        "--source-only"
+      ],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "tooling",
+      "scope": "Candidate source hash and inventory check; not deployment parity"
+    },
+    {
+      "id": "rebuild-source",
+      "path": "scripts/check-rebuild-source.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "manual",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "tooling",
+      "scope": "Candidate source implementation",
+      "reason": "Covered by source-only via check-live-source; direct invocation is the same check."
+    },
+    {
+      "id": "release",
+      "path": "scripts/check-release.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "manual",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "publication",
+      "scope": "Staged release/privacy scanner",
+      "reason": "Requires a deliberately reviewed staging area and separate publication workflow; runner never stages project files."
+    },
+    {
+      "id": "account-auto-sync",
+      "path": "scripts/check_account_auto_sync.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing account auto sync regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "account-storage-denial",
+      "path": "scripts/check_account_storage_denial.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing account storage denial regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "account-sync-frequency",
+      "path": "scripts/check_account_sync_frequency.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing account sync frequency regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "account-sync-manager",
+      "path": "scripts/check_account_sync_manager.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing account sync manager regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "account-sync-unchanged-read",
+      "path": "scripts/check_account_sync_unchanged_read.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing account sync unchanged read regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "activity-monitoring",
+      "path": "scripts/check_activity_monitoring.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing activity monitoring regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "admin-contributions",
+      "path": "scripts/check_admin_contributions.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing admin contributions regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "admin-session-indicator",
+      "path": "scripts/check_admin_session_indicator.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing admin session indicator regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "admin-signout",
+      "path": "scripts/check_admin_signout.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing admin signout regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "agreement-preferences",
+      "path": "scripts/check_agreement_preferences.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing agreement preferences regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "audit-privacy",
+      "path": "scripts/check_audit_privacy.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing audit privacy regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "beginner-guidance",
+      "path": "scripts/check_beginner_guidance.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing beginner guidance regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "blind-completion",
+      "path": "scripts/check_blind_completion.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing blind completion regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "blind-eq",
+      "path": "scripts/check_blind_eq.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing blind eq regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "blind-eq-workflow",
+      "path": "scripts/check_blind_eq_workflow.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing blind eq workflow regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "browser-pairing",
+      "path": "scripts/check_browser_pairing.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing browser pairing regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "browser-sync",
+      "path": "scripts/check_browser_sync.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing browser sync regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "community-estimator-calibration",
+      "path": "scripts/check_community_estimator_calibration.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "research",
+      "scope": "Existing community estimator calibration regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "community-ranking-pilot",
+      "path": "scripts/check_community_ranking_pilot.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "research",
+      "scope": "Existing community ranking pilot regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "community-reference",
+      "path": "scripts/check_community_reference.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing community reference regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "comparison-passage",
+      "path": "scripts/check_comparison_passage.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing comparison passage regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "consent-choices",
+      "path": "scripts/check_consent_choices.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing consent choices regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "consent-correlations",
+      "path": "scripts/check_consent_correlations.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing consent correlations regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "design-corrections",
+      "path": "scripts/check_design_corrections.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing design corrections regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "display-preferences",
+      "path": "scripts/check_display_preferences.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing display preferences regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "embed-shootout",
+      "path": "scripts/check_embed_shootout.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing embed shootout regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "eq-response-fidelity",
+      "path": "scripts/check_eq_response_fidelity.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing eq response fidelity regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "file-matching",
+      "path": "scripts/check_file_matching.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing file matching regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "first-time-journey",
+      "path": "scripts/check_first_time_journey.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing first time journey regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "foundation",
+      "path": "scripts/check_foundation.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 180000,
+      "requires": [],
+      "owner": "tooling",
+      "scope": "Release drift, preservation, actual runner failures/timeouts/mutations and source-only exit-code regression"
+    },
+    {
+      "id": "free-listening",
+      "path": "scripts/check_free_listening.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing free listening regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "glossary-search",
+      "path": "scripts/check_glossary_search.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing glossary search regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "isolated-consent-access",
+      "path": "scripts/check_isolated_consent_access.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing isolated consent access regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "landscape-motion",
+      "path": "scripts/check_landscape_motion.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing landscape motion regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "large-account-sync",
+      "path": "scripts/check_large_account_sync.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing large account sync regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "listener-nickname",
+      "path": "scripts/check_listener_nickname.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing listener nickname regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "listening-audio",
+      "path": "scripts/check_listening_audio.cjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing listening audio regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "listening-audio-worker",
+      "path": "scripts/check_listening_audio_worker.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "worker",
+      "timeoutMs": 180000,
+      "requires": [
+        "node_modules/typescript/package.json",
+        "node_modules/miniflare/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing listening audio worker regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "listening-reminder",
+      "path": "scripts/check_listening_reminder.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing listening reminder regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "local-audio-error",
+      "path": "scripts/check_local_audio_error.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing local audio error regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "main-workflows",
+      "path": "scripts/check_main_workflows.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing main workflows regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "maintenance-dependencies",
+      "path": "scripts/check_maintenance_dependencies.cjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing maintenance dependencies regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "maintenance-scope",
+      "path": "scripts/check_maintenance_scope.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing maintenance scope regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "matched-listening",
+      "path": "scripts/check_matched_listening.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing matched listening regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "measurement-research",
+      "path": "scripts/check_measurement_research.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing measurement research regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "media-recovery",
+      "path": "scripts/check_media_recovery.cjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing media recovery regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "migration-chain",
+      "path": "scripts/check_migration_chain.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing migration chain regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "music-playback-requests",
+      "path": "scripts/check_music_playback_requests.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing music playback requests regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "music-preferences",
+      "path": "scripts/check_music_preferences.cjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing music preferences regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "music-rank-refresh",
+      "path": "scripts/check_music_rank_refresh.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing music rank refresh regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "nickname-brand-forms",
+      "path": "scripts/check_nickname_brand_forms.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing nickname brand forms regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "notice-duration",
+      "path": "scripts/check_notice_duration.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing notice duration regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "open-music-source",
+      "path": "scripts/check_open_music_source.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing open music source regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "owner-only-maintenance",
+      "path": "scripts/check_owner_only_maintenance.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing owner only maintenance regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "participant-device-sync",
+      "path": "scripts/check_participant_device_sync.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing participant device sync regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "participation-entry",
+      "path": "scripts/check_participation_entry.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing participation entry regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-edit",
+      "path": "scripts/check_passage_edit.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage edit regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-float-tolerance",
+      "path": "scripts/check_passage_float_tolerance.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "audio",
+      "scope": "Existing passage float tolerance regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-keyboard",
+      "path": "scripts/check_passage_keyboard.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage keyboard regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-pointer-focus",
+      "path": "scripts/check_passage_pointer_focus.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage pointer focus regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-ranking",
+      "path": "scripts/check_passage_ranking.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage ranking regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-shuffle",
+      "path": "scripts/check_passage_shuffle.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage shuffle regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "passage-time",
+      "path": "scripts/check_passage_time.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing passage time regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "peqdb-autoeq",
+      "path": "scripts/check_peqdb_autoeq.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "prepared",
+      "timeoutMs": 180000,
+      "requires": [
+        "artifacts/peqdb-autoeq/public/vendor/peqdb-autoeq/autoeq-wasm.mjs",
+        "artifacts/peqdb-autoeq/public/vendor/peqdb-autoeq/autoeq-wasm.wasm",
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Actual prepared engine regressions; synthetic fallback fixtures unless optional lab inputs exist"
+    },
+    {
+      "id": "peqdb-browser",
+      "path": "scripts/check_peqdb_browser.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "manual",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "interface",
+      "scope": "Real browser integration checks",
+      "reason": "Requires reviewed loopback fixtures, Playwright/browser installation and dedicated hidden account scope; follow ADMIN_TEST_ISOLATION.md."
+    },
+    {
+      "id": "peqdb-built",
+      "path": "scripts/check_peqdb_built.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "manual",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "build",
+      "scope": "Built browser engine and license delivery",
+      "reason": "Requires matching own build and reviewed browser/origin configuration; no automatic navigation or inherited remote-origin override."
+    },
+    {
+      "id": "peqdb-package",
+      "path": "scripts/check_peqdb_package.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "built",
+      "timeoutMs": 180000,
+      "requires": [
+        "artifacts/peqdb-autoeq/manifest.json",
+        "dist/peqdb-build-source.json",
+        "dist/client"
+      ],
+      "owner": "build",
+      "scope": "Matching source/binary/license package; temporarily mutates and restores generated fixtures"
+    },
+    {
+      "id": "permission-music",
+      "path": "scripts/check_permission_music.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing permission music regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-contribution-status",
+      "path": "scripts/check_personal_contribution_status.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing personal contribution status regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-passage-optout",
+      "path": "scripts/check_personal_passage_optout.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing personal passage optout regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-playback",
+      "path": "scripts/check_personal_playback.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing personal playback regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-research",
+      "path": "scripts/check_personal_research.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing personal research regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-shootout",
+      "path": "scripts/check_personal_shootout.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing personal shootout regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-start-status",
+      "path": "scripts/check_personal_start_status.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing personal start status regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "personal-target-pool",
+      "path": "scripts/check_personal_target_pool.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing personal target pool regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "playback-shortcuts",
+      "path": "scripts/check_playback_shortcuts.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing playback shortcuts regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "player-picker-rereview",
+      "path": "scripts/check_player_picker_rereview.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing player picker rereview regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "player-picker-review",
+      "path": "scripts/check_player_picker_review.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing player picker review regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "preference-ranking",
+      "path": "scripts/check_preference_ranking.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "research",
+      "scope": "Existing preference ranking regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "public-write-limits",
+      "path": "scripts/check_public_write_limits.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing public write limits regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "ranked-runs",
+      "path": "scripts/check_ranked_runs.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "research",
+      "scope": "Existing ranked runs regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "ranking-api",
+      "path": "scripts/check_ranking_api.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing ranking api regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "ranking-view",
+      "path": "scripts/check_ranking_view.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing ranking view regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "rate-penalties",
+      "path": "scripts/check_rate_penalties.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing rate penalties regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "release-fixtures",
+      "path": "scripts/check_release_fixtures.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing release fixtures regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "request-json",
+      "path": "scripts/check_request_json.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing request json regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "research-source",
+      "path": "scripts/check_research_source.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing research source regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "research-source-focus",
+      "path": "scripts/check_research_source_focus.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing research source focus regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "saved-eq",
+      "path": "scripts/check_saved_eq.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing saved eq regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "security-response-headers",
+      "path": "scripts/check_security_response_headers.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing security response headers regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "selected-passage-timing",
+      "path": "scripts/check_selected_passage_timing.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing selected passage timing regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "service-warning",
+      "path": "scripts/check_service_warning.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing service warning regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "setup-auto-hide",
+      "path": "scripts/check_setup_auto_hide.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing setup auto hide regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "share-previews",
+      "path": "scripts/check_share_previews.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing share previews regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "source-bitrate",
+      "path": "scripts/check_source_bitrate.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing source bitrate regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "stable-passage",
+      "path": "scripts/check_stable_passage.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing stable passage regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "style-cleanup",
+      "path": "scripts/check_style_cleanup.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "application",
+      "scope": "Existing style cleanup regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "target-context-and-changes",
+      "path": "scripts/check_target_context_and_changes.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing target context and changes regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "target-upload",
+      "path": "scripts/check_target_upload.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing target upload regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "test-account-controls",
+      "path": "scripts/check_test_account_controls.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing test account controls regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "tuning-unified",
+      "path": "scripts/check_tuning_unified.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing tuning unified regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "unified-consent-flow",
+      "path": "scripts/check_unified_consent_flow.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing unified consent flow regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "vote-limits",
+      "path": "scripts/check_vote_limits.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "research",
+      "scope": "Existing vote limits regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "waveform-asset-binding",
+      "path": "scripts/check_waveform_asset_binding.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "worker",
+      "timeoutMs": 180000,
+      "requires": [
+        "node_modules/typescript/package.json",
+        "node_modules/miniflare/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing waveform asset binding regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "waveform-peaks",
+      "path": "scripts/check_waveform_peaks.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing waveform peaks regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "waveform-playhead",
+      "path": "scripts/check_waveform_playhead.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio",
+      "scope": "Existing waveform playhead regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "waveform-pyramid",
+      "path": "scripts/check_waveform_pyramid.py",
+      "runtime": "python3",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "audio",
+      "scope": "Existing waveform pyramid regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "worker-media-route",
+      "path": "scripts/check_worker_media_route.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "worker",
+      "timeoutMs": 180000,
+      "requires": [
+        "node_modules/typescript/package.json",
+        "node_modules/miniflare/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing worker media route regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "write-policy",
+      "path": "scripts/check_write_policy.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing write policy regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-account",
+      "path": "scripts/check_yinyangeq_account.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Existing yinyangeq account regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-api",
+      "path": "scripts/check_yinyangeq_api.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing yinyangeq api regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-files",
+      "path": "scripts/check_yinyangeq_files.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing yinyangeq files regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-gate",
+      "path": "scripts/check_yinyangeq_gate.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [],
+      "owner": "access-and-data",
+      "scope": "Existing yinyangeq gate regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-history",
+      "path": "scripts/check_yinyangeq_history.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing yinyangeq history regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "yinyangeq-replacement",
+      "path": "scripts/check_yinyangeq_replacement.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Existing yinyangeq replacement regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "listening-controls",
+      "path": "scripts/check_listening_controls.mjs",
+      "profile": "public",
+      "runtime": "node",
+      "args": [],
+      "timeoutMs": 180000,
+      "requires": [
+        "node_modules/typescript/lib/typescript.js"
+      ],
+      "owner": "audio-protocol",
+      "scope": "Actual configurable fitters, server provenance and cohort separation; actual stereo dynamics-worklet compression/expansion/bypass and file naming on synthetic signals."
+    },
+    {
+      "id": "generated-eq-comparison",
+      "path": "scripts/check_generated_eq_comparison.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 180000,
+      "requires": [
+        "node_modules/typescript/lib/typescript.js"
+      ],
+      "owner": "audio-protocol",
+      "scope": "Generated-set pairing, within-set outcomes, exact-set resume, no Sync inclusion, shared stereo FIR routing, rendered RMS matching and headroom with synthetic inputs."
+    }
+  ]
+}

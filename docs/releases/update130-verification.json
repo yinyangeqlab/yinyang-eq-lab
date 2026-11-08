@@ -1,0 +1,102 @@
+{
+  "update": 130,
+  "sourceCommit": "56ca7e46ccdeebc4eecf7e8b0732e17818ce252d",
+  "deploymentVerification": {
+    "at": "2026-10-31T09:21:26.803812+00:00",
+    "update": 130,
+    "revision": "56ca7e46ccdeebc4eecf7e8b0732e17818ce252d",
+    "deploymentVerified": true,
+    "deployment": {
+      "id": "aca5ca9f-f5d9-41e8-814e-70061cc1a3e8",
+      "versions": [
+        {
+          "version_id": "fdcb5750-c7d9-48d4-b7f1-0f356345b669",
+          "percentage": 100
+        }
+      ]
+    },
+    "deploymentId": "aca5ca9f-f5d9-41e8-814e-70061cc1a3e8",
+    "versions": [
+      {
+        "version_id": "fdcb5750-c7d9-48d4-b7f1-0f356345b669",
+        "percentage": 100
+      }
+    ],
+    "migrations": [],
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "operationalNoticePreserved": true,
+    "nonAppResourcesUnchanged": true,
+    "exactServerModulesVerified": 307,
+    "exactGateAndShareHelpersVerified": true,
+    "publicPagesVerified": 6,
+    "publicAssetsVerified": 1250,
+    "anonymousMediaProtectionVerified": true,
+    "protectedHttpVerificationPending": false,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "protectedHttpVerificationScope": "Anonymous gates and exact deployed modules verified; no production admin session used.",
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "recoveryRegistrationPending": false
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 109,
+    "regressionSuitesFailed": 0,
+    "sourceRevision": "56ca7e46ccdeebc4eecf7e8b0732e17818ce252d",
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "appTypesPassed": true,
+    "infraTypesPassed": true,
+    "productionBuildPassed": true,
+    "sourceBinaryLicensePackageMatched": true,
+    "protectedRecordings": 224,
+    "publicInputs": 384,
+    "retainedPreviousClientFiles": 1139,
+    "publicOnlyPackage": false,
+    "ownPinnedDependencies": true,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1"
+  },
+  "browserVerification": {
+    "syntheticPreviewReviewed": true,
+    "dedicatedHiddenTestAccountOnly": true,
+    "productionBrowserSessionUsed": false,
+    "productionAdminSessionUsed": false,
+    "desktopAndNarrowReviewed": true,
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "reviewRecord": "docs/reviews/2026-10-31-saved-eq-preview.md"
+  },
+  "migrations": [],
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "implementationRecord": "docs/reviews/2026-10-31-saved-eq-preview.md",
+  "sourceOnlyRecoveryRegistrationPending": false,
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "applicationInputsReconstructed": 736,
+    "compiledBuildFilesReconstructed": 2211,
+    "sourceOwnedPublicAssetsReconstructed": 18,
+    "externalFontFilesReconstructed": 2,
+    "newEncryptedObjects": 3,
+    "newEncryptedObjectBytes": 669192175,
+    "verifiedAt": "2026-10-31T10:06:45.474768+00:00"
+  },
+  "recoveryCloseout": {
+    "existingDataSnapshotsUnchanged": true,
+    "newDataExport": false,
+    "hostedValidationPassed": true
+  }
+}

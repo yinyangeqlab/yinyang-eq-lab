@@ -35,6 +35,7 @@ function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src
       if (id === '@/lib/curated-waveforms') return { curatedWaveform: () => null };
       if (id === '@/lib/music-preferences') return { playbackGain: () => 1 };
       if (id === '@/lib/eq-playback') return { replaceEqStage: () => ({ dispose() {} }), safeGain() {}, watchAudioInterruptions: () => () => {} };
+      if (id === '@/components/playback-transport') return { __esModule: true, default: 'transport', PlaybackTime: 'time', NowPlaying: 'now-playing' };
       if (id === '@/components/track-waveform') return { __esModule: true, default() {} };
       throw Error('Unexpected dependency: ' + id);
     },
@@ -46,7 +47,7 @@ function fixture({ hostname = 'localhost', origin = 'http://localhost:5173', src
     for (const child of [element.props?.children].flat(Infinity)) { const found = find(child, predicate); if (found) return found; }
     return null;
   };
-  const media = find(tree, element => element.type === 'audio'), button = find(tree, element => element.type === 'button');
+  const media = find(tree, element => element.type === 'audio'), transport = find(tree, element => element.type === 'transport'), button = {props:{onClick:transport.props.onToggle}};
   const audio = { src, paused: true, currentTime: 0, error: { code: 4 }, pause() { this.paused = true; }, async play() { calls.push('play'); this.paused = false; media.props.onPlay({ currentTarget: this }); media.props.onPlaying(); } };
   media.props.ref.current = audio;
   const cleanups = effects.map(effect => effect()).filter(Boolean);

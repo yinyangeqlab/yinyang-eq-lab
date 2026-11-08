@@ -16,7 +16,12 @@
     "setup:local": "node scripts/init-local.mjs",
     "recovery:environment": "node scripts/recovery/check-environment.mjs",
     "recovery": "node scripts/recovery/recovery.mjs",
-    "test:recovery": "node scripts/recovery/test-recovery.mjs"
+    "test:recovery": "node scripts/recovery/test-recovery.mjs",
+    "verify": "node scripts/verify.mjs",
+    "verify:list": "node scripts/verify.mjs --list",
+    "release:check": "node scripts/release-state.mjs",
+    "release:refresh": "node scripts/release-state.mjs --write",
+    "source:refresh": "node scripts/refresh-rebuild-manifest.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

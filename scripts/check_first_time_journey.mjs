@@ -50,7 +50,7 @@ function picker(onImport = async () => {}) {
   return {
     render, input, option, document, props,
     get inputProps() { return inputProps; }, get tree() { return tree; },
-    button(name) { const n = all(tree, n => n.type === 'button' && text(n) === name)[0]; assert.ok(n, name); return n; },
+    button(name) { const n = all(tree, n => n.type === 'button' && (text(n) === name || n.props?.['aria-label']===name))[0]; assert.ok(n, name); return n; },
     publicButton() { const n = all(tree, n => n.type === 'button' && text(n).startsWith('Synthetic headphones'))[0]; assert.ok(n); return n; },
     open() { input.focus(); render(); }, frames() { while (frames.length) frames.shift()(); },
     openRegion() { return all(tree, n => n.props?.role === 'region').length > 0; },
@@ -66,7 +66,7 @@ let checks = 0;
   h.document.activeElement = h.input; h.inputProps.onKeyDown({ key: 'Escape' }); h.render();
   h.inputProps.onKeyDown({ key: 'ArrowDown', preventDefault() {} }); h.render(); const other = {}; h.document.activeElement = other; h.frames();
   assert.equal(h.document.activeElement, other); checks++;
-  h.button('Remove selection').props.onClick(); h.render();
+  h.button('Clear selected headphones').props.onClick(); h.render();
   assert.equal(h.props.selectedId, ''); assert.equal(h.document.activeElement, h.input); assert.equal(h.openRegion(), false); checks++;
 }
 for (const moved of [false, true]) {

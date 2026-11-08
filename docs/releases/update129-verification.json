@@ -1,0 +1,131 @@
+{
+  "update": 129,
+  "sourceCommit": "744911be0250da25b415414686505e02e30f5581",
+  "deploymentVerification": {
+    "at": "2026-10-30T10:29:11.155196+00:00",
+    "update": 129,
+    "revision": "744911be0250da25b415414686505e02e30f5581",
+    "deploymentVerified": true,
+    "deployment": {
+      "id": "37f0d4e1-0a92-4fc3-9018-c11a0d57cb1e",
+      "versions": [
+        {
+          "version_id": "5fb299cd-9a66-49c9-9227-711807af2535",
+          "percentage": 100
+        }
+      ]
+    },
+    "deploymentId": "37f0d4e1-0a92-4fc3-9018-c11a0d57cb1e",
+    "versions": [
+      {
+        "version_id": "5fb299cd-9a66-49c9-9227-711807af2535",
+        "percentage": 100
+      }
+    ],
+    "migrations": [],
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "operationalNoticePreserved": true,
+    "nonAppResourcesUnchanged": true,
+    "exactServerModulesVerified": 307,
+    "exactGateAndShareHelpersVerified": true,
+    "publicPagesVerified": 6,
+    "publicAssetsVerified": 1221,
+    "anonymousMediaProtectionVerified": true,
+    "protectedHttpVerificationPending": false,
+    "productionAdminSessionUsed": true,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "recoveryRegistrationPending": false,
+    "readOnlyAdminVerificationOwnerApproved": true,
+    "protectedPagesVerified": 8,
+    "protectedAssetsVerified": 8,
+    "waveformAssetsVerified": 224,
+    "adminMaintenanceOffVerified": true,
+    "sourceOwnedShareCardsVerified": 3
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 108,
+    "regressionSuitesFailed": 0,
+    "sourceRevision": "744911be0250da25b415414686505e02e30f5581",
+    "initialRehearsalPassed": 107,
+    "initialRehearsalFailed": 1,
+    "initialCssDuplicateDeclarationsRemoved": 42,
+    "finalFullRerunPassed": 108,
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "appTypesPassed": true,
+    "infraTypesPassed": true,
+    "productionBuildPassed": true,
+    "sourceBinaryLicensePackageMatched": true,
+    "protectedRecordings": 224,
+    "publicInputs": 384,
+    "retainedPreviousClientFiles": 1108,
+    "publicOnlyPackage": false,
+    "ownPinnedDependencies": true
+  },
+  "browserVerification": {
+    "syntheticPreviewReviewed": true,
+    "publicGlossaryBrowserOpened": true,
+    "existingSignedInBrowserAutoSyncTriggered": true,
+    "existingSessionReviewStopped": true,
+    "explicitVoteConsentOrAccountMutationSubmitted": false,
+    "autoSyncPayloadChangesAudited": false,
+    "productionAdminSessionUsed": true,
+    "protectedHttpVerificationPending": false,
+    "note": "A live public glossary navigation reused an existing signed-in browser and displayed its normal Browser matches account Sync status. The review tab was closed immediately after this was identified. No explicit vote/consent action was submitted; automatic Sync payload effects were not audited. Further verification uses server-side requests; admin requests require the separately requested explicit exception.",
+    "adminHttpSessionUsed": true,
+    "productionAdminBrowserSessionUsed": false,
+    "readOnlyAdminExceptionOwnerApproved": true
+  },
+  "migrations": [],
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "sourceOnlyRecoveryRegistrationPending": false,
+  "protectedVerificationPending": false,
+  "implementationRecord": "docs/reviews/2026-10-30-update129-release.md",
+  "recoveryOwnerApproved": true,
+  "protectedReadOnlyVerification": {
+    "at": "2026-10-30T10:35:43.728939+00:00",
+    "revision": "744911be0250da25b415414686505e02e30f5581",
+    "readOnlyOwnerException": true,
+    "adminHttpSessionUsed": true,
+    "browserSessionUsed": false,
+    "protectedPagesVerified": 8,
+    "protectedAssetsVerified": 8,
+    "waveformAssetsVerified": 224,
+    "maintenanceOff": true,
+    "deploymentUnchanged": true,
+    "audioPlayed": false,
+    "votesOrConsentSubmitted": false,
+    "explicitAccountDataMutation": false
+  },
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "applicationInputsReconstructed": 731,
+    "compiledBuildFilesReconstructed": 2180,
+    "sourceOwnedPublicAssetsReconstructed": 18,
+    "externalFontFilesReconstructed": 2,
+    "newEncryptedObjects": 3,
+    "newEncryptedObjectBytes": 668087092,
+    "verifiedAt": "2026-10-30T10:48:13.959564+00:00"
+  },
+  "recoveryCloseout": {
+    "documentationOnly": true,
+    "websiteRedeployed": false,
+    "existingDataSnapshotsUnchanged": true,
+    "newDataExport": false,
+    "hostedValidationPassed": true
+  }
+}

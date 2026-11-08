@@ -1,5 +1,5 @@
+import { cleanFitMetadata } from "@/lib/fitter-settings";
 import { publicTargetPredicate } from "@/lib/public-targets";
-import { targetHeadphoneType } from "@/lib/target-type";
 import { curveVersion } from "@/lib/curve-version";
 import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
@@ -57,11 +57,10 @@ export async function POST(request: Request) {
     for (const key of ["rig","measurementType","normalizationStatus","loudnessTarget","recordingId","sha256","audioFormat"]) if(typeof context[key]==="string") cleanContext[key]=context[key].slice(0,160);
     for (const key of ["sampleRate","bitrate","duration"]) if(typeof context[key]==="number" && Number.isFinite(context[key]) && Number(context[key])>=0) cleanContext[key]=context[key];
     if (!shareSong) for (const key of ["recordingId","sha256","audioFormat","sampleRate","bitrate","duration"]) delete cleanContext[key];
-    const fits=Array.isArray(context.eqFits)?context.eqFits:[];
-    cleanContext.eqFits=fits.slice(0,2).map(value=>{const f=value as Record<string,unknown>;return {...Object.fromEntries(["bands","rms","preamp","sampleRate"].filter(k=>typeof f?.[k]==="number"&&Number.isFinite(f[k])).map(k=>[k,f[k]])),...Object.fromEntries(["engine","engineVersion"].filter(k=>typeof f?.[k]==="string").map(k=>[k,String(f[k]).slice(0,160)]))};});
+    try { cleanContext.eqFits = cleanFitMetadata(context.eqFits); } catch { return Response.json({ error: "Both sides need valid matching EQ fitter provenance." }, { status: 400 }); }
     const targetRows=await db.select().from(targets).where(publicTargetPredicate);
     if ((testMode === "open" || !matchedPassageRequired) && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
-    if ([targetAId,targetBId].some(id=>{const target=targetRows.find(t=>t.id===id);if(!target)return true;const type=targetHeadphoneType(target);return type!==null&&type!==headphoneType;})) return Response.json({error:"Target headphone category does not match this comparison."},{status:400});
+    if ([targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id&&target.status==="approved"))) return Response.json({error:"Only current approved targets can be collected."},{status:400});
     cleanContext.targetVersions=await Promise.all([targetAId,targetBId].map(async targetId=>{const target=targetRows.find(t=>t.id===targetId);if(!target)return null;return curveVersion(target.points);}));
     if((trialId && JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions)) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions)) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
     await db.batch([db.insert(listeningRuns).values({

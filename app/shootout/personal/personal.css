@@ -223,10 +223,10 @@
 
 /* Duel: progress at a glance. */
 .personal-duel-progress{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin:2px 0 10px}
-.personal-duel-progress progress{flex:1 1 160px;max-width:320px;height:8px;border:0;border-radius:999px;overflow:hidden;background:#17303a;accent-color:#67dacb}
+.personal-duel-progress progress{flex:1 1 160px;max-width:320px;height:8px;appearance:none;-webkit-appearance:none;border:0;border-radius:999px;overflow:hidden;background:#17303a;accent-color:#72ddca}
 .personal-duel-progress progress::-webkit-progress-bar{background:#17303a;border-radius:999px}
-.personal-duel-progress progress::-webkit-progress-value{background:linear-gradient(90deg,#ff526f,#67dacb 55%,#48b8ff);border-radius:999px}
-.personal-duel-progress progress::-moz-progress-bar{background:#67dacb;border-radius:999px}
+.personal-duel-progress progress::-webkit-progress-value{background:linear-gradient(90deg,#72ddca,#69bdf0);border-radius:999px;transition:width .25s ease}
+.personal-duel-progress progress::-moz-progress-bar{background:linear-gradient(90deg,#72ddca,#69bdf0);border-radius:999px}
 .personal-duel-progress span{color:#b9ccd3;font-size:13px}
 
 /* Guided starter for first-time visitors: promise, three steps, results style, and everything else folded away. */
@@ -300,3 +300,5 @@
 @media(max-width:600px){
  .personal-shootout .personal-starter .personal-music-settings .personal-music-fields select[data-music-control="source"]{padding-right:0}
 }
+
+@media(prefers-reduced-motion:reduce){.personal-duel-progress progress::-webkit-progress-value{transition:none}}

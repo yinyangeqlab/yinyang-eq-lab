@@ -10,9 +10,9 @@ export async function POST(request:Request){
  if(request.headers.get('origin')!==new URL(request.url).origin)return Response.json({error:'Invalid origin.'},{status:403,headers});
  try{const body=await readJsonObject(request,4096);
  const durationMinutes=body.durationMinutes===undefined&&typeof body.hours==='number'&&[1,2,8,24].includes(body.hours)?body.hours*60:body.durationMinutes;
- if(typeof body.active!=='boolean'||typeof body.pauseSubmissions!=='boolean'||!validNoticeMinutes(durationMinutes)||typeof body.message!=='string'||body.message.length>500)return Response.json({error:'Choose a notice, duration and maintenance setting.'},{status:400,headers});
+ if(typeof body.active!=='boolean'||typeof body.pauseSubmissions!=='boolean'||(body.indefinite!==undefined&&typeof body.indefinite!=='boolean')||(body.indefinite!==true&&!validNoticeMinutes(durationMinutes))||typeof body.message!=='string'||body.message.length>500)return Response.json({error:'Choose a notice, duration and maintenance setting.'},{status:400,headers});
  if(body.lockedFeatures!==undefined&&(!validMaintenanceLocks(body.lockedFeatures)||body.pauseSubmissions!==(body.lockedFeatures.length>0)))return Response.json({error:'Choose valid maintenance locks. Leave all unchecked for an informational notice.'},{status:400,headers});
  const message=body.message.trim()||DEFAULT_MAINTENANCE_MESSAGE;
- return Response.json(await publishServiceStatus({active:body.active,message,pauseSubmissions:body.pauseSubmissions,durationMinutes,...(body.lockedFeatures!==undefined?{lockedFeatures:body.lockedFeatures}:{} )}),{headers});
+ return Response.json(await publishServiceStatus({active:body.active,message,pauseSubmissions:body.pauseSubmissions,durationMinutes:validNoticeMinutes(durationMinutes)?durationMinutes:undefined,indefinite:body.indefinite===true,...(body.lockedFeatures!==undefined?{lockedFeatures:body.lockedFeatures}:{} )}),{headers});
  }catch(error){return requestInputResponse(error)||Response.json({error:'The site notice could not be saved. Try again.'},{status:503,headers});}
 }

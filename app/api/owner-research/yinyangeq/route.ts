@@ -1,6 +1,6 @@
 import { env } from "cloudflare:workers";
 import { ownerAccessResponse } from "@/lib/owner-access";
-import { profileAccount,createProfileAccount,createProfileGrant,revokeProfileDevice,profileOrigin,PROFILE_SLUG } from "@/lib/yinyangeq-account";
+import { profileAccount,createProfileAccount,createProfileGrant,claimProfileGrant,profileCookie,profileHash,profileSetCookie,PROFILE_CLAIM_COOKIE,revokeProfileDevice,profileOrigin,PROFILE_SLUG } from "@/lib/yinyangeq-account";
 import { createHistoryCapture,historyPreview,migrateHistoryBatch } from "@/lib/yinyangeq-history";
 import { readJsonObject,RequestInputError } from "@/lib/request-json";
 import { profileHeaders,profileFailure } from "@/lib/profile-api";
@@ -16,6 +16,15 @@ export async function GET(request:Request){const denied=await ownerAccessRespons
 export async function POST(request:Request){const denied=await ownerAccessResponse(request);if(denied)return denied;try{
  profileOrigin(request);const body=await readJsonObject(request,16384);let result:unknown;
  switch(body.action){
+ case "listen-here":{
+  const tester=profileCookie(request,"__Host-yinyangeq_tester");
+  if(/^[A-Za-z0-9_-]{43}$/.test(tester)){
+   const approved=await env.DB!.prepare("SELECT 1 FROM private_tester_devices d JOIN private_tester_invites i ON i.id=d.invite_id JOIN owner_public_profiles p ON p.invite_id=d.invite_id JOIN owner_profile_devices v ON v.session_hash=d.session_hash WHERE p.slug=? AND d.session_hash=? AND d.expires_at>? AND i.revoked_at IS NULL AND i.session_expires_at>? AND v.revoked_at IS NULL").bind(PROFILE_SLUG,await profileHash(tester),Math.floor(Date.now()/1000),Math.floor(Date.now()/1000)).first();
+   if(approved){const response=Response.json({redirect:"/account-sync?setup=1"},{headers:profileHeaders});for(const name of ["__Host-yinyangeq_owner","__Host-yinyangeq_data",PROFILE_CLAIM_COOKIE])response.headers.append("Set-Cookie",profileSetCookie(name,"",0));return response;}
+  }
+  const grant=await createProfileGrant(env.DB!,"My listening browser"),claim=await claimProfileGrant(env.DB!,grant.code);
+  const response=Response.json({redirect:"/profile-access?approved=1"},{headers:profileHeaders});response.headers.append("Set-Cookie",profileSetCookie(PROFILE_CLAIM_COOKIE,claim.secret,600));return response;
+ }
  case "create":await createProfileAccount(env.DB!);result={ok:true};break;
  case "grant":result=await createProfileGrant(env.DB!,body.label,typeof body.snapshotId==="string"&&body.snapshotId?body.snapshotId:undefined);break;
  case "revoke":await revokeProfileDevice(env.DB!,String(body.id));result={ok:true};break;

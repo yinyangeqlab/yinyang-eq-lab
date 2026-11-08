@@ -1,15 +1,16 @@
+import { FIT_BANDS, FIT_METHODS, type FitBands, type FitterMethod } from "./fitter-settings";
 import { fitAutoEq, autoEqReferenceOffset, response, type PeqFilter } from './autoeq';
 import { finalizeVariant, peakBoost } from './preference-finalize';
 import { at, fitGrid, validatePoints } from './peqdb-engine';
 import type { Point } from './curves';
 
 export const PEQDB_VERSION = 'fdc0db772164387c2df8739742594197c6851fc3';
-export type AutoEqRequest = { raw: Point[]; targets: Point[][]; kind: 'shootout' | 'export'; bands: 10 | 15 | 20; sampleRate: number; legacyPriority?: 'smooth' | 'close' };
-export type AutoEqFit = { filters: PeqFilter[]; preamp: number; peakBoost: number; rms: number; engine: 'peqdb' | 'legacy'; engineVersion: string; sampleRate: number; smoothing: 'none' | 'legacy'; fallbackReason?: string };
+export type AutoEqRequest = { raw: Point[]; targets: Point[][]; kind: 'shootout' | 'export'; bands: FitBands; method?: FitterMethod; sampleRate: number; legacyPriority?: 'smooth' | 'close' };
+export type AutoEqFit = { filters: PeqFilter[]; preamp: number; peakBoost: number; rms: number; engine: 'peqdb' | 'legacy'; engineVersion: string; sampleRate: number; smoothing: 'none' | 'legacy'; fallbackReason?: string; method?: FitterMethod; bands?: FitBands };
 
 export function validateRequest(request: AutoEqRequest) {
   validatePoints(request.raw);
-  if (!['shootout', 'export'].includes(request.kind) || ![10, 15, 20].includes(request.bands) || request.kind === 'shootout' && request.bands !== 10 ||
+  if (!['shootout', 'export'].includes(request.kind) || !FIT_BANDS.includes(request.bands) || request.method !== undefined && !FIT_METHODS.includes(request.method) || !request.method && request.kind === 'shootout' && request.bands !== 10 ||
       !Number.isFinite(request.sampleRate) || request.sampleRate < 3000 || request.sampleRate > 768000 || request.targets.length < 1 || request.targets.length > 3 || request.legacyPriority !== undefined && !['smooth', 'close'].includes(request.legacyPriority)) throw Error('Unsupported EQ request.');
   request.targets.forEach(validatePoints);
 }
@@ -31,15 +32,15 @@ export function describeFit(request: AutoEqRequest, target: Point[], filters: Pe
   const rms = Math.sqrt(desired.reduce((sum, [hz, db]) => sum + (db - filters.reduce((s, f) => s + response(hz, f, request.sampleRate), 0)) ** 2, 0) / desired.length);
   if (![peak, rms].every(Number.isFinite)) throw Error('The EQ engine returned an invalid response.');
   return { filters, peakBoost: peak, preamp: -Math.ceil((Math.max(0, peak) + (request.kind === 'shootout' ? 1 : .5)) * 10) / 10,
-    rms, engine, engineVersion: engine === 'peqdb' ? `${PEQDB_VERSION}:unsmoothed-fixed-reference-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
+    rms, engine, ...(request.method ? { method: request.method, bands: request.bands } : {}), engineVersion: engine === 'peqdb' ? `${PEQDB_VERSION}:unsmoothed-fixed-reference-v1` : request.method && request.method !== 'peqdb' ? `yinyang-${request.method}-${request.legacyPriority ?? 'close'}@listening-fitter-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
     smoothing: engine === 'peqdb' ? 'none' : 'legacy', ...(fallbackReason ? { fallbackReason } : {}) };
 }
 
 export function legacyBatch(request: AutoEqRequest, reason: string): AutoEqFit[] {
   validateRequest(request);
   return request.targets.map(target => {
-    const result = request.kind === 'shootout' ? fitAutoEq(request.raw, target) : finalizeVariant(request.raw, target, request.bands, 'precise', request.legacyPriority ?? 'close');
+    const result = request.method ? finalizeVariant(request.raw, target, request.bands, request.method === 'standard' ? 'standard' : 'precise', request.legacyPriority ?? 'close', request.kind === 'shootout' ? 'shootout' : '1khz') : request.kind === 'shootout' ? fitAutoEq(request.raw, target) : finalizeVariant(request.raw, target, request.bands, 'precise', request.legacyPriority ?? 'close');
     const filters = (result.filters.length ? result.filters : [{ hz: 1000, gain: 0, q: 1 }]).map(f => ({ ...f, hz: Math.min(f.hz, request.sampleRate * .49) }));
-    return describeFit(request, target, filters, 'legacy', reason);
+    return describeFit(request, target, filters, 'legacy', request.method && request.method !== 'peqdb' ? undefined : reason);
   });
 }

@@ -5,7 +5,6 @@ import { submissionContext } from "@/lib/submission-ownership";
 import { eq, and } from "drizzle-orm";
 import { getDb } from "@/db";
 import { comparisonChoices, targets, listeningRuns, submissionOwners } from "@/db/schema";
-import { targetHeadphoneType } from "@/lib/target-type";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
 
@@ -23,9 +22,6 @@ export async function POST(request: Request) {
     const [a] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,aId),publicTargetPredicate)).limit(1);
     const [b] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,bId),publicTargetPredicate)).limit(1);
     if (!a || !b || a.status !== "approved" || b.status !== "approved") return Response.json({ error: "Only approved targets can enter owner research." }, { status: 403 });
-    const aType = targetHeadphoneType({ name: a.name, measurement: a.measurement });
-    const bType = targetHeadphoneType({ name: b.name, measurement: b.measurement });
-    if ((aType && aType !== data.headphoneType) || (bType && bType !== data.headphoneType)) return Response.json({ error: "Targets must match the selected headphone type." }, { status: 400 });
     const run=await db.select().from(listeningRuns).where(eq(listeningRuns.id,id)).get();
     const own=await db.select().from(submissionOwners).where(and(eq(submissionOwners.recordKind,"run"),eq(submissionOwners.recordId,id))).get();
     if(!run||own?.subjectId!==ownership.subjectId||run.voterId!==participantId||run.testMode!=="open"||run.targetAId!==aId||run.targetBId!==bId||run.result!==data.result) return Response.json({error:"Save the matching owned Open listening record first."},{status:409});

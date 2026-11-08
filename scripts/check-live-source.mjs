@@ -5,21 +5,23 @@ import {resolve,join,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
-if(process.argv.includes('--source-only')){await import('./check-rebuild-source.mjs');process.exit(0);}
+if(process.argv.includes('--source-only')){await import('./check-rebuild-source.mjs');process.exit(process.exitCode || 0);}
 const state=JSON.parse(readFileSync(join(root,'LIVE_RELEASE.json'),'utf8'));
 const groups=['applicationFiles','infrastructureFiles','documentationFiles','buildFiles','localConfigurationFiles'];
 if(process.argv.includes('--assets'))groups.push('assetFiles');
 const snapshot=process.argv.includes('--snapshot');
 const sourceRoot=snapshot?resolve(root,state.applicationSnapshot):root;
 const failures=[];
+const documentationDrift=[];
 let checked=0;
 for(const group of groups)for(const file of state[group]){
  const mapped=snapshot&&group==='applicationFiles'?join(state.applicationSnapshot,file.path):snapshot&&group==='infrastructureFiles'?join(state.infrastructureSnapshot,file.path.replace(/^infra\/pulumi\//,'')):snapshot&&group==='assetFiles'?join(state.applicationSnapshot,file.path):file.path;
  const path=resolve(root,mapped);
  if(!path.startsWith(root+'/'))throw Error('Invalid manifest path');
- if(!existsSync(path)||!lstatSync(path).isFile()){failures.push(`Missing file: ${file.path}`);continue;}
+ const issues=snapshot&&group==='documentationFiles'?documentationDrift:failures;
+ if(!existsSync(path)||!lstatSync(path).isFile()){issues.push(`Missing file: ${file.path}`);continue;}
  const digest=createHash('sha256').update(readFileSync(path)).digest('hex');
- if(digest!==file.sha256)failures.push(`Changed since live update ${state.update}: ${file.path}`);
+ if(digest!==file.sha256)issues.push(`Changed since live update ${state.update}: ${file.path}`);
  checked++;
 }
 const expected=new Set(state.applicationFiles.map(f=>f.path));
@@ -29,5 +31,7 @@ function inspect(dir){for(const entry of readdirSync(dir,{withFileTypes:true})){
  else if(entry.isFile()&&!expected.has(relative(sourceRoot,path)))failures.push(`Extra runtime file: ${relative(sourceRoot,path)}`);
 }}
 for(const directory of state.runtimeDirectories)inspect(join(sourceRoot,directory));
+if(documentationDrift.length){console.error('Recorded documentation differs from working documentation:');console.error(documentationDrift.join('\n'));}
 if(failures.length){console.error(failures.join('\n'));console.error('Local files differ from the recorded live snapshot. Review intentional edits or reconcile the source; do not assume an older checkout is current.');process.exitCode=1;}
+else if(documentationDrift.length){console.error(`Snapshot runtime, infrastructure, build and configuration groups match; ${documentationDrift.length} documentation differences remain. Exit 2 is not a full snapshot pass. Preserve original evidence and review intentional drift; do not rewrite deployment hashes or redeploy for documentation changes.`);process.exitCode=2;}
 else console.log(`${snapshot?'Live snapshot':'Local project'} matches recorded live update ${state.update}: ${checked} files verified${groups.includes('assetFiles')?', including all public assets':''}. Source snapshot: ${state.applicationSnapshot}.`);

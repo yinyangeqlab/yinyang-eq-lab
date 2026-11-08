@@ -1,3 +1,4 @@
+import { fitterCohort } from "@/lib/fitter-settings";
 import { communityEstimate, type CommunityBlock } from "@/lib/community-estimator";
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
 import { targetContextVersion } from "@/lib/target-context-version";
@@ -64,7 +65,7 @@ export async function adaptiveCommunitySummary(db: D1Database) { const rows = aw
     if (saved.targetVersions?.[0] !== versions.get(r.target_a_id) || saved.targetVersions?.[1] !== versions.get(r.target_b_id))
         continue;
     const pair = [r.target_a_id, r.target_b_id].sort(), context = JSON.parse(r.selection_json);
-    const key = JSON.stringify({ pair, headphones: r.headphone_type, protocol: r.protocol_version, scheduler: r.scheduler_version, period: new Date(r.created_at).toISOString().slice(0, 7), loudness: context.loudnessTarget, channel: context.channelMode, music: context.musicMode });
+    const key = JSON.stringify({ fitter: fitterCohort(r.selection_json).key, pair, headphones: r.headphone_type, protocol: r.protocol_version, scheduler: r.scheduler_version, period: new Date(r.created_at).toISOString().slice(0, 7), loudness: context.loudnessTarget, channel: context.channelMode, music: context.musicMode });
     const cell = cells.get(key) || new Map<string, number[]>(), scores = cell.get(r.subject_id) || [];
     const score = r.result === 'tie' ? .5 : r.result === 'a' ? 1 : 0;
     scores.push(r.target_a_id === pair[0] ? score : 1 - score);

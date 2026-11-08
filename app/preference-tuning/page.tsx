@@ -6,21 +6,31 @@ import "@/components/alpha-audio-workbench.css";
 import { recordAdminTestIfNeeded } from "@/lib/admin-test-store";
 import {musicDisplayTitle} from "@/lib/music-display";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { BookOpen, Pause, Play, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Undo2, Upload, Volume2, VolumeX, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AudioLines, BookOpen, FileAudio, FolderOpen, Play, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Undo2, Upload, X } from "lucide-react";
 import { parseCurve, type Point } from "@/lib/curves";
 import { packRegionLabels, placeMarkerLabels } from "@/lib/curve-label-layout";
 import { presetFilterResponse, type PresetFilter } from "@/lib/peq-preset";
 import { fitAutoEqAsync } from "@/lib/autoeq-client";
-import { finalizePeqdb } from "@/lib/autoeq-export";
+import EqCandidateResults from "@/components/eq-candidate-results";
+import { useGeneratedEqResults } from "@/lib/use-generated-eq-results";
+import { generateEqCandidates } from "@/lib/eq-candidates";
+import FitterControls from "@/components/fitter-controls";
+import { useFitterSettings } from "@/lib/use-fitter-settings";
+import { fitterLabel } from "@/lib/fitter-settings";
 import type { AutoEqFit } from "@/lib/autoeq-fit";
 import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from "@/lib/eq-playback";
-import { finalizeVariant, exportPeq, exportEqualizerApo, exportEasyEffects, exportQudelixGuide, type FinalizedVariant } from "@/lib/preference-finalize";
+import { exportPeq, exportEqualizerApo, exportEasyEffects, exportQudelixGuide, type FinalizedVariant } from "@/lib/preference-finalize";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import HeadphonePicker, { type CatalogMeasurement } from "@/components/headphone-picker";
 import MeasurementManager from "@/components/measurement-manager";
 import { importCatalogEntry } from "@/lib/public-measurements";
-import { saveLibraryEq } from "@/lib/music-library-eq";
+import { measurementChannelMatch, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
+import SoundSetup, { type SoundMode } from "@/components/sound-setup";
+import PlaybackTransport, { PlaybackTime, NowPlaying } from "@/components/playback-transport";
+import { measurementResponsePoints, tuningResponsePlot } from "@/lib/eq-response";
+import { channelMatchWav, downloadLocalFile, autoMatchFilename } from "@/lib/channel-match-export";
+import MusicTrackPicker from "@/components/music-track-picker";
 import TrackWaveform from "@/components/track-waveform";
 import { analyzeTrack, type TrackAnalysis } from "@/lib/loudness";
 import { listeningPool as curatedMusic } from "@/lib/music-catalog";
@@ -36,68 +46,65 @@ type AxisView = { freqMin: number; freqMax: number; dbMin: number; dbMax: number
 const defaultAxis: AxisView = { freqMin: 20, freqMax: 20000, dbMin: 55, dbMax: 90, autoDb: true, width: 100, height: 0 };
 const formatHz = (hz: number) => hz >= 1000 ? `${hz / 1000}k` : String(hz);
 const formatHzWithUnit = (hz: number) => hz >= 1000 ? `${hz / 1000} kHz` : `${hz} Hz`;
-const formatTime = (seconds: number) => { const safe = Number.isFinite(seconds) ? Math.max(0, seconds) : 0; return `${Math.floor(safe / 60)}:${String(Math.floor(safe % 60)).padStart(2, "0")}`; };
-function ScrollingTrackTitle({ title }: { title: string }) {
-  const viewport = useRef<HTMLDivElement>(null);
-  const content = useRef<HTMLSpanElement>(null);
-  const [overflow, setOverflow] = useState(0);
-  useEffect(() => {
-    const measure = () => setOverflow(Math.max(0, (content.current?.scrollWidth || 0) - (viewport.current?.clientWidth || 0)));
-    const observer = new ResizeObserver(measure);
-    if (viewport.current) observer.observe(viewport.current);
-    if (content.current) observer.observe(content.current);
-    measure();
-    return () => observer.disconnect();
-  }, [title]);
-  const label = title || "Choose music to begin";
-  return <div ref={viewport} className={`pt-deck-title${overflow > 1 ? " is-scrolling" : ""}`} title={label}>
-    <span className="pt-visually-hidden">Track: </span><span ref={content} style={overflow > 1 ? { "--pt-title-distance": `${overflow}px`, animationDuration: `${Math.max(14, overflow / 18 + 6)}s` } as CSSProperties : undefined}>{label}</span>
-  </div>;
-}
 const fallback: Target = { id: "flat", name: "Flat reference", creator: "Reference", points: [[20, 0], [20000, 0]] };
 type GainKey = "bass" | "body" | "ear" | "air" | "treble";
 type EditSnapshot = { settings: Settings; selected: string; expanded: boolean };
 const GAIN_CONTROLS: { key: GainKey; name: string; hz: number; limit: number; color: string; hint: string }[] = [
-  { key: "bass", name: "Bass", hz: 80, limit: 12, color: "#65c9ff", hint: "Sub weight and kick impact" },
-  { key: "body", name: "Body", hz: 320, limit: 6, color: "#e9b66a", hint: "Warmth and low mids" },
-  { key: "ear", name: "Ear gain", hz: 2800, limit: 10, color: "#b3a0ff", hint: "Voice and instrument presence" },
-  { key: "air", name: "Upper presence", hz: 6500, limit: 6, color: "#f29cad", hint: "Clarity, snap and sibilance" },
-  { key: "treble", name: "Treble", hz: 12000, limit: 12, color: "#df9ae9", hint: "Air and overall high end" },
+  { key: "bass", name: "Bass", hz: 80, limit: 12, color: "#65c9ff", hint: "Deep bass and drum impact" },
+  { key: "body", name: "Body", hz: 320, limit: 6, color: "#e9b66a", hint: "Fullness in voices and instruments" },
+  { key: "ear", name: "Voice presence", hz: 2800, limit: 10, color: "#b3a0ff", hint: "Voice and instrument presence" },
+  { key: "air", name: "Sharpness", hz: 6500, limit: 6, color: "#ffb66f", hint: "Crisp sounds and sharp “s” sounds" },
+  { key: "treble", name: "Treble", hz: 12000, limit: 12, color: "#79e5b2", hint: "Higher sounds and cymbal detail" },
+];
+type PlacementKey = "bassHz" | "earHz" | "trebleHz";
+const PLACEMENTS = {
+  bassHz: { name: "Bass transition", tag: "B", min: 60, max: 250, step: 5 },
+  earHz: { name: "Ear gain center", tag: "EG", min: 1500, max: 4500, step: 50 },
+  trebleHz: { name: "Treble transition", tag: "T", min: 3500, max: 10000, step: 100 },
+} as const;
+const TONE_FREQUENCIES: { label: string; relation: string; placement?: PlacementKey; fixed?: number }[] = [
+  { label: "Bass", relation: "Below", placement: "bassHz" },
+  { label: "Body", relation: "Around", fixed: 320 },
+  { label: "Voice", relation: "Around", placement: "earHz" },
+  { label: "Edge", relation: "Around", fixed: 6500 },
+  { label: "Air", relation: "Above", placement: "trebleHz" },
 ];
 const BANDS = [
   { name: "Sub", short: "SUB", range: "20–60 Hz", example: "808 sustain, subwoofer rumble, the lowest kick fundamentals", effect: "More feels deeper and heavier; less tightens rumble that masks bass notes.", low: 20, high: 60, color: "#4fdac8" },
   { name: "Bass", short: "BASS", range: "60–250 Hz", example: "Kick punch, bass guitar fundamentals, low piano and cello", effect: "More adds impact and weight; too much can blur rhythm.", low: 60, high: 250, color: "#65c9ff" },
   { name: "Low mids", short: "BODY", range: "250–800 Hz", example: "Vocal chest, guitar and brass body, piano warmth", effect: "More adds fullness; less clears mud but can make music thin.", low: 250, high: 800, color: "#e9b66a" },
   { name: "Mids & ear gain", short: "VOICE", range: "800 Hz–4 kHz", example: "Vocal intelligibility, flute, guitar attack, brass presence", effect: "More brings voices forward; too much can sound shouty.", low: 800, high: 4000, color: "#b3a0ff" },
-  { name: "Upper presence", short: "EDGE", range: "4–8 kHz", example: "Consonants, snare snap, pick noise and sibilance", effect: "More adds definition; less softens sharpness and hiss.", low: 4000, high: 8000, color: "#f29cad" },
-  { name: "Air", short: "AIR", range: "8–22 kHz", example: "Cymbal shimmer, room air and breath detail", effect: "More sounds open; too much can make recordings splashy.", low: 8000, high: MAX_VIEW_HZ, color: "#df9ae9" },
+  { name: "Sharpness", short: "EDGE", range: "4–8 kHz", example: "Consonants, snare snap, pick noise and sibilance", effect: "More adds definition; less softens sharpness and hiss.", low: 4000, high: 8000, color: "#ffb66f" },
+  { name: "Air", short: "AIR", range: "8–22 kHz", example: "Cymbal shimmer, room air and breath detail", effect: "More sounds open; too much can make recordings splashy.", low: 8000, high: MAX_VIEW_HZ, color: "#79e5b2" },
 ] as const;
 const at = (points: Point[], hz: number) => {
   if (!points.length) return 0;
   if (hz <= points[0][0]) return points[0][1];
-  for (let i = 1; i < points.length; i++) if (hz <= points[i][0]) {
-    const [a, y0] = points[i - 1], [b, y1] = points[i];
-    return y0 + (y1 - y0) * Math.log(hz / a) / Math.log(b / a);
-  }
-  return points[points.length - 1][1];
+  if (hz >= points[points.length - 1][0]) return points[points.length - 1][1];
+  let low = 0, high = points.length - 1;
+  while (high - low > 1) { const middle = (low + high) >>> 1; if (points[middle][0] < hz) low = middle; else high = middle; }
+  const [a, y0] = points[low], [b, y1] = points[high];
+  return y0 + (y1 - y0) * Math.log(hz / a) / Math.log(b / a);
 };
 const filtersFor = (s: Settings): PresetFilter[] => [
-  { type: "LSC", hz: s.bassHz, gain: s.bass, q: .7 },
+  { type: "LSC", hz: s.bassHz, gain: s.bass, q: Math.SQRT1_2 },
   { type: "PK", hz: 320, gain: s.body, q: .8 },
   { type: "PK", hz: s.earHz, gain: s.ear, q: .9 },
   { type: "PK", hz: 6500, gain: s.air, q: 1.5 },
-  { type: "HSC", hz: s.trebleHz, gain: s.treble, q: .7 },
+  { type: "HSC", hz: s.trebleHz, gain: s.treble, q: Math.SQRT1_2 },
 ];
 const previewGain = (filters: PresetFilter[], bypass: boolean) => {
-  if (bypass) return .7;
+  if (bypass) return 1;
   const peak = Math.max(0, ...Array.from({ length: 121 }, (_, i) => {
     const hz = 20 * 1000 ** (i / 120);
     return filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, 48000), 0);
   }));
-  return .7 * 10 ** (-peak / 20);
+  return 10 ** (-peak / 20);
 };
-function CurveChart({ points, settings, expanded, axis, analyser, playing, regionDrag, onDragStart, onDrag, onDragEnd }: { points: Point[]; settings: Settings; expanded: boolean; axis: AxisView; analyser: AnalyserNode | null; playing: boolean; regionDrag: boolean; onDragStart: () => void; onDrag: (key: keyof Settings, value: number) => void; onDragEnd: () => void }) {
+type CurveOverlay = { key: "raw" | "after" | "target"; label: string; points?: Point[]; color: string; dash?: string };
+function CurveChart({ points, curveBase, overlays = [], saved = false, editable = true, settings, expanded, axis, sampleRate = 48000, analyser, playing, fitterControls, regionDrag, onDragStart, onDrag, onDragEnd }: { points: Point[]; curveBase?: Point[]; overlays?: CurveOverlay[]; saved?: boolean; editable?: boolean; settings: Settings; expanded: boolean; axis: AxisView; sampleRate?: number; analyser: AnalyserNode | null; playing: boolean; fitterControls?: import("react").ReactNode; regionDrag: boolean; onDragStart: () => void; onDrag: (key: keyof Settings, value: number) => void; onDragEnd: () => void }) {
   const surface = useRef<HTMLDivElement>(null);
+  const [comparison, setComparison] = useState({ raw: false, after: false, target: false });
   const [size, setSize] = useState({ width: 800, height: 230 });
   const drag = useRef<{ key: GainKey; startY: number; startGain: number; startResponse: number; frequency: number; settings: Settings; regional: boolean; height: number; scale: number; plotHeight: number; limit: number } | null>(null);
   const markerDrag = useRef<{key: "bassHz" | "earHz" | "trebleHz"; min: number; max: number; step: number} | null>(null);
@@ -111,11 +118,13 @@ function CurveChart({ points, settings, expanded, axis, analyser, playing, regio
     return () => observer.disconnect();
   }, []);
   const filters = filtersFor(settings);
-  const frequencies = Array.from({ length: 241 }, (_, i) => 20 * (MAX_VIEW_HZ / 20) ** (i / 240));
-  const base = frequencies.map(hz => at(points, hz) - at(points, 1000) + CURVE_VIEW.anchor);
-  const adjusted = frequencies.map((hz, i) => base[i] + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, 48000), 0));
+  const frequencies = [...new Set([...Array.from({ length: 961 }, (_, i) => 20 * (MAX_VIEW_HZ / 20) ** (i / 960)), ...(curveBase ?? points).map(([hz]) => hz)])].filter(hz => hz >= 20 && hz <= MAX_VIEW_HZ).sort((a, b) => a - b);
+  const baseAt = (hz: number) => curveBase ? at(curveBase, hz) : at(points, hz) - at(points, 1000) + CURVE_VIEW.anchor;
+  const base = frequencies.map(baseAt);
+  const visibleOverlays = overlays.filter(row => comparison[row.key] && row.points?.length);
+  const adjusted = frequencies.map((hz, i) => base[i] + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, sampleRate), 0));
   const visible = frequencies.flatMap((hz, i) => hz >= axis.freqMin && hz <= axis.freqMax ? [base[i], adjusted[i]] : []);
-  const measured = visible.length ? visible : [...base, ...adjusted];
+  const measured = [...(visible.length ? visible : [...base, ...adjusted]), ...visibleOverlays.flatMap(row => [at(row.points!, axis.freqMin), at(row.points!, axis.freqMax), ...row.points!.filter(([hz]) => hz >= axis.freqMin && hz <= axis.freqMax).map(([, db]) => db)])];
   const viewMin = axis.autoDb ? Math.min(CURVE_VIEW.min, Math.floor((Math.min(...measured) - 2) / 5) * 5) : axis.dbMin;
   const viewMax = axis.autoDb ? Math.max(CURVE_VIEW.max, Math.ceil((Math.max(...measured) + 2) / 5) * 5) : axis.dbMax;
   const plot = { left: 48, right: size.width - 17, top: 25, bottom: size.height - 38 };
@@ -131,33 +140,34 @@ function CurveChart({ points, settings, expanded, axis, analyser, playing, regio
   const standardTicks = (size.width < 650 ? [20, 100, 500, 2000, 10000, 20000] : [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000]).filter(hz => hz > axis.freqMin && hz < axis.freqMax);
   const frequencyTicks = [axis.freqMin, ...standardTicks.filter(hz => x(hz) - plot.left > 32 && plot.right - x(hz) > 32), axis.freqMax];
   const path = (dbs: number[]) => dbs.map((db, i) => `${i ? "L" : "M"}${x(frequencies[i]).toFixed(2)} ${y(db).toFixed(2)}`).join(" ");
-  const adjustedAt = (hz: number) => at(points, hz) - at(points, 1000) + CURVE_VIEW.anchor + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, 48000), 0);
+  const adjustedAt = (hz: number) => baseAt(hz) + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, sampleRate), 0);
   const placementMarkers = [
-    { key: "bassHz" as const, min: 60, max: 250, step: 5, name: "Bass transition", tag: "BT", hz: settings.bassHz, color: GAIN_CONTROLS[0].color },
-    { key: "earHz" as const, min: 1500, max: 4500, step: 50, name: "Ear gain center", tag: "EGC", hz: settings.earHz, color: GAIN_CONTROLS[2].color },
-    { key: "trebleHz" as const, min: 3500, max: 10000, step: 100, name: "Treble transition", tag: "TT", hz: settings.trebleHz, color: GAIN_CONTROLS[4].color },
+    { key: "bassHz" as const, min: 60, max: 250, step: 5, name: "Bass transition", tag: "B", hz: settings.bassHz, color: GAIN_CONTROLS[0].color },
+    { key: "earHz" as const, min: 1500, max: 4500, step: 50, name: "Ear gain center", tag: "EG", hz: settings.earHz, color: GAIN_CONTROLS[2].color },
+    { key: "trebleHz" as const, min: 3500, max: 10000, step: 100, name: "Treble transition", tag: "T", hz: settings.trebleHz, color: GAIN_CONTROLS[4].color },
   ];
-  const visibleMarkers = placementMarkers.filter(marker => marker.hz >= axis.freqMin && marker.hz <= axis.freqMax).map(marker => ({ ...marker, x: x(marker.hz), y: Math.max(plot.top + 3, Math.min(plot.bottom - 3, y(adjustedAt(marker.hz)))), width: marker.tag === "EGC" ? 42 : 34 }));
+  const visibleMarkers = placementMarkers.filter(marker => marker.hz >= axis.freqMin && marker.hz <= axis.freqMax).map(marker => ({ ...marker, x: x(marker.hz), y: Math.max(plot.top + 3, Math.min(plot.bottom - 3, y(adjustedAt(marker.hz)))), width: marker.tag === "EG" ? 30 : 24 }));
   const markerLabels = placeMarkerLabels(visibleMarkers, { left: plot.left, right: plot.right, top: plot.top, bottom: plot.bottom });
-  return <div className="pt-chart-wrap"><div className="pt-chart-surface" ref={surface} style={{ width: `${axis.width}%`, height: axis.height || undefined }}><svg viewBox={`0 0 ${size.width} ${size.height}`} role="group" aria-label={`Selected baseline curve in gray and region colored adjusted curve, plotted from ${axis.freqMin} to ${axis.freqMax} hertz and ${viewMin} to ${viewMax} dB`}>
+  return <div className="pt-chart-wrap"><div className="pt-chart-surface" ref={surface} style={{ width: `${axis.width}%`, height: axis.height || undefined }}><svg viewBox={`0 0 ${size.width} ${size.height}`} role="group" aria-label={`${saved ? "Saved EQ settings" : "Starting target"} in gray and region colored adjusted curve with optional headphone response overlays, plotted from ${axis.freqMin} to ${axis.freqMax} hertz and ${viewMin} to ${viewMax} dB`}>
     <defs><clipPath id="pt-plot-clip"><rect x={plot.left} y={plot.top} width={plotWidth} height={plotHeight} /></clipPath></defs>
-    {ticks.map(db => <g key={db}><line className="pt-grid-line" x1={plot.left} x2={plot.right} y1={y(db)} y2={y(db)} stroke={db === CURVE_VIEW.anchor ? "rgba(160,185,190,.30)" : db % 10 === 0 ? "rgba(130,160,175,.16)" : "rgba(130,160,175,.10)"} strokeWidth={db === CURVE_VIEW.anchor ? .8 : db % 10 === 0 ? .7 : .6} vectorEffect="non-scaling-stroke" strokeDasharray={db === CURVE_VIEW.anchor ? "4 4" : undefined}/><text x={plot.left - 9} y={y(db) + 3.5} textAnchor="end" fill="#8ca4ab" fontSize="10">{db}</text></g>)}
-    {BANDS.slice(1).filter(b => b.low > axis.freqMin && b.low < axis.freqMax).map(b => <line className="pt-region-grid-line" key={b.name} x1={x(b.low)} x2={x(b.low)} y1={plot.top} y2={plot.bottom} stroke="rgba(130,160,175,.14)" strokeWidth=".65" vectorEffect="non-scaling-stroke" strokeDasharray="3 5"/>)}
-    <path d={path(base)} clipPath="url(#pt-plot-clip)" fill="none" stroke="#8a999c" strokeWidth="2" strokeDasharray="6 5" />
+    {ticks.map(db => <g key={db}><line className="pt-grid-line" x1={plot.left} x2={plot.right} y1={y(db)} y2={y(db)} stroke={db === CURVE_VIEW.anchor ? "rgba(160,185,190,.30)" : db % 10 === 0 ? "rgba(130,160,175,.16)" : "rgba(130,160,175,.10)"} strokeWidth={db === CURVE_VIEW.anchor ? .8 : db % 10 === 0 ? .7 : .6} vectorEffect="non-scaling-stroke" /><text x={plot.left - 9} y={y(db) + 3.5} textAnchor="end" fill="#8ca4ab" fontSize="10">{db}</text></g>)}
+    {BANDS.slice(1).filter(b => b.low > axis.freqMin && b.low < axis.freqMax).map(b => <line className="pt-region-grid-line" key={b.name} x1={x(b.low)} x2={x(b.low)} y1={plot.top} y2={plot.bottom} stroke="rgba(130,160,175,.14)" strokeWidth=".65" vectorEffect="non-scaling-stroke"/>)}
+    <path d={path(base)} clipPath="url(#pt-plot-clip)" fill="none" stroke="#8a999c" strokeWidth="2" strokeDasharray={saved ? undefined : "1 5"} strokeLinecap="round" />
     {visibleBands.map((b, index) => <g key={b.name}><text className="pt-region-label" x={regionLabels[index].x} y={16 + regionLabels[index].row * 16} textAnchor="middle" fill={b.color} fontSize="11" fontWeight="700">{b.short}</text><clipPath id={`pt-region-${b.short}`}><rect x={x(Math.max(b.low, axis.freqMin))} y={plot.top} width={x(Math.min(b.high, axis.freqMax))-x(Math.max(b.low, axis.freqMin))} height={plotHeight} /></clipPath><path d={path(adjusted)} clipPath={`url(#pt-region-${b.short})`} fill="none" stroke={b.color} strokeWidth="8" strokeOpacity=".23" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 7px ${b.color})` }}/><path d={path(adjusted)} clipPath={`url(#pt-region-${b.short})`} fill="none" stroke={b.color} strokeWidth="3" strokeLinejoin="round" style={{ filter: `drop-shadow(0 0 4px ${b.color})` }}/></g>)}
+    {visibleOverlays.map(row => <path key={row.key} d={row.points!.map(([hz, db], index) => `${index ? "L" : "M"}${x(hz).toFixed(2)} ${y(db).toFixed(2)}`).join(" ")} clipPath="url(#pt-plot-clip)" fill="none" stroke={row.color} className={`pt-overlay pt-overlay-${row.key}`} strokeWidth={row.key === "after" ? "3" : "1.8"} strokeDasharray={row.dash} strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>)}
     {frequencyTicks.map(hz => <text key={hz} x={x(hz)} y={plot.bottom + 16} textAnchor="middle" fill="#91a8ae" fontSize="10">{formatHz(hz)}</text>)}
     <text x={plot.right} y={size.height - 5} textAnchor="end" fill="#91a8ae" fontSize="10">Frequency (Hz) · level (dB)</text>
-    <rect x={plot.left} y={plot.top} width={plotWidth} height={plotHeight} fill="transparent" className="pt-curve-drag" aria-hidden="true" onPointerDown={event => { const svg = event.currentTarget.ownerSVGElement; if (!svg) return; const bounds = svg.getBoundingClientRect(); const xx = (event.clientX - bounds.left) * size.width / bounds.width; const hz = axis.freqMin * (axis.freqMax / axis.freqMin) ** (Math.max(0, Math.min(1, (xx - plot.left) / plotWidth))); const sensitivity = (key: GainKey) => { const up = filtersFor({...settings, [key]: .5}), down = filtersFor({...settings, [key]: -.5}); return up.reduce((sum, filter, index) => sum + presetFilterResponse(hz, filter, 48000) - presetFilterResponse(hz, down[index], 48000), 0); }; const control = GAIN_CONTROLS.reduce((best, item) => sensitivity(item.key) > sensitivity(best.key) ? item : best, GAIN_CONTROLS[0]); drag.current = { key: control.key, startY: event.clientY, startGain: settings[control.key], startResponse: adjustedAt(hz), frequency: hz, settings: {...settings}, regional: regionDrag || event.shiftKey, height: bounds.height, scale: viewMax - viewMin, plotHeight, limit: expanded ? EXPANDED_GAIN_LIMIT : control.limit }; event.currentTarget.setPointerCapture(event.pointerId); onDragStart(); }} onPointerMove={event => { const active = drag.current; if (!active) return; const delta = (active.startY - event.clientY) * size.height / active.height * active.scale / active.plotHeight; let next = active.startGain + delta;
+    <rect x={plot.left} y={plot.top} width={plotWidth} height={plotHeight} fill="transparent" className="pt-curve-drag" aria-hidden="true" onPointerDown={event => { if (!editable) return; const svg = event.currentTarget.ownerSVGElement; if (!svg) return; const bounds = svg.getBoundingClientRect(); const xx = (event.clientX - bounds.left) * size.width / bounds.width; const hz = axis.freqMin * (axis.freqMax / axis.freqMin) ** (Math.max(0, Math.min(1, (xx - plot.left) / plotWidth))); const sensitivity = (key: GainKey) => { const up = filtersFor({...settings, [key]: .5}), down = filtersFor({...settings, [key]: -.5}); return up.reduce((sum, filter, index) => sum + presetFilterResponse(hz, filter, sampleRate) - presetFilterResponse(hz, down[index], sampleRate), 0); }; const control = GAIN_CONTROLS.reduce((best, item) => sensitivity(item.key) > sensitivity(best.key) ? item : best, GAIN_CONTROLS[0]); drag.current = { key: control.key, startY: event.clientY, startGain: settings[control.key], startResponse: adjustedAt(hz), frequency: hz, settings: {...settings}, regional: regionDrag || event.shiftKey, height: bounds.height, scale: viewMax - viewMin, plotHeight, limit: expanded ? EXPANDED_GAIN_LIMIT : control.limit }; event.currentTarget.setPointerCapture(event.pointerId); onDragStart(); }} onPointerMove={event => { const active = drag.current; if (!active) return; const delta = (active.startY - event.clientY) * size.height / active.height * active.scale / active.plotHeight; let next = active.startGain + delta;
       if (!active.regional) {
         const desired = active.startResponse + delta;
-        const response = (gain: number) => at(points, active.frequency) - at(points, 1000) + CURVE_VIEW.anchor + filtersFor({...active.settings, [active.key]: gain}).reduce((sum, filter) => sum + presetFilterResponse(active.frequency, filter, 48000), 0);
+        const response = (gain: number) => baseAt(active.frequency) + filtersFor({...active.settings, [active.key]: gain}).reduce((sum, filter) => sum + presetFilterResponse(active.frequency, filter, sampleRate), 0);
         let low = -active.limit, high = active.limit;
         for (let iteration = 0; iteration < 28; iteration++) { const middle = (low + high) / 2; if (response(middle) < desired) low = middle; else high = middle; }
         next = (low + high) / 2;
       }
       onDrag(active.key, Math.round(Math.max(-active.limit, Math.min(active.limit, next)) * 1000) / 1000); }} onPointerUp={event => { if (drag.current) { drag.current = null; event.currentTarget.releasePointerCapture(event.pointerId); onDragEnd(); } }} onPointerCancel={() => { drag.current = null; onDragEnd(); }}/>
-    {visibleMarkers.map((marker, index) => { const mx = marker.x, my = marker.y; const label = markerLabels[index]; const labelCenter = label.x + label.width / 2; const labelEdge = my < label.y ? label.y : label.y + label.height; return <g key={marker.name} className="pt-placement-marker" role="slider" tabIndex={0} aria-label={marker.name} aria-valuemin={marker.min} aria-valuemax={marker.max} aria-valuenow={marker.hz} aria-valuetext={`${marker.hz} hertz`} aria-orientation="horizontal" aria-keyshortcuts="ArrowLeft ArrowRight Home End" onKeyDown={event => { let next = marker.hz; if (event.key === "ArrowLeft") next -= marker.step; else if (event.key === "ArrowRight") next += marker.step; else if (event.key === "Home") next = marker.min; else if (event.key === "End") next = marker.max; else return; event.preventDefault(); event.stopPropagation(); onDragStart(); onDrag(marker.key, Math.max(marker.min, Math.min(marker.max, next))); }} onKeyUp={onDragEnd} onBlur={onDragEnd} onPointerDown={event => { event.stopPropagation(); markerDrag.current = marker; event.currentTarget.setPointerCapture(event.pointerId); onDragStart(); }} onPointerMove={event => { const active = markerDrag.current; const svg = event.currentTarget.ownerSVGElement; if (!active || !svg) return; const bounds = svg.getBoundingClientRect(); const xx = (event.clientX - bounds.left) * size.width / bounds.width; const frequency = axis.freqMin * (axis.freqMax / axis.freqMin) ** Math.max(0, Math.min(1, (xx - plot.left) / plotWidth)); onDrag(active.key, Math.max(active.min, Math.min(active.max, Math.round(frequency / active.step) * active.step))); }} onPointerUp={event => { if (markerDrag.current) { markerDrag.current = null; event.currentTarget.releasePointerCapture(event.pointerId); onDragEnd(); } }} onPointerCancel={() => { markerDrag.current = null; onDragEnd(); }}><title>{`${marker.name}: drag left or right, or use arrow keys`}</title><circle className="pt-marker-halo" cx={mx} cy={my} r="12" fill={marker.color} fillOpacity=".12" stroke={marker.color} strokeOpacity=".35"/><line x1={mx} x2={labelCenter} y1={my} y2={labelEdge} stroke={marker.color} strokeWidth="1" opacity=".7"/><circle cx={mx} cy={my} r="5" fill={marker.color} stroke="#041013" strokeWidth="1.5"/><rect className="pt-marker-tag" x={label.x} y={label.y} width={label.width} height={label.height} rx="4" fill="#061116" stroke={marker.color} strokeWidth="1"/><text x={labelCenter} y={label.y + 12} textAnchor="middle" fill={marker.color} fontSize="11" fontWeight="800" letterSpacing=".5">{marker.tag}</text></g>; })}
-  </svg><LiveSpectrum analyser={analyser} playing={playing} size={size} plot={plot} freqMin={axis.freqMin} freqMax={axis.freqMax}/></div><div className="pt-legend"><span><i className="baseline"/>Baseline</span><span><i className="adjusted"/>Your curve</span><span>Live spectrum when music plays</span></div></div>;
+    {(editable ? visibleMarkers : []).map((marker, index) => { const mx = marker.x, my = marker.y; const label = markerLabels[index]; const labelCenter = label.x + label.width / 2; const labelEdge = my < label.y ? label.y : label.y + label.height; return <g key={marker.name} className="pt-placement-marker" role="slider" tabIndex={0} aria-label={marker.name} aria-valuemin={marker.min} aria-valuemax={marker.max} aria-valuenow={marker.hz} aria-valuetext={`${marker.hz} hertz`} aria-orientation="horizontal" aria-keyshortcuts="ArrowLeft ArrowRight Home End" onKeyDown={event => { let next = marker.hz; if (event.key === "ArrowLeft") next -= marker.step; else if (event.key === "ArrowRight") next += marker.step; else if (event.key === "Home") next = marker.min; else if (event.key === "End") next = marker.max; else return; event.preventDefault(); event.stopPropagation(); onDragStart(); onDrag(marker.key, Math.max(marker.min, Math.min(marker.max, next))); }} onKeyUp={onDragEnd} onBlur={onDragEnd} onPointerDown={event => { event.stopPropagation(); markerDrag.current = marker; event.currentTarget.setPointerCapture(event.pointerId); onDragStart(); }} onPointerMove={event => { const active = markerDrag.current; const svg = event.currentTarget.ownerSVGElement; if (!active || !svg) return; const bounds = svg.getBoundingClientRect(); const xx = (event.clientX - bounds.left) * size.width / bounds.width; const frequency = axis.freqMin * (axis.freqMax / axis.freqMin) ** Math.max(0, Math.min(1, (xx - plot.left) / plotWidth)); onDrag(active.key, Math.max(active.min, Math.min(active.max, Math.round(frequency / active.step) * active.step))); }} onPointerUp={event => { if (markerDrag.current) { markerDrag.current = null; event.currentTarget.releasePointerCapture(event.pointerId); onDragEnd(); } }} onPointerCancel={() => { markerDrag.current = null; onDragEnd(); }}><title>{`${marker.name}: drag left or right, or use arrow keys`}</title><circle className="pt-marker-halo" cx={mx} cy={my} r="12" fill={marker.color} fillOpacity=".12" stroke={marker.color} strokeOpacity=".35"/><line x1={mx} x2={labelCenter} y1={my} y2={labelEdge} stroke={marker.color} strokeWidth="1" opacity=".7"/><circle cx={mx} cy={my} r="5" fill={marker.color} stroke="#041013" strokeWidth="1.5"/><rect className="pt-marker-tag" x={label.x} y={label.y} width={label.width} height={label.height} rx="4" fill="#061116" stroke={marker.color} strokeWidth="1"/><text x={labelCenter} y={label.y + 12} textAnchor="middle" fill={marker.color} fontSize="11" fontWeight="800" letterSpacing=".5">{marker.tag}</text></g>; })}
+  </svg><LiveSpectrum analyser={analyser} playing={playing} size={size} plot={plot} freqMin={axis.freqMin} freqMax={axis.freqMax}/></div><div className="pt-legend"><span><i className={saved ? "baseline saved" : "baseline"}/>{saved ? "Saved EQ" : "Starting target"}</span><span><i className="adjusted"/>Your curve</span><span>Live spectrum when music plays</span></div><div className="pt-response-overlays" role="group" aria-label="Optional response overlays">{overlays.map(row => <label key={row.key}><input type="checkbox" checked={comparison[row.key]} disabled={!row.points?.length} onChange={event => setComparison(state => ({ ...state, [row.key]: event.target.checked }))}/><i style={{ background: row.color }}/>{row.label}</label>)}{fitterControls}</div></div>;
 }
 function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { analyser: AnalyserNode | null; playing: boolean; size: { width: number; height: number }; plot: { left: number; right: number; top: number; bottom: number }; freqMin: number; freqMax: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -193,7 +203,7 @@ function LiveSpectrum({ analyser, playing, size, plot, freqMin, freqMax }: { ana
   }, [analyser, playing, size.width, size.height, plot.left, plot.right, plot.top, plot.bottom, freqMin, freqMax]);
   return <canvas ref={canvas} className="pt-spectrum" aria-label="Live music spectrum across the labeled frequency regions" role="img"/>;
 }
-type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: EqStage; fitKey?: string; fitAbort?: AbortController; fitPromise?: Promise<AutoEqFit[]>; prepared?: AutoEqFit; fitReady?: boolean; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode; dynamicsLoading?: boolean; playbackInitialized?: boolean; stopInterruptions?: () => void; volumeGain: GainNode };
+type AudioGraph = { context: AudioContext; input: GainNode; filters: BiquadFilterNode[]; fit: EqStage; balance: EqStage; fitKey?: string; fitAbort?: AbortController; fitPromise?: Promise<AutoEqFit[]>; prepared?: AutoEqFit; appliedFitKey?: string; fitReady?: boolean; output: GainNode; spectrum: AnalyserNode; media?: MediaElementAudioSourceNode; dynamics?: AudioWorkletNode; dynamicsLoading?: boolean; playbackInitialized?: boolean; stopInterruptions?: () => void; volumeGain: GainNode };
 function sameEdit(a: EditSnapshot, b: EditSnapshot) { return a.selected === b.selected && a.expanded === b.expanded && (Object.keys(defaults) as (keyof Settings)[]).every(key => a.settings[key] === b.settings[key]); }
 export default function PreferenceTuning() {
   const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
@@ -213,8 +223,7 @@ export default function PreferenceTuning() {
   const [queue, setQueue] = useState<File[]>([]);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(.8);
-  const [volumeOpen, setVolumeOpen] = useState(false);
+  const [volume, setVolume] = useState(1);
   const [waveZoom, setWaveZoom] = useState(1);
   const [dynamicRange, setDynamicRange] = useState(0);
   const dynamicRangeRef = useRef(0);
@@ -233,6 +242,10 @@ export default function PreferenceTuning() {
   const [managerOpen, setManagerOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [activeBand, setActiveBand] = useState(3);
+  const [frequencyEditor, setFrequencyEditor] = useState<PlacementKey | null>(null);
+  const [frequencyDraft, setFrequencyDraft] = useState("");
+  const frequencyInput = useRef<HTMLInputElement>(null);
+  const frequencyTrigger = useRef<HTMLButtonElement | null>(null);
   const [message, setMessage] = useState("");
   const [storageNotice, setStorageNotice] = useState("");
   const sourceGeneration = useRef(0);
@@ -250,15 +263,30 @@ export default function PreferenceTuning() {
   const [finalizing, setFinalizing] = useState(false);
   const [finalProgress, setFinalProgress] = useState(0);
   const finalizeAbort = useRef<AbortController | null>(null);
-  const [finalized, setFinalized] = useState<{ key: string; variants: FinalizedVariant[]; curve: Point[] } | null>(null);
-  const [exportBand, setExportBand] = useState<10 | 15 | 20>(10);
   const graph = useRef<AudioGraph | null>(null);
   const [analyser,setAnalyser]=useState<AnalyserNode | null>(null);
   const media = useRef<HTMLAudioElement>(null);
   const objectUrl = useRef("");
+  const { fitter, setFitter, defaultFitter, saveDefault, notice: fitterNotice } = useFitterSettings();
   const [bypass, setBypass] = useState(false);
+  const [matchEnabled, setMatchEnabled] = useState(true);
+  const [soundMode, setSoundMode] = useState<SoundMode>("target");
+  const [presets, setPresets] = useState<LibraryEq[]>([]);
+  const [presetId, setPresetId] = useState("");
+  const [previewRate, setPreviewRate] = useState(48000);
+  const [preparingEq, setPreparingEq] = useState(false);
+  const modeDrafts = useRef<Record<SoundMode, Settings>>({ target: { ...defaults }, saved: { ...defaults } });
+  useEffect(() => {
+    const refresh = () => {
+      setPresets(readLibraryEqs());
+      try { const rows = JSON.parse(localStorage.getItem("target-lab-measurements") || "[]"); if (Array.isArray(rows)) setMeasurements(rows); } catch {}
+    }; refresh();
+    window.addEventListener("library-eqs-changed", refresh); window.addEventListener("storage", refresh); window.addEventListener("yinyang-data-changed", refresh);
+    return () => { window.removeEventListener("library-eqs-changed", refresh); window.removeEventListener("storage", refresh); window.removeEventListener("yinyang-data-changed", refresh); };
+  }, []);
   useEffect(() => { const current = graph.current; if (current) current.volumeGain.gain.setTargetAtTime(volume, current.context.currentTime, .01); }, [volume]);
-  const showEdit = useCallback((next: EditSnapshot) => { editRef.current = next; setSettings(next.settings); setSelected(next.selected); setExpanded(next.expanded); }, []);
+  useEffect(() => { if (frequencyEditor) { frequencyInput.current?.focus(); frequencyInput.current?.select(); } }, [frequencyEditor]);
+  const showEdit = useCallback((next: EditSnapshot) => { setFrequencyEditor(null); editRef.current = next; setSettings(next.settings); setSelected(next.selected); setExpanded(next.expanded); }, []);
   const applyEdit = useCallback((next: EditSnapshot) => {
     const previous = editRef.current;
     if (sameEdit(next, previous)) return;
@@ -337,41 +365,48 @@ export default function PreferenceTuning() {
   }, [applyEdit]);
   // A failed external storage write needs immediate visible feedback; editing remains available.
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { if (!axisLoaded) return; try { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [settings, selected, expanded, axisLoaded]);
+  useEffect(() => { if (!axisLoaded || soundMode !== "target") return; try { localStorage.setItem("personal-tuning-v1", JSON.stringify({ settings, selected, expanded })); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [settings, selected, expanded, axisLoaded, soundMode]);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- Report an external storage failure.
   useEffect(() => { if (axisLoaded) try { localStorage.setItem("preference-tuning-axis-v1", JSON.stringify(axis)); } catch { setStorageNotice("Browser storage is unavailable. Tuning still works in this tab; changes will not be saved when you leave."); } }, [axis, axisLoaded]);
   const target = targets.find(t => t.id === selected) || fallback;
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
   const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
-  const selectedCuratedRank = curatedRanks.get(selected);
   const targetOptions = useMemo(() => [...targets].sort((a, b) => (curatedRanks.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (curatedRanks.get(b.id) ?? Number.MAX_SAFE_INTEGER)), [targets, curatedRanks]);
   const filters = useMemo(() => filtersFor(settings), [settings]);
-  const measurement = measurements.find(row => row.id === measurementId);
+  const savedEq = presets.find(eq => eq.id === presetId);
+  const measurement = measurements.find(row => row.id === (soundMode === "saved" ? savedEq?.measurementId : measurementId));
+  const activeMatch = useMemo(() => soundMode === "saved" ? savedEq?.channelMatch : measurementChannelMatch(measurement), [soundMode, savedEq, measurement]);
+  const tweaksChanged = GAIN_CONTROLS.some(control => Math.abs(settings[control.key]) > .0001);
+  const eqAvailable = soundMode === "target" || !!savedEq;
+  const eqOn = !bypass && eqAvailable;
   const [fit, setFit] = useState<AutoEqFit | null>(null);
+  const basePreamp = soundMode === "saved" ? savedEq?.preamp ?? 0 : fit?.preamp ?? 0;
+  const responseRaw = useMemo(() => measurementResponsePoints(measurement), [measurement]);
+  const responsePlot = useMemo(() => tuningResponsePlot(responseRaw, soundMode === "target" ? normalized : savedEq?.target?.points, soundMode === "saved" ? savedEq?.filters ?? [] : fit?.filters ?? [], filters, previewRate, soundMode === "saved" ? "1khz" : "shootout", eqOn, CURVE_VIEW.anchor, { referenceRaw: measurement?.points, channelMatch: matchEnabled ? activeMatch : undefined }), [responseRaw, measurement, normalized, savedEq, fit, filters, previewRate, soundMode, eqOn, matchEnabled, activeMatch]);
+  const responseReady = !preparingEq && (soundMode === "saved" ? !!savedEq : !!fit);
+  const responseOverlays: CurveOverlay[] = [
+    { key: "raw", label: "Raw headphones", points: responsePlot.raw, color: "#d6e0e7" },
+    { key: "after", label: "Predicted EQ", points: responseReady ? responsePlot.after : undefined, color: "#a4ffe4" },
+    ...(soundMode === "saved" ? [{ key: "target" as const, label: "Saved target", points: responsePlot.target, color: "#aeb7be", dash: "1 5" }] : []),
+  ];
   const preferenceCurve = useMemo<Point[]>(() => Array.from({ length: 241 }, (_, i) => {
     const hz = 20 * 1000 ** (i / 240);
     return [hz, at(normalized, hz) - at(normalized, 1000) + filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, 48000), 0)];
   }), [normalized, filters]);
   const finalizeKey = useMemo(() => JSON.stringify({ selected, settings, measurementId, raw: measurement?.points, target: normalized }), [selected, settings, measurementId, measurement?.points, normalized]);
   useEffect(() => () => { finalizeAbort.current?.abort(); }, [finalizeKey]);
-  const finalIsCurrent = finalized?.key === finalizeKey;
+  const { result: previousResults, current: finalized, heading: resultsHeading, save: saveResults, clear: clearResults } = useGeneratedEqResults("tuning", finalizeKey);
   /** Tuning itself needs no agreement. Viewing the finished EQ or exporting it keeps the file, curve and settings for private research, so that step asks once. */
   async function finalizeCurve() { await consent.ask(runFinalize); }
   async function runFinalize() {
     if (!measurement?.points?.length || finalizing) return;
     finalizeAbort.current?.abort(); const request = new AbortController(); finalizeAbort.current = request;
-    setFinalizing(true); setFinalProgress(0); setFinalized(null);
+    setFinalizing(true); setFinalProgress(0);
     const curve = preferenceCurve;
     const variants: FinalizedVariant[] = [];
     try {
-      for (const bands of [10, 15, 20] as const) for (const method of ["standard", "precise"] as const) for (const priority of ["smooth", "close"] as const) {
-        await new Promise<void>(resolve => setTimeout(resolve, 0));
-        if (request.signal.aborted) return;
-        variants.push(finalizeVariant(measurement.points, curve, bands, method, priority));
-        setFinalProgress(variants.length);
-      }
-      for (const bands of [10, 15, 20] as const) { variants.push(await finalizePeqdb(measurement.points, curve, bands, request.signal)); setFinalProgress(variants.length); }
-      if (!request.signal.aborted) setFinalized({ key: finalizeKey, variants, curve });
+      variants.push(...await generateEqCandidates(measurement.points,curve,request.signal,setFinalProgress));
+      if (!request.signal.aborted) saveResults(variants);
     } catch (error) { if (!request.signal.aborted) setMessage(error instanceof Error ? error.message : "Could not generate EQ filters."); }
     finally { if (finalizeAbort.current === request) setFinalizing(false); }
   }
@@ -400,24 +435,26 @@ export default function PreferenceTuning() {
       node.type = filters[i].type === "LSC" ? "lowshelf" : filters[i].type === "HSC" ? "highshelf" : "peaking";
       node.frequency.setTargetAtTime(filters[i].hz, graph.current!.context.currentTime, .025);
       node.Q.setTargetAtTime(filters[i].q, graph.current!.context.currentTime, .025);
-      node.gain.setTargetAtTime(bypass ? 0 : filters[i].gain, graph.current!.context.currentTime, .025);
+      node.gain.setTargetAtTime(eqOn ? filters[i].gain : 0, graph.current!.context.currentTime, .025);
     });
-    safeGain(graph.current.output, measurement && !graph.current.fitReady ? 0 : previewGain(filters, bypass) * 10 ** ((fit?.preamp || 0) / 20), graph.current.context.currentTime);
-  }, [filters, bypass, fit, measurement]);
+    safeGain(graph.current.output, (graph.current.fitReady || graph.current.playbackInitialized) ? previewGain(filters, !eqOn) * 10 ** ((eqOn ? basePreamp : 0) / 20) : 0, graph.current.context.currentTime);
+  }, [filters, eqOn, basePreamp]);
   const ensureGraph = useCallback(() => {
     if (graph.current) return graph.current;
     const context = new AudioContext();
+    setPreviewRate(context.sampleRate);
     const input = context.createGain();
     const nodes = filtersFor(settings).map(filter => {
       const node = context.createBiquadFilter();
       node.type = filter.type === "LSC" ? "lowshelf" : filter.type === "HSC" ? "highshelf" : "peaking";
-      node.frequency.value = filter.hz; node.gain.value = bypass ? 0 : filter.gain; node.Q.value = filter.q;
+      node.frequency.value = filter.hz; node.gain.value = eqOn ? filter.gain : 0; node.Q.value = filter.q;
       return node;
     });
     const output = context.createGain();
-    output.gain.value = measurement ? 0 : previewGain(filtersFor(settings), bypass);
+    output.gain.value = 0;
     const fitStage = replaceEqStage(context, input, nodes[0], []);
-    nodes.forEach((node, i) => node.connect(nodes[i + 1] || output));
+    nodes.forEach((node, i) => { if (nodes[i + 1]) node.connect(nodes[i + 1]); });
+    const balance = replaceEqStage(context, nodes[nodes.length - 1], output, [], undefined, matchEnabled ? activeMatch : undefined);
     const spectrum = context.createAnalyser(); spectrum.fftSize = 8192; spectrum.smoothingTimeConstant = .78;
     const volumeGain = context.createGain(); volumeGain.gain.value = volume;
     output.connect(spectrum); spectrum.connect(volumeGain); volumeGain.connect(context.destination);
@@ -426,38 +463,61 @@ export default function PreferenceTuning() {
     });
     const source = media.current ? context.createMediaElementSource(media.current) : undefined;
     source?.connect(input);
-    graph.current = { context, input, filters: nodes, fit: fitStage, output, spectrum, stopInterruptions, volumeGain, media: source };
+    graph.current = { context, input, filters: nodes, fit: fitStage, balance, output, spectrum, stopInterruptions, volumeGain, media: source };
     setAnalyser(spectrum);
     return graph.current;
-  }, [settings, bypass, measurement, volume]);
+  }, [settings, eqOn, volume, matchEnabled, activeMatch, setMessage]);
+  useEffect(() => {
+    const current = graph.current;
+    if (!current) return;
+    current.balance = replaceEqStage(current.context, current.filters[current.filters.length - 1], current.output, [], current.balance, matchEnabled ? activeMatch : undefined);
+  }, [matchEnabled, activeMatch]);
   const preparePreviewFit = useCallback(async (current: AudioGraph) => {
     const raw = measurement?.points;
-    const key = JSON.stringify([raw, normalized, current.context.sampleRate]);
-    if (!raw?.length) {
-      current.fitAbort?.abort(); current.fitKey = key; current.fitReady = true;
-      current.fit = replaceEqStage(current.context, current.input, current.filters[0], [], current.fit);
-      current.prepared = undefined; setFit(null);
-      safeGain(current.output, previewGain(filters, bypass), current.context.currentTime);
+    const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, raw, normalized, fitter, current.context.sampleRate]);
+    const apply = (baseFilters: AutoEqFit["filters"], preamp: number) => {
+      const appliedKey = JSON.stringify([key, eqOn]);
+      if (current.appliedFitKey !== appliedKey) {
+        current.fit = replaceEqStage(current.context, current.input, current.filters[0], eqOn ? baseFilters : [], current.fit);
+        current.appliedFitKey = appliedKey;
+      }
+      safeGain(current.output, previewGain(filters, !eqOn) * 10 ** ((eqOn ? preamp : 0) / 20), current.context.currentTime);
+    };
+    if (soundMode === "saved" || !raw?.length) {
+      current.fitAbort?.abort(); current.fitKey = key; current.fitReady = true; current.prepared = undefined;
+      setFit(null); setPreparingEq(false);
+      apply(soundMode === "saved" ? savedEq?.filters ?? [] : [], soundMode === "saved" ? savedEq?.preamp ?? 0 : 0);
       return true;
     }
     if (current.fitKey !== key || current.fitAbort?.signal.aborted) {
       current.fitAbort?.abort(); current.fitAbort = new AbortController(); current.fitKey = key; current.fitReady = false;
-      media.current?.pause(); current.output.gain.cancelScheduledValues(current.context.currentTime); current.output.gain.setValueAtTime(0, current.context.currentTime);
-      current.fitPromise = fitAutoEqAsync({ raw, targets: [normalized], kind: "shootout", bands: 10, sampleRate: current.context.sampleRate }, current.fitAbort.signal);
+      setPreparingEq(true);
+      // Keep the last verified graph audible while the replacement is fitted.
+      if (!current.playbackInitialized) { current.output.gain.cancelScheduledValues(current.context.currentTime); current.output.gain.setValueAtTime(0, current.context.currentTime); }
+      current.fitPromise = fitAutoEqAsync({ raw, targets: [normalized], kind: "shootout", ...fitter, sampleRate: current.context.sampleRate }, current.fitAbort.signal);
     }
     try {
       const [prepared] = await current.fitPromise!;
       if (graph.current !== current || current.fitKey !== key || current.fitAbort?.signal.aborted) return false;
-      if (current.prepared !== prepared) current.fit = replaceEqStage(current.context, current.input, current.filters[0], prepared.filters, current.fit);
-      current.prepared = prepared; current.fitReady = true; setFit(prepared);
-      safeGain(current.output, previewGain(filters, bypass) * 10 ** (prepared.preamp / 20), current.context.currentTime);
+      current.prepared = prepared; current.fitReady = true; setFit(prepared); setPreparingEq(false); apply(prepared.filters, prepared.preamp);
       return true;
     } catch (error) {
       if (graph.current !== current || current.fitKey !== key || current.fitAbort?.signal.aborted || error instanceof Error && error.name === "AbortError") return false;
-      setMessage(error instanceof Error ? error.message : "Could not prepare headphone EQ."); return false;
+      current.fitAbort?.abort(); setPreparingEq(false); setMessage(error instanceof Error ? error.message : "Could not prepare headphone EQ."); return false;
     }
-  }, [measurement, normalized, filters, bypass]);
-  useEffect(() => { if (measurement?.points?.length || graph.current) try { void preparePreviewFit(ensureGraph()); } catch { /* Report unsupported audio on Play. */ } }, [measurement, preparePreviewFit, ensureGraph]);
+  }, [soundMode, savedEq, measurement, normalized, fitter, filters, eqOn, setMessage]);
+  useEffect(() => { if (savedEq || measurement?.points?.length || graph.current) try { void preparePreviewFit(ensureGraph()); } catch { /* Play reports audio initialization failures. */ } }, [savedEq, measurement, preparePreviewFit, ensureGraph]);
+  // Reconcile external deletion without silently switching back to a target.
+  useEffect(() => {
+    if (presetId && !savedEq) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- The saved collection changed outside this editor.
+      setPresetId(""); modeDrafts.current.saved = { ...defaults };
+      if (soundMode === "saved") {
+        setMessage("The selected saved EQ was removed. Choose another EQ; playback now uses the original sound.");
+        showEdit({ ...editRef.current, settings: { ...defaults } }); setPast([]); setFuture([]);
+      }
+    }
+  }, [presetId, savedEq, soundMode, showEdit]);
   const updateDynamicRange = useCallback((value: number) => {
     const amount = Math.max(-1, Math.min(1, value));
     dynamicRangeRef.current = amount; setDynamicRange(amount);
@@ -493,22 +553,25 @@ export default function PreferenceTuning() {
       const current = ensureGraph();
       if (!current.media) { current.media = current.context.createMediaElementSource(audio); current.media.connect(current.input); }
       setupDynamics(current);
-      const key = JSON.stringify([measurement?.points, normalized, current.context.sampleRate]);
-      if (measurement && (!current.fitReady || current.fitKey !== key)) { void preparePreviewFit(current); setMessage("Preparing headphone EQ. Press Play when it is ready."); return; }
+      const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, measurement?.points, normalized, fitter, current.context.sampleRate]);
+      if (!current.fitReady || current.fitKey !== key) {
+        void preparePreviewFit(current);
+        if (!current.fitReady) { setMessage("Preparing headphone EQ. Press Play when it is ready."); return; }
+      }
       current.playbackInitialized = true;
       await Promise.all([current.context.resume(), audio.play()]);
       if (intent !== playbackIntent.current || source !== sourceGeneration.current) return;
       setPlaying(!audio.paused); setMessage("");
     } catch { if (intent === playbackIntent.current && source === sourceGeneration.current) setMessage("Playback could not start. Choose another track or check browser audio permissions."); }
-  }, [ensureGraph, setupDynamics, preparePreviewFit, measurement, normalized]);
+  }, [ensureGraph, setupDynamics, preparePreviewFit, measurement, normalized, soundMode, savedEq, fitter, setMessage]);
   function handleMediaPlay() {
     const current = graph.current, audio = media.current;
     if (!audio) return;
     if (!current?.media || !current.playbackInitialized) {
       audio.pause(); setPlaying(false); setMessage("Press Play music to initialize audio processing."); return;
     }
-    const key = JSON.stringify([measurement?.points, normalized, current.context.sampleRate]);
-    if (measurement && (!current.fitReady || current.fitKey !== key)) {
+    const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, measurement?.points, normalized, fitter, current.context.sampleRate]);
+    if (!current.fitReady || current.fitKey !== key) {
       audio.pause(); setPlaying(false); void preparePreviewFit(current); setMessage("Preparing headphone EQ. Press Play music when it is ready."); return;
     }
     const intent = playbackIntent.current, source = sourceGeneration.current;
@@ -577,7 +640,7 @@ export default function PreferenceTuning() {
     gestureRef.current = null;
     setPast([]); setFuture([]);
     showEdit({ settings: defaults, selected: curatedLeader?.id || "flat", expanded: false });
-    setAxis(defaultAxis); setActiveBand(3); setBypass(false); setFinalized(null);
+    setAxis(defaultAxis); setActiveBand(3); setBypass(false); finalizeAbort.current?.abort(); clearResults();
     setMessage("Tuning reset. Undo and redo history cleared.");
     closeReset();
   }
@@ -621,74 +684,130 @@ export default function PreferenceTuning() {
   function addMeasurement(row: HeadphoneMeasurement) { saveMeasurements([...measurements, row]); setMeasurementId(row.id); setHeadphoneType(row.type); persistBrowserValue("target-lab-active-measurement", row.id); }
   function deleteMeasurement(id: string) { saveMeasurements(measurements.filter(row => row.id !== id)); if (measurementId === id) clearMeasurement(); }
   async function importMeasurement(entry: CatalogMeasurement) { try { const row = await importCatalogEntry(entry); addMeasurement(row); } catch (error) { setMessage(error instanceof Error ? error.message : "Could not import this headphone measurement."); } }
-  const slider = (key: keyof Settings, title: string, detail: string, min: number, max: number, step = .5, unit = "dB", color?: string) =>
-    <label className="pt-control" key={key} title={detail}><span><strong>{title}</strong><small>{detail}</small></span><input type="range" min={min} max={max} step={step} value={settings[key]} style={color ? { accentColor: color } : undefined} onPointerDown={beginGesture} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={e => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(e.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={e => set(key, Number(e.target.value))} aria-label={title} /><output style={color ? { color } : undefined}>{settings[key] > 0 && unit === "dB" ? "+" : ""}{settings[key]} {unit}</output></label>;
+  function changeSoundMode(next: SoundMode) {
+    if (next === soundMode) return;
+    modeDrafts.current[soundMode] = { ...settings }; setSoundMode(next);
+    showEdit({ ...editRef.current, settings: { ...modeDrafts.current[next] } }); setPast([]); setFuture([]);
+  }
+  function chooseSavedEq(id: string) {
+    setPresetId(id); setMessage("");
+    showEdit({ ...editRef.current, settings: { ...defaults } }); modeDrafts.current.saved = { ...defaults }; setPast([]); setFuture([]);
+    const eq = presets.find(item => item.id === id);
+    if (eq?.measurementId && measurements.some(row => row.id === eq.measurementId)) chooseMeasurement(eq.measurementId);
+  }
+  function saveEditedEq() {
+    if (!savedEq) return;
+    try {
+      const combined = [...savedEq.filters, ...filters.filter(filter => Math.abs(filter.gain) > .0001)];
+      const eq: LibraryEq = { ...savedEq, id: crypto.randomUUID(), name: `${savedEq.name} · tuned`, source: `Tuned copy of ${savedEq.name}`, filters: combined, preamp: Math.min(savedEq.preamp, basePreamp), createdAt: undefined, updatedAt: undefined };
+      saveLibraryEq(eq); chooseSavedEq(eq.id); setMessage("Saved a new EQ to My space. The original EQ is unchanged.");
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Could not save this EQ."); }
+  }
+  function closeFrequencyEditor() { setFrequencyEditor(null); frequencyTrigger.current?.focus(); }
+  function applyFrequency() {
+    if (!frequencyEditor || !frequencyDraft.trim()) return;
+    const placement = PLACEMENTS[frequencyEditor], value = Number(frequencyDraft);
+    if (!Number.isFinite(value) || value < placement.min || value > placement.max) return;
+    set(frequencyEditor, Math.max(placement.min, Math.min(placement.max, Math.round(value / placement.step) * placement.step)));
+    closeFrequencyEditor();
+  }
+  const selectedCuratedIndex = curatedMusic.findIndex(track => track.fileUrl === audioUrl);
   return <main className="pt-shell alpha-tuning">
     {storageNotice && <p role="status" className="pt-message">{storageNotice}</p>}
     {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Use full-document navigation so access checks and unsaved-listening beforeunload guards run. */}
-    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ</em></span></a><nav aria-label="Main navigation"><a href="/">Welcome</a><a href="/shootout">Tournament</a><a href="/music-library">Listening Pool</a><span aria-current="page">Preference Tuning</span></nav></header>
+    <header className="pt-top"><a href="/home" className="pt-brand" aria-label="YinYang EQ home"><span className="pt-brand-mark" aria-hidden="true"/><span>YinYang <em>EQ</em></span></a><nav aria-label="Main navigation"><a href="/">Home</a><a href="/shootout">Listen</a><a href="/music-library">Music library</a><span aria-current="page">Preference Tuning</span></nav></header>
     <div className="pt-content">
-      <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div><p>Choose a target, drag its curve, and hear your changes with your own music.</p></div><div className="pt-history"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo <span>{past.length || ""}</span></button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo <span>{future.length || ""}</span></button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div>
+      <div className="pt-heading"><div><div className="pt-eyebrow">PREFERENCE TUNING LAB</div><div className="pt-title-row"><h1>Shape the sound you want.</h1></div></div><div className="pt-header-actions"><button ref={instructionsButton} type="button" className="pt-instructions-button" aria-haspopup="dialog" aria-expanded={instructionsOpen} onClick={() => setInstructionsOpen(true)}><BookOpen size={15}/> Instructions</button><div className="pt-history" role="group" aria-label="Tuning history"><button type="button" disabled={!past.length} onClick={undo} title="Undo (Ctrl/⌘ Z)"><Undo2 size={16}/> Undo {past.length > 0 && <span>{past.length}</span>}</button><button type="button" disabled={!future.length} onClick={redo} title="Redo (Ctrl/⌘ Shift Z)"><Redo2 size={16}/> Redo {future.length > 0 && <span>{future.length}</span>}</button><button ref={resetButton} type="button" className="pt-reset" aria-haspopup="dialog" aria-expanded={resetOpen} onClick={() => setResetOpen(true)}><RotateCcw size={16}/> Reset</button></div></div></div>
+      <div className="pt-get-started" aria-label="How to get started"><strong>Start here</strong><ol><li><a href="#tuning-headphones"><b>1</b> Choose headphones &amp; EQ</a></li><li><a href="#saved-eq-listening"><b>2</b> Play music</a></li><li><a href="#tuning-curve"><b>3</b> Shape your sound</a></li></ol></div>
       <div className="pt-workbench">
-        <section className="pt-chart-card"><div className="pt-card-heading"><div><span className="pt-step">SHAPE</span><h2>Drag the curve. Hear the change.</h2></div><div className="pt-chart-meta"><span className="pt-chart-badge">{formatHzWithUnit(axis.freqMin)} – {formatHzWithUnit(axis.freqMax)}</span><button type="button" className="pt-axis-button" aria-expanded={axisOpen} aria-controls="pt-axis-panel" onClick={() => setAxisOpen(open => !open)}><SlidersHorizontal size={13}/> Axis & size</button><label className="pt-range-toggle" title="Allow all five gain sliders to reach ±20 dB"><input type="checkbox" checked={expanded} onChange={toggleExpanded}/> ±20 dB range</label><span className="pt-fit-label">{measurement ? "Fitted to " + measurement.name : "Preference EQ preview"}</span></div></div>
-          {axisOpen && <div className="pt-axis-panel" id="pt-axis-panel" aria-label="Chart axis and size controls"><div className="pt-axis-fields"><label>Frequency start <span>Hz</span><input type="number" min="20" max="10000" step="10" value={axis.freqMin} onChange={e => setAxis(current => ({ ...current, freqMin: Math.min(current.freqMax / 1.25, Math.max(20, Number(e.target.value) || 20)) }))}/></label><label>Frequency end <span>Hz</span><input type="number" min="40" max={MAX_VIEW_HZ} step="10" value={axis.freqMax} onChange={e => setAxis(current => ({ ...current, freqMax: Math.max(current.freqMin * 1.25, Math.min(MAX_VIEW_HZ, Number(e.target.value) || defaultAxis.freqMax)) }))}/></label><label>Bottom <span>dB</span><input type="number" min="-20" max="110" step="1" value={axis.dbMin} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMin: Math.min(current.dbMax - 5, Math.max(-20, Number(e.target.value) || 0)) }))}/></label><label>Top <span>dB</span><input type="number" min="-10" max="120" step="1" value={axis.dbMax} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMax: Math.max(current.dbMin + 5, Math.min(120, Number(e.target.value) || 90)) }))}/></label><label>Width <span>%</span><input type="number" min="65" max="100" step="1" value={axis.width} onChange={e => setAxis(current => ({ ...current, width: Math.max(65, Math.min(100, Number(e.target.value) || 100)) }))}/></label><label>Height · 0 = auto <span>px</span><input type="number" min="0" max="520" step="10" value={axis.height} onChange={e => setAxis(current => ({ ...current, height: Math.max(0, Math.min(520, Number(e.target.value) || 0)) }))}/></label></div><div className="pt-axis-actions"><label><input type="checkbox" checked={axis.autoDb} onChange={e => setAxis(current => ({ ...current, autoDb: e.target.checked }))}/> Auto-fit dB to curve</label><button type="button" onClick={() => setAxis(defaultAxis)}>Reset view</button></div></div>}
-          <div className="pt-current-target" aria-live="polite"><span>Selected baseline</span><strong>{target.name}</strong><small>by {target.creator}</small></div>
-          <CurveChart points={normalized} settings={settings} expanded={expanded} axis={axis} analyser={analyser} playing={playing} regionDrag={regionDrag} onDragStart={beginGesture} onDrag={(key,value) => { set(key,value); if (["bass", "body", "ear", "air", "treble"].includes(key)) setActiveBand(key === "bass" ? 1 : key === "body" ? 2 : key === "ear" ? 3 : key === "air" ? 4 : 5); }} onDragEnd={endGesture}/>
-          <div className="pt-gesture-guide"><span>Drag the curve at your pointer · drag BT / EGC / TT sideways to place transitions.</span><label><input type="checkbox" checked={regionDrag} onChange={event => setRegionDrag(event.target.checked)}/> Move by region gain <span>(or hold Shift)</span></label></div>
-          <div className="pt-gain-controls">{GAIN_CONTROLS.map(control => <div className="pt-gain-item" style={{ borderTopColor: control.color }} key={control.key}>{slider(control.key, control.name, control.hint, -(expanded ? EXPANDED_GAIN_LIMIT : control.limit), expanded ? EXPANDED_GAIN_LIMIT : control.limit, .5, "dB", control.color)}</div>)}</div>
-          <div className="pt-region-guide"><div className="pt-region-tabs" role="group" aria-label="Frequency region guide">{BANDS.map((band, index) => <button type="button" aria-pressed={activeBand === index} key={band.name} onClick={() => setActiveBand(index)} style={{ borderTopColor: band.color }}><strong style={{ color: band.color }}>{band.name}</strong><small>{band.range}</small></button>)}</div><p><strong style={{ color: BANDS[activeBand].color }}>{BANDS[activeBand].name}:</strong> {BANDS[activeBand].example}. {BANDS[activeBand].effect}</p></div>
-          <details className="pt-advanced"><summary>Advanced frequency placement <span className="pt-placement-key"><i style={{ color: GAIN_CONTROLS[0].color }}/>Bass <i style={{ color: GAIN_CONTROLS[2].color }}/>Ear gain <i style={{ color: GAIN_CONTROLS[4].color }}/>Treble</span></summary><div className="pt-frequency-controls">{slider("bassHz", "Bass transition", "Where the shelf turns", 60, 250, 5, "Hz", GAIN_CONTROLS[0].color)}{slider("earHz", "Ear gain center", "Move the presence peak", 1500, 4500, 50, "Hz", GAIN_CONTROLS[2].color)}{slider("trebleHz", "Treble transition", "Where the shelf begins", 3500, 10000, 100, "Hz", GAIN_CONTROLS[4].color)}</div></details>
+        <section className="pt-chart-card" id="tuning-curve"><div className="pt-card-heading"><div><span className="pt-step">SHAPE</span><h2>Fine-tune your sound</h2></div><div className="pt-chart-meta"><div className="pt-listening-checks" role="group" aria-label="Listening options"><label><input type="checkbox" aria-label="Enable EQ" checked={eqOn} disabled={!eqAvailable} onChange={event => setBypass(!event.target.checked)}/>EQ {eqOn ? "on" : "off"}</label><label><input type="checkbox" aria-label="Enable channel match" checked={!!activeMatch && matchEnabled} disabled={!activeMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && activeMatch ? "on" : "off"}</label></div><span className="pt-chart-badge">{formatHzWithUnit(axis.freqMin)} – {formatHzWithUnit(axis.freqMax)}</span><button type="button" className="pt-axis-button" aria-expanded={axisOpen} aria-controls="pt-axis-panel" onClick={() => setAxisOpen(open => !open)}><SlidersHorizontal size={13}/> Graph display</button><label className="pt-range-toggle" title="Allow all five gain sliders to reach ±20 dB"><input type="checkbox" checked={expanded} onChange={toggleExpanded}/> ±20 dB range</label></div></div>
+          <div className="pt-current-target"><span>{soundMode === "saved" ? "Saved EQ" : "Target"}</span><strong>{soundMode === "saved" ? savedEq?.name || "Choose a saved EQ below" : target.name}</strong><small>Adjustments below add to this sound.</small></div>
+                    {axisOpen && <div className="pt-axis-panel" id="pt-axis-panel" aria-label="Chart axis and size controls"><div className="pt-axis-fields"><label>Frequency start <span>Hz</span><input type="number" min="20" max="10000" step="10" value={axis.freqMin} onChange={e => setAxis(current => ({ ...current, freqMin: Math.min(current.freqMax / 1.25, Math.max(20, Number(e.target.value) || 20)) }))}/></label><label>Frequency end <span>Hz</span><input type="number" min="40" max={MAX_VIEW_HZ} step="10" value={axis.freqMax} onChange={e => setAxis(current => ({ ...current, freqMax: Math.max(current.freqMin * 1.25, Math.min(MAX_VIEW_HZ, Number(e.target.value) || defaultAxis.freqMax)) }))}/></label><label>Bottom <span>dB</span><input type="number" min="-20" max="110" step="1" value={axis.dbMin} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMin: Math.min(current.dbMax - 5, Math.max(-20, Number(e.target.value) || 0)) }))}/></label><label>Top <span>dB</span><input type="number" min="-10" max="120" step="1" value={axis.dbMax} disabled={axis.autoDb} onChange={e => setAxis(current => ({ ...current, dbMax: Math.max(current.dbMin + 5, Math.min(120, Number(e.target.value) || 90)) }))}/></label><label>Width <span>%</span><input type="number" min="65" max="100" step="1" value={axis.width} onChange={e => setAxis(current => ({ ...current, width: Math.max(65, Math.min(100, Number(e.target.value) || 100)) }))}/></label><label>Height · 0 = auto <span>px</span><input type="number" min="0" max="520" step="10" value={axis.height} onChange={e => setAxis(current => ({ ...current, height: Math.max(0, Math.min(520, Number(e.target.value) || 0)) }))}/></label></div><div className="pt-axis-actions"><label><input type="checkbox" checked={axis.autoDb} onChange={e => setAxis(current => ({ ...current, autoDb: e.target.checked }))}/> Auto-fit dB to curve</label><button type="button" onClick={() => setAxis(defaultAxis)}>Reset view</button></div></div>}
+          <CurveChart points={normalized} curveBase={soundMode === "saved" ? responsePlot.base : undefined} overlays={responseOverlays} saved={soundMode === "saved"} editable={soundMode === "target" || !!savedEq} settings={settings} expanded={expanded} axis={axis} sampleRate={previewRate} fitterControls={soundMode === "saved" ? <details className="fitter-controls"><summary>Advanced EQ settings</summary><div className="fitter-panel"><p>Stored base EQ · {savedEq?.fitter ? fitterLabel(savedEq.fitter) : "fitter unrecorded"} · {savedEq?.filters.length ?? 0} stored filters{tweaksChanged ? " + tuning adjustments" : ""}</p></div></details> : <FitterControls advanced value={fitter} defaultValue={defaultFitter} onChange={setFitter} onDefault={saveDefault} notice={fitterNotice}/>} analyser={analyser} playing={playing} regionDrag={regionDrag} onDragStart={beginGesture} onDrag={(key,value) => { set(key,value); if (["bass", "body", "ear", "air", "treble"].includes(key)) setActiveBand(key === "bass" ? 1 : key === "body" ? 2 : key === "ear" ? 3 : key === "air" ? 4 : 5); }} onDragEnd={endGesture}/>
+          <div className="pt-match-download"><span>{activeMatch ? activeMatch.channelMatchMode === "custom" ? "Uploaded channel match" : "YinYang AutoMatch · from saved Left/Right responses" : "Channel match needs paired Left/Right responses."}</span><button type="button" disabled={!activeMatch} onClick={()=>{try { if(activeMatch) downloadLocalFile(autoMatchFilename(measurement?.device || savedEq?.headphone || "headphones", activeMatch.channelMatchMode === "custom"),channelMatchWav(activeMatch),"audio/wav"); } catch(error) { setMessage(error instanceof Error?error.message:"Could not download the channel match."); }}}>Download match WAV</button><a href="/shootout?tab=eqs#channel-matches">Saved channel matches</a></div><p className="pt-fit-status" role="status">{soundMode === "saved" ? `Stored EQ · ${savedEq?.source || "original coefficients"}` : `${fitterLabel(fitter)}${preparingEq ? " · preparing replacement; current sound continues" : fit?.fallbackReason ? " · original fitter fallback" : ""}`}</p><p className="pt-response-note">{!measurement ? soundMode === "saved" ? "The saved EQ’s linked headphone measurement is needed for raw and predicted overlays." : "Choose a headphone measurement to add raw and predicted response overlays." : preparingEq ? "Preparing EQ… the predicted overlay will be available when the fit is ready." : "Raw and predicted overlays retain the measurement’s peaks and dips. The prediction adds the filters used for playback; it is not a new measurement."}{soundMode === "saved" && !savedEq?.target && " This saved EQ has no stored target curve."}{matchEnabled && activeMatch && " Includes the active channel correction; paired measurements show the L/R average."} Overall playback volume and headroom are excluded. Your curve shows the settings; the prediction follows EQ on/off.</p>
+          {soundMode === "saved" && savedEq && <div className="pt-saved-edit-status"><span>{tweaksChanged ? "Edited · not saved" : "Playing the saved filters"}</span><button type="button" disabled={!tweaksChanged} onClick={saveEditedEq}>Save as new EQ</button></div>}
+          <div className="pt-gesture-guide"><span>Drag the curve or use the controls below.</span><label><input type="checkbox" checked={regionDrag} onChange={event => setRegionDrag(event.target.checked)}/> Move by region gain <span>(or hold Shift)</span></label></div>
+          <fieldset className="pt-tone-controls" disabled={soundMode === "saved" && !savedEq}>
+            <legend className="pt-visually-hidden">Added tuning adjustments</legend>
+            <div className="pt-tone-strips">{GAIN_CONTROLS.map((control, index) => {
+              const tone = TONE_FREQUENCIES[index], hz = tone.placement ? settings[tone.placement] : tone.fixed!;
+              const limit = expanded ? EXPANDED_GAIN_LIMIT : control.limit, gain = Math.round(settings[control.key] * 10) / 10;
+              return <div className="pt-tone-strip" key={control.key} style={{ color: control.color }}>
+                <label className="pt-tone-gain" title={control.hint}>
+                  <strong>{tone.label}</strong><output>{gain > 0 ? "+" : ""}{gain}<small> dB</small></output>
+                  <span className="pt-tone-rail"><i className="pt-tone-zero" aria-hidden="true"/><input type="range" min={-limit} max={limit} step={.5} value={settings[control.key]} style={{ accentColor: control.color }} aria-label={control.name} aria-orientation="vertical" aria-valuetext={`${settings[control.key]} decibels; ${tone.relation.toLowerCase()} ${hz} hertz`} onPointerDown={() => { beginGesture(); setActiveBand(index + 1); }} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={event => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={event => { set(control.key, Number(event.target.value)); setActiveBand(index + 1); }}/></span>
+                </label>
+                <span className="pt-tone-relation">{tone.relation}</span>
+                {tone.placement ? <button type="button" className="pt-tone-frequency" aria-label={`Edit ${PLACEMENTS[tone.placement].name}`} aria-expanded={frequencyEditor === tone.placement} aria-controls="pt-frequency-editor" title={`Change ${PLACEMENTS[tone.placement].name.toLowerCase()} (${PLACEMENTS[tone.placement].tag})`} onClick={event => { frequencyTrigger.current = event.currentTarget; if (frequencyEditor === tone.placement) closeFrequencyEditor(); else { setFrequencyDraft(String(hz)); setFrequencyEditor(tone.placement!); } }}><span>{formatHz(hz)}<small> Hz</small></span><b>{PLACEMENTS[tone.placement].tag}</b></button> : <span className="pt-tone-frequency pt-tone-fixed" title="Fixed center frequency">{formatHz(hz)}<small> Hz</small></span>}
+              </div>;
+            })}</div>
+            {frequencyEditor && <form className="pt-frequency-editor" id="pt-frequency-editor" aria-label="Frequency placement" onSubmit={event => { event.preventDefault(); applyFrequency(); }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); closeFrequencyEditor(); } }}>
+              <label htmlFor="pt-frequency-value"><strong>{PLACEMENTS[frequencyEditor].tag} · {PLACEMENTS[frequencyEditor].name}</strong><span>{PLACEMENTS[frequencyEditor].min}–{PLACEMENTS[frequencyEditor].max} Hz</span></label>
+              <div><input ref={frequencyInput} id="pt-frequency-value" aria-label={PLACEMENTS[frequencyEditor].name + " frequency"} type="number" inputMode="decimal" required min={PLACEMENTS[frequencyEditor].min} max={PLACEMENTS[frequencyEditor].max} step={PLACEMENTS[frequencyEditor].step} value={frequencyDraft} onChange={event => setFrequencyDraft(event.target.value)}/><span>Hz</span></div>
+              <button type="submit">Apply</button><button type="button" className="pt-frequency-cancel" aria-label="Cancel frequency change" onClick={closeFrequencyEditor}><X size={15}/></button>
+            </form>}
+          </fieldset>
+          <div className="pt-tone-help"><span>Slide up to add, down to reduce. Click B, EG or T to move its frequency.</span><details className="pt-frequency-guide"><summary>Frequency guide</summary><div className="pt-region-guide"><div className="pt-region-tabs" role="group" aria-label="Frequency region guide">{BANDS.map((band, index) => <button type="button" aria-pressed={activeBand === index} key={band.name} onClick={() => setActiveBand(index)} style={{ borderTopColor: band.color }}><strong style={{ color: band.color }}>{band.name}</strong><small>{band.range}</small></button>)}</div><p><strong style={{ color: BANDS[activeBand].color }}>{BANDS[activeBand].name}:</strong> {BANDS[activeBand].example}. {BANDS[activeBand].effect}</p><p>Bass and Treble change a broad shelf below or above their transition. Body, Voice and Edge adjust around a center frequency. These shapes overlap; the curve shows their combined effect.</p></div></details></div>
         </section>
-        <section className="pt-setup" aria-label="Tuning setup">
-          <div className="pt-baseline"><div className="pt-setup-label"><span className="pt-step" title={selectedCuratedRank ? `Matched A/B blind rank across all headphone types: #${selectedCuratedRank}` : "This target has no eligible matched A/B blind ranking"}>{selectedCuratedRank ? `#${selectedCuratedRank} MATCHED A/B · ALL HEADPHONES` : "NO MATCHED A/B RANK"}</span><strong>Target</strong></div><p className="pt-cohort-note">Ranks use matched A/B blind comparisons from both music sources, across all headphone types. Positions can differ from filtered <a href="/shootout?tab=rankings">Research Rankings</a>.</p><div className="pt-selects"><label><span className="pt-visually-hidden">Target curve</span><select aria-label="Target curve" value={selected} onChange={e => changeTarget(e.target.value)}>{targetOptions.map(t => <option key={t.id} value={t.id}>{curatedRanks.has(t.id) ? `#${curatedRanks.get(t.id)} · ` : "No matched A/B rank · "}{t.name} · {t.creator}</option>)}</select></label><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={e => void loadCurve(e.target.files?.[0])}/></label></div></div>
-          <div className="pt-headphones"><div className="pt-setup-label"><span className="pt-step">HEADPHONES</span><strong>Playback fit</strong></div><div className="shootout-content pt-picker"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div></div>
-        </section>
-        {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}
-      <section className="pt-listen">{fit?.fallbackReason && <p role="status">Using the original headphone EQ fitter.</p>}<p className="alpha-tuning-shortcuts"><kbd>Space</kbd> play / pause · <kbd>←</kbd> / <kbd>→</kbd> seek 0.25s · <kbd>Shift</kbd> + arrow seek 1s</p><div className="pt-card-heading"><div><span className="pt-step">LISTEN</span><h2>Play your music</h2></div><label className="pt-bypass"><input type="checkbox" checked={bypass} onChange={e => setBypass(e.target.checked)}/> Bypass adjustments</label></div>
-      <div className={`pt-source-row${queue.length ? " pt-has-folder" : ""}`}><button className="pt-track-play" onClick={playRandomCurated}><Shuffle size={16}/> Random curated track</button><select aria-label="Choose a curated track" value="" onChange={e => loadCurated(Number(e.target.value))}><option value="" disabled>Choose curated music</option>{curatedMusic.map((track, index) => <option key={index} value={index}>{track.title} · {track.artist}{track.versionLabel ? ` · ${track.versionLabel}` : ""}</option>)}</select><label className="pt-file"><Upload size={16}/> Choose a file<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" onChange={e => void loadAudio(e.target.files?.[0])}/></label><label className="pt-file"><Upload size={16}/> Choose a folder<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" multiple {...{ webkitdirectory: "" }} onChange={e => { const files = Array.from(e.target.files || []).filter(file => /\.(mp3|m4a|flac|wav|ogg|opus|aac)$/i.test(file.name)); setQueue(files); if (files[0]) void loadAudio(files[0]); }}/></label>{queue.length > 0 && <><button type="button" className="pt-track-play pt-folder-shuffle" onClick={shuffleFolder}><Shuffle size={14}/> Shuffle folder</button><select aria-label="Choose a track from the folder" value="" onChange={e => e.target.value === "shuffle" ? shuffleFolder() : void loadAudio(queue[Number(e.target.value)])}><option value="" disabled>{queue.length} folder tracks</option><option value="shuffle">↝ Shuffle folder tracks</option>{queue.map((file, index) => <option key={index} value={index}>{file.name}</option>)}</select></>}</div>
+        <div id="tuning-headphones"><SoundSetup mode={soundMode} onMode={changeSoundMode} presets={presets} presetId={presetId} onPreset={chooseSavedEq}
+          headphones={<div className="shootout-content pt-headphones"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div>}
+          target={<><div><label className="pt-visually-hidden" htmlFor="tuning-target">Target curve</label><div className="sound-source-actions"><select id="tuning-target" aria-label="Target curve" value={selected} onChange={event => changeTarget(event.target.value)}>{targetOptions.map(row => <option key={row.id} value={row.id}>{row.name} · {row.creator}</option>)}</select><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.target.files?.[0])}/></label></div></div><p>{measurement ? `Fitted for ${measurement.name}.` : "Choose your headphones to hear this target applied to their measurement."}</p></>}>
+          {soundMode === "saved" && savedEq && !measurement && <p className="sound-state">{savedEq.measurementId ? "The linked headphone measurement is unavailable in this browser. Saved filters still work; raw and predicted headphone overlays need that measurement." : "This EQ has no linked headphone measurement. Saved filters still work; headphone response overlays are unavailable."}</p>}
+        </SoundSetup></div>
+      <section className="pt-listen pt-unified-player" id="saved-eq-listening" aria-label="Music player"><div className="pt-card-heading"><NowPlaying title={audioName} source={audioUrl.startsWith("blob:") ? "File on your device" : audioUrl ? "Music library" : undefined} playing={playing}/></div>
+        <p className="pt-active-sound" role="status">{eqOn ? soundMode === "saved" ? `Saved EQ: ${savedEq?.name}` : `Target: ${target.name}${measurement ? ` · ${measurement.name}` : " · choose headphones to apply this target"}` : "EQ off · original sound"}{soundMode === "saved" && tweaksChanged ? " · edited, not saved" : ""}{matchEnabled && activeMatch ? " · channel match on" : ""}{preparingEq ? " · preparing EQ…" : ""}</p>
+      <div className="pt-music-chooser" role="group" aria-label="Choose music">
+      <div className={`pt-source-row${queue.length ? " pt-has-folder" : ""}`}><button className="pt-track-play" onClick={playRandomCurated}><Shuffle size={16}/> Random song</button><MusicTrackPicker tracks={curatedMusic} selectedIndex={selectedCuratedIndex} onSelect={index => loadCurated(index)}/><label className="pt-file"><FileAudio size={16}/> Audio file<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" onChange={e => void loadAudio(e.target.files?.[0])}/></label><label className="pt-file"><FolderOpen size={16}/> Music folder<input type="file" accept="audio/*,.wav,.mp3,.flac,.m4a,.ogg,.opus" multiple {...{ webkitdirectory: "" }} onChange={e => { const files = Array.from(e.target.files || []).filter(file => /\.(mp3|m4a|flac|wav|ogg|opus|aac)$/i.test(file.name)); setQueue(files); if (files[0]) void loadAudio(files[0]); }}/></label>{queue.length > 0 && <><button type="button" className="pt-track-play pt-folder-shuffle" onClick={shuffleFolder}><Shuffle size={14}/> Shuffle folder</button><select aria-label="Choose a track from the folder" value="" onChange={e => e.target.value === "shuffle" ? shuffleFolder() : void loadAudio(queue[Number(e.target.value)])}><option value="" disabled>{queue.length} folder tracks</option><option value="shuffle">↝ Shuffle folder tracks</option>{queue.map((file, index) => <option key={index} value={index}>{file.name}</option>)}</select></>}</div>
+</div>
       <div className={`pt-playback-deck${playing ? " is-playing" : ""}`} role="group" aria-label="Music playback controls">
-        <div className="pt-deck-toolbar"><div className="pt-deck-heading"><strong>Local Playback</strong><span className="pt-deck-time">{formatTime(position)} <i>/</i> {formatTime(duration)}</span><small>L / R · pre-EQ · click to seek</small></div>
-          <div className="pt-deck-actions"><button type="button" className="pt-deck-dynamics" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} disabled={!dynamicsReady || !duration} onClick={() => setDynamicSliderEnabled(enabled => !enabled)} title="Adjust dynamic range on the waveform"><SlidersHorizontal size={19}/></button><button type="button" className="pt-deck-dynamics" aria-label="Reset track dynamics" disabled={!dynamicsReady || Math.abs(dynamicRange) < .0001} onClick={() => updateDynamicRange(0)}><RotateCcw size={19}/></button>
-          <button type="button" className="pt-deck-play" aria-label={playing ? "Pause music" : "Play music"} aria-keyshortcuts="Space" disabled={!audioUrl} onClick={() => void (media.current?.paused ? play() : stop())}>{playing ? <Pause size={20} fill="currentColor"/> : <Play size={20} fill="currentColor"/>}</button>
-          <div className="pt-deck-zoom" role="group" aria-label="Waveform zoom"><button type="button" aria-label="Zoom waveform out" disabled={!audioAnalysis || waveZoom === 1} onClick={() => setWaveZoom(value => Math.max(1, value / 2))}>−</button><span>{waveZoom}×</span><button type="button" aria-label="Zoom waveform in" disabled={!audioAnalysis || waveZoom === 8} onClick={() => setWaveZoom(value => Math.min(8, value * 2))}>+</button></div>
-          <div className="pt-deck-volume"><button type="button" aria-label={volume === 0 ? "Volume muted; show volume control" : "Show volume control"} aria-expanded={volumeOpen} onClick={() => setVolumeOpen(open => !open)}>{volume === 0 ? <VolumeX size={21}/> : <Volume2 size={21}/>}</button><input aria-label="Volume" type="range" min="0" max="1" step="0.01" value={volume} hidden={!volumeOpen} onChange={e => { const value = Number(e.target.value); setVolume(value); }}/></div></div><ScrollingTrackTitle title={audioName}/></div>
-        <TrackWaveform compact hideZoom zoom={waveZoom} onZoom={setWaveZoom} analysis={audioAnalysis} position={position} duration={duration} onSeek={seconds => { if (media.current) media.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={dynamicSliderEnabled} dynamicRangeDisabled={!dynamicsReady} placeholder={audioUrl ? "Track ready · waveform analysis in progress" : "Choose music to view its waveform"}/>
+        <PlaybackTransport playing={playing} disabled={!audioUrl || (!playing && preparingEq)} onToggle={() => void (media.current?.paused ? play() : stop())} volume={volume} onVolume={setVolume} zoom={{ value: waveZoom, min: 1, max: 8, available: !!audioAnalysis, onChange: setWaveZoom }} tools={<><button type="button" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} disabled={!dynamicsReady || !duration} onClick={() => setDynamicSliderEnabled(value => !value)} title="Adjust the difference between quiet and loud moments"><AudioLines size={18}/><span>Dynamics</span></button>{Math.abs(dynamicRange) >= .0001 && <button type="button" aria-label="Reset track dynamics" disabled={!dynamicsReady} onClick={() => updateDynamicRange(0)}>Reset dynamics</button>}</>}/>
+        {dynamicSliderEnabled && <p className="pt-dynamics-note">Dynamics changes the level contrast over time. Drag up to expand (quieter quiet parts), or down to compress (less contrast, with makeup gain). 0% keeps the original. It cannot restore detail already lost in a compressed recording.</p>}
+        <TrackWaveform playing={playing} getPlaybackPosition={()=>media.current?.currentTime??position} compact hideZoom zoom={waveZoom} onZoom={setWaveZoom} analysis={audioAnalysis} sourceUrl={audioUrl} position={position} duration={duration} onSeek={seconds => { if (media.current) media.current.currentTime = seconds; setPosition(seconds); }} dynamicRange={dynamicRange} onDynamicRangeChange={updateDynamicRange} dynamicSliderEnabled={dynamicSliderEnabled} dynamicRangeDisabled={!dynamicsReady} placeholder={audioUrl ? "Track ready · waveform analysis in progress" : "Choose music to view its waveform"}/>
+        <PlaybackTime position={position} duration={duration}/>
+        <p className="pt-playback-shortcut"><kbd>Space</kbd> play / pause</p>
       </div>
       <audio ref={media} crossOrigin="anonymous" preload="metadata" onLoadedMetadata={() => { setDuration(media.current?.duration || 0); if (media.current) media.current.volume = 1; }} onTimeUpdate={() => setPosition(media.current?.currentTime || 0)} onPlay={handleMediaPlay} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} onError={() => setMessage("This track could not be played in your browser. Try another format or file.")}/></section>
-        <section className="pt-finalize" aria-label="Finalize preference curve">
-          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Finalize preference curve</h2><p>Generate 10, 15, and 20 band EQs with PEQdB unsmoothed, plus the original Standard and Precise options.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Generating ${finalProgress} / 15…` : !measurement?.points?.length ? "Choose headphone to finalize" : finalIsCurrent ? "Regenerate 15 EQs" : "Finalize preference curve"}</button></div></div>
-          <p id="pt-export-disclosure" className="pt-export-disclosure">For participating listener accounts, downloads are recorded in admin-only research with the selected target, adjusted curve, settings and exported file. Admin and hidden test accounts save local tests instead. Music files and raw headphone measurements are not collected here.</p>
-          <div className="pt-export-downloads" role="group" aria-label="Target curve downloads" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText("original-target.csv", `frequency_hz,level_db\n${normalized.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Original Target</button><button type="button" onClick={() => void downloadText("preference-target.csv", `frequency_hz,level_db\n${preferenceCurve.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Download Preference Target</button></div>
+        {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}
 
-          {finalized && !finalIsCurrent && <p className="pt-finalize-hint">The curve or headphone changed. Finalize again for current settings.</p>}
-          {finalized && finalIsCurrent && <>
-            <div className="pt-finalize-results-heading"><div><strong>15 EQ options for {measurement?.name}</strong><span>Choose a band count, then compare PEQdB unsmoothed with Standard / Precise and Smooth / Close.</span></div></div>
-            <div className="pt-export-band-tabs" role="group" aria-label="EQ band count">{([10, 15, 20] as const).map(bands => <button type="button" key={bands} aria-pressed={exportBand === bands} onClick={() => setExportBand(bands)}><b>{bands} bands</b><small>5 options</small></button>)}</div>
-            <div className="pt-finalize-grid">{finalized.variants.filter(variant => variant.bands === exportBand).map(variant => { const base = `preference-${variant.bands}band-${variant.method}-${variant.priority}`; return <div className="pt-finalize-option" key={base}><div className="pt-option-top"><strong>{variant.method === "peqdb" ? (variant.engine === "peqdb" ? "PEQdB" : "Original fallback") : variant.method === "standard" ? "Standard" : "Precise"}</strong><span className={`pt-priority pt-${variant.priority}`}>{variant.method === "peqdb" && variant.engine === "peqdb" ? "Unsmoothed" : variant.priority === "smooth" ? "Smooth" : "Close"}</span></div>{variant.fallbackReason && <p role="status">Original fitter used because PEQdB was unavailable.</p>}<p>Fit error <b>{variant.rms.toFixed(2)} dB</b><span aria-hidden="true">·</span> Preamp <b>{variant.preamp.toFixed(1)} dB</b></p><details><summary>View {variant.bands} filters</summary><div className="pt-filter-list">{variant.filters.map((filter, index) => <span key={index}>{index + 1}. {filter.type ?? "PK"} · {filter.hz} Hz · {filter.gain > 0 ? "+" : ""}{filter.gain.toFixed(2)} dB · Q {filter.q.toFixed(2)}</span>)}</div></details><div className="pt-export-actions" aria-label="Download EQ formats" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText(`${base}.txt`, exportPeq(variant), "text/plain", variant)}>TXT</button><button type="button" onClick={() => void downloadText(`${base}-equalizerapo.txt`, exportEqualizerApo(variant), "text/plain", variant)}>Equalizer APO</button><button type="button" onClick={() => void downloadText(`${base}-easyeffects.txt`, exportEasyEffects(variant), "text/plain", variant)}>EasyEffects</button><button type="button" onClick={() => void downloadText(`${base}-qudelix5k.txt`, exportQudelixGuide(variant), "text/plain", variant)}>Qudelix 5K</button><button type="button" onClick={() => { saveLibraryEq({ id: crypto.randomUUID(), name: `${measurement?.device || measurement?.name} → ${target.name}`, engine: variant.engine, engineVersion: variant.engineVersion, source: `${variant.method === "peqdb" ? variant.engine === "peqdb" ? "PEQdB unsmoothed" : "Original fitter fallback" : "Preference Tuning"} · ${variant.bands} bands · ${variant.priority}`, filters: variant.filters, preamp: variant.preamp }); setMessage("EQ saved for Listening Pool playback in this browser."); }}>Save listening EQ</button></div></div>; })}</div>
+        {soundMode === "target" && <section className="pt-finalize" aria-label="Make EQ settings">
+          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings to use in this site’s music library or a compatible EQ app. Start with the recommended EQ, which favors smaller boosts, especially in deep bass. Listen to the closer fit too when it differs.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); document.querySelector<HTMLInputElement>('.pt-headphones input[type="search"]')?.focus(); document.querySelector('.pt-headphones')?.scrollIntoView({block:"center"}); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Making EQ settings ${finalProgress} / 12…` : !measurement?.points?.length ? "Choose headphones first" : finalized ? "Regenerate EQ settings" : "Make my EQ settings"}</button></div></div>
+          {finalized && <a className="eq-results-jump" href="#tuning-eq-results">View generated EQ results</a>}
+          <p id="pt-export-disclosure" className="pt-export-disclosure">For participating listener accounts, downloading sends the selected target, adjusted curve, settings and exported file for administrator-only research. EQ exports also include the selected measurement name. Admin and hidden test accounts save local tests instead. Music files and raw headphone measurements are not collected here.</p>
+          <div className="pt-curve-downloads"><p>Download curve data</p><div className="pt-export-downloads" role="group" aria-label="Target curve downloads" aria-describedby="pt-export-disclosure"><button type="button" onClick={() => void downloadText("original-target.csv", `frequency_hz,level_db\n${normalized.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Starting curve data (CSV)</button><button type="button" onClick={() => void downloadText("preference-target.csv", `frequency_hz,level_db\n${preferenceCurve.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>My adjusted curve data (CSV)</button></div></div>
+
+          {previousResults && !finalized && <p className="pt-finalize-hint">Your sound or headphones changed. Make updated settings before downloading.</p>}
+          {finalized && <section className="eq-results-section" aria-labelledby="tuning-eq-results">
+            <header className="eq-results-heading">
+              <h2 id="tuning-eq-results" ref={resultsHeading} tabIndex={-1}>EQ results for {measurement?.name}</h2>
+              <p>{finalized.saved ? "The last generated set is saved in this browser for this setup." : "These results are available in this tab. Browser storage is unavailable."}</p>
+            </header>
+
+            <EqCandidateResults tuning comparisonContext={{headphones:measurement?.device || measurement?.name || "Selected headphones",target:target.name}} channelMatch={matchEnabled?activeMatch:undefined} onCompare={stop} variants={finalized.variants} raw={measurement!.points} target={preferenceCurve} onDownload={(variant,format)=>{const base=`preference-${variant.bands}band-${variant.method}${variant.reducedBoost ? "-reduced-boost" : ""}`;const content=format==="equalizerapo"?exportEqualizerApo(variant):format==="easyeffects"?exportEasyEffects(variant):format==="qudelix5k"?exportQudelixGuide(variant):exportPeq(variant);void downloadText(`${base}${format==="txt"?"":"-"+format}.txt`,content,"text/plain",variant);}} onSave={variant=>{try { saveLibraryEq({id:crypto.randomUUID(),name:`${measurement?.device || measurement?.name} → ${target.name}`,fitter:{method:variant.method,bands:variant.bands},source:`Tuning · ${variant.bands} bands · ${variant.method}${variant.reducedBoost ? " · reduced boost" : ""}`,engine:variant.engine,engineVersion:variant.engineVersion,filters:variant.filters,preamp:variant.preamp,measurementId:measurement?.id,headphone:measurement?.device || measurement?.name,channelMatch:measurementChannelMatch(measurement),target:{id:target.id,name:target.name,points:preferenceCurve}});setMessage("EQ saved to My space, Tuning and Music library.");} catch(error){setMessage(error instanceof Error?error.message:"Could not save this EQ.");}}}/>
+
             <p className="pt-export-help">EasyEffects uses its Import APO action; set its input gain to the listed preamp if needed. The Qudelix 5K file is a manual-entry guide.</p>
-            <p className="pt-finalize-note">Preamp is rounded down from the highest calculated EQ boost over 20 Hz–20 kHz at 44.1, 48, and 96 kHz, plus 0.5 dB headroom. Keep additional player or device headroom for intersample peaks and other processing.</p>
-          </>}
+            <details className="pt-finalize-note"><summary>How the volume adjustment is calculated</summary><p>Preamp is rounded down from the highest calculated EQ boost over 20 Hz–20 kHz at 44.1, 48, and 96 kHz, plus 0.5 dB headroom. Keep additional player or device headroom for intersample peaks and other processing. This does not measure the sound level at your ears.</p></details>
+          </section>}
 
-        </section>
+        </section>}
       </div>
       {message && <p className="pt-message" role="status">{message}</p>}
     </div>
     {resetOpen && <div className="pt-reset-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) closeReset(); }}>
       <section className="pt-reset-dialog" role="dialog" aria-modal="true" aria-labelledby="pt-reset-title" aria-describedby="pt-reset-description" onKeyDown={event => { if (event.key === "Tab") { event.preventDefault(); (document.activeElement === resetNoButton.current ? resetYesButton.current : resetNoButton.current)?.focus(); } }}>
         <span className="pt-reset-kicker">RESET TUNING</span><h2 id="pt-reset-title">Reset all changes?</h2><p id="pt-reset-description">This restores the starting target, sliders, frequency placements, and chart view. It clears every Undo and Redo state and removes generated EQ results. Your headphone selection and loaded music stay in place. This cannot be undone.</p>
-        <div className="pt-reset-actions"><button ref={resetNoButton} type="button" onClick={closeReset}>No</button><button ref={resetYesButton} type="button" className="pt-reset-confirm" onClick={confirmReset}>Yes</button></div>
+        <div className="pt-reset-actions"><button ref={resetNoButton} type="button" onClick={closeReset}>Keep my changes</button><button ref={resetYesButton} type="button" className="pt-reset-confirm" onClick={confirmReset}>Reset tuning</button></div>
       </section>
     </div>}
     {instructionsOpen && <div className="pt-instructions-backdrop" onMouseDown={event => { if (event.target === event.currentTarget) { setInstructionsOpen(false); instructionsButton.current?.focus(); } }}>
       <section className="pt-instructions-dialog" role="dialog" aria-modal="true" aria-labelledby="pt-instructions-title" onKeyDown={event => { if (event.key !== "Tab") return; const controls=Array.from(event.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled),summary,a[href],input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex="0"]')).filter(el=>el.getClientRects().length>0); const first=controls[0],last=controls.at(-1); if (event.shiftKey && document.activeElement===first) {event.preventDefault();last?.focus();} else if (!event.shiftKey && document.activeElement===last) {event.preventDefault();first?.focus();} }}>
         <div className="pt-instructions-header"><div><span className="pt-step">PREFERENCE TUNING LAB</span><h2 id="pt-instructions-title">How to use the lab</h2><p>Four quick moves, with examples of what to click and what changes.</p></div><button ref={instructionsClose} type="button" aria-label="Close instructions" onClick={() => { setInstructionsOpen(false); instructionsButton.current?.focus(); }}><X size={18}/></button></div>
         <div className="pt-instructions-steps">
-          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>1</span> Start with a target and headphones</h3><p>Choose a target curve, then select your In-Ear or Over-Ear headphones. A measurement lets the lab account for your headphones and create an EQ you can download.</p><p><b>Example:</b> Pick a target from the list, search for your headphone model, then select its measurement. You can also upload a CSV or TXT curve or your own headphone measurement.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">TARGET</span><div className="pt-preview-row"><span className="pt-preview-select">Choose target <b>⌄</b></span><span className="pt-preview-square"><Upload size={13}/></span></div><span className="pt-preview-label">HEADPHONES</span><div className="pt-preview-row"><span className="pt-preview-pill">In-Ear</span><span className="pt-preview-pill">Over-Ear</span><span className="pt-preview-search">Search model</span></div></div></section>
+          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>1</span> Start with a target and headphones</h3><p>Choose your headphones in Headphones & EQ, then select Target or Saved EQ. A measurement lets the lab account for your headphones and create an EQ you can download.</p><p><b>Example:</b> Pick a target from the list, search for your headphone model, then select its measurement. You can also upload a CSV or TXT curve or your own headphone measurement.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">TARGET</span><div className="pt-preview-row"><span className="pt-preview-select">Choose target <b>⌄</b></span><span className="pt-preview-square"><Upload size={13}/></span></div><span className="pt-preview-label">HEADPHONES</span><div className="pt-preview-row"><span className="pt-preview-pill">In-Ear</span><span className="pt-preview-pill">Over-Ear</span><span className="pt-preview-search">Search model</span></div></div></section>
           <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>2</span> Shape the curve</h3><p>Drag the colored curve up or down, or use the sliders beneath it. The dashed gray line shows where you started; the colored line shows your changes.</p><p><b>Example:</b> Raise Bass by 3 dB for more low-end weight. Use Undo or Reset if you want to try another direction.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">YOUR CHANGE</span><div className="pt-preview-curve"><i/><i/><i/></div><div className="pt-preview-slider"><b>Bass</b><span>━━━━●━━━━</span><b>+3 dB</b></div><div className="pt-preview-row"><span className="pt-preview-pill">↶ Undo</span><span className="pt-preview-pill">↷ Redo</span><span className="pt-preview-pill">Reset</span></div></div></section>
-          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>3</span> Listen to the difference</h3><p>Play a curated track or choose audio from your device. Turn <b>Bypass adjustments</b> on and off to compare your edited sound with the starting target. Keep the volume comfortable.</p><p><b>Example:</b> Listen to a vocal section, bypass your change, then turn it back on. Click the waveform to replay the same moment.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">PLAYBACK</span><div className="pt-preview-row"><span className="pt-preview-play"><Play size={12}/> Play</span><span className="pt-preview-pill">□ Bypass adjustments</span></div><div className="pt-preview-wave">▁▃▇▄▂▅▇▃▁▆▂▅▇▄▁</div><span className="pt-preview-label">COMPARE THE SAME MOMENT</span></div></section>
-          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>4</span> Finalize and download</h3><p>Press <b>Finalize preference curve</b> after choosing a headphone measurement. Compare the filter options, check fit error and preamp, then download the EQ format for your device.</p><p>You can also download the original target or your adjusted preference curve as data.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">EXPORT</span><span className="pt-preview-finalize">Finalize preference curve</span><div className="pt-preview-row"><span className="pt-preview-pill">10 bands</span><span className="pt-preview-pill">15 bands</span><span className="pt-preview-pill">20 bands</span></div><span className="pt-preview-label">CHECK FIT · DOWNLOAD EQ</span></div></section>
+          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>3</span> Listen to the difference</h3><p>Play a library song or choose audio from your device. Turn <b>EQ</b> on and off above Fine-tune your sound to compare your edited sound with the starting target. Keep the volume comfortable.</p><p><b>Example:</b> Listen to a vocal section, bypass your change, then turn it back on. Click the waveform to replay the same moment.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">PLAYBACK</span><div className="pt-preview-row"><span className="pt-preview-play"><Play size={12}/> Play</span><span className="pt-preview-pill">□ Hear without my added EQ changes</span></div><div className="pt-preview-wave">▁▃▇▄▂▅▇▃▁▆▂▅▇▄▁</div><span className="pt-preview-label">COMPARE THE SAME MOMENT</span></div></section>
+          <section className="pt-instructions-step"><div className="pt-instructions-copy"><h3><span>4</span> Make settings and choose where to use them</h3><p>Press <b>Make EQ settings</b> after choosing a headphone measurement. Use quick setup, then choose where to use it: this site’s music library, a supported app, or a manual setup guide. You can keep editing and generate settings again.</p><p>You can also download the original target or your adjusted preference curve as data.</p></div><div className="pt-instructions-preview" aria-hidden="true"><span className="pt-preview-label">EXPORT</span><span className="pt-preview-finalize">Make EQ settings</span><div className="pt-preview-row"><span className="pt-preview-pill">10 bands</span><span className="pt-preview-pill">15 bands</span><span className="pt-preview-pill">20 bands</span></div><span className="pt-preview-label">CHECK FIT · DOWNLOAD EQ</span></div></section>
         </div>
-        <details className="pt-instructions-more"><summary>More controls and shortcuts</summary><div><p><b>Fine tuning:</b> Use Axis &amp; size for chart limits. Advanced frequency placement moves the BT, EGC, and TT points. The ±20 dB range expands the sliders. Tap colored frequency labels for sound examples.</p><p><b>Playback:</b> Space pauses or resumes when a form field is not focused. Shuffle folder picks another local track. Files from your device stay in the browser.</p><p><b>Export:</b> Standard spaces filters evenly; Precise fits more closely. Smooth favors a gentler curve; Close follows it more tightly. Leave device headroom when applying EQ.</p></div></details>
+        <details className="pt-instructions-more"><summary>More controls and shortcuts</summary><div><p><b>Fine tuning:</b> Use Axis &amp; size for chart limits. Click the B, EG, or T frequency beneath a gain slider to change its placement, or drag its marker on the graph. The ±20 dB range expands the sliders. Open Frequency guide for sound examples.</p><p><b>Playback:</b> Space pauses or resumes when a form field is not focused. Shuffle folder picks another local track. Files from your device stay in the browser.</p><p><b>Export:</b> Standard spaces filters evenly; Precise fits more closely. Smooth favors a gentler curve; Close follows it more tightly. Leave device headroom when applying EQ.</p></div></details>
       </section>
     </div>}
   {consent.dialog}

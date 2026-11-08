@@ -13,7 +13,11 @@ const raw=JSON.stringify([{id:'l1',name:'Mine',points:pts,status:'local'},{id:'l
 const publicIds=new Set(pub.map(x=>x.id));
 t('local targets: valid rows only, approved/duplicate-of-public and admin test rows hidden',()=>{const rows=parseLocalTargets(raw,{publicIds,adminTesting:false});eq(rows.map(r=>r.id),['l1','l2']);assert.equal(rows[1].pending,true);eq(parseLocalTargets(raw,{publicIds,adminTesting:true}).map(r=>r.id),['l1','l2','l4']);eq(parseLocalTargets('nope',{publicIds,adminTesting:false}),[]);});
 const local=parseLocalTargets(raw,{publicIds,adminTesting:false});
-t('all mode never includes private targets and filters by headphone type',()=>{eq(personalPool(pub,local,{mode:'all'},'oe').map(x=>x.id),['p1','p2']);eq(personalPool(pub,local,{mode:'all'},'ie').map(x=>x.id),['p1','p2','p3']);});
+t('all mode includes every public target for either headphone type and never adds private targets',()=>{eq(personalPool(pub,local,{mode:'all'},'oe').map(x=>x.id),['p1','p2','p3']);eq(personalPool(pub,local,{mode:'all'},'ie').map(x=>x.id),['p1','p2','p3']);});
 t('custom mode mixes public and private targets, ignores unknown ids',()=>{const pool=personalPool(pub,local,{mode:'custom',ids:['l1','p2','gone','l2']},'oe');eq(pool.map(x=>x.id),['l1','l2','p2']);});
 t('runs containing any non-public candidate are flagged local-only',()=>{assert.equal(poolHasLocalTargets(['p1','p2'],publicIds),false);assert.equal(poolHasLocalTargets(['p1','l1'],publicIds),true);assert.equal(poolHasLocalTargets(Array.from({length:MAX_SHARED_POOL+1},(_,i)=>'p'+i),new Set(Array.from({length:MAX_SHARED_POOL+1},(_,i)=>'p'+i))),true,'pools beyond the server limit stay local');assert.equal(poolHasLocalTargets(Array.from({length:MAX_SHARED_POOL},(_,i)=>'p'+i),new Set(Array.from({length:MAX_SHARED_POOL},(_,i)=>'p'+i))),false);});
 console.log(`${n} passed`);
+
+const {shortStarterPool}=load('lib/personal-target-pool.ts');
+const starterTargets=Array.from({length:30},(_,i)=>({id:`starter-${i}`,name:`Starter ${i}`,parentTargetId:`family-${Math.floor(i/3)}`,points:[[20,0],[20000,0]]}));let seed=9;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+const starter=shortStarterPool(starterTargets,12,random);assert.equal(starter.length,12);assert.equal(new Set(starter).size,12);assert.equal(new Set(starter.slice(0,10).map(id=>starterTargets.find(t=>t.id===id).parentTargetId)).size,10);console.log('PASS optional 12-target starter is a unique family-balanced random subset, not a silent full-pool claim.');

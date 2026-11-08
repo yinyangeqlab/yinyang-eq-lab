@@ -1,0 +1,26 @@
+import ModeIllustration from "@/components/mode-illustration";
+import "../welcome.css";
+import "./style.css";
+function WelcomeModeArt({kind}:{kind:"personal"|"blind"|"open"|"eq"}){
+ return <div className={`alpha-mode-art alpha-mode-${kind}`} aria-hidden="true"><ModeIllustration kind={kind}/></div>;
+}
+
+export default function ListenPage(){return <main className="listen-page">
+    <section className="welcome-modes" aria-labelledby="welcome-modes-title">
+      <div className="welcome-section-head"><span className="welcome-eyebrow">LISTEN</span><h1 id="welcome-modes-title">How would you like to listen?</h1><p>Find your own favorites first. You can also help with research or choose your own comparisons.</p></div>
+      <div className="welcome-mode-grid">
+        <a className="welcome-mode listen-choice recommended" href="/shootout/personal" aria-labelledby="listen-personal-title"><span className="welcome-mode-badge">SUGGESTED START</span><WelcomeModeArt kind="personal"/><h2 id="listen-personal-title">Personal Tournament</h2><p>Try two sounds at a time and build a shortlist of your favorites. Come back later to continue.</p><p className="welcome-mode-data">Your choices stay in this browser by default. Sharing is optional.</p><span className="listen-choice-action">Find a sound I like <span aria-hidden="true">→</span></span></a>
+        <a className="welcome-mode listen-choice" href="/shootout?mode=blind" aria-labelledby="listen-research-title"><span className="welcome-mode-badge">HELP THE RESEARCH</span><WelcomeModeArt kind="blind"/><h2 id="listen-research-title">Blind Research</h2><p>Compare sound settings without seeing their names. Eligible choices help build shared Research Rankings.</p><p className="welcome-mode-data">Use a library song or music from your device. Your audio stays on your device.</p><span className="listen-choice-action">Contribute a blind comparison <span aria-hidden="true">→</span></span></a>
+        <a className="welcome-mode listen-choice" href="/shootout?mode=open" aria-labelledby="listen-open-title"><span className="welcome-mode-badge">CHOOSE YOUR OWN</span><WelcomeModeArt kind="open"/><h2 id="listen-open-title">Open Comparison</h2><p>Choose the sound settings yourself. Revisit a favorite or compare settings you already know.</p><p className="welcome-mode-data">These comparisons do not add public ranking votes.</p><span className="listen-choice-action">Choose a comparison <span aria-hidden="true">→</span></span></a>
+        <a className="welcome-mode listen-choice" href="/eq-compare" aria-labelledby="listen-eq-title"><span className="welcome-mode-badge">YOUR EQ FILES</span><WelcomeModeArt kind="eq"/><h2 id="listen-eq-title">Blind EQ comparison</h2><p>Load two saved EQ files and compare them without seeing which is playing.</p><p className="welcome-mode-data">Files and choices stay in this tab. No ranking votes.</p><span className="listen-choice-action">Compare my EQ files <span aria-hidden="true">→</span></span></a>
+      </div>
+      <details className="welcome-ranking-guide" id="ranking-guide"><summary>How results and sharing work</summary><dl>
+        <div><dt>Your Personal results</dt><dd>A shortlist based on the sounds and music you have tried. Your favorites can change as you listen more. You can separately opt into private owner research or the Community Preferences pilot.</dd></div>
+        <div><dt>Research Rankings</dt><dd>Shared preferences from eligible Blind Research comparisons. They describe participating listeners’ choices; the top setting may not be your favorite. Library songs and your own music contribute to the combined rankings, with separate source filters.</dd></div>
+        <div><dt>Community Preferences</dt><dd>An optional research pilot with its own sharing permission. Public numerical results are withheld until independent listener validation and privacy review; earlier private-only contributions stay private.</dd></div>
+        <div><dt>Open Comparison and your data</dt><dd>No public ranking votes. Choices involving approved settings can enter private owner research under the existing agreement; comparisons involving private settings stay local. Sharing song details from your own files is optional.</dd></div>
+      </dl><p><a href="/my-data">Review your sharing choices</a> · <a href="/privacy">Read the privacy notice</a> · <a href="/community-preferences">About the research pilot</a></p></details>
+      <details className="welcome-ranking-guide"><summary>More help with your first comparison</summary><p>Both sounds use the same headphones and song. Personal and Blind Research keep setting names hidden while you choose. Volume can still differ between settings, so use a comfortable listening level.</p><p><a href="/shortcuts">Open the step-by-step listening guide</a></p></details>
+    </section>
+
+</main>;}

@@ -1,12 +1,20 @@
 import "./mode-illustration.css";
 
-type ModeKind = "personal" | "blind" | "open";
+type ModeKind = "personal" | "blind" | "open" | "eq";
 
 /** Decorative SVG only. The surrounding link/button owns every action and label. */
 export default function ModeIllustration({ kind, compact = false }: { kind: ModeKind; compact?: boolean }) {
   return <span className={`mode-illustration mode-illustration--${kind}${compact ? " mode-illustration--compact" : ""}`} aria-hidden="true">
     <svg viewBox="0 0 160 120" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      {kind === "personal" ? <>
+      {kind === "eq" ? <>
+        <circle cx="80" cy="60" r="46" stroke="#a3c5d2" opacity=".2"/>
+        <g className="mode-art-eq-swirl">
+          <circle cx="80" cy="60" r="36" fill="#4dbaff" stroke="#acdcec"/>
+          <path d="M80 24a36 36 0 0 0 0 72 18 18 0 0 1 0-36 18 18 0 0 0 0-36Z" fill="#ff627b" stroke="none"/>
+          <circle cx="80" cy="42" r="5" fill="#4dbaff" stroke="none"/>
+          <circle cx="80" cy="78" r="5" fill="#ff627b" stroke="none"/>
+        </g>
+      </> : kind === "personal" ? <>
         <circle className="mode-art-orbit-guide" cx="80" cy="60" r="48"/>
         <ellipse className="mode-art-orbit-guide mode-art-orbit-ellipse" cx="80" cy="60" rx="69" ry="28" transform="rotate(-18 80 60)"/>
         <g className="mode-art-orbit mode-art-orbit-outer">

@@ -21,7 +21,7 @@ export async function analyzeTrack(file: Blob): Promise<TrackAnalysis> {
     const decoded = await decoder.decodeAudioData(await file.arrayBuffer());
     if (decoded.numberOfChannels !== 2) throw new Error("Stereo audio required.");
     const left = decoded.getChannelData(0), right = decoded.getChannelData(1);
-    const count = Math.min(32768, decoded.length);
+    const count = Math.min(Math.ceil(decoded.length / 64), 1_048_576);
     const minL = new Float32Array(count), maxL = new Float32Array(count);
     const minR = new Float32Array(count), maxR = new Float32Array(count);
     const bucketSize = Math.max(1, Math.round(decoded.sampleRate / 10));
@@ -30,7 +30,7 @@ export async function analyzeTrack(file: Blob): Promise<TrackAnalysis> {
     for (let bin = 0; bin < count; bin++) {
       const start = Math.floor(bin * decoded.length / count);
       const end = Math.floor((bin + 1) * decoded.length / count);
-      let lowL = 1, highL = -1, lowR = 1, highR = -1;
+      let lowL = Infinity, highL = -Infinity, lowR = Infinity, highR = -Infinity;
       for (let i = start; i < end; i++) {
         const l = left[i], r = right[i];
         lowL = Math.min(lowL, l); highL = Math.max(highL, l);

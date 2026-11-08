@@ -1,3 +1,4 @@
+import * as fitters from "../lib/fitter-settings.ts";
 import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -17,9 +18,9 @@ const targets=[{id:'a',name:'Alpha',creator:'Fixture',status:'approved'},{id:'b'
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[],removed=new Set();
 const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/file-fingerprint':fingerprints,'@/lib/listening-protocol':protocol,'@/lib/listening':{intervalStats,parseIntervals},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[]},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!removed.has(kind+':'+id)},'@/db/schema':schema,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})}};
-function load(relative){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+relative,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},Response});return exports;}
+function load(relative){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+relative,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;assert.ok(name in deps,name);return deps[name];},Response});return exports;}
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
-const api=load('app/api/research/route.ts');
+const api=load('app/api/research/route.ts');const rawGET=api.GET;api.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
 const intervals=JSON.stringify([{side:0,start:0,end:6,rate:1},{side:1,start:0,end:6,rate:1}]);
 const base={winnerId:'a',loserId:'b',eligible:1,testMode:'blind',headphoneType:'oe',protocolVersion:protocol.LISTENING_PROTOCOL,heardA:6,heardB:6,intervals,songTitle:null,songArtist:null,songAlbum:null,recordingId:null,sha256:hash,reasonTags:'[]'};
 const one={...base,id:'vote-one',voterId:'private-browser-one'},two={...base,id:'vote-two',voterId:'private-browser-two'};
@@ -32,7 +33,7 @@ owners=[{recordKind:'vote',recordId:one.id,subjectId:'same-account'},{recordKind
 votes=[one,{...two,sha256:otherHash}];await check('Different files remain separate',0);
 for(const value of [null,'', 'not-a-hash','x'.repeat(64)]){votes=[one,{...two,sha256:value}];await check('Invalid or absent hash cannot supply the second group',0);}
 votes=[one,{...two,protocolVersion:'legacy-v1'}];let body=await check('All versions may match files heard in different protocol eras',2);assert.equal(body.protocols.current.verified.voteCount,0);assert.equal(body.protocols.legacy.verified.voteCount,0);
-votes=[];runs=[tie('one','private-browser-one'),tie('two','private-browser-two')];body=await check('Two tie-only groups retain consented hashes without song tags',2);assert.equal(body.protocols.current.verified.voteCount,2);assert.ok(body.verified.rows.every(row=>row.ties===2));assert.ok((await deps['@/lib/ranking-evidence'].rankingEvidence()).votes.every(v=>v.sha256===hash));
+votes=[];runs=[tie('one','private-browser-one'),tie('two','private-browser-two')];body=await check('Two tie-only groups retain consented hashes without song tags',2);assert.equal(body.protocols.current.verified.voteCount,2);assert.ok(body.verified.rows.every(row=>row.ties===2));assert.ok((await deps['@/lib/ranking-evidence'].rankingEvidence()).allFitterVotes.every(v=>v.sha256===hash));
 owners=[{recordKind:'run',recordId:'one',subjectId:'same-account'},{recordKind:'run',recordId:'two',subjectId:'same-account'}];await check('Tie-only synced browsers remain one group',0);owners=[];
 votes=[one];runs=[tie('two','private-browser-two')];await check('A decisive answer and tie can establish two file groups',2);
 removed=new Set(['run:two']);body=await check('Removing a tie removes its evidence and the two-group cohort',0);assert.equal(body.all.voteCount,1);removed=new Set(['vote:trial-two']);await check('Removing a linked trial excludes its tie',0);removed.clear();

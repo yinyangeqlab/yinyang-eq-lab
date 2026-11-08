@@ -4,13 +4,12 @@ import { RequestInputError } from "@/lib/request-json";
 import { requireParticipantSubject } from "@/lib/admin-contributions";
 import { communityPermission } from "@/lib/community-server";
 import { COMMUNITY_NOTICE_VERSION } from "@/lib/community-notice";
-import { targetHeadphoneType } from "@/lib/target-type";
 import { listeningPool } from "@/lib/music-catalog";
 import { parseIntervals, intervalStats } from "@/lib/listening";
-export const COMMUNITY_METHOD = "uniform-reference-fixed10-v1";
+export const COMMUNITY_METHOD = "uniform-reference-fixed10-v2";
 export const REFERENCE_ROUNDS = 10;
 export function referenceSystem(value:unknown){if(typeof value!=="string"||!value.trim()||value.length>120||/[\x00-\x1f\x7f]/.test(value)||/^(unknown|unspecified|none)$/i.test(value.trim()))throw new RequestInputError("Reference checks need a declared rig/reference-system label. Unknown remains available for Personal exploration.",400);return value.trim().replace(/\s+/g," ").toLowerCase();}
-function referencePeriod(rig:unknown){return new Date().toISOString().slice(0,7)+" · "+referenceSystem(rig);}
+function referencePeriod(rig:unknown){return new Date().toISOString().slice(0,7)+" · "+referenceSystem(rig)+" · unrestricted-targets-v2";}
 
 export function randomIndex(length: number) { if (!Number.isSafeInteger(length) || length < 1 || length > 0x100000000)
     throw Error("Invalid random support"); const limit = Math.floor(0x100000000 / length) * length; let n; do {
@@ -94,10 +93,10 @@ export async function startReference(db: D1Database, subject: string, sessionHas
     catalog_json: string;
     music_json: string;
 }>(); if (!catalog) {
-    const rows = await db.prepare("SELECT id,name,points,measurement,headphone_type AS headphoneType,reference_system AS referenceSystem,submission_kind AS submissionKind FROM targets WHERE status='approved' AND lower(trim(reference_system))=? AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='target' AND o.record_id=targets.id AND o.subject_id IN ('owner','invite:layout-test-only')) ORDER BY id LIMIT 257").bind(referenceSystem(rig)).all<CatalogTarget>();
-    const eligible = rows.results.filter(t => targetHeadphoneType(t) === type);
+    const rows = await db.prepare("SELECT id,name,points,measurement,headphone_type AS headphoneType,reference_system AS referenceSystem,submission_kind AS submissionKind FROM targets WHERE status='approved' AND NOT EXISTS(SELECT 1 FROM submission_owners o WHERE o.record_kind='target' AND o.record_id=targets.id AND o.subject_id IN ('owner','invite:layout-test-only')) ORDER BY id LIMIT 257").all<CatalogTarget>();
+    const eligible = rows.results;
     if (eligible.length < 2 || rows.results.length > 256)
-        throw new RequestInputError("The reference catalog needs 2–256 approved curves with the same declared reference-system label and headphone category. Unknown or mismatched systems cannot be pooled.", 409);
+        throw new RequestInputError("The reference catalog needs 2–256 approved curves.", 409);
     await db.prepare("INSERT OR IGNORE INTO community_catalogs VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(), period, String(type), JSON.stringify(await Promise.all(eligible.map(async (t) => ({ id: t.id, version: await targetContextVersion(t) })))), JSON.stringify(listeningPool.map(t => ({ url: t.url, version: t.sha256 ?? null }))), COMMUNITY_METHOD).run();
     catalog = await db.prepare("SELECT id,catalog_json,music_json FROM community_catalogs WHERE period=? AND headphone_type=?").bind(period, String(type)).first<{
         id: string;

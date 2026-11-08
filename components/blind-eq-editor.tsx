@@ -55,9 +55,9 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
     <h2 id={`${id}-title`}>{title}</h2>
     <label htmlFor={`${id}-name`}>Name to reveal at the end</label>
     <input id={`${id}-name`} maxLength={100} value={name} disabled={busy} onChange={event => rename(event.target.value)} />
-    <label className="eq-upload">{busy ? "Reading preset…" : "Upload preset TXT"}<input type="file" accept=".txt,text/plain" disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>
+    <label className="eq-upload">{busy ? "Reading preset…" : "Choose EQ settings file (.txt)"}<input type="file" accept=".txt,text/plain" disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>
     <details open={manual} onToggle={event => setManual(event.currentTarget.open)}>
-      <summary>Manual entry / review imported filters</summary>
+      <summary>Advanced: enter or inspect individual sound adjustments</summary>
       {separatePreamps ? <div className="eq-preamps">{(["Left", "Right"] as const).map((channel, index) => <label key={channel}>{channel} preamp (dB)<input type="number" min={-40} max={40} step="any" value={preamps[index]} disabled={busy} onChange={event => { dirty(); const next: [string, string] = [...preamps]; next[index] = event.target.value; setPreamps(next); }} /></label>)}</div> : <label className="eq-shared-preamp">Preamp (dB)<input type="number" min={-40} max={40} step="any" value={preamps[0]} disabled={busy} onChange={event => { dirty(); setPreamps([event.target.value, event.target.value]); }} /></label>}
       <label className="eq-check"><input type="checkbox" checked={separatePreamps} disabled={busy} onChange={event => { dirty(); setSeparatePreamps(event.target.checked); if (!event.target.checked) setPreamps([preamps[0], preamps[0]]); }} />Separate Left / Right preamps</label>
       <p className="eq-muted">{separatePreamps ? "Turn this off to use the Left value as one shared preamp." : "One preamp applies to both channels."}</p>

@@ -18,7 +18,7 @@ export default function PrivacyEvents() {
     return () => { channel?.close(); syncChannel?.close(); window.removeEventListener("storage",storage); };
   }, []);
   useEffect(() => {
-    const allowed = new Set(["/", "/home", "/shootout", "/preference-tuning", "/personal-tuning", "/music-library", "/my-data", "/privacy", "/curve-credits"]);
+    const allowed = new Set(["/", "/home", "/shootout", "/preference-tuning", "/ear-tuning", "/personal-tuning", "/music-library", "/my-data", "/privacy", "/curve-credits"]);
     if (!allowed.has(pathname)) return;
     let sessionId = "";
     try {

@@ -2,6 +2,8 @@
 
 Owner requirement: use ONLY the `yinyangeqlab` GitHub account for all project contributions, commits, pushes, pull requests, and publication. NEVER use a personal GitHub account, personal email, or the inherited global Git identity. Set Git author AND committer to `Yin Yang EQ Lab <343846436+yinyangeqlab@users.noreply.github.com>`; GitHub connector commits must use the yinyangeqlab connection. Verify both actual identities before every commit/publication, including in temporary clones, worktrees, scripts, and tools. Repository ownership alone does not control attribution. Preserve local identity guards and never bypass them. Never republish pre-scrub history: use the scrubbed main history for publication, while preserving original historical release provenance. Stop if the lab identity cannot be verified. This is a permanent owner instruction for every future session.
 
+Read [docs/ENGINEERING.md](docs/ENGINEERING.md) for shared engineering guidelines and verification. Follow the [release versioning skill](docs/skills/yinyangeq-release-versioning/SKILL.md) for version labels, changelog updates, and handoffs. Read [docs/COORDINATION.md](docs/COORDINATION.md) before claiming work. Codex owns implementation; Claude is review-only unless the owner explicitly assigns implementation in a separate worktree. Review findings require source verification and triage.
+
 # Canonical GitHub repository — renamed October 21, 2026
 
 Use ONLY `yinyangeqlab/yinyang-eq-lab` for future application work: https://github.com/yinyangeqlab/yinyang-eq-lab (origin: https://github.com/yinyangeqlab/yinyang-eq-lab.git). The former `yinyang-eq-league` name redirects to the same repository; do not recreate it or treat it as another app. The separate `yinyangeqlab.github.io` repository hosts public demo videos and credits, not application source; preserve its short video URLs. Read docs/REPOSITORY_RENAME.md and the current handover. Preserve immutable historical provenance, old backups and lab identity hooks. Renaming/publication does not authorize a deployment.
@@ -12,13 +14,13 @@ This checkout is the active source. In the owner container it is workspace/. Do 
 
 # Current release and rebuild instructions
 
-Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current deployed baseline is 0.2.0-beta.1 / update124, source 8c36be0aa4352f668f6cfbb351bc187713042191. Owner-only maintenance remains enabled without expiry. Read the active notice and audit limits in docs/HANDOFF.md and docs/releases/update124-verification.json. Preserve separate original drafts when selecting a baseline. Historical handoffs are not deployment instructions.
+Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md before selecting a baseline. Fetch GitHub and inspect local divergence/changes first. Current deployment, maintenance, publication and recovery facts live in the generated LIVE_STATE.md, validated against LIVE_RELEASE.json and its receipt. Do not duplicate mutable release facts in agent instructions. Preserve separate original drafts when selecting a baseline. Historical handoffs are not deployment instructions.
 
 In a public clone run `node scripts/check-live-source.mjs --source-only`. Full `--snapshot` mode requires the owner's private immutable snapshots and stack configuration; do not publish those to make it pass. In the owner project use its current LIVE_RELEASE.json and full snapshot check. Preserve intentional root changes.
 
 GitHub contains application and reviewed credential-free deployment source, but excludes credentials, recordings, numerical target seeds, participant records, stack configuration/state and generated output. Never restore erased user records. Keep private access/media controls, CPU5000ms, six abuse bindings, disabled public Worker URLs, edge burst protection and independent cost guard.
 
-Build, commit, push and deploy are separate operations. Do not redeploy for documentation/rebuild audits. After a verified deployment update LIVE_RELEASE.json, LIVE_STATE.md, HANDOFF.md and HOSTING_HANDOFF.md together; publish separately when authorized. Public-only packages are for clone previews and must not be deployed.
+Build, commit, push and deploy are separate operations. Do not redeploy for documentation/rebuild audits. After a verified deployment update LIVE_RELEASE.json and its evidence, then run npm run release:refresh and npm run release:check to update LIVE_STATE.md, HANDOFF.md and HOSTING_HANDOFF.md together. Review the diff, explicitly approve any new untracked source paths, run npm run source:refresh and npm run verify; publish separately when authorized. Public-only packages are for clone previews and must not be deployed.
 
 # Private recovery storage
 
@@ -28,7 +30,7 @@ Read docs/ENCRYPTED_BACKUP.md before backup work. Keep the storage service/accou
 
 Use only the dedicated hidden, non-contributing layout test account for browser reviews. Do not use an admin session, including for admin UI reviews, unless the owner explicitly authorizes an exception. Keep test credentials, fixture provisioning and local state out of Git. The local workflow is documented in docs/ADMIN_TEST_ISOLATION.md. Test activity must never enter research, public rankings, community song votes or participant Sync.
 
-Latest feature review (deployed as update94 with explicit owner authorization; account activation/history transfer/publication remain separate): read docs/TOURNAMENT_REVIEW_2026-10-19.md and docs/DEPLOYMENT_STAGE_2026-10-19.md. The earlier WIP checkpoint is historical; its four failing suites were resolved. Owner review, live account/history execution and any push/deployment remain separate.
+Review records in docs/reviews and docs/releases retain their original scope and limitations. Historical approval does not authorize a new release, account/history action, publication or deployment.
 
 # Dropdown review
 

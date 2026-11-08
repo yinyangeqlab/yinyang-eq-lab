@@ -1,4 +1,4 @@
-import { targetHeadphoneType, type HeadphoneType } from "@/lib/target-type";
+import { type HeadphoneType } from "@/lib/target-type";
 import type { Point } from "@/lib/curves";
 
 /** Browser-only list of targets the person uploaded (Private, or submitted and still pending review). */
@@ -13,17 +13,17 @@ const MAX_STORED_SELECTION = 20000;
 
 export type PoolTarget = { id: string; name: string; creator?: string; points: Point[]; parentTargetId?: string | null; headphoneType?: HeadphoneType; measurement?: { type?: unknown } | null };
 export type LocalPoolTarget = PoolTarget & { local: true; pending: boolean };
-export type PoolChoice = { mode: "all" } | { mode: "custom"; ids: string[] };
+export type PoolChoice = { mode: "all" } | { mode: "custom"; ids: string[]; starter?: true };
 
 const isPoint = (value: unknown): value is Point => Array.isArray(value) && value.length === 2 && value.every(item => typeof item === "number" && Number.isFinite(item));
 
 export function parsePoolChoice(raw: string | null): PoolChoice {
   if (!raw) return { mode: "all" };
   try {
-    const value = JSON.parse(raw) as { mode?: unknown; ids?: unknown };
+    const value = JSON.parse(raw) as { mode?: unknown; ids?: unknown; starter?: unknown };
     if (value.mode !== "custom" || !Array.isArray(value.ids)) return { mode: "all" };
     const ids = [...new Set(value.ids.filter((id): id is string => typeof id === "string" && id.length > 0 && id.length <= 80))].slice(0, MAX_STORED_SELECTION);
-    return { mode: "custom", ids };
+    return { mode: "custom", ids, ...(value.starter === true ? {starter:true as const} : {}) };
   } catch { return { mode: "all" }; }
 }
 
@@ -45,13 +45,18 @@ export function parseLocalTargets(raw: string | null, options: { publicIds: Read
   return out;
 }
 
-const fits = (target: PoolTarget, type: HeadphoneType | undefined) => { const kind = targetHeadphoneType(target); return !kind || kind === type; };
-
-/** The targets one Personal run compares. "all" keeps the original behavior: every public target for this headphone type, never private ones. */
-export function personalPool<T extends PoolTarget>(publicTargets: T[], localTargets: LocalPoolTarget[], choice: PoolChoice, type: HeadphoneType | undefined): (T | LocalPoolTarget)[] {
+/** The targets one Personal run compares. "all" keeps the original behavior: every public target, independent of headphone type, never private ones. */
+export function personalPool<T extends PoolTarget>(publicTargets: T[], localTargets: LocalPoolTarget[], choice: PoolChoice, _type: HeadphoneType | undefined): (T | LocalPoolTarget)[] {
   const all: (T | LocalPoolTarget)[] = choice.mode === "all" ? publicTargets : [...publicTargets, ...localTargets].filter(target => choice.ids.includes(target.id));
-  return all.filter(target => fits(target, type)).sort((a, b) => a.id.localeCompare(b.id));
+  return all.sort((a, b) => a.id.localeCompare(b.id));
 }
 
 /** True when a run must stay on this device: it includes a non-public target, or its pool is larger than the research endpoints accept. */
 export const poolHasLocalTargets = (candidateIds: readonly string[], publicIds: ReadonlySet<string>) => candidateIds.length > MAX_SHARED_POOL || candidateIds.some(id => !publicIds.has(id));
+
+/** A disclosed random subset, balanced across explicitly related target families. */
+export function shortStarterPool<T extends PoolTarget>(targets:T[],count=12,random=Math.random):string[]{
+ const shuffle=<V,>(values:V[])=>{const out=[...values];for(let i=out.length-1;i>0;i--){const j=Math.min(i,Math.floor(random()*(i+1)));[out[i],out[j]]=[out[j],out[i]];}return out;};
+ const groups=new Map<string,T[]>();for(const row of targets){const key=row.parentTargetId || (/^MrChillStorm ISO 226 85 phon (?:0\.00|0\.25|0\.3661543|0\.50|0\.75|1\.00)$/.test(row.name)?"mrchillstorm-iso226-85":row.id);groups.set(key,[...(groups.get(key)||[]),row]);}
+ const families=shuffle([...groups.values()]).map(shuffle),ids:string[]=[];while(ids.length<Math.min(count,targets.length)){let added=false;for(const group of families){const next=group.shift();if(next){ids.push(next.id);added=true;}if(ids.length>=count)break;}if(!added)break;}return ids;
+}

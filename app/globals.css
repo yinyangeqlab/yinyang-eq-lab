@@ -2038,13 +2038,19 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 
 /* Votes share the Switch A/B control's short, smooth lift and color glow. */
 @media(hover:hover) and (pointer:fine) {
- .shootout-content .choice-controls button[data-locked="true"]:disabled:hover,
  .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b):not(:disabled):hover { transform:translateY(-1px); filter:brightness(1.12); box-shadow:inset 0 1px 0 #ffffff6b,inset 0 -3px 5px #0009,0 0 17px color-mix(in srgb,var(--plate-edge) 55%,transparent); }
 }
 @media(prefers-reduced-motion:reduce) {
  .shootout-content .shootout-controls button { transition:none; }
  .shootout-content .choice-controls button[data-locked="true"]:disabled:hover,.shootout-content .choice-controls button:not(:disabled):hover { transform:none; }
 }
+
+/* Locked votes retain their colors at lower brightness and stay still on hover. */
+.shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled,
+.shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled:hover{--plate-top:color-mix(in srgb,var(--vote-top) 62%,#0b0e12);--plate-mid:color-mix(in srgb,var(--vote-mid) 62%,#0b0e12);--plate-base:color-mix(in srgb,var(--vote-base) 62%,#0b0e12);--plate-edge:color-mix(in srgb,var(--vote-accent) 65%,#0b0e12);filter:none;transform:none;animation:none;transition:none;box-shadow:inset 0 1px 0 #ffffff40,inset 0 -2px 3px #0007,0 2px 4px #0008}
+.shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled *,
+.shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled::before,
+.shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled::after{animation:none;transition:none}
 
 /* Continue is the next primary action after a saved comparison. */
 .shootout-content .shootout-controls .continue-button {
@@ -2280,3 +2286,18 @@ footer.site-data-footer { justify-content:center; align-items:center; flex-wrap:
 .account-sync-status{max-width:900px;margin:1rem auto;padding:.6rem 1rem;border:1px solid #ffffff25;border-radius:10px;overflow-wrap:anywhere}.account-sync-status p{margin:.3rem 0}.account-sync-status a,.account-sync-status button{display:inline-block;margin:.3rem .7rem .3rem 0}
 
 .profile-sync-manager{padding:1rem;margin:1rem 0;border:1px solid #ffffff35;border-radius:12px}.profile-sync-manager pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:20rem;overflow:auto}.profile-sync-manager details{margin:.8rem 0}
+
+/* Plain-language help and durable action feedback. */
+.sound-guide{margin:16px 0;padding:14px 18px;border:1px solid #365c68;border-radius:12px;background:#0a1b24;color:#dcebf0;font-size:14px;line-height:1.65;overflow-wrap:anywhere}.sound-guide summary{cursor:pointer;font-weight:650;color:#d7f3ed}.sound-guide a{color:#a0e4d5}.sound-guide li+li{margin-top:8px}.comparison-outcome{margin:12px 0;padding:14px 18px;border:1px solid #4f8b83;border-radius:12px;background:#102b2b;color:#e1f3ef;overflow-wrap:anywhere}.beginner-note{font-size:14px;line-height:1.6;color:#bdd3dd}.readable-copy-list{padding-left:22px;overflow-wrap:anywhere}.sound-guide:focus-within{outline:2px solid #82d7ca;outline-offset:3px}
+
+/* Available votes use vivid colors with one consistent plate finish. */
+.shell .shootout-content .choice-controls .choice-a{--vote-accent:#ff718e;--vote-top:#d94265;--vote-mid:#ab234c;--vote-base:#65172f}
+.shell .shootout-content .choice-controls .choice-tie{--vote-accent:#f4f7fa;--vote-top:#ffffff;--vote-mid:#e7edf2;--vote-base:#bac7d2}
+.shell .shootout-content .choice-controls .choice-b{--vote-accent:#68d0ff;--vote-top:#158acb;--vote-mid:#0969a8;--vote-base:#073d65}
+.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b):not(:disabled){color:#fff;border-color:var(--vote-accent);background:linear-gradient(180deg,var(--vote-top),var(--vote-mid) 55%,var(--vote-base));box-shadow:inset 0 1px 0 #ffffff55,inset 0 -1px 0 #0007,0 2px 5px #0008,0 0 10px color-mix(in srgb,var(--vote-accent) 18%,transparent);text-shadow:0 1px 2px #0009;transition:box-shadow .08s ease-out,border-color .08s ease-out}
+@media(hover:hover) and (pointer:fine){.shell .shootout-content .choice-controls button:is(.choice-a,.choice-tie,.choice-b):not(:disabled):is(:hover,:focus-visible){color:#fff;filter:none;transform:none;translate:none;border-color:color-mix(in srgb,var(--vote-accent) 70%,white);box-shadow:inset 0 1px 0 #ffffff85,inset 0 -1px 0 #0006,0 0 0 1px color-mix(in srgb,var(--vote-accent) 40%,transparent),0 0 12px color-mix(in srgb,var(--vote-accent) 65%,transparent),0 0 28px color-mix(in srgb,var(--vote-accent) 32%,transparent),0 5px 12px #0008}}
+
+.shell .shootout-content .choice-controls button.choice-tie:not(:disabled),.shell .shootout-content .choice-controls button.choice-tie:not(:disabled):is(:hover,:focus-visible){color:#17232d;text-shadow:0 1px 0 #ffffff70}
+
+/* Paired responses are the primary measurement input; the single response is secondary. */
+.measurement-drop{position:relative;min-width:0}.measurement-drop .drop-zone{padding:25px 16px;min-height:125px;justify-content:center;background:#182e37;border-color:#639caa}.measurement-drop .drop-zone strong{overflow-wrap:anywhere}.measurement-drop input[type=file]{position:absolute;opacity:0;width:1px;height:1px}.measurement-drop:focus-within .drop-zone{outline:2px solid #87e3d4;outline-offset:3px}.measurement-drop.is-dragging .drop-zone{background:#254953;border-color:#8ce4d4}.measurement-drop.is-disabled .drop-zone{background:#18242a;border-color:#475961;color:#a2b3bb;cursor:default}.measurement-drop.is-disabled .drop-zone strong{color:#9eb4bc}.measurement-drop-secondary .drop-zone{min-height:68px;padding:12px;background:#19272f;border-color:#485f6b}.measurement-drop-secondary .drop-zone strong{font-size:12px;font-weight:500}.channel-file-row>.measurement-drop{min-width:0}.library-eq-match{display:flex!important;align-items:center;gap:9px}.library-eq-match input{width:18px!important;min-height:18px!important}.library-eq-match:has(input:focus-visible){outline:2px solid #87e3d4;outline-offset:3px}

@@ -1,3 +1,4 @@
+import * as fitters from "../lib/fitter-settings.ts";
 import * as requestInput from "../lib/request-json.ts";
 import * as fingerprints from "../lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
@@ -11,14 +12,14 @@ const targets=[{id:'a',name:'Alpha',creator:'QA',status:'approved'},{id:'b',name
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[];
 const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
-function load(file){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return fixtureModule.exports;}
+function load(file){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return fixtureModule.exports;}
 deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
 const route=load('app/api/research/route.ts');
 const interval=(side,start,end)=>({side,start,end,rate:1});
 const pair=(start,end)=>[interval(0,start,end),interval(1,start,end)];
 const row=(id,intervals,extra={})=>({id,voterId:'listener-'+id,winnerId:'a',loserId:'b',testMode:'bring',headphoneType:'ie',protocolVersion:LISTENING_PROTOCOL,eligible:1,heardA:8,heardB:8,overlapSeconds:8,intervals:JSON.stringify(intervals),songTitle:'Track',songArtist:'Artist',songAlbum:'Album',recordingId:'recording',sha256:'a'.repeat(64),reasonTags:'[]',...extra});
-const get=async()=> (await route.GET()).json();let checks=0;
+const get=async()=> {const data=await (await route.GET()).json();return data.fitterCohorts.find(c=>c.key==="historical")?.view ?? data;};let checks=0;
 async function expectCount(label,expected,current=expected){const data=await get();assert.equal(data.all.voteCount,expected,label);assert.equal(data.protocols.current.all.voteCount,current,label+' (current cohort)');checks++;console.log('PASS '+label);return data;}
 votes=[row('moved',pair(35,43))];await expectCount('Moved same excerpt qualifies',1);
 votes=[row('trimmed',pair(35,41))];await expectCount('Six-second trimmed excerpt qualifies',1);

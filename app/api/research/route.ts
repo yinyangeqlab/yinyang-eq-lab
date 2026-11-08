@@ -1,3 +1,4 @@
+import { MAIN_FITTER_COHORT } from "@/lib/fitter-settings";
 import { rankingEvidence, type EvidenceVote } from "@/lib/ranking-evidence";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { maintenanceResponse } from "@/lib/maintenance";
@@ -39,5 +40,8 @@ export async function GET() {
   return { methodology: "participant-balanced-fractional-bt-v2", fileMatching: "sha256-two-participant-groups-v2", reasonCounts, all: rank(qualified), random: rank(randomVotes), bring: rank(bringVotes), curated: { ...rank(curatedVotes), trackCount: curatedTracks.length }, verified: rank(verifiedVotes),
     categories: { random: { ie: byType(randomVotes, "ie"), oe: byType(randomVotes, "oe") }, bring: { ie: byType(bringVotes, "ie"), oe: byType(bringVotes, "oe") }, all: { ie: byType(qualified, "ie"), oe: byType(qualified, "oe") }, curated: { ie: byType(curatedVotes, "ie"), oe: byType(curatedVotes, "oe") }, verified: { ie: byType(verifiedVotes, "ie"), oe: byType(verifiedVotes, "oe") } } };
   }
-  return Response.json({...build(qualified), protocols:{current:build(qualified.filter(v=>v.protocolVersion===LISTENING_PROTOCOL)),legacy:build(qualified.filter(v=>v.protocolVersion!==LISTENING_PROTOCOL))}});
+  const view = (votes: EvidenceVote[]) => ({...build(votes),protocols:{current:build(votes.filter(v=>v.protocolVersion===LISTENING_PROTOCOL)),legacy:build(votes.filter(v=>v.protocolVersion!==LISTENING_PROTOCOL))}});
+  const cohorts = new Map<string, string>([[MAIN_FITTER_COHORT, "Standard · 10 bands · main reference"]]);
+  for (const vote of evidence.allFitterVotes) if (vote.fitterCohort) cohorts.set(vote.fitterCohort.key, vote.fitterCohort.key === MAIN_FITTER_COHORT ? "Standard · 10 bands · main reference" : vote.fitterCohort.label);
+  return Response.json({...view(qualified),mainFitterCohort:MAIN_FITTER_COHORT,fitterCohorts:[...cohorts].map(([key,label])=>({key,label,view:view(evidence.allFitterVotes.filter(v=>v.fitterCohort?.key===key))}))});
 }

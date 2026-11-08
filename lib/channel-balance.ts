@@ -5,6 +5,7 @@ import { presetResponse } from "./peq-preset";
 // A measured magnitude response has no acoustic phase information. The matched
 // response is therefore checked against the measured magnitude model only.
 const LENGTH = 8192;
+export type ChannelMatch = Pick<HeadphoneMeasurement, "leftPoints" | "rightPoints" | "leftLevelDb" | "rightLevelDb" | "channelMatchMode" | "channelMatchPreset">;
 
 export function at(points: Point[], hz: number) {
   if (hz <= points[0][0]) return points[0][1];
@@ -44,7 +45,7 @@ function fft(real: Float64Array, imag: Float64Array, inverse = false) {
   if (inverse) for (let i = 0; i < n; i++) { real[i] /= n; imag[i] /= n; }
 }
 
-export function channelBalance(measurement: HeadphoneMeasurement | undefined, sampleRate: number, customAllowed = true) {
+export function channelBalance(measurement: ChannelMatch | undefined, sampleRate: number, customAllowed = true) {
   const left = measurement?.leftPoints, right = measurement?.rightPoints;
   const supplied = customAllowed && measurement?.channelMatchMode === "custom" && measurement.channelMatchPreset;
   if ((!left?.length || !right?.length) && !supplied) return null;

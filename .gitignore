@@ -76,3 +76,6 @@ work/
 /recovery-inputs/
 /.recovery-local/
 /archive/
+
+# Prepared external Public Sans font/license; restore through the pinned preparation script.
+/public/fonts/public-sans/

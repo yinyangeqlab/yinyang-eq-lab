@@ -1,3 +1,4 @@
+import type { FitterSettings, FitProvenance } from "@/lib/fitter-settings";
 import type { PersonalPlayback } from "@/lib/personal-playback";
 // Local discovery policy v1. These are scheduling heuristics, not a calibrated
 // best-arm identification procedure or a population preference estimator.
@@ -5,13 +6,14 @@ export const MAX_PERSONAL_CANDIDATES = 200;
 export const PERSONAL_KEY = "target-lab-personal-shootouts-v1";
 export type Candidate = { id: string; name: string; family: string };
 export type PersonalChoice = {
-  pair: [string, string]; result: "a" | "b" | "tie" | "skip";
+  eqFits?: FitProvenance[]; pair: [string, string]; result: "a" | "b" | "tie" | "skip";
+  heardSeconds?: [number, number];
   matchedPassageRequired?:boolean;matchedPassage?:boolean;recording: string; start: number; end: number; at: number; phase: "explore" | "confirm";
 };
 export type PersonalMusic = { mode: "pool" | "song" | "playlist" | "upload"; ids: string[] };
 export type PersonalCheckpoint = { at: number; choices: number; comparisons: number; explored: number; phase: "explore" | "confirm"; favorite: string | null; leaders: { id: string; name: string; wins: number; losses: number; ties: number }[] };
 export type PersonalRun = {
-  version: 1; adminTestOnly?:boolean; requireMatchedPassage?:boolean;context: string; label: string; candidates: Candidate[]; music?: PersonalMusic; playback?: PersonalPlayback;
+  version: 1; schedulerVersion?: "personal-v2"; adminTestOnly?:boolean; requireMatchedPassage?:boolean;context: string; label: string; candidates: Candidate[]; music?: PersonalMusic; playback?: PersonalPlayback; fitter?: FitterSettings;
   choices: PersonalChoice[]; excluded: string[]; restored: string[];
   pending: [string, string] | null; phase: "explore" | "confirm";
   finalists: string[]; budget: number; checkpoint: number; updatedAt: number;
@@ -24,7 +26,7 @@ export function targetFamily(target: { id: string; name: string; parentTargetId?
 }
 export function createPersonalRun(context: string, label: string, candidates: Candidate[], budget = 20): PersonalRun {
   if (candidates.length < 2 || candidates.length > MAX_PERSONAL_CANDIDATES) throw Error(`Choose 2–${MAX_PERSONAL_CANDIDATES} targets before starting. Your saved runs are unchanged.`);
-  return { version: 1, context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
+  return { version: 1, schedulerVersion: "personal-v2", context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
 }
 const pairKey = (pair: string[]) => [...pair].sort().join("|");
 export function personalStandings(run: PersonalRun) {
@@ -56,10 +58,11 @@ export function personalStandings(run: PersonalRun) {
   return rows.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
 }
 export function confirmationEvidence(run: PersonalRun, pair: string[]) {
-  return new Set(run.choices.filter(c => c.phase === "confirm" && c.result !== "skip" && c.matchedPassage!==false && !!c.recording && pairKey(c.pair) === pairKey(pair)).map(c => c.recording));
+  return new Set(run.choices.filter(c => c.phase === "confirm" && c.result !== "skip" && (c.matchedPassage !== false || run.requireMatchedPassage !== true && c.matchedPassageRequired === false && c.heardSeconds?.every(seconds => seconds > 0)) && !!c.recording && pairKey(c.pair) === pairKey(pair)).map(c => c.recording));
 }
 export function personalFavorite(run: PersonalRun) {
-  const shortlist = personalStandings(run).filter(row => row.heard > 0 && !run.excluded.includes(row.id)).slice(0,3);
+  if (run.schedulerVersion === "personal-v2" && !confirmationComplete(run)) return null;
+  const shortlist = personalStandings(run).filter(row => row.heard > 0 && !run.excluded.includes(row.id) && (run.schedulerVersion!=="personal-v2" || run.finalists.includes(row.id))).slice(0,3);
   if (shortlist.length < 2) return null;
   const leader = shortlist[0];
   // Do not turn a model's arbitrary tie-break or a preference cycle into a winner.
@@ -103,6 +106,7 @@ export function nextPersonalPair(run: PersonalRun, random = Math.random): [strin
     const pair = pick(pairs.filter(pair => confirmationEvidence(run, pair).size === min));
     return orient(...pair);
   }
+  if (run.schedulerVersion === "personal-v2") return progressivePair(run,rows,random);
   const last: string[] = run.choices.at(-1)?.pair ?? [];
   const active = rows.filter(row => !row.benched);
   const available = active.length >= 2 ? active : rows;
@@ -142,6 +146,57 @@ export function nextPersonalPair(run: PersonalRun, random = Math.random): [strin
   const best = Math.max(...opponents.map(priority));
   return orient(a.id, pick(opponents.filter(row => priority(row) >= best - .15)).id);
 }
+
+/** New discovery procedure: connect newcomers to known contenders and compare contenders during coverage. */
+function progressivePair(run: PersonalRun, rows: ReturnType<typeof personalStandings>, random: () => number): [string,string] | null {
+  const pick = <T,>(items:T[]) => items[Math.min(items.length-1,Math.floor(random()*items.length))];
+  const orient = (a:string,b:string):[string,string] => random()<.5?[a,b]:[b,a];
+  const last:string[]=run.choices.at(-1)?.pair??[];
+  const active=rows.filter(row=>!row.benched),available=active.length>=2?active:rows;
+  const known=available.filter(row=>row.heard>0),unseen=available.filter(row=>row.heard===0);
+  const meetings=(a:string,b:string)=>run.choices.filter(c=>c.result!=="skip"&&pairKey(c.pair)===pairKey([a,b])).length;
+  const contenders=()=>{
+    const top=known.slice(0,Math.min(6,known.length));
+    const leaderScore=top[0].score;
+    const a=pick(top.filter(row=>row.score>=leaderScore-.1));
+    let others=top.filter(row=>row.id!==a.id);
+    const notLast=others.filter(row=>pairKey([a.id,row.id])!==pairKey(last));if(notLast.length)others=notLast;
+    const fewest=Math.min(...others.map(row=>meetings(a.id,row.id)));
+    const fresh=others.filter(row=>meetings(a.id,row.id)===fewest);
+    const best=Math.max(...fresh.map(row=>row.score));
+    return orient(a.id,pick(fresh.filter(row=>row.score>=best-.1)).id);
+  };
+  // Every third decision connects likely contenders, even while the pool is still being introduced.
+  if(known.length>=2 && run.choices.length%3===2)return contenders();
+  if(unseen.length){
+    const a=pick(unseen),winners=known.filter(row=>row.wins>0||row.ties>0),anchors=(winners.length?winners:known).slice(0,6);
+    if(!anchors.length){const other=unseen.filter(row=>row.id!==a.id);return orient(a.id,pick(other).id);}
+    const cooled=anchors.filter(row=>!last.includes(row.id));const options=cooled.length?cooled:anchors;
+    const least=Math.min(...options.map(row=>row.heard));return orient(a.id,pick(options.filter(row=>row.heard===least)).id);
+  }
+  // Continue some coverage and periodically give benched targets another chance.
+  const rescue=run.choices.length%10===9?rows.filter(row=>row.benched):[];
+  if(rescue.length||random()<.25){
+    const pool=rescue.length?rescue:available,least=Math.min(...pool.map(row=>row.heard));const a=pick(pool.filter(row=>row.heard===least));
+    let others=available.filter(row=>row.id!==a.id);if(!others.length)others=rows.filter(row=>row.id!==a.id);
+    const counts=Math.min(...others.map(row=>meetings(a.id,row.id)));return orient(a.id,pick(others.filter(row=>meetings(a.id,row.id)===counts)).id);
+  }
+  return contenders();
+}
+
+export function personalFinalistReadiness(run:PersonalRun) {
+  const rows=personalStandings(run).filter(row=>!run.excluded.includes(row.id));
+  const shortlist=rows.filter(row=>row.heard>0&&!row.benched).slice(0,3);
+  if(run.schedulerVersion!=="personal-v2")return {ready:shortlist.length>=2,reason:"",ids:shortlist.map(row=>row.id)};
+  const unseen=rows.filter(row=>row.heard===0).length;
+  const result=(ready:boolean,reason:string)=>({ready,reason,ids:shortlist.map(row=>row.id)});
+  if(unseen)return result(false,`${unseen} targets in this pool are still unheard. These are early contenders, not a confirmed shortlist.`);
+  const minimumOpponents=Math.min(2,rows.length-1);
+  if(shortlist.length<2||shortlist.some(row=>row.heard<3||row.opponents.size<minimumOpponents))return result(false,"Leading targets need at least three comparisons and more than one opponent before finalist checks.");
+  const fourth=rows.filter(row=>row.heard>0&&!row.benched)[3];
+  if(fourth&&Math.abs(fourth.score-shortlist[2].score)<1e-8)return result(false,"More than three contenders remain tied. Continue listening rather than choosing finalists by name or ID.");
+  return result(true,"Ready to compare the leading targets on different songs.");
+}
 export function recordPersonalChoice(run: PersonalRun, choice: PersonalChoice): PersonalRun {
   if (!run.pending || pairKey(run.pending) !== pairKey(choice.pair) || run.pending[0] !== choice.pair[0]) throw Error("This matchup has changed. Please listen again.");
   if (run.choices.length >= 500) throw Error("This run has reached 500 comparisons. Export it, then start a new run.");
@@ -156,6 +211,8 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
     if (!r || r.version !== 1 || typeof r.context !== "string" || typeof r.label !== "string" || !Number.isFinite(r.updatedAt) || !Array.isArray(r.candidates) || r.candidates.length < 2 || r.candidates.length > MAX_PERSONAL_CANDIDATES || !Array.isArray(r.choices) || r.choices.length > 500 || !Array.isArray(r.excluded) || !Array.isArray(r.restored) || !Array.isArray(r.finalists) || ![10,20,40].includes(r.budget) || !Number.isInteger(r.checkpoint) || r.checkpoint < 0 || !["explore", "confirm"].includes(r.phase)) throw Error("Invalid saved personal run.");
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
+    if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2") throw Error("Unsupported saved scheduler version.");
+    if (r.fitter && (!["standard","precise","peqdb"].includes(r.fitter.method)||![10,15,20,30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
     if (r.playback && (!["-14","-16","-18","off"].includes(r.playback.loudnessTarget)||!["auto","uploaded","off"].includes(r.playback.channelMode))) throw Error("Invalid saved playback settings.");
     if (r.music && (!["pool","song","playlist","upload"].includes(r.music.mode) || !Array.isArray(r.music.ids) || r.music.ids.length > 200 || r.music.ids.some(id => typeof id !== "string") || r.music.mode === "song" && r.music.ids.length !== 1)) throw Error("Invalid saved music choices.");
     const ids = new Set(r.candidates.map(c => c?.id));
@@ -167,7 +224,7 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
     }
     const validPair = (pair: unknown): pair is [string,string] => Array.isArray(pair) && pair.length === 2 && pair[0] !== pair[1] && pair.every(id => typeof id === "string" && ids.has(id));
     if (r.pending !== null && !validPair(r.pending) || [...r.excluded,...r.restored,...r.finalists].some(id => !ids.has(id)) || r.finalists.length > 3) throw Error("Invalid saved pairing.");
-    for (const c of r.choices) if (!c || c.matchedPassageRequired!==undefined&&typeof c.matchedPassageRequired!=="boolean" || c.matchedPassage!==undefined&&typeof c.matchedPassage!=="boolean" || !validPair(c.pair) || !["a","b","tie","skip"].includes(c.result) || !["explore","confirm"].includes(c.phase) || typeof c.recording !== "string" || ![c.start,c.end,c.at].every(Number.isFinite) || c.end < c.start) throw Error("Invalid saved personal choice.");
+    for (const c of r.choices) if (!c || c.heardSeconds !== undefined && (!Array.isArray(c.heardSeconds) || c.heardSeconds.length !== 2 || c.heardSeconds.some(n => !Number.isFinite(n) || n < 0)) || c.matchedPassageRequired!==undefined&&typeof c.matchedPassageRequired!=="boolean" || c.matchedPassage!==undefined&&typeof c.matchedPassage!=="boolean" || !validPair(c.pair) || !["a","b","tie","skip"].includes(c.result) || !["explore","confirm"].includes(c.phase) || typeof c.recording !== "string" || ![c.start,c.end,c.at].every(Number.isFinite) || c.end < c.start) throw Error("Invalid saved personal choice.");
   }
   return runs as PersonalRun[];
 }

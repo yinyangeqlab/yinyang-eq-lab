@@ -1,8 +1,10 @@
 import { packagePeqdbAssets } from "./peqdb-assets.mjs";
+import { verifyVoteFontAssets } from "./vote-font-assets.mjs";
 import {readdirSync,mkdirSync,lstatSync,statSync,linkSync,copyFileSync,unlinkSync,readFileSync,existsSync,writeFileSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
+verifyVoteFontAssets();
 const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/client');
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
@@ -25,6 +27,16 @@ function visit(folder,relative=''){
 }
 visit(source);
 packagePeqdbAssets(destination);
+if(!publicOnly){
+ const peaks=join(root,'artifacts/waveform-peaks/public/__waveform-peaks');
+ const audioManifest=JSON.parse(readFileSync(join(root,'data/listening-pool-audio-manifest.json'),'utf8'));
+ mkdirSync(join(destination,'__waveform-peaks'),{recursive:true});
+ for(const asset of Object.values(audioManifest)){
+  const name=asset.sha256+'.bin',input=join(peaks,name),output=join(destination,'__waveform-peaks',name);
+  if(!existsSync(input))throw new Error('Missing detailed waveform assets. Run python3 scripts/prepare-waveform-peaks.py before full packaging.');
+  if(existsSync(output))unlinkSync(output);copyFileSync(input,output);
+ }
+}
 const manifest=JSON.parse(readFileSync(join(root,'data/listening-pool-audio-manifest.json'),'utf8'));
 if(!publicOnly)for(const asset of Object.values(manifest))for(const part of asset.parts){const file=resolve(destination,'.'+part.path);if(!file.startsWith(destination+'/')||!existsSync(file)||statSync(file).size!==part.bytes)throw new Error('Incomplete protected media package. Restore the authorized media for a live rebuild; use --public-only solely for a public clone preview.');}
 if(publicOnly)console.log(`Packaged ${files} public-clone assets. Protected recordings not verified; NOT a deployable live package.`);

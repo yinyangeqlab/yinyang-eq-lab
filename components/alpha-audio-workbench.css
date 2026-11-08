@@ -454,10 +454,6 @@
 .shell.alpha-listening .shootout-content .pair-picker .alpha-target-actions .compare-random-button:hover{border-color:#7bcbd3;background:#17353d;color:#e5faff;box-shadow:none}
 .shell.alpha-listening .listen-card .curve-frame{height:clamp(152px,23vh,240px)}
 .shell.alpha-listening .listen-card .card-bottom{min-height:38px;padding:6px 10px}
-.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row{display:grid;grid-template-columns:auto minmax(0,180px) 4ch;align-items:center;justify-content:center;gap:8px;flex:1 1 100%;grid-column:1/-1;grid-row:3;width:100%;min-width:0;min-height:30px;margin:0;color:#9eafb8;font-size:11px;line-height:1.3}
-.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row[hidden]{display:none}
-.shell.alpha-listening .music-panel-host .playback-transport .playback-volume-row .deck-volume{display:block;position:static;inset:auto;transform:none;box-sizing:border-box;flex:none;width:100%;max-width:100%;min-width:0;height:30px;min-height:30px;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
-.shell.alpha-listening .music-panel-host .playback-volume-row output{text-align:right;font:500 10px/1.3 ui-monospace,monospace;color:#c1d0d8}
 .shell.alpha-listening .music-panel-host.persistent.edge-expanded .music-panel>.playback-transport{display:flex!important}
 @media(min-width:641px){
  .shell.alpha-listening .shootout-content .tournament-modes{margin-bottom:8px}
@@ -467,10 +463,10 @@
  .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-label{font-size:12px}
  .shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact,.shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact>svg{width:44px;height:33px}
  .shell.alpha-listening .shootout-content .measurement-picker{grid-template-columns:24px minmax(125px,max-content) minmax(0,1fr) 124px;gap:6px}
- .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:180px;min-width:125px;max-width:100%;height:36px}
+ .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:180px;min-width:125px;max-width:100%;height:42px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{font-size:10px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-mark svg{width:24px;height:24px}
- .shell.alpha-listening .shootout-content .measurement-picker .add-measurement-button{grid-column:4;grid-row:1;min-height:38px;max-width:100%;padding:5px 6px;font-size:10px;line-height:1.25}
+ .shell.alpha-listening .shootout-content .measurement-picker .add-measurement-button{grid-column:4;grid-row:1;min-height:42px;max-width:100%;padding:5px 6px;font-size:10px;line-height:1.25}
 }
 @media(max-width:640px){
  .shell.alpha-listening .shootout-content .shootout-setup{grid-template-columns:minmax(0,1fr);gap:4px}
@@ -544,3 +540,31 @@
 /* Keep both headphone-type labels visible when users enlarge text. */
 .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{height:auto;min-height:36px}
 .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{height:auto;min-height:36px;white-space:normal;overflow-wrap:normal}
+
+/* Keep the comparison compact and visibly boxed, with one centered transport. */
+.shell.alpha-listening.personal-shootout .shootout-content{width:100%;max-width:1120px;margin-inline:auto}
+.shell.alpha-listening.personal-shootout .personal-ab .listen-card{border:1px solid #597482;border-radius:12px;background:#0b1720;padding:0;box-shadow:inset 0 1px #ffffff0b}
+.shell.alpha-listening.personal-shootout .personal-ab .listen-card:first-child{border-color:#945266}
+.shell.alpha-listening.personal-shootout .personal-ab .listen-card:nth-child(2){border-color:#387da8}
+.shell.alpha-listening.personal-shootout .personal-ab .curve-frame{border:0;border-radius:0;height:clamp(160px,22vh,225px)}
+.shell.alpha-listening.personal-shootout .personal-ab .card-bottom{border-top:0;padding:10px 4px 2px}
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .playback-transport{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.shell.alpha-listening.personal-shootout .playback-end{display:contents}
+.shell.alpha-listening.personal-shootout .playback-secondary{display:flex;align-items:center;gap:8px}
+.shell.alpha-listening .shootout-content .measurement-picker .measurement-saved-note{display:block;grid-column:1/-1;margin:4px 0 0;color:#abc4cd;font-size:12px;line-height:1.5}
+.shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{min-height:40px}
+
+@media(max-width:600px){
+ .shell.alpha-listening.personal-shootout .personal-ab.cards{grid-template-columns:minmax(0,1fr)}
+ .shell.alpha-listening.personal-shootout .personal-ab .curve-frame{height:160px}
+}
+
+.shell.alpha-listening.personal-shootout .personal-ab .chart{padding:6px 4px 0;gap:2px;align-items:stretch}
+.shell.alpha-listening.personal-shootout .personal-ab .level-meter{margin:0 0 6px;width:10px;min-width:10px}
+
+.shell.alpha-listening.personal-shootout .personal-ab .chart{grid-template-columns:minmax(0,1fr) 10px}
+.shell.alpha-listening.personal-shootout .personal-ab .card-bottom{padding:8px 12px}
+.shell.alpha-listening.personal-shootout .personal-ab .chart-labels span:nth-child(1){left:4%;transform:none}
+.shell.alpha-listening.personal-shootout .personal-ab .chart-labels span:nth-child(2){left:34.67%}
+.shell.alpha-listening.personal-shootout .personal-ab .chart-labels span:nth-child(3){left:65.33%}
+.shell.alpha-listening.personal-shootout .personal-ab .chart-labels span:nth-child(4){right:4%}

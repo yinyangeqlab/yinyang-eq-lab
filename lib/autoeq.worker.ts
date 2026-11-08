@@ -7,6 +7,11 @@ self.onmessage = async (event: MessageEvent<{ id: number; request: AutoEqRequest
   try {
     validateRequest(request);
     let results;
+    if (request.method === "standard" || request.method === "precise") {
+      results = legacyBatch(request, "");
+      self.postMessage({ id, results, unavailable });
+      return;
+    }
     try {
       if (unavailable) throw Error('Engine unavailable');
       engine ??= import(/* @vite-ignore */ "/vendor/peqdb-autoeq/autoeq-wasm.mjs").then(({ default: factory }) => createEngine(factory)).catch(error => { unavailable = true; throw error; });

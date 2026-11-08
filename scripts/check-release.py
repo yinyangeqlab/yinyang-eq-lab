@@ -69,11 +69,14 @@ public_evidence = {
 }
 
 
-# Reviewed, already-public in-memory SQLite fixtures contain synthetic target rows,
+# Reviewed in-memory SQLite fixtures contain synthetic target rows,
 # not private numerical target seeds. Only these exact blobs waive that one rule;
 # every credential/path guard still applies, and any edited/new fixture fails closed.
 reviewed_synthetic_target_fixtures = {
-    "scripts/check_target_context_and_changes.mjs": "bec7105f998e91d682b9a544a39e0c797a43115c06a0951a54ca3e18405bd1fd",
+    "scripts/check_audit_privacy.mjs": "30760a6787080fe0b9bd57e5b946882bb443b8bba2aea1a1c59f1f35af31e0c5",
+    "scripts/check_personal_research.mjs": "ccf8d260947b7c82491df4cba89d10a079907bd831927e9042bbe7d0079152a7",
+    "scripts/check_community_reference.mjs": "9e847bdc8cced7da53bed2620831b2cfd6e2a19ba9bd449db6199495ce3ec4cd",
+    "scripts/check_target_context_and_changes.mjs": "282e850e0d933ed2a22dba74ab39e5ebda60a937b7ada58665d76e38ee68f73c",
     "scripts/check_yinyangeq_history.mjs": "fc811f283acee3bef28755d54b30a067ee9433e9f7e9a6c21948a4694cab1466",
 }
 

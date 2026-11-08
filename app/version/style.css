@@ -1,0 +1,27 @@
+.version-history { display: grid; gap: 12px; }
+.version-history details {
+  padding: 8px 11px;
+  border: 1px solid #35525b;
+  border-radius: 8px;
+  background: #0d2028;
+  scroll-margin-top: 68px;
+}
+.version-history summary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  cursor: pointer;
+}
+.version-history summary strong { color: #9de8dc; }
+.version-history summary strong::before { content: "▸"; display: inline-block; width: 13px; }
+.version-history details[open] summary strong::before { content: "▾"; }
+.version-history time { font-size: 12px; color: #b4c6ce; }
+.version-history details ul { margin: 7px 0 10px; }
+.version-history :focus-visible { outline: 2px solid #a5eee1; outline-offset: 3px; }
+@media (max-width: 520px) {
+  .version-history summary { grid-template-columns: minmax(0, 1fr) max-content; }
+  .version-history summary span { grid-row: 2; grid-column: 1 / -1; }
+  .version-history time { grid-row: 1; grid-column: 2; }
+}

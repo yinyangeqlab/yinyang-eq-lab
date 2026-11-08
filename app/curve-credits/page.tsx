@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import credits from "@/data/curve-credits.json";
+import ResearchHeader from "@/components/research-header";
 import "./style.css";
 
 export default function CurveCreditsPage() {
@@ -13,14 +14,10 @@ export default function CurveCreditsPage() {
   const sourced = credits.targets.filter(target => target.sourceUrl).length;
 
   return <main className="curve-credits">
-    <header className="credits-header">
-      {/* eslint-disable-next-line @next/next/no-html-link-for-pages, @next/next/no-img-element -- Use full-document navigation so access checks and unsaved-listening beforeunload guards run. This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
-      <a href="/" className="credits-brand"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ</em></span></a>
-      <nav aria-label="Credits navigation"><a href="/shootout">Tournament</a><a href="/music-library">Listening pool</a></nav>
-    </header>
+    <ResearchHeader section="targets"/>
     <section className="credits-intro">
       <span className="credits-eyebrow">THE PEOPLE BEHIND THE CURVES</span>
-      <h1>Good listening starts<br />with giving credit.</h1>
+      <h2 className="research-section-title">Targets &amp; credits</h2><p className="beginner-note">Creators and sources behind the built-in targets. <a href="/glossary#target">What is a target?</a> Credit alone does not grant reuse rights.</p>
       <p>Target curves reflect the work of researchers, reviewers and the audio community. This page credits curve creators and explains how curves were imported or reproduced. Every built-in curve is included, whether or not a reuse license has been identified. Each entry separates attribution, source, changes and our basis for use.</p>
       <div className="credits-stats" role="group" aria-label="Curve attribution summary">
         <div><strong>{credited}</strong><span>credited curves</span></div><div><strong>{sourced}</strong><span>source references</span></div><div><strong>{licensed}</strong><span>stated licenses</span></div>

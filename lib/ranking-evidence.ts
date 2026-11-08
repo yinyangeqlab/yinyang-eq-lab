@@ -1,3 +1,4 @@
+import { fitterCohort, MAIN_FITTER_COHORT } from "@/lib/fitter-settings";
 import { isTestSubject } from "@/lib/admin-contributions";
 import { getDb } from "@/db";
 import { runFileFingerprint } from "@/lib/file-fingerprint";
@@ -26,8 +27,14 @@ export async function rankingEvidence() {
   } catch {return false;}
  };
  const excludedTrials=new Set(runs.filter(run=>run.trialId&&(!official("run",run.id)||!active("run",run.id))).map(run=>run.trialId));
- const decisive=allVotes.filter(v=>official("vote",v.id)&&official("trial",v.id)&&(!isTestSubject(v.voterId)||ownership.has(`vote:${v.id}`))&&active("vote",v.id)&&!excludedTrials.has(v.id)&&v.eligible===1&&valid(v.testMode,v.winnerId,v.loserId,v.heardA,v.heardB,v.protocolVersion,v.intervals)).map(v=>({...v,voterId:participant("vote",v.id,v.voterId),result:"preference"}));
- const ties=runs.filter(run=>run.result==="tie"&&official("run",run.id)&&(!run.trialId||official("trial",run.trialId)&&official("vote",run.trialId))&&(!isTestSubject(run.voterId)||ownership.has(`run:${run.id}`))&&active("run",run.id)&&(!run.trialId||active("vote",run.trialId))&&valid(run.testMode,run.targetAId,run.targetBId,run.heardA,run.heardB,run.protocolVersion,run.intervals)).map(run=>({...run,id:`tie:${run.id}`,voterId:participant("run",run.id,run.voterId),winnerId:run.targetAId,loserId:run.targetBId,sha256:runFileFingerprint(run.researchContext),audioFormat:null,sampleRate:null,bitrate:null,duration:null,reasonTags:"[]",result:"tie"}));
- return {targets:allTargets.filter(t=>approved.has(t.id)),votes:[...decisive,...ties]};
+ const runCohorts = new Map<string, ReturnType<typeof fitterCohort>>();
+ for (const run of runs) if (run.trialId && official("run",run.id) && active("run",run.id)) {
+   const cohort = fitterCohort(run.researchContext), prior = runCohorts.get(run.trialId);
+   runCohorts.set(run.trialId, prior && prior.key !== cohort.key ? { key: "mixed", label: "Inconsistent fitter records · excluded" } : cohort);
+ }
+ const decisive=allVotes.filter(v=>official("vote",v.id)&&official("trial",v.id)&&(!isTestSubject(v.voterId)||ownership.has(`vote:${v.id}`))&&active("vote",v.id)&&!excludedTrials.has(v.id)&&v.eligible===1&&valid(v.testMode,v.winnerId,v.loserId,v.heardA,v.heardB,v.protocolVersion,v.intervals)).map(v=>({...v,voterId:participant("vote",v.id,v.voterId),result:"preference", fitterCohort:runCohorts.get(v.id) ?? fitterCohort(null)}));
+ const ties=runs.filter(run=>run.result==="tie"&&official("run",run.id)&&(!run.trialId||official("trial",run.trialId)&&official("vote",run.trialId))&&(!isTestSubject(run.voterId)||ownership.has(`run:${run.id}`))&&active("run",run.id)&&(!run.trialId||active("vote",run.trialId))&&valid(run.testMode,run.targetAId,run.targetBId,run.heardA,run.heardB,run.protocolVersion,run.intervals)).map(run=>({...run,id:`tie:${run.id}`,voterId:participant("run",run.id,run.voterId),winnerId:run.targetAId,loserId:run.targetBId,sha256:runFileFingerprint(run.researchContext),audioFormat:null,sampleRate:null,bitrate:null,duration:null,reasonTags:"[]",result:"tie", fitterCohort:fitterCohort(run.researchContext)}));
+ const allFitterVotes = [...decisive,...ties].filter(v=>v.fitterCohort.key!=="mixed");
+ return {targets:allTargets.filter(t=>approved.has(t.id)),votes:allFitterVotes.filter(v=>v.fitterCohort.key===MAIN_FITTER_COHORT),allFitterVotes};
 }
-export type EvidenceVote=RankingVote & {testMode:string;headphoneType:string|null;protocolVersion:string;songTitle:string|null;songArtist:string|null;songAlbum:string|null;recordingId:string|null;sha256:string|null;reasonTags:string|null};
+export type EvidenceVote=RankingVote & {fitterCohort?:{key:string;label:string};testMode:string;headphoneType:string|null;protocolVersion:string;songTitle:string|null;songArtist:string|null;songAlbum:string|null;recordingId:string|null;sha256:string|null;reasonTags:string|null};

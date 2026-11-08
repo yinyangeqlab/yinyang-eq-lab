@@ -285,13 +285,13 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     <main className="es-card" aria-live="polite" aria-busy={phase === "loading" || busy}>
       {phase === "loading" && <p className="es-status">Loading shootout…</p>}
 
-      {phase === "error" && <div className="es-center"><h1>Shootout unavailable</h1><p>{error}</p>{!embed && <a className="es-button" href="/share-shootout">Make a new shootout</a>}</div>}
+      {phase === "error" && <div className="es-center"><h1>Shootout unavailable</h1><p>{error}</p><p>Reloading starts this quick comparison again and clears any choices not yet sent.</p><button type="button" className="es-button" onClick={()=>window.location.reload()}>Reload comparison</button>{!embed && <a className="es-button" href="/share-shootout">Make a new shootout</a>}</div>}
 
       {phase === "intro" && config && <section className="es-intro">
         <p className="es-eyebrow">Blind shootout · {config.bands.length} targets · about {Math.max(1, Math.round(roundCount * 0.75))} min</p>
         <h1>{config.title}</h1>
         <p className="es-lead">You will hear short loops through hidden EQ curves and pick the one that sounds better. Sides are shuffled, and the names appear only after your last pick.</p>
-        <p>Target curves are adjusted to the same mean band power across 125 Hz–8 kHz. This is an approximation, not a measurement of perceived playback loudness. No headphone correction is applied, so you hear the target differences on top of your own headphones.</p>
+        <p>Hear the same short sound with two different balances of bass, middle and high sounds. This quick comparison adds changes to your headphones’ usual sound; it does not use a measurement of your model. A signal-level adjustment is applied (mean band power, 125 Hz–8 kHz), but perceived loudness can still differ.</p>
         <ul className="es-tips"><li>Best on headphones. <strong>Start the volume low</strong> and raise it gently.</li><li>Switch between <b className="es-a">A</b> and <b className="es-b">B</b> as often as you like. The music keeps playing.</li><li>No right answers. Trust what you prefer.</li></ul>
         <fieldset className="es-field"><legend>How are you listening? <small>(optional)</small></legend>
           <div className="es-chips">{EMBED_LISTENER_KINDS.map(option => <label key={option} className={kind === option ? "on" : ""}><input type="radio" name="kind" checked={kind === option} onChange={() => setKind(option)} />{KIND_LABELS[option]}</label>)}</div>
@@ -306,7 +306,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
         <label className="es-check"><input type="checkbox" checked={peek} onChange={event => setPeek(event.target.checked)} /> Show the curves while I listen <small>(counts as a sighted run, kept out of the blind totals)</small></label>
         {repeat && <p className="es-note">You already sent picks for this shootout from this browser. You can listen again; extra runs are not recorded.</p>}
         <button type="button" className="es-button es-primary" onClick={() => void start()}>Start listening</button>
-        <p className="es-privacy">Only your A/B picks (and the optional answers above) are sent. No account, no cookies and no tracking ID. The person who shared this sees combined results.</p>
+        <p className="es-privacy">Only your A/B picks (and the optional answers above) are sent. No account, no cookies and no tracking ID. The creator can view totals and export anonymous completed-run rows, including these choices, optional setup and curve-viewing state. The creator can also choose to share those records with the lab owner.</p>
       </section>}
 
       {(phase === "listen" || phase === "sending") && config && round && <section className="es-listen">
@@ -323,7 +323,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
         <div className="es-controls">
           <button type="button" className="es-mini" onClick={() => void togglePlay()}>{playing ? "Pause" : "Play"}</button>
           <label className="es-volume">Volume<input type="range" min="0" max="1" step="0.01" value={volume} onChange={event => { const v = Number(event.target.value); setVolume(v); audition.current?.setVolume(v); }} aria-label="Volume" /></label>
-          <span className="es-hint">Space or S switches A/B (shared shootout)</span>
+          <span className="es-hint">Space or S switches sounds here. Use Pause to stop playback.</span>
         </div>
         <div className="es-vote" role="group" aria-label="Which sounds better?">
           <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("a")} className="es-vote-a">A sounds better</button>
@@ -340,7 +340,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
           const winner = leaders.length === 1 ? result.reveal[leaders[0].index] : null;
           return <>
             <p className="es-eyebrow">The reveal</p>
-            <h1>{winner ? <>Your favorite: <span style={{ color: TARGET_COLORS[leaders[0].index] }}>{winner.name}</span></> : "You liked them about equally"}</h1>
+            <h1>{winner ? <>Your favorite: <span style={{ color: TARGET_COLORS[leaders[0].index] }}>{winner.name}</span></> : "No clear favorite from these choices"}</h1>
             <CurvePlot label={`Frequency response of ${result.reveal.map(t => t.name).join(", ")}`} series={result.reveal.map(t => ({ name: t.name, bands: t.bands }))} />
             <ul className="es-reveal">
               {result.reveal.map((target, index) => {

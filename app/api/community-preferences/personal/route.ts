@@ -1,3 +1,4 @@
+import { cleanFitMetadata } from "@/lib/fitter-settings";
 import { matchedListeningProgress } from "@/lib/matched-listening";
 import { targetContextVersion } from "@/lib/target-context-version";
 import { requireParticipantSubject } from "@/lib/admin-contributions";
@@ -9,7 +10,6 @@ import { readJsonObject, RequestInputError, requestInputResponse } from "@/lib/r
 import { publicWriteGate } from "@/lib/public-write-gate";
 import { intervalStats, parseIntervals } from "@/lib/listening";
 import { listeningPool } from "@/lib/music-catalog";
-import { targetHeadphoneType } from "@/lib/target-type";
 import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 const headers = { "Cache-Control": "private, no-store", "Vary": "Cookie" };
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
@@ -60,12 +60,13 @@ export async function POST(request: Request) {
         if (!permission.enabled || data.consentToken !== permission.token || data.noticeVersion !== COMMUNITY_NOTICE_VERSION)
             throw new RequestInputError("Community research sharing is off or changed. Review your sharing option.", 403);
         const id = String(data.id || ""), a = String(data.targetAId || ""), b = String(data.targetBId || ""), setup = String(data.setupFingerprint || ""), recording = String(data.recordingId || "");
-        if (![id, a, b].every(x => uuid.test(x)) || a === b || !/^[a-f0-9]{64}$/.test(setup) || !["a", "b", "tie"].includes(String(data.result)) || !["ie", "oe"].includes(String(data.headphoneType)) || !["explore", "confirm"].includes(String(data.phase)) || !Number.isInteger(data.roundNumber) || Number(data.roundNumber) < 1 || Number(data.roundNumber) > 500 || data.schedulerVersion !== "personal-v1" || !(listeningPool.some(track => track.url === recording) || data.musicMode === "upload" && /^own:[a-f0-9-]{36}$/i.test(recording) || data.matchedPassageRequired === false && recording === ""))
+        if (![id, a, b].every(x => uuid.test(x)) || a === b || !/^[a-f0-9]{64}$/.test(setup) || !["a", "b", "tie"].includes(String(data.result)) || !["ie", "oe"].includes(String(data.headphoneType)) || !["explore", "confirm"].includes(String(data.phase)) || !Number.isInteger(data.roundNumber) || Number(data.roundNumber) < 1 || Number(data.roundNumber) > 500 || !["personal-v1","personal-v2"].includes(String(data.schedulerVersion)) || !(listeningPool.some(track => track.url === recording) || data.musicMode === "upload" && /^own:[a-f0-9-]{36}$/i.test(recording) || data.matchedPassageRequired === false && recording === ""))
             throw new RequestInputError("Invalid personal comparison.", 400);
         if (!["-14", "-16", "-18", "off"].includes(String(data.loudnessTarget)) || !["auto", "uploaded", "off"].includes(String(data.channelMode)))
             throw new RequestInputError("Invalid personal playback context.", 400);
         if (data.matchedPassageRequired !== undefined && typeof data.matchedPassageRequired !== "boolean")
             throw new RequestInputError("Invalid listening requirement.", 400);
+        let eqFits; try { eqFits = cleanFitMetadata(data.eqFits); } catch { throw new RequestInputError("Invalid EQ fitter provenance.",400); }
         const intervals = parseIntervals(data.intervals), stats = intervalStats(intervals);
         if (!Array.isArray(data.intervals) || data.intervals.length > 200 || intervals.length !== data.intervals.length)
             throw new RequestInputError("Invalid playback intervals.", 400);
@@ -88,21 +89,12 @@ export async function POST(request: Request) {
             const t = byId.get(target);
             if (!t)
                 throw new RequestInputError("Only current approved targets can be contributed.", 403);
-            let measurement = null;
-            try {
-                measurement = t.measurement ? JSON.parse(t.measurement) : null;
-            }
-            catch {
-                throw new RequestInputError("Target context unavailable.", 409);
-            }
-            const kind = targetHeadphoneType({ name: t.name, measurement, headphoneType: t.headphoneType });
-            if (kind && kind !== data.headphoneType)
-                throw new RequestInputError("Target and headphone categories must match.", 400);
+
         }
         // The permission is checked again by a database trigger in this atomic batch.
         // No vote, listening-run, ranked-trial or permanent archive row is created.
         await env.DB!.batch([
-            env.DB!.prepare("INSERT INTO community_personal_choices(id,subject_id,consent_token,notice_version,target_a_id,target_b_id,result,headphone_type,setup_fingerprint,recording_id,playback_json,selection_json,phase,round_number,protocol_version,scheduler_version,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id, identity.subjectId, permission.token, COMMUNITY_NOTICE_VERSION, a, b, String(data.result), String(data.headphoneType), setup, recording, JSON.stringify(intervals), JSON.stringify({ targetVersions: await Promise.all([a, b].map(id => targetContextVersion(byId.get(id)!))), candidateIds: ids, excludedIds: excluded, matchedPassageRequired: data.matchedPassageRequired !== false, matchedPassage: stats.heardA >= 5 && stats.heardB >= 5 && matchedListeningProgress(intervals).complete, loudnessTarget: data.loudnessTarget, channelMode: data.channelMode, musicMode: ["pool", "song", "playlist", "upload"].includes(String(data.musicMode)) ? data.musicMode : "pool" }), String(data.phase), Number(data.roundNumber), data.matchedPassageRequired === false ? FREE_LISTENING_PROTOCOL : LISTENING_PROTOCOL, "personal-v1", Date.now()),
+            env.DB!.prepare("INSERT INTO community_personal_choices(id,subject_id,consent_token,notice_version,target_a_id,target_b_id,result,headphone_type,setup_fingerprint,recording_id,playback_json,selection_json,phase,round_number,protocol_version,scheduler_version,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").bind(id, identity.subjectId, permission.token, COMMUNITY_NOTICE_VERSION, a, b, String(data.result), String(data.headphoneType), setup, recording, JSON.stringify(intervals), JSON.stringify({ eqFits, targetVersions: await Promise.all([a, b].map(id => targetContextVersion(byId.get(id)!))), candidateIds: ids, excludedIds: excluded, matchedPassageRequired: data.matchedPassageRequired !== false, matchedPassage: stats.heardA >= 5 && stats.heardB >= 5 && matchedListeningProgress(intervals).complete, loudnessTarget: data.loudnessTarget, channelMode: data.channelMode, musicMode: ["pool", "song", "playlist", "upload"].includes(String(data.musicMode)) ? data.musicMode : "pool" }), String(data.phase), Number(data.roundNumber), data.matchedPassageRequired === false ? FREE_LISTENING_PROTOCOL : LISTENING_PROTOCOL, String(data.schedulerVersion), Date.now()),
             env.DB!.prepare("INSERT INTO submission_owners(record_kind,record_id,subject_id,session_hash) VALUES('community',?,?,?)").bind(id, identity.subjectId, identity.sessionHash)
         ]);
         return Response.json({ ok: true }, { status: 201, headers });

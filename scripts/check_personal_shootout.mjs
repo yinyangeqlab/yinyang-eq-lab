@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';import ts from 'typescript';import{parseCurve}from'../lib/curves.ts';
-import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,targetFamily,PERSONAL_KEY} from '../lib/personal-shootout.ts';
+import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,personalFinalistReadiness,targetFamily,PERSONAL_KEY} from '../lib/personal-shootout.ts';
 import {captureSyncPayload,replaceSyncStorage} from '../lib/browser-sync.mjs';
 let checks=0;const check=(description,action)=>{action();checks++;console.log('PASS',description);};
 const candidates=Array.from({length:12},(_,i)=>({id:`t${i}`,name:`Target ${i}`,family:i<6?'variants':`family${i}`}));
-const initial=()=>createPersonalRun('synthetic-context','Synthetic headphones',candidates);
+const initial=()=>{const run=createPersonalRun('synthetic-context','Synthetic headphones',candidates);delete run.schedulerVersion;return run;}; // Preserve legacy-v1 regression coverage.
 function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function choose(run,result='a',recording='song-one') {run={...run,pending:run.pending??nextPersonalPair(run,rng(run.choices.length+4))};return recordPersonalChoice(run,{pair:run.pending,result,recording,start:0,end:5,at:run.choices.length,phase:run.phase});}
 check('Round-trip restores exact pending sides and progress',()=>{const run=initial();run.pending=nextPersonalPair(run,rng(12));assert.deepEqual(parsePersonalRuns(JSON.stringify([run]))[0],run);});
@@ -25,6 +25,17 @@ class Storage{constructor(values={}){this.values=new Map(Object.entries(values))
 check('Explicit Sync carries personal progress without creating research votes',()=>{const src=new Storage({'target-lab-voter':'11111111-1111-4111-8111-111111111111',[PERSONAL_KEY]:JSON.stringify([initial()])});const payload=captureSyncPayload(src),dest=new Storage();replaceSyncStorage(dest,payload);assert.equal(dest.getItem(PERSONAL_KEY),src.getItem(PERSONAL_KEY));assert.equal(dest.getItem('target-lab-trials'),null);});
 check('Personal comparisons stay separate from public votes; song ratings use their own handler',()=>{const page=readFileSync('app/shootout/personal/page.tsx','utf8'),player=readFileSync('components/music-panel.tsx','utf8');assert.ok(!/\/api\/(votes|trials|listening-runs|open-choices|feedback)/.test(page));assert.ok(page.includes('personalOnly'));assert.ok(player.includes('async function voteForMusic('));assert.ok(player.includes('Private test ratings stay in this browser'));assert.ok(!player.includes('{!personalOnly && <div className="shootout-music-vote"'));});
 check('Actual-page sample results include bronze and history without modifying candidates',()=>{const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-example.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:()=>({checkpointPersonalRun,createPersonalRun,recordPersonalChoice})});const before=JSON.stringify(candidates);const sample=exports.createPersonalExample(candidates,1792350000000);assert.equal(sample.candidates.length,12);assert.equal(personalStandings(sample).filter(row=>row.heard>0).length,12);assert.equal(confirmationComplete(sample),true);assert.equal(sample.pending,null);assert.equal(sample.paused,true);assert.ok(sample.history.length>=5);assert.equal(JSON.stringify(candidates),before);const page=readFileSync('app/shootout/personal/page.tsx','utf8');assert.ok(page.includes('if (sampleRun) throw Error('));assert.ok(page.includes('window.location.hostname'));assert.ok(page.includes('pool.every(target=>target.name.startsWith("Preview synthetic"))'));assert.ok(page.includes('!sampleRun && <PersonalResearchSharing'));});
+check('Progressive discovery compares contenders before full coverage instead of producing disconnected 1/1 winners',()=>{
+ const pool=Array.from({length:60},(_,i)=>({id:`x${i}`,name:`X${i}`,family:`f${i}`}));let run=createPersonalRun('new','New',pool);const random=rng(7823);
+ for(let i=0;i<20;i++){run.pending=nextPersonalPair(run,random);const [a,b]=run.pending.map(id=>Number(id.slice(1)));run=choose(run,a<b?'a':'b',`song${i}`);}
+ const rows=personalStandings(run);assert.ok(rows[0].heard>=4);assert.ok(rows.filter(r=>r.heard>1).length>=3);assert.ok(rows.filter(r=>r.heard===0).length>0);assert.equal(personalFavorite(run),null);assert.equal(personalFinalistReadiness(run).ready,false);
+});
+check('Twelve-target progressive runs cover the pool and revisit likely leaders; ties do not manufacture a favorite',()=>{
+ let run=createPersonalRun('new','New',candidates);const random=rng(180);
+ for(let i=0;i<40;i++){run.pending=nextPersonalPair(run,random);const [a,b]=run.pending.map(id=>Number(id.slice(1)));run=choose(run,a<b?'a':'b',`song${i}`);}
+ const rows=personalStandings(run);assert.equal(rows.filter(r=>r.heard>0).length,12);assert.equal(rows[0].id,'t0');assert.ok(rows[0].heard>5);assert.equal(personalFavorite(run),null);
+ let tied=createPersonalRun('tied','Tied',candidates);for(let i=0;i<40;i++){tied.pending=nextPersonalPair(tied,random);tied=choose(tied,'tie',`song${i}`);}assert.equal(personalFavorite(tied),null);assert.equal(personalFinalistReadiness(tied).ready,false);
+});
 // Seeded synthetic evaluation, not human accuracy validation. Compare equal
 // observation budgets. No selection or thresholds are tuned to these trials.
 const results=[];

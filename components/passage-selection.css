@@ -49,3 +49,52 @@
 .wf-passage:hover .wf-time,.wf-passage:focus-within .wf-time,.wf-passage.is-active .wf-time{opacity:1;transform:none}
 @media(max-width:600px){.wf-time{font-size:11px;padding:4px 9px}.wf-grip{width:42px;height:24px}}
 @media(pointer:coarse){.wf-edge{width:28px}.wf-edge-start{left:-14px}.wf-edge-end{right:-14px}.wf-edge::before{left:12.5px}}
+
+/* Clear flat grips: separate move and resize bands even on a short selection. */
+.wf-passage{border-radius:3px;background:rgba(99,226,196,.1);box-shadow:inset 0 0 0 1px #9ef1dba6;transition:background .12s ease}
+.wf-passage.is-active,.wf-passage:hover{background:rgba(99,226,196,.16);box-shadow:inset 0 0 0 1px #b1ffe8}
+.wf-grip,.wf-passage.is-fixed .wf-grip{width:30px;height:20px;border-radius:5px;background:#0b252a;border:1px solid #bcffed;box-shadow:0 1px 3px #0008}
+.wf-grip svg{width:26px;height:15px}
+.wf-passage:hover .wf-grip,.wf-passage.is-active .wf-grip{transform:translate(-50%,-50%)}
+.wf-edge::before{box-shadow:none;background:#b3ffe9}
+.wf-edge-knob{width:12px;height:24px;border-radius:4px;background:#a7f3dc;border:1px solid #e0fff4;box-shadow:0 1px 3px #0009}
+.wf-edge-knob::before{left:4px;top:6px;width:1px;height:10px;margin:0;border-radius:0;background:#155047;box-shadow:3px 0 0 #155047}
+.wf-edge-start .wf-edge-knob{transform:translate(-100%,-50%)}
+.wf-edge-end .wf-edge-knob{transform:translate(0,-50%)}
+.wf-edge:hover .wf-edge-knob,.wf-edge:focus-visible .wf-edge-knob{border-color:#fff}
+.wf-edge-start:hover .wf-edge-knob,.wf-edge-start:focus-visible .wf-edge-knob{transform:translate(-100%,-50%)}
+.wf-edge-end:hover .wf-edge-knob,.wf-edge-end:focus-visible .wf-edge-knob{transform:translate(0,-50%)}
+.wf-time{border-radius:5px}
+
+/* All three visible grips share the selection's vertical center. */
+.wf-passage.is-resizable .wf-move{top:50%;height:22px;border-radius:4px}
+.wf-grip,.wf-passage.is-fixed .wf-grip{width:clamp(16px,calc(100% - 4px),28px);height:18px;border-radius:4px}
+.wf-grip svg,.wf-passage.is-fixed .wf-grip svg{width:calc(100% - 4px);height:12px;display:block}
+.wf-passage.is-resizable .wf-edge-knob{top:0}
+.wf-edge-knob{width:8px;height:20px;border-radius:3px}
+.wf-edge-knob::before{left:3px;top:5px;height:8px;box-shadow:none}
+
+/* Boundary buttons extend outward; the center's drag band remains reachable. */
+.wf-passage.is-resizable .wf-move{z-index:4}
+.wf-passage.is-resizable .wf-edge{top:0;height:100%}
+.wf-passage.is-resizable .wf-edge::before{top:0}
+.wf-passage.is-resizable .wf-edge-knob{top:50%}
+.wf-edge-start{clip-path:inset(0 50% 0 0)}
+.wf-edge-end{clip-path:inset(0 0 0 50%)}
+.wf-edge-start[data-at-boundary=true]{clip-path:inset(0 0 0 50%)}
+.wf-edge-end[data-at-boundary=true]{clip-path:inset(0 50% 0 0)}
+.wf-edge-start[data-at-boundary=true] .wf-edge-knob{transform:translate(0,-50%)}
+.wf-edge-end[data-at-boundary=true] .wf-edge-knob{transform:translate(-100%,-50%)}
+
+/* Transparent move arrows and narrow, textured end grips. */
+.wf-grip,.wf-passage.is-fixed .wf-grip{display:grid;place-items:center;width:clamp(18px,calc(100% - 4px),32px);height:22px;border:0;border-radius:3px;background:transparent;color:#d4fff0;box-shadow:none;filter:drop-shadow(0 1px 2px #000)}
+.wf-grip svg,.wf-passage.is-fixed .wf-grip svg{display:block;width:calc(100% - 4px);height:14px}
+.wf-edge-knob{width:8px;height:26px;border:1px solid #8bb4a8;border-radius:2px;background:linear-gradient(90deg,#243638e6,#0b1b1ee6);box-shadow:inset 1px 0 0 #ffffff24,inset -1px 0 0 #0009,0 1px 3px #0009}
+.wf-edge-knob::before{content:"";display:block;position:absolute;inset:4px 2px;width:auto;height:auto;margin:0;border:0;border-radius:0;background:repeating-linear-gradient(0deg,#9bbfb3 0 1px,#0008 1px 2px,transparent 2px 4px);box-shadow:none}
+.wf-edge-knob::after{content:"";position:absolute;left:1px;top:3px;bottom:3px;width:1px;background:#d6f4e52e}
+.wf-edge-end .wf-edge-knob::after{left:auto;right:1px}
+
+/* Cached waveform layers; the clock-driven cursor never changes peak geometry. */
+.waveform-played-layer{position:absolute;inset:0;pointer-events:none;clip-path:inset(0 100% 0 0)}
+.waveform-played-layer>canvas{width:100%;height:100%;border-radius:inherit}
+.waveform-playhead{position:absolute;left:0;top:0;bottom:0;width:2px;background:#f4f9fa;pointer-events:none;z-index:2;will-change:transform;visibility:hidden}

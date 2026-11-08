@@ -74,11 +74,11 @@ function pageFixture(sampleRate = 48000) {
   check(restoredFocus && !text(h.tree).includes('End this session now?'), 'Escape cancels confirmation and restores the invoking control');
   h.button('Finish & reveal').props.onClick({ currentTarget: opener }); h.render(); h.button('End & reveal presets').props.onClick(); h.render();
   check(/A · Preset [12] · Same preset name/.test(text(h.tree)), 'Duplicate preset names remain distinguishable in per-song results');
-  h.button('Download private results').props.onClick(); h.render(); const result = JSON.parse(await h.getBlob().text());
+  h.button('Download results (JSON file)').props.onClick(); h.render(); const result = JSON.parse(await h.getBlob().text());
   check(result.playlist.length === 3 && result.unanswered === 2 && result.rounds[0].sourceId === result.playlist[0].id, 'Early-reveal JSON preserves the complete ordered playlist and unanswered count');
   check(result.revealedAt && h.clicks() === 1, 'Download contains the original reveal timestamp and triggers one browser download');
   check(h.listeners.get('beforeunload').size === 1 && text(h.tree).includes('Check that the file saved'), 'Requesting a download cannot silently disable the leave-page protection');
-  h.failDownload(); h.button('Download private results').props.onClick(); h.render();
+  h.failDownload(); h.button('Download results (JSON file)').props.onClick(); h.render();
   check(text(h.tree).includes('Your results are still in this tab') && text(h.tree).includes('The reveal'), 'Download failure gives feedback and preserves results');
   h.button('New blind session').props.onClick({ currentTarget: opener }); h.render(); check(h.focus.at(-1) === 'Clear this session?', 'Clear-session confirmation receives focus');
   h.button('Clear session').props.onClick(); h.render(); check(h.listeners.get('beforeunload').size === 0 && all(h.tree, n => n.type === h.Editor).every(n => n.props.initialPreset), 'Explicit clearing removes the leave guard but restores applied presets');
@@ -100,13 +100,13 @@ function listenerFixture(options = {}) {
   }
   async function prepare(buffer, presets, at, seconds, match, signal) { renders.push({ at, signal }); if (options.silent && at === 9) throw Error('This passage is silent or too quiet to compare. Choose another passage.'); return { buffers: [], seconds }; }
   const fetch = async (url, config) => { requests.push(config); if (options.fetch) return await options.fetch.promise; return { ok: !options.maintenance, status: options.maintenance ? 503 : 200, headers: { get: n => options.maintenance && n === 'X-YinYang-Service' ? 'owner-only-maintenance' : null }, arrayBuffer: async () => new ArrayBuffer(10) }; };
-  const h = mount('components/blind-eq-listener.tsx', { '@/lib/blind-eq-audio': { BlindEqPlayer: Player, prepareComparison: prepare } }, { document, window, fetch }, { song: options.song || { id: 'synthetic', title: 'Synthetic', artist: 'Fixture', url: '/tone.wav' }, presets: [flat('one'), flat('two')], match: true, initialVolume: .07, onVolumeChange: v => volumes.push(v), onEvidence: value => evidence.push(value) });
-  return Object.assign(h, { players, requests, evidence, volumes, renders, async prepare() { h.button('Prepare this song').props.onClick(); await flush(); h.render(); }, hide() { document.visibilityState = 'hidden'; events.get('visibilitychange')?.(); }, show() { document.visibilityState = 'visible'; }, tick(seconds = .2) { players[0].elapsed += seconds; for (const fn of intervals) fn(); h.render(); } });
+  const h = mount('components/blind-eq-listener.tsx', { '@/lib/blind-eq-audio': { BlindEqPlayer: Player, prepareComparison: prepare } }, { document, window, fetch }, { song: options.song || { id: 'synthetic', title: 'Synthetic', artist: 'Fixture', url: '/tone.wav' }, presets: [flat('one'), flat('two')], match: true, sourceCache:options.sourceCache, initialVolume: .07, onVolumeChange: v => volumes.push(v), onEvidence: value => evidence.push(value) });
+  return Object.assign(h, { players, requests, evidence, volumes, renders, async prepare() { h.button('Get this song ready').props.onClick(); await flush(); h.render(); }, hide() { document.visibilityState = 'hidden'; events.get('visibilitychange')?.(); }, show() { document.visibilityState = 'visible'; }, tick(seconds = .2) { players[0].elapsed += seconds; for (const fn of intervals) fn(); h.render(); } });
 }
 {
   const h = listenerFixture({ silent: true }); await h.prepare();
-  check(text(h.tree).includes('silent or too quiet') && all(h.tree, n => n.type === 'input' && n.props['aria-label'] === 'Passage start').length === 1, 'A silent initial passage keeps the passage selector available');
-  h.find(n => n.type === 'input' && n.props['aria-label'] === 'Passage start').props.onChange({ target: { value: '0' } }); h.render(); h.button('Prepare this passage').props.onClick(); await flush(); h.render();
+  check(text(h.tree).includes('silent or too quiet') && all(h.tree, n => n.type === 'input' && n.props['aria-label'] === 'Section start').length === 1, 'A silent initial passage keeps the passage selector available');
+  h.find(n => n.type === 'input' && n.props['aria-label'] === 'Section start').props.onChange({ target: { value: '0' } }); h.render(); h.button('Prepare this section').props.onClick(); await flush(); h.render();
   check(all(h.tree, n => n.type === 'button' && text(n) === 'Play A').length === 1 && h.renders.at(-1).at === 0, 'A non-silent passage can be prepared without skipping or discarding the session');
   check(h.players[0].volume === .07, 'The saved volume is applied before this song can play');
   h.button('Play A').props.onClick(); await flush(); h.render(); h.tick(); const heard = h.evidence.at(-1).heard[0];
@@ -117,7 +117,7 @@ function listenerFixture(options = {}) {
 for (const stage of ['resume', 'fetch', 'file', 'decode']) {
   const pending = deferred(); let bytesRead = 0;
   const options = stage === 'file' ? { song: { id: 'file', title: 'File', artist: 'Fixture', file: { size: 10, arrayBuffer: () => pending.promise } } } : { [stage]: pending };
-  const h = listenerFixture(options); h.button('Prepare this song').props.onClick(); await flush(); h.unmount();
+  const h = listenerFixture(options); h.button('Get this song ready').props.onClick(); await flush(); h.unmount();
   if (stage === 'fetch') { check(h.requests[0].signal.aborted, 'Unmount actively aborts the outstanding recording fetch'); pending.resolve({ ok: true, headers: { get() {} }, arrayBuffer: async () => { bytesRead++; return new ArrayBuffer(10); } }); }
   else if (stage === 'file') pending.resolve(new ArrayBuffer(10)); else if (stage === 'decode') pending.resolve({ duration: 30, length: 1_440_000, numberOfChannels: 2 }); else pending.resolve();
   await flush(); check(h.renders.length === 0 && h.lateUpdates === 0 && h.players[0].closed, `No rendering/state updates survive unmount during ${stage}`);
@@ -128,7 +128,7 @@ for (const action of ['hide', 'unmount', 'change-passage']) {
   const h = listenerFixture(); await h.prepare(); const pending = deferred(); h.players[0].nextResume = pending; h.button('Play A').props.onClick();
   if (action === 'hide') h.hide();
   if (action === 'unmount') h.unmount();
-  if (action === 'change-passage') { h.find(n => n.type === 'input' && n.props['aria-label'] === 'Passage start').props.onChange({ target: { value: '0' } }); h.render(); h.button('Use this passage').props.onClick(); await flush(); h.render(); }
+  if (action === 'change-passage') { h.find(n => n.type === 'input' && n.props['aria-label'] === 'Section start').props.onChange({ target: { value: '0' } }); h.render(); h.button('Use this section').props.onClick(); await flush(); h.render(); }
   pending.resolve(); await flush(); check(h.players[0].playCalls === 0 && h.lateUpdates === 0, 'Pending playback cannot start after ' + action); if (action !== 'unmount') h.unmount();
 }
 {
@@ -142,7 +142,7 @@ for (const action of ['hide', 'unmount', 'change-passage']) {
   class Buffer { constructor({ numberOfChannels, length, sampleRate }) { this.numberOfChannels = numberOfChannels; this.length = length; this.sampleRate = sampleRate; this.duration = length / sampleRate; this.data = Array.from({ length: numberOfChannels }, () => new Float32Array(length).fill(.1)); } getChannelData(c) { return this.data[c]; } copyToChannel(values, c) { this.data[c].set(values); } }
   const node = () => ({ gain: {}, connect() {}, start() {} });
   class Offline { constructor(channels, length, rate) { instances++; this.destination = {}; this.output = new Buffer({ numberOfChannels: channels, length, sampleRate: rate }); } createBufferSource() { return node(); } createChannelSplitter() { return node(); } createChannelMerger() { return node(); } createGain() { return node(); } async startRendering() { await firstRender.promise; return this.output; } }
-  const dsp = load('lib/blind-eq-audio.ts', id => id === './blind-eq' ? model : (() => { throw Error(id); })(), { AudioBuffer: Buffer, OfflineAudioContext: Offline });
+  const dsp = load('lib/blind-eq-audio.ts', id => id === './blind-eq' ? model : id === './channel-balance' ? {channelBalance:()=>null} : (() => { throw Error(id); })(), { AudioBuffer: Buffer, OfflineAudioContext: Offline });
   const buffer = new Buffer({ numberOfChannels: 2, length: 48_000 * 6, sampleRate: 48_000 }), controller = new AbortController();
   const render = dsp.prepareComparison(buffer, [flat('one'), flat('two')], 0, 5, true, controller.signal); controller.abort(); firstRender.resolve();
   await assert.rejects(render, /cancelled/); check(instances === 1, 'Cancellation after the first offline render prevents rendering the second preset');
@@ -160,3 +160,8 @@ for (const rate of [44100, 48000]) {
  h.unmount();
 }
 console.log('PASS setup-time sample-rate boundaries and validated context handoff.');
+
+{
+ const sourceCache={current:null};const first=listenerFixture({sourceCache});await first.prepare();check(first.requests.length===1&&sourceCache.current?.id==='synthetic','A generated-set round retains one decoded source for later pairs');first.find(n=>n.type==='input'&&n.props['aria-label']==='Section start').props.onChange({target:{value:'0'}});first.render();first.button('Use this section').props.onClick();await flush();first.render();first.unmount();const second=listenerFixture({sourceCache});await second.prepare();check(second.requests.length===0&&second.players[0].decodeCalls===undefined&&second.renders[0].at===0,'The next pair reuses decoded audio without fetching or decoding it again');second.unmount();
+ const third=listenerFixture({sourceCache,song:{id:'different',title:'Other',artist:'Fixture',url:'/different.wav'}});await third.prepare();check(third.requests.length===1&&sourceCache.current?.id==='different','Changing recordings replaces the one-source cache');third.unmount();
+}

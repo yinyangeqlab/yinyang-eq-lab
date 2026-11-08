@@ -1,0 +1,34 @@
+export type GlossaryTerm = { id: string; title: string; text: string; related: string[] };
+
+const entries: GlossaryTerm[] = [
+  { related: ["target curve", "sound balance", "bass", "treble", "midrange", "goal", "reference curve", "preference curve", "house curve", "tuning", "tonal balance"], id: "target", title: "Target", text: "The balance of bass, midrange and treble you want to aim for, drawn as a curve. It is a chosen goal or reference, rather than a measurement of your headphones or one correct sound for everyone. The site combines a target with a headphone measurement to calculate EQ." },
+  { related: ["headphone model", "fit", "seal", "measuring rig", "measurement rig", "ear simulator", "test rig", "headphone graph", "measured response", "coupler", "unit variation"], id: "measurement", title: "Measurement", text: "A curve showing how a headphone model reproduces different frequencies on a particular measurement rig. Treat it as an estimate of what you will hear. Your own pair, fit, seal and ears can affect the result. Measurements made on different rigs may also differ." },
+  { related: ["equalizer", "equaliser", "equalisation", "bass", "treble", "tone", "parametric EQ", "PEQ", "filters", "boost", "cut"], id: "eq", title: "EQ / equalization", text: "Settings that turn parts of the frequency range up or down, such as adding bass or softening treble. An equalizer applies these changes to the music. Here, EQ is calculated from your selected headphone measurement and target." },
+  { related: ["EQ settings", "filters", "export", "equalizer", "EQ profile", "saved EQ", "filter list", "import", "download", "config file"], id: "preset", title: "Preset", text: "A saved set of EQ settings for a compatible equalizer app or device. A preset contains the adjustments to apply; a target describes the balance you are aiming for. Presets come in different formats, so a file made for one equalizer may not load in another." },
+  { related: ["bass", "midrange", "treble", "Hz", "kHz", "hertz", "kilohertz", "FR", "response curve", "graph", "mids", "highs", "lows", "tonal balance"], id: "frequency-response", title: "Frequency response", text: "How loudly different frequencies are reproduced, drawn as a curve from low to high. Bass includes low notes and the thump of a kick drum. The middle range carries much of the body of voices and instruments. Treble includes cymbals and the “s” sounds in speech. Frequency is measured in Hz (hertz); 1 kHz is 1,000 Hz." },
+  { related: ["AB test", "A-B test", "shootout", "preference", "tie", "no preference", "switch", "side by side"], id: "comparison", title: "A/B comparison", text: "Listen to the same recording with two settings, called A and B, then choose your preference or a tie. Your choice says what you like; it does not prove which setting is more accurate." },
+  { related: ["hidden names", "open comparison", "blind test", "bias", "expectations", "reveal"], id: "blind", title: "Blind / open", text: "Blind comparisons hide the target names while you listen. Open comparisons show them. Hiding names helps reduce expectations about a target or its creator, but does not remove every influence on your choice." },
+  { related: ["segment", "start", "end", "five seconds", "5 seconds", "clip", "excerpt", "section", "selection", "loop", "region", "time range", "duration"], id: "passage", title: "Passage / segment", text: "The section of a recording between your chosen start and end times. A matched passage uses the same section for A and B. The site normally requires at least five seconds on each side. This is a site rule, not a scientifically validated minimum for hearing differences; some modes let you turn it off." },
+  { related: ["decibels", "level", "gain", "volume", "boost", "cut", "dBFS", "dB SPL", "sound pressure"], id: "db", title: "dB / decibels", text: "A unit for comparing levels against a reference. On an EQ curve, positive values raise that frequency range, negative values lower it, and 0 dB means no change. A digital level or EQ value does not tell you the actual sound level at your ears; that also depends on your headphones and volume setting." },
+  { related: ["loudness", "volume", "normalization", "normalisation", "loudness normalization", "loudness normalisation", "level matching", "volume matching", "integrated loudness", "LKFS", "LU", "too loud", "too quiet"], id: "lufs", title: "LUFS", text: "Loudness Units relative to Full Scale: a standardized measure of perceived loudness in digital audio, rather than just its highest peak. The site uses a common loudness level to reduce differences between recordings. This loudness level is different from a Target curve. It does not measure or calibrate the actual volume at your ears." },
+  { related: ["44.1", "48", "44100", "48000", "kHz", "sampling rate", "sampling frequency", "resampling", "sample rate conversion", "audio context"], id: "sample-rate", title: "Sample rate", text: "How many samples of a sound wave a digital recording stores per second. For example, 44.1 kHz means 44,100 samples per second; 48 kHz is another common rate. A recording’s source rate can differ from the browser or output device’s processing rate, so audio may be converted during playback. A higher sample rate does not by itself mean better sound." },
+  { related: ["CBR", "VBR", "ABR", "constant bitrate", "variable bitrate", "average bitrate", "kbps", "kbit/s", "bit rate", "MP3", "AAC", "Opus", "audio file", "encoding", "file size"], id: "bitrate", title: "Bitrate / CBR / VBR / ABR", text: "How much data an encoded audio file uses per second, usually shown in kb/s (kilobits per second). CBR means constant bitrate: each audio frame uses the same rate. VBR means variable bitrate: the rate can change. ABR means average bitrate: it aims for an average while individual frames can vary. Bitrate alone does not establish sound quality. It is different from sample rate." },
+];
+
+export const glossaryTerms = [...entries].sort((a, b) => a.title.localeCompare(b.title, "en", { sensitivity: "base" }));
+function normalize(value: string) {
+  return value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("en").replace(/[^a-z0-9]+/g, " ").trim();
+}
+export function searchGlossary(query: string): GlossaryTerm[] {
+  const words = normalize(query).split(/\s+/).filter(Boolean);
+  return glossaryTerms.filter(term => {
+    const text = normalize([term.title, term.text, ...term.related].join(" "));
+    return words.every(word => text.includes(word));
+  });
+}
+
+export function relatedGlossaryWords(term: GlossaryTerm, query: string): string[] {
+  const words = normalize(query).split(/\s+/).filter(Boolean);
+  const matches = words.length ? term.related.filter(related => words.every(word => normalize(related).includes(word))) : [];
+  return (matches.length ? matches : term.related).slice(0, 4);
+}

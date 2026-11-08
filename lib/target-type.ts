@@ -7,7 +7,7 @@ type TargetTypeSource = {
   measurement?: { type?: unknown } | string | null;
 };
 
-/** Returns a fixed headphone type when known; unmarked targets remain valid for both. */
+/** Legacy provenance for versioning only. Never restrict target eligibility with this metadata. */
 export function targetHeadphoneType(target: TargetTypeSource): HeadphoneType | null {
   if(target.headphoneType === "ie" || target.headphoneType === "oe") return target.headphoneType;
   let measurementType: unknown;

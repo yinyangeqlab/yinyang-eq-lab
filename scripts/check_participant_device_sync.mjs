@@ -1,3 +1,5 @@
+import {browserPairing,pairingHash} from '../lib/browser-pairing.mjs';
+import {ACCOUNT_SYNC_NOTICE_VERSION} from '../lib/account-sync-notice.mjs';
 import assert from'node:assert/strict';import{DatabaseSync}from'node:sqlite';import{readFileSync,readdirSync}from'node:fs';import vm from'node:vm';import ts from'typescript';
 import*as sync from'../lib/account-sync.mjs';import*as devices from'../lib/device-sync.mjs';import{validateSyncPayload}from'../lib/browser-sync.mjs';import{accountSyncFixtureDeps}from'./account-sync-fixture.mjs';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const name of readdirSync('drizzle').filter(name=>name.endsWith('.sql')).sort())sql.exec(readFileSync('drizzle/'+name,'utf8'));
@@ -44,4 +46,28 @@ for(const table of ['account_browser_sync','account_sync_permissions','privacy_a
 assert.equal(sql.prepare('SELECT count(*) n FROM private_tester_devices WHERE invite_id=?').get(other.id).n,0);assert.equal((await get()).status,403);
 assert.equal(sql.prepare('SELECT count(*) n FROM account_browser_sync WHERE subject_id=?').get(first.subject).n,1,'Other account erasure cannot touch the disconnected account copy');
 console.log('PASS all-account device sync: explicit default-off, no preconsent upload, root registration, isolated account copies, real content/consent confirmation, stale/conflict/paused states, private names/notes, current-device binding, pause/resume, root/peer disconnection and retained cloud data. Synthetic SQLite only.');
+
+// The protected personal profile links devices through the same two-sided flow.
+const protectedProfile=await account.createProfileAccount(DB),grant=await account.createProfileGrant(DB,'Primary listening browser'),claim=await account.claimProfileGrant(DB,grant.code),credentials=await account.completeProfileGrant(DB,claim.secret,false);
+const primary={id:protectedProfile.invite_id,subject:protectedProfile.subject_id,token:credentials.access,access:await pairingHash(credentials.access),session:await pairingHash(credentials.data)};
+await DB.batch([deps['@/lib/account-sync-permission'].accountSyncPermissionStatement(DB,primary.subject,true)]);
+const pairEnv={DB,PRIVATE_ACCESS_PASSWORD:crypto.randomUUID()},participant={id:primary.id,label:'YinYangEQ'};
+const pairRequest=(body,jar='')=>new Request(origin+'/sync',{method:body?'POST':'GET',headers:{Cookie:jar,...(body?{Origin:origin,'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
+const cookieJar=r=>r.headers.getSetCookie().map(v=>v.split(';')[0]).join('; ');
+const primaryJar='__Host-yinyangeq_tester='+primary.token;
+assert.equal((await browserPairing(pairRequest(undefined,primaryJar),pairEnv,participant)).status,200,'An approved personal-profile device gets ordinary linking controls');
+assert.equal((await browserPairing(pairRequest({action:'create'},'__Host-yinyangeq_tester='+ 'X'.repeat(43)),pairEnv,participant)).status,403,'A forged or unregistered personal-profile source cannot create codes');
+const pairingResponse=await browserPairing(pairRequest({action:'create'},primaryJar),pairEnv,participant),pairHtml=await pairingResponse.text(),pairCode=pairHtml.match(/<code>([A-Z2-9]{5})-([A-Z2-9]{5})<\/code>/).slice(1).join('');
+const receiver=await browserPairing(pairRequest({action:'claim',code:pairCode,replace:'yes',syncNoticeVersion:ACCOUNT_SYNC_NOTICE_VERSION}),pairEnv,null);assert.equal(receiver.status,303);const receiverJar=cookieJar(receiver),pairRow=sql.prepare('SELECT * FROM browser_pairings WHERE code_hash=?').get(await pairingHash(pairCode));
+assert.equal((await browserPairing(pairRequest({action:'complete'},receiverJar),pairEnv,null)).status,403,'Receiver gets no account access before source confirmation');
+assert.equal((await browserPairing(pairRequest({action:'approve',pairing:pairRow.code_hash,confirmation:pairRow.confirmation},primaryJar),pairEnv,participant)).status,303);
+const finished=await browserPairing(pairRequest({action:'complete'},receiverJar),pairEnv,null);assert.equal(finished.status,200);
+const signedJar=cookieJar(finished),receiverToken=signedJar.match(/__Host-yinyangeq_tester=([^; ]+)/)[1],receiverData=signedJar.match(/__Host-yinyangeq_data=([^; ]+)/)[1];
+active={...primary,token:receiverToken,access:await pairingHash(receiverToken),session:await pairingHash(receiverData)};
+const protectedState=await(await get()).json();assert.equal(protectedState.protectedAccount,true);assert.equal(protectedState.enabled,true);assert.ok(sql.prepare('SELECT id FROM owner_profile_devices WHERE session_hash=? AND revoked_at IS NULL').get(active.access),'Participant-approved device is registered for protected Sync and revocation');
+const receiverDevice=(await list()).devices.find(row=>row.current).id;active=primary;assert.equal((await act({action:'disconnect',deviceId:receiverDevice})).status,200);
+assert.equal((await browserPairing(pairRequest({action:'complete'},receiverJar),pairEnv,null)).status,410,'A consumed handshake never resurrects a revoked participant device');
+assert.equal((await get()).status,200,'The primary account remains usable after disconnecting its peer');
+console.log('PASS protected normal-participant pairing: source credential and consent, two-sided confirmation, registered Sync identity, ordinary device management and revoke/replay protection.');
+
 sql.close();

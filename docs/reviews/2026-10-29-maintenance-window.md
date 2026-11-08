@@ -1,0 +1,9 @@
+# Maintenance duration and reopening
+
+October 29, 2026. The owner explicitly authorized disabling whole-site maintenance, adding an indefinite admin maintenance duration and ensuring future whole-site maintenance appears Live in admin.
+
+The admin timer offers “Until I turn it off.” An explicit validated indefinite flag stores expiry zero in the existing singleton notice row; reads expose null expiry and stay active until cleared. Timed/legacy notices keep their existing expiry and clearing behavior. No schema migration is required. This existing admin notice pauses the selected features; the separately configured whole-site admin-only gate is reported Live, with no automatic end, even when no timed notice exists. The panel explains that deployment maintenance must be disabled separately.
+
+Reopening disables both deployment maintenance flags while retaining normal account/private-media access, contribution eligibility, CPU5000ms, six abuse bindings, disabled public Worker URLs, edge protection and cost guard. Any active admin notice is cleared as part of the authorized reopening. No participant records, consent, scoring or audio behavior change. Future agent requests for the same whole-site closure must set the deployment gate and verify the admin endpoint reports active=true, ownerOnly=true, enabled=true and expiresAt=null. Do not claim Live based only on an unsaved editor selection.
+
+Synthetic server tests cover indefinite survival after 400 days, explicit clearing, invalid flags, legacy timed expiry, origin/owner checks and live deployment-lock reporting. Actual-component tests cover the indefinite payload, visible duration and Live status. Responsive synthetic browser checks and final live read-only readiness checks are recorded in the release evidence. The website is ready for the owner’s walkthrough; physical audio, physical Apple hardware and real novice usability remain unverified.

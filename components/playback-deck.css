@@ -2,11 +2,11 @@
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;width:100%;box-sizing:border-box;max-width:none;margin:0!important;padding:6px 12px!important}
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-secondary{display:flex;flex:0 1 auto;align-items:center;gap:8px;min-width:0;grid-column:auto;grid-row:auto;justify-self:auto}
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-time{position:static;display:inline-flex;flex:none;align-items:baseline;justify-content:flex-end;gap:5px;min-width:11ch;margin:0;grid-column:auto;grid-row:auto;color:#b9d8ea;font:600 13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
-/* The speaker stays put; its slider opens below it without moving transport controls. */
+/* The speaker stays put; its slider opens beside it without moving transport controls. */
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .volume-control{position:relative;display:flex;flex:none;align-items:center;top:auto;right:auto;transform:none;width:auto;height:auto;padding:0;border:0;background:none;box-shadow:none}
-.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row{position:absolute;left:auto;right:0;top:calc(100% + 8px);z-index:30;display:grid;grid-template-columns:auto minmax(96px,1fr) 4ch;align-items:center;gap:10px;box-sizing:border-box;width:clamp(200px,24vw,300px);margin:0;padding:6px 12px;transform:none;border:1px solid #3c5b64;border-radius:10px;background:rgba(9,22,28,.97);box-shadow:0 8px 24px rgba(0,0,0,.55);color:#cfe3e8;font-size:12px}
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row{position:absolute;left:calc(100% + 8px);right:auto;top:50%;z-index:40;display:grid;grid-template-columns:auto minmax(96px,1fr) 4ch;align-items:center;gap:10px;box-sizing:border-box;width:200px;margin:0;padding:8px 12px;transform:translateY(-50%);border:1px solid #658696;border-radius:10px;background:#10212b;box-shadow:0 8px 24px rgba(0,0,0,.55);color:#cfe3e8;font-size:12px}
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row[hidden]{display:none}
-.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row .deck-volume{display:block;position:static;width:100%;min-width:0;margin:0;transform:none}
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row .deck-volume{display:block;position:static;inset:auto;width:100%;min-width:0;height:28px;min-height:28px;margin:0;padding:0;transform:none;border:0;border-radius:0;background:transparent;box-shadow:none;accent-color:#8ebacc}
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-volume-row output{text-align:right;font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#b8f5e4}
 @media(max-width:700px){
   .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport{gap:6px;padding:6px 8px!important}
@@ -79,9 +79,6 @@
 .shell.alpha-listening .listening-band .compare-strip-help summary{min-height:28px}
 .shell.alpha-listening .listening-band .compare-strip-help p{padding:0 4px}
 .shell.alpha-listening .listening-band .playback-transport{margin:0!important}
-.shell.alpha-listening .listening-band .playback-volume-row:not([hidden]){position:static!important;inset:auto!important;transform:none!important;width:100%!important;max-width:280px;box-sizing:border-box;grid-template-columns:auto minmax(0,1fr) 4ch}
-.shell.alpha-listening .listening-band .volume-control.open{display:contents!important}
-.shell.alpha-listening .listening-band .playback-volume-row:not([hidden]){grid-column:1/-1;grid-row:auto;justify-self:end;padding:1px 10px!important}
 .shell.alpha-listening .listening-band .deck-play{align-self:start;width:auto!important;min-width:82px;white-space:nowrap}
 .shell.alpha-listening .listening-band .volume-control.open .deck-volume-toggle{justify-self:end}
 .shell.alpha-listening .listening-band .playback-source-error{margin:0 10px;padding:8px;border:1px solid #b88248;overflow-wrap:anywhere}
@@ -191,3 +188,29 @@
 @container listening-deck (max-width:20rem){
  .shell.alpha-listening .music-panel-host:not(.persistent) .music-chooser .playback-source-choice{grid-template-columns:minmax(0,1fr);justify-items:start;gap:6px}
 }
+
+/* Personal listening keeps its seek tools together at the middle of the waveform. */
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck .playback-end{display:contents}
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport .playback-secondary{justify-content:center}
+
+/* Choices follow the target panels; the transport sits directly on its waveform. */
+.shell.alpha-listening .comparison-votes-first{margin:0 0 8px}
+.shell.alpha-listening .comparison-votes-first .choice-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) minmax(0,1fr);gap:10px;width:100%;padding:0;margin:0}
+.shell.alpha-listening .comparison-votes-first .choice-controls button{max-width:none}
+.shell.alpha-listening .comparison-votes-first .alpha-session-utilities{justify-content:center}
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport{min-height:64px;border-radius:8px 8px 0 0}
+.waveform-time-row{display:flex;justify-content:center;gap:5px;padding:6px 10px;color:#b9cbd6;font:12px/1.4 ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.music-panel-host.persistent .waveform-time-row{display:none}
+
+.shell.alpha-listening .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport>.deck-play{width:auto;min-width:108px;white-space:nowrap}
+
+/* Keep the tool surface close to its buttons; song information follows the wave. */
+.shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck .playback-transport{width:fit-content;max-width:100%;min-height:42px;margin:0 auto 4px!important;padding:5px 10px!important;border-radius:8px}
+.playback-hotkey-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:5px 12px;margin:5px 0;font-size:12px}
+.playback-hotkey-row .shortcut-scope{margin:0}
+.playback-key-guide{min-width:0}
+.playback-key-guide>summary{display:list-item;min-height:30px;cursor:pointer;color:#b6cad4}
+.playback-key-guide[open]{flex-basis:100%;text-align:center}
+.playback-key-guide .alpha-playback-shortcuts{padding:4px 8px;margin:0}
+.music-panel-host.persistent .playback-hotkey-row{display:none}

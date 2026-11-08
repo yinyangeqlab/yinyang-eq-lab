@@ -1,0 +1,121 @@
+{
+  "update": 128,
+  "deploymentVerification": {
+    "at": "2026-10-29T21:45:54.013342+00:00",
+    "revision": "ae917c975a1bd097d0beab7ad8c09ffe3f6166a2",
+    "deploymentVerified": true,
+    "ownerOnlyMaintenance": false,
+    "maintenanceDisabled": true,
+    "adminMaintenanceOffVerified": true,
+    "deploymentId": "3f1f72ce-93fd-4d77-a3de-15b068978ae9",
+    "versions": [
+      {
+        "version_id": "987ff5ab-665a-4d9a-a86b-88d75671616e",
+        "percentage": 100
+      }
+    ],
+    "anonymousPathsVerified": 6,
+    "adminLoginAvailable": true,
+    "realAdminSessionTested": true,
+    "authenticatedAssetsVerified": 1171,
+    "exactGateModulesVerified": true,
+    "schemaDefinitions": 220,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "newDataExport": false,
+    "newBackupSnapshot": false,
+    "releaseRecordsPending": false,
+    "sourceOnlyRecoveryRegistrationPending": false,
+    "blindEqAdminRouteVerified": true,
+    "versionPageAdminRouteVerified": true,
+    "changedAdminRoutesVerified": [
+      "/preference-tuning",
+      "/my-data",
+      "/my-profile",
+      "/music-library",
+      "/share-shootout"
+    ],
+    "waveformAssetsVerified": 224,
+    "allBindingsUnchanged": true
+  },
+  "candidateVerification": {
+    "regressionSuitesPassed": 105,
+    "regressionSuitesFailed": 0,
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "appTypesPassed": true,
+    "productionBuildPassed": true,
+    "protectedRecordings": 224,
+    "previousClientFilesRetained": 1136,
+    "publicOnlyPackage": false,
+    "nativeAssetBindingSyntheticExactBytesPassed": true,
+    "fullSnapshotFilesVerified": 3251
+  },
+  "browserVerification": {
+    "syntheticOnly": true,
+    "viewports": [
+      360,
+      1360
+    ],
+    "frequencyLabelsInsideCards": true,
+    "meterRightClearancePx": 4.66,
+    "meterTopClearancePx": 6.66,
+    "originalVoteArtworkRestored": true,
+    "productionAdminSessionUsed": true,
+    "productionAdminExceptionExplicitlyApproved": true,
+    "productionAdminVerificationReadOnly": true,
+    "productionParticipantWrites": false
+  },
+  "candidateAttempts": {
+    "deployments": 2,
+    "interimCandidateFailedLiveWaveformVerification": true
+  },
+  "migrations": [],
+  "newDataSnapshot": false,
+  "protectedVerificationPending": false,
+  "recoveryRegistrationPending": false,
+  "implementationRecord": "docs/reviews/2026-10-29-walkthrough-fixes.md",
+  "recoveryOwnerApproved": true,
+  "ownerApprovals": {
+    "readOnlyAdminDeploymentVerification": true,
+    "encryptedSourceBuildRecoveryMetadataApproximately667MB": true,
+    "databaseExportAuthorizedOrPerformed": false,
+    "recoveryKeyUploadAuthorizedOrPerformed": false
+  },
+  "recoveryQuotaPreview": {
+    "sourceArchiveBytes": 655150388,
+    "historyBundleBytes": 11062545,
+    "totalNewPlaintextObjectBytes": 666212933,
+    "newDatabaseExports": 0,
+    "newDataSnapshots": 0,
+    "newImmutableMediaUploads": 0
+  },
+  "recoveryVerification": {
+    "sourceOnlyHandoverPassed": true,
+    "priorDataSnapshotsExactlyUnchanged": true,
+    "priorDataTimestampUnchanged": true,
+    "newDataSnapshots": 0,
+    "databaseExportPerformed": false,
+    "remoteIndexAuthenticated": true,
+    "liveDeploymentUnchanged": true,
+    "applicationInputsReconstructed": 712,
+    "compiledBuildFilesReconstructed": 2120,
+    "sourceOwnedPublicAssetsReconstructed": 17,
+    "newEncryptedObjects": 3,
+    "newEncryptedObjectBytes": 666253681,
+    "verifiedAt": "2026-10-29T21:59:42.891812+00:00",
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "hostedValidationReadOnly": true,
+    "completedAt": "2026-10-29T22:01:01.655943+00:00"
+  },
+  "recoveryCloseout": {
+    "verifiedAt": "2026-10-29T22:01:01.655943+00:00",
+    "documentationOnly": true,
+    "websiteRedeployed": false,
+    "existingDataSnapshotsUnchanged": true,
+    "newDataExport": false,
+    "newDataSnapshots": 0
+  }
+}
