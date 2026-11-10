@@ -1,9 +1,38 @@
-import assert from 'node:assert/strict';import{readFileSync}from'node:fs';
-const gate=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.meta.url),'utf8');const start=gate.indexOf('const agreementException ='),end=gate.indexOf('if (!owner && (["/shootout"',start);assert.ok(start>0&&end>start);
-const check=new Function('request','data','owner','tester','dataRoute','json','finish',`const url=new URL(request.url),path=url.pathname;${gate.slice(start,end)} return null;`);
-for(const canParticipate of[true,false])for(const path of['/participation','/shootout','/music-library','/preference-tuning','/api/votes','/api/my-data']){const method=path.startsWith('/api/')?'POST':'GET',dataRoute=path==='/api/my-data';const r=check(new Request('https://example.test'+path,{method}),{canParticipate},false,{},dataRoute,(body,status)=>Response.json(body,{status}),r=>r);// Viewing (GET) needs no agreement anywhere; every state-changing route still does, except the data-choices routes themselves.
-if(canParticipate||dataRoute||method==='GET')assert.equal(r,null);else assert.equal(r.status,403);}
-// The page now delegates to the shared editor; execute that editor's request and
-// navigation harness instead of checking removed inline implementation strings.
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const gate = readFileSync(new URL('../infra/pulumi/private-gate.mjs', import.meta.url), 'utf8');
+const practiceScores = gate.match(/const practiceScores = [^;]+;/)?.[0];
+const start = gate.indexOf('const agreementException =');
+const end = gate.indexOf('if (!owner && (["/shootout"', start);
+assert.ok(practiceScores && start > 0 && end > start);
+const check = new Function('request', 'data', 'owner', 'tester', 'dataRoute', 'json', 'finish', `
+  const url = new URL(request.url), path = url.pathname;
+  ${practiceScores}
+  ${gate.slice(start, end)}
+  return null;
+`);
+
+const entries = [
+  '/participation', '/shootout', '/music-library', '/preference-tuning',
+  '/api/votes', '/api/my-data', '/api/ear-practice', '/api/ear-practice-other',
+];
+for (const canParticipate of [true, false]) {
+  for (const path of entries) {
+    const method = path.startsWith('/api/') ? 'POST' : 'GET';
+    const dataRoute = path === '/api/my-data';
+    const request = new Request('https://example.test' + path, { method });
+    const result = check(request, { canParticipate }, false, {}, dataRoute,
+      (body, status) => Response.json(body, { status }), response => response);
+    // Ranked practice checks its separate consent inside its own API handler.
+    if (canParticipate || dataRoute || method === 'GET' || path === '/api/ear-practice') {
+      assert.equal(result, null, path);
+    } else {
+      assert.equal(result.status, 403, path);
+    }
+  }
+}
+
+// Exercise the shared editor's request and navigation behavior.
 await import('./check_unified_consent_flow.mjs');
-console.log('PASS actual participation gate fragment: consent/data reads remain available, tool entry redirects without agreement, research writes stay blocked.');
+console.log('PASS actual participation gate: viewing, data management, and independent ranked practice consent remain available; research writes require agreement.');

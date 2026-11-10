@@ -1,0 +1,39 @@
+.welcome-settings { min-width:0; }
+.welcome-settings summary {
+ display:flex;align-items:center;gap:7px;min-height:44px;padding:0 3px;
+ color:#d5e6e9;font-size:13px;font-weight:650;line-height:1.2;cursor:pointer;list-style:none;
+}
+.welcome-settings summary::-webkit-details-marker { display:none; }
+.welcome-settings summary:is(:hover,:focus-visible),.welcome-settings[open] summary { color:#a8eee1; }
+.welcome-settings[open] summary { box-shadow:inset 0 -2px #75c6bc; }
+.welcome-settings summary:focus-visible { outline-offset:1px; }
+.welcome-menu-icon { width:18px;height:18px;flex:none;stroke-width:1.8; }
+@media (max-width:480px) {
+ .welcome-settings summary { font-size:11px; }
+ .welcome-menu-icon { width:16px;height:16px; }
+}
+.welcome-settings-panel {
+ position:absolute;top:100%;right:var(--site-topbar-inline);z-index:20;width:330px;
+ max-width:100cqw;max-height:65svh;overflow:auto;padding:7px;
+ border:1px solid #385861;border-radius:0 0 14px 14px;background:#0a1820;box-shadow:0 16px 40px #000a;
+}
+.welcome-settings[open] .welcome-settings-panel { animation:welcome-settings-enter .16s ease-out; }
+.welcome-settings-heading {
+ margin:0 5px 4px;padding:7px 5px;color:#abc5cc;font-size:11px;font-weight:650;
+}
+.welcome-settings-panel a {
+ display:grid;grid-template-columns:32px minmax(0,1fr) 14px;align-items:center;gap:10px;
+ min-height:56px;padding:8px 9px;border-radius:8px;color:#e7fff8;text-decoration:none;
+}
+.welcome-settings-panel a:is(:hover,:focus-visible) { background:#122d36;text-decoration:none; }
+.welcome-settings-link-icon {
+ width:32px;height:32px;padding:7px;border-radius:8px;background:#142d34;color:#9ee5d9;stroke-width:1.65;
+}
+.welcome-settings-link-icon[data-color=blue] { background:#152b3e;color:#a2d2fa; }
+.welcome-settings-link-icon[data-color=violet] { background:#29243b;color:#d2baf4; }
+.welcome-settings-link-icon[data-color=green] { background:#192e2b;color:#b0ddbd; }
+.welcome-settings-link-copy { display:grid;gap:3px;min-width:0; }
+.welcome-settings-panel strong { font-size:13px;line-height:1.25; }
+.welcome-settings-link-copy>span { color:#a8c0c9;font-size:12px;line-height:1.4; }
+.welcome-settings-link-arrow { width:14px;height:14px;color:#83a3ac; }
+@keyframes welcome-settings-enter { from { opacity:0; } }

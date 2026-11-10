@@ -1,4 +1,5 @@
 "use client";
+import { graphColor } from "@/lib/graph-theme";
 import { useId } from "react";
 import type { Point } from "@/lib/curves";
 function curveReference(points: Point[]) {
@@ -32,14 +33,14 @@ export default function Curve({ points, color }: { points: Point[]; color: strin
   const clipId = useId();
   return <svg className="curve" viewBox="0 0 560 210" preserveAspectRatio="none" role="img" aria-label={`Frequency response curve, 1 kHz at 75 dB, displayed from ${CURVE_VIEW.min} to ${CURVE_VIEW.max} dB; arrows mark values outside this view`}>
     <defs><clipPath id={clipId}><rect x="64" y="17" width="482" height="176" /></clipPath></defs>
-    <line x1="54" x2="54" y1="17" y2="193" stroke="rgba(130,160,175,.45)" strokeWidth=".75" vectorEffect="non-scaling-stroke" />
-    {[17, anchorY, 193].map(y => <line key={y} x1="51" x2="57" y1={y} y2={y} stroke="rgba(130,160,175,.45)" strokeWidth=".75" vectorEffect="non-scaling-stroke" />)}
-    <path d={path} clipPath={`url(#${clipId})`} fill="none" stroke={color} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
-    <circle cx={anchorX} cy={anchorY} r="4" fill={color} stroke="#090e12" strokeWidth="1.5" />
+    <line x1="54" x2="54" y1="17" y2="193" stroke={graphColor("rgba(130,160,175,.45)", "#90a7aa")} strokeWidth=".75" vectorEffect="non-scaling-stroke" />
+    {[17, anchorY, 193].map(y => <line key={y} x1="51" x2="57" y1={y} y2={y} stroke={graphColor("rgba(130,160,175,.45)", "#90a7aa")} strokeWidth=".75" vectorEffect="non-scaling-stroke" />)}
+    <path d={path} clipPath={`url(#${clipId})`} fill="none" stroke={color} strokeWidth="3.5" strokeLinejoin="round" strokeLinecap="round" style={{ filter: `var(--curve-glow, drop-shadow(0 0 4px ${color}))` }} />
+    <circle cx={anchorX} cy={anchorY} r="4" fill={color} stroke={graphColor("#090e12", "#f7fbfa")} strokeWidth="1.5" />
     {lowPoint[1] < CURVE_VIEW.min && <text x={plotX(lowPoint[0])} y="190" textAnchor="middle" fill={color} fontSize="15" fontWeight="900">↓</text>}
     {highPoint[1] > CURVE_VIEW.max && <text x={plotX(highPoint[0])} y="31" textAnchor="middle" fill={color} fontSize="15" fontWeight="900">↑</text>}
-    <text x="46" y="20" textAnchor="end" fill="#8fa3ad" fontSize="10" fontWeight="700">{CURVE_VIEW.max} dB</text>
-    <text x="46" y={anchorY + 4} textAnchor="end" fill="#b9cbd2" fontSize="11" fontWeight="700">75 dB</text>
-    <text x="46" y="197" textAnchor="end" fill="#8fa3ad" fontSize="10" fontWeight="700">{CURVE_VIEW.min} dB</text>
+    <text x="46" y="20" textAnchor="end" fill={graphColor("#8fa3ad", "#435e68")} fontSize="10" fontWeight="700">{CURVE_VIEW.max} dB</text>
+    <text x="46" y={anchorY + 4} textAnchor="end" fill={graphColor("#b9cbd2", "#19333b")} fontSize="11" fontWeight="700">75 dB</text>
+    <text x="46" y="197" textAnchor="end" fill={graphColor("#8fa3ad", "#435e68")} fontSize="10" fontWeight="700">{CURVE_VIEW.min} dB</text>
   </svg>;
 }

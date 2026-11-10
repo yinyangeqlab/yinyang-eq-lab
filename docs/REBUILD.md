@@ -1,7 +1,7 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update132**, source `f33b8fb2906e3005a50f06e3fc436b1b145c2e79`.
+Recorded deployment: **update139**, source `29ce40a5659978c056ec3b45d54dec18b8e86cc7`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 

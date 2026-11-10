@@ -1,0 +1,83 @@
+.about-page {
+  width: min(100%, 1100px);
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 64px) clamp(16px, 4vw, 40px);
+}
+
+.about-welcome {
+  padding: clamp(24px, 5vw, 64px);
+  border: 1px solid #2d4a51;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, #071418 15%, #071418ed 52%, #07141880),
+    url("/brand-landscape-crimson.webp") 66% 45% / cover;
+}
+
+.about-welcome-copy {
+  max-width: 630px;
+}
+
+.about-kicker {
+  margin: 0 0 12px;
+  color: #99e5dc;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.about-welcome h1 {
+  margin: 0 0 18px;
+  color: #ecfffa;
+  font-size: clamp(30px, 6vw, 58px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.about-intro {
+  margin: 0 0 12px;
+  color: #d2e3e6;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.6;
+}
+
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  margin-top: 24px;
+}
+
+.about-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: #b5eee4;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.about-actions a.about-primary {
+  padding: 0 12px;
+  border: 1px solid #6ab5aa;
+  border-radius: 8px;
+  background: #14343a;
+  color: #e9fff9;
+  text-decoration: none;
+}
+
+.about-actions a.about-primary:hover {
+  background: #1f464d;
+}
+
+@media (max-width: 600px) {
+  .about-welcome {
+    background:
+      linear-gradient(180deg, #071418e8, #071418),
+      url("/brand-landscape-crimson.webp") center top / auto 240px no-repeat;
+  }
+}

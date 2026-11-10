@@ -1,4 +1,5 @@
 "use client";
+import { useGraphTheme } from "@/lib/graph-theme";
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { adjustComparisonPassage, adjustResizablePassage, type ComparisonPassage } from "@/lib/comparison-passage";
 import type { TrackAnalysis } from "@/lib/loudness";
@@ -16,6 +17,17 @@ function seekClock(seconds: number) {
 }
 
 type Props = { playing?:boolean; getPlaybackPosition?:()=>number; deferDetail?:boolean; sourceUrl?:string; resizablePassage?: boolean; viewCenter?:number|null; maxZoom?:number; onPassageChange?: (passage: ComparisonPassage) => void; passage?: ComparisonPassage | null; passageActive?: boolean; analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
+
+const waveformColors = {
+  dark: {
+    compress: { left: ["#3a7197", "#59b8ff"], right: ["#486f99", "#90d2ff"] },
+    expand: { left: ["#ba6575", "#ff8997"], right: ["#a66a7b", "#ffadba"] },
+  },
+  light: {
+    compress: { left: ["#4c7899", "#135d93"], right: ["#526f94", "#2b588a"] },
+    expand: { left: ["#a85265", "#a12e4a"], right: ["#965a71", "#873550"] },
+  },
+} as const;
 
 export default function TrackWaveform({ playing=false, getPlaybackPosition, analysis:sourceAnalysis, sourceUrl, deferDetail=false, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false, passage = null, passageActive = false, onPassageChange, resizablePassage=false, viewCenter=null, maxZoom=8 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -114,9 +126,12 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
     const rect = control.parentElement?.getBoundingClientRect();
     if (rect) onDynamicRangeChange(Math.max(-1, Math.min(1, (rect.top + rect.height / 2 - clientY) / (rect.height * .3))));
   };
+  const theme = useGraphTheme();
+  const light = theme === "light";
   useEffect(() => {
     const canvas=canvasRef.current,playedCanvas=playedCanvasRef.current;
     if(!canvas||!playedCanvas)return;
+    const traces = waveformColors[theme][expanding ? "expand" : "compress"];
     const drawLayer = (target:HTMLCanvasElement,played:boolean) => {
       const rect = canvas.getBoundingClientRect();
       const scale = Math.min(2, window.devicePixelRatio || 1);
@@ -125,14 +140,14 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
       const pen = target.getContext("2d");
       if (!pen) return;
       pen.clearRect(0, 0, width, height);
-      pen.fillStyle = "#071522"; pen.fillRect(0, 0, width, height);
+      pen.fillStyle = light ? "#f4f9fa" : "#071522"; pen.fillRect(0, 0, width, height);
       if (!analysis || !duration) return;
       pen.lineWidth=1;
       const waves = preview || analysis.waveform;
       const count = waves.minL.length;
       const columns=peakColumns(waves,start/duration,(start+span)/duration,width);
       if (adjusted) {
-        pen.strokeStyle = expanding ? "rgba(102, 182, 226, .58)" : "rgba(196, 208, 218, .42)";
+        pen.strokeStyle = light ? "#8b9eaa" : expanding ? "rgba(102, 182, 226, .58)" : "rgba(196, 208, 218, .42)";
         for (let x = 0; x < width; x++) {
           const from = Math.max(0, Math.min(count - 1, Math.floor((start + x / width * span) / duration * count)));
           const to = Math.max(from + 1, Math.min(count, Math.ceil((start + (x + 1) / width * span) / duration * count)));
@@ -148,12 +163,12 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
         const [lowL,highL,lowR,highR]=columns.subarray(x*4,x*4+4);
         // Use the same amplitude scale for original and processed previews.
         // Downward expansion lowers quiet material; it does not grow peaks.
-        pen.strokeStyle = expanding ? (played ? "#ff8997" : "#ba6575") : (played ? "#59b8ff" : "#3a7197");
+        pen.strokeStyle = traces.left[played ? 1 : 0];
         pen.beginPath(); pen.moveTo(x + .5, height * (.25 - highL * .21)); pen.lineTo(x + .5, height * (.25 - lowL * .21)); pen.stroke();
-        pen.strokeStyle = expanding ? (played ? "#ffadba" : "#a66a7b") : (played ? "#90d2ff" : "#486f99");
+        pen.strokeStyle = traces.right[played ? 1 : 0];
         pen.beginPath(); pen.moveTo(x + .5, height * (.75 - highR * .21)); pen.lineTo(x + .5, height * (.75 - lowR * .21)); pen.stroke();
       }
-      pen.strokeStyle = "rgba(194, 203, 210, .82)";
+      pen.strokeStyle = light ? "#758e97" : "rgba(194, 203, 210, .82)";
       pen.lineWidth = scale;
       for (const center of [.25, .75]) {
         const y = Math.round(height * center) + .5;
@@ -163,7 +178,7 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
     const draw=()=>{drawLayer(canvas,false);drawLayer(playedCanvas,true);paintPlayheadRef.current?.();};
     const observer=new ResizeObserver(draw);observer.observe(canvas);draw();
     return()=>observer.disconnect();
-  }, [analysis,preview,adjusted,expanding,dynamicRange,duration,span,start]);
+  }, [analysis,preview,adjusted,expanding,dynamicRange,duration,span,start,theme,light]);
   useEffect(() => {
     const line=playheadRef.current,layer=playedLayerRef.current,canvas=canvasRef.current;
     if(!line||!layer||!canvas)return;

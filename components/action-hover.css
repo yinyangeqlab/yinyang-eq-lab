@@ -31,7 +31,7 @@
 .sound-check-dialog { max-height:calc(100dvh - 36px);overflow:auto;overscroll-behavior:contain; }
 .sound-check-dialog:focus { outline:none; }
 .sound-check-dialog .sound-check-research { margin:0 0 14px;padding:10px 12px;border:1px solid #3e6268;border-radius:8px;background:#0a1418; }
-.sound-check-research summary { cursor:pointer;font-size:13px;font-weight:650;color:#a3ddd5;line-height:1.5; }
+.sound-check-research h3 { margin:0;font-size:13px;font-weight:650;color:#a3ddd5;line-height:1.5; }
 .sound-check-dialog .sound-check-research p { font-size:12px;margin:10px 0;line-height:1.6; }
 .sound-check-research a { display:block;color:#98d8ea;font-size:12px;line-height:1.6;margin-top:9px;text-underline-offset:3px; }
 .sound-check-dialog p { font-size:14px; }
@@ -45,7 +45,10 @@
 .sound-check-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:3px}
 .sound-check-actions{padding-top:4px}
 .sound-check-actions .sound-check-repeat-note{font-size:11px;margin-bottom:7px}
-.sound-check-actions>button{min-height:44px}
+.sound-check-decision{display:flex;flex-wrap:wrap;gap:8px}
+.sound-check-decision>button{min-height:44px}
+.sound-check-decision>.sound-check-cancel{background:#18272b;border-color:#6f8c91}
+.sound-check-dialog .sound-check-ear-warning{padding:10px 12px;border:1px solid #967647;border-radius:8px;background:#30251a;color:#ffedc9}
 .shootout-content .shootout-setup-control{gap:7px 12px}
 .setup-auto-hide-note{flex-basis:100%;max-width:600px;margin:0 auto 5px;color:#93a9b2;font-size:11px;line-height:1.4;text-align:center}
 @media(max-width:600px){
@@ -54,7 +57,7 @@
  .sound-check-dialog p{font-size:13px;line-height:1.45;margin-bottom:10px}
  .sound-check-dialog .sound-check-research{padding:9px 10px;margin-bottom:6px}
  .sound-check-skip{margin-top:8px;font-size:13px;min-height:28px}
- .sound-check-actions>button{width:100%;margin-top:3px}
+ .sound-check-decision>button{flex:1 1 160px;margin-top:3px}
  .shootout-content .shootout-setup-toggle{min-height:40px;padding:5px 10px}
  .setup-auto-hide-note{max-width:310px;padding:0 8px;font-size:10px}
  .shootout-music-vote{gap:8px!important;row-gap:10px!important}

@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 78 48" fill="none" shape-rendering="geometricPrecision"><circle cx="22" cy="24" r="18" fill="#59d8c8" stroke="#91f3e6" stroke-width="0.8"/><path d="M22 6A18 18 0 0 1 22 42L22 6Z" fill="#071114"/><circle cx="22" cy="15" r="9" fill="#59d8c8"/><circle cx="22" cy="33" r="9" fill="#071114"/><circle cx="22" cy="15" r="2.2" fill="#071114"/><circle cx="22" cy="33" r="2.2" fill="#59d8c8"/><path d="M49 16a11 11 0 0 1 0 16M56 11a18 18 0 0 1 0 26M63 7a24 24 0 0 1 0 34" stroke="#59d8c8" stroke-width="2.4" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="YinYang EQ red and cobalt yin-yang"><defs>
+    <clipPath id="orb-edge"><circle cx="32" cy="32" r="24"/></clipPath>
+    <radialGradient id="warm" gradientUnits="userSpaceOnUse" cx="40" cy="29" r="34"><stop stop-color="#f56d78"/><stop offset=".58" stop-color="#db4b5c"/><stop offset="1" stop-color="#8e2341"/></radialGradient>
+    <radialGradient id="cool" gradientUnits="userSpaceOnUse" cx="40" cy="29" r="34"><stop stop-color="#79a6ec"/><stop offset=".58" stop-color="#3f6ac0"/><stop offset="1" stop-color="#193971"/></radialGradient>
+  </defs>
+  <g clip-path="url(#orb-edge)" transform="rotate(-90 32 32)">
+    <path d="M0 0H64V64H0Z" fill="url(#cool)"/>
+    <path d="M32 0V8a12 12 0 0 1 0 24 12 12 0 0 0 0 24v8H0V0Z" fill="url(#warm)"/>
+    <circle cx="32" cy="20" r="3.65" fill="#245ab4"/>
+    <circle cx="32" cy="44" r="3.65" fill="#f0586c"/>
+  </g></svg>

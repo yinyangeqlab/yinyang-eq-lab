@@ -1,0 +1,238 @@
+.ear-frequency-navigator {
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+
+.ear-frequency-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.ear-frequency-heading strong {
+  color: light-dark(var(--workbench-ink), #e8f8f4);
+  font-size: 15px;
+}
+
+.ear-frequency-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 7px;
+  margin-top: 4px;
+  color: light-dark(var(--workbench-muted), #b7cdd1);
+  font-size: 12px;
+}
+
+.ear-frequency-legend i {
+  width: 15px;
+  border-top: 2px dashed light-dark(var(--workbench-line), #8da6ad);
+}
+
+.ear-frequency-legend i[data-measured="true"] {
+  border-top: 2px solid light-dark(var(--workbench-teal-edge), #84e8ce);
+}
+
+.ear-frequency-outside {
+  color: light-dark(var(--workbench-amber), #ffdfaf);
+}
+
+.ear-frequency-entry {
+  display: grid;
+  gap: 4px;
+  color: light-dark(var(--workbench-teal), #c7dddf);
+  white-space: nowrap;
+}
+
+.ear-frequency-entry input {
+  width: 7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.ear-frequency-chart {
+  min-width: 0;
+  padding: 8px 13px 4px;
+  border: 1px solid light-dark(var(--workbench-line), #36545c);
+  border-radius: 9px;
+  background: light-dark(var(--workbench-surface), #061219);
+}
+
+.ear-frequency-plot {
+  position: relative;
+  height: clamp(112px, 19vw, 155px);
+  border-radius: 4px;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.ear-frequency-plot:active {
+  cursor: grabbing;
+}
+
+.ear-frequency-plot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.ear-frequency-grid {
+  stroke: #2b434b;
+}
+
+.ear-frequency-reference {
+  stroke: light-dark(var(--workbench-muted), #8da6ad);
+  stroke-dasharray: 4 5;
+  opacity: .8;
+}
+
+.ear-frequency-curve {
+  fill: none;
+  stroke: light-dark(var(--workbench-teal), #84e8ce);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.ear-frequency-playhead {
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+  background: #efc480;
+  pointer-events: none;
+}
+
+.ear-frequency-marker,
+.ear-frequency-sample {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ear-frequency-marker {
+  border: 2px solid light-dark(var(--workbench-line), #061219);
+  background: #ffda95;
+  box-shadow: 0 0 0 1px #efc480;
+}
+
+.ear-frequency-sample {
+  width: 7px;
+  height: 7px;
+  background: #84e8ce;
+}
+
+.ear-frequency-axis {
+  position: relative;
+  height: 20px;
+  margin-top: 6px;
+  color: light-dark(var(--workbench-muted), #b7cdd1);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ear-frequency-axis span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ear-frequency-axis span:first-child {
+  transform: none;
+}
+
+.ear-frequency-axis span:last-child {
+  transform: translateX(-100%);
+}
+
+.ear-frequency-navigator .ear-frequency-hint {
+  color: light-dark(var(--workbench-muted), #b7cdd1);
+  font-size: 12px;
+}
+.ear-frequency-reveal-marker {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  transform: translate(-50%, -50%);
+  border: 1px solid light-dark(var(--workbench-amber-edge), #ffdd9d);
+  border-radius: 50%;
+  background: light-dark(var(--workbench-amber-wash), #30261a);
+  color: light-dark(var(--workbench-amber), #ffdd9d);
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.ear-frequency-gain-label {
+  position: absolute;
+  inset-inline-end: 3px;
+  padding-inline: 3px;
+  transform: translateY(-50%);
+  background: light-dark(var(--workbench-surface), #061219);
+  color: light-dark(var(--workbench-muted), #b7cdd1);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.ear-frequency-plot[data-seek="false"] { cursor: default; touch-action: auto; }
+.ear-frequency-legend i[data-measured="true"][data-before="true"],
+.ear-frequency-curve[data-before="true"] { border-color: light-dark(var(--workbench-line), #9bb0b8); stroke: light-dark(var(--workbench-muted), #9bb0b8); }
+.ear-frequency-stage { position: relative; }
+.ear-frequency-chart[data-gain-axis="true"] { padding-inline: 33px 25px; }
+.ear-frequency-stage[data-editing="true"] { margin-block: 4px 32px; }
+.ear-frequency-edit-gain-label {
+  position: absolute;
+  right: calc(100% + 6px);
+  transform: translateY(-50%);
+  color: light-dark(var(--workbench-muted), #b7cdd1);
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.ear-band-overlay { position: absolute; inset: 0; pointer-events: none; }
+.ear-band-span {
+  position: absolute;
+  inset-block: 0 -13px;
+  border-inline: 1px solid light-dark(color-mix(in srgb, var(--workbench-amber-edge) 55%, transparent), rgb(239 196 128 / 55%));
+  border-bottom: 2px solid light-dark(var(--workbench-amber-edge), #efc480);
+  background: rgb(239 196 128 / 6%);
+}
+.ear-band-handle {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid currentColor;
+  background: light-dark(var(--workbench-soft), #102830);
+  color: light-dark(var(--workbench-amber), #ffdd9d);
+  font-size: 18px;
+  line-height: 1;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+}
+.ear-band-gain {
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: ns-resize;
+}
+.ear-band-gain[data-kind="dip"] { color: light-dark(var(--workbench-teal), #a1f0dc); }
+.ear-band-gain[data-active="true"] { z-index: 1; background: light-dark(var(--workbench-soft), #263b40); box-shadow: 0 0 0 2px #061219; }
+.ear-band-edge { top: calc(100% + 1px); cursor: ew-resize; }
+.ear-band-edge[data-edge="start"] { transform: translateX(-100%); border-radius: 6px 0 0 6px; }
+.ear-band-edge[data-edge="end"] { border-radius: 0 6px 6px 0; }
+.ear-band-handle:focus-visible { z-index: 2; }
+.ear-band-selection { display: grid; gap: 6px; min-width: 0; }
+.ear-band-selection > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.ear-tool .ear-band-selection button { min-height: 34px; padding: 3px 8px; font-size: 12px; }
+.ear-band-selection small { color: light-dark(var(--workbench-teal), #c7dddf); font-variant-numeric: tabular-nums; }

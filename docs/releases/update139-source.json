@@ -1,0 +1,8 @@
+{
+  "update": 139,
+  "tag": "update139",
+  "deployedSourceCommit": "29ce40a5659978c056ec3b45d54dec18b8e86cc7",
+  "publicBaselineCommit": "2b21bd263d538275ff2ab2922d7f3dc5abc694a7",
+  "applicationSourceMatchesDeployment": true,
+  "publicArchiveIncludesDeploymentInputs": false
+}

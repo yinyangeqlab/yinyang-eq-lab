@@ -1,16 +1,22 @@
 export type SharePage = {
   path: string; slug: string; title: string; description: string;
-  ogTitle?: string; kind?: string; kicker?: string; tagline?: string; private?: boolean;
+  ogTitle?: string; kind?: string; kicker?: string; tagline?: string; private?: boolean; noIndex?: boolean;
   image?: { path: string; width: number; height: number; alt: string };
   canonicalSearch?: string;
 };
 export const SITE_ORIGIN: string;
 export const SITE_NAME: string;
 export const SHARE_IMAGE_SIZE: { width: number; height: number };
+export const SHARE_MOTION_SIZE: typeof SHARE_IMAGE_SIZE;
 export const sharePages: SharePage[];
+export const sharePreviewCards: SharePage[];
+export const privateShareCard: SharePage;
+export const sharedShootoutCard: SharePage;
 export function sharePageFor(pathname: string, search?: string): SharePage | null;
 export function previewTitle(page: SharePage): string;
 export function shareImageUrl(page: SharePage): { url: string; width: number; height: number; alt: string };
-export function shareHtml(page: SharePage, options?: { origin?: string; pathname?: string }): string;
+export function shareAnimationUrl(page: SharePage): (ReturnType<typeof shareImageUrl> & { type: string }) | null;
+export function shareHtml(page: SharePage, options?: { origin?: string; pathname?: string; animated?: boolean }): string;
 export function shareMetadataFields(path: string): Record<string, unknown>;
 export function isUnfurlCrawler(userAgent: string | null | undefined): boolean;
+export function prefersAnimatedShare(userAgent: string | null | undefined): boolean;

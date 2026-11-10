@@ -366,6 +366,42 @@ export const listenerNicknames = sqliteTable("listener_nicknames", {
   nickname: text("nickname").notNull(),
 });
 
+export const earPracticeProfiles = sqliteTable("ear_practice_profiles", {
+  subjectId: text("subject_id").primaryKey().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
+  username: text("username"),
+  clearedAt: integer("cleared_at").notNull().default(0),
+}, table => [uniqueIndex("ear_practice_username_idx").on(sql`lower(${table.username})`)]);
+
+export const earPracticeScores = sqliteTable("ear_practice_scores", {
+  subjectId: text("subject_id").notNull().references(() => earPracticeProfiles.subjectId, { onDelete: "cascade" }),
+  protocol: text("protocol").notNull(),
+  furthest: integer("furthest").notNull().default(0),
+  correct: integer("correct").notNull(),
+  attempts: integer("attempts").notNull(),
+  accuracySum: real("accuracy_sum").notNull().default(0),
+  consentVersion: text("consent_version").notNull(),
+  createdAt: integer("created_at").notNull(),
+}, table => [
+  primaryKey({ columns: [table.subjectId, table.protocol] }),
+  index("ear_practice_rank_idx").on(table.protocol, sql`${table.furthest} DESC`),
+  check("ear_practice_furthest", sql`${table.furthest} BETWEEN 0 AND 100`),
+  check("ear_practice_correct", sql`${table.correct} >= 0 AND ${table.correct} <= ${table.attempts}`),
+  check("ear_practice_attempts", sql`${table.attempts} > 0`),
+  check("ear_practice_accuracy", sql`${table.accuracySum} >= 0 AND ${table.accuracySum} <= 100 * ${table.attempts}`),
+]);
+
+export const earPracticeSets = sqliteTable("ear_practice_sets", {
+  subjectId: text("subject_id").primaryKey().references(() => earPracticeProfiles.subjectId, { onDelete: "cascade" }),
+  id: text("id").notNull(),
+  protocol: text("protocol").notNull(),
+  stage: integer("stage").notNull(),
+  bands: text("bands").notNull(),
+  answer: text("answer"),
+  createdAt: integer("created_at").notNull(),
+}, table => [
+  check("ear_practice_set_stage", sql`${table.stage} BETWEEN 1 AND 100`),
+]);
+
 // Optional adaptive-discovery research, deliberately separate from ranking inputs.
 export const personalResearchPermissions = sqliteTable("personal_research_permissions", {
   subjectId:text("subject_id").primaryKey().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),

@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { copyText, embedSnippet, readSaved, saveShootout, siteOrigin, TARGET_COLORS, type SavedShootout } from "@/components/embed-common";
 import "./embed-shootout.css";
@@ -49,7 +48,6 @@ export default function EmbedCreate() {
   const shareUrl = created ? `${origin}/s/${created.id}` : "";
 
   return <div className="em-root">
-    <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/privacy">Privacy</a></header>
     <main className="em-wrap">{copied === "failed" && <p role="status">Couldn’t copy automatically. Select the link text and copy it yourself.</p>}
       {!created && <>
         <section className="em-card em-hero">

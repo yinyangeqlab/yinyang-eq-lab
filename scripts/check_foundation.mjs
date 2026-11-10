@@ -52,6 +52,17 @@ const dataExportRecord = state => ({
   newDataSnapshots: 1, registered: true, hostedValidationPassed: true,
   independentDownloadDecryptionVerified: true, fullReconstructionVerified: true,
 });
+const sourceOnlyFixture = state => {
+  const value = clone(state);
+  delete value.recoveryProcess.releaseMetadataHandover;
+  Object.assign(value.recoveryProcess, {
+    sourceOnlyHandoverPending: true,
+    [`update${state.update}SourceOnlyHandover`]: {
+      metadataOnly: true, databaseExport: false, registrationPending: true,
+    },
+  });
+  return value;
+};
 try {
   const state = json(join(root, 'LIVE_RELEASE.json')), receipt = json(join(root, state.evidence));
   test('current release contract', () => validateRelease(state, receipt));
@@ -62,14 +73,14 @@ try {
     ['missing protection', value => { value.deploymentVerification.abuseBindings = 5; }]
   ]) test(name, () => { const value = clone(receipt); mutate(value); assert.throws(() => validateRelease(state, value), /Release state:/); });
   test('pending handover cannot be silently promoted using old baseline evidence', () => {
-    const value = clone(state); value.recoveryProcess.sourceOnlyHandoverPending = false;
+    const value = sourceOnlyFixture(state); value.recoveryProcess.sourceOnlyHandoverPending = false;
     value.recoveryProcess[`update${state.update}SourceOnlyHandover`].registrationPending = false;
     Object.assign(value.recoveryProcess, { metadataOnlyHandoverVerified: true, metadataValidationPassed: true, hostedValidationPending: false, hostedValidationPassed: true });
     value.recoveryProcess.sourceBaselineUpdate = state.update - 1;
     assert.throws(() => validateRelease(value, receipt), /baseline differs/);
   });
   test('explicit completed source-only record passes without rewriting deployment receipt', () => {
-    const value = clone(state);
+    const value = sourceOnlyFixture(state);
     Object.assign(value.recoveryProcess, { sourceOnlyHandoverPending: false, sourceBaselineUpdate: state.update, metadataOnlyHandoverVerified: true, metadataValidationPassed: true, hostedValidationPending: false, hostedValidationPassed: true });
     value.recoveryProcess[`update${state.update}SourceOnlyHandover`].registrationPending = false;
     validateRelease(value, receipt); assert.deepEqual(recoveryState(value), { kind: 'source-only', pending: false });

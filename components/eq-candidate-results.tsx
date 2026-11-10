@@ -1,4 +1,5 @@
 "use client";
+import { graphColor } from "@/lib/graph-theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type {Point} from "@/lib/curves";
 import {eqResponse} from "@/lib/eq-response";
@@ -9,10 +10,15 @@ import "./eq-candidate-results.css";
 import GeneratedEqComparison, { type GeneratedEqContext } from "./generated-eq-comparison";
 import { generatedSignature } from "@/lib/generated-eq-comparison";
 import type { ChannelMatch } from "@/lib/channel-balance";
-const curveColors = ["#ffdc83", "#6de7cd", "#f3a3e2", "#81c6ff", "#f3a176", "#c1abfa", "#b5df80",
-  "#ff8ea8", "#7edeea", "#f9b7a9", "#9aafff", "#e9cfac", "#b9ebc3"];
-const targetColor = "#c0c5cb";
-const rawColor = "#839ba9";
+const curveColors = [
+  ["#ffdc83", "#805504"], ["#6de7cd", "#00665a"], ["#f3a3e2", "#8a3575"],
+  ["#81c6ff", "#165f9c"], ["#f3a176", "#963b21"], ["#c1abfa", "#65449d"],
+  ["#b5df80", "#426814"], ["#ff8ea8", "#a32d50"], ["#7edeea", "#146976"],
+  ["#f9b7a9", "#8c413b"], ["#9aafff", "#4250a1"], ["#e9cfac", "#745b2f"],
+  ["#b9ebc3", "#2f6f47"],
+].map(([dark, light]) => graphColor(dark, light));
+const targetColor = graphColor("#c0c5cb", "#58656f");
+const rawColor = graphColor("#839ba9", "#466170");
 type Plot = { fit: FinalizedVariant; rows: NonNullable<ReturnType<typeof eqResponse>> };
 type CurveSelection = "selected" | "all" | Set<string>;
 
@@ -85,7 +91,7 @@ function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVari
     <div className="eq-plot-surface" ref={surface}>
       <svg viewBox={`0 0 ${width} 248`} role="img" aria-label={deviation ? "Predicted EQ deviation from the target in decibels" : "Raw response, target and predicted EQ responses"}>
         {ticks.map(db => <g key={db}>
-          <line x1={left} x2={right} y1={y(db)} y2={y(db)} stroke="#253946"/>
+          <line x1={left} x2={right} y1={y(db)} y2={y(db)} stroke={graphColor("#253946", "#c5d4d5")}/>
           <text x={left - 7} y={y(db) + 4} textAnchor="end">{deviation && db > 0 ? "+" : ""}{db}</text>
         </g>)}
         {(width < 380 ? [20, 100, 1000, 5000, 20000] : [20, 100, 1000, 10000, 20000]).map(hz => <text key={hz} x={x(hz)} y="227" textAnchor={hz === 20000 ? "end" : "middle"}>{hz >= 1000 ? `${hz / 1000}k` : hz}</text>)}

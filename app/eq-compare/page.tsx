@@ -113,11 +113,11 @@ export default function BlindEqCompare() {
   const shown = [...songs.filter(song => selectedIds.includes(song.id)), ...matchedSongs.filter(song => !selectedIds.includes(song.id))];
   const decisive = session?.rounds.filter(round => round.choice === "A" || round.choice === "B").length || 0;
   return <div className="eq-compare">
-    <header className="eq-header"><a href="/home">YinYang EQ</a><nav aria-label="EQ comparison navigation"><a href="/listen">Listen</a><a href="/music-library">Music library</a></nav></header>
     <main>
       <p className="eq-eyebrow">Private listening room</p>
       <h1 ref={heading} tabIndex={-1}>{session?.revealed ? "The reveal" : "Blind EQ comparison"}</h1>
       <p className="eq-intro">{session?.revealed ? "Your choices are locked. Here’s which preset you preferred on each song." : session ? "Listen, switch and choose. Preset names stay hidden until you end the session." : "Already have two saved EQ settings? Hear them with the same music before seeing their names."}</p>
+      <nav className="eq-related-links" aria-label="EQ comparison navigation"><a href="/listen">Listen</a><a href="/music-library">Music library</a></nav>
       <p className="eq-privacy">Presets, local audio and choices stay in this tab. They aren’t sent to research, rankings or Account Sync. Refreshing or closing the page clears the session; download your results after the reveal.</p>
 
       {!session && <>

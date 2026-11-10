@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { EMBED_LISTENER_KINDS, EMBED_SIGNAL_CODES, KIND_LABELS, SIGNAL_LABELS } from "@/lib/embed-shootout";
 import { TARGET_COLORS, copyText, embedSnippet, forgetShootout, readSaved, saveShootout, siteOrigin, type EmbedResults } from "@/components/embed-common";
@@ -84,8 +83,8 @@ export default function EmbedResultsView({ id }: { id: string }) {
   if (deleted) return <div className="em-root"><main className="em-card em-center">{copied === "failed" && <p role="status">Couldn’t copy automatically. Select the link text and copy it yourself.</p>}<h1>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
 
   return <div className="em-root">
-    <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/share-shootout">Make another shootout</a></header>
     <main className="em-wrap" aria-busy={loading}>
+      <p className="em-muted"><a href="/share-shootout">Make another shootout</a></p>
       {!keySaved && data && <p className="es-error" role="alert">Browser storage could not save your private results key. Keep the private results link bookmarked or copied before leaving.</p>}
       {loading && <p className="es-status">Loading results…</p>}
 

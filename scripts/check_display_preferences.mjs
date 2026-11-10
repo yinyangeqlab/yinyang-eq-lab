@@ -46,6 +46,10 @@ assert.doesNotThrow(() => prefs.writeDisplayPreferences({ motion: 'reduced' }), 
 assert.equal(document.documentElement.dataset.motion, 'reduced', 'the current page still applies the choice without storage');
 storageBroken = false;
 
+const legacy = prefs.parseDisplayPreferences(JSON.stringify({ theme: 'light', motion: 'reduced', shortcutScope: 'player' }));
+assert.deepEqual(legacy, { motion: 'reduced', singleKeyShortcuts: true, shortcutScope: 'player' }, 'saved light choices are ignored while motion and shortcuts are retained');
+assert.equal('siteTheme' in document.documentElement.dataset, false);
+
 // Display preferences are per-browser: they must not enter account Sync.
 const { ACCOUNT_SYNC_KEYS } = await import('../lib/account-sync.mjs');
 assert.equal(ACCOUNT_SYNC_KEYS.includes(KEY), false, 'display preferences are excluded from account Sync');

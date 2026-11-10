@@ -121,6 +121,9 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("DELETE FROM community_personal_choices WHERE subject_id=?",subjectId!);
     add("DELETE FROM community_personal_permissions WHERE subject_id=?",subjectId!);
     add("DELETE FROM listener_nicknames WHERE subject_id=?", subjectId!);
+    add("DELETE FROM ear_practice_scores WHERE subject_id=?", subjectId!);
+    add("DELETE FROM ear_practice_sets WHERE subject_id=?", subjectId!);
+    add("DELETE FROM ear_practice_profiles WHERE subject_id=?", subjectId!);
     add("DELETE FROM privacy_accounts WHERE subject_id=?", subjectId!);
     const accessId = subjectId!.startsWith("invite:") ? subjectId!.slice(7) : subjectId!.startsWith("browser:") ? `open-${subjectId!.slice(8)}` : null;
     if (accessId) {

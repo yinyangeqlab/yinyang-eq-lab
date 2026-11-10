@@ -7,6 +7,87 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Gave Blind EQ Comparison a dedicated link preview with an animated Discord card and a matching still image.",
+] as const;
+
+const update138Changes = [
+  "Removed two redundant account links from the Music Library introduction.",
+  "Matched the homepage, navigation, favicon, and share artwork to the smooth red and cobalt yin-yang.",
+  "Redesigned link previews with clearer artwork and motion for each destination, including shared shootouts. Discord gets a single animated card, and other platforms get a matching still.",
+  "Layered four folding aurora curtains with drifting colors and added flying carpets that pitch and bank as their fabric ripples.",
+  "Extended wave motion to the lowest mountain traces and added traveling light and a brief resonance at the summits.",
+  "Turned the red and cobalt yin-yang sideways on the homepage orb and logos, and shaded the floating orb as one rounded sphere.",
+  "Restored the homepage orb’s original face proportions, brightened its outer glow, and let a little of the sky show through its face.",
+  "Added 3D headphones and in-ear monitors that slowly turn inside clear bubbles. The rugs fly in opposite directions at separate heights, shrink toward the horizon, and sometimes drift up out of the sky.",
+  "Gave Sound A and Sound B fuller yin-yang halves and kept both beside the caption as one compact group. The homepage text overlays the water below the orb at every width.",
+  "Softened the Sound A and Sound B symbols and gave the caption’s S-curve a smoother, slightly thicker stroke.",
+  "Gave the flying rugs smooth rises and dips and quicker fabric flaps. The orb has a shorter vertical float with more mist around it.",
+  "Synced the sidebar edge line and gradient and added a transparent Open sidebar button with a hover border.",
+  "Made phone navigation drop from the header, with two columns of destinations and a separate utility row.",
+  "Made the sidebar solid black and gave the navigation and header controls their own space at narrow widths.",
+  "Moved the homepage logo and wordmark into the top bar and made the sidebar tagline larger.",
+  "Kept the logo, version and settings in the same places across page headers, with the current page name beside the logo.",
+  "Organized the footer into compact responsive columns, separated Project and Contact, added an About Us page, and moved the listening history to Research.",
+  "Narrowed the sidebar and added softly tinted boxes and a consistent teal accent for hover and selection.",
+  "Kept the original sidebar arrow, with a hover-only divider in the fully open layout and a larger arrow on hover in the icon-only layout.",
+  "Refined the icon-only sidebar with a softly fading edge, a brighter chevron on hover, and a full-height click area.",
+  "Slow mist drifts across the valley, the water and the orb’s lower third. Scattered wisps pass over the mountain slopes.",
+] as const;
+
+const update137Changes = [
+  "Kept the original pink-noise exercise in Beginner practice and added sine and harmonic sweeps in Intermediate practice.",
+  "Added three scored Advanced practice stages for finding a hidden peak or dip below 10 kHz.",
+  "Reused the Finder’s frequency navigator in Advanced practice and kept Reference and Mystery matched away from the hidden band.",
+  "Added an opt-in Ranked Practice Challenge with randomized mixed difficulty across 100 levels, a Grandmaster milestone, and public names or anonymous listener labels.",
+  "Show wins, losses and independent frequency accuracy in ranked results, with a distribution covering all participating players and ties sharing a rank.",
+  "Plotted revealed bands and expanded frequency labels when the chart has room.",
+  "Added distinct peak and dip icons to the marking controls.",
+  "Clarified Preference Tuning in navigation and added dedicated link previews for the Finder, Listen and Software licenses.",
+  "Practice feedback distinguishes correct answers, reversed peaks and dips, and missed frequencies, with encouragement for correct streaks.",
+  "Explained how to compare practice clips with uncalibrated headphones.",
+  "Gave the tutorial a compact Recommended practice row with a short description.",
+  "Pink noise and music start with the selected frequency isolated, with full-range listening one click away.",
+  "Practice volume starts at 10% and resets after completion. Playback shortcuts cover Space, frequency arrows, and Reference and Mystery.",
+  "Leaving an unfinished ranked challenge prompts you to continue or discard it.",
+  "Headphone adjustments support custom Q and editable half-gain frequency edges.",
+  "Drag width and gain directly on the flat or measured Finder graph and the EQ comparison graph.",
+  "Ranked Practice Challenge has its own section on the Finder. Advanced practice stays unranked under Recommended practice.",
+  "Added animated social cards with still images for platforms that display a static preview.",
+  "Updated the rounded yin-yang in the full sidebar and welcome header. The collapsed sidebar starts with Home.",
+  "The yin-yang gently grows and recoils on the beat, opening with a double-tap rhythm. Its strongest hit still launches the outward wave, and tinted light drifts inside the orb.",
+  "A soft highlight spans both colors of the orb, with gentle shading along its lower rim. The water reflection brightens slightly on the strongest hit.",
+  "The welcome headphones have paired earcups with shaded cushions, and the IEMs have tapered shells with open cable bends. Foreground mist and reflected water light tie the orb into the landscape.",
+  "The animated orb uses the still artwork’s bright red and deep blue palette, with cyan reflected light along its lower edge.",
+  "Slow foreground mist drifts across the orb and the floating devices. The IEM cables curve back from their connectors and the tips have recessed openings.",
+  "On wide layouts the homepage copy sits over the full landscape. Narrow layouts place the copy below the artwork.",
+  "The wide homepage title sits lower to give the headphones and rug more room, and the IEM shells have rounder, ear-shaped contours.",
+  "The homepage headline overlays the landscape when the browser is wider than 768 pixels, including when the full sidebar is open.",
+  "The IEMs have inset faceplates and deeper blue shells. The animated orb uses a warmer red and an ocean blue that picks up the mountain colors.",
+  "The still homepage artwork uses the same orb colors as the animation.",
+  "The sidebar icon and homepage logo use the warmer red and ocean blue palette, with a brighter blue highlight on the sidebar icon.",
+  "The favicon, touch icon, and still and animated link previews match the Warm Red and teal-blue branding. The icons have a clean edge.",
+  "The homepage listening and browser sync links glow more quickly on hover, with clear keyboard focus and a clearer prompt for returning listeners.",
+  "The animated and still homepage artwork, header logo, and sidebar mark use Warm Red and teal blue. The header logo shows the original detailed ridges and water around a clean orb edge.",
+  "Unified the welcome layout around one wide landscape, with a darker phone treatment. Red and blue plasma wisps move through softly shaded headphones and IEMs above their carpets.",
+] as const;
+
+const update136Changes = [
+  "Added a subtle outline around All Your Targets in Personal Tournament results.",
+  "Shaped the welcome artwork into traveling audio pulses and removed the homepage Peak & Dip Finder buttons.",
+] as const;
+
+const update134Changes = [
+  "Renamed Tune by ear to Peak & Dip Finder and added interactive practice for hearing peaks and dips.",
+  "Added a frequency playhead, exact Hz entry and fine dragging, with an optional saved headphone or IEM measurement.",
+  "Added a hearing-safety prompt and a low starting level per visit. Sine, harmonic tones and pink noise switch during playback.",
+  "Clarified the reference EQ, frequency focus and before-and-after comparison. The version page leads with the build ID.",
+] as const;
+
+const update133Changes = [
+  "Added a direct link to the update132 GitHub release from the version page.",
+] as const;
+
+const update132Changes = [
   "Added Tune by ear with sine and harmonic sweeps, pink noise, library and local music, and an output meter. Mark peaks or dips and compare the adjustments live.",
   "Save manual adjustments by themselves or combine them with a target fit. Saved EQs use the existing Account Sync collection.",
   "Generated EQ results stay available in the same browser for matching inputs. Overlay individual fits or show them all, view deviation from the gray dotted target, and compare fit error and preamp.",
@@ -21,7 +102,17 @@ export const candidateChanges = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: candidateChanges,
+  { update: 139, date: "2026-11-10", title: "Blind EQ Comparison link preview", changes: candidateChanges },
+  { update: 138, date: "2026-11-10", title: "Homepage, navigation and animated link previews", changes: update138Changes },
+  { update: 137, date: "2026-11-09", title: "Ranked practice and homepage refresh", changes: update137Changes },
+  { update: 136, date: "2026-11-08", title: "Homepage audio pulses and tournament standings", changes: update136Changes },
+  { update: 135, date: "2026-11-08", title: "Direct GitHub release link", changes: [
+    "Linked the published update134 GitHub release directly from the version page.",
+  ] },
+  { update: 134, date: "2026-11-08", title: "Peak & Dip Finder", changes: update134Changes,
+    github: { commit: "a0a93078296ca875d43f5e0a3c2586e12177802c", releaseTag: "update134" } },
+  { update: 133, date: "2026-11-07", title: "Direct GitHub release link", changes: update133Changes },
+  { update: 132, date: "2026-11-07", title: "Tune by ear, generated EQs and free listening", changes: update132Changes,
     github: { commit: "dd5062c8d49986a59d582e604d94614e3c0f2c3e", releaseTag: "update132" } },
   { update: 131, date: "2026-10-31", title: "Unified Tuning and saved EQ playback", changes: [
     "Restored the interactive Tuning curve with raw and predicted overlays, compact tone controls and integrated frequency markers.",

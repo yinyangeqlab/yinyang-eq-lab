@@ -4,13 +4,11 @@ import type { ReactNode } from "react";
 import AlphaShell from "@/components/alpha-shell";
 import PrivacyEvents from "@/components/privacy-events";
 import ServiceWarningPopup from "@/components/service-warning";
-import SiteBetaNotice from "@/components/site-beta-notice";
 import SiteDataFooter from "@/components/site-data-footer";
+import SiteTopbar from "@/components/site-topbar";
 
-// Shareable shootout pages are public and anonymous, and /embed pages run inside
-// other sites. The private EQ page has its own full-navigation header and
-// memory-only session guard. These pages must not load the sidebar shell, account sync, cross-tab
-// privacy redirects, service popups or the site footer.
+// Guest shootouts and private EQ comparisons use the site bar without the
+// sidebar, account sync, cross-tab redirects, service popups or site footer.
 const STANDALONE = /^\/(?:embed|s)\/[a-z0-9]+(?:\/|$)/;
 
 export function isStandalonePath(pathname: string | null): boolean {
@@ -18,6 +16,14 @@ export function isStandalonePath(pathname: string | null): boolean {
 }
 
 export default function SiteChrome({ children }: { children: ReactNode }) {
-  if (isStandalonePath(usePathname())) return <>{children}</>;
-  return <><PrivacyEvents /><AlphaShell><ServiceWarningPopup />{children}<SiteBetaNotice /><SiteDataFooter /></AlphaShell></>;
+  const pathname = usePathname();
+  if (isStandalonePath(pathname) && pathname) {
+    if (pathname.startsWith("/embed/")) return <>{children}</>;
+    const title = pathname === "/eq-compare" ? "Blind EQ Comparison"
+      : pathname === "/share-shootout" ? "Create a Shareable Shootout"
+      : /\/results\/?$/.test(pathname) ? "Private Shootout Results"
+      : "Blind Shootout";
+    return <><SiteTopbar title={title} />{children}</>;
+  }
+  return <><PrivacyEvents /><AlphaShell><ServiceWarningPopup />{children}<SiteDataFooter home={pathname === "/" || pathname === "/home"} /></AlphaShell></>;
 }

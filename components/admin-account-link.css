@@ -1,6 +1,14 @@
+.site-data-footer .welcome-admin-link {
+  display:inline-flex;align-items:center;gap:6px;flex:none;min-height:40px;
+  padding:6px 10px;border:1px solid #25343a;border-radius:6px;
+  background:#070c0f;color:#a4b9bf;font-size:12px;white-space:nowrap;text-decoration:none;
+}
+.site-data-footer .welcome-admin-link:hover { color:#d1edf4;border-color:#43575d; }
+.welcome-admin-link svg { width:14px;height:14px;stroke-width:1.6; }
+
 /* Persistent session signal; no hover or animation is required to see it. */
 .admin-session-link.admin-session-active,
-.welcome-footer .welcome-admin-link.admin-session-active,
+.site-data-footer .welcome-admin-link.admin-session-active,
 .topbar .owner-utility-link.admin-session-active {
   border-color:#67b9f7;
   background:linear-gradient(140deg,#102c48,#091827);

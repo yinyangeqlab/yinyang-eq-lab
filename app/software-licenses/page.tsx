@@ -1,3 +1,7 @@
+import { shareMetadata } from "@/lib/share-metadata";
+
+export const metadata = shareMetadata("/software-licenses");
+
 export default function SoftwareLicenses() {
   return <main className="page-shell" style={{ maxWidth: 900, margin: '40px auto', padding: 24 }}>
     <h1>Software licenses</h1>

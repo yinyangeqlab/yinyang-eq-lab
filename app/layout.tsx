@@ -4,26 +4,23 @@ import { invitesEnabled } from "@/lib/invite-settings.mjs";
 import { InviteModeProvider } from "@/components/invite-mode";
 import type { Metadata } from "next";
 import "./globals.css";
+import "./site-light.css";
 import "@/components/action-hover.css";
 import SiteChrome from "@/components/site-chrome";
+import { buildLabel } from "@/lib/release-info";
+import { shareMetadata } from "@/lib/share-metadata";
+
+const welcomeMetadata = shareMetadata("/");
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://yinyangeq.com"),
-  title: "YinYang EQ",
-  description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.",
+  title: welcomeMetadata.title,
+  description: welcomeMetadata.description,
+  openGraph: welcomeMetadata.openGraph,
+  twitter: welcomeMetadata.twitter,
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/brand-avatar-aligned.png",
-  },
-  openGraph: {
-    title: "YinYang EQ",
-    description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.",
-    images: [{ url: "/social-preview-aligned-v2.png", width: 1254, height: 1254, alt: "Neon yin-yang over red and blue waveform waves" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["/social-preview-aligned-v2.png"],
+    icon: { url: `/favicon.svg?v=${buildLabel}`, type: "image/svg+xml", sizes: "any" },
+    apple: { url: `/brand-yin-yang.png?v=${buildLabel}`, sizes: "180x180" },
   },
 };
 
@@ -34,7 +31,7 @@ export default async function RootLayout({
 }>) {
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteChrome>{children}</SiteChrome></InviteModeProvider></body>
     </html>
   );

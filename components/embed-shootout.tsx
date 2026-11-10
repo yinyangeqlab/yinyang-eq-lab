@@ -1,4 +1,5 @@
 "use client";
+import { useGraphTheme } from "@/lib/graph-theme";
 import { shortcutDecision } from "@/lib/playback-shortcuts";
 import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
 import Link from "next/link";
@@ -17,6 +18,7 @@ type Side = "a" | "b";
 type Pick = { round: number; winner: "a" | "b" | "tie"; flipped: boolean; signal: SourceKind };
 const MIN_HEARD = 2;
 const SIDE_COLOR = { a: [255, 77, 94], b: [77, 141, 255], none: [88, 216, 201] } as const;
+const LIGHT_SIDE_COLOR = { a: [164, 47, 76], b: [20, 95, 157], none: [17, 104, 92] } as const;
 
 function shuffled(count: number): number[] {
   const order = Array.from({ length: count }, (_, i) => i);
@@ -27,6 +29,7 @@ function shuffled(count: number): number[] {
 /** Live spectrum of what is being played, with the hidden curves overlaid only in peek mode. */
 function Stage({ audition, side, curves, peek }: { audition: Audition | null; side: Side | null; curves: { a: number[]; b: number[] } | null; peek: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const light = useGraphTheme() === "light";
   const live = useRef({ side, curves, peek });
   useEffect(() => { live.current = { side, curves, peek }; });
   useEffect(() => {
@@ -48,18 +51,20 @@ function Stage({ audition, side, curves, peek }: { audition: Audition | null; si
     const padL = 8, padB = 22, logLo = Math.log(25), logHi = Math.log(18000);
     const xAt = (hz: number) => padL + (Math.log(hz) - logLo) / (logHi - logLo) * (width - padL * 2);
     const draw = () => {
-      const { side: s, curves: c, peek: showCurves } = live.current, color = SIDE_COLOR[s ?? "none"], rgb = color.join(",");
+      const { side: s, curves: c, peek: showCurves } = live.current;
+      const palette = light ? LIGHT_SIDE_COLOR : SIDE_COLOR;
+      const rgb = palette[s ?? "none"].join(",");
       g.clearRect(0, 0, width, height);
       const plotH = height - padB;
-      const bg = g.createLinearGradient(0, 0, 0, height); bg.addColorStop(0, "#050d11"); bg.addColorStop(1, "#02070a");
+      const bg = g.createLinearGradient(0, 0, 0, height); bg.addColorStop(0, light ? "#fbfdfd" : "#050d11"); bg.addColorStop(1, light ? "#edf4f3" : "#02070a");
       g.fillStyle = bg; g.fillRect(0, 0, width, height);
       g.fillStyle = `rgba(${rgb},.07)`; g.font = `800 ${Math.min(plotH * 0.9, 200)}px Arial, sans-serif`; g.textAlign = "center"; g.textBaseline = "middle";
       if (s) g.fillText(s.toUpperCase(), width / 2, plotH / 2 + 6);
       g.textBaseline = "alphabetic"; g.font = "11px Arial, sans-serif";
       for (const [hz, label] of [[50, "50"], [100, "100"], [500, "500"], [1000, "1k"], [5000, "5k"], [10000, "10k"]] as const) {
         const x = xAt(hz);
-        g.strokeStyle = "rgba(88,216,201,.12)"; g.lineWidth = 1; g.beginPath(); g.moveTo(x, 6); g.lineTo(x, plotH); g.stroke();
-        g.fillStyle = "#7f96a6"; g.fillText(label, x, height - 6);
+        g.strokeStyle = light ? "#c5d4d5" : "rgba(88,216,201,.12)"; g.lineWidth = 1; g.beginPath(); g.moveTo(x, 6); g.lineTo(x, plotH); g.stroke();
+        g.fillStyle = light ? "#435e68" : "#7f96a6"; g.fillText(label, x, height - 6);
       }
       if (audition && audition.ctx.state === "running") {
         const raw = audition.spectrum(POINTS);
@@ -68,25 +73,25 @@ function Stage({ audition, side, curves, peek }: { audition: Audition | null; si
         g.beginPath();
         for (let i = 0; i < POINTS; i++) { const x = xAt(25 * (18000 / 25) ** (i / (POINTS - 1))), y = yFor(smoothed[i]); if (i) g.lineTo(x, y); else g.moveTo(x, y); }
         g.save();
-        g.shadowColor = `rgba(${rgb},.9)`; g.shadowBlur = 14; g.strokeStyle = `rgba(${rgb},1)`; g.lineWidth = 2.2; g.stroke(); g.restore();
+        g.shadowColor = `rgba(${rgb},.9)`; g.shadowBlur = light ? 0 : 14; g.strokeStyle = `rgba(${rgb},1)`; g.lineWidth = 2.2; g.stroke(); g.restore();
         g.lineTo(xAt(18000), plotH); g.lineTo(xAt(25), plotH); g.closePath();
         const fill = g.createLinearGradient(0, 0, 0, plotH); fill.addColorStop(0, `rgba(${rgb},.5)`); fill.addColorStop(1, `rgba(${rgb},.02)`);
         g.fillStyle = fill; g.fill();
       }
       if (showCurves && c) {
         for (const [key, gains] of [["a", c.a], ["b", c.b]] as const) {
-          const active = key === s, tone = SIDE_COLOR[key].join(",");
+          const active = key === s, tone = palette[key].join(",");
           g.beginPath();
           const pts = gains.map((db, band) => [padL + bandX(band, width - padL * 2), plotH / 2 - Math.max(-18, Math.min(18, db)) / 18 * (plotH * 0.38)] as const);
           pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
-          g.save(); g.shadowColor = `rgba(${tone},.9)`; g.shadowBlur = active ? 12 : 0; g.strokeStyle = `rgba(${tone},${active ? 1 : 0.4})`; g.lineWidth = active ? 3 : 1.6; g.stroke(); g.restore();
+          g.save(); g.shadowColor = `rgba(${tone},.9)`; g.shadowBlur = active && !light ? 12 : 0; g.strokeStyle = `rgba(${tone},${active ? 1 : light ? .72 : .4})`; g.lineWidth = active ? 3 : 1.6; g.stroke(); g.restore();
         }
       }
       frame = requestAnimationFrame(draw);
     };
     frame = requestAnimationFrame(draw);
     return () => { cancelAnimationFrame(frame); observer.disconnect(); };
-  }, [audition]);
+  }, [audition, light]);
   return <canvas ref={canvas} className="es-stage" role="img" aria-label="Live spectrum of the sound you are hearing" />;
 }
 
@@ -277,11 +282,9 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
   const stageCurves = config && round ? { a: config.bands[targetFor("a")], b: config.bands[targetFor("b")] } : null;
   const roundCount = config?.rounds.length ?? 0;
 
-  const header = !embed && <header className="es-top"><Link className="es-brand" href="/" prefetch={false}>YinYang <span>EQ</span></Link><a className="es-make" href="/share-shootout">Make your own shootout</a></header>;
   const linkProps = embed ? { target: "_blank", rel: "noopener" } : {};
 
   return <div className={`es-root${embed ? " es-embed" : ""}`}>
-    {header}
     <main className="es-card" aria-live="polite" aria-busy={phase === "loading" || busy}>
       {phase === "loading" && <p className="es-status">Loading shootout…</p>}
 
@@ -364,7 +367,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
         })()}
       </section>}
     </main>
-    {!embed && <footer className="es-foot"><a href="/privacy">Privacy</a><a href="/curve-credits">Curve credits</a><Link href="/" prefetch={false}>YinYang EQ</Link></footer>}
+    {!embed && <footer className="es-foot"><a href="/share-shootout">Make your own shootout</a><a href="/privacy">Privacy</a><a href="/curve-credits">Curve credits</a><Link href="/" prefetch={false}>YinYang EQ</Link></footer>}
     {embed && phase === "done" && <p className="es-foot es-powered">Powered by <Link href="/" prefetch={false} {...linkProps}>YinYang EQ</Link></p>}
   </div>;
 }

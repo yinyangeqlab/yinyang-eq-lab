@@ -1,116 +1,210 @@
-// Renders the 1200x630 link-preview cards in public/share from lib/share-pages.mjs.
-// Re-run after editing page copy: node scripts/generate-share-cards.mjs [--slug=discover]
-import { mkdirSync, writeFileSync } from "node:fs";
+// Renders the static share cards and provides the same artwork to the GIF generator.
+import { mkdir, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
-import { sharePages, sharePageFor, previewTitle } from "../lib/share-pages.mjs";
+import { SHARE_IMAGE_SIZE, previewTitle, sharePreviewCards, sharePageFor } from "../lib/share-pages.mjs";
 
 const root = new URL("../", import.meta.url);
-const outDir = new URL("public/share/", root);
-mkdirSync(outDir, { recursive: true });
-const W = 1200, H = 630;
-const TEAL = "#58d8c9", RED = "#ff4d5e", BLUE = "#4d8dff", TEXT = "#edf3f7", MUTED = "#9fb4c4";
-const FONT = "Arial, 'DejaVu Sans', sans-serif";
-
+const out = new URL("public/share/", root);
+const { width: W, height: H } = SHARE_IMAGE_SIZE;
+const TEAL = "#80e2d1", RED = "#ff8691", BLUE = "#86b5ff", TEXT = "#f0f7fa", MUTED = "#b9cdd6";
+const FONT = "DejaVu Sans, sans-serif";
+const graph = { x: 32, y: 35, width: 334, height: 97 };
+const restPhase = .16;
 const esc = value => String(value).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+const source = name => fileURLToPath(new URL("public/" + name, root));
 
-function wrap(text, size, width) {
-  const limit = Math.floor(width / (size * 0.56));
+function wrap(text, size, width, glyphWidth = .54) {
+  const limit = Math.floor(width / (size * glyphWidth));
   const lines = [];
-  let line = "";
   for (const word of text.split(" ")) {
-    if (line && (line + " " + word).length > limit) { lines.push(line); line = word; } else line = line ? line + " " + word : word;
+    const last = lines.at(-1);
+    if (last && last.length + word.length + 1 <= limit) lines[lines.length - 1] += " " + word;
+    else lines.push(word);
   }
-  if (line) lines.push(line);
   return lines;
 }
 
-// Smooth frequency-response-looking path across a box, from a list of [t, y] stops (0..1).
-function curvePath(stops, x, y, w, h) {
-  const pts = stops.map(([t, v]) => [x + t * w, y + (1 - v) * h]);
-  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
-  for (let i = 1; i < pts.length; i++) {
-    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2;
-    d += ` C${mx.toFixed(1)} ${y0.toFixed(1)} ${mx.toFixed(1)} ${y1.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`;
-  }
-  return d;
+const gaussian = (t, center, width) => Math.exp(-((t - center) ** 2) / width ** 2);
+const xAt = t => graph.x + t * graph.width;
+function plot(response, color, width = 5, opacity = 1) {
+  const path = Array.from({ length: 73 }, (_, i) => {
+    const t = i / 72;
+    return `${i ? "L" : "M"}${xAt(t).toFixed(1)} ${response(t).toFixed(1)}`;
+  }).join(" ");
+  return `<path d="${path}" fill="none" stroke="${color}" stroke-width="${width}" opacity="${opacity}"/>`;
 }
-const glow = (color, width = 6) => `fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"`;
-const panel = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="#04090c" fill-opacity=".72" stroke="#58d8c9" stroke-opacity=".28" stroke-width="2"/>`;
-const grid = (x, y, w, h) => [0.25, 0.5, 0.75].map(t => `<line x1="${x}" x2="${x + w}" y1="${y + h * t}" y2="${y + h * t}" stroke="#58d8c9" stroke-opacity=".14"/>`).join("")
-  + [0.2, 0.4, 0.6, 0.8].map(t => `<line y1="${y}" y2="${y + h}" x1="${x + w * t}" x2="${x + w * t}" stroke="#58d8c9" stroke-opacity=".1"/>`).join("");
-const badge = (x, y, label, color) => `<circle cx="${x}" cy="${y}" r="21" fill="${color}" fill-opacity=".18" stroke="${color}" stroke-width="3"/><text x="${x}" y="${y + 9}" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="25" fill="${color}">${label}</text>`;
 
-const A = [[0, .42], [.12, .5], [.28, .56], [.42, .5], [.55, .72], [.68, .6], [.8, .45], [1, .3]];
-const B = [[0, .5], [.12, .46], [.28, .5], [.42, .6], [.55, .55], [.68, .66], [.8, .55], [1, .38]];
+const baseline = `<path d="M32 81H366" stroke="${MUTED}" stroke-opacity=".28" stroke-width="2"/>`;
+const badge = (x, y, label, color) => `<circle cx="${x}" cy="${y}" r="16" fill="#0d1b24" stroke="${color}" stroke-width="2.5"/><text x="${x}" y="${y + 6}" text-anchor="middle" font-size="17" font-weight="700" fill="${color}">${label}</text>`;
+const marker = (x, y, color) => `<circle cx="${x}" cy="${y}" r="14" fill="${color}" opacity=".19"/><circle cx="${x}" cy="${y}" r="6" fill="${color}"/>`;
 
-// Motifs are drawn inside a 440x400 area; the caller translates it to the right half of the card.
+function compare(progress) {
+  const a = t => 93 - 31 * gaussian(t, .45, .27) + 15 * t;
+  const b = t => 110 - 47 * gaussian(t, .67, .27) - 8 * t;
+  return baseline + plot(a, RED, 4 + 2 * progress, .68 + .32 * progress)
+    + plot(b, BLUE, 6 - 2 * progress, 1 - .32 * progress)
+    + badge(48, 39, "A", RED) + badge(352, 39, "B", BLUE);
+}
+
 const motifs = {
-  blind: () => `${panel(0, 20, 440, 360)}${grid(30, 60, 380, 280)}<path d="${curvePath(A, 30, 70, 380, 260)}" ${glow(RED)}/><path d="${curvePath(B, 30, 70, 380, 260)}" ${glow(BLUE)}/>${badge(60, 50, "A", RED)}${badge(380, 50, "B", BLUE)}<text x="220" y="372" text-anchor="middle" font-family="${FONT}" font-size="20" fill="${MUTED}" letter-spacing="3">WHICH SOUNDS BETTER?</text>`,
-  ranking: () => `${panel(0, 20, 440, 360)}${[[.92, TEAL], [.78, TEAL], [.66, BLUE], [.5, BLUE], [.36, RED]].map(([v, c], i) => `<rect x="40" y="${58 + i * 62}" width="${v * 350}" height="34" rx="9" fill="${c}" fill-opacity=".8" filter="url(#glow)"/><text x="52" y="${82 + i * 62}" font-family="${FONT}" font-weight="700" font-size="20" fill="#021012">${i + 1}</text>`).join("")}`,
-  bracket: () => `${panel(0, 20, 440, 360)}<g fill="none" stroke="${TEAL}" stroke-width="5" stroke-linecap="round" filter="url(#glow)">${[0, 1, 2, 3].map(i => `<path d="M40 ${70 + i * 76} H150 V${108 + (i >> 1) * 152}"/>`).join("")}<path d="M150 108 V184 M150 260 V336" opacity="0"/><path d="M150 146 H250 V222 M150 298 H250 V222"/><path d="M250 222 H340"/></g><circle cx="365" cy="222" r="26" fill="${TEAL}" fill-opacity=".25" stroke="${TEAL}" stroke-width="4" filter="url(#glow)"/><path d="M365 208 l4 9 10 1-8 7 3 10-9-6-9 6 3-10-8-7 10-1z" fill="${TEAL}"/>`,
-  tuning: () => `${panel(0, 20, 440, 360)}${grid(30, 60, 380, 230)}<path d="${curvePath([[0, .35], [.15, .5], [.32, .42], [.5, .66], [.66, .5], [.84, .6], [1, .4]], 30, 60, 380, 230)}" ${glow(TEAL)}/>${[[.15, .5], [.5, .66], [.84, .6]].map(([t, v]) => `<circle cx="${30 + t * 380}" cy="${60 + (1 - v) * 230}" r="13" fill="#04090c" stroke="${RED}" stroke-width="5" filter="url(#glow)"/>`).join("")}<rect x="40" y="322" width="360" height="8" rx="4" fill="#ffffff" fill-opacity=".14"/><rect x="40" y="322" width="210" height="8" rx="4" fill="${BLUE}"/><circle cx="250" cy="326" r="14" fill="${BLUE}" filter="url(#glow)"/>`,
-  community: () => `${panel(0, 20, 440, 360)}${Array.from({ length: 5 }, (_, i) => { const x = 62 + i * 78, v = [.55, .8, .45, .7, .62][i], c = [RED, TEAL, BLUE, TEAL, RED][i]; return `<line x1="${x}" x2="${x}" y1="${330 - v * 250 - 34}" y2="${330 - v * 250 + 34}" stroke="${c}" stroke-width="4" filter="url(#glow)"/><circle cx="${x}" cy="${330 - v * 250}" r="14" fill="${c}" filter="url(#glow)"/>`; }).join("")}<path d="M40 330 H400" stroke="${MUTED}" stroke-opacity=".5" stroke-width="2"/>`,
-  library: () => `${panel(0, 20, 440, 360)}<g filter="url(#glow)" fill="none" stroke="${TEAL}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M150 270 V120 L300 90 V240"/><circle cx="118" cy="270" r="32" fill="${TEAL}" fill-opacity=".25"/><circle cx="268" cy="240" r="32" fill="${TEAL}" fill-opacity=".25"/></g>${[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => `<rect x="${60 + i * 36}" y="${334 - [10, 26, 16, 38, 22, 44, 18, 30, 12][i]}" width="18" height="${[10, 26, 16, 38, 22, 44, 18, 30, 12][i]}" rx="5" fill="${i % 2 ? BLUE : RED}" fill-opacity=".85"/>`).join("")}`,
-  credits: () => `${panel(0, 20, 440, 360)}<text x="70" y="190" font-family="Georgia, serif" font-size="150" fill="${TEAL}" filter="url(#glow)">“</text>${[0, 1, 2, 3].map(i => `<rect x="70" y="${210 + i * 36}" width="${[300, 260, 290, 170][i]}" height="12" rx="6" fill="${MUTED}" fill-opacity=".55"/>`).join("")}`,
-  discover: () => `${panel(0, 20, 440, 360)}<g filter="url(#glow)" fill="none" stroke="${TEAL}" stroke-width="6"><circle cx="220" cy="200" r="120"/><circle cx="220" cy="200" r="70" stroke="${BLUE}" stroke-opacity=".8"/></g><path d="M220 200 L290 130 L255 235 Z" fill="${RED}" fill-opacity=".9" filter="url(#glow)"/><path d="M220 200 L150 270 L185 165 Z" fill="${TEAL}" fill-opacity=".9" filter="url(#glow)"/><circle cx="220" cy="200" r="10" fill="#04090c" stroke="${TEXT}" stroke-width="3"/>`,
-  privacy: () => `${panel(0, 20, 440, 360)}<path d="M220 70 L330 110 V210 C330 270 280 310 220 336 C160 310 110 270 110 210 V110 Z" fill="${TEAL}" fill-opacity=".16" stroke="${TEAL}" stroke-width="7" stroke-linejoin="round" filter="url(#glow)"/><rect x="180" y="190" width="80" height="62" rx="10" fill="#04090c" stroke="${TEXT}" stroke-width="5"/><path d="M194 190 V166 a26 26 0 0 1 52 0 V190" fill="none" stroke="${TEXT}" stroke-width="6"/>`,
-  keys: () => `${panel(0, 20, 440, 360)}${[["SPACE", 40, 70, 240], ["1", 296, 70, 100], ["2", 40, 190, 100], ["S", 156, 190, 100], ["A/B", 272, 190, 124]].map(([label, x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="92" rx="16" fill="#0b1c20" stroke="${TEAL}" stroke-width="4" filter="url(#glow)"/><text x="${x + w / 2}" y="${y + 58}" text-anchor="middle" font-family="${FONT}" font-weight="700" font-size="${label.length > 3 ? 28 : 40}" fill="${TEXT}">${label}</text>`).join("")}`,
-  version: () => `${panel(0, 20, 440, 360)}<g filter="url(#glow)" fill="none" stroke="${TEAL}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"><path d="M150 130 L70 200 L150 270"/><path d="M290 130 L370 200 L290 270"/></g><path d="M250 110 L190 290" stroke="${RED}" stroke-width="12" stroke-linecap="round" filter="url(#glow)"/>`,
-  journal: () => `${panel(0, 20, 440, 360)}${[0, 1, 2, 3, 4].map(i => `<line x1="50" x2="390" y1="${90 + i * 52}" y2="${90 + i * 52}" stroke="${MUTED}" stroke-opacity=".3" stroke-width="2"/>`).join("")}<path d="${curvePath([[0, .5], [.1, .8], [.2, .3], [.3, .9], [.4, .2], [.5, .7], [.6, .4], [.7, .85], [.8, .35], [.9, .6], [1, .5]], 50, 150, 340, 110)}" ${glow(BLUE, 5)}/><circle cx="64" cy="300" r="7" fill="${RED}"/><rect x="82" y="294" width="190" height="12" rx="6" fill="${MUTED}" fill-opacity=".55"/>`,
-  embed: () => `${panel(0, 20, 440, 360)}${grid(30, 60, 380, 190)}<path d="${curvePath(A, 30, 70, 380, 170)}" ${glow(RED, 5)}/><path d="${curvePath(B, 30, 70, 380, 170)}" ${glow(BLUE, 5)}/>${[[150, 332, RED, "A"], [290, 332, BLUE, "B"]].map(([x, y, c, l]) => badge(x, y, l, c)).join("")}<text x="220" y="340" font-family="${FONT}" font-size="22" font-weight="700" fill="${MUTED}" text-anchor="middle" letter-spacing="3">VS</text>`,
-  private: () => `<g filter="url(#glow)"><circle cx="220" cy="200" r="120" fill="#04090c" fill-opacity=".7" stroke="${TEAL}" stroke-width="6"/><path d="M220 80 A60 60 0 0 1 220 200 A60 60 0 0 0 220 320 A120 120 0 0 1 220 80Z" fill="${TEAL}" fill-opacity=".9"/><circle cx="220" cy="140" r="14" fill="#04090c"/><circle cx="220" cy="260" r="14" fill="${TEAL}"/></g>`,
+  modes(progress) {
+    return ["TOURNAMENT", "BLIND", "OPEN"].map((label, i) => {
+      const x = 28 + i * 117;
+      const color = [RED, TEAL, BLUE][i];
+      const strength = .22 + .38 * Math.max(0, 1 - Math.abs(progress * 2 - i));
+      return `<rect x="${x}" y="41" width="106" height="80" rx="13" fill="${color}" fill-opacity=".09" stroke="${color}" stroke-opacity="${strength}" stroke-width="3"/>
+        <circle cx="${x + 53}" cy="65" r="7" fill="${color}" opacity="${.43 + strength}"/>
+        <text x="${x + 53}" y="100" text-anchor="middle" fill="${TEXT}" font-size="12" font-weight="700">${label}</text>`;
+    }).join("");
+  },
+  finder(progress) {
+    const response = t => 80 - 37 * gaussian(t, .30, .12) + 35 * gaussian(t, .68, .135);
+    const x = xAt(.06 + .88 * progress), y = response(.06 + .88 * progress);
+    return baseline + plot(response, TEAL) + marker(xAt(.30), response(.30), RED)
+      + marker(xAt(.68), response(.68), BLUE)
+      + `<path d="M${x} 24V132" stroke="${TEAL}" stroke-width="2" opacity=".70"/>` + marker(x, y, TEXT);
+  },
+  tuning(progress) {
+    const response = t => 104 - 30 * gaussian(t, .12, .18)
+      - (39 + 18 * progress) * gaussian(t, .57, .19) + 8 * gaussian(t, .82, .13);
+    return baseline + plot(response, TEAL) + marker(xAt(.12), response(.12), BLUE)
+      + marker(xAt(.57), response(.57), RED) + marker(xAt(.82), response(.82), BLUE);
+  },
+  blind: compare,
+  embed: compare,
+  open(progress) {
+    const reference = t => 87 - 26 * gaussian(t, .4, .28) + 12 * t;
+    const selected = t => 106 - 42 * gaussian(t, .65, .31) - 16 * t;
+    return baseline + plot(reference, RED, 5, .86) + plot(selected, BLUE, 5)
+      + marker(xAt(.20 + .60 * progress), selected(.20 + .60 * progress), BLUE);
+  },
+  bracket(progress) {
+    const bracket = "M48 37h88v30h78v21h87M48 71h88v-4M48 103h88v19h78V88M48 137h88v-15";
+    return `<path d="${bracket}" fill="none" stroke="${TEAL}" stroke-opacity=".64" stroke-width="5"/>
+      <path d="M48 37h88v30h78v21h87" pathLength="1" fill="none" stroke="${TEXT}" stroke-width="5"
+        stroke-dasharray=".15 .85" stroke-dashoffset="${-progress}"/>` + marker(326, 88, TEAL);
+  },
+  ranking(progress) {
+    return [.86, .71, .58, .45].map((value, i) => `<rect x="46" y="${29 + i * 34}"
+      width="${300 * (value + (i % 2 ? -1 : 1) * progress * .05)}" height="19" rx="9"
+      fill="${[TEAL, BLUE, BLUE, RED][i]}" opacity="${1 - i * .12}"/>`).join("");
+  },
+  library(progress, phase) {
+    return Array.from({ length: 19 }, (_, i) => {
+      const envelope = 12 + 68 * gaussian(i, 9, 6.3);
+      const h = envelope * (.55 + .45 * Math.sin(phase * Math.PI * 2 + i * 1.7) ** 2);
+      return `<rect x="${37 + i * 17}" y="${82 - h / 2}" width="8" height="${h}" rx="4" fill="${i < 9 ? RED : BLUE}"/>`;
+    }).join("");
+  },
+  community(progress) {
+    return baseline + [.42, .73, .32, .63, .51].map((value, i) => {
+      const x = 61 + i * 68, y = 118 - value * 100 + (i % 2 ? -1 : 1) * progress * 8;
+      return `<path d="M${x} ${y - 19}v38" stroke="${BLUE}" stroke-width="3"/>` + marker(x, y, TEAL);
+    }).join("");
+  },
+  journal(progress) {
+    return baseline + plot(t => 83 + Math.sin(t * 22) * (15 + 12 * progress) * Math.sin(Math.PI * t), BLUE);
+  },
+  credits(progress) {
+    return `<path d="M93 51c-21 0-35 12-35 34v17h40V68H77c2-6 8-10 16-11Zm69 0c-21 0-35 12-35 34v17h40V68h-21c2-6 8-10 16-11Z" fill="${TEAL}"/>
+      <path d="M197 66h142m-142 31h${105 + progress * 26}" stroke="${BLUE}" stroke-width="6"/>`;
+  },
+  book(progress) {
+    return `<path d="M199 58c-33-20-71-24-120-18v76c51-4 84 3 120 23 36-20 69-27 120-23V40c-49-6-87-2-120 18v81"
+      fill="none" stroke="${TEAL}" stroke-width="4"/>
+      <path d="M100 66q46-3 75 9m-75 18q46-3 75 9m48-27q29-12 75-9m-75 36q29-12 75-9"
+      fill="none" stroke="${BLUE}" stroke-width="4" opacity="${.55 + .45 * progress}"/>`;
+  },
+  history(progress) {
+    return `<path d="M64 84H335" stroke="${TEAL}" stroke-opacity=".44" stroke-width="4"/>`
+      + [76, 157, 240, 322].map((x, i) => `<path d="M${x} 103v13" stroke="${MUTED}" stroke-opacity=".46" stroke-width="3"/>`
+        + marker(x, 84, [RED, MUTED, BLUE, TEAL][i])).join("")
+      + marker(76 + 246 * progress, 84, TEXT);
+  },
+  privacy(progress) {
+    return `<path d="M199 24l58 22v36c0 25-20 47-58 63-38-16-58-38-58-63V46Z"
+      fill="${TEAL}" fill-opacity="${.09 + progress * .12}" stroke="${TEAL}" stroke-width="4"/>
+      <path d="m174 84 16 16 33-36" fill="none" stroke="${TEXT}" stroke-width="5"/>`;
+  },
+  keys(progress) {
+    return [["SPACE", 53, 112], ["A", 182, 62], ["B", 261, 62]].map(([label, x, width], i) =>
+      `<rect x="${x}" y="54" width="${width}" height="58" rx="10" fill="${TEAL}" fill-opacity="${i === 0 ? .14 : .08 + (i === 1 ? progress : 1 - progress) * .34}" stroke="${TEAL}" stroke-width="2"/>
+        <text x="${x + width / 2}" y="91" fill="${TEXT}" font-size="20" font-weight="700" text-anchor="middle">${label}</text>`).join("");
+  },
+  version(progress) {
+    return `<g fill="none" stroke-width="6"><path d="m128 49-47 35 47 35m142-70 47 35-47 35" stroke="${TEAL}"/>
+      <path d="m216 43-34 83" stroke="${RED}" opacity="${.64 + .36 * progress}"/></g>`;
+  },
 };
 
-async function background() {
-  const art = await sharp(fileURLToPath(new URL("public/brand-landscape.webp", root))).resize(W, H, { fit: "cover", position: "center" }).modulate({ brightness: 0.78, saturation: 1.1 }).png().toBuffer();
-  return art;
+function svg(size, body) {
+  return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size.width}" height="${size.height}" viewBox="0 0 ${W} ${H}" font-family="${FONT}">${body}</svg>`);
 }
 
-// Every private page shares one neutral card; it never names the page it stands in for.
-const neutral = { slug: "private", private: true, ogTitle: "YinYang EQ", title: "YinYang EQ", kicker: "Blind listening for headphones", tagline: "Compare headphone targets with your own ears." };
-
-function cardSvg(page) {
-  if (page.private) page = neutral;
-  const kind = page.private ? "private" : page.kind ?? "blind";
-  const title = previewTitle(page);
-  const kicker = page.kicker ?? "YINYANG EQ";
-  const size = title.length > 34 ? 52 : title.length > 22 ? 62 : 72;
-  const lines = wrap(title, size, 560).slice(0, 3);
-  const tagline = page.tagline ?? "";
-  const titleY = 215;
-  const titleSvg = lines.map((line, i) => `<text x="72" y="${titleY + i * (size * 1.12)}" font-family="${FONT}" font-weight="800" font-size="${size}" fill="${TEXT}">${esc(line)}</text>`).join("");
-  const afterTitle = titleY + (lines.length - 1) * size * 1.12 + 56;
-  const taglineSvg = wrap(tagline, 30, 560).slice(0, 2).map((line, i) => `<text x="72" y="${afterTitle + i * 40}" font-family="${FONT}" font-size="30" fill="${MUTED}">${esc(line)}</text>`).join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-<defs>
- <linearGradient id="shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".96"/><stop offset=".62" stop-color="#000" stop-opacity=".88"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
- <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></linearGradient>
- <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>
-<rect width="${W}" height="${H}" fill="url(#shade)"/><rect width="${W}" height="${H}" fill="url(#floor)"/>
-<rect x="72" y="92" width="64" height="6" rx="3" fill="${TEAL}"/>
-<text x="72" y="140" font-family="${FONT}" font-weight="700" font-size="23" letter-spacing="5" fill="${TEAL}">${esc(kicker.toUpperCase())}</text>
-${titleSvg}${taglineSvg}
-<g transform="translate(700 115)">${motifs[kind]()}</g>
-<text x="72" y="567" font-family="${FONT}" font-weight="800" font-size="30" letter-spacing="3" fill="${TEXT}">YINYANG <tspan fill="${TEAL}">EQ</tspan></text>
-<text x="1128" y="567" text-anchor="end" font-family="${FONT}" font-size="24" fill="${MUTED}">yinyangeq.com</text>
-</svg>`;
+function textArt(page, size) {
+  const title = page.private ? "Private page" : previewTitle(page);
+  const kicker = page.private ? "PRIVATE LINK" : page.kicker;
+  const tagline = page.private ? "Open YinYang EQ to continue." : page.tagline;
+  const titleSize = title.length > 22 ? 58 : 67;
+  const lines = wrap(title, titleSize, 550, .62);
+  const titleY = 234;
+  const copyY = titleY + (lines.length - 1) * titleSize * 1.11 + 58;
+  return svg(size, `
+    <defs>
+      <linearGradient id="shade"><stop stop-color="#050b10" stop-opacity=".95"/>
+        <stop offset=".36" stop-color="#050b10" stop-opacity=".77"/><stop offset=".58" stop-color="#050b10" stop-opacity=".10"/>
+        <stop offset="1" stop-color="#050b10" stop-opacity="0"/></linearGradient>
+      <linearGradient id="floor" x2="0" y2="1"><stop offset=".54" stop-color="#050b10" stop-opacity="0"/>
+        <stop offset="1" stop-color="#050b10" stop-opacity=".57"/></linearGradient>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#shade)"/><rect width="${W}" height="${H}" fill="url(#floor)"/>
+    <text x="159" y="84" font-weight="700" font-size="25" letter-spacing="2" fill="${TEXT}">YINYANG <tspan fill="${TEAL}">EQ</tspan></text>
+    <text x="76" y="155" font-size="21" font-weight="700" letter-spacing="3" fill="${TEAL}">${esc(kicker)}</text>
+    ${lines.map((line, i) => `<text x="72" y="${titleY + i * titleSize * 1.11}" font-weight="800" font-size="${titleSize}" fill="${TEXT}">${esc(line)}</text>`).join("")}
+    ${wrap(tagline, 32, 515).map((line, i) => `<text x="76" y="${copyY + i * 42}" font-size="32" fill="${MUTED}">${esc(line)}</text>`).join("")}
+    <path d="M91 543H174" stroke="${TEAL}" stroke-width="2" opacity=".52"/>
+    <circle cx="77" cy="543" r="6" fill="${RED}"/><circle cx="188" cy="543" r="6" fill="${BLUE}"/>
+  `);
 }
 
-const bg = await background();
-const done = new Set();
-const entries = [...sharePages];
-// Query variants of /shootout have their own cards.
-for (const search of ["?mode=blind", "?mode=open", "?tab=rankings"]) entries.push(sharePageFor("/shootout", search));
-const selectedSlug = process.argv.find(arg => arg.startsWith("--slug="))?.slice(7);
-if (selectedSlug !== undefined && !entries.some(page => page.slug === selectedSlug && !page.image)) throw new Error("Unknown generated share-card slug.");
-for (const page of entries) {
-  if (selectedSlug && page.slug !== selectedSlug) continue;
-  if (page.image || done.has(page.slug)) continue;
-  done.add(page.slug);
-  const svg = Buffer.from(cardSvg(page));
-  const jpg = await sharp(bg).composite([{ input: svg }]).jpeg({ quality: 84, mozjpeg: true }).toBuffer();
-  writeFileSync(new URL(`${page.slug}.jpg`, outDir), jpg);
-  console.log(`${page.slug}.jpg ${(jpg.length / 1024).toFixed(0)} KB`);
+let scene;
+export async function prepareShareCard(page, size = SHARE_IMAGE_SIZE) {
+  // Frame the orb in the right half so it stays bright and clear of the headline.
+  scene ??= sharp(source("brand-landscape-crimson.webp")).resize({ width: 1530 })
+    .extract({ left: 0, top: 15, width: W, height: H }).png().toBuffer();
+  const logo = await sharp(source("brand-header.svg"))
+    .resize(Math.round(92 * size.width / W)).png().toBuffer();
+  const background = await sharp(await scene).resize(size.width, size.height).composite([
+    { input: textArt(page, size) },
+    { input: logo, left: Math.round(62 * size.width / W), top: Math.round(42 * size.height / H) },
+  ]).png().toBuffer();
+  return (phase = restPhase) => {
+    const motif = motifs[page.kind];
+    if (!motif) return sharp(background);
+    const progress = .5 - .5 * Math.cos(phase * Math.PI * 2);
+    return sharp(background).composite([{ input: svg(size, `
+      <g transform="translate(692 382) scale(1.10)" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="1" width="396" height="163" rx="23" fill="#07141e" fill-opacity=".90" stroke="#8dcedc" stroke-opacity=".61" stroke-width="2"/>
+        ${motif(progress, phase)}
+      </g>`) }]);
+  };
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await mkdir(out, { recursive: true });
+  // The legacy Discover image URL now points to the Rankings artwork.
+  const pages = [...sharePreviewCards, { ...sharePageFor("/discover"), slug: "discover" }].filter(page => !page.image);
+  const slug = process.argv.find(arg => arg.startsWith("--slug="))?.slice(7);
+  if (slug && !pages.some(page => page.slug === slug)) throw new Error("Unknown generated share-card slug.");
+  const done = new Set();
+  for (const page of pages) {
+    if (done.has(page.slug) || (slug && page.slug !== slug)) continue;
+    done.add(page.slug);
+    const render = await prepareShareCard(page);
+    const jpg = await render().jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+    await writeFile(new URL(`${page.slug}.jpg`, out), jpg);
+    console.log(`${page.slug}.jpg ${Math.round(jpg.length / 1024)} KB`);
+  }
 }
