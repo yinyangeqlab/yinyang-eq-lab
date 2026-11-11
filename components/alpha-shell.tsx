@@ -64,13 +64,15 @@ function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnima
   const paperClip = useId();
   return <svg className="alpha-destination-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
     {kind === "home" ? <>
-      <path d="m7 15 9-8 9 8M10 13v12h4v-7h4v7h4V13"/>
+      <path d="m9 15 7-6 7 6m-12-1.7V23h3.5v-5h3v5H21v-9.7"/>
       <g className="alpha-home-orbit">
-        <circle cx="16" cy="16" r="13.5" opacity=".28" strokeDasharray="1 3"/>
-        <g className="alpha-home-rocket" strokeWidth="1">
-          <path d="M13 2.4c2.1-1.6 4.7-1.6 6.6-.4-1.2 1.8-3.4 2.8-6 2.2zM13.3 2.4l-1-.6-1.6 1m3 1.2-.9 1.4-1.8-.5"/>
-          <circle cx="16.7" cy="2.6" r=".55" fill="currentColor" stroke="none"/>
-          <path d="m10.8 3.7-1.7.5" opacity=".65"/>
+        <circle cx="16" cy="16" r="12.3" opacity=".36" strokeWidth=".9" strokeDasharray=".5 2.4"/>
+        <g className="alpha-home-rocket">
+          <g transform="translate(16 3.7)" strokeWidth="1">
+            <path className="alpha-home-rocket-body" d="M-2.3-1.5C-.7-2.4 2.2-2.2 4.7 0 2.2 2.2-.7 2.4-2.3 1.5ZM-2.3-1.5l-1.6-1v5l1.6-1"/>
+            <circle cx="1.5" cy="0" r=".65" fill="currentColor" stroke="none"/>
+            <path d="M-5.5 0H-7.3" opacity=".8"/>
+          </g>
         </g>
       </g>
     </> :
@@ -96,11 +98,17 @@ function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnima
       kind === "rankings" ? <><path d="M4 28h25" opacity=".5"/><rect className="alpha-research-bar" x="5" y="16" width="6" height="12" rx="1"/><rect className="alpha-research-bar" x="13" y="7" width="6" height="21" rx="1"/><rect className="alpha-research-bar" x="21" y="20" width="6" height="8" rx="1"/><path d="m14 3 2-2 2 2"/></> :
       kind === "terms" ? <><path d="M16 8C12 5 7 5 3 6v19c4-1 9-1 13 2 4-3 9-3 13-2V6c-4-1-9-1-13 2Zm0 0v19"/><path className="alpha-terms-lines" pathLength="1" d="m7 11 5 1m-5 4 5 1m8-5 5-1m-5 6 5-1" opacity=".65"/></> :
       <>
-        <clipPath id={paperClip}><path d="M5 1h23v14H5z"/></clipPath>
+        <clipPath id={paperClip}><rect width="32" height="15"/></clipPath>
         <path d="M3 15V9a2 2 0 0 1 2-2h5l3 3"/>
-        <g clipPath={`url(#${paperClip})`} strokeWidth="1.2">
-          <path className="alpha-folder-paper alpha-folder-paper-back" d="M13 15V7h12v8m-9-5h6m-6 2.5h6" opacity=".65"/>
-          <path className="alpha-folder-paper" d="M8 16v-5h12v5m-9-2.5h6"/>
+        <g clipPath={`url(#${paperClip})`} strokeWidth="1.25">
+          <g className="alpha-folder-paper alpha-folder-paper-back">
+            <rect x="13" y="7.5" width="11.5" height="13" rx="1"/>
+            <path d="M16 10.5h5.5m-5.5 2.5h4" opacity=".65"/>
+          </g>
+          <g className="alpha-folder-paper alpha-folder-paper-front">
+            <rect x="7.5" y="10" width="11.5" height="12" rx="1"/>
+            <path d="M10.5 13h5.5m-5.5 2.5h4" opacity=".75"/>
+          </g>
         </g>
         <path d="M3 15h26v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <path d="m12 21 3 3 5-5"/>
@@ -143,6 +151,7 @@ const pageTitles: Record<string, string> = {
   "/shootout/personal": "Personal Tournament",
   "/shortcuts": "Help & Hotkeys",
   "/software-licenses": "Software Licenses",
+  "/terms": "Terms of Use",
   "/test-history": "Private Test History",
   "/version": "About This Version",
 };

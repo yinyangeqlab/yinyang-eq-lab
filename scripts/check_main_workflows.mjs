@@ -44,6 +44,7 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
   if(id==='@/lib/autoeq-client'||id==='./autoeq-client')return{fitAutoEqAsync:async()=>[]};
   if(id==='@/components/embed-common')return load('components/embed-common.ts');
   if(id==='@/components/playback-transport')return load('components/playback-transport.tsx');
+  if(id==='@/components/admin-table')return load('components/admin-table.tsx');
   if(id.startsWith('@/components/')||id==='next/link')return{default:id,useInvitesEnabled:()=>false,useConsentPrompt:()=>({ask:async fn=>fn(),prompt:null})};
   if(id==='lucide-react')return new Proxy({},{get:(_,k)=>String(k)});
   if(id.startsWith('@/data/')&&id.endsWith('.json'))return {default:require('../'+id.slice(2))};
@@ -102,7 +103,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const fit={filters:[{type:'PK',hz:200,gain:2,q:1}],preamp:-2.5,engine:'legacy',engineVersion:'fixture'};
  const h=mount('app/ear-tuning/page.tsx',{imports:{'./guide':{default:'ear-guide'},'./ranked-practice':{default:'ranked-practice'},'./adjustment-handles':{gainLimit:band=>band.kind==='peak'?12:6},'./frequency-navigator':{default:'frequency-navigator'},'./peak-dip-icon':{default:'peak-dip-icon'},'./adjustment-width':{default:'adjustment-width'},'./playback-keys':{useEarPlaybackKeys:()=>()=>{}},'@/lib/music-catalog':{listeningPool:[]},'@/lib/autoeq-client':{fitAutoEqAsync(request){requests.push(request);return Promise.resolve([fit]);}}},globals:{crypto,Event,localStorage:storage,fetch:async()=>({ok:true,json:async()=>[]})}});
  h.render();
- check(h.button('Save EQ to My space').props.disabled,'Peak & Dip Finder requires a change before saving');
+ check(h.button('Save EQ to My Collection').props.disabled,'Peak & Dip Finder requires a change before saving');
  h.button('Play sound').props.onClick();h.render();
  const warning=h.find(n=>n.type==='@/components/before-you-listen');
  check(warning.props.earTuning,'The Finder opens its safety warning before audio can start');
@@ -114,16 +115,16 @@ function tuning({blocked=false,queueFunctional=false}={}){
  check(navigator().props.frequency===3150 && h.button('Mark peak at 3,150 Hz'),'Seeking changes the frequency used by the mark controls');
  navigator().props.onSeek(2400);h.render();
  h.button('Mark peak at 2,400 Hz').props.onClick();h.render();
- h.button('Save EQ to My space').props.onClick();h.render();
+ h.button('Save EQ to My Collection').props.onClick();h.render();
  const saved=()=>JSON.parse(captureAccountValues(storage)['target-lab-library-eqs-v1']);
  check(saved()[0].filters.length===1 && saved()[0].filters[0].hz===2400 && saved()[0].filters[0].gain===-3,'A marked peak saves a cut as an Account Sync eligible EQ');
  h.button('Mark dip at 2,400 Hz').props.onClick();h.render();
- h.button('Save EQ to My space').props.onClick();h.render();
+ h.button('Save EQ to My Collection').props.onClick();h.render();
  check(saved()[0].filters.length===2 && saved()[0].filters[1].gain===2,'A marked dip saves a modest positive adjustment');
  h.find(n=>n.type==='label'&&text(n).trim()==='Fit a target, then add my changes').props.children[0].props.onChange();h.render();
- check(h.button('Save EQ to My space').props.disabled,'Target mode gates saving until its current fit is ready');
+ check(h.button('Save EQ to My Collection').props.disabled,'Target mode gates saving until its current fit is ready');
  h.button('Prepare reference EQ').props.onClick();await flush();h.render();
- h.button('Save EQ to My space').props.onClick();h.render();
+ h.button('Save EQ to My Collection').props.onClick();h.render();
  const combined=saved()[0];
  check(requests.length===1 && requests[0].raw.length===2 && combined.target.id==='flat' && combined.measurementId===measurement.id,'Target mode fits the selected measurement and retains its provenance');
  check(combined.filters.length===3 && combined.filters[1].gain===-3 && combined.filters[2].gain===2 && combined.preamp<=-2,'Target EQ and manual cut save together with headroom');

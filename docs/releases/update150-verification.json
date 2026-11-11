@@ -1,0 +1,78 @@
+{
+  "update": 150,
+  "sourceCommit": "0005d2cebb498f87147e790e89cb8f16ffbd0b2f",
+  "deploymentVerification": {
+    "at": "2026-11-11T12:33:44Z",
+    "update": 150,
+    "revision": "0005d2cebb498f87147e790e89cb8f16ffbd0b2f",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 225,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 338,
+    "exactClientAssetsVerified": 9,
+    "anonymousGateChecks": {
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicTermsPageVerified": true,
+    "publicFooterTermsLinkVerified": true,
+    "publicTermsCrawlerPreviewVerified": true,
+    "publicVersionPageVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "0005d2cebb498f87147e790e89cb8f16ffbd0b2f",
+    "regressionSuitesPassed": 122,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1679,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      360
+    ],
+    "engines": [
+      "Chromium"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": true,
+    "syntheticFixture": true,
+    "workflows": [
+      "Terms without sign-in",
+      "Footer link",
+      "Sharing notices for new and saved targets",
+      "Private upload path",
+      "Keyboard focus",
+      "No new checkbox or popup"
+    ]
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": 0,
+  "sourceOnlyRecoveryRegistrationPending": true
+}

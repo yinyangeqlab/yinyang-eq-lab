@@ -4,6 +4,7 @@
  * for every group of controls on the page. The dialog shell, focus handling and Escape live in editor.tsx.
  * Control names are written as they appear on the page; keep them in step with the editor when a label changes.
  */
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import { useEffect, useRef, useState } from "react";
 
 export type GuideTopic = "setup" | "playback" | "loop" | "compare" | "snapshots" | "tone" | "graph" | "filters" | "history" | "display" | "fit" | "export" | "dock" | "privacy";
@@ -20,7 +21,7 @@ const TOPICS: Topic[] = [
       ["Upload, edit, delete, clear", "The upload button opens the measurement editor for your own measurement file. Close measurement editor puts it away. Measurements you have added stay listed in this browser, where you can select, edit or delete them. Clearing the selection keeps the saved measurements and returns the lab to tuning without a headphone fit."],
       ["Target", "Starts from a target curve. With a measurement chosen, the lab fits an EQ that brings your headphones to that target, and that fitted sound is your Starting sound. The Target curve list is ordered by the current listener ranking. Without headphones you hear only your own adjustments on the original sound."],
       ["Import", "Loads a target from a CSV or TXT file for this session."],
-      ["Saved EQ", "Starts from an EQ saved in My space. Its stored filters are the Starting sound and your adjustments are added on top. If the EQ is linked to a headphone measurement kept in this browser, that measurement is selected for you. If the linked measurement is missing, the saved filters still play. The headphone curves need a linked measurement."],
+      ["Saved EQ", `Starts from an EQ saved in ${PERSONAL_AREA_TITLE}. Its stored filters are the Starting sound and your adjustments are added on top. If the EQ is linked to a headphone measurement kept in this browser, that measurement is selected for you. If the linked measurement is missing, the saved filters still play. The headphone curves need a linked measurement.`],
       ["Switching Target and Saved EQ", "Each mode keeps its own adjustments. Switching mode, or choosing a different saved EQ, clears Undo and Redo. A newly chosen saved EQ starts with all adjustments at zero."],
       ["Links that name a target", "A link that opens Tuning with a specific target loads it with neutral adjustments. Undo brings back the tuning you had."],
     ],
@@ -151,16 +152,16 @@ const TOPICS: Topic[] = [
     rows: [
       ["Kept as you go", "With a target, your tuning is saved in this browser as you work. Save & export jumps to the export section."],
       ["Make my EQ settings", "Fits finished EQ settings for your headphones to your adjusted curve. It needs a headphone measurement, and asks once for agreement because viewing or exporting keeps the file, curve and settings for private research. Regenerate EQ settings does it again after more tuning. A note appears when your sound or headphones have changed since the last set."],
-      ["EQ results", "Several ready-made versions with different numbers of bands. Start with the recommended one, which favors smaller boosts, especially in deep bass, and listen to the closer fit too when it differs. Each can be compared by ear, saved to My space (where Tuning and the Music library can use it), or downloaded."],
+      ["EQ results", `Several ready-made versions with different numbers of bands. Start with the recommended one, which favors smaller boosts, especially in deep bass, and listen to the closer fit too when it differs. Each can be compared by ear, saved to ${PERSONAL_AREA_TITLE} (where Tuning and the Music library can use it), or downloaded.`],
       ["View generated EQ results", "Jumps to the most recent results for this setup. Choose the Recommended EQ or Closer fit card to change which version you’ll save or download."],
       ["Listen to both EQs", "When the recommendation and closer fit differ, this opens a listening comparison using the same recording for both."],
       ["Result graph", "Response shows the predicted sound. Deviation from target shows how far the fit is above or below the adjusted target. Show all EQs overlays the generated results. Show selected EQ isolates the version you chose."],
       ["Advanced EQ results", "Opens the full set of fitters and band counts. Choose a result to inspect its fit or use Compare generated EQ results to audition a shortlist."],
-      ["Download selected EQ and Save selected EQ to My space", "Download uses the selected format. Save adds the selected filters to My space, where you can load them in Tuning or Music library."],
+      [`Download selected EQ and Save selected EQ to ${PERSONAL_AREA_TITLE}`, `Download uses the selected format. Save adds the selected filters to ${PERSONAL_AREA_TITLE}, where you can load them in Tuning or Music library.`],
       ["Download formats", "A parametric EQ text file, Equalizer APO, EasyEffects (use its Import APO action and set its input gain to the listed preamp if needed) and a Qudelix 5K manual-entry guide."],
       ["Download curve data", "Starting curve data (CSV) is the target you started from. My adjusted curve data (CSV) is that target with your tuning."],
       ["Volume adjustment (preamp)", "Each result lists a preamp that leaves headroom for its boosts. Keep some extra headroom on your player or device."],
-      ["Save as new EQ (saved EQ mode)", "Saves the saved EQ plus your adjustments as a new EQ in My space, named “… · tuned”. The original EQ is unchanged. “Edited · not saved” means there are adjustments not yet saved this way."],
+      ["Save as new EQ (saved EQ mode)", `Saves the saved EQ plus your adjustments as a new EQ in ${PERSONAL_AREA_TITLE}, named “… · tuned”. The original EQ is unchanged. “Edited · not saved” means there are adjustments not yet saved this way.`],
     ],
   },
   {

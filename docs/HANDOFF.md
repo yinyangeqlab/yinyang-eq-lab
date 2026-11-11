@@ -1,19 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update149**, source `f07966b0b6b07a2502ba3c4e4b7c331ab3d72744`.
+Recorded deployment: **update152**, source `2b94fac545acde01b5e7b866af2e13872e784cbe`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
-Update149 makes 65 AutoEq curves selectable in Open Shootout, Personal custom pools, Preference Tuning, Peak & Dip Finder and Music Library EQ. Ten use existing target IDs. The other 55 load from the pinned upstream CSVs and enter eligible Blind Research comparisons. Rankings lists the new targets and scores them as eligible evidence accrues. Credits covers all 61 source files, including two rig conversion references. The oratory1990 in-ear target includes the “USOUND1v1 approximation” alias.
+Update152 refines the Home rocket orbit and the folder paper animation. My Collection brings together results, headphones, saved targets and EQs. The release keeps the direct AutoEq catalog, Terms of Use, and the private admin tables.
 
-The browser checks the file and curve hashes. The Worker checks the curve version when it accepts ranked evidence. Numerical curves stay at the original source and user exports stay on the listener’s device. [Target inventory and attribution](TARGET_INVENTORY.md)
+Production verification matched 340 Worker modules and eight client assets. The dedicated layout account checked both animations, both themes, keyboard navigation, and reduced motion at 1366, 720, 390, and 320 px. All 122 selected release regression suites passed. [Deployment verification](releases/update152-verification.json)
 
-The deployment passed 122 regression suites. Isolated Chromium checks covered target selection and search, retry after a failed source request, keyboard controls and local downloads at 1220 and 360 px. Physical audio and native popup pixels were outside verification. [Deployment verification](releases/update149-verification.json)
+Matching encrypted off-device source and build recovery passed independent reconstruction and hosted validation. Existing data snapshots retain their original timestamps. [Recovery verification](releases/update152-recovery-verification.json)
 
-Hosted validation for the matching encrypted off-device source and build recovery baseline passed on November 11, 2026 at 12:20 UTC. Independent reconstruction verified 1,117 application inputs and 3,266 compiled build files. The existing data snapshots and their timestamps were preserved. [Recovery verification](releases/update149-recovery-verification.json)
-
-[Update149 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149) · [Source provenance](releases/update149-source.json) · [Publication verification](releases/update149-publication.json)
+[Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152) · [Source provenance](releases/update152-source.json) · [Update149 publication verification](releases/update149-publication.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

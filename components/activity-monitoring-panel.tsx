@@ -1,4 +1,5 @@
 "use client";
+import { AdminTable, adminDate } from "@/components/admin-table";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type EventRow = { retained_indefinitely?:number; id:string; subject_id:string; session_id:string; event_type:string; route:string; shootout_tab:string|null; test_mode:string|null; test_active:number; created_at:number; listener_label:string };
@@ -12,6 +13,7 @@ export default function ActivityMonitoringPanel() {
 
   const [events,setEvents] = useState<EventRow[]>([]);
   const cursorRef = useRef<Cursor>(null);
+  const loadedInitial = useRef(false);
   const [hasMore,setHasMore] = useState(false);
   const [windowSeconds,setWindowSeconds] = useState(90);
   const [error,setError] = useState("");
@@ -31,7 +33,12 @@ export default function ActivityMonitoringPanel() {
         for (const row of [...retained,...result.events]) merged.set(row.id,row);
         return [...merged.values()].sort((a,b)=>b.created_at-a.created_at || b.id.localeCompare(a.id));
       });
-      cursorRef.current=result.next; setHasMore(result.hasMore); setWindowSeconds(result.activeWindowSeconds);
+      if (older || !loadedInitial.current) {
+        loadedInitial.current = true;
+        cursorRef.current = result.next;
+        setHasMore(result.hasMore);
+      }
+      setWindowSeconds(result.activeWindowSeconds);
     } catch(cause) { setError(cause instanceof Error ? cause.message : "Activity records could not be loaded."); }
     finally { setLoading(false); }
   },[]);
@@ -43,15 +50,27 @@ export default function ActivityMonitoringPanel() {
     return latest;
   },[events]);
   const liveCount = useMemo(()=>[...latestBySession.values()].filter(row=>row.test_active===1 && clock-row.created_at<=windowSeconds*1000).length,[latestBySession,windowSeconds,clock]);
+  const eventStatus = (row: EventRow) => {
+    const latest = latestBySession.get(JSON.stringify([row.subject_id, row.session_id]))?.id === row.id;
+    if (!latest) return "Event";
+    return row.test_active === 1 && clock - row.created_at <= windowSeconds * 1000 ? "Active in test" : "Last seen";
+  };
   return <section id="activity-monitoring" aria-label="Opted-in activity monitoring">
     <h2>Opted-in test activity</h2>
     <p>{liveCount} session{liveCount===1?"":"s"} currently reporting an active Tournament test. “Active” means the page sent a heartbeat in the last {windowSeconds} seconds; it does not prove someone is listening. Logged routes and Tournament tabs are visible below. Ordinary participant entries are kept for 30 days and deleted on opt-out. Protected YinYangEQ history is kept indefinitely, including after monitoring is turned off, until explicitly included in an account-specific deletion.</p>
     <p>Only users who enabled identifiable activity monitoring are listed. Labels identify the browser or shared account, not a verified person. No IP address, device fingerprint, typed content, form values, audio or external browser history is collected by this feature.</p>
     {error&&<p role="alert">{error}</p>}
-    <div className="owner-table-wrap"><table><thead><tr><th>Time</th><th>Tester</th><th>Status</th><th>Location</th><th>Event</th></tr></thead><tbody>
-      {events.map(row=>{const latest=latestBySession.get(JSON.stringify([row.subject_id,row.session_id]))?.id===row.id;const live=latest&&row.test_active===1&&clock-row.created_at<=windowSeconds*1000;return <tr key={row.id}><td>{new Date(row.created_at).toLocaleString()}</td><td>{row.listener_label}</td><td>{live?"Active in test":latest?"Last seen":"Event"}</td><td>{row.route}{row.route==="/shootout"&&row.shootout_tab?` · ${row.shootout_tab}`:""}{row.route==="/shootout"&&row.test_mode?` · ${row.test_mode}`:""}</td><td>{eventNames[row.event_type]||row.event_type}</td></tr>;})}
-      {!events.length&&<tr><td colSpan={5}>No opted-in activity recorded yet.</td></tr>}
-    </tbody></table></div>
+    {hasMore && <p>Filters search loaded activity. Load older activity to expand the search.</p>}
+    <AdminTable label="Opted-in activity" rows={events} rowKey={row => row.id} initialSort={{ key: "date", descending: true }}
+      empty="No opted-in activity recorded yet." columns={[
+        adminDate<EventRow>("Time", row => row.created_at),
+        { key: "tester", label: "Tester", value: row => row.listener_label, search: row => row.subject_id },
+        { key: "status", label: "Status", value: eventStatus },
+        { key: "route", label: "Location", value: row => row.route },
+        { key: "tab", label: "Tournament tab", value: row => row.shootout_tab },
+        { key: "mode", label: "Test mode", value: row => row.test_mode },
+        { key: "event", label: "Event", value: row => eventNames[row.event_type] || row.event_type },
+      ]} />
     {hasMore&&<button type="button" disabled={loading} onClick={()=>void load(true)}>{loading?"Loading…":"Load older activity"}</button>}
   </section>;
 }

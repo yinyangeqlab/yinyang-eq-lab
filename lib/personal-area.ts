@@ -1,5 +1,4 @@
-// Owner preference: keep My space for the combined personal area.
-export const PERSONAL_AREA_TITLE = "My space";
+export const PERSONAL_AREA_TITLE = "My Collection";
 export const PERSONAL_AREA_TABS = [
   { section: "profile", label: "Results" },
   { section: "measurements", label: "Headphones" },

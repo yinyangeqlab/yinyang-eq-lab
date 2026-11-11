@@ -63,3 +63,52 @@
 @media(max-width:1050px) { .owner-research .owner-top { grid-template-columns:minmax(0,1fr) auto; gap:14px; } .owner-top nav { grid-row:2; grid-column:1/-1; justify-content:flex-start; gap:10px 18px; } .admin-signout { grid-row:1; grid-column:2; } .owner-top .owner-back-link { min-width:0; } }
 @media(max-width:420px) { .owner-top .owner-back-link { font-size:13px; gap:7px; } .admin-signout button { padding:9px 11px; font-size:13px; gap:6px; } }
 @media(prefers-reduced-motion:reduce) { .admin-signout button,.admin-signout button::before { transition:none; } .admin-signout button:active { transform:none; } }
+
+/* Shared controls for private record tables. Keep wide data inside its own scroll region. */
+.owner-research :is(section,.admin-tool-group,.admin-grid) { min-width:0; }
+.owner-research select, .owner-research :is(option,optgroup) { color-scheme:dark; background:#101c20; color:#eef8f8; }
+.owner-research option:disabled { color:#a7b7ba; }
+.admin-grid { margin:16px 0; }
+.admin-grid-tools,.admin-grid-pages { display:flex; flex-wrap:wrap; align-items:end; gap:10px; }
+.admin-grid-tools label { display:grid; gap:4px; max-width:100%; font-size:.85rem; }
+.admin-grid-tools input,.owner-research input.admin-column-filter {
+ min-width:0; width:100%; min-height:34px; padding:5px 8px; border:1px solid #537075; border-radius:6px;
+ background:#0b1619; color:#edf9f8; color-scheme:dark; font:inherit;
+}
+.admin-grid-tools input { width:min(100%, 21rem); }
+.owner-research input.admin-column-filter { display:block; margin-top:5px; font-size:.78rem; min-width:5.5rem; }
+.owner-research .admin-grid-scroll { margin-top:8px; }
+.owner-research .admin-grid th { vertical-align:bottom; }
+.owner-research .admin-grid td { vertical-align:top; }
+.owner-research .admin-grid-sort { display:inline-flex; align-items:center; gap:6px; margin:0; padding:3px 0; border:0; background:transparent; color:#d2efeb; font:inherit; text-align:left; cursor:pointer; }
+.admin-grid-sort span { color:#87d6c9; font-size:.7em; }
+.admin-grid-tools p { margin:0 0 5px; font-size:.85rem; color:#b9d3d2; }
+.admin-grid-pages { align-items:center; margin-top:10px; }
+.owner-research .admin-index { width:1%; color:#aac3c3; font-variant-numeric:tabular-nums; }
+.owner-research .admin-index input { min-width:3.1rem; }
+.owner-research :is(.admin-grid button,.admin-grid input,.admin-grid-scroll,.admin-tool-group > summary,select):focus-visible { outline:2px solid #a4f4e3; outline-offset:2px; }
+.owner-research .admin-id { display:block; font-size:.75rem; min-width:7rem; max-width:19rem; overflow-wrap:anywhere; }
+.admin-tool-group { margin:16px 0; padding:12px 16px; border:1px solid #3b5659; border-radius:8px; background:#0b1518; }
+.admin-tool-group > summary { cursor:pointer; color:#d2efeb; font-weight:650; }
+.admin-tool-group > summary small { margin-inline-start:8px; color:#aac7c5; font-weight:400; }
+.admin-workbench-meta { display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px; margin-block:12px; }
+@media(max-width:650px) { .admin-tool-group { padding:10px; } .admin-tool-group > summary small { display:block; margin:3px 0 0 16px; } }
+.owner-research .admin-grid table { min-width:0; }
+.owner-research .admin-grid-tools button,.owner-research .admin-grid-pages button,.owner-research .admin-workbench-meta button {
+ min-height:34px; padding:5px 10px; border:1px solid #537b79; border-radius:6px;
+ color:#d3f5ee; background:#15312f; cursor:pointer;
+}
+.owner-research .admin-grid button:disabled,.owner-research .admin-workbench-meta button:disabled { opacity:.55; cursor:default; }
+.owner-research .admin-grid td pre { max-height:14rem; overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; }
+.owner-research .admin-grid td small { display:block; }
+.owner-research .admin-grid .name-filter-mismatch { color:#ffbbad; }
+@media(max-width:480px) {
+ .owner-research { padding-inline:12px; }
+ .owner-research section { padding:12px; }
+ .admin-grid-tools { align-items:start; }
+ .admin-grid-tools p { align-self:center; }
+}
+.owner-research .admin-review .admin-review-guide { margin-top:8px; }
+.admin-review-guide summary { color:#b8ded9; }
+.owner-research input.admin-date-filter { min-width:7.2rem; }
+.owner-research .admin-row-actions button { white-space:nowrap; }

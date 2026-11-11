@@ -1,4 +1,5 @@
 "use client";
+import { AdminTable, adminDate } from "@/components/admin-table";
 import { useCallback, useEffect, useState } from "react";
 
 type Invite = { id: string; label: string; created_at: number; code_expires_at: number; redeemed_at: number | null; session_expires_at: number | null; revoked_at: number | null };
@@ -88,7 +89,15 @@ export function TesterInvites() {
     <p>Create one invitation per tester. Each code expires after 48 hours and can be redeemed once in one browser. That browser stays signed in for 48 hours from redemption. Revoking an invitation also ends its active session. A code identifies the first browser that uses it; it does not verify a person’s identity.</p>
     <form onSubmit={create}><label>Tester name or label<input value={label} onChange={event => setLabel(event.target.value)} maxLength={80} required placeholder="For example: Alex" /></label><button disabled={busy}>Create invitation</button></form>
     {created && <div className="tester-created"><strong>Copy this code now for {created.label}. It will not be shown again.</strong><code>{created.code}</code><button type="button" onClick={() => void copyCode()}>Copy code</button>{copyStatus && <span role="status">{copyStatus}</span>}<p>Send them to <strong>https://yinyangeq.com/access</strong> and give them the code separately. Do not share the admin password.</p></div>}
-    <div className="owner-table-wrap"><table><thead><tr><th>Tester</th><th>Status</th><th>Expires</th><th>Actions</th></tr></thead><tbody>{invites.map(row => <tr key={row.id}><td>{row.label}</td><td>{status(row)}</td><td>{new Date((row.session_expires_at || row.code_expires_at) * 1000).toLocaleString()}</td><td><div className="tester-actions">{!row.revoked_at && <button type="button" disabled={busy} onClick={() => void revoke(row.id)}>Revoke</button>}<button type="button" disabled={busy} onClick={() => void remove(row.id, row.label)}>Delete</button></div></td></tr>)}</tbody></table></div>
+    <AdminTable label="Tester invitations" rows={invites} rowKey={row => row.id} columns={[
+      { key: "tester", label: "Tester", value: row => row.label },
+      { key: "status", label: "Status", value: status },
+      adminDate("Expires", (row: typeof invites[number]) => (row.session_expires_at || row.code_expires_at) * 1000),
+      { key: "actions", label: "Actions", render: row => <div className="tester-actions">
+        {!row.revoked_at && <button type="button" disabled={busy} onClick={() => void revoke(row.id)}>Revoke</button>}
+        <button type="button" disabled={busy} onClick={() => void remove(row.id, row.label)}>Delete</button>
+      </div> },
+    ]} />
     </>}
   </section>;
 }

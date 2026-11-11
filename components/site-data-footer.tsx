@@ -26,6 +26,7 @@ export default function SiteDataFooter({ home }: { home: boolean }) {
         </div>
         <div>
           <strong>Data &amp; Privacy</strong>
+          <a href="/terms">Terms of Use</a>
           <a href="/privacy">Privacy notice</a>
           <a href="/my-data">My data, sharing &amp; deletion</a>
           <a href="/sync">Browser Sync</a>

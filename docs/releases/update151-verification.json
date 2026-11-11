@@ -1,0 +1,79 @@
+{
+  "update": 151,
+  "sourceCommit": "9d7c4a5d9a71e3fb628317c29e88a4d9b7f53d19",
+  "deploymentVerification": {
+    "at": "2026-11-11T13:08:13Z",
+    "update": 151,
+    "revision": "9d7c4a5d9a71e3fb628317c29e88a4d9b7f53d19",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 225,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 339,
+    "exactClientAssetsVerified": 10,
+    "anonymousGateChecks": {
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicTermsPageVerified": true,
+    "publicFooterTermsLinkVerified": true,
+    "publicTermsCrawlerPreviewVerified": true,
+    "publicVersionPageVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "9d7c4a5d9a71e3fb628317c29e88a4d9b7f53d19",
+    "regressionSuitesPassed": 122,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1703,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      360
+    ],
+    "engines": [
+      "Chromium"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": true,
+    "syntheticFixture": true,
+    "workflows": [
+      "Sortable columns and keyword filters",
+      "Stable row numbering and paging",
+      "Retained account and browser attribution",
+      "Older claims queue",
+      "Keyboard select and scroll"
+    ]
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": 0,
+  "sourceOnlyRecoveryRegistrationPending": true
+}

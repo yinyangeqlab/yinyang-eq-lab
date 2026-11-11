@@ -22,7 +22,13 @@ assert.equal(sharePageFor('/preference-tuning/').path, '/preference-tuning');
 assert.equal(sharePageFor('/nope'), null);
 
 // Cards exist, are the documented size class, and stay within public asset rules.
-const publicImages = sharePages.filter(page => !page.private).map(page => shareImageUrl(page).url);
+const publicImages = sharePages.filter(page => !page.private && !page.artworkSlug).map(page => shareImageUrl(page).url);
+for (const page of sharePages.filter(page => page.artworkSlug)) {
+  const artwork = sharePreviewCards.find(card => card.slug === page.artworkSlug);
+  assert.ok(artwork, `Unrecognized shared artwork for ${page.path}`);
+  assert.deepEqual(shareImageUrl(page), shareImageUrl(artwork));
+  assert.deepEqual(shareAnimationUrl(page), shareAnimationUrl(artwork));
+}
 assert.equal(new Set(publicImages).size, publicImages.length, 'Each shareable page has its own preview image');
 for (const page of sharePages) {
   if (page.image) {

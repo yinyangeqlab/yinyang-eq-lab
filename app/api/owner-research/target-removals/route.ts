@@ -1,6 +1,6 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
-import { targetRemovalRequests, targets } from "@/db/schema";
+import { listenerNicknames, targetRemovalRequests, targets } from "@/db/schema";
 import { ownerAccessResponse } from "@/lib/owner-access";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 
@@ -11,11 +11,16 @@ export async function GET(request: Request) {
   const denied = await ownerAccessResponse(request);
   if (denied) return denied;
   const db = getDb();
-  const rows = await db.select().from(targetRemovalRequests).orderBy(desc(targetRemovalRequests.createdAt)).limit(200);
-  const ids = [...new Set(rows.map(row => row.targetId))];
-  const named = ids.length ? await db.select({ id: targets.id, name: targets.name, creator: targets.creator, status: targets.status }).from(targets).where(inArray(targets.id, ids)) : [];
-  const byId = new Map(named.map(row => [row.id, row]));
-  return Response.json({ requests: rows.map(row => ({ id: row.id, targetId: row.targetId, message: row.message, status: row.status, adminNote: row.adminNote, createdAt: row.createdAt, resolvedAt: row.resolvedAt, targetName: byId.get(row.targetId)?.name ?? null, targetCreator: byId.get(row.targetId)?.creator ?? null, targetStatus: byId.get(row.targetId)?.status ?? null })) }, { headers });
+  const rows = await db.select({
+    id: targetRemovalRequests.id, targetId: targetRemovalRequests.targetId, message: targetRemovalRequests.message,
+    status: targetRemovalRequests.status, adminNote: targetRemovalRequests.adminNote, createdAt: targetRemovalRequests.createdAt,
+    resolvedAt: targetRemovalRequests.resolvedAt, accountId: targetRemovalRequests.subjectId, listenerNickname: listenerNicknames.nickname,
+    targetName: targets.name, targetCreator: targets.creator, targetStatus: targets.status,
+  }).from(targetRemovalRequests)
+    .leftJoin(targets, eq(targets.id, targetRemovalRequests.targetId))
+    .leftJoin(listenerNicknames, eq(listenerNicknames.subjectId, targetRemovalRequests.subjectId))
+    .orderBy(desc(targetRemovalRequests.createdAt), targetRemovalRequests.id).limit(200);
+  return Response.json({ requests: rows }, { headers });
 }
 
 /** Decide a request. "done" takes the target out of rankings by marking it withdrawn: the existing database triggers rebuild counts, bump the ranking revision and log a coarse ranking-change day. Votes are kept but stop counting. */

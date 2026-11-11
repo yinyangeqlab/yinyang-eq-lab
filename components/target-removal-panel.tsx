@@ -1,8 +1,9 @@
 "use client";
+import { AdminTable, adminDate, identityColumns, type SubmissionIdentity } from "@/components/admin-table";
 
 import { useCallback, useEffect, useState } from "react";
 
-type RemovalRequest = { id: string; targetId: string; message: string; status: "pending" | "done" | "declined"; adminNote: string | null; createdAt: number; resolvedAt: number | null; targetName: string | null; targetCreator: string | null; targetStatus: string | null };
+type RemovalRequest = SubmissionIdentity & { id: string; targetId: string; message: string; status: "pending" | "done" | "declined"; adminNote: string | null; createdAt: number; resolvedAt: number | null; targetName: string | null; targetCreator: string | null; targetStatus: string | null };
 
 /** Owner queue for participants who asked to take an approved target out of public rankings. */
 export default function TargetRemovalPanel() {
@@ -35,7 +36,20 @@ export default function TargetRemovalPanel() {
   return <section id="target-removals" aria-label="Target removal requests"><h2>Target removal requests</h2>
     <p>Participants can ask to take an approved target out of public rankings. Nothing changes until you decide. Removing marks the target withdrawn: rankings recalculate without it and the change is logged as a coarse ranking-change day. Participants can also erase their own data from My data, which removes their submissions.</p>
     {error && <p role="alert">{error}</p>}
-    {rows === null ? <p role="status">Loading requests…</p> : open.length === 0 ? <p className="footnote">No open requests.</p> : <div className="owner-table-wrap"><table><thead><tr><th>Requested</th><th>Target</th><th>Message</th><th>Your note</th><th>Decision</th></tr></thead><tbody>{open.map(row => <tr key={row.id}><td>{new Date(row.createdAt).toLocaleString()}</td><td><strong>{row.targetName ?? "Unknown target"}</strong><br />{row.targetCreator ?? ""}{row.targetStatus && row.targetStatus !== "approved" ? <><br /><small>Currently {row.targetStatus}</small></> : null}</td><td>{row.message || "—"}</td><td><input aria-label={`Note for ${row.targetName ?? "request"}`} maxLength={500} value={notes[row.id] ?? ""} onChange={event => setNotes(current => ({ ...current, [row.id]: event.target.value }))}/></td><td><button type="button" disabled={busy === row.id} onClick={() => void decide(row, "done")}>Remove from rankings</button> <button type="button" disabled={busy === row.id} onClick={() => void decide(row, "declined")}>Decline</button></td></tr>)}</tbody></table></div>}
+    {rows === null ? <p role="status">Loading requests…</p> : <AdminTable label="Open target removal requests" rows={open} rowKey={row => row.id}
+      empty="No open requests." initialSort={{ key: "date", descending: true }} columns={[
+        adminDate<RemovalRequest>("Requested", row => row.createdAt), ...identityColumns<RemovalRequest>(),
+        { key: "target", label: "Target", value: row => row.targetName ?? "Unknown target", search: row => row.targetId },
+        { key: "creator", label: "Creator", value: row => row.targetCreator },
+        { key: "status", label: "Target status", value: row => row.targetStatus },
+        { key: "message", label: "Message", value: row => row.message },
+        { key: "note", label: "Your note", render: row => <input aria-label={`Note for ${row.targetName ?? "request"}`} maxLength={500}
+          value={notes[row.id] ?? ""} onChange={event => setNotes(current => ({ ...current, [row.id]: event.target.value }))} /> },
+        { key: "actions", label: "Decision", render: row => <>
+          <button type="button" disabled={Boolean(busy)} onClick={() => void decide(row, "done")}>Remove from rankings</button>
+          <button type="button" disabled={Boolean(busy)} onClick={() => void decide(row, "declined")}>Decline</button>
+        </> },
+      ]} />}
     {closed.length > 0 && <details><summary>Recent decisions ({closed.length})</summary><ul>{closed.map(row => <li key={row.id}>{row.targetName ?? row.targetId} · {row.status === "done" ? "removed" : "declined"} {row.resolvedAt ? new Date(row.resolvedAt).toLocaleDateString() : ""}{row.adminNote ? ` · ${row.adminNote}` : ""}</li>)}</ul></details>}
   </section>;
 }

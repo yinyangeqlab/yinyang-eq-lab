@@ -7,6 +7,21 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "The Home rocket follows a smooth orbit. The My Collection papers fan out on hover and settle when the pointer leaves.",
+  "My Collection brings together results, headphones, saved targets and EQs.",
+] as const;
+
+const update151Changes = [
+  "Search, sort, and page through records in the private admin tables.",
+  "See usernames and retained browser IDs on submissions, with older claims in a collapsible queue.",
+] as const;
+
+const update150Changes = [
+  "Read the Terms of Use from the footer, including how sharing, rankings, and changes to the site work.",
+  "See what permission you give the site before submitting a target for public review.",
+] as const;
+
+const update149Changes = [
   "Select AutoEq targets directly in Shootout, target search and Tuning.",
   "Find AutoEq curves in the target rankings. Their scores use eligible Blind Research comparisons.",
 ] as const;
@@ -157,8 +172,10 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: candidateChanges,
-    github: { commit: "ec0269bfbb9c0f587747a1cd6265d76965d5aab0", releaseTag: "update149" } },
+  { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: candidateChanges },
+  { update: 151, date: "2026-11-11", title: "Private admin table improvements", changes: update151Changes },
+  { update: 150, date: "2026-11-11", title: "Terms of Use and target sharing", changes: update150Changes },
+  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: update149Changes },
   { update: 148, date: "2026-11-11", title: "Sidebar controls and icon animations", changes: update148Changes },
   { update: 147, date: "2026-11-11", title: "AutoEq target source library", changes: update147Changes },
   { update: 146, date: "2026-11-11", title: "Homepage wallpapers and Sound A/B design", changes: update146Changes },

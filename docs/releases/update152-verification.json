@@ -1,0 +1,87 @@
+{
+  "update": 152,
+  "sourceCommit": "2b94fac545acde01b5e7b866af2e13872e784cbe",
+  "deploymentVerification": {
+    "at": "2026-11-11T22:28:47Z",
+    "update": 152,
+    "revision": "2b94fac545acde01b5e7b866af2e13872e784cbe",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 225,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 340,
+    "exactClientAssetsVerified": 8,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicFitterGuideVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1DatabaseVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "2b94fac545acde01b5e7b866af2e13872e784cbe",
+    "regressionSuitesPassed": 122,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1726,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      720,
+      390,
+      320
+    ],
+    "engines": [
+      "Chromium",
+      "Firefox"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": false,
+    "dedicatedLayoutAccountUsed": true,
+    "liveEngines": [
+      "Chromium"
+    ],
+    "workflows": [
+      "Home rocket orbit and heading",
+      "My Collection hover and return motion",
+      "Reduced-motion preferences",
+      "Keyboard navigation and native-select focus",
+      "Desktop, icons-only and touch navigation"
+    ]
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": 0,
+  "sourceOnlyRecoveryRegistrationPending": true
+}

@@ -1,5 +1,6 @@
 "use client";
 import "./legacy-review.css";
+import { AdminTable, adminDate } from "@/components/admin-table";
 import {useCallback,useEffect,useState} from 'react';
 import {ARCHIVE_TARGETS} from '@/lib/archive-targets';
 const names=new Map<string,string>(ARCHIVE_TARGETS.map(t=>[t.id,t.name]));
@@ -16,10 +17,91 @@ export function LegacyReviewPanel(){
  {requests.map(r=><article key={r.id}><p>{r.record_kind} · <code>{r.record_id}</code> · <strong>{r.status}</strong></p><p>{r.message}</p>{r.admin_reason&&<p>Admin response: {r.admin_reason}</p>}{r.status==='approved'?<a href={`/my-data?trial=${encodeURIComponent(r.record_id)}`}>Find recovered submission for server deletion</a>:<button type="button" disabled={busy} onClick={()=>void act('/api/my-data/legacy','DELETE',{id:r.id})}>Withdraw / delete this request</button>}</article>)}
  <h2>Historical-study permissions</h2><p>Review, grant or withdraw these permissions in the shared data choices form. Ownership recovery never grants research permission. Sealed group results remain after withdrawal; original records remain deletable.</p><a href="/participation?review=1&return_to=/my-data">Review all data choices and historical studies →</a>{studies.map(s=><article key={s.id}><h3>{names.get(s.target_a)||s.target_a} / {names.get(s.target_b)||s.target_b}</h3><p>{s.opted_in?'Permission saved':'Not opted in'} · {s.sealed?'Result already sealed':'Not sealed'}</p></article>)}{!studies.length&&<p>No historical study is currently available.</p>}{error&&<p role="alert">{error}</p>}{status&&<p role="status">{status}</p>}</section>;
 }
-export function AdminLegacyReview(){
- const [rows,setRows]=useState<Review[]>([]),[reason,setReason]=useState<Record<string,string>>({}),[verified,setVerified]=useState<Record<string,boolean>>({}),[error,setError]=useState(''),[busy,setBusy]=useState(false);
- // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
- const load=useCallback(async()=>{try{const r=await fetch('/api/owner-research/legacy',{cache:'no-store'}),j=await r.json() as {error?:string;requests:Review[]};if(!r.ok)throw Error(j.error);setRows(j.requests);}catch(e){setError(e instanceof Error?e.message:'Queue unavailable.');}},[]);useEffect(()=>{void load();},[load]);
- async function review(r:Review,action:string){setBusy(true);setError('');try{await send('/api/owner-research/legacy','POST',{requestId:r.id,action,reason:reason[r.id]||'',independentlyVerified:verified[r.id]===true,confirmation:'VERIFY SPECIFIC LEGACY OWNERSHIP'});await load();}catch(e){setError(e instanceof Error?e.message:'Review failed.');}finally{setBusy(false);}}
- return <section className="legacy-review" aria-label="Admin legacy ownership review"><h2>Legacy ownership review</h2><p>Showing up to 20 requests, pending first. Process and refresh to see the next requests.</p><p>Confirm specific record ownership independently. A browser ID, a guessed record ID or a checkbox alone is insufficient. Approval links only the explicit comparison graph shown below and enables deletion; it never grants retrospective archive permission. Review known fake/test data separately using moderation. Keep reasons minimal and free of sensitive evidence; these notes are erased with the source/account.</p><button type="button" disabled={busy} onClick={()=>void load()}>Refresh legacy queue</button>{rows.map(r=><article key={r.id}><h3>{r.requester_label||r.subject_id} · {r.status}</h3><p>{r.record_kind} · <code>{r.record_id}</code></p><p>Requester: {r.message}</p>{r.preview?<><p>{new Date(r.preview.createdAt).toLocaleString()} · {r.preview.mode} · {names.get(r.preview.targetA)||r.preview.targetA} / {names.get(r.preview.targetB)||r.preview.targetB}</p><details><summary>Explicit linked records ({r.preview.linkedRecords.length})</summary>{r.preview.linkedRecords.map(x=><p key={x.kind+x.id}>{x.kind} · {x.id}</p>)}</details></>:<p>No matching historical source remains. Do not approve.</p>}{r.status==='pending'?<><label>Minimal verification / rejection reason<textarea maxLength={500} value={reason[r.id]||''} onChange={e=>setReason({...reason,[r.id]:e.target.value})} /></label><label><input type="checkbox" checked={verified[r.id]||false} onChange={e=>setVerified({...verified,[r.id]:e.target.checked})} /> I independently verified this requester owns these specific linked records.</label><button type="button" disabled={busy||!r.preview||!verified[r.id]||(reason[r.id]||'').trim().length<10} onClick={()=>void review(r,'approve')}>Approve verified ownership</button><button type="button" disabled={busy||(reason[r.id]||'').trim().length<10} onClick={()=>void review(r,'reject')}>Reject request</button></>:<p>{r.admin_reason}</p>}</article>)}{!rows.length&&<p>No requests awaiting review.</p>}{error&&<p role="alert">{error}</p>}</section>;
+export function AdminLegacyReview() {
+  const [rows, setRows] = useState<(Review & { created_at: number })[]>([]);
+  const [pending, setPending] = useState<number | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [reason, setReason] = useState("");
+  const [verified, setVerified] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch("/api/owner-research/legacy", { cache: "no-store" });
+      const result = await response.json() as { error?: string; requests: (Review & { created_at: number })[]; pending: number };
+      if (!response.ok) throw Error(result.error);
+      setRows(result.requests);
+      setPending(result.pending);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Queue unavailable.");
+    } finally { setLoading(false); }
+  }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap the queue count for the collapsed summary.
+  useEffect(() => { void load(); }, [load]);
+
+  const active = rows.find(row => row.id === selected);
+  function openReview(id: string | null) {
+    setSelected(id);
+    setReason("");
+    setVerified(false);
+  }
+  async function review(action: "approve" | "reject") {
+    if (!active || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await send("/api/owner-research/legacy", "POST", {
+        requestId: active.id, action, reason, independentlyVerified: verified, confirmation: "VERIFY SPECIFIC LEGACY OWNERSHIP",
+      });
+      openReview(null);
+      await load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Review failed.");
+    } finally { setBusy(false); }
+  }
+  return <details className="admin-tool-group" id="legacy-review">
+    <summary>Older submission claims <small>{pending === null ? loading ? "Checking queue…" : "Queue unavailable" : `${pending} pending`}</small></summary>
+    <section className="legacy-review" aria-label="Older submission claims">
+      <p>Participants can ask to recover older comparisons so they can manage or delete them from My data.</p>
+      <details>
+        <summary>Verification rules</summary>
+        <p>Verify ownership of the exact comparison independently. A browser ID or a known record ID alone is insufficient. Approval links only the listed records and does not grant research or archive permission. Keep sensitive evidence out of review notes.</p>
+      </details>
+      <button type="button" disabled={busy || loading} onClick={() => void load()}>{loading ? "Loading…" : "Refresh claims"}</button>
+      {pending !== null && pending > rows.filter(row => row.status === "pending").length && <p>The queue shows up to 20 requests. Review these claims to reveal the next ones.</p>}
+      {error && <p role="alert">{error}</p>}
+      {!loading && <AdminTable label="Older submission claims" rows={rows} rowKey={row => row.id} empty="No claims to review." columns={[
+        adminDate("Requested", (row: { created_at: number }) => row.created_at),
+        { key: "requester", label: "Requester", value: row => row.requester_label || row.subject_id },
+        { key: "kind", label: "Record type", value: row => row.record_kind },
+        { key: "record", label: "Record ID", value: row => row.record_id, render: row => <code className="admin-id">{row.record_id}</code> },
+        { key: "status", label: "Status", value: row => row.status },
+        { key: "evidence", label: "Matching records", value: row => row.preview?.linkedRecords.length, search: row => !row.preview && row.status === "pending" ? "No source found" : null,
+          render: row => row.preview?.linkedRecords.length ?? (row.status === "pending" ? "No source found" : "—") },
+        { key: "review", label: "Review", render: row => <button type="button" disabled={busy} onClick={() => openReview(row.id)}>{row.status === "pending" ? "Review…" : "View"}</button> },
+      ]} />}
+      {active && <article key={active.id} className="admin-review-form">
+        <h3>{active.requester_label || active.subject_id} · {active.status}</h3>
+        <p>{active.record_kind} · <code>{active.record_id}</code></p>
+        <p>Requester message: {active.message}</p>
+        {active.preview && <>
+          <p>{new Date(active.preview.createdAt).toLocaleString()} · {active.preview.mode} · {names.get(active.preview.targetA) || active.preview.targetA} / {names.get(active.preview.targetB) || active.preview.targetB}</p>
+          <details><summary>Linked records ({active.preview.linkedRecords.length})</summary>
+            {active.preview.linkedRecords.map(row => <p key={`${row.kind}:${row.id}`}>{row.kind} · <code>{row.id}</code></p>)}
+          </details>
+        </>}
+        {active.status === "pending" ? <>
+          {!active.preview && <p>No matching historical source remains. Approval is unavailable.</p>}
+          <label>Verification or rejection reason<textarea autoFocus maxLength={500} disabled={busy} value={reason} onChange={event => setReason(event.target.value)} /></label>
+          <label><input type="checkbox" disabled={busy || !active.preview} checked={verified} onChange={event => setVerified(event.target.checked)} /> I independently verified ownership of these specific records.</label>
+          <button type="button" disabled={busy || !active.preview || !verified || reason.trim().length < 10} onClick={() => void review("approve")}>Approve verified ownership</button>
+          <button type="button" disabled={busy || reason.trim().length < 10} onClick={() => void review("reject")}>Reject claim</button>
+        </> : <p>{active.admin_reason}</p>}
+        <button type="button" disabled={busy} onClick={() => openReview(null)}>Close</button>
+      </article>}
+    </section>
+  </details>;
 }

@@ -1,4 +1,5 @@
 "use client";
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import { graphColor } from "@/lib/graph-theme";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type {Point} from "@/lib/curves";
@@ -235,6 +236,6 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
    {allResultsButton}
    {candidateGrid}
  </details> : candidateGrid}
- <div className="eq-results-actions"><strong>Selected · {tuning ? choiceLabel(active) : fitterLabel(active)}</strong><label>Download format<select value={exportFormat} onChange={e=>setFormat(e.target.value)}><option value="txt">EQ TXT</option><option value="equalizerapo">Equalizer APO · Windows</option><option value="easyeffects">EasyEffects · Linux</option><option value="qudelix5k" disabled={active.bands>20}>Qudelix 5K · up to 20 bands</option></select></label><button type="button" onClick={()=>onDownload(active,exportFormat)}>Download selected EQ</button><button type="button" onClick={()=>onSave(active)}>Save selected EQ to My space</button></div><p className="eq-results-caveat">Preamp values nearer 0 dB need less attenuation. The graph excludes uniform volume and preamp, so it shows changes in sound balance. Predictions use the uploaded measurement, not a new measurement at your ears. Extra bands and lower errors can also follow measurement artifacts.</p>
+ <div className="eq-results-actions"><strong>Selected · {tuning ? choiceLabel(active) : fitterLabel(active)}</strong><label>Download format<select value={exportFormat} onChange={e=>setFormat(e.target.value)}><option value="txt">EQ TXT</option><option value="equalizerapo">Equalizer APO · Windows</option><option value="easyeffects">EasyEffects · Linux</option><option value="qudelix5k" disabled={active.bands>20}>Qudelix 5K · up to 20 bands</option></select></label><button type="button" onClick={()=>onDownload(active,exportFormat)}>Download selected EQ</button><button type="button" onClick={()=>onSave(active)}>Save selected EQ to {PERSONAL_AREA_TITLE}</button></div><p className="eq-results-caveat">Preamp values nearer 0 dB need less attenuation. The graph excludes uniform volume and preamp, so it shows changes in sound balance. Predictions use the uploaded measurement, not a new measurement at your ears. Extra bands and lower errors can also follow measurement artifacts.</p>
  </div>;
 }

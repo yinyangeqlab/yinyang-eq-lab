@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Published source · update149** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Live beta · update152** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
@@ -19,7 +19,7 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-Update149 makes 65 AutoEq listening curves available directly in Shootout, target search and Preference Tuning. Eligible Blind Research comparisons contribute to Rankings. The Credits page links the original sources, and the oratory1990 in-ear target also appears as “USOUND1v1 approximation”. [Update149 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149) · [Targets & credits](https://yinyangeq.com/curve-credits#autoeq-library)
+Update152 gives the Home rocket a smooth orbit and renames My Space to My Collection. The folder papers fan out on hover and settle when the pointer leaves. My Collection holds results, headphones, saved targets and EQs. [Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152) · [Targets & credits](https://yinyangeq.com/curve-credits#autoeq-library)
 
 The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
 

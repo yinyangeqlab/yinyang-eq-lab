@@ -1,4 +1,5 @@
 "use client";
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
 
 import { useEffect, useMemo, useState } from "react";
@@ -58,7 +59,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
         <button type="button" disabled={!selectedIds.length} onClick={() => { setSelectedIds([]); setDeleteRequest(null); }}>Clear selection</button>
         <button type="button" disabled={!selectedIds.length} onClick={() => setDeleteRequest([...selectedIds])}>Delete selected ({selectedIds.length})</button>
       </div>
-      {deleteRequest && pendingIds.length > 0 && <div className="saved-eq-confirm" role="group" aria-label="Confirm bulk EQ deletion"><p>Delete {pendingIds.length} selected {pendingIds.length === 1 ? "EQ" : "EQs"}? They will also disappear from Tuning and Music library. This cannot be undone.</p><button type="button" onClick={() => { if (act(() => removeLibraryEqs(pendingIds), `${pendingIds.length} ${pendingIds.length === 1 ? "EQ deleted" : "EQs deleted"} from My space, Tuning and Music library.`)) { setSelectedIds([]); setDeleteRequest(null); } }}>Delete {pendingIds.length} {pendingIds.length === 1 ? "EQ" : "EQs"}</button><button type="button" onClick={() => setDeleteRequest(null)}>Cancel</button></div>}
+      {deleteRequest && pendingIds.length > 0 && <div className="saved-eq-confirm" role="group" aria-label="Confirm bulk EQ deletion"><p>Delete {pendingIds.length} selected {pendingIds.length === 1 ? "EQ" : "EQs"}? They will also disappear from Tuning and Music library. This cannot be undone.</p><button type="button" onClick={() => { if (act(() => removeLibraryEqs(pendingIds), `${pendingIds.length} ${pendingIds.length === 1 ? "EQ deleted" : "EQs deleted"} from ${PERSONAL_AREA_TITLE}, Tuning and Music library.`)) { setSelectedIds([]); setDeleteRequest(null); } }}>Delete {pendingIds.length} {pendingIds.length === 1 ? "EQ" : "EQs"}</button><button type="button" onClick={() => setDeleteRequest(null)}>Cancel</button></div>}
       <ul className="saved-eq-list">{eqs.map(eq => {
         const chosenId = eqModels[eq.id] ?? eq.measurementId ?? "";
         const chosen = measurements.find(row => row.id === chosenId);
@@ -68,7 +69,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
           <p>{eq.headphone && `${eq.headphone} · `}{eq.source} · {eq.filters.length} filters · {eq.preamp.toFixed(1)} dB preamp</p><small>{eq.channelMatch ? "Left/Right correction saved. Channel match is on by default while listening." : "No Left/Right channel correction saved."}</small>
           <div className="saved-eq-actions">
             <button type="button" onClick={() => act(() => downloadLocalFile("saved-eq.txt", `# ${eq.name.replace(/[\r\n]/g, " ")}\n# EQ only; channel match is a separate download.\nPreamp: ${eq.preamp} dB\n${eq.filters.map((f, i) => `Filter ${i + 1}: ON ${f.type || "PK"} Fc ${f.hz} Hz Gain ${f.gain} dB Q ${f.q}`).join("\n")}\n`, "text/plain"), "EQ settings downloaded.")}>Download EQ TXT</button>
-            <button type="button" onClick={() => act(() => removeLibraryEq(eq.id), "EQ deleted from My space, Tuning and Music library.")}>Delete EQ</button>
+            <button type="button" onClick={() => act(() => removeLibraryEq(eq.id), `EQ deleted from ${PERSONAL_AREA_TITLE}, Tuning and Music library.`)}>Delete EQ</button>
           </div>
           {eq.channelMatch && matchDownloads(eq.channelMatch, eq.name)}
           <details className="saved-eq-correction"><summary>Channel correction</summary><p>This balances differences between your headphones’ Left and Right earpieces. Choose the same headphones this EQ was made for, then copy their correction into this EQ. Your EQ filters stay the same.</p>
@@ -78,7 +79,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
           </details>
         </li>;
       })}</ul>
-    </> : <p>No saved EQs yet. Finalize an EQ in Tuning and choose <b>Save EQ to My space</b>.</p>}
+    </> : <p>No saved EQs yet. Finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
     <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
       <div className="automatch-files" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
         <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>

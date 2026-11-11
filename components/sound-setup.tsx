@@ -1,4 +1,5 @@
 "use client";
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
 import { useId, type ReactNode } from "react";
 import type { LibraryEq } from "@/lib/music-library-eq";
@@ -17,7 +18,7 @@ export default function SoundSetup({ mode, onMode, headphones, target, presets, 
   return <section className="sound-setup" aria-label="Headphones & EQ">
     <div className="sound-setup-grid"><div className="sound-headphones"><h3>Headphones</h3>{mode === "target" ? headphones : <div className="sound-linked-headphone"><strong>{selected ? selected.headphone || "Headphones not recorded" : "Choose a saved EQ"}</strong><p>{selected ? selected.measurementId ? "Linked to this saved EQ." : "This EQ has no saved headphone measurement link." : "Its saved headphones will appear here."}</p></div>}</div>
       <div className="sound-source"><div className="sound-mode" role="group" aria-label="EQ source"><button type="button" aria-pressed={mode === "target"} onClick={() => onMode("target")}>Target</button><button type="button" aria-pressed={mode === "saved"} onClick={() => onMode("saved")}>Saved EQ</button></div>
-        {mode === "target" ? <div className="sound-target">{target}</div> : <div className="sound-saved"><label htmlFor={id + "-eq"}><span className="sound-visually-hidden">Saved EQ</span><select id={id + "-eq"} value={presetId} onChange={event => onPreset(event.target.value)}><option value="">Choose a saved EQ</option>{Array.from(groups, ([key, group]) => <optgroup key={key} label={group.name}>{group.eqs.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}</optgroup>)}</select></label>{!presets.length && <p>No saved EQs yet. Make one from a target or add one in My space.</p>}<Link className="sound-manage-eqs" href="/shootout?tab=eqs" prefetch={false}>Manage saved EQs</Link>{savedExtra}</div>}
+        {mode === "target" ? <div className="sound-target">{target}</div> : <div className="sound-saved"><label htmlFor={id + "-eq"}><span className="sound-visually-hidden">Saved EQ</span><select id={id + "-eq"} value={presetId} onChange={event => onPreset(event.target.value)}><option value="">Choose a saved EQ</option>{Array.from(groups, ([key, group]) => <optgroup key={key} label={group.name}>{group.eqs.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}</optgroup>)}</select></label>{!presets.length && <p>No saved EQs yet. Make one from a target or add one in {PERSONAL_AREA_TITLE}.</p>}<Link className="sound-manage-eqs" href="/shootout?tab=eqs" prefetch={false}>Manage saved EQs</Link>{savedExtra}</div>}
       </div></div>{children}
   </section>;
 }

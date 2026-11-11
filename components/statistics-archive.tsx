@@ -1,4 +1,5 @@
 "use client";
+import { AdminTable } from "@/components/admin-table";
 import ProtectedArchive from "@/components/protected-archive";
 import { useCallback, useEffect, useState } from "react";
 import { ARCHIVE_TARGETS } from "@/lib/archive-targets";
@@ -16,8 +17,37 @@ export default function StatisticsArchivePanel(){
   function download(archive:StatisticsArchive){const url=URL.createObjectURL(new Blob([JSON.stringify(archive,null,2)],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download=`yinyang-legacy-statistics-${archive.year}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   const percent=(n:number)=>`${(n*100).toFixed(1)}%`;
   return <><ProtectedArchive/><section aria-label="Research summaries and archive planning"><h2>Research summaries and archive planning</h2><p>All valid comparisons, including repeat answers, stay in the private research dataset unless erased. A new year does not reset the study or delete data. These live summaries use decisive eligible blind votes and separate UTC years, music modes and headphone categories. Open choices, ties and checks remain in the research dataset but are not counted in this table.</p><p><strong>Private analysis, not an anonymous archive.</strong> Exact small-group results can reveal preferences. This table is recomputed from retained records and changes after deletion or moderation; no permanent copy is saved here. Refresh after other admin actions.</p><p>Every repeat contributes to the raw preference. The equal-group preference first averages each group’s answers, then weights groups equally. Groups are authenticated accounts where ownership exists, otherwise legacy browser IDs; a shared admin account is one group. These are not verified counts of people, and this summary does not replace the live participant-balanced exploratory rankings.</p><button type="button" disabled={busy} onClick={()=>void load()}>{busy?"Loading…":"Refresh private summaries"}</button>{error&&<p role="alert">{error}</p>}
-    <div className="owner-table-wrap"><table><thead><tr><th>UTC year / mode / type</th><th>Target A / target B</th><th>All comparisons</th><th>Participant groups</th><th>A preference</th></tr></thead><tbody>{rows.map(row=><tr key={JSON.stringify([row.year,row.mode,row.headphoneType,row.targetA,row.targetB])}><td>{row.year}<br/>{row.mode} · {row.headphoneType}</td><td>{row.nameA}<br/>{row.nameB}</td><td>{row.comparisons} total<br/>{row.aWins} A / {row.bWins} B<br/>{row.repeatComparisons} beyond first per group</td><td>{row.groups} groups<br/>{row.verifiedAccountGroups} authenticated accounts<br/>{row.legacyBrowserGroups} legacy browsers / {row.sharedAdminGroups} shared admin</td><td>{percent(row.rawAShare)} raw<br/>{percent(row.equalGroupAShare)} equal group</td></tr>)}{!rows.length&&!busy&&<tr><td colSpan={5}>No qualifying decisive comparisons in the retained dataset.</td></tr>}</tbody></table></div>
+    <AdminTable label="Research summaries and archive planning" rows={rows}
+      rowKey={row => JSON.stringify([row.year, row.mode, row.headphoneType, row.targetA, row.targetB])}
+      empty={busy ? "Loading…" : "No qualifying decisive comparisons in the retained dataset."} columns={[
+        { key: "year", label: "UTC year", value: row => row.year },
+        { key: "mode", label: "Mode", value: row => row.mode },
+        { key: "type", label: "Headphone type", value: row => row.headphoneType },
+        { key: "a", label: "Target A", value: row => row.nameA },
+        { key: "b", label: "Target B", value: row => row.nameB },
+        { key: "total", label: "Comparisons", value: row => row.comparisons },
+        { key: "aWins", label: "A wins", value: row => row.aWins },
+        { key: "bWins", label: "B wins", value: row => row.bWins },
+        { key: "repeat", label: "Repeat comparisons", value: row => row.repeatComparisons },
+        { key: "groups", label: "Participant groups", value: row => row.groups },
+        { key: "accounts", label: "Authenticated accounts", value: row => row.verifiedAccountGroups },
+        { key: "browsers", label: "Legacy browsers", value: row => row.legacyBrowserGroups },
+        { key: "admin", label: "Shared admin", value: row => row.sharedAdminGroups },
+        { key: "raw", label: "Raw A preference", value: row => row.rawAShare, render: row => percent(row.rawAShare), search: row => percent(row.rawAShare) },
+        { key: "equal", label: "Equal-group A preference", value: row => row.equalGroupAShare, render: row => percent(row.equalGroupAShare), search: row => percent(row.equalGroupAShare) },
+      ]} />
     <h3>Private research and saved results</h3><p>Use the protected archive above for preplanned studies. These exact private summaries remain live and subject to deletion. They are not a protected release and should not be shared as an anonymous dataset. Earlier v1 saved releases remain available separately; its annual generator is still retired.</p>
-    {archives.map(archive=><div key={archive.year}><h3>{archive.year} · legacy saved estimates</h3><p>Produced with the retired sampled mechanism, not the full retained comparison dataset.</p><button type="button" onClick={()=>download(archive)}>Download existing {archive.year} archive</button><div className="owner-table-wrap"><table><thead><tr><th>Target A</th><th>Target B</th><th>Estimated A wins</th><th>Estimated B wins</th></tr></thead><tbody>{archive.pairs.map(row=><tr key={`${row.targetA}:${row.targetB}`}><td>{names.get(row.targetA)||row.targetA}</td><td>{names.get(row.targetB)||row.targetB}</td><td>{row.estimatedAWins}</td><td>{row.estimatedBWins}</td></tr>)}</tbody></table></div></div>)}
+    {archives.map(archive => <div key={archive.year}>
+      <h3>{archive.year} · legacy saved estimates</h3>
+      <p>Produced with the retired sampled mechanism.</p>
+      <button type="button" onClick={() => download(archive)}>Download existing {archive.year} archive</button>
+      <AdminTable label={`${archive.year} archive estimates`} rows={archive.pairs} rowKey={row => JSON.stringify([row.targetA,row.targetB])} columns={[
+        { key: "a", label: "Target A", value: row => names.get(row.targetA) || row.targetA },
+        { key: "b", label: "Target B", value: row => names.get(row.targetB) || row.targetB },
+        { key: "aw", label: "Estimated A wins", value: row => row.estimatedAWins },
+        { key: "bw", label: "Estimated B wins", value: row => row.estimatedBWins },
+      ]} />
+    </div>)}
+
   </section></>;
 }

@@ -27,7 +27,7 @@ const signAt = async issued => {
  return payload+'.'+btoa(String.fromCharCode(...sig)).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
 };
 const actors=[{}, {'Cookie':'__Host-yinyangeq_tester='+'a'.repeat(43)}, {'Cookie':'__Host-yinyangeq_owner=forged'}, {'oai-authenticated-user-id':'owner','Authorization':'Bearer synthetic'}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)-13*3600)}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)+3600)}];
-const paths=['/','/home','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
+const paths=['/','/home','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/terms','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
 const enginePaths = ['autoeq-wasm.mjs','autoeq-wasm.wasm','LICENSE','COPYING','RUNTIME-NOTICES.txt','source.tar.gz'].map(name => '/vendor/peqdb-autoeq/' + name);
 const wallpaperPaths = ['/wallpapers/files.json', '/wallpapers/yinyang-eq-landscape-4k.mp4', '/wallpapers/yinyang-eq-flying-gear-1080p.jpg'];
 paths.push(...enginePaths, ...wallpaperPaths);
@@ -59,6 +59,16 @@ for (const path of ['/vendor/peqdb-autoeq/other.js','/vendor/peqdb-autoeq/COPYIN
 }
 const normal=await context.exports.handler.fetch(new Request('https://fixture.test/'),{...env,OWNER_ONLY_MAINTENANCE:'false'},{});assert.equal(await normal.text(),'APPLICATION CONTENT');
 for(const config of [{...env,PRIVATE_ACCESS_PASSWORD:''},{...env,PRIVATE_ACCESS_PASSWORD:undefined}])assert.equal((await context.exports.handler.fetch(new Request('https://fixture.test/'),config,{})).status,503);
+// The exact Terms page can be read before signing in; writes and adjacent paths stay gated.
+const publicTermsEnv = { ...env, OWNER_ONLY_MAINTENANCE: 'false', PRIVATE_ACCESS_PASSWORD: undefined };
+for (const method of ['GET', 'HEAD']) {
+ const response = await context.exports.handler.fetch(new Request('https://fixture.test/terms', { method }), publicTermsEnv, {});
+ assert.equal(response.status, 200);
+}
+for (const [method, path] of [['POST', '/terms'], ['GET', '/terms/private']]) {
+ const response = await context.exports.handler.fetch(new Request('https://fixture.test' + path, { method }), publicTermsEnv, {});
+ assert.equal(response.status, 503);
+}
 const escaped=await ownerOnlyMaintenanceResponse(new Request('https://fixture.test/'),'<script>alert(1)</script> & test').text();assert.doesNotMatch(escaped,/<script>/);assert.match(escaped,/&lt;script&gt;/);assert.match(escaped,/min-height:100svh/);assert.match(escaped,/name="viewport"/);assert.doesNotMatch(escaped,/<a |<form|<input/);
 const infra=readFileSync('infra/pulumi/index.ts','utf8');assert.match(infra,/ownerOnlyMaintenance \? \["\/\*"\] : \["\/\*", \.\.\.publicAssetBypassPatterns\]/);assert.match(infra,/config.getBoolean\("ownerOnlyMaintenance"\) \?\? false/);
 // Admitted/denied client reload behavior is exercised by check_main_workflows.mjs.

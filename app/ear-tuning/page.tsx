@@ -1,5 +1,6 @@
 "use client";
 
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioLines, Headphones, Pause, Play, Save, SlidersHorizontal, Trash2 } from "lucide-react";
@@ -363,7 +364,7 @@ export default function EarTuningPage() {
         setSaveMessage("EQ settings downloaded.");
       } else {
         saveLibraryEq(eq);
-        setSaveMessage(`Saved “${eq.name}” to My space. Account Sync includes saved EQs on approved browsers when enabled.`);
+        setSaveMessage(`Saved “${eq.name}” to ${PERSONAL_AREA_TITLE}. Account Sync includes saved EQs on approved browsers when enabled.`);
       }
     } catch (error) { setSaveMessage(errorMessage(error, "Could not save this EQ.")); }
   }
@@ -525,7 +526,7 @@ export default function EarTuningPage() {
       <div className="ear-step"><Save size={19} aria-hidden="true"/><h2 id="ear-save">3. Save your EQ</h2></div>
       <label className="ear-name">Preset name<input type="text" value={name} maxLength={100} placeholder="My headphone EQ" onChange={event => setName(event.target.value)}/></label>
       <div className="ear-save-actions">
-        <button type="button" className="ear-primary" disabled={!canSave} onClick={() => output()}>Save EQ to My space</button>
+        <button type="button" className="ear-primary" disabled={!canSave} onClick={() => output()}>Save EQ to {PERSONAL_AREA_TITLE}</button>
         <button type="button" disabled={!canSave} onClick={() => output(true)}>Download EQ TXT</button>
         <Link href="/shootout?tab=eqs">View saved EQs</Link>
       </div>

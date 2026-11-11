@@ -1,3 +1,4 @@
+import { PERSONAL_AREA_TITLE } from "./personal-area";
 import { validFitter, type FitterSettings } from "./fitter-settings";
 import type { Point } from "./curves";
 import type { PeqFilter } from "@/lib/autoeq";
@@ -39,7 +40,7 @@ export function safeLibraryEq(value: LibraryEq): LibraryEq {
 
 export function parseLibraryEq(text: string, name: string): LibraryEq {
   if (text.length > 100_000) throw new Error("The EQ file is too large.");
-  if (/^\s*CH:\s*[01]\s*$/im.test(text)) throw new Error("This is a channel-match preset. Attach it to a headphone model in My space instead of importing it as a shared EQ.");
+  if (/^\s*CH:\s*[01]\s*$/im.test(text)) throw new Error(`This is a channel-match preset. Attach it to a headphone model in ${PERSONAL_AREA_TITLE} instead of importing it as a shared EQ.`);
   const filters: PeqFilter[] = [];
   let preamp = 0;
   let engine: LibraryEq["engine"], engineVersion: string | undefined;

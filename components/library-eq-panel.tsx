@@ -1,5 +1,6 @@
 "use client";
 
+import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
 import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
 import { autoEqPickerTargets, isSourceAutoEqTarget } from "@/lib/autoeq-target-sources";
@@ -119,7 +120,7 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
       <div className="sound-playback-options"><label><input type="checkbox" aria-label="Enable EQ" checked={enabled && !!selected} disabled={!selected} onChange={event => setEnabled(event.target.checked)}/>EQ {enabled && selected ? "on" : "off"}</label><label><input type="checkbox" aria-label="Enable channel match" checked={matchEnabled && !!selected?.channelMatch} disabled={!selected?.channelMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && selected?.channelMatch ? "on" : "off"}</label><span className="sound-state">{enabled && selected ? `EQ: ${selected.name}` : "EQ off · original sound"}{matchEnabled && selected?.channelMatch ? " · channel match on" : ""}</span></div>
       <p>{selected?.channelMatch ? "Channel match uses the Left/Right correction saved with this EQ." : "Channel matching needs paired headphone responses or a saved two-channel correction."} Turn off other EQ on your device before listening.</p>
       {selected && soundMode === "saved" && <p>Stored base EQ: {selected.fitter ? fitterLabel(selected.fitter) : "fitter unrecorded"} · {selected.filters.length} stored filters</p>}
-      {selected && soundMode === "saved" && <button type="button" className="library-eq-remove" onClick={() => { try { removeLibraryEq(selected.id); setSelectedId(""); setEnabled(false); setMessage("EQ removed from My space, Tuning and Music library."); } catch { setMessage("Could not remove this EQ. Browser storage may be unavailable."); } }}>Remove selected EQ</button>}
+      {selected && soundMode === "saved" && <button type="button" className="library-eq-remove" onClick={() => { try { removeLibraryEq(selected.id); setSelectedId(""); setEnabled(false); setMessage(`EQ removed from ${PERSONAL_AREA_TITLE}, Tuning and Music library.`); } catch { setMessage("Could not remove this EQ. Browser storage may be unavailable."); } }}>Remove selected EQ</button>}
       {message && <p role="status">{message}</p>}
   </SoundSetup>;
 }

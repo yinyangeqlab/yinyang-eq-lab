@@ -2,6 +2,7 @@ export type SharePage = {
   path: string; slug: string; title: string; description: string;
   ogTitle?: string; kind?: string; kicker?: string; tagline?: string; private?: boolean; noIndex?: boolean;
   image?: { path: string; width: number; height: number; alt: string };
+  artworkSlug?: string;
   canonicalSearch?: string;
 };
 export const SITE_ORIGIN: string;

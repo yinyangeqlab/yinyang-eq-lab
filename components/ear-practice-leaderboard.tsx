@@ -1,5 +1,6 @@
 "use client";
 
+import { AdminTable } from "@/components/admin-table";
 import { useEffect, useState } from "react";
 import type { EarPracticeBoard } from "@/lib/ear-practice-ranking";
 import "./ear-practice-leaderboard.css";
@@ -29,7 +30,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
   useEffect(() => {
     const controller = new AbortController();
     const endpoint = owner ? "/api/owner-research/ear-practice" : publicApi;
-    fetch(endpoint + "?page=" + pageIndex, { signal: controller.signal, cache: "no-store" })
+    fetch(endpoint + (owner ? "?all=1" : "?page=" + pageIndex), { signal: controller.signal, cache: "no-store" })
       .then(async response => {
         if (!response.ok) throw Error();
         const result = await response.json() as EarPracticeBoard;
@@ -117,7 +118,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
     <header className="ear-practice-board-header">
       <div>
         <h2 id={owner ? "ear-practice-admin-title" : "ear-practice-board-title"}>{owner ? "Ranked practice participants" : "Ranked Practice Challenge results"}</h2>
-        {owner && <p>Private participant IDs link each account to its published scores, including anonymous entries.</p>}
+        {owner && <p>Scores combine results at the account level. Each row shows the published username and the private participant ID.</p>}
       </div>
       {!owner && <a className="ear-practice-play-link" href="/ear-tuning">Open Peak &amp; Dip Finder</a>}
     </header>
@@ -125,23 +126,34 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
       : <>
         {loadingPage && <p role="status">Loading page {pageIndex + 1}…</p>}
         {board.rows.length ? <>
-          <div key={board.page} className="ear-practice-table" aria-busy={loadingPage} tabIndex={0} role="region" aria-label="Ranked practice scores">
+          {owner ? <AdminTable label="Ranked practice participants" rows={board.rows} rowKey={row => row.participantId ?? row.username} columns={[
+            { key: "rank", label: "Rank", value: row => row.rank },
+            { key: "username", label: "Username", value: row => row.username },
+            { key: "participant", label: "Participant ID", value: row => row.participantId, render: row => <code className="admin-id">{row.participantId}</code> },
+            { key: "wins", label: "Wins", value: row => row.correct },
+            { key: "losses", label: "Losses", value: row => row.attempts - row.correct },
+            { key: "rate", label: "Win rate", value: row => 100 * row.correct / row.attempts,
+              render: row => `${(100 * row.correct / row.attempts).toFixed(1)}%` },
+            { key: "accuracy", label: "Accuracy", value: row => row.accuracy, render: row => `${row.accuracy.toFixed(1)}%` },
+            { key: "level", label: "Level cleared", value: row => row.furthest, search: row => row.furthest === 100 ? "Grandmaster" : null,
+              render: row => <>{row.furthest}{row.furthest === 100 && <small className="ear-practice-grandmaster">Grandmaster</small>}
+                <small>{levelPercentile(row.furthest).toFixed(1)}th percentile</small></> },
+          ]} /> : <div key={board.page} className="ear-practice-table" aria-busy={loadingPage} tabIndex={0} role="region" aria-label="Ranked practice scores">
             <table>
               <caption>{participants > board.pageSize
                 ? `Showing ${(board.page * board.pageSize + 1).toLocaleString("en-US")}–${(board.page * board.pageSize + board.rows.length).toLocaleString("en-US")} of ${participants.toLocaleString("en-US")} players`
                 : `${participants.toLocaleString("en-US")} ${participants === 1 ? "player" : "players"}`}</caption>
-              <thead><tr><th scope="col">Rank / Player</th><th scope="col">Wins / Losses</th><th scope="col">Accuracy</th><th scope="col">Level cleared</th>{owner && <th scope="col">Participant ID</th>}</tr></thead>
+              <thead><tr><th scope="col">Rank / Player</th><th scope="col">Wins / Losses</th><th scope="col">Accuracy</th><th scope="col">Level cleared</th></tr></thead>
               <tbody>{board.rows.map(row => <tr key={row.username}>
                 <th scope="row"><span className="ear-practice-player"><span className="ear-practice-rank">#{row.rank}</span><span>{row.username}</span></span></th>
                 <td>{row.correct} / {row.attempts - row.correct}<small>{(100 * row.correct / row.attempts).toFixed(1)}% win rate</small></td>
                 <td>{row.accuracy.toFixed(1)}%</td>
                 <td>{row.furthest}{row.furthest === 100 && <small className="ear-practice-grandmaster">Grandmaster</small>}
                   <small>{levelPercentile(row.furthest).toFixed(1)}th percentile</small></td>
-                {owner && <td><code>{row.participantId}</code></td>}
               </tr>)}</tbody>
             </table>
-          </div>
-          {participants > board.pageSize && <nav className="ear-practice-pagination" aria-label="Ranked practice result pages">
+          </div>}
+          {!owner && participants > board.pageSize && <nav className="ear-practice-pagination" aria-label="Ranked practice result pages">
             <button type="button" disabled={loadingPage || pageIndex === 0} onClick={() => changePage(pageIndex - 1)}>Previous page</button>
             <span aria-live="polite">Page {board.page + 1} of {Math.ceil(participants / board.pageSize)}</span>
             <button type="button" disabled={loadingPage || (pageIndex + 1) * board.pageSize >= participants} onClick={() => changePage(pageIndex + 1)}>Next page</button>
