@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "b610b1b3d865511d6f8fb896e15ba60975b994dc",
+  "baseRevision": "6664d0b6b3a291a303c0749e7a6184b507add47f",
   "recordedLiveUpdate": 152,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -547,7 +547,7 @@
     },
     {
       "path": "app/glossary/page.tsx",
-      "sha256": "108bffa16aa0ae01ef7d48e598508bfbb0d11e22d83bb40a4bd0f1ab158e67d7",
+      "sha256": "75d4a39b90f739094f04ad4b08524d0381ddaa359d5f93e75d8e935952c3c85d",
       "executable": false
     },
     {
