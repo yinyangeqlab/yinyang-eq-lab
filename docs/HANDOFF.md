@@ -11,7 +11,7 @@ Production verification matched 340 Worker modules and eight client assets. The 
 
 Matching encrypted off-device source and build recovery passed independent reconstruction and hosted validation. Existing data snapshots retain their original timestamps. [Recovery verification](releases/update152-recovery-verification.json)
 
-[Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152) · [Source provenance](releases/update152-source.json) · [Update149 publication verification](releases/update149-publication.json)
+[Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152) · [Source provenance](releases/update152-source.json) · [Publication verification](releases/update152-publication.json) · [Update149 publication verification](releases/update149-publication.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

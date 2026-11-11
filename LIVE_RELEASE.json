@@ -19,11 +19,12 @@
     "branch": "work/update152-sidebar-motion-20261111",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "592743e272ee422ce3f20fc17abe93cc07ee5933"
+    "baseMain": "592743e272ee422ce3f20fc17abe93cc07ee5933",
+    "publicationEvidence": "docs/releases/update152-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
