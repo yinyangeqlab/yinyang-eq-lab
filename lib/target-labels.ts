@@ -1,5 +1,8 @@
 // Stable IDs preserve comparisons while names change. Historical snapshots stay intact.
+export const oratoryInEarId = "f424c849-5e3a-4184-9503-bb0461af6409";
+export const oratoryInEarLabel = "oratory1990 in-ear (aka USOUND1v1 approximation)";
 const labels: Record<string, string> = {
+  [oratoryInEarId]: oratoryInEarLabel,
   "80814769-6c61-4d24-801b-d80c20c1d5f4": "YinYang EQ Preference Target I",
   "7a8ee296-ac62-4e56-b413-0b1042e9f46f": "YinYang EQ Preference Target II",
   "fefbaa8f-563f-4c1b-ace9-74b299afa2fe": "YinYang EQ Preference Target II (rev. 2)",

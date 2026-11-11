@@ -19,7 +19,8 @@ let sweeps = 0;
 const finalizer = load('lib/preference-finalize.ts'), originalPeakBoost = finalizer.peakBoost;
 finalizer.peakBoost = filters => { sweeps++; return originalPeakBoost(filters); };
 const { safeLibraryEq, saveLibraryEq, readLibraryEqs, removeLibraryEq, removeLibraryEqs, measurementChannelMatch, parseLibraryEq, LIBRARY_EQ_KEY } = load('lib/music-library-eq.ts');
-const { channelMatchWav, safeChannelMatch } = load('lib/channel-match-export.ts');
+const { channelMatchWav, channelMatchIirText, safeChannelMatch } = load('lib/channel-match-export.ts');
+const { parseChannelMatchPreset, presetFilterResponse, presetResponse } = load('lib/peq-preset.ts');
 const { replaceEqStage } = load('lib/eq-playback.ts');
 const points = Array.from({length:21},(_,i)=>[20*1000**(i/20),0]);
 const model = {leftPoints:points,rightPoints:points.map(([hz])=>[hz,6]),channelMatchMode:'auto'};
@@ -37,6 +38,21 @@ assert.equal(view.getUint16(20,true),3);assert.equal(view.getUint16(22,true),2);
 function magnitude(ch,hz){let re=0,im=0;for(let i=0;i<8192;i++){const value=view.getFloat32(44+i*8+ch*4,true),angle=2*Math.PI*hz*i/48000;re+=value*Math.cos(angle);im-=value*Math.sin(angle);}return 20*Math.log10(Math.hypot(re,im));}
 assert.ok(Math.abs(magnitude(0,1000)-magnitude(1,1000)-6)<.05,'Stereo WAV corrects the 6 dB ear mismatch in the correct direction');
 assert.ok(magnitude(0,1000)<-1.4,'WAV includes boost headroom');
+const flatMatch = parseChannelMatchPreset(channelMatchIirText(eq.channelMatch));
+assert.ok(Math.abs(flatMatch.channels[0].preampDb - flatMatch.channels[1].preampDb - 6) < .01, 'TXT preserves broadband left/right correction');
+assert.equal(flatMatch.channels[0].filters.length, 0, 'Broadband imbalance only needs a level correction');
+const shape = { type:'PK', hz:500, gain:5, q:1 };
+const uneven = { ...model, leftLevelDb:-1, rightLevelDb:1, rightPoints:points.map(([hz])=>[hz, 2 * presetFilterResponse(hz, shape, 48000)]) };
+const fitted = parseChannelMatchPreset(channelMatchIirText(uneven));
+const residual = (hz, db) => 2 + db + presetResponse(hz, fitted, 1, 48000) - presetResponse(hz, fitted, 0, 48000);
+assert.ok(uneven.rightPoints.reduce((error,[hz,db])=>error + residual(hz,db)**2,0) < 6, 'TXT corrects the shape and level of a synthetic mismatch');
+for (const rate of [44100,48000,96000]) for (const [hz] of points) for (const channel of [0,1]) {
+  assert.ok(presetResponse(hz,fitted,channel,rate) < -1.4,'TXT retains shared headroom for both channels');
+}
+const uploaded = parseChannelMatchPreset('CH: 0\nPreamp: -3 dB\nFilter 1: ON LSC Fc 80 Hz Gain 1 dB Q 0.7\nCH: 1\nPreamp: -2 dB');
+assert.deepEqual(parseChannelMatchPreset(channelMatchIirText({channelMatchMode:'custom',channelMatchPreset:uploaded})),uploaded,'Uploaded TXT preserves its original settings');
+assert.deepEqual(parseChannelMatchPreset(channelMatchIirText({...uneven,channelMatchPreset:uploaded})),fitted,'Auto mode exports its own correction even when an uploaded preset is attached');
+assert.throws(()=>channelMatchIirText({...model,rightLevelDb:100}),/FIR WAV instead/,'TXT fails clearly when the required levels exceed its format');
 const nodes=[];
 function node(kind){const n={kind,connections:[],gain:{value:1,cancelScheduledValues(){},setValueAtTime(){},linearRampToValueAtTime(){}},connect(...args){this.connections.push(args);},disconnect(){this.disconnected=true;}};nodes.push(n);return n;}
 const context={sampleRate:48000,currentTime:0,createGain:()=>node('gain'),createIIRFilter:()=>node('iir'),createChannelSplitter:()=>node('splitter'),createChannelMerger:()=>node('merger'),createConvolver:()=>node('convolver'),createBuffer:(_channels,length)=>({copyToChannel(samples){assert.equal(samples.length,length);}})};

@@ -17,6 +17,7 @@ function load(path) {
   const url = 'data:text/javascript;base64,' + Buffer.from(code).toString('base64'); urls.set(path, url); return url;
 }
 const core = await import(load('lib/autoeq-fit.ts'));
+const fitters = await import(load('lib/fitter-settings.ts'));
 const { createEngine } = await import(load('lib/peqdb-engine.ts'));
 const { createAutoEqService } = await import(load('lib/autoeq-client.ts'));
 const { response, peqCoefficients } = await import(load('lib/autoeq.ts'));
@@ -77,8 +78,10 @@ const routeModule = { exports: {} }, inserts = [];
 const routeJs = ts.transpileModule(readFileSync('app/api/preference-exports/route.ts', 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 vm.runInNewContext(routeJs, { module: routeModule, exports: routeModule.exports, Response, Request, crypto, require(name) {
   if (name.endsWith('submission-ownership')) return { submissionContext: async () => ({ record: id => ({ ownership: id }) }) };
+  if (name === '@/lib/autoeq-target-sources') return { isSourceAutoEqTarget: id => id === 'linked-fixture' };
   if (name === '@/db') return { getDb: () => ({ insert: () => ({ values: value => value }), batch: async values => inserts.push(values) }) };
   if (name === '@/db/schema') return { preferenceExports: {} };
+  if (name.endsWith('fitter-settings')) return fitters;
   if (name.endsWith('request-json')) return { readJsonObject: request => request.json(), requestInputResponse: () => null };
   throw Error(name);
 } });
@@ -88,6 +91,11 @@ const post = body => routeModule.exports.POST(new Request('https://local.test/ap
 assert.equal((await post(exportBody)).status, 201); assert.equal(inserts.length, 1);
 for (const change of [{ method: 'unknown' }, { priority: 'smooth' }, { filters: exportVariant.filters.map(f => ({ ...f, type: 'unknown' })) }, { preamp: 3 }]) assert.equal((await post({ ...exportBody, variant: { ...exportVariant, ...change } })).status, 400);
 assert.equal(inserts.length, 1, 'Invalid exports must not write');
+assert.equal((await post({ ...exportBody, variant: { ...exportVariant, method: 'peqdb-smoothed' } })).status, 201);
+assert.equal((await post({ ...exportBody, variant: { ...exportVariant, method: 'peqdb-smoothed', priority: 'smooth' } })).status, 400);
+assert.equal(inserts.length, 2, 'Only a valid smoothed EQ export adds a row');
+assert.equal((await post({ ...exportBody, targetId: 'linked-fixture' })).status, 400);
+assert.equal(inserts.length, 2, 'Source curve export cannot upload the curve to research');
 
 let workers = [];
 function factory() {

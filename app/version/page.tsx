@@ -11,18 +11,18 @@ const repository = repositoryUrl;
 const releaseUrl = (tag: string) => `${repository}/releases/tag/${encodeURIComponent(tag)}`;
 
 export default function VersionPage() {
-  const currentReleaseTag = releaseHistory.find(entry => entry.update === releaseInfo.build.update)?.github?.releaseTag;
+  const latestReleaseTag = releaseHistory.find(entry => entry.github?.releaseTag)?.github?.releaseTag;
   return <main className="alpha-help-page alpha-version-page">
     <span className="alpha-version-eyebrow">YinYang EQ</span>
     <h1>About this version</h1>
     <div className="alpha-release-summary"><strong>{buildLabel}</strong><span>{releaseInfo.build.preview ? "Preview" : "Release build"}</span></div>
-    <p>Beta version {releaseInfo.version} · based on update{releaseInfo.build.basedOn} · <time dateTime={releaseInfo.build.date}>{releaseInfo.build.date}</time></p>
+    <p>Based on update{releaseInfo.build.basedOn} · <time dateTime={releaseInfo.build.date}>{releaseInfo.build.date}</time></p>
     <ReleaseAvailability/>
     <section className="alpha-help-card" aria-labelledby="version-beta"><h2 id="version-beta">What beta means</h2><p>The beta includes listening, tuning and account tools. Access follows the current testing restrictions shown above. Some features may still be unfinished.</p><p>Found a problem? Include what happened, how to reproduce it, and your browser and device. GitHub reports are public; leave out personal data and private account information.</p><a href={bugReportUrl} target="_blank" rel="noopener noreferrer">Report a bug on GitHub ↗</a></section>
     <section className="alpha-help-card version-build-notes" aria-labelledby="build-notes">
       <h2 id="build-notes">Changes in this build</h2>
       <ul>{candidateChanges.map(change => <li key={change}>{change}</li>)}</ul>
-      {currentReleaseTag && <div className="alpha-version-links"><a href={releaseUrl(currentReleaseTag)}>View {currentReleaseTag} on GitHub</a></div>}
+      {latestReleaseTag && <div className="alpha-version-links"><a href={releaseUrl(latestReleaseTag)}>View {latestReleaseTag} on GitHub</a></div>}
     </section>
     <section className="alpha-help-card version-history" aria-labelledby="version-changes">
       <h2 id="version-changes">Release history</h2>

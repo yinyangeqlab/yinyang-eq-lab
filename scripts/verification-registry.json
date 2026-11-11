@@ -425,6 +425,19 @@
       "scope": "Existing display preferences regression assertions; synthetic/source scope in the script"
     },
     {
+      "id": "ear-practice",
+      "path": "scripts/check_ear_practice.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "audio-protocol",
+      "scope": "Actual ranked practice routes, migrated in-memory SQL, mixed difficulty audio, location accuracy, idempotency, consent, anonymous labels, legacy resume and paginated global ranks; synthetic data only."
+    },
+    {
       "id": "embed-shootout",
       "path": "scripts/check_embed_shootout.mjs",
       "runtime": "node",
@@ -1285,6 +1298,19 @@
       "requires": [],
       "owner": "application",
       "scope": "Existing share previews regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "share-preview-routes",
+      "path": "scripts/check_share_preview_routes.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Preview destinations, aliases, internal navigation links, dynamic shootout metadata and private URL handling."
     },
     {
       "id": "source-bitrate",

@@ -1,13 +1,19 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update132**, source `f33b8fb2906e3005a50f06e3fc436b1b145c2e79`.
+Recorded deployment: **update149**, source `f07966b0b6b07a2502ba3c4e4b7c331ab3d72744`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
-Update132 added generated EQ graphs and restored results, free listening, gentler EQ, listening-based tuning, and music search. The release candidate passed 120 selected public, Worker, engine and packaging checks. Physical audio output, iPhone playback and native select popups were outside that verification.
+Update149 makes 65 AutoEq curves selectable in Open Shootout, Personal custom pools, Preference Tuning, Peak & Dip Finder and Music Library EQ. Ten use existing target IDs. The other 55 load from the pinned upstream CSVs and enter eligible Blind Research comparisons. Rankings lists the new targets and scores them as eligible evidence accrues. Credits covers all 61 source files, including two rig conversion references. The oratory1990 in-ear target includes the “USOUND1v1 approximation” alias.
 
-The deployed source is recorded in [the verification receipt](releases/update132-verification.json). The matching application source is published as [GitHub release update132](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update132). [Publication verification](releases/update132-publication.json) The owner retains the complete deployment and recovery records. [Recovery verification](releases/update132-recovery-verification.json)
+The browser checks the file and curve hashes. The Worker checks the curve version when it accepts ranked evidence. Numerical curves stay at the original source and user exports stay on the listener’s device. [Target inventory and attribution](TARGET_INVENTORY.md)
+
+The deployment passed 122 regression suites. Isolated Chromium checks covered target selection and search, retry after a failed source request, keyboard controls and local downloads at 1220 and 360 px. Physical audio and native popup pixels were outside verification. [Deployment verification](releases/update149-verification.json)
+
+Hosted validation for the matching encrypted off-device source and build recovery baseline passed on November 11, 2026 at 12:20 UTC. Independent reconstruction verified 1,117 application inputs and 3,266 compiled build files. The existing data snapshots and their timestamps were preserved. [Recovery verification](releases/update149-recovery-verification.json)
+
+[Update149 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149) · [Source provenance](releases/update149-source.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

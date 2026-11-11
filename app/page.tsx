@@ -2,63 +2,88 @@
 
 import "./welcome.css";
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
+import { Eye, EyeOff, Pause, Play } from "lucide-react";
 import WelcomeLandscape from "@/components/welcome-landscape";
+import WelcomeWallpapers from "@/components/welcome-wallpapers";
 import { useInvitesEnabled } from "@/components/invite-mode";
-import AdminAccountLink from "@/components/admin-account-link";
-import { readDisplayPreferences, subscribeDisplayPreferences, writeDisplayPreferences } from "@/lib/display-preferences";
+import { readDisplayPreferences, subscribeDisplayPreferences, writeDisplayPreferences, type DisplayPreferences } from "@/lib/display-preferences";
 
-function WelcomeLinkEffect({ kind }: { kind: "shootout" | "listening" | "tuning" }) {
- return <span className={`alpha-welcome-effect alpha-welcome-${kind}`} aria-hidden="true"><svg viewBox="0 0 40 24" fill="none">{kind === "listening" ? <><path d="M1 12c5-14 8 14 13 0s8 14 13 0 8 8 12-1"/><path d="M1 19c5-7 8 7 13 0s8 7 13 0 8 4 12-1"/></> : kind === "tuning" ? <path d="M1 14c8 0 8 4 15 4s4-14 11-14 4 12 12 12"/> : <><rect x="15" y="2" width="10" height="20" rx="2"/><circle cx="20" cy="7" r="2"/><circle cx="20" cy="16" r="3"/><path d="M10 12c-3 2-3 6 0 8M30 12c3 2 3 6 0 8M6 9c-5 4-5 10 0 14M34 9c5 4 5 10 0 14"/></>}</svg></span>;
+function WelcomeComparison() {
+  return <figure id="sound-comparison" className="welcome-comparison" aria-describedby="welcome-comparison-description">
+    <figcaption>
+      <span>Same song.</span>{" "}
+      <span>Two sounds.</span>{" "}
+      <strong>Your choice.</strong>
+    </figcaption>
+    <span className="welcome-comparison-sound welcome-comparison-a">Sound A</span>
+    <span className="welcome-comparison-line welcome-comparison-line-a" aria-hidden="true"/>
+    <span className="welcome-comparison-line welcome-comparison-line-b" aria-hidden="true"/>
+    <span className="welcome-comparison-sound welcome-comparison-b">Sound B</span>
+    <p id="welcome-comparison-description" className="sr-only">Hear the same song with two different sound settings, then choose the one you prefer.</p>
+  </figure>;
 }
 
 export default function Welcome() {
   const invites = useInvitesEnabled();
   const [motion, setMotion] = useState(true);
+  const [showFlights, setShowFlights] = useState(true);
   const [inView, setInView] = useState(true);
   const [visible, setVisible] = useState(true);
   const hero = useRef<HTMLElement>(null);
-  const dataMenu = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const preference = () => setMotion(!reduced.matches && readDisplayPreferences().motion !== "reduced");
-    preference();
+    const preference = (value: DisplayPreferences) => {
+      setMotion(!reduced.matches && value.motion !== "reduced");
+      setShowFlights(value.welcomeFlights);
+    };
+    const systemMotionChange = () => preference(readDisplayPreferences());
+    systemMotionChange();
     const unsubscribe = subscribeDisplayPreferences(preference);
     const visibility = () => setVisible(!document.hidden);
-    const outside = (event: PointerEvent) => { if (dataMenu.current?.open && !dataMenu.current.contains(event.target as Node)) dataMenu.current.open = false; };
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape" && dataMenu.current?.open) { dataMenu.current.open = false; dataMenu.current.querySelector("summary")?.focus(); } };
     const observer = new IntersectionObserver(entries => setInView(entries[0]?.isIntersecting ?? false));
     if (hero.current) observer.observe(hero.current);
-    reduced.addEventListener("change", preference);
+    reduced.addEventListener("change", systemMotionChange);
     document.addEventListener("visibilitychange", visibility);
-    document.addEventListener("pointerdown", outside);
-    document.addEventListener("keydown", escape);
-    return () => { unsubscribe(); observer.disconnect(); reduced.removeEventListener("change", preference); document.removeEventListener("visibilitychange", visibility); document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
+    return () => { unsubscribe(); observer.disconnect(); reduced.removeEventListener("change", systemMotionChange); document.removeEventListener("visibilitychange", visibility); };
   }, []);
   return <main className="welcome-shell">
     <section ref={hero} className="welcome-hero" data-motion={motion && inView && visible} aria-labelledby="welcome-title">
-      <WelcomeLandscape running={motion && inView && visible}/>
+      <WelcomeLandscape running={motion && inView && visible} showFlights={showFlights}/>
       <div className="welcome-shade" aria-hidden="true" />
-      <header className="welcome-nav">
-        {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
-        <a className="welcome-brand" href="/home" aria-label="YinYang EQ home"><img src="/brand-avatar-aligned.webp" alt="" /><span>YinYang <em>EQ</em></span></a>
-        <nav aria-label="Welcome navigation">
-          <a className="welcome-tool-link" data-effect="shootout" href="/listen"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3M4 12H3v7h4v-7H4Zm16 0h1v7h-4v-7h3Z" /></svg><span className="welcome-tool-label">Listen</span><WelcomeLinkEffect kind="shootout" /></a>
-          <a className="welcome-tool-link" data-effect="listening" href="/music-library"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18V5l11-2v13M9 9l11-2" /><ellipse cx="6" cy="18" rx="3" ry="3" /><ellipse cx="17" cy="16" rx="3" ry="3" /></svg><span className="welcome-tool-label">Music library</span><WelcomeLinkEffect kind="listening" /></a>
-          <a className="welcome-tool-link" data-effect="tuning" href="/preference-tuning"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3v8m0 4v6M12 3v3m0 4v11M19 3v11m0 4v3M2 11h6M9 6h6m1 8h6" /></svg><span className="welcome-tool-label">Preference Tuning</span><WelcomeLinkEffect kind="tuning" /></a>
-          <a className="welcome-tool-link" href="/ear-tuning"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 13h4l3-6 4 12 4-14 3 8h2"/></svg><span className="welcome-tool-label">Tune by ear</span></a>
-        </nav>
-        <details ref={dataMenu} className="welcome-settings"><summary><svg className="welcome-menu-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg><span>Your data & settings</span></summary><div className="welcome-settings-panel"><a href="/account-sync"><strong>Your account &amp; Sync</strong><span>Saved data, devices and account access</span></a><a href="/sync"><strong>Browser Sync</strong><span>Use your saved data on another browser</span></a><a href="/my-data"><strong>My data &amp; sharing</strong><span>Manage participation and saved submissions</span></a><a href="/privacy"><strong>Privacy notice</strong><span>How your data is used</span></a></div></details>
-      </header>
       <div className="welcome-copy">
         <span className="welcome-kicker"><span aria-hidden="true" /> WELCOME TO YINYANG EQ</span>
         <h1 id="welcome-title">Find your sound.<br /><strong>Let your ears decide.</strong></h1>
         <p>Hear the same music with two sound settings. Choose the one you enjoy more. Find your personal favorites, and help explore what the community prefers.</p>
-        <div className="welcome-actions"><a className="welcome-primary" href="/shootout/personal">{invites ? "Enter with invitation" : "Find a sound I like"} <span aria-hidden="true">→</span></a><a className="welcome-secondary" href="/ear-tuning">Tune by ear <span aria-hidden="true">→</span></a><a className="welcome-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div>
-        <div className="welcome-sync-note"><p>Already using another browser?</p><a className="welcome-sync-button" href="/sync"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.36-6.36L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.36 6.36L3 16M8 16H3v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg><span>Sync this browser</span><span aria-hidden="true">↗</span></a></div>
+        <div className="welcome-actions"><a className="welcome-primary" href="/shootout/personal">{invites ? "Enter with invitation" : "Find a sound I like"} <span aria-hidden="true">→</span></a><a className="welcome-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div>
+        <div className="welcome-sync-note"><p>Already used this in another browser?</p><a className="welcome-sync-button" href="/sync"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.36-6.36L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.36 6.36L3 16M8 16H3v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg><span>Sync this browser</span><span aria-hidden="true">↗</span></a></div>
         <p className="welcome-access-note">{invites ? "Invited testers" : "Listeners"} must agree to comparison-data collection before using the listening tools. Sharing details from your own music is optional.</p>
       </div>
-      <div className="welcome-hero-foot"><span><i className="welcome-a" /> SOUND A</span><span className="welcome-foot-line" aria-hidden="true" /><span className="welcome-tagline">Two sounds. Your choice.</span><span className="welcome-foot-line" aria-hidden="true" /><span><i className="welcome-b" /> SOUND B</span><button type="button" className="welcome-motion-control" aria-pressed={motion} onClick={()=>{ const next = !motion; setMotion(next); writeDisplayPreferences({ motion: next ? "auto" : "reduced" }); }} title={motion ? "Pause the animated background" : "Resume the animated background"}>{motion ? <Pause size={13} aria-hidden="true"/> : <Play size={13} aria-hidden="true"/>}<span>{motion ? "Pause background" : "Resume background"}</span></button></div>
+      <div className="welcome-hero-foot">
+        <WelcomeComparison />
+        <div className="welcome-art-controls" role="group" aria-label="Background controls">
+          <button
+            type="button"
+            onClick={() => {
+              const next = !motion;
+              setMotion(next);
+              writeDisplayPreferences({ motion: next ? "auto" : "reduced" });
+            }}
+            title={motion ? "Pause the animated background" : "Resume the animated background"}
+          >
+            {motion ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
+            <span>{motion ? "Pause background" : "Resume background"}</span>
+          </button>
+          <button
+            type="button"
+            aria-describedby="welcome-flights-description"
+            onClick={() => writeDisplayPreferences({ welcomeFlights: !showFlights })}
+          >
+            {showFlights ? <EyeOff size={15} aria-hidden="true" /> : <Eye size={15} aria-hidden="true" />}
+            <span>{showFlights ? "Hide flying carpets" : "Show flying carpets"}</span>
+          </button>
+          <span id="welcome-flights-description" className="sr-only">Includes the headphones and IEMs riding on the carpets.</span>
+        </div>
+      </div>
     </section>
 
     <section className="welcome-how" id="how-it-works" aria-labelledby="welcome-how-title">
@@ -71,6 +96,6 @@ export default function Welcome() {
       <div className="welcome-last-call"><div><span className="welcome-eyebrow">{invites ? "INVITED LISTENERS" : "LISTENERS"}</span><h2>Try your first comparison</h2>{invites && <p>Have your invitation code handy.</p>}</div><a className="welcome-primary" href="/listen">Choose how to listen <span aria-hidden="true">→</span></a></div>
     </section>
 
-    <footer className="welcome-footer"><span>YinYang EQ · by Yin Yang EQ Lab</span><span>Built for curious ears. Eligible Blind Research votes shape the research rankings.</span><div className="welcome-footer-links"><a href="/listeners/yinyangeq">YinYangEQ’s published listening history</a><a href="/privacy">Privacy notice</a><a href="/my-data">My data</a><a href="/sync">Browser Sync</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab" target="_blank" rel="noopener noreferrer">Source code on GitHub</a><a href="https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new" target="_blank" rel="noopener noreferrer">Report a bug or contact us on GitHub</a><a href="mailto:yinyangeqlab@gmail.com">yinyangeqlab@gmail.com</a></div><AdminAccountLink placement="welcome"/></footer>
+    <WelcomeWallpapers />
   </main>;
 }

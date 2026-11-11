@@ -29,7 +29,8 @@ const signAt = async issued => {
 const actors=[{}, {'Cookie':'__Host-yinyangeq_tester='+'a'.repeat(43)}, {'Cookie':'__Host-yinyangeq_owner=forged'}, {'oai-authenticated-user-id':'owner','Authorization':'Bearer synthetic'}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)-13*3600)}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)+3600)}];
 const paths=['/','/home','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
 const enginePaths = ['autoeq-wasm.mjs','autoeq-wasm.wasm','LICENSE','COPYING','RUNTIME-NOTICES.txt','source.tar.gz'].map(name => '/vendor/peqdb-autoeq/' + name);
-paths.push(...enginePaths);
+const wallpaperPaths = ['/wallpapers/files.json', '/wallpapers/yinyang-eq-landscape-4k.mp4', '/wallpapers/yinyang-eq-flying-gear-1080p.jpg'];
+paths.push(...enginePaths, ...wallpaperPaths);
 let cases=0;
 for(const actor of actors)for(const path of paths)for(const method of ['GET','HEAD','POST','OPTIONS']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{method,headers:{...actor,'User-Agent':'Discordbot'}}),env,{});
@@ -48,9 +49,9 @@ for(const path of ['/','/shootout','/owner-research','/api/targets','/api/listen
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{headers:{Cookie:'__Host-yinyangeq_owner='+cookie}}),env,{});
  assert.equal(response.status,200,`Admin retains access to ${path}`);
 }
-for (const path of enginePaths) {
+for (const path of [...enginePaths, ...wallpaperPaths]) {
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{headers:{Cookie:'__Host-yinyangeq_owner='+cookie}}),env,{});
- assert.equal(response.status,200); assert.equal(await response.text(),'ASSET CONTENT', 'Admitted engine/license/source requests must reach the asset binding');
+ assert.equal(response.status,200); assert.equal(await response.text(),'ASSET CONTENT', 'Admitted downloads must reach the asset binding');
 }
 for (const path of ['/vendor/peqdb-autoeq/other.js','/vendor/peqdb-autoeq/COPYING/extra']) {
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{headers:{Cookie:'__Host-yinyangeq_owner='+cookie}}),env,{});

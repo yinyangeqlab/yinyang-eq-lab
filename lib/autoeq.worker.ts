@@ -1,5 +1,6 @@
-import { createEngine } from './peqdb-engine';
-import { correction, describeFit, legacyBatch, validateRequest, type AutoEqRequest } from './autoeq-fit';
+import { at, createEngine } from './peqdb-engine';
+import type { Point } from './curves';
+import { correction, describeFit, fitSmoothing, legacyBatch, validateRequest, type AutoEqRequest } from './autoeq-fit';
 let engine: ReturnType<typeof createEngine> | undefined;
 let unavailable = false;
 self.onmessage = async (event: MessageEvent<{ id: number; request: AutoEqRequest }>) => {
@@ -18,9 +19,12 @@ self.onmessage = async (event: MessageEvent<{ id: number; request: AutoEqRequest
       const loaded = await engine;
       results = request.targets.map(target => {
         const desired = correction(request.raw, target, request.kind);
-        // Fixed midrange/1 kHz reference preserves application normalization.
-        // No adaptive smoothing and no free overall gain parameter.
-        const fit = loaded.fit([[20, 0], [20000, 0]], desired, 'none', request.bands, 3000, request.sampleRate, false);
+        const smoothing = fitSmoothing(request);
+        // Smoothing acts on the measurement. Preserve the fixed reference computed from the original curves.
+        const raw: Point[] = smoothing === 'none' ? [[20, 0], [20000, 0]] : request.raw;
+        const alignedTarget: Point[] = smoothing === 'none' ? desired
+          : desired.map(([hz, db]) => [hz, db + at(request.raw, hz)]);
+        const fit = loaded.fit(raw, alignedTarget, smoothing, request.bands, 3000, request.sampleRate, false);
         return describeFit(request, target, fit.filters, 'peqdb');
       });
     } catch {

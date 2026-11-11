@@ -1,3 +1,4 @@
+import {searchRows} from '../lib/search.ts';
 import {MAIN_FITTER_COHORT} from "../lib/fitter-settings.ts";
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -11,13 +12,21 @@ import {renderToStaticMarkup} from 'react-dom/server';
 const page=readFileSync(new URL('../app/shootout/page.tsx',import.meta.url),'utf8');
 const pageAst=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 const rankingBranches=[];
-function findRanking(node){if(ts.isJsxExpression(node)&&node.expression&&ts.isBinaryExpression(node.expression)&&node.expression.left.getText(pageAst)==='tab === "rankings"'&&node.expression.right.getText(pageAst).includes('const view='))rankingBranches.push(node.expression.right.getText(pageAst));ts.forEachChild(node,findRanking);}
+function findRanking(node) {
+ const expression = ts.isJsxExpression(node) && node.expression;
+ if (expression && ts.isBinaryExpression(expression) &&
+     expression.left.getText(pageAst) === 'tab === "rankings" && rankingsView === "targets"' &&
+     expression.right.getText(pageAst).includes('const view=')) {
+  rankingBranches.push(expression.right.getText(pageAst));
+ }
+ ts.forEachChild(node, findRanking);
+}
 findRanking(pageAst);assert.equal(rankingBranches.length,1,'Find the actual ranking body rather than a navigation/eyebrow branch');
 const expression=rankingBranches[0];
-const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError=""}) { const refresh=()=>{},setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}; return (${expression}); }`;
+const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError="",rankQuery=""}) { const setRankQuery=()=>{}; const refresh=()=>{},setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}; return (${expression}); }`;
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
-const context=vm.createContext({MAIN_FITTER_COHORT,exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default,ArrowRight:createRequire(import.meta.url)("lucide-react").ArrowRight});
+const context=vm.createContext({MAIN_FITTER_COHORT,searchRows,targets:[],isCatalogAutoEqTarget:()=>true,exports:{},require:createRequire(import.meta.url),RankingChangeExplanation:componentContext.exports.default,ArrowRight:createRequire(import.meta.url)("lucide-react").ArrowRight});
 vm.runInContext(compiled,context);
 const modes=['all','random','bring','verified'];
 function rows(preferences,ties){

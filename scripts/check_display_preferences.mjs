@@ -18,12 +18,13 @@ globalThis.document = { documentElement: { dataset: {} } };
 
 const prefs = await import('../lib/display-preferences.ts');
 const KEY = 'yinyang-display-preferences';
+const defaults = { motion: 'auto', welcomeFlights: true, singleKeyShortcuts: true, shortcutScope: 'everywhere' };
 
-assert.deepEqual(prefs.readDisplayPreferences(), { motion: 'auto', singleKeyShortcuts: true, shortcutScope: 'everywhere' }, 'defaults keep motion and shortcuts on');
+assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'defaults keep motion, flying artwork and shortcuts on');
 store.set(KEY, '{not json');
-assert.deepEqual(prefs.readDisplayPreferences(), { motion: 'auto', singleKeyShortcuts: true, shortcutScope: 'everywhere' }, 'corrupt storage falls back to defaults');
+assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'corrupt storage falls back to defaults');
 store.set(KEY, JSON.stringify({ motion: 'sideways', singleKeyShortcuts: 'no' }));
-assert.deepEqual(prefs.readDisplayPreferences(), { motion: 'auto', singleKeyShortcuts: true, shortcutScope: 'everywhere' }, 'unknown values never disable features');
+assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'unknown values never disable features');
 store.set(KEY, JSON.stringify({ shortcutScope: 'player' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'player');store.set(KEY, JSON.stringify({ shortcutScope: 'off' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'off');store.set(KEY, JSON.stringify({ shortcutScope: 'bogus' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'everywhere');store.delete(KEY);
 store.delete(KEY);
 
@@ -31,9 +32,9 @@ let notified = 0;
 const stop = prefs.subscribeDisplayPreferences(() => notified++);
 prefs.writeDisplayPreferences({ motion: 'reduced' });
 assert.equal(document.documentElement.dataset.motion, 'reduced', 'pausing motion marks the root element');
-assert.deepEqual(JSON.parse(store.get(KEY)), { motion: 'reduced', singleKeyShortcuts: true, shortcutScope: 'everywhere' }, 'writes merge with existing choices');
+assert.deepEqual(JSON.parse(store.get(KEY)), { ...defaults, motion: 'reduced' }, 'writes merge with existing choices');
 prefs.writeDisplayPreferences({ singleKeyShortcuts: false });
-assert.deepEqual(prefs.readDisplayPreferences(), { motion: 'reduced', singleKeyShortcuts: false, shortcutScope: 'everywhere' }, 'second choice keeps the first');
+assert.deepEqual(prefs.readDisplayPreferences(), { ...defaults, motion: 'reduced', singleKeyShortcuts: false }, 'second choice keeps the first');
 prefs.writeDisplayPreferences({ motion: 'auto' });
 assert.equal('motion' in document.documentElement.dataset, false, 'resuming motion removes the root marker');
 assert.equal(notified, 3, 'each write notifies subscribers in this tab');
@@ -41,10 +42,20 @@ stop();
 prefs.writeDisplayPreferences({ motion: 'auto' });
 assert.equal(notified, 3, 'unsubscribed listeners are not called');
 
+prefs.writeDisplayPreferences({ welcomeFlights: false });
+assert.equal(prefs.readDisplayPreferences().welcomeFlights, false, 'the flying-artwork choice persists');
+assert.equal(prefs.readDisplayPreferences().motion, 'auto', 'hiding the flying artwork leaves landscape motion on');
+prefs.writeDisplayPreferences({ motion: 'reduced' });
+assert.equal(prefs.readDisplayPreferences().welcomeFlights, false, 'motion changes preserve the flying-artwork choice');
+
 storageBroken = true;
 assert.doesNotThrow(() => prefs.writeDisplayPreferences({ motion: 'reduced' }), 'unavailable storage never breaks the page');
 assert.equal(document.documentElement.dataset.motion, 'reduced', 'the current page still applies the choice without storage');
 storageBroken = false;
+
+const legacy = prefs.parseDisplayPreferences(JSON.stringify({ theme: 'light', motion: 'reduced', shortcutScope: 'player' }));
+assert.deepEqual(legacy, { ...defaults, motion: 'reduced', shortcutScope: 'player' }, 'saved light choices are ignored while motion and shortcuts are retained');
+assert.equal('siteTheme' in document.documentElement.dataset, false);
 
 // Display preferences are per-browser: they must not enter account Sync.
 const { ACCOUNT_SYNC_KEYS } = await import('../lib/account-sync.mjs');

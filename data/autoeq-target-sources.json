@@ -1,0 +1,721 @@
+{
+  "revision": "7ae0f56d53074872b028649617a22bbb4232feb7",
+  "sharedCatalog": "dbafc70908eba2dc099b3e4d64a52037dd243fb8c8db3d64b9243d1b68239a7d",
+  "entries": [
+    {
+      "file": "711 5128 delta.csv",
+      "sha256": "7450b906ede84e48e36d4e83926ca531bf0880e20788f09bd5deec764b87b688",
+      "credit": "Brüel & Kjær 5128 reference",
+      "kind": "conversion"
+    },
+    {
+      "file": "All Harman Targets.csv",
+      "sha256": "c3531c7fc431de4153789dcc60ba32ba05c790c4bda68a0b975d3bcdd0f1b7f8",
+      "credit": "Harman research team",
+      "kind": "table",
+      "columns": [
+        "Harman loudspeaker in-room flat 2013",
+        "Harman over-ear 2013",
+        "Harman over-ear 2015",
+        "Harman over-ear 2018",
+        "Harman in-ear 2016",
+        "Harman in-ear 2017-1",
+        "Harman in-ear 2017-2"
+      ],
+      "shared": [
+        {
+          "id": "251a99a3-37df-5791-8a60-1571d75e1d40",
+          "version": "1072898347d1ebc654659732c6de5db0da4a21652af1fb9c05295a3d4b5d21d5"
+        },
+        {
+          "id": "e3ed8764-da97-53dd-833f-d31508fc641f",
+          "version": "f54d2d9c7d3fa6ace0f323fa38cea575c2b102b2c968868d10ec53eb282d3428"
+        },
+        {
+          "id": "ee204553-a5ab-535e-8c8f-95fcb209c73f",
+          "version": "5bc9b00c4aa8652e7e166a429ebedb5439ac69d7124047d731234555c48238da"
+        },
+        {
+          "id": "c6120b5f-041e-5d28-853a-24ce36951a1e",
+          "version": "cd9f2218fee64bd74cab8d56d5b623c089d6c085fc1b6026399035014632c3f2"
+        },
+        {
+          "id": "e5b3930a-1a48-5ad8-8e4e-48f7bbb02897",
+          "version": "5b2f65f4a08ef986ccd913db73d7c090910184e5076c6ea0ff7029924b531056"
+        },
+        {
+          "id": "bb8fad6b-9017-55a7-827e-a0abe85cf611",
+          "version": "2f15fc432670dccb67063ca2eed635aa1dc305c6ee7a2b720a6cd1d1f59b4160"
+        },
+        {
+          "id": "25e0dc37-bdf5-548e-8e39-2d654d7cf083",
+          "version": "bddb3d4d6ee2cedae0ffa0bef29ab2f12f64919fd7a4c343b2f924d34a6cd9f9"
+        }
+      ]
+    },
+    {
+      "file": "AutoEq in-ear.csv",
+      "sha256": "92c72c6bfc3ce49e097495fc896031236b7b8239c7bc345a2355fb4b2849abf8",
+      "credit": "Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "builtInId": "5fdc6752-ffa8-4443-9082-a7f053b9f19d"
+    },
+    {
+      "file": "Diffuse field 5128 -1dB per octave.csv",
+      "sha256": "4d19b0c3e751ccbecdd959f3b4171af7681b7abc8889f62550e285480695000c",
+      "credit": "Brüel & Kjær 5128 reference",
+      "kind": "curve",
+      "builtInId": "f2ef19ff-9447-433f-b9af-8b6de5cd30c6"
+    },
+    {
+      "file": "Diffuse field 5128.csv",
+      "sha256": "f906951f4ef7229fee579ca0bb574eec4aeea93f69e1e224ca4f94461836d361",
+      "credit": "Brüel & Kjær 5128 reference",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "ea69ffbc-5864-54c9-878c-b9b709f78700",
+          "version": "63090d931b011df9698a20fbd3c1290936f6e837f262c5b85a529259a3e49eaf"
+        }
+      ]
+    },
+    {
+      "file": "Diffuse field GRAS KEMAR.csv",
+      "sha256": "96b0ea7df98adb2024b1261d131360a74825f75e53fb664644a381ffb55ce426",
+      "credit": "GRAS KEMAR reference",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "1fd5288e-cd06-5a45-8d91-6fa68ff311ed",
+          "version": "0b894b063fcf354fc95cbb5063402fd59fad4fb0f2d58ba5fea489777aba642d"
+        }
+      ]
+    },
+    {
+      "file": "Diffuse field ISO 11904-1.csv",
+      "sha256": "dbcde695c7c04dc67512dea78651f59e89d1b9a12fbb999466dd35aeb7815a53",
+      "credit": "ISO 11904-1 reference",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "6f5f5fb5-8b2a-5bb0-8713-5cad0b41e388",
+          "version": "7ff08948adda6ff1d4f38ebdf32006504e3b49b6bcbf0f2a9015adf809590d41"
+        }
+      ]
+    },
+    {
+      "file": "HMS II.3 AutoEq in-ear.csv",
+      "sha256": "f5f461f99a8b0c8cde85a0839449992208f113d55a544ae7ee8862ba3eafa2ab",
+      "credit": "HEAD acoustics HMS II.3 reference; Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "6e5e550e-f322-5624-8120-66ec68ea2b7e",
+          "version": "a0c7c5f791078684d2268a9738b31bdd0edafd82f44aebe3e7239605d1c250e8"
+        }
+      ]
+    },
+    {
+      "file": "HMS II.3 Harman in-ear 2019 without bass.csv",
+      "sha256": "94ee335b2ed5f862cdda802ef26d081f258a7e7ea70d61040e5311075b29385c",
+      "credit": "HEAD acoustics HMS II.3 reference; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "ddea4361-06ce-52b3-84af-a8da644b0dc9",
+          "version": "6a1eb89dc2918ca33bca481fc1eaa8193689364536f6229474e266a7e4ffbebf"
+        }
+      ]
+    },
+    {
+      "file": "HMS II.3 Harman over-ear 2018 without bass.csv",
+      "sha256": "f654d4c9d57ebcb016894240257fe0c3f33e07408cceeadccce2dd4901f18a88",
+      "credit": "HEAD acoustics HMS II.3 reference; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "ced3c49f-31b0-5340-8eab-f7d85495f77c",
+          "version": "5e194c0b276e5fd2035a6f55c28ad1032258f0c27660bee1eaa1646db874db77"
+        }
+      ]
+    },
+    {
+      "file": "Harman in-ear 2016 without bass.csv",
+      "sha256": "1b9ba20c93b1d6dd1a0f1df8747034e1cca221e00d28fd1eac4808e5cf3d9f87",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "fe266fce-58e3-59eb-820c-e81d2189927a",
+          "version": "4616821a241fecaf96b1dbe6c1541995a65d00596611a63dc5fe694e5c68a798"
+        }
+      ]
+    },
+    {
+      "file": "Harman in-ear 2016.csv",
+      "sha256": "03bc6b996b49b96e07c18bee408939aa7065341911b3c50a5e1f177023dba1ac",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "builtInId": "7963a10d-5f71-4e38-8edc-e47f649763e8"
+    },
+    {
+      "file": "Harman in-ear 2017-1 without bass.csv",
+      "sha256": "27f0b7289b3c5f0d5ae2b6af8cd24f64feb60a64272e97b70a77197f128f418e",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "56084afd-8b6a-55f0-8147-527d165fde97",
+          "version": "3eed8225d01c68c31f73f59ab7f33fa05ddcf6a9efc12cc9fe7ec77cbba0c0a6"
+        }
+      ]
+    },
+    {
+      "file": "Harman in-ear 2017-1.csv",
+      "sha256": "cfc7ae17b18f1f9477a8ee380e151a2392d834bdbd31873b82012b6daaf49456",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "builtInId": "e60f9be7-9603-4e4b-99ac-9d07149f12be"
+    },
+    {
+      "file": "Harman in-ear 2017-2 without bass.csv",
+      "sha256": "e13d5aa310268076e39c35da2c7e0e0657317f54be6d604ff04fd5414000b084",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "fa5692b9-93a6-5991-86b8-83413b4e0f0c",
+          "version": "24fc8cea8c1a4eac1b5f40e31e76c18b48fc5354bda0fa886ed0c80f9616ff66"
+        }
+      ]
+    },
+    {
+      "file": "Harman in-ear 2017-2.csv",
+      "sha256": "6692b4a0e789d5e4b054c0fb5013eb77b702289cfe531f9bf4d98e00ae6aceec",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "builtInId": "b6dcbb8c-4e88-4fd5-abd1-ee878178e7f6"
+    },
+    {
+      "file": "Harman in-ear 2019 without bass.csv",
+      "sha256": "35bae4244bed9d2ec84ccdb4ea62a86b1f7d5f3b64568469f136bb4d0d435cb8",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "7aa4d0d9-49f7-5c81-8019-584e93dd44be",
+          "version": "64454646e1a50c8f77df2b103c4c97366a38e4d073553f7ccbde11abf8ac79fc"
+        }
+      ]
+    },
+    {
+      "file": "Harman in-ear 2019.csv",
+      "sha256": "9f7acab72e1f7507889a13d4278390089d495ccedcfd3aa48df939a6c7491139",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "dbeb2471-7cee-5168-8458-f8e1adb7a1e4",
+          "version": "3cd1fd3df67fe29f09c037515583ad6fb6497a15b38a05e9758ad1aee7c1db69"
+        }
+      ]
+    },
+    {
+      "file": "Harman loudspeaker in-room flat 2013.csv",
+      "sha256": "171b5568adf8c43d9805b51fb7acc42ac4ad4e7bab4c4f00a009741bf301d118",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "3254d8ba-84c7-5e66-83ab-57592a46997f",
+          "version": "491fba6d0c0a3ce5df0432a315cd5b09a8344287ea92649f1325e6ad9a0fd255"
+        }
+      ]
+    },
+    {
+      "file": "Harman over-ear 2013 without bass.csv",
+      "sha256": "c0a5d9132e7196aac0c1d391d52e5766ee112e71747bcad58e8b8ddac6b12239",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "22f3c169-5723-507b-857d-22c4f3e80003",
+          "version": "b529dd5cb1a776e4276c834e2b782453877e8d545463b1fee8b54d3fd11d1917"
+        }
+      ]
+    },
+    {
+      "file": "Harman over-ear 2013.csv",
+      "sha256": "c20316a64760e6bc039007126c71be029d06a05dcfccae940cfb7b83101ec6f5",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "a73f5926-586c-5185-8f84-19099cffab22",
+          "version": "cdcf4b5840ce1834a04bef4e3735055614e85ff5ca098ea4c5804c94594e2d89"
+        }
+      ]
+    },
+    {
+      "file": "Harman over-ear 2015 without bass.csv",
+      "sha256": "90c508da5e57f51179b465df39df020ec3b725ec620de6cacc827cfc453360d4",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "55016227-3b25-5396-803b-b67ddc3eeda3",
+          "version": "c2024933dcdf8b966c727fc3ac5e7663c27caf9258c50eaf5547c9edb50410b0"
+        }
+      ]
+    },
+    {
+      "file": "Harman over-ear 2015.csv",
+      "sha256": "ac4e85fbc2b9b08d11782bbb59ce5e1af6bb55a0d9697ff91e7fe21bab79e3a1",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "builtInId": "9b097d26-d35b-41d1-82ac-28ac513c52ce"
+    },
+    {
+      "file": "Harman over-ear 2018 without bass.csv",
+      "sha256": "108d62ddb7e421db03f7b4a323ab9c6cbb931091aeaac3a7225218a57e00e1fd",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "c230dab1-4aa6-5e7b-8659-157a824849a6",
+          "version": "1323a38453becbdbd332486bad4dd90182434c1e0d8849e80c21de4a72016a89"
+        }
+      ]
+    },
+    {
+      "file": "Harman over-ear 2018.csv",
+      "sha256": "12797010a78a693adeaa3e91f961e88cca3d25abc7883d144369915fc7c18f7c",
+      "credit": "Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "9dda4cb0-6775-5575-87b1-4431a6959daf",
+          "version": "5c9f4e9822aa3b3b462dab884f66f61e099115bbc02a67b993e173ca5681edde"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy AutoEq in-ear.csv",
+      "sha256": "427321727065d5696a4629bd054bd7ff6baa599c8b512449c23e92a5acd15056",
+      "credit": "Headphone.com Legacy; Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "158b7b7e-1f62-5174-8eaf-f31311624437",
+          "version": "a9b06f24c9de8809dc57bc0f328494c8e8538c7b4c168cd28e1657a3fa112e1e"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy Harman in-ear 2019 without bass.csv",
+      "sha256": "9775b23d5578aa320f2bf1f313027d5ee8f73b2e736ad14785f821865ec5cbc7",
+      "credit": "Headphone.com Legacy; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "ff628b0e-3794-56d2-8697-872b33c52e71",
+          "version": "79c490c74948a3c83e866263b29822e663e3c9e8e5a2e4c5afb01abf1c316cf1"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy Harman in-ear 2019.csv",
+      "sha256": "54bce988e898bc18a17e6cbd4b03452f6a7b7c2728772f361f00faeafdc46e00",
+      "credit": "Headphone.com Legacy; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "f485df79-126b-5afb-8e04-b01af65c659e",
+          "version": "fa5d7bd017db1738bee5a5fb4c7eb7ce8ababc379fc918b0824907e03e22c06a"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy Harman over-ear 2018 without bass.csv",
+      "sha256": "839076f4c4f43cc15f7f47474e6f843bca17dfd838ec3fdea045d8f709b1c3c6",
+      "credit": "Headphone.com Legacy; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "f337f2ac-7118-5365-8ba3-368aef529ca1",
+          "version": "c881a51da226ee197dcc8b57332e9cfa50da8106160821fb9cc253d5fb2935cc"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy Harman over-ear 2018.csv",
+      "sha256": "c8bfcc0e7949375e347680f46dff3cba3effc627de3bb7f177186fd4ef08d457",
+      "credit": "Headphone.com Legacy; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "e0c338f9-8b20-5635-8118-c1903a4c75e5",
+          "version": "5a00e1f6ce452c73b06647806fd6de72e73837ef19f0d2914ae367e1c3cb2672"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy SBAF-Serious.csv",
+      "sha256": "3a98482605b3be0a5fa5cc629fab4f7f9f8021d03e801454b52e12a950aa5b21",
+      "credit": "Headphone.com Legacy; Super Best Audio Friends (SBAF)",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "260968d8-c940-5cff-8a85-c3c4c2a04406",
+          "version": "18a6710e471b031d9253e8dfd665122bea0467d7e88b1ebb8603d728bc48415b"
+        }
+      ]
+    },
+    {
+      "file": "Headphone.com Legacy original.csv",
+      "sha256": "7682a8e5feef2835cc6b38ad9607831e466ce878df44f76f918c504192c1691b",
+      "credit": "Headphone.com Legacy",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "61cf000f-1eb4-5ab5-8f57-36431d664b23",
+          "version": "757fec92e3ed2da1f4c06698e276f930117b08fd67add422c1b4cf13dd127111"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity 2016.csv",
+      "sha256": "55a660663f2f158cd84409e90ec58d4e27594fc6f5148afb1df90918713bce31",
+      "credit": "InnerFidelity",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "c62004cc-eb51-5397-8c9b-c8c14bd99477",
+          "version": "80c75dad03e67347f01bbba60c5e8c975db6dc22c0cc19ff137d9cb919f004ef"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity 2017.csv",
+      "sha256": "bf1e5bb3586f4b4f47feb2e2b400c68d69978c9c8ffed2b1b7d12e570cbc806f",
+      "credit": "InnerFidelity",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "be8765b8-11a5-5034-8701-86145d8facb5",
+          "version": "1c9828aa3817986da0780f154c2592468f7d0a9fe411ad6b19e0b3d638140c77"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity AutoEq in-ear.csv",
+      "sha256": "a9002cc8db762758dec9da224bed5de5dfe501ed869be8b75735b16029b504a4",
+      "credit": "InnerFidelity; Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "c12b0ad5-7c36-5a2e-80c6-6ef8fc6007ab",
+          "version": "c471b36bd74310fce8846388c2bd0893834f14ff934c9b87087d691b35f679b2"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity Harman in-ear 2019 without bass.csv",
+      "sha256": "688421920d0f138370486dbfeefac622bd1ce7dbe065d2bd5900bbd3178abdff",
+      "credit": "InnerFidelity; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "2f2a350a-8d2a-5c74-8779-5adabe4b59fb",
+          "version": "209651892911a7b60e261ff9f282f88ac50028ab8992f27aeab38349267e3119"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity Harman in-ear 2019.csv",
+      "sha256": "6da97d48c51c671a86e53e182d19c107b789a8d3046d5efa57b60cbd908a56bf",
+      "credit": "InnerFidelity; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "dcc7f045-ebef-5fb6-842a-dba187ae8862",
+          "version": "a86942783d7a643236d63b642cb102e0c5ae7eb854d53b1ad7f213aecfb1029f"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity Harman over-ear 2018 without bass.csv",
+      "sha256": "dadd92a2db0eafbb2e5dcdd57e41c8da782677653bb48f1fb4fa98072463f257",
+      "credit": "InnerFidelity; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "e5179b11-24cd-5344-8dfa-0c3939079b29",
+          "version": "75abbca2577770604cc4510415743dbd99935ab4bd4a3029df14c9a11735b529"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity Harman over-ear 2018.csv",
+      "sha256": "daf1963dba57ec276faaca2df85264fa532da5783a33ed5082ed7804932f06da",
+      "credit": "InnerFidelity; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "01c5a060-b267-5910-8a54-31c436c8a201",
+          "version": "f6f2685763cc15a9b77a999b8ef07f058f7398464a7485158c075aad638cd193"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity SBAF Serious.csv",
+      "sha256": "ea99490141b3bf231c2f29d767c42f91aca9bcd439097c9b848ee1dfed8b423b",
+      "credit": "InnerFidelity; Super Best Audio Friends (SBAF)",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "8eaeee3c-fbe9-543a-8792-d420a572cb8b",
+          "version": "bd6283ce70cf51883c6bc6df3ea0c8ea88a01980671440930c533f3f573fb62d"
+        }
+      ]
+    },
+    {
+      "file": "Innerfidelity transformation 2016 to 2017.csv",
+      "sha256": "85a7fd49302124bb4bf555e0fdd9e520726dc9cbd11c14a813090b5c1b68c3d1",
+      "credit": "InnerFidelity",
+      "kind": "conversion"
+    },
+    {
+      "file": "JM-1 with Harman filters.csv",
+      "sha256": "9120be5921ca9730a257fdfd02ba53f27523831a56169627746c0e6c0671e93f",
+      "credit": "JM-1 (Listener, Mad_Economist and SupOrSalad); Harman filters",
+      "kind": "curve",
+      "builtInId": "c713b0d2-c63d-4a9b-bffd-83e7a8381d0e"
+    },
+    {
+      "file": "JM-1 with Harman treble filter.csv",
+      "sha256": "53bbc9769511020afb7950125c9468b4ff57f9cef60faef9b87d3aa3693de419",
+      "credit": "JM-1 (Listener, Mad_Economist and SupOrSalad); Harman filters",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "1a9af3dd-760b-59f3-8bda-3ed92b5ff1c0",
+          "version": "2921d25365a6a2dc678e386cd18d2c9731aec2f2864eb30322645108507338bc"
+        }
+      ]
+    },
+    {
+      "file": "LMG 5128 0.6 without bass.csv",
+      "sha256": "ba54eefbed17df3dafd52c6e176ddf7fcb0d77283bcfe5341c3a9ad76d728e85",
+      "credit": "Linus Media Group (LMG)",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "2788fe49-b989-5ed7-8832-defae982af5e",
+          "version": "61a50711e800fe265b472a8eb0a5f2b253d9c9c24f3595cbef678543d3baba58"
+        }
+      ]
+    },
+    {
+      "file": "LMG 5128 0.6.csv",
+      "sha256": "d4207b122b56826250689da48f948f830c2d92f2b451a46df185b5fce12b786d",
+      "credit": "Linus Media Group (LMG)",
+      "kind": "curve",
+      "builtInId": "d4c834bf-d814-4b7e-897a-a2875a5cc97e"
+    },
+    {
+      "file": "Rtings AutoEq in-ear.csv",
+      "sha256": "4a180b0723b037a3a8fba45e1e3b44ee6181fbe934f49f08c56ed08ab8d1a4cf",
+      "credit": "RTINGS.com; Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "name": "RTINGS AutoEq in-ear",
+      "shared": [
+        {
+          "id": "d9a85bc8-05c3-52ed-8c83-b47b0dd41839",
+          "version": "9cad3cbb8d4c0fe6d1d9b04a18122887b855e9859ca4cc750ad5b9e95b778e99"
+        }
+      ]
+    },
+    {
+      "file": "Rtings Harman in-ear 2019 without bass.csv",
+      "sha256": "3a0ba695e77b9d5ec2e761ab0714ce381166c786e9040d4b9152f91495195966",
+      "credit": "RTINGS.com; Harman research team",
+      "kind": "curve",
+      "name": "RTINGS Harman in-ear 2019 without bass",
+      "shared": [
+        {
+          "id": "2aff9f94-f78d-5d3d-880d-1a2a68d1804a",
+          "version": "abf34e622e721c288d2495ef3419a09ed47acc91c9434d66acd0235c286898e2"
+        }
+      ]
+    },
+    {
+      "file": "Rtings Harman in-ear 2019.csv",
+      "sha256": "eaf2134316444763b2c864214267f773dc771154f225945443988f2870d6f089",
+      "credit": "RTINGS.com; Harman research team",
+      "kind": "curve",
+      "name": "RTINGS Harman in-ear 2019",
+      "shared": [
+        {
+          "id": "77d5fa6b-fdf8-5c47-88c7-ecf26dfcbd30",
+          "version": "29a562f26f54c60a3d57e4a71c6f5663f0c29b1f5455c8611614f258eb61f20c"
+        }
+      ]
+    },
+    {
+      "file": "Rtings Harman over-ear 2018 without bass.csv",
+      "sha256": "baaadf8e1236c47bd405bd4432df709ae7bd6f4d4bb0039f623d654581d45706",
+      "credit": "RTINGS.com; Harman research team",
+      "kind": "curve",
+      "name": "RTINGS Harman over-ear 2018 without bass",
+      "shared": [
+        {
+          "id": "af5fffb2-0f3d-50e4-8b43-0d000f0f8c5c",
+          "version": "e9cb82a9e73bf4be200ab00ea0314572be95550cd26cb198ffb613ad9c5d1152"
+        }
+      ]
+    },
+    {
+      "file": "Rtings Harman over-ear 2018.csv",
+      "sha256": "b0e22d6a1157f4fab3c7a50f307a41d5d5a340b0e0ffe968bd43b2519c2febc8",
+      "credit": "RTINGS.com; Harman research team",
+      "kind": "curve",
+      "name": "RTINGS Harman over-ear 2018",
+      "shared": [
+        {
+          "id": "2c6f488c-2585-5d5a-87b2-fe26c970568c",
+          "version": "f4c9fce8ee5290501b3ea906d0b0bfb4b8ca699ecd28fd578dfc39f0881e8ff5"
+        }
+      ]
+    },
+    {
+      "file": "Rtings SBAF-Serious.csv",
+      "sha256": "64c8893543c137494f8286f6b06bb871bab83b00cf70b4958c770102a911f976",
+      "credit": "RTINGS.com; Super Best Audio Friends (SBAF)",
+      "kind": "curve",
+      "name": "RTINGS SBAF-Serious",
+      "shared": [
+        {
+          "id": "2990c7e4-6b87-5bca-8504-87e664a41223",
+          "version": "6f16b06df7898b6ddc3d7db4328c82f055655fab32093cd65bd362954b4beb20"
+        }
+      ]
+    },
+    {
+      "file": "Rtings in-ear origianl with bass.csv",
+      "sha256": "f75d340dfa3df57d599df70872bb8b086c9d25f63ca70790b21e862c6f5f8f00",
+      "credit": "RTINGS.com",
+      "kind": "curve",
+      "name": "RTINGS in-ear original with bass",
+      "shared": [
+        {
+          "id": "d13d1325-43b7-5268-803c-2582cc0d9cf6",
+          "version": "3f0741ed6a934252ea6f86ca76932a56c3afb1d39ad7e009c54cc518820686bc"
+        }
+      ]
+    },
+    {
+      "file": "Rtings orginal average.csv",
+      "sha256": "82827c07f0bdee64f2b6acbbc477911a5724245bbd63bc9435584721162002ca",
+      "credit": "RTINGS.com",
+      "kind": "curve",
+      "name": "RTINGS original average",
+      "shared": [
+        {
+          "id": "309f0d6b-d8e4-5ab6-8317-ab13c3a2ba72",
+          "version": "bc6c77181198800fb702327c9dfa607c9de85c304ca9a728120818f1703bf544"
+        }
+      ]
+    },
+    {
+      "file": "Rtings original with bass.csv",
+      "sha256": "756508265f3a3e5578d0f14b2d290eb329db6cd40c3c3f5c37c31bbe9e34799a",
+      "credit": "RTINGS.com",
+      "kind": "curve",
+      "name": "RTINGS original with bass",
+      "shared": [
+        {
+          "id": "55ffddd2-a79d-50e0-8c14-cad09d546c6b",
+          "version": "e251695a83b50d97a97d1a1bd2e877a925e67617057bae6ad157084d7f4df148"
+        }
+      ]
+    },
+    {
+      "file": "Rtings original.csv",
+      "sha256": "c346fb3c74067ffe1539c731833874e566a6a8e79b9e782becd7d939703871c4",
+      "credit": "RTINGS.com",
+      "kind": "curve",
+      "name": "RTINGS original",
+      "shared": [
+        {
+          "id": "1f45a4ef-5511-57e3-893a-2e02a3874089",
+          "version": "01533c70664155749af5c8a18d6cfa30620543f366350ee8325e424ebe68c2c2"
+        }
+      ]
+    },
+    {
+      "file": "crinacle EARS + 711 Harman over-ear 2018 without bass.csv",
+      "sha256": "d4f918fb6991127ae82a62fe48708bc5789035705cafdd4a037a315b7e77aba2",
+      "credit": "crinacle; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "bce0580c-e836-5e10-893e-ea28c59c0619",
+          "version": "142f84b01b7edc3733793c1409c98b8865d7ea839f85f063e74a785dda1db330"
+        }
+      ]
+    },
+    {
+      "file": "crinacle EARS + 711 Harman over-ear 2018.csv",
+      "sha256": "0ec162893001e2c4d554dbf1992d78ad3258b4e0cf95aac8498b48a465ce59fb",
+      "credit": "crinacle; Harman research team",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "c65fd101-bff9-5ef1-8217-622bd0f82744",
+          "version": "295b3f39517ee5b0bd9df8642358238f2bf5d7d6087a81db7f43ec1a1ea3c271"
+        }
+      ]
+    },
+    {
+      "file": "oratory1990 in-ear without bass.csv",
+      "sha256": "0b4a0acc4808f0445df2d59b4ae0a64e4d4fa642a20bb755b99d050fb968b53c",
+      "credit": "oratory1990",
+      "kind": "curve",
+      "shared": [
+        {
+          "id": "76f2882d-1a13-5af9-8b51-2545cfc0281e",
+          "version": "6874e60a08eb03f8d7dad15069819d42a6ed8ba31a3695a3d0980632066d7d25"
+        }
+      ]
+    },
+    {
+      "file": "oratory1990 in-ear.csv",
+      "sha256": "b4ca2dd60a33b09527fec2c234bf0487045ebc2f07a22a369cda5ab21813169d",
+      "credit": "oratory1990 / USound",
+      "kind": "curve",
+      "name": "oratory1990 in-ear (aka USOUND1v1 approximation)",
+      "builtInId": "f424c849-5e3a-4184-9503-bb0461af6409"
+    },
+    {
+      "file": "oratory1990 optimum hifi over-ear.csv",
+      "sha256": "d0d2cd58582a2362b73d2eac20f21daf69e97da2e665e1ddf98a55f4499a2e31",
+      "credit": "oratory1990",
+      "kind": "curve",
+      "builtInId": "74dbf5da-7df1-4cc1-b1b3-4ebc69beccd6"
+    },
+    {
+      "file": "zero.csv",
+      "sha256": "37fe99a23272c049d416572b0c3854c9170c4767b74265921d167fba931f0b68",
+      "credit": "Jaakko Pasanen / AutoEq",
+      "kind": "curve",
+      "name": "Flat (0 dB reference)",
+      "shared": [
+        {
+          "id": "c9e797e9-2205-54ab-8d9d-c0f3e0be051c",
+          "version": "403f70e6b2d115fa17d7e0789165321bf645b511b072bb3e2f06605546f98f2a"
+        }
+      ]
+    }
+  ]
+}

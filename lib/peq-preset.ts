@@ -1,6 +1,13 @@
 export type PresetFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q: number };
 export type ChannelMatchPreset = { channels: [{ preampDb: number; filters: PresetFilter[] }, { preampDb: number; filters: PresetFilter[] }] };
 
+export function peakingHalfGainEdges(hz: number, q: number, sampleRate = 48000): [number, number] {
+  const center = Math.tan(Math.PI * hz / sampleRate);
+  const ratio = (Math.hypot(2, 1 / q) + 1 / q) / 2;
+  const toHz = (value: number) => Math.atan(value) * sampleRate / Math.PI;
+  return [toHz(center / ratio), toHz(center * ratio)];
+}
+
 export function parseChannelMatchPreset(text: string): ChannelMatchPreset {
   if (text.length > 200_000) throw new Error("Preset file exceeds 200 KB.");
   if (!/^\s*(?:CH:\s*[01]\s*$)/im.test(text)) {
@@ -66,4 +73,27 @@ export function presetFilterResponse(hz: number, filter: PresetFilter, sampleRat
 export function presetResponse(hz: number, preset: ChannelMatchPreset, channel: 0 | 1, sampleRate: number) {
   const row = preset.channels[channel];
   return row.preampDb + row.filters.reduce((sum, filter) => sum + presetFilterResponse(hz, filter, sampleRate), 0);
+}
+
+/** Visible span where one tuning filter changes the response by at least minimumDb. */
+export function tuningFilterEffectRange(filter: PresetFilter, fromHz: number, toHz: number, minimumDb: number, sampleRate: number): [number, number] | null {
+  const upperHz = Math.min(toHz, sampleRate / 2);
+  if (fromHz >= upperHz || Math.abs(filter.gain) < minimumDb) return null;
+  const changesResponse = (hz: number) => Math.abs(presetFilterResponse(hz, filter, sampleRate)) >= minimumDb;
+  // Tuning shelves cap Q at the smooth, monotonic shelf limit.
+  const strongestHz = filter.type === "LSC" ? fromHz : filter.type === "HSC" ? upperHz
+    : Math.max(fromHz, Math.min(upperHz, filter.hz, sampleRate * .49));
+  if (!changesResponse(strongestHz)) return null;
+  function edge(boundaryHz: number) {
+    if (changesResponse(boundaryHz)) return boundaryHz;
+    let outside = boundaryHz;
+    let inside = strongestHz;
+    for (let step = 0; step < 24; step++) {
+      const midpoint = Math.sqrt(outside * inside);
+      if (changesResponse(midpoint)) inside = midpoint;
+      else outside = midpoint;
+    }
+    return inside;
+  }
+  return [edge(fromHz), edge(upperHz)];
 }

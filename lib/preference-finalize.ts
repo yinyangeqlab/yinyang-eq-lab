@@ -1,8 +1,8 @@
 import type { Point } from "@/lib/curves";
-import type { FitBands } from "./fitter-settings";
+import { isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
 import { autoEqReferenceOffset, response, type PeqFilter } from "@/lib/autoeq";
 
-export type FitMethod = "standard" | "precise" | "peqdb";
+export type FitMethod = FitterMethod;
 export type FitPriority = "smooth" | "close";
 export type FinalizedVariant = {
   engine?: "peqdb" | "legacy";
@@ -127,7 +127,7 @@ export function peakBoost(filters: PeqFilter[]) {
 }
 
 export function finalizeVariant(raw: Point[], desired: Point[], bands: FitBands, method: FitMethod, priority: FitPriority, reference: "1khz" | "shootout" = "1khz"): FinalizedVariant {
-  if (method === "peqdb") throw Error("Use the asynchronous PEQdB export service.");
+  if (isPeqdbMethod(method)) throw Error("Use the asynchronous PEQdB export service.");
   if (raw.length < 2 || desired.length < 2) throw new Error("Choose a headphone measurement and a target curve first.");
   const rawAt1k = at(raw, 1000), desiredAt1k = at(desired, 1000);
   const offset = reference === "shootout" ? autoEqReferenceOffset(raw, desired) : desiredAt1k - rawAt1k;

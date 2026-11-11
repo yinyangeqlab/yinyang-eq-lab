@@ -16,7 +16,7 @@ const points=Array.from({length:20},(_,i)=>[20*1000**(i/19),i/10]);
 const target=(id,type='ie')=>({id,name:`Reference ${id}`,points,status:'approved',measurement:{type}});
 function harness(extra={}){
  const stored=new Map(),calls=[];
- const state={sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
+ const state={sourceCurves:{ready:true},autoEqCatalogId:"synthetic-catalog",sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
  name:'Warm reference',creator:'QA',description:'Synthetic',targetCategory:'ie',referenceSystem:'Unknown',submissionKind:'target',targetMeasurementId:'',measurements:[],csv:points.map(p=>p.join(',')).join('\n'),fileName:'curve.csv',curveKind:'original',parentTargetId:'',
  selectedMeasurement:{id:'measurement',name:'QA',type:'ie',points},headphoneType:'ie',rankType:'ie',targets:[target('a')],localTargets:[],testMode:'blind',sessionExpired:false,sessionFinished:false,sessionTrials:[],sessionId:'old',pair:['old-a','old-b'],trialId:'old-trial',revealed:true,busy:false,submissionsEnabled:true,voteDataAccepted:true,
  feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},nextComparisonFocusPending:{current:false},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},router:{replace(){}},
@@ -26,7 +26,7 @@ function harness(extra={}){
  requireMeasurement:()=>!!state.selectedMeasurement,touchBlind(){},requestSoundCheck:action=>action(),browserVoterId:()=> 'voter',VOTE_DATA_NOTICE_VERSION:'qa',refresh:async()=>{},trials:[],
  fetch:async(url,options)=>{calls.push({url,body:JSON.parse(options.body)});return {ok:true,json:async()=>({ok:true})};},
  ...extra};
- Object.defineProperties(state,{allTargets:{get:()=>[...state.targets,...state.localTargets]},testPool:{get:()=>[...state.targets,...(state.testMode==='open'?state.localTargets:[])]}});
+ Object.defineProperties(state,{playbackTargets:{get:()=>state.allTargets},allTargets:{get:()=>[...state.targets,...state.localTargets]},testPool:{get:()=>[...state.targets,...(state.testMode==='open'?state.localTargets:[])]}});
  for(const key of ['targetEditorOpen','removalRequests','targetVisibility','message','name','description','curveKind','parentTargetId','csv','fileName','localTargets','pair','trialId','pickA','pickB','testMode','previewMode','heard','revealed','selectedChoice','tab','setupCollapsed','sessionFinished','sessionExpired','sessionId','lastActivity','feedbackNonce','describeOpen','trials','busy','reviewVoteData','headphoneType','rankType','lastResearchSource','commonHeard'])state['set'+key[0].toUpperCase()+key.slice(1)]=v=>{state[key]=typeof v==='function'?v(state[key]):v;};
  state.URL=URL;state.window={location:{href:"http://local.test/shootout"},history:{replaceState(){}},requestAnimationFrame:fn=>fn()};state.document={querySelector:()=>null};
  const context=vm.createContext(state);vm.runInContext(code,context);

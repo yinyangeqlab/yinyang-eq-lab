@@ -1,5 +1,9 @@
 "use client";
 
+import AutoEqCurveStatus from "@/components/autoeq-curve-status";
+import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
+import { autoEqPickerTargets, isSourceAutoEqTarget } from "@/lib/autoeq-target-sources";
+import { useAutoEqLocalTargets } from "@/lib/use-autoeq-local-targets";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Point } from "@/lib/curves";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
@@ -33,8 +37,12 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
   const fitRequest = useRef<AbortController | null>(null);
   const savedSelection = presets.find(row => row.id === selectedId);
   const headphone = measurements.find(row => row.id === (soundMode === "saved" ? savedSelection?.measurementId : measurementId));
-  const target = targets.find(row => row.id === targetId);
-  const fitKey = useMemo(() => JSON.stringify([measurementId, targetId, headphone?.points, target?.points, fitter]), [measurementId, targetId, headphone?.points, target?.points, fitter]);
+  const autoEqTargets = useAutoEqLocalTargets();
+  const availableTargets = [...targets, ...autoEqPickerTargets, ...autoEqTargets];
+  const selectedTarget = availableTargets.find(row => row.id === targetId);
+  const sourceCurves = useAutoEqSourceCurves(soundMode === "target" ? [targetId] : []);
+  const target = selectedTarget && sourceCurves.resolve(selectedTarget);
+  const fitKey = useMemo(() => JSON.stringify([measurementId, targetId, headphone?.points, headphone?.type, target?.points, fitter]), [measurementId, targetId, headphone?.points, headphone?.type, target?.points, fitter]);
   useEffect(() => () => { fitRequest.current?.abort(); }, [fitKey, soundMode]);
 
   useEffect(() => {
@@ -85,13 +93,13 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     finally { setBusy(false); }
   }
   async function generate() {
-    if (!headphone?.points?.length || !target?.points?.length) { setMessage("Choose a headphone measurement and target first."); return; }
+    if (!sourceCurves.ready || !headphone?.points?.length || !target?.points?.length) { setMessage("Choose a headphone measurement and target first."); return; }
     fitRequest.current?.abort(); const request = new AbortController(); fitRequest.current = request;
     setBusy(true); setMessage("Preparing headphone EQ…");
     try {
-      const [result] = await fitAutoEqAsync({raw:headphone.points,targets:[target.points],kind:"export",...fitter,sampleRate:48000},request.signal);
+      const [result] = await fitAutoEqAsync({raw:headphone.points,targets:[target.points],kind:"export",...fitter,headphoneType:headphone.type,sampleRate:48000},request.signal);
       if (request.signal.aborted || fitRequest.current !== request) return;
-      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, engine: result.engine, engineVersion: result.engineVersion, fitter, source: `${fitterLabel(fitter)}${result.fallbackReason ? " · fallback" : ""}`, filters: result.filters, preamp: result.preamp, measurementId: headphone.id, headphone: headphone.device || headphone.name, channelMatch: measurementChannelMatch(headphone), target: { id: target.id, name: target.name, points: target.points } };
+      const eq: LibraryEq = { id: crypto.randomUUID(), name: `${headphone.device || headphone.name} → ${target.name}`, engine: result.engine, engineVersion: result.engineVersion, fitter, source: `${fitterLabel(fitter)}${result.fallbackReason ? " · fallback" : ""}`, filters: result.filters, preamp: result.preamp, measurementId: headphone.id, headphone: headphone.device || headphone.name, channelMatch: measurementChannelMatch(headphone), target: isSourceAutoEqTarget(target.id) ? undefined : { id: target.id, name: target.name, points: target.points } };
       saveLibraryEq(eq); setSelectedId(eq.id); setGenerated({ key: fitKey, eq }); setEnabled(true);
       setMessage(`${result.fallbackReason ? "Original fitter used. " : ""}EQ ready · ${result.rms.toFixed(2)} dB fit error · ${readLibraryEqs()[0]?.preamp.toFixed(1)} dB starting volume adjustment.`);
     } catch (error) { if (request.signal.aborted) return; setMessage(error instanceof Error ? error.message : "EQ fitting failed."); }
@@ -105,7 +113,7 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
   }}
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Full navigation runs access checks and unsaved-listening guards.
     headphones={<div className="shootout-content"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); setMeasurementId(""); }} onSelect={chooseHeadphone} onClear={() => setMeasurementId("")} onImport={importHeadphone} onUpload={() => { window.location.href = "/shootout?tab=measurements"; }} onEdit={() => { window.location.href = "/shootout?tab=measurements"; }} onDelete={id => { const rows = measurements.filter(row => row.id !== id); try { localStorage.setItem("target-lab-measurements", JSON.stringify(rows)); setMeasurements(rows); if (measurementId === id) setMeasurementId(""); } catch { setMessage("Could not remove this measurement."); } }}/></div>}
-    target={<><label htmlFor="library-target">Target curve<select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}><option value="">Choose a target</option>{targets.map(row => <option key={row.id} value={row.id}>{row.name} · {row.creator}</option>)}</select></label><FitterControls value={fitter} defaultValue={defaultFitter} onChange={setFitter} onDefault={saveDefault} notice={fitterNotice}/><button type="button" className="library-eq-generate" disabled={busy || !measurementId || !targetId} onClick={() => void generate()}>{busy ? "Preparing EQ…" : "Create EQ"}</button><p>{selected ? "Target EQ ready for the selected headphones." : "Choose headphones and a target, then create their EQ."}</p></>}
+    target={<><label htmlFor="library-target">Target curve<select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}><option value="">Choose a target</option>{availableTargets.map(row => <option key={row.id} value={row.id}>{row.name} · {row.creator}</option>)}</select></label><AutoEqCurveStatus {...sourceCurves}/><FitterControls value={fitter} defaultValue={defaultFitter} onChange={setFitter} onDefault={saveDefault} notice={fitterNotice}/><button type="button" className="library-eq-generate" disabled={busy || !measurementId || !targetId || !sourceCurves.ready} onClick={() => void generate()}>{busy ? "Preparing EQ…" : "Create EQ"}</button><p>{selected ? "Target EQ ready for the selected headphones." : "Choose headphones and a target, then create their EQ."}</p></>}
     savedExtra={<details className="sound-import-eq"><summary>Import an EQ file</summary><label>EQ settings TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/></label></details>}>
       {soundMode === "saved" && selected && !headphone && <p>{selected.measurementId ? "The linked measurement is unavailable here. The saved filters and channel correction still work." : "This EQ has no linked headphone measurement. It plays the saved filters directly."}</p>}
       <div className="sound-playback-options"><label><input type="checkbox" aria-label="Enable EQ" checked={enabled && !!selected} disabled={!selected} onChange={event => setEnabled(event.target.checked)}/>EQ {enabled && selected ? "on" : "off"}</label><label><input type="checkbox" aria-label="Enable channel match" checked={matchEnabled && !!selected?.channelMatch} disabled={!selected?.channelMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && selected?.channelMatch ? "on" : "off"}</label><span className="sound-state">{enabled && selected ? `EQ: ${selected.name}` : "EQ off · original sound"}{matchEnabled && selected?.channelMatch ? " · channel match on" : ""}</span></div>

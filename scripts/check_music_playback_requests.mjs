@@ -60,13 +60,15 @@ let checks = 0;
 }
 {
   const f = fixture(), points = [[20, 0], [20000, 0]], fit = { filters: [{}], rms: .5, preamp: -2, engine: 'peqdb', engineVersion: 'test', sampleRate: 48000 };
-  f.state.measurement = { points }; f.state.pairTargets = [{ points }, { points }];
+  f.state.measurement = { points, type: "oe" }; f.state.pairTargets = [{ points }, { points }];
   Object.assign(f.state.engine.current, { fits: [fit, fit], fitReady: false }); f.state.engine.current.context.sampleRate = 48000;
   assert.equal(f.state.fitMetadata().length, 0, 'Pending setup never reports the previous fits');
   f.state.engine.current.fitReady = true; f.state.engine.current.fitKey = 'old pair';
   assert.equal(f.state.fitMetadata().length, 0, 'A ready but mismatched pair never enters vote metadata');
-  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], {method:"standard",bands:10}, 48000]);
-  assert.equal(f.state.fitMetadata().length, 2); checks++;
+  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], {method:"standard",bands:10}, "oe", 48000]);
+  assert.equal(f.state.fitMetadata().length, 2);
+  f.state.measurement = { points, type: "ie" };
+  assert.equal(f.state.fitMetadata().length, 0, "A changed headphone type invalidates earlier fit metadata"); checks++;
 }
 {
   const f = fixture(); let side;

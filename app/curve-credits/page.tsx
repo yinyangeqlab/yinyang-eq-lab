@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import AutoEqTargetLibrary from "@/components/autoeq-target-library";
 import credits from "@/data/curve-credits.json";
 import ResearchHeader from "@/components/research-header";
 import "./style.css";
@@ -17,7 +18,7 @@ export default function CurveCreditsPage() {
     <ResearchHeader section="targets"/>
     <section className="credits-intro">
       <span className="credits-eyebrow">THE PEOPLE BEHIND THE CURVES</span>
-      <h2 className="research-section-title">Targets &amp; credits</h2><p className="beginner-note">Creators and sources behind the built-in targets. <a href="/glossary#target">What is a target?</a> Credit alone does not grant reuse rights.</p>
+      <h2 className="research-section-title">Targets &amp; credits</h2><p className="beginner-note">Creators and sources behind the built-in targets. <a href="/glossary#target">What is a target?</a> Credit alone does not grant reuse rights. <a href="#autoeq-library">Browse the AutoEq source library.</a></p>
       <p>Target curves reflect the work of researchers, reviewers and the audio community. This page credits curve creators and explains how curves were imported or reproduced. Every built-in curve is included, whether or not a reuse license has been identified. Each entry separates attribution, source, changes and our basis for use.</p>
       <div className="credits-stats" role="group" aria-label="Curve attribution summary">
         <div><strong>{credited}</strong><span>credited curves</span></div><div><strong>{sourced}</strong><span>source references</span></div><div><strong>{licensed}</strong><span>stated licenses</span></div>
@@ -37,6 +38,7 @@ export default function CurveCreditsPage() {
       {!shown.length && <p className="credits-empty">No curves match this search. Try another curve, creator or source.</p>}
     </section>
 
+    <AutoEqTargetLibrary/>
     <footer className="credits-footer"><div><strong>Are you a curve creator?</strong><p>For a correction, a preferred credit, a source clarification, a reuse concern or a removal request, contact <a href={`mailto:${credits.contact}`}>{credits.contact}</a>.</p></div><p>Creator names and links identify sources. They do not imply endorsement of YinYang EQ.</p></footer>
   </main>;
 }

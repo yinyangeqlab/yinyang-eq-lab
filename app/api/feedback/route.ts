@@ -1,3 +1,4 @@
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq, gte } from "drizzle-orm";
@@ -39,8 +40,8 @@ export async function POST(request: Request) {
         return Response.json({ error: "This feedback does not match an active trial." }, { status: 403 });
       }
     }
-    const [a] = await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetAId),publicTargetPredicate)).limit(1);
-    const [b] = await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetBId),publicTargetPredicate)).limit(1);
+    const [a] = sharedAutoEqTarget(targetAId) ? [{ status: "approved" }] : await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetAId),publicTargetPredicate)).limit(1);
+    const [b] = sharedAutoEqTarget(targetBId) ? [{ status: "approved" }] : await db.select({ status: targets.status }).from(targets).where(and(eq(targets.id, targetBId),publicTargetPredicate)).limit(1);
     if (!a || !b || a.status !== "approved" || b.status !== "approved") return Response.json({ error: "Shared feedback needs approved targets." }, { status: 403 });
     const now = Date.now();
     const recent = await db.select({ createdAt: feedbackSubmissions.createdAt, otherReason: feedbackSubmissions.otherReason }).from(feedbackSubmissions)

@@ -6,10 +6,10 @@ const source=ts.transpileModule(readFileSync('lib/welcome-landscape.ts','utf8'),
 function fixture({available=true,compile=true,buffer=true}={}){
  const jobs=new Map(),calls=[],ready=[],uniforms={};let id=0;
  const gl={VERTEX_SHADER:1,FRAGMENT_SHADER:2,COMPILE_STATUS:3,LINK_STATUS:4,ARRAY_BUFFER:5,STATIC_DRAW:6,FLOAT:7,TEXTURE_2D:8,TEXTURE_WRAP_S:9,TEXTURE_WRAP_T:10,CLAMP_TO_EDGE:11,TEXTURE_MIN_FILTER:12,TEXTURE_MAG_FILTER:13,LINEAR:14,RGB:15,UNSIGNED_BYTE:16,TRIANGLES:17,
-  createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>compile,createProgram:()=>({}),attachShader(){},linkProgram(){},getProgramParameter:()=>true,useProgram(){},createBuffer:()=>buffer?{}:null,bindBuffer(){},bufferData(){},getAttribLocation:()=>0,enableVertexAttribArray(){},vertexAttribPointer(){},createTexture:()=>({}),bindTexture(){},texParameteri(){},getUniformLocation:(_,n)=>n,uniform2f:(n,...v)=>uniforms[n]=v,uniform1f:(n,v)=>uniforms[n]=v,viewport(){},texImage2D:()=>calls.push('texture'),drawArrays:()=>calls.push('draw'),isContextLost:()=>false,deleteBuffer:()=>calls.push('free-buffer'),deleteTexture:()=>calls.push('free-texture'),deleteProgram:()=>calls.push('free-program'),deleteShader:()=>calls.push('free-shader')};
+  createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>compile,createProgram:()=>({}),attachShader(){},linkProgram(){},getProgramParameter:()=>true,useProgram(){},createBuffer:()=>buffer?{}:null,bindBuffer(){},bufferData(){},getAttribLocation:()=>0,enableVertexAttribArray(){},vertexAttribPointer(){},createTexture:()=>({}),bindTexture(){},texParameteri(){},getUniformLocation:(_,n)=>n,uniform2f:(n,...v)=>uniforms[n]=v,uniform4fv:(n,v)=>uniforms[n]=Array.from(v),uniform1f:(n,v)=>uniforms[n]=v,viewport(){},texImage2D:()=>calls.push('texture'),drawArrays:()=>calls.push('draw'),isContextLost:()=>false,deleteBuffer:()=>calls.push('free-buffer'),deleteTexture:()=>calls.push('free-texture'),deleteProgram:()=>calls.push('free-program'),deleteShader:()=>calls.push('free-shader')};
  const canvas={width:0,height:0,getContext:()=>available?gl:null,getBoundingClientRect:()=>({width:2000,height:1200})},image={complete:true,naturalWidth:1400,naturalHeight:758};
  const fixtureModule={exports:{}},document={hidden:false};
- vm.runInNewContext(source,{module:fixtureModule,exports:fixtureModule.exports,Float32Array,window:{devicePixelRatio:3,matchMedia:()=>({matches:false})},document,requestAnimationFrame:fn=>{jobs.set(++id,fn);return id},cancelAnimationFrame:i=>jobs.delete(i)});
+ vm.runInNewContext(source,{module:fixtureModule,exports:fixtureModule.exports,Float32Array,window:{devicePixelRatio:3},document,requestAnimationFrame:fn=>{jobs.set(++id,fn);return id},cancelAnimationFrame:i=>jobs.delete(i)});
  const engine=fixtureModule.exports.createLandscapeRenderer(canvas,image,value=>ready.push(value));
  const step=now=>{const pending=[...jobs.values()];jobs.clear();for(const fn of pending)fn(now)};
  return {engine,canvas,image,document,jobs,calls,ready,uniforms,step};
@@ -22,6 +22,24 @@ f.step(100);const initial=f.calls.filter(x=>x==='draw').length;f.step(120);asser
 f.engine.setRunning(false);assert.equal(f.jobs.size,0,'Pause cancels pending work');f.step(10000);assert.equal(f.uniforms.time,time,'paused image remains still');
 f.engine.setRunning(true);f.step(20000);f.step(20050);assert.ok(f.uniforms.time-time<.2,'resume does not jump by elapsed wall time');
 f.document.hidden=true;f.step(21000);assert.equal(f.jobs.size,0,'hidden document stops scheduling');f.document.hidden=false;f.engine.setRunning(true);assert.equal(f.jobs.size,1);
-f.image.naturalWidth=1254;f.image.naturalHeight=1254;f.engine.load();assert.equal(f.uniforms.portrait,1,'responsive square artwork uses the matching moon/water coordinates');
+f.image.naturalWidth=2800;f.image.naturalHeight=1516;f.engine.load();assert.deepEqual(f.uniforms.imageSize,[2800,1516],'image reload updates the landscape texture size');
 f.engine.dispose();assert.equal(f.jobs.size,0);assert.equal(f.ready.at(-1),false);assert.ok(f.calls.includes('free-texture')&&f.calls.includes('free-buffer')&&f.calls.includes('free-program'));const count=f.calls.length;f.engine.load();f.engine.setRunning(true);f.engine.resize();f.step(22000);assert.equal(f.calls.length,count,'disposed renderer cannot restart');
-console.log('PASS decorative renderer fallback, resource cleanup, image readiness, bounded resolution, frame cap, pause/resume, hidden-tab stop, responsive texture and disposal.');
+f=fixture();f.engine.load();f.engine.setRunning(true);f.step(100);
+let pattern=f.uniforms["rhythmStrengths[0]"];
+let nextSwitch=39.5,switches=0;
+for(let frame=1;frame<=756;frame++){
+ f.step(100+100*frame);
+ const current=f.uniforms["rhythmStrengths[0]"];
+ if(f.uniforms.time>=nextSwitch){
+  assert(f.uniforms.time<nextSwitch+.101,'switch occurs on the first frame after the downbeat');
+  assert.notDeepEqual(current,pattern,'rhythm switches on every third wave downbeat');
+  assert.equal(current[f.uniforms.rhythmLength-1],0,'the final slot leaves room for a seamless switch');
+  assert.equal(48%f.uniforms.rhythmLength,0,'each phrase fits the wave cycle');
+  pattern=current;
+  switches++;
+  nextSwitch+=36;
+ }else assert.deepEqual(current,pattern,'rhythm stays stable between switches');
+}
+assert.equal(switches,2);
+f.engine.dispose();
+console.log('PASS decorative renderer fallback, resource cleanup, image readiness, bounded resolution, frame cap, pause/resume, hidden-tab stop, shared landscape texture, automatic rhythm changes and disposal.');

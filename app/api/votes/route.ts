@@ -1,3 +1,4 @@
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { env } from "cloudflare:workers";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
@@ -58,10 +59,13 @@ export async function POST(request: Request) {
     if (feedback.otherReason && recentVotes.filter(row => row.otherReason?.toLowerCase() === feedback.otherReason.toLowerCase()).length >= 2) {
       return Response.json({ error: "This feedback was already submitted. Add details specific to this comparison." }, { status: 429 });
     }
-    const pair = await db.select().from(targets).where(and(eq(targets.id, winnerId),publicTargetPredicate));
-    const other = await db.select().from(targets).where(and(eq(targets.id, loserId),publicTargetPredicate));
-    if (!pair[0] || !other[0]) return Response.json({ error: "Target not found." }, { status: 404 });
-    if (pair[0].status !== "approved" || other[0].status !== "approved") return Response.json({ error: "Both targets need owner approval before votes can be collected." }, { status: 403 });
+    async function status(id: string) {
+      if (sharedAutoEqTarget(id)) return "approved";
+      return (await db.select().from(targets).where(and(eq(targets.id, id),publicTargetPredicate)))[0]?.status;
+    }
+    const [winnerStatus, loserStatus] = await Promise.all([status(winnerId), status(loserId)]);
+    if (!winnerStatus || !loserStatus) return Response.json({ error: "Target not found." }, { status: 404 });
+    if (winnerStatus !== "approved" || loserStatus !== "approved") return Response.json({ error: "Both targets need owner approval before votes can be collected." }, { status: 403 });
     if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Submit a tie through its completed listening record; this endpoint accepts decisive votes." }, { status: 400 });
     const safeNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
     const intervals = parseIntervals(JSON.parse(completed.intervals));

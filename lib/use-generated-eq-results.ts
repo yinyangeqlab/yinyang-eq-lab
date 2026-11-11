@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { validFitter } from "./fitter-settings";
+import { FIT_CANDIDATE_COUNT, validFitter } from "./fitter-settings";
 import type { FinalizedVariant } from "./preference-finalize";
 
 type ResultsScope = "tuning" | "shootout" | "personal";
 type GeneratedResults = { key: string; variants: FinalizedVariant[]; saved: boolean };
 
 function readVariants(value: unknown): value is FinalizedVariant[] {
-  if (!Array.isArray(value) || value.length < 1 || value.length > 12) return false;
+  if (!Array.isArray(value) || value.length < 1 || value.length > FIT_CANDIDATE_COUNT) return false;
   return value.every((fit: FinalizedVariant) => fit && validFitter(fit) && fit.priority === "close" &&
     (fit.engine === "legacy" || fit.engine === "peqdb") &&
     Number.isFinite(fit.rms) && fit.rms >= 0 &&
@@ -22,7 +22,7 @@ function readVariants(value: unknown): value is FinalizedVariant[] {
       Number.isFinite(filter.q) && filter.q >= .1 && filter.q <= 20));
 }
 
-export function useGeneratedEqResults(scope: ResultsScope, inputKey: string) {
+export function useGeneratedEqResults(scope: ResultsScope, inputKey: string, priorInputKey?: string) {
   const storageKey = `yinyang-generated-eq-results-v1:${scope}`;
   const [result, setResult] = useState<GeneratedResults | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -37,7 +37,8 @@ export function useGeneratedEqResults(scope: ResultsScope, inputKey: string) {
     } catch { /* A fresh calculation is available if the browser cache is unreadable. */ }
   }, [storageKey]);
 
-  const current = result?.key === inputKey ? result : null;
+  const current = result && (result.key === inputKey ||
+    result.key === priorInputKey && result.variants.every(fit => fit.method !== "peqdb-smoothed")) ? result : null;
   useEffect(() => {
     if (!current || !focusPending.current || !heading.current) return;
     focusPending.current = false;

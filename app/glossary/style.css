@@ -18,3 +18,12 @@
 .terms-page .terms-result-count{font-size:12px;margin:20px 0 12px;color:#c4cfe0}
 .terms-no-results{padding:22px;border:1px solid #3d5661;border-radius:9px;background:#0d1c24}.terms-no-results h2{font-size:18px;margin:0}
 @media(max-width:650px){.terms-search-control{flex-wrap:wrap}.terms-search-control input{flex:1 1 210px}.terms-page .terms-clear{padding:8px 10px}.terms-suggestions{max-height:260px}.terms-search-control:has(.terms-clear) input{flex-basis:100%}}
+
+.eq-fitting-guide { margin-top: 38px; scroll-margin-top: 72px; }
+.eq-fitting-guide h2 { font-size: 25px; margin-bottom: 8px; }
+.eq-fitting-guide h3 { font-size: 18px; margin: 26px 0 8px; }
+.eq-fitting-guide ul { padding-inline-start: 21px; color: #c9d8df; font-size: 14px; line-height: 1.65; }
+.eq-fitting-guide li + li { margin-top: 6px; }
+.eq-fitting-guide figure { margin: 18px 0; }
+.eq-fitting-guide figure img { display: block; width: 100%; height: auto; border-radius: 9px; }
+.eq-fitting-guide figcaption { margin-top: 8px; font-size: 13px; }

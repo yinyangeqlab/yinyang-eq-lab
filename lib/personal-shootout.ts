@@ -212,7 +212,7 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
     if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2") throw Error("Unsupported saved scheduler version.");
-    if (r.fitter && (!["standard","precise","peqdb"].includes(r.fitter.method)||![10,15,20,30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
+    if (r.fitter && (!["standard", "precise", "peqdb", "peqdb-smoothed"].includes(r.fitter.method) || ![10, 15, 20, 30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
     if (r.playback && (!["-14","-16","-18","off"].includes(r.playback.loudnessTarget)||!["auto","uploaded","off"].includes(r.playback.channelMode))) throw Error("Invalid saved playback settings.");
     if (r.music && (!["pool","song","playlist","upload"].includes(r.music.mode) || !Array.isArray(r.music.ids) || r.music.ids.length > 200 || r.music.ids.some(id => typeof id !== "string") || r.music.mode === "song" && r.music.ids.length !== 1)) throw Error("Invalid saved music choices.");
     const ids = new Set(r.candidates.map(c => c?.id));

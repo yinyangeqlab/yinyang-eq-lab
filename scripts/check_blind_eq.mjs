@@ -117,6 +117,7 @@ const shellModule = { exports: {} }; let shellPath = '/eq-compare';
 const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id.startsWith('@/components/') ? { default: ({children}) => require('react').createElement('aside', {'data-site-effect': id}, children) } : require(id) });
 const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, null, require('react').createElement('main', null, 'Private tool')));
-check(shellMarkup() === '<main>Private tool</main>', 'Private EQ mounts only its own navigation and no Sync/sidebar/privacy effects');
+const privateMarkup = shellMarkup();
+check(privateMarkup === '<aside data-site-effect="@/components/site-topbar"></aside><main>Private tool</main>', 'Private EQ mounts the shared top bar without Sync/sidebar/privacy effects');
 shellPath = '/home'; check(shellMarkup().includes('data-site-effect'), 'Ordinary site routes retain the existing shell and privacy controls');
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

@@ -1,5 +1,8 @@
+import { graphColor } from "@/lib/graph-theme";
 import { BAND_HZ } from "@/lib/embed-shootout";
 import { TARGET_COLORS, bandX, smoothPoints } from "@/components/embed-common";
+
+const lightSeries = ["#a42f4c", "#145f9d", "#11685c", "#854e17"];
 
 type Series = { name: string; bands: readonly number[] };
 
@@ -17,6 +20,6 @@ export default function CurvePlot({ series, label }: { series: Series[]; label: 
     {freqTicks.map(([index, text]) => <g key={text}><line x1={left + bandX(index, plotW)} x2={left + bandX(index, plotW)} y1={top} y2={top + plotH} className="es-plot-grid" /><text x={left + bandX(index, plotW)} y={H - 8} textAnchor="middle" className="es-plot-label">{text}</text></g>)}
     <text x={W - right} y={H - 8} textAnchor="end" className="es-plot-label">Hz</text>
     {series.map((item, index) => <path key={item.name} d={smoothPoints(item.bands.map((db, band) => [left + bandX(band, plotW), y(db)] as [number, number]))}
-      className="es-plot-line" pathLength={1} style={{ stroke: TARGET_COLORS[index], animationDelay: `${index * 160}ms` }} filter="url(#es-plot-glow)" />)}
+      className="es-plot-line" pathLength={1} style={{ stroke: graphColor(TARGET_COLORS[index], lightSeries[index]), animationDelay: `${index * 160}ms` }} filter="url(#es-plot-glow)" />)}
   </svg>;
 }

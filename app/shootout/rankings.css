@@ -1,0 +1,68 @@
+.rankings-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block: 0 18px;
+}
+
+.rankings-views a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid light-dark(var(--workbench-line), #34454f);
+  border-radius: 8px;
+  background: light-dark(var(--workbench-surface), #0a161d);
+  color: light-dark(var(--workbench-ink), #c1d1da);
+  font-size: .875rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.rankings-views a:hover {
+  border-color: light-dark(var(--workbench-teal), #65beaf);
+}
+
+.rankings-views a[aria-current="page"] {
+  border-color: light-dark(var(--workbench-teal), #65beaf);
+  background: light-dark(var(--workbench-soft), #153333);
+  color: light-dark(var(--workbench-teal), #a5f4e2);
+}
+
+.rankings-views a:focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal), #9ce8d5);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .rankings-views a { flex: 1 1 auto; padding-inline: 10px; }
+}
+
+.ranking-search {
+  display: grid;
+  gap: 6px;
+  max-width: 32rem;
+  margin: 14px 0;
+}
+
+.ranking-awaiting {
+  margin-top: 16px;
+}
+
+.ranking-awaiting summary {
+  cursor: pointer;
+}
+
+.ranking-awaiting ul {
+  padding-inline-start: 20px;
+}
+
+.ranking-awaiting li {
+  margin-block: 8px;
+  overflow-wrap: anywhere;
+}
+
+.ranking-awaiting small {
+  display: block;
+}

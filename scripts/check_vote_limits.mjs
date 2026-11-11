@@ -9,7 +9,7 @@ const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTa
 const voterId = "11111111-1111-4111-8111-111111111111";
 const trialId = "22222222-2222-4222-8222-222222222222";
 const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPairClaims", "listeningRuns", "comparisonRecords"].map(table => [table, new Proxy({ table }, { get: (target, key) => target[key] ?? key })]));
-async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [] } = {}) {
+async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [], linked = false } = {}) {
   let batches = 0; let savedVote;
   let targetRead = 0;
   const db = {
@@ -34,7 +34,7 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     update() { return { set: () => ({ where() {} }) }; },
     async batch() { batches++; },
   };
-  const imports = {"@/lib/public-targets":{publicTargetPredicate:{}},
+  const imports = {"@/lib/autoeq-target-sources":{sharedAutoEqTarget:id=>linked&&id==="a"?{id}:undefined},"@/lib/public-targets":{publicTargetPredicate:{}},
     "@/lib/listening-protocol":{LISTENING_PROTOCOL:"matched-passage-v2"},
     "cloudflare:workers":{env:{DB:{prepare:()=>({bind:()=>({first:async()=>({subject_id:"test-account"})})})}}},
     "@/lib/submission-ownership": { submissionContext: async () => ({subjectId:"test-account",shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },
@@ -69,3 +69,5 @@ console.log("Vote route accepts the seventh and 51st votes; shared throttling, r
 
 const removedCheck = await submit({checks:[{id:'removed-check',trialId:'issued',testMode:'blind',heardA:6,heardB:6,result:'tie'}]});
 assert.equal(removedCheck.reliabilityWeight,1,'Removed checks cannot calibrate future votes');
+
+assert.equal((await submit({linked:true})).status,200,"A pinned source ID can receive a vote without a target-table row.");

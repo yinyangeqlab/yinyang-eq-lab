@@ -1,3 +1,4 @@
+import { autoEqRankingTargets, autoEqCatalogId, sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
 import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Please wait a moment before starting another pairing." }, { status: 429 });
     }
     const approvedRows = await db.select({ id: targets.id, name: targets.name, measurement: targets.measurement, points:targets.points }).from(targets).where(and(eq(targets.status, "approved"),publicTargetPredicate));
-    const approved = approvedRows;
+    const approved = data.autoEqCatalog === autoEqCatalogId ? [...approvedRows, ...autoEqRankingTargets] : approvedRows;
     if (approved.length < 2) return Response.json({ error: "At least two approved targets are needed." }, { status: 503 });
     const previous = await db.select({ winnerId: votes.winnerId, loserId: votes.loserId }).from(votes)
       .where(and(eq(votes.voterId, data.voterId), eq(votes.testMode, data.testMode)));
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
       pair = pool[random(pool.length)];
       if (random(2)) pair = [pair[1], pair[0]];
     }
-    const targetVersions=await Promise.all(pair.map(id=>curveVersion(approved.find(t=>t.id===id)!.points)));
+    const targetVersions=await Promise.all(pair.map(id=>sharedAutoEqTarget(id)?.version ?? curveVersion(approved.find(t=>t.id===id)!.points)));
     const id = crypto.randomUUID();
     await db.batch([db.insert(rankedTrials).values({ id, protocolVersion: LISTENING_PROTOCOL, targetVersions:JSON.stringify(targetVersions),headphoneType, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"trial",recordId:id,comparisonId:id})]);
     return Response.json({ trialId: id, pair }, { headers: { "Cache-Control": "no-store" } });

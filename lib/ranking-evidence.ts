@@ -1,3 +1,5 @@
+import { oratoryInEarId, oratoryInEarLabel } from "@/lib/target-labels";
+import { autoEqRankingTargets } from "@/lib/autoeq-target-sources";
 import { fitterCohort, MAIN_FITTER_COHORT } from "@/lib/fitter-settings";
 import { isTestSubject } from "@/lib/admin-contributions";
 import { getDb } from "@/db";
@@ -9,7 +11,8 @@ import { intervalStats, parseIntervals } from "@/lib/listening";
 import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL, MIN_SIDE_SECONDS, MIN_COMMON_SECONDS } from "@/lib/listening-protocol";
 export async function rankingEvidence() {
  const db=getDb();
- const [allTargets,allVotes,runs,owners]=await Promise.all([db.select().from(targets),db.select().from(votes),db.select().from(listeningRuns),db.select().from(submissionOwners)]);
+ const [storedTargets,allVotes,runs,owners]=await Promise.all([db.select().from(targets),db.select().from(votes),db.select().from(listeningRuns),db.select().from(submissionOwners)]);
+ const allTargets=[...storedTargets.map(row => row.id === oratoryInEarId ? { ...row, name: oratoryInEarLabel } : row), ...autoEqRankingTargets];
  const active=await activeSubmissions();
  const ownership=new Map(owners.map(o=>[`${o.recordKind}:${o.recordId}`,o.subjectId]));
  const official=(kind:string,id:string)=>!isTestSubject(ownership.get(`${kind}:${id}`)||"");

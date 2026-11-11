@@ -1,10 +1,12 @@
 export type FitBands = 10 | 15 | 20 | 30;
-export type FitterMethod = "standard" | "precise" | "peqdb";
+export const FIT_METHODS = ["standard", "precise", "peqdb", "peqdb-smoothed"] as const;
+export type FitterMethod = typeof FIT_METHODS[number];
+export const isPeqdbMethod = (method: unknown) => method === "peqdb" || method === "peqdb-smoothed";
 export type FitterSettings = { method: FitterMethod; bands: FitBands };
 export const DEFAULT_FITTER: FitterSettings = { method: "standard", bands: 10 };
 export const FITTER_STORAGE = "yinyang-default-fitter-v1";
 export const FIT_BANDS = [10, 15, 20, 30] as const;
-export const FIT_METHODS = ["standard", "precise", "peqdb"] as const;
+export const FIT_CANDIDATE_COUNT = FIT_METHODS.length * FIT_BANDS.length;
 export const MAIN_FITTER_COHORT = "standard:10:legacy:yinyang-standard-close@listening-fitter-v1";
 export type FitProvenance = { method?: FitterMethod; bands: number; filterCount?: number; engine: string; engineVersion: string; sampleRate: number; rms: number; preamp: number };
 
@@ -28,7 +30,13 @@ export function readDefaultFitter(): FitterSettings {
   try { const value: unknown = JSON.parse(localStorage.getItem(FITTER_STORAGE) || "null"); if (validFitter(value)) return value; } catch {}
   return { ...DEFAULT_FITTER };
 }
-export const fitterLabel = (settings: FitterSettings) => `${settings.method === "peqdb" ? "PEQdB" : settings.method === "precise" ? "Precise" : "Standard"} · ${settings.bands} bands`;
+const fitterNames: Record<FitterMethod, string> = {
+  standard: "Standard",
+  precise: "Precise",
+  peqdb: "PEQdB · Unsmoothed",
+  "peqdb-smoothed": "PEQdB · Smoothed",
+};
+export const fitterLabel = (settings: FitterSettings) => `${fitterNames[settings.method]} · ${settings.bands} bands`;
 
 /** Missing historical provenance must never be inferred as today's default. */
 export function fitterCohort(context: string | null | undefined): { key: string; label: string } {
@@ -38,6 +46,6 @@ export function fitterCohort(context: string | null | undefined): { key: string;
     if (!Array.isArray(fits) || fits.length !== 2) return { key: "historical", label: "Earlier results · fitter unrecorded" };
     const [a, b] = fits as (FitProvenance & FitterSettings)[];
     if (!validFitter(a) || !validFitter(b) || a.method !== b.method || a.bands !== b.bands || a.engine !== b.engine || a.engineVersion !== b.engineVersion || typeof a.engineVersion !== "string" || !["legacy", "peqdb"].includes(a.engine)) return { key: "historical", label: "Earlier results · fitter unrecorded" };
-    return { key: `${a.method}:${a.bands}:${a.engine}:${a.engineVersion}`, label: `${fitterLabel(a)}${a.method === "peqdb" && a.engine !== "peqdb" ? " · fallback" : ""}` };
+    return { key: `${a.method}:${a.bands}:${a.engine}:${a.engineVersion}`, label: `${fitterLabel(a)}${isPeqdbMethod(a.method) && a.engine !== "peqdb" ? " · fallback" : ""}` };
   } catch { return { key: "historical", label: "Earlier results · fitter unrecorded" }; }
 }

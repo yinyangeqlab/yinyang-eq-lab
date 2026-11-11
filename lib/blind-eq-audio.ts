@@ -1,6 +1,8 @@
 import { comparisonGains, eqCoefficients, type EqPreset } from "./blind-eq";
 import { channelBalance, type ChannelMatch } from "./channel-balance";
 
+export const EQ_COMPARISON_PLAY_EVENT = "yinyang:eq-comparison-play";
+
 export type PreparedComparison = { buffers: [AudioBuffer, AudioBuffer]; seconds: number; gains?: [number, number] };
 
 function stats(buffer: AudioBuffer) {

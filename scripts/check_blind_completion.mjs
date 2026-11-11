@@ -28,6 +28,7 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,pa
   const stored = new Map();
   const calls = [];
   const state = {
+    sourceCurves: {ready: true},
     setResearchComparisonId:value=>{state.researchComparisonId=value;},setSelectedChoice:value=>{state.selectedChoice=value;},openFeedbackIdRef:{current:"old"},setFeedbackNonce(){},setDescribeOpen(){},sharedAdmin,saveAdminTestRecord(){},passageRequired,pair: ["a", "b"], busy: false, revealed: false, sessionExpired: false, sessionFinished: false,
     trialId: "trial", testMode: mode, headphoneType: "ie", sessionId: "session", trials: [],
     selectedMeasurement: { points: [[20, 0], [20000, 0]] },
@@ -55,6 +56,7 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,pa
       } };
     },
   };
+  Object.defineProperty(state, "playbackTargets", {get: () => state.allTargets});
   const context = vm.createContext(state);
   vm.runInContext(code, context);
   return { state, context, stored, calls };

@@ -1,18 +1,25 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { graphColor } from "@/lib/graph-theme";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type {Point} from "@/lib/curves";
 import {eqResponse} from "@/lib/eq-response";
 import {candidateKey,deepBassBoost,recommendCandidates} from "@/lib/eq-recommendation";
-import {fitterLabel} from "@/lib/fitter-settings";
+import {FIT_BANDS, fitterLabel, isPeqdbMethod, type FitBands} from "@/lib/fitter-settings";
 import type {FinalizedVariant} from "@/lib/preference-finalize";
 import "./eq-candidate-results.css";
 import GeneratedEqComparison, { type GeneratedEqContext } from "./generated-eq-comparison";
 import { generatedSignature } from "@/lib/generated-eq-comparison";
 import type { ChannelMatch } from "@/lib/channel-balance";
-const curveColors = ["#ffdc83", "#6de7cd", "#f3a3e2", "#81c6ff", "#f3a176", "#c1abfa", "#b5df80",
-  "#ff8ea8", "#7edeea", "#f9b7a9", "#9aafff", "#e9cfac", "#b9ebc3"];
-const targetColor = "#c0c5cb";
-const rawColor = "#839ba9";
+const curveColors = [
+  ["#ffdc83", "#805504"], ["#6de7cd", "#00665a"], ["#f3a3e2", "#8a3575"],
+  ["#81c6ff", "#165f9c"], ["#f3a176", "#963b21"], ["#c1abfa", "#65449d"],
+  ["#b5df80", "#426814"], ["#ff8ea8", "#a32d50"], ["#7edeea", "#146976"],
+  ["#f9b7a9", "#8c413b"], ["#9aafff", "#4250a1"], ["#e9cfac", "#745b2f"],
+  ["#b9ebc3", "#2f6f47"], ["#ffd8ad", "#9c541e"], ["#b7dafe", "#1c5a84"],
+  ["#edbaff", "#76328c"], ["#b2db98", "#3e702b"],
+].map(([dark, light]) => graphColor(dark, light));
+const targetColor = graphColor("#c0c5cb", "#58656f");
+const rawColor = graphColor("#839ba9", "#466170");
 type Plot = { fit: FinalizedVariant; rows: NonNullable<ReturnType<typeof eqResponse>> };
 type CurveSelection = "selected" | "all" | Set<string>;
 
@@ -85,7 +92,7 @@ function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVari
     <div className="eq-plot-surface" ref={surface}>
       <svg viewBox={`0 0 ${width} 248`} role="img" aria-label={deviation ? "Predicted EQ deviation from the target in decibels" : "Raw response, target and predicted EQ responses"}>
         {ticks.map(db => <g key={db}>
-          <line x1={left} x2={right} y1={y(db)} y2={y(db)} stroke="#253946"/>
+          <line x1={left} x2={right} y1={y(db)} y2={y(db)} stroke={graphColor("#253946", "#c5d4d5")}/>
           <text x={left - 7} y={y(db) + 4} textAnchor="end">{deviation && db > 0 ? "+" : ""}{db}</text>
         </g>)}
         {(width < 380 ? [20, 100, 1000, 5000, 20000] : [20, 100, 1000, 10000, 20000]).map(hz => <text key={hz} x={x(hz)} y="227" textAnchor={hz === 20000 ? "end" : "middle"}>{hz >= 1000 ? `${hz / 1000}k` : hz}</text>)}
@@ -121,11 +128,13 @@ function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVari
 export default function EqCandidateResults({variants,raw,target,onDownload,onSave,comparisonContext,channelMatch,onCompare,tuning=false}:{variants:FinalizedVariant[];raw:Point[];target:Point[];onDownload:(fit:FinalizedVariant,format:string)=>void;onSave:(fit:FinalizedVariant)=>void;comparisonContext:GeneratedEqContext;channelMatch?:ChannelMatch;onCompare?:()=>void;tuning?:boolean}) {
  const awards=useMemo(()=>recommendCandidates(variants,tuning ? {raw,target} : undefined),[variants,tuning,raw,target]);
  const [selected,setSelected]=useState("");const [format,setFormat]=useState("txt");
- const [comparison,setComparison]=useState<"pair" | "all" | null>(null);
+ const [comparison,setComparison]=useState<"pair" | "all" | "smoothing" | null>(null);
+ const [comparisonBands, setComparisonBands] = useState<FitBands>();
+ const smoothingHeading = useId();
+ const smoothingBandLabel = useId();
  const quickPair=useMemo(() => awards && awards.recommended !== awards.bestError
    ? [awards.recommended, awards.bestError]
    : null, [awards]);
- const signature=useMemo(()=>generatedSignature({raw,target,comparisonContext,channelMatch},variants),[raw,target,comparisonContext,channelMatch,variants]);
  const candidates=useMemo(() => awards?.recommended.reducedBoost
    ? [awards.recommended, ...variants]
    : variants, [awards, variants]);
@@ -133,7 +142,16 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
  const plots=useMemo(()=>candidates.map(fit=>({fit,rows:eqResponse(raw,target,fit.filters,[],48000,"1khz")??[]})),[candidates,raw,target]);
  if(!awards||!active||!plots[0]?.rows.length)return null;
  const exportFormat=format==="qudelix5k"&&active.bands>20?"txt":format;
- function openComparison(mode: "pair" | "all") {
+ const availableBands = FIT_BANDS.filter(bands => (["peqdb", "peqdb-smoothed"] as const).every(method =>
+   variants.some(fit => fit.bands === bands && fit.method === method && fit.engine === "peqdb")));
+ const compareBands = comparisonBands && availableBands.includes(comparisonBands) ? comparisonBands
+   : availableBands.includes(active.bands) ? active.bands : availableBands[0];
+ const smoothingPair = (["peqdb", "peqdb-smoothed"] as const)
+   .map(method => variants.find(fit => fit.bands === compareBands && fit.method === method && fit.engine === "peqdb"))
+   .filter((fit): fit is FinalizedVariant => !!fit);
+ const listeningFits = comparison === "smoothing" ? smoothingPair : comparison === "pair" && quickPair ? quickPair : variants;
+ const signature = comparison ? generatedSignature({raw,target,comparisonContext,channelMatch}, listeningFits) : "";
+ function openComparison(mode: "pair" | "all" | "smoothing") {
    onCompare?.();
    setComparison(mode);
  }
@@ -143,11 +161,11 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
  </div>;
  const choiceLabel = (fit: FinalizedVariant) =>
    fit === awards.recommended ? "Recommended EQ" : fit === awards.bestError ? "Closer fit" : "EQ selected under Advanced";
- const candidateGrid = <div className="eq-candidate-grid" role="group" aria-label="Generated EQ comparisons">{candidates.map(fit=>{const recommended=fit===awards.recommended,headroom=Math.abs(fit.preamp-awards.leastHeadroom.preamp)<.05;return <button type="button" key={candidateKey(fit)} className={`eq-candidate${recommended?" is-recommended":""}${headroom?" is-headroom":""}`} aria-pressed={active===fit} onClick={()=>setSelected(candidateKey(fit))}><strong>{fitterLabel(fit)}{fit.reducedBoost ? " · reduced boost" : ""}</strong>{recommended&&<span className="eq-gold-badge">Recommended</span>}{headroom&&<span className="eq-headroom-badge">Least preamp reduction</span>}{fit===awards.bestError&&<small>Lowest numerical error</small>}<span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span><span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span><small>{fit.engine==="peqdb"?"PEQdB engine":fit.method==="peqdb"?"Precise fallback · PEQdB unavailable":"YinYang engine"} · max Q {Math.max(...fit.filters.map(f=>f.q)).toFixed(2)}</small></button>;})}</div>;
+ const candidateGrid = <div className="eq-candidate-grid" role="group" aria-label="Generated EQ comparisons">{candidates.map(fit=>{const recommended=fit===awards.recommended,headroom=Math.abs(fit.preamp-awards.leastHeadroom.preamp)<.05;return <button type="button" key={candidateKey(fit)} className={`eq-candidate${recommended?" is-recommended":""}${headroom?" is-headroom":""}`} aria-pressed={active===fit} onClick={()=>setSelected(candidateKey(fit))}><strong>{fitterLabel(fit)}{fit.reducedBoost ? " · reduced boost" : ""}</strong>{recommended&&<span className="eq-gold-badge">Recommended</span>}{headroom&&<span className="eq-headroom-badge">Least preamp reduction</span>}{fit===awards.bestError&&<small>Lowest numerical error</small>}<span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span><span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span><small>{fit.engine==="peqdb"?"PEQdB engine":isPeqdbMethod(fit.method)?"Precise fallback · PEQdB unavailable":"YinYang engine"} · max Q {Math.max(...fit.filters.map(f=>f.q)).toFixed(2)}</small></button>;})}</div>;
  return <div className="eq-candidates">
    {comparison && <GeneratedEqComparison
      key={`${comparison}:${signature}`}
-     variants={comparison === "pair" && quickPair ? quickPair : variants}
+     variants={listeningFits}
      quick={comparison === "pair"}
      signature={signature}
      context={comparisonContext}
@@ -184,6 +202,33 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
        <p>Favors fewer bands and less preamp reduction among fits with similar numerical error and moderate filter widths.</p>
      </div>
    </>}
+ {smoothingPair.length === 2 ? <section className="eq-smoothing-comparison" aria-labelledby={smoothingHeading}>
+   <div className="eq-smoothing-header">
+     <h3 id={smoothingHeading}>Compare PEQdB smoothing</h3>
+     <label><span id={smoothingBandLabel}>Band count</span><select aria-labelledby={smoothingBandLabel} value={compareBands} onChange={event => setComparisonBands(Number(event.target.value) as FitBands)}>
+       {availableBands.map(bands => <option key={bands} value={bands}>{bands} bands</option>)}
+     </select></label>
+   </div>
+   <p>Lower fit error means a closer match to your measured target. Lower peak boost needs less headroom.</p>
+   <div className="eq-smoothing-choices" role="group" aria-label="PEQdB fits with the same band count">
+     {smoothingPair.map((fit, index) => {
+       const other = smoothingPair[1 - index];
+       const error = fit.rms.toFixed(2), boost = fit.peakBoost.toFixed(1);
+       const closer = Number(error) < Number(other.rms.toFixed(2));
+       const lessBoost = Number(boost) < Number(other.peakBoost.toFixed(1));
+       return <button type="button" className="eq-candidate" key={fit.method} aria-pressed={active === fit}
+         onClick={() => { setComparisonBands(fit.bands); setSelected(candidateKey(fit)); }}>
+         <strong>{index === 0 ? "Unsmoothed" : "Smoothed"}</strong>
+         <small>{index === 0 ? "Follows finer details in the measurement." : "Softens narrow peaks and dips before fitting."}</small>
+         <span>Full-range fit error <b>{error} dB RMS</b>{closer && <small className="eq-fit-advantage">Closer to target</small>}</span>
+         <span>Peak boost <b>{boost} dB</b>{lessBoost && <small className="eq-fit-advantage">Less peak boost</small>}</span>
+       </button>;
+     })}
+   </div>
+   <div className="eq-results-audition"><button type="button" onClick={() => openComparison("smoothing")}>Listen to both PEQdB fits</button></div>
+ </section> : variants.some(fit => fit.method === "peqdb-smoothed" && fit.engine !== "peqdb") ?
+   <p className="eq-results-caveat">PEQdB was unavailable for this generation. The fallback results cannot show the effect of smoothing.</p> :
+   <p className="eq-results-caveat">Regenerate EQ settings to compare Smoothed and Unsmoothed PEQdB fits.</p>}
  <EqResultsPlot plots={plots} active={active}/>
  {tuning ? <details className="eq-results-advanced">
    <summary>Advanced EQ results</summary>

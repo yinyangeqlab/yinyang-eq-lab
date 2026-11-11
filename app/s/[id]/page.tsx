@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
 import EmbedShootout from "@/components/embed-shootout";
 import { getShootout } from "@/lib/embed-store";
+import { requestShareImage } from "@/lib/share-metadata";
+import { sharedShootoutCard } from "@/lib/share-pages.mjs";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const shootout = await getShootout(id).catch(() => null);
-  if (!shootout) return { title: "Shootout not found | YinYang EQ", robots: { index: false, follow: false } };
+  if (!shootout) {
+    const title = "Shootout not found";
+    return {
+      title: `${title} | YinYang EQ`,
+      robots: { index: false, follow: false },
+      openGraph: { title, images: [] },
+      twitter: { card: "summary", title, images: [] },
+    };
+  }
   const count = shootout.targetIds.length;
   const description = `A blind A/B shootout of ${count} headphone targets. Put on headphones, pick the one that sounds better, then see which was which. No account needed. Completed runs include your choices, optional setup and whether curves were shown.`;
-  const image = { url: `/s/${id}/card.png`, width: 1200, height: 630, alt: "A and B waveforms around a yin-yang" };
+  const { image, twitterImage } = await requestShareImage(sharedShootoutCard);
   return {
     title: `${shootout.title} | YinYang EQ`,
     description,
     alternates: { canonical: `/s/${id}` },
     robots: { index: false, follow: false },
     openGraph: { type: "website", siteName: "YinYang EQ", title: shootout.title, description, url: `/s/${id}`, images: [image] },
-    twitter: { card: "summary_large_image", title: shootout.title, description, images: [image.url] },
+    twitter: { card: "summary_large_image", title: shootout.title, description, images: twitterImage },
     other: { "theme-color": "#58d8c9" },
   };
 }

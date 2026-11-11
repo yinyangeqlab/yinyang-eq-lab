@@ -184,9 +184,12 @@ const privateGate = {
     // Link-preview crawlers (Discord, Slack, iMessage...) cannot sign in, so gated
     // pages would redirect them to a generic page. Answer with public copy only:
     // no session, no database, no app content.
-    if ((request.method === "GET" || request.method === "HEAD") && isUnfurlCrawler(request.headers.get("User-Agent"))) {
+    const userAgent = request.headers.get("User-Agent");
+    if ((request.method === "GET" || request.method === "HEAD") && isUnfurlCrawler(userAgent)) {
       const page = sharePageFor(path, url.search);
-      if (page) return new Response(request.method === "HEAD" ? null : shareHtml(page, { pathname: page.path }), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300", "Vary": "User-Agent", ...(page.private ? { "X-Robots-Tag": "noindex, nofollow" } : {}) } });
+      // Two Open Graph images can be rendered as a cropped gallery.
+      const animated = /discordbot/i.test(userAgent);
+      if (page) return new Response(request.method === "HEAD" ? null : shareHtml(page, { animated }), { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "private, max-age=300", "Vary": "User-Agent", ...(page.private || page.noIndex ? { "X-Robots-Tag": "noindex, nofollow" } : {}) } });
     }
     // Anonymous shareable shootouts: public pages, preview card and API. Edge burst
     // protection runs first; cookies and identity headers never reach the app.
@@ -207,7 +210,7 @@ const privateGate = {
     }
     const publicLandingAsset = isPublicAsset(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/curve-credits" || path === "/version" || path === "/shortcuts" || path === "/glossary" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/shortcuts" || path === "/glossary" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
       if (publicLandingAsset) return env.ASSETS.fetch(request);
       if(publicProfile){const limited=await preDatabaseGuard(request,env,false);if(limited)return limited;}
       const headers = new Headers(request.headers);
@@ -270,7 +273,9 @@ const privateGate = {
       const syncReceive = path === "/pair" || path === "/pair/reset" || path === "/sync" && (url.searchParams.get("receive") === "1" || request.method !== "GET");
       const adminPath = path === "/owner-research" || path.startsWith("/api/owner-research");
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
-      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) && cookie(request, dataCookie) || communityManagement && cookie(request,dataCookie);
+      const practiceScores = path === "/api/ear-practice";
+      const practiceManagement = practiceScores && (["PATCH", "DELETE"].includes(request.method) || url.searchParams.has("mine") && request.method === "GET");
+      const managementOnly = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) && cookie(request, dataCookie) || (communityManagement || practiceManagement) && cookie(request,dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
         const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
         await env.DB.prepare("INSERT INTO private_tester_invites(id,label,code_hash,created_at,code_expires_at,redeemed_at,session_hash,session_expires_at) VALUES(?,?,?,?,?,?,?,?)").bind(id,"Listener",await hash(randomToken()),now,now,now,await hash(session),now+dataSeconds).run();
@@ -294,7 +299,7 @@ const privateGate = {
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
       }
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) || communityManagement;
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) || communityManagement || practiceManagement;
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       // Management-only cookies remain isolated after the tester session expires.
       if(data?.subject==="invite:layout-test-only"&&!tester){
@@ -315,7 +320,7 @@ const privateGate = {
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
       }
       // Viewing needs no agreement: only requests that change or collect data do. Every state-changing route still checks the agreement itself.
-      const agreementException = dataRoute || (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
+      const agreementException = dataRoute || practiceScores || (request.method === "GET" || request.method === "HEAD") || owner && (path === "/owner-research" || path.startsWith("/api/owner-research"));
       if (!owner && tester && !data?.canParticipate && !agreementException) {
         const blocked = path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD"
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
@@ -353,7 +358,9 @@ const privateGate = {
           if (cached) { const hit=rankingResponse(cached, "HIT"); if(data?.setCookie) hit.headers.append("Set-Cookie",data.setCookie); return hit; }
         } catch { console.warn("ranking_cache_read_failed"); }
       }
-      const response = path.startsWith("/api/listening-audio/") ? await serveWorkerMedia(request, env) : path.startsWith("/_next/static/") || path.startsWith("/music/shantae/") || peqdbAssetPaths.has(path) ? await env.ASSETS.fetch(request) : await app.fetch(appRequest, env, context);
+      const staticAsset = path.startsWith("/_next/static/") || path.startsWith("/music/shantae/") || path.startsWith("/wallpapers/") || peqdbAssetPaths.has(path);
+      const response = path.startsWith("/api/listening-audio/") ? await serveWorkerMedia(request, env)
+        : staticAsset ? await env.ASSETS.fetch(request) : await app.fetch(appRequest, env, context);
       if (cacheRanking && response.status === 200 && rankingCache) {
         const cached = new Response(response.clone().body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=30" } });
         context.waitUntil(rankingCache.put(rankingKey, cached).catch(() => console.warn("ranking_cache_write_failed")));

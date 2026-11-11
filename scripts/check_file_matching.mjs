@@ -19,6 +19,8 @@ const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[],removed=new Set();
 const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/file-fingerprint':fingerprints,'@/lib/listening-protocol':protocol,'@/lib/listening':{intervalStats,parseIntervals},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[]},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!removed.has(kind+':'+id)},'@/db/schema':schema,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})}};
 function load(relative){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+relative,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;assert.ok(name in deps,name);return deps[name];},Response});return exports;}
+deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
+deps['@/lib/target-labels']={oratoryInEarId:'oratory-fixture',oratoryInEarLabel:'oratory1990 in-ear (aka USOUND1v1 approximation)'};
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
 const api=load('app/api/research/route.ts');const rawGET=api.GET;api.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
 const intervals=JSON.stringify([{side:0,start:0,end:6,rate:1},{side:1,start:0,end:6,rate:1}]);

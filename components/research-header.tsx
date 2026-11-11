@@ -12,6 +12,7 @@ const sections = [
 export default function ResearchHeader({ section }: { section: ResearchSection }) {
   return <header className="research-area-heading">
     <div className="research-area-title"><div><h1>Research</h1><p>Shared rankings, target creators and the community research pilot.</p></div><a className="research-terms-link" href="/glossary">Terms &amp; definitions</a></div>
+    {section === "rankings" && <p className="research-history-link"><a href="/listeners/yinyangeq">YinYangEQ’s published listening history</a></p>}
     <nav aria-label="Research sections">{sections.map(({ id, href, label, Icon }) => <a key={id} href={href} aria-current={section === id ? "page" : undefined}><Icon size={17} aria-hidden="true"/><span>{label}</span></a>)}</nav>
   </header>;
 }

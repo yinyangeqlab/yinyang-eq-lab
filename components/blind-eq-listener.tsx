@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { BlindEqPlayer, prepareComparison, type PreparedComparison } from "@/lib/blind-eq-audio";
+import { BlindEqPlayer, EQ_COMPARISON_PLAY_EVENT, prepareComparison, type PreparedComparison } from "@/lib/blind-eq-audio";
 import type { EqPreset } from "@/lib/blind-eq";
 import type { ChannelMatch } from "@/lib/channel-balance";
 
@@ -119,6 +119,7 @@ export default function BlindEqListener({ song, presets, match, context, onEvide
     try {
       await current.resume();
       if (request !== playRequest.current || token !== generation.current || player.current !== current || prepared.current !== value || document.visibilityState !== "visible") return;
+      window.dispatchEvent(new Event(EQ_COMPARISON_PLAY_EVENT));
       if (freeListening && source.current && value.gains) {
         const section = passageRef.current;
         const range = loop ? { start: section.start, end: section.start + section.seconds } : undefined;

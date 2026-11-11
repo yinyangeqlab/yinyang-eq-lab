@@ -1,3 +1,4 @@
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 
 import { comparisonRecords } from "@/db/schema";
@@ -19,8 +20,8 @@ export async function POST(request: Request) {
     const aId = String(data.targetAId || ""), bId = String(data.targetBId || "");
     if (![id,participantId,aId,bId].every(value => uuid.test(value)) || aId === bId || data.testMode !== "open" || !["ie","oe"].includes(String(data.headphoneType)) || !["a","b","tie"].includes(String(data.result))) return Response.json({ error: "Invalid open comparison." }, { status: 400 });
     const db = getDb();
-    const [a] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,aId),publicTargetPredicate)).limit(1);
-    const [b] = await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,bId),publicTargetPredicate)).limit(1);
+    const [a] = sharedAutoEqTarget(aId) ? [{ status: "approved" }] : await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,aId),publicTargetPredicate)).limit(1);
+    const [b] = sharedAutoEqTarget(bId) ? [{ status: "approved" }] : await db.select({ status: targets.status, name: targets.name, measurement: targets.measurement }).from(targets).where(and(eq(targets.id,bId),publicTargetPredicate)).limit(1);
     if (!a || !b || a.status !== "approved" || b.status !== "approved") return Response.json({ error: "Only approved targets can enter owner research." }, { status: 403 });
     const run=await db.select().from(listeningRuns).where(eq(listeningRuns.id,id)).get();
     const own=await db.select().from(submissionOwners).where(and(eq(submissionOwners.recordKind,"run"),eq(submissionOwners.recordId,id))).get();

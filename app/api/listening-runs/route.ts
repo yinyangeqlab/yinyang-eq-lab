@@ -1,3 +1,4 @@
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { cleanFitMetadata } from "@/lib/fitter-settings";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
@@ -58,10 +59,19 @@ export async function POST(request: Request) {
     for (const key of ["sampleRate","bitrate","duration"]) if(typeof context[key]==="number" && Number.isFinite(context[key]) && Number(context[key])>=0) cleanContext[key]=context[key];
     if (!shareSong) for (const key of ["recordingId","sha256","audioFormat","sampleRate","bitrate","duration"]) delete cleanContext[key];
     try { cleanContext.eqFits = cleanFitMetadata(context.eqFits); } catch { return Response.json({ error: "Both sides need valid matching EQ fitter provenance." }, { status: 400 }); }
-    const targetRows=await db.select().from(targets).where(publicTargetPredicate);
-    if ((testMode === "open" || !matchedPassageRequired) && [targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id && target.status==="approved"))) return Response.json({error:"Private-target comparisons stay in this browser and are not collected."},{status:400});
-    if ([targetAId,targetBId].some(id=>!targetRows.some(target=>target.id===id&&target.status==="approved"))) return Response.json({error:"Only current approved targets can be collected."},{status:400});
-    cleanContext.targetVersions=await Promise.all([targetAId,targetBId].map(async targetId=>{const target=targetRows.find(t=>t.id===targetId);if(!target)return null;return curveVersion(target.points);}));
+    const targetRows = await db.select().from(targets).where(publicTargetPredicate);
+    const targetVersions = await Promise.all([targetAId, targetBId].map(id => {
+      const stored = targetRows.find(target => target.id === id);
+      if (stored) return stored.status === "approved" ? curveVersion(stored.points) : null;
+      return sharedAutoEqTarget(id)?.version ?? null;
+    }));
+    if (targetVersions.some(version => version === null)) {
+      const error = testMode === "open" || !matchedPassageRequired
+        ? "Private-target comparisons stay in this browser and are not collected."
+        : "Only current approved targets can be collected.";
+      return Response.json({ error }, { status: 400 });
+    }
+    cleanContext.targetVersions = targetVersions;
     if((trialId && JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions)) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions)) return Response.json({error:"Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing."},{status:409});
     await db.batch([db.insert(listeningRuns).values({
       id, voterId, testMode, headphoneType, targetAId, targetBId, trialId, protocolVersion, researchContext: JSON.stringify(cleanContext),

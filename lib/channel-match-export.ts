@@ -1,10 +1,38 @@
-import { channelBalance, type ChannelMatch } from "./channel-balance";
-import { parseChannelMatchPreset } from "./peq-preset";
+import { at, automaticChannelCorrection, channelBalance, type ChannelMatch } from "./channel-balance";
+import { parseChannelMatchPreset, type ChannelMatchPreset } from "./peq-preset";
 import type { Point } from "./curves";
+import { finalizeVariant, peakBoost } from "./preference-finalize";
 
 export function channelMatchText(match: ChannelMatch) {
   if (!match.channelMatchPreset) throw new Error("No uploaded channel-match preset is attached.");
   return match.channelMatchPreset.channels.map((channel, index) => `CH: ${index}\nPreamp: ${channel.preampDb} dB\n${channel.filters.map((f, i) => `Filter ${i + 1}: ON ${f.type} Fc ${f.hz} Hz Gain ${f.gain} dB Q ${f.q}`).join("\n")}\n`).join("\n");
+}
+
+export function channelMatchIirText(match: ChannelMatch) {
+  const safe = safeChannelMatch(match);
+  if (safe.channelMatchMode === "custom") return channelMatchText(safe);
+  const { leftPoints, rightPoints, leftLevelDb = 0, rightLevelDb = 0 } = safe;
+  if (!leftPoints || !rightPoints) throw new Error("AutoMatch needs paired Left and Right responses.");
+  const correction = Array.from({ length: 241 }, (_, i): Point => {
+    const hz = 20 * 1000 ** (i / 240);
+    const db = automaticChannelCorrection(hz, leftPoints, rightPoints, leftLevelDb, rightLevelDb);
+    return [hz, Math.max(-40, Math.min(40, db))];
+  });
+  const left = finalizeVariant([[20, 0], [20000, 0]], correction, 10, "precise", "close");
+  // AutoMatch applies opposite corrections. Inverting peak gains preserves that
+  // relationship, and shared headroom preserves the left/right level difference.
+  const right = left.filters.map(filter => ({ ...filter, gain: -filter.gain }));
+  const level = at(correction, 1000);
+  const headroom = Math.ceil((Math.max(0, level + left.peakBoost, -level + peakBoost(right)) + 1.5) * 10) / 10;
+  const makeChannel = (filters: typeof right, center: number): ChannelMatchPreset["channels"][number] => ({
+    preampDb: +(center - headroom).toFixed(3),
+    filters: filters.filter(filter => filter.gain !== 0).map(filter => ({ ...filter, type: "PK" })),
+  });
+  const channels: ChannelMatchPreset["channels"] = [makeChannel(left.filters, level), makeChannel(right, -level)];
+  if (channels.some(channel => Math.abs(channel.preampDb) > 40)) {
+    throw new Error("This match needs more level correction than the TXT format supports. Download the FIR WAV instead.");
+  }
+  return `# YinYang AutoMatch channel match · approximate 10-band IIR fit\n# CH: 0 is Left. CH: 1 is Right.\n${channelMatchText({ channelMatchPreset: { channels } })}`;
 }
 
 export function safeChannelMatch(value: ChannelMatch): ChannelMatch {
@@ -42,7 +70,13 @@ export function downloadLocalFile(name: string, contents: BlobPart, type: string
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export function autoMatchFilename(name: string, uploaded = false) {
+export function autoMatchFilename(name: string, uploaded = false, format: "txt" | "wav" = "wav") {
   const model = name.replace(/[^a-z0-9_-]/gi, "-").replace(/-+/g,"-").slice(0,70) || "headphones";
-  return `${model}-${uploaded ? "uploaded-channel-match" : "YinYang-AutoMatch"}-48k.wav`;
+  return `${model}-${uploaded ? "uploaded-channel-match" : "YinYang-AutoMatch"}-${format === "txt" ? "IIR.txt" : "48k.wav"}`;
+}
+
+export function downloadChannelMatch(match: ChannelMatch, name: string, format: "txt" | "wav") {
+  const filename = autoMatchFilename(name, match.channelMatchMode === "custom", format);
+  if (format === "txt") downloadLocalFile(filename, channelMatchIirText(match), "text/plain");
+  else downloadLocalFile(filename, channelMatchWav(match), "audio/wav");
 }

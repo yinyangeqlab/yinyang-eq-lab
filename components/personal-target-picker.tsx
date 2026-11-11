@@ -9,6 +9,7 @@ import "./personal-target-picker.css";
 
 type Props = {
   publicTargets: PoolTarget[];
+  defaultPublicTargets?: PoolTarget[];
   localTargets: LocalPoolTarget[];
   choice: PoolChoice;
   type: HeadphoneType | undefined;
@@ -17,7 +18,7 @@ type Props = {
   disabled?: boolean;
 };
 
-export default function PersonalTargetPicker({ publicTargets, localTargets, choice, type, onChange, disabled = false }: Props) {
+export default function PersonalTargetPicker({ publicTargets, defaultPublicTargets = publicTargets, localTargets, choice, type, onChange, disabled = false }: Props) {
   const id = useId();
   const [query, setQuery] = useState("");
   const custom = choice.mode === "custom";
@@ -25,7 +26,9 @@ export default function PersonalTargetPicker({ publicTargets, localTargets, choi
   const eligiblePublic = useMemo(() => personalPool(publicTargets, [], { mode: "all" }, type), [publicTargets, type]);
   const eligibleLocal = useMemo(() => personalPool([], localTargets, { mode: "custom", ids: localTargets.map(row => row.id) }, type) as LocalPoolTarget[], [localTargets, type]);
   const chosen = useMemo(() => new Set(choice.mode === "custom" ? choice.ids : []), [choice]);
-  const pool = personalPool(publicTargets, localTargets, choice, type);
+  const pool = personalPool(custom ? publicTargets : defaultPublicTargets, localTargets, choice, type);
+  const defaultCount = defaultPublicTargets.length;
+  const hasSourceChoices = defaultCount < eligiblePublic.length;
   const privateInPool = pool.filter(row => "local" in row).length;
   const matchFields = (row: PoolTarget) => [row.name, row.creator ?? ""];
   const shownLocal = searchRows(eligibleLocal, query, matchFields);
@@ -35,17 +38,18 @@ export default function PersonalTargetPicker({ publicTargets, localTargets, choi
     const next = chosen.has(rowId) ? choice.ids.filter(item => item !== rowId) : [...choice.ids, rowId];
     onChange({ mode: "custom", ids: next });
   };
-  const summary = starter ? `Quick starter · ${pool.length} of ${eligiblePublic.length} public targets` : custom ? `Your own pool · ${pool.length} target${pool.length === 1 ? "" : "s"}${privateInPool ? ` (${privateInPool} private)` : ""}` : `All ${eligiblePublic.length} public targets`;
+  const summary = starter ? `Quick starter · ${pool.length} of ${defaultCount} built-in targets` : custom ? `Your own pool · ${pool.length} target${pool.length === 1 ? "" : "s"}${privateInPool ? ` (${privateInPool} private)` : ""}` : `All ${defaultCount} ${hasSourceChoices ? "built-in" : "public"} targets`;
   const tooSmall = custom && pool.length < MIN_CUSTOM_POOL;
   return <section className="target-pool" aria-label="Targets to compare">
     <div className="target-pool-heading"><span className="target-pool-label">Targets to compare</span><span className="target-pool-summary">{summary}</span></div>
     <div className="target-pool-body">
+      <a href="/curve-credits#autoeq-library">AutoEq sources and credits</a>
       <div className="target-pool-modes" role="radiogroup" aria-label="Which targets to compare">
-        <label className={!custom ? "is-on" : ""}><input type="radio" name={`${id}-mode`} checked={!custom} disabled={disabled} onChange={() => onChange({ mode: "all" })}/><span><strong>All public targets</strong><small>The shared pool ({eligiblePublic.length} targets). Your private targets are not included.</small></span></label>
+        <label className={!custom ? "is-on" : ""}><input type="radio" name={`${id}-mode`} checked={!custom} disabled={disabled} onChange={() => onChange({ mode: "all" })}/><span><strong>{hasSourceChoices ? "All built-in targets" : "All public targets"}</strong><small>{hasSourceChoices ? "For AutoEq source curves, choose your own pool." : `The shared pool (${defaultCount} targets). Your private targets are not included.`}</small></span></label>
         <label className={custom && !starter ? "is-on" : ""}><input type="radio" name={`${id}-mode`} checked={custom && !starter} disabled={disabled} onChange={() => onChange({ mode: "custom", ids: custom ? choice.ids : eligibleLocal.length <= MAX_PERSONAL_CANDIDATES ? eligibleLocal.map(row => row.id) : [] })}/><span><strong>Choose my own pool</strong><small>Pick {MIN_CUSTOM_POOL}–{MAX_PERSONAL_CANDIDATES} public targets and your own uploads. Names stay hidden while you listen.</small></span></label>
-        <label className={starter?"is-on":""}><input type="radio" name={`${id}-mode`} checked={starter} disabled={disabled||eligiblePublic.length<2} onChange={()=>onChange({mode:"custom",ids:shortStarterPool(eligiblePublic),starter:true})}/><span><strong>Quick starter · up to 12 targets</strong><small>A random subset spread across known target families. Finds favorites within this subset; it does not rank every public target.</small></span></label>
+        <label className={starter?"is-on":""}><input type="radio" name={`${id}-mode`} checked={starter} disabled={disabled||defaultCount<2} onChange={()=>onChange({mode:"custom",ids:shortStarterPool(defaultPublicTargets),starter:true})}/><span><strong>Quick starter · up to 12 targets</strong><small>A random subset spread across known target families. Finds favorites within this subset; it does not rank every public target.</small></span></label>
       </div>
-      {starter&&<p className="target-pool-note">{pool.length} of {eligiblePublic.length} public targets selected. Your subset is saved with this setup. Choose All public targets for broader coverage.</p>}
+      {starter&&<p className="target-pool-note">{pool.length} of {defaultCount} built-in targets selected. Your subset is saved with this setup. Choose the full pool for broader coverage.</p>}
       {custom && !starter && <>
         <div className="target-pool-tools">
           <input type="search" aria-label="Find a target by name" placeholder="Find a target" value={query} onChange={event => setQuery(event.target.value)} disabled={disabled}/>

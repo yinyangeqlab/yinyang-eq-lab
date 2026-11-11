@@ -1,3 +1,4 @@
+import { FIT_CANDIDATE_COUNT } from './fitter-settings';
 import { legacyBatch, validateRequest, type AutoEqFit, type AutoEqRequest } from './autoeq-fit';
 type Reply = { id: number; results?: AutoEqFit[]; error?: string; unavailable?: boolean };
 type Pending = { resolve: (fits: AutoEqFit[]) => void; reject: (error: Error) => void; request: AutoEqRequest; cleanup: () => void };
@@ -13,7 +14,7 @@ export function createAutoEqService(makeWorker = () => new Worker(new URL('./aut
   const remember = (request: AutoEqRequest, results: AutoEqFit[]) => {
     const encoded = key(request); if (encoded.length > 500000) return;
     if (cache.has(encoded)) { cache.delete(encoded); cacheChars -= encoded.length; }
-    while (cache.size && (cache.size >= 12 || cacheChars + encoded.length > 500000)) { const oldest = cache.keys().next().value!; cacheChars -= oldest.length; cache.delete(oldest); }
+    while (cache.size && (cache.size >= FIT_CANDIDATE_COUNT || cacheChars + encoded.length > 500000)) { const oldest = cache.keys().next().value!; cacheChars -= oldest.length; cache.delete(oldest); }
     cache.set(encoded, structuredClone(results)); cacheChars += encoded.length;
   };
   const validResults = (results: AutoEqFit[] | undefined, request: AutoEqRequest) => Array.isArray(results) && results.length === request.targets.length && results.every(f =>

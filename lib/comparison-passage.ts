@@ -70,16 +70,19 @@ export function adjustComparisonPassage(passage: ComparisonPassage, mode: "move"
   return { start, end: Math.min(duration, start + length) };
 }
 
-/** Personal exploration: body moves preserve length; only edges resize, min 5s. */
-export function adjustResizablePassage(passage: ComparisonPassage, mode: "move" | "start" | "end", delta: number, duration: number): ComparisonPassage {
-  if (!Number.isFinite(duration)||!Number.isFinite(delta)||duration<PASSAGE_SECONDS) return passage;
-  const limit=duration>=PASSAGE_SECONDS+.1?duration-.1:duration;
-  const round=(n:number)=>Math.round(n*100)/100;
-  const length=Math.min(limit,Math.max(PASSAGE_SECONDS,passage.end-passage.start));
-  const baseStart=Math.max(0,Math.min(limit-length,passage.start));
-  const baseEnd=baseStart+length;
-  if(mode==="start")return {start:Math.min(baseEnd-PASSAGE_SECONDS,Math.max(0,round(baseStart+delta))),end:baseEnd};
-  if(mode==="end")return {start:baseStart,end:Math.max(baseStart+PASSAGE_SECONDS,Math.min(limit,round(baseEnd+delta)))};
-  const start=Math.max(0,Math.min(limit-length,round(baseStart+delta)));
-  return {start,end:start+length};
+export type ResizablePassageBounds = { minimum: number; endPadding: number };
+export const defaultResizablePassageBounds: ResizablePassageBounds = { minimum: PASSAGE_SECONDS, endPadding: .1 };
+
+/** Body moves preserve length. Edges resize within the supplied bounds. */
+export function adjustResizablePassage(passage: ComparisonPassage, mode: "move" | "start" | "end", delta: number, duration: number, { minimum, endPadding }: ResizablePassageBounds = defaultResizablePassageBounds): ComparisonPassage {
+  if (!Number.isFinite(duration) || !Number.isFinite(delta) || duration < minimum) return passage;
+  const limit = duration >= minimum + endPadding ? duration - endPadding : duration;
+  const round = (seconds: number) => Math.round(seconds * 100) / 100;
+  const length = Math.min(limit, Math.max(minimum, passage.end - passage.start));
+  const baseStart = Math.max(0, Math.min(limit - length, passage.start));
+  const baseEnd = baseStart + length;
+  if (mode === "start") return { start: Math.min(baseEnd - minimum, Math.max(0, round(baseStart + delta))), end: baseEnd };
+  if (mode === "end") return { start: baseStart, end: Math.max(baseStart + minimum, Math.min(limit, round(baseEnd + delta))) };
+  const start = Math.max(0, Math.min(limit - length, round(baseStart + delta)));
+  return { start, end: start + length };
 }

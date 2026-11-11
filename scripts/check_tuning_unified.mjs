@@ -30,7 +30,7 @@ const {safeLibraryEq}=load('lib/music-library-eq.ts'), preset={id:'saved',name:'
 const stored=safeLibraryEq(preset);target[0][1]=99;
 check(stored.target.points[0][1]===4,'Saved target is an immutable snapshot');
 check(!safeLibraryEq({...preset,target:{name:'Invalid',points:[[20,0],[20,1]]}}).target,'Invalid target metadata is omitted without losing valid EQ filters');
-check(safeLibraryEq({...preset,filters:Array.from({length:25},()=>({...base[0],gain:.1}))}).filters.length===25,'An exported EQ plus all five tuning controls can be saved');
+check(safeLibraryEq({...preset,filters:Array.from({length:36},()=>({...base[0],gain:.1}))}).filters.length===36,'A 30-band exported EQ plus all six tuning controls can be saved');
 assert.throws(()=>safeLibraryEq({...preset,filters:Array.from({length:41},()=>base[0])}));checks++;
 assert.throws(()=>safeLibraryEq({...preset,filters:Array.from({length:25},()=>base[0])}),/headroom/);checks++;
 const reference=[[20,4],[1000,0],[20000,1]], plot=tuningResponsePlot(raw,reference,base,added);
@@ -41,10 +41,10 @@ const bypassPlot=tuningResponsePlot(raw,reference,base,added,48000,'shootout',fa
 check(bypassPlot.after.every((point,i)=>point[1]===bypassPlot.raw[i][1]),'Bypassed overlays coincide with raw on the original graph');
 const absent=tuningResponsePlot(undefined,reference,base,added);
 check(!absent.raw && !absent.after && absent.base.length>=2049,'Without a measurement only settings are plotted, not invented headphone responses');
-const source=fs.readFileSync('app/preference-tuning/page.tsx','utf8'), ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
+const source=fs.readFileSync('app/preference-tuning/editor.tsx','utf8'), ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
 const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='preparePreviewFit')initializer=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);
 const jobs=[],stages=[],statuses=[],messages=[],fits=[];
-const current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},filters:[{}]};
+const current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},toneInput:{},toneGain:1};
 const state={fitter:{method:"standard",bands:10},AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:raw},normalized:[[20,0],[20000,0]],filters:added,soundMode:'target',savedEq:undefined,eqOn:true,graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage(_context,_input,_output,filters){stages.push(filters);return{};},safeGain(){},setFit:value=>fits.push(value),setPreparingEq:value=>statuses.push(value),setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});jobs.push({promise,resolve,reject,signal});return promise;}};
 const prepare=vm.runInNewContext(ts.transpileModule('('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
 const pending=prepare(current);check(statuses.at(-1) && !current.fitReady,'Pending fit hides stale predictions and is not ready for playback');
@@ -68,8 +68,8 @@ const measurementB={id:'headphone-b',name:'Headphone B',device:'Headphone B',typ
 const linkedStored={...stored,measurementId:measurementA.id,headphone:measurementA.name};
 const unlinkedStored={...stored,id:'unlinked',name:'Imported without headphones'};
 const store=new Map([['target-lab-library-eqs-v1',JSON.stringify([linkedStored,unlinkedStored])],['target-lab-measurements',JSON.stringify([measurementA,measurementB])],['target-lab-active-measurement',measurementB.id]]);
-const h=mount('app/preference-tuning/page.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
-const setup=()=>h.find(n=>n.type==='@/components/sound-setup'), bass=()=>h.find(n=>n.props?.['aria-label']==='Bass');
+const h=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
+const setup=()=>h.find(n=>n.type==='@/components/sound-setup'), bass=()=>h.find(n=>n.props?.['aria-label']==='Bass gain');
 const responseCurve=()=>h.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart').props;
 const rawOverlay=()=>responseCurve().overlays.find(row=>row.key==='raw').points;
 const lowEnd=points=>points[0][1]-interpolate(points,1000);
@@ -84,7 +84,7 @@ store.set('target-lab-measurements',JSON.stringify([measurementA,measurementB]))
 check(Math.abs(lowEnd(rawOverlay())-5)<1e-9,'Restoring the linked measurement restores its response without choosing unrelated headphones');
 setup().props.onPreset('unlinked');h.render();check(!rawOverlay(),'Imported EQ without a measurement link never borrows the current target headphones');
 setup().props.onPreset('saved');h.render();bass().props.onChange({target:{value:'2'}});h.render();
-check(h.find(n=>n.type==='audio') && h.find(n=>n.type==='@/components/playback-transport'),'Tuning has one audio element and one shared player');
+check(h.find(n=>n.type==='audio') && h.find(n=>n.props?.id==='saved-eq-listening'),'Tuning has one audio element and one shared player');
 store.set('target-lab-library-eqs-v1','[]');h.events.get('library-eqs-changed').forEach(fn=>fn());h.render();h.render();
 check(setup().props.presetId==='' && bass().props.value===0,'External deletion clears the selected preset and unsaved tweaks');
 store.set('target-lab-library-eqs-v1',JSON.stringify([linkedStored]));h.events.get('library-eqs-changed').forEach(fn=>fn());h.render();setup().props.onPreset('saved');h.render();
@@ -92,6 +92,17 @@ setup().props.onMode('target');h.render();bass().props.onChange({target:{value:'
 store.set('target-lab-library-eqs-v1','[]');h.events.get('library-eqs-changed').forEach(fn=>fn());h.render();h.render();
 check(setup().props.presetId==='' && bass().props.value===4,'Deleting the inactive saved EQ preserves the active Target tuning draft');
 setup().props.onMode('saved');h.render();check(bass().props.value===0,'Deletion still clears the inactive Saved EQ draft');
+setup().props.onMode('target');h.render();
+const toneControl=(label)=>h.find(n=>n.props?.['aria-label']===label);
+toneControl('Editing view').props.children[1].props.onClick();h.render();
+const subGain=()=>h.find(n=>typeof n.type==='function'&&n.type.name==='SignedGainInput'&&n.props.label==='Sub gain');
+check(subGain().props.value===0 && toneControl('Bass filter shape').props.value==='LSC','Older tuning drafts restore with neutral Sub and the original Bass shelf');
+subGain().props.onCommit(4);h.render();
+toneControl('Sub Q').props.onBlur({currentTarget:{valueAsNumber:4,value:'4'}});h.render();
+check(responseCurve().settings.sub===4 && responseCurve().settings.subQ===4,'Sub gain and Q reach the actual Tuning graph settings');
+toneControl('Sub filter shape').props.onChange({target:{value:'HSC'}});h.render();
+check(responseCurve().settings.subType==='HSC' && responseCurve().settings.subQ===Math.SQRT1_2,'Changing to a shelf applies the smooth shelf Q bound');
+check(JSON.parse(store.get('personal-tuning-v1')).settings.subType==='HSC','The selected shape persists with the existing tuning draft');
 h.unmount();
 // Verify the actual shared picker only renders its selected mode's input.
 const props={mode:'target',onMode(){},headphones:{type:'fixture-headphone-picker',props:{}},target:{type:'select',props:{id:'target-fixture'}},presets:[linkedStored],presetId:'saved',onPreset(){}};
@@ -104,10 +115,10 @@ check(savedSetup.find(n=>n.type==='optgroup').props.label==='Headphone A','Saved
 const collect=(n,predicate)=>!n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(item=>collect(item,predicate)):[...(predicate(n)?[n]:[]),...collect(n.props?.children,predicate)];
 check(collect(savedSetup.tree,n=>n.type==='fixture-headphone-picker').length===0,'Saved mode hides the unrelated editable headphone picker');savedSetup.unmount();
 // Render the actual original chart function held by the page, then exercise its controls.
-const chartHost=mount('app/preference-tuning/page.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{ResizeObserver:class{observe(){}disconnect(){}},fetch:async()=>({ok:true,json:async()=>[]})}});
+const chartHost=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{ResizeObserver:class{observe(){}disconnect(){}},fetch:async()=>({ok:true,json:async()=>[]})}});
 chartHost.render();const chartNode=chartHost.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart');
-const drags=[];let starts=0,ends=0;
-const chartProps={...chartNode.props,overlays:[{key:'raw',label:'Raw headphones',points:plot.raw,color:'#d6e0e7'},{key:'after',label:'Predicted after EQ',points:plot.after,color:'#8ee8ca'}],onDrag:(...args)=>drags.push(args),onDragStart:()=>starts++,onDragEnd:()=>ends++};
+const drags=[],focusedChanges=[];let starts=0,ends=0;
+const chartProps={...chartNode.props,mode:'filters',overlays:[{key:'raw',label:'Raw headphones',points:plot.raw,color:'#d6e0e7'},{key:'after',label:'Predicted after EQ',points:plot.after,color:'#8ee8ca'}],onDrag:(...args)=>drags.push(args),onFocusedChange:filter=>focusedChanges.push(filter),onDragStart:()=>starts++,onDragEnd:()=>ends++};
 
 let chart=chartNode.type(chartProps);
 check(collect(chart,n=>n.type==='path'&&n.props.stroke==='#d6e0e7').length===0,'Response overlays are off by default, retaining the original curve view');
@@ -122,9 +133,37 @@ assert.deepEqual(collect(chart,n=>n.type==='path'&&n.props.strokeWidth==='3').ma
 const marker=collect(chart,n=>n.props?.['aria-label']==='Ear gain center')[0];marker.props.onKeyDown({key:'ArrowRight',preventDefault(){},stopPropagation(){}});marker.props.onKeyUp();
 check(drags.at(-1)[0]==='earHz' && drags.at(-1)[1]===2850,'Original frequency markers retain keyboard editing');
 const drag=collect(chart,n=>n.props?.className==='pt-curve-drag')[0],rect={width:800,height:230,left:0};
-const event={clientX:300,clientY:100,pointerId:1,shiftKey:false,currentTarget:{ownerSVGElement:{getBoundingClientRect:()=>rect},setPointerCapture(){},releasePointerCapture(){}}};
+const event={clientX:300,clientY:100,pointerId:1,shiftKey:true,currentTarget:{ownerSVGElement:{getBoundingClientRect:()=>rect},setPointerCapture(){},releasePointerCapture(){}}};
 drag.props.onPointerDown(event);drag.props.onPointerMove({...event,clientY:85});drag.props.onPointerUp(event);
 check(drags.length===2 && ['bass','body','ear','air','treble'].includes(drags.at(-1)[0]) && starts===2 && ends===2,'Original graph drag editing and gesture history remain active');
+for (const [hz, expectedBand] of [[25,'sub'],[59,'sub'],[61,'bass'],[320,'body'],[2800,'ear'],[6500,'air'],[12000,'treble']]) {
+  const clientX=48+(800-17-48)*Math.log(hz/20)/Math.log(20000/20);
+  drag.props.onPointerDown({...event,clientX});
+  drag.props.onPointerMove({...event,clientX,clientY:97});
+  drag.props.onPointerUp({...event,clientX});
+  check(drags.at(-1)[0]===expectedBand && drags.at(-1)[1]>0,`Drag at ${hz} Hz adjusts the labeled ${expectedBand} band even when another filter overlaps it`);
+}
+const focusEvent={...event,clientX:48+(800-17-48)*Math.log(1500/20)/Math.log(20000/20),shiftKey:false};
+const broadChanges=drags.length;
+drag.props.onPointerDown(focusEvent);drag.props.onPointerMove({...focusEvent,clientY:90});drag.props.onPointerUp(focusEvent);
+check(focusedChanges.length===1 && focusedChanges[0].hz===1500 && focusedChanges[0].gain>0 && focusedChanges[0].q===4 && drags.length===broadChanges,'A plain drag creates a focused peak at the pointer while keeping whole-region gains separate');
+const focusMath=load('lib/peq-preset.ts');
+for (const rate of [44100,48000,96000]) {
+  const filter={type:'PK',hz:1500,gain:-6,q:4};
+  for (const hz of focusMath.peakingHalfGainEdges(filter.hz,filter.q,rate)) {
+    check(Math.abs(focusMath.presetFilterResponse(hz,filter,rate)+3)<1e-7,'Focused range edges match the actual digital filter half-gain response');
+  }
+}
+const subCut={type:'PK',hz:40,gain:-1.93,q:1.5};
+const subEffect=focusMath.tuningFilterEffectRange(subCut,20,20000,.1,48000);
+check(subEffect?.[0]===20 && focusMath.presetFilterResponse(20,subCut,48000)<-.1,'The Sub cut includes its real change at the 20 Hz graph edge');
+check(Math.abs(Math.abs(focusMath.presetFilterResponse(subEffect[1],subCut,48000))-.1)<1e-5,'The displayed peak range ends at the actual 0.1 dB threshold');
+for (const [type,hz,edge] of [['LSC',105,0],['HSC',6500,1]]) {
+  const shelf={type,hz,gain:3,q:Math.SQRT1_2};
+  const range=focusMath.tuningFilterEffectRange(shelf,20,20000,.1,48000);
+  check(range[edge]===[20,20000][edge] && Math.abs(focusMath.presetFilterResponse(range[1-edge],shelf,48000)-.1)<1e-5,'Shelf range reaches the graph edge and includes its audible tail');
+}
+check(!focusMath.tuningFilterEffectRange({...subCut,gain:-.05},20,20000,.1,48000),'A smaller change is reported as below the displayed threshold');
 const rateSettings={...chartProps.settings,treble:6};
 const renderRate=sampleRate=>{chartHost.render();return chartNode.type({...chartProps,settings:rateSettings,curveBase:[[20,75],[10000,75],[22000,75]],overlays:[],sampleRate,axis:{...chartProps.axis,autoDb:false,dbMin:55,dbMax:90}});};
 const rateChart=renderRate(44100),ratePath=collect(rateChart,n=>n.type==='path'&&n.props.strokeWidth==='3')[0].props.d;
@@ -148,49 +187,84 @@ libraryStore.set('target-lab-measurements',JSON.stringify([measurementB]));linke
 check(libraryChanges.at(-1).measurementId===measurementA.id && JSON.stringify(libraryChanges.at(-1).filters)===JSON.stringify(linkedStored.filters),'Missing linked headphone does not replace or refit Library playback');linkedLibrary.unmount();
 
 // Exercise the actual unified gain/frequency editor rather than a copied state reducer.
-const tones=mount('app/preference-tuning/page.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{fetch:async()=>({ok:true,json:async()=>[]})}});
+let editTime=1000;
+const tones=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{performance:{now:()=>editTime},fetch:async()=>({ok:true,json:async()=>[]})}});
 const toneCurve=()=>tones.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart').props;
-const toneGain=name=>tones.find(n=>n.type==='input'&&n.props['aria-label']===name);
-const toneField=()=>tones.find(n=>n.type==='input'&&n.props.id==='pt-frequency-value');
-const toneForm=()=>tones.find(n=>n.type==='form'&&n.props.id==='pt-frequency-editor');
+const toneGain=name=>tones.find(n=>n.type==='input'&&n.props.type==='range'&&n.props['aria-label']===name+' gain');
+const filterField=label=>tones.find(n=>n.type==='input'&&n.props['aria-label']===label);
 const toneSetup=()=>tones.find(n=>n.type==='@/components/sound-setup');
-let returnedFocus=0;
-const openToneFrequency=name=>{tones.find(n=>n.type==='button'&&n.props['aria-label']==='Edit '+name).props.onClick({currentTarget:{focus(){returnedFocus++;}}});tones.render();};
-const submitToneFrequency=()=>{toneForm().props.onSubmit({preventDefault(){}});tones.render();};
-const editorVisible=()=>collect(tones.tree,n=>n.props?.id==='pt-frequency-editor').length===1;
+const setEditorView=index=>{tones.find(n=>n.props?.['aria-label']==='Editing view').props.children[index].props.onClick();tones.render();};
+const sliderHistory=()=>tones.find(n=>n.props?.['aria-label']==='Tuning history');
+const clickHistory=index=>{collect(sliderHistory(),n=>n.type==='button')[index].props.onClick();tones.render();};
+const commitFrequency=(label,value)=>{filterField(label).props.onBlur({currentTarget:{valueAsNumber:value,value:String(value)}});tones.render();};
+const toneRanges=()=>collect(tones.tree,n=>n.type==='input'&&n.props.className==='pt-tone-slider');
 tones.render();
-check(collect(tones.tree,n=>n.type==='input'&&n.props.type==='range').length===5,'Five gain ranges replace the previous separate gain and frequency slider banks');
-check(collect(tones.tree,n=>n.props?.className==='pt-tone-frequency pt-tone-fixed').length===2 && collect(tones.tree,n=>n.type==='button'&&n.props.className==='pt-tone-frequency').length===3,'Body and Edge frequencies are fixed; only B, EG and T open a frequency editor');
-check(toneGain('Bass').props['aria-valuetext'].includes('below 105 hertz') && toneGain('Treble').props['aria-valuetext'].includes('above 6500 hertz'),'Tone controls describe actual shelf transitions instead of nominal region frequencies');
+check(toneCurve().mode==='tone'&&toneRanges().length===3,'Tone starts with the three common adjustments');
+const toneToggle=()=>tones.find(n=>n.type==='button'&&n.props['aria-controls']==='pt-tone-bands');
+const toneChoices=()=>tones.find(n=>n.props?.['aria-label']==='Choose a tone band').props.children;
+const toggleTones=()=>{toneToggle().props.onClick();tones.render();};
+toggleTones();
+check(toneChoices().length===6&&toneRanges().length===1,'All six Tone bands share one visible slider');
+toneChoices()[0].props.onClick();tones.render();
+check(toneCurve().selectedGraphBand==='sub'&&toneGain('Sub').props.value===0,'Choosing a band selects the matching curve region and slider');
+toneGain('Sub').props.onChange({target:{value:'2'}});tones.render();
+check(!toneToggle().props.disabled,'A change outside the main three keeps the view toggle enabled');
+toggleTones();
+check(toneRanges().length===3&&toneCurve().settings.sub===2,'Returning to the main three preserves the extra gain');
+toggleTones();
+check(toneGain('Sub').props.value===2,'Reopening restores the selected band and its current gain');
+toggleTones();
+check(toneGain('Bass').props['aria-valuetext'].includes('below 105 hertz') && toneGain('Treble').props['aria-valuetext'].includes('above 6500 hertz'),'Tone controls describe the actual shelf transitions');
 toneGain('Bass').props.onKeyDown({key:'ArrowUp'});toneGain('Bass').props.onChange({target:{value:'3'}});toneGain('Bass').props.onKeyUp();tones.render();
 check(toneCurve().settings.bass===3 && toneGain('Bass').props.value===3,'Gain changes update the same settings used by the curve');
-openToneFrequency('Bass transition');
-check(toneField().props.value==='105' && toneField().props.min===60 && toneField().props.max===250 && toneField().props.step===5,'Frequency editor starts at the current shelf position with the established bounds and step');
-toneField().props.onChange({target:{value:'2'}});tones.render();
-check(toneField().props.value==='2' && toneCurve().settings.bassHz===105,'Incomplete frequency typing changes only the draft and never jumps the live curve');
-toneField().props.onChange({target:{value:'150'}});tones.render();submitToneFrequency();
-check(toneCurve().settings.bassHz===150 && toneCurve().settings.bass===3 && !editorVisible() && returnedFocus===1,'Apply updates placement without changing gain, closes the editor and restores chip focus');
-tones.button('Undo 2').props.onClick();tones.render();
+setEditorView(1);
+const bassFrequency='Bass transition frequency';
+const earFrequency='Ear gain center frequency';
+const bassField=filterField(bassFrequency).props;
+check(toneCurve().mode==='filters'&&bassField.defaultValue===105 && bassField.min===60 && bassField.max===250 && bassField.step===5,'Filters shows the current shelf position and established input bounds');
+check(collect(tones.tree,n=>n.props?.className==='pt-fx-fixed').length===3,'The three fixed band frequencies are visible in Filters');
+commitFrequency(bassFrequency,150);
+check(toneCurve().settings.bassHz===150 && toneCurve().settings.bass===3,'Committing an inline frequency changes placement without changing gain');
+clickHistory(0);
 check(toneCurve().settings.bassHz===105 && toneCurve().settings.bass===3,'Undo reverts frequency placement independently from its gain');
-tones.button('Redo 1').props.onClick();tones.render();
+clickHistory(1);
 check(toneCurve().settings.bassHz===150,'Redo reapplies the committed frequency placement');
-openToneFrequency('Ear gain center');toneField().props.onChange({target:{value:'3400'}});tones.render();tones.find(n=>n.props?.['aria-label']==='Cancel frequency change').props.onClick();tones.render();
-check(toneCurve().settings.earHz===2800 && !editorVisible() && returnedFocus===2,'Cancel discards the frequency draft and returns focus without changing the curve');
-openToneFrequency('Treble transition');toneField().props.onChange({target:{value:'8000'}});tones.render();let escaped=0;toneForm().props.onKeyDown({key:'Escape',preventDefault(){escaped++;},stopPropagation(){escaped++;}});tones.render();
-check(toneCurve().settings.trebleHz===6500 && !editorVisible() && escaped===2 && returnedFocus===3,'Escape cancels the editor without applying a stale frequency or triggering other shortcuts');
-openToneFrequency('Bass transition');toneField().props.onChange({target:{value:''}});tones.render();submitToneFrequency();
-check(toneCurve().settings.bassHz===150 && editorVisible(),'Blank frequency submission leaves the live settings unchanged');
-toneField().props.onChange({target:{value:'999'}});tones.render();submitToneFrequency();
-check(toneCurve().settings.bassHz===150 && editorVisible(),'Out-of-range frequency submission cannot alter live settings');
-tones.find(n=>n.props?.['aria-label']==='Cancel frequency change').props.onClick();tones.render();
-// Graph marker editing and the new chips share one placement state and history.
-toneCurve().onDragStart();toneCurve().onDrag('earHz',3150);toneCurve().onDragEnd();tones.render();openToneFrequency('Ear gain center');
-check(toneField().props.value==='3150' && toneGain('Voice presence').props['aria-valuetext'].includes('3150 hertz'),'Graph placement edits immediately update the frequency chip editor and gain description');
-toneField().props.onChange({target:{value:'4000'}});tones.render();toneSetup().props.onMode('saved');tones.render();
-check(tones.find(n=>n.type==='fieldset'&&n.props.className==='pt-tone-controls').props.disabled===true,'Without a selected saved EQ, one disabled fieldset blocks gain and frequency editing');
-check(!editorVisible(),'Switching sound modes discards an unfinished frequency edit');
+commitFrequency(bassFrequency,NaN);commitFrequency(bassFrequency,999);
+check(toneCurve().settings.bassHz===150,'Blank and out-of-range frequency edits keep the current placement');
+let stopped=0;
+const canceledField={value:'3400',defaultValue:'2800',blur(){commitFrequency(earFrequency,Number(this.value));}};
+filterField(earFrequency).props.onKeyDown({key:'Escape',preventDefault(){stopped++;},stopPropagation(){stopped++;},currentTarget:canceledField});
+check(toneCurve().settings.earHz===2800 && stopped===2,'Escape discards the frequency draft without triggering other shortcuts');
+toneCurve().onDragStart();toneCurve().onDrag('earHz',3150);toneCurve().onDragEnd();tones.render();
+check(filterField(earFrequency).props.defaultValue===3150,'Graph placement updates the inline frequency');
+setEditorView(0);
+check(toneGain('Mids & ear gain').props['aria-valuetext'].includes('3150 hertz'),'The Tone view describes the same placement');
+setEditorView(1);
+toneSetup().props.onMode('saved');tones.render();
+check(tones.find(n=>n.type==='fieldset'&&n.props.id==='pt-edit-controls').props.disabled===true,'Without a selected saved EQ, the Filters fields are disabled');
 toneSetup().props.onMode('target');tones.render();
-check(toneCurve().settings.earHz===3150,'Returning to Target preserves its committed frequency rather than the discarded draft');
+check(toneCurve().settings.earHz===3150,'Returning to Target preserves its committed frequency');
+const initialQ=toneCurve().settings.earQ;
+toneCurve().onWheelQ('ear',-120);editTime+=80;tones.render();
+toneCurve().onWheelQ('ear',-120);tones.render();
+const adjustedQ=toneCurve().settings.earQ;
+check(adjustedQ>initialQ && toneCurve().settings.ear===0,'Wheel edits narrow the selected peak without changing gain');
+clickHistory(0);
+check(toneCurve().settings.earQ===initialQ,'Undo next to the sliders reverses a burst of wheel edits in one step');
+clickHistory(1);
+check(toneCurve().settings.earQ===adjustedQ,'Redo next to the sliders restores the wheel edit');
+toneCurve().onWheelQ('bass',-120);tones.render();
+check(toneCurve().settings.bassQ===Math.SQRT1_2,'Wheel edits respect the shelf Q limit');
+const originalGains=['sub','bass','body','ear','air','treble'].map(key=>toneCurve().settings[key]);
+toneCurve().onFocusedChange({hz:1500,gain:-3,q:4});tones.render();
+check(toneCurve().settings.focused.length===1 && toneCurve().settings.focused[0].gain===-3,'Focused correction reaches the Tuning settings');
+assert.deepEqual(['sub','bass','body','ear','air','treble'].map(key=>toneCurve().settings[key]),originalGains);checks++;
+clickHistory(0);check(toneCurve().settings.focused.length===0,'Undo removes a focused correction independently of whole-region gains');
+clickHistory(1);check(toneCurve().settings.focused[0].hz===1500,'Redo restores the focused correction');
+for(const hz of [700,9000,17000,19000]){toneCurve().onFocusedChange({hz,gain:2,q:4});tones.render();}
+check(toneCurve().settings.focused.length===4 && !toneCurve().settings.focused.some(filter=>filter.hz===19000),'Focused corrections stay within the four-edit export budget');
+toneCurve().onFocusedChange({hz:1500,gain:0,q:4});tones.render();
+check(toneCurve().settings.focused.length===3,'Removing a focused correction releases its slot');
 tones.unmount();
 
 
@@ -206,16 +280,20 @@ class ControlsAudioContext extends EventTarget {
 class ControlsWorklet {port={postMessage:value=>audioMessages.push(value)};connect(){}disconnect(){}}
 const controlsAudio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},play(){this.paused=false;return Promise.resolve();}};
 const controlsTracks=[{fileUrl:'/first-fixture.wav',title:'First fixture',artist:'Synthetic artist'},{fileUrl:'/second-fixture.wav',title:'Second fixture',artist:'Synthetic artist'}];
-const player=mount('app/preference-tuning/page.tsx',{audio:controlsAudio,imports:{'@/lib/music-catalog':{listeningPool:controlsTracks},'@/lib/loudness':{analyzeTrack:async()=>({})},'@/components/playback-transport':{default:'fixture-transport',NowPlaying:'fixture-now-playing',PlaybackTime:'fixture-playback-time'}},globals:{AudioContext:ControlsAudioContext,AudioWorkletNode:ControlsWorklet,fetch:async()=>({ok:true,json:async()=>[],blob:async()=>new Blob()})}});
+const player=mount('app/preference-tuning/editor.tsx',{audio:controlsAudio,imports:{'@/lib/music-catalog':{listeningPool:controlsTracks},'@/lib/loudness':{analyzeTrack:async()=>({})},'@/components/playback-transport':{default:'fixture-transport',NowPlaying:'fixture-now-playing',PlaybackTime:'fixture-playback-time'}},globals:{AudioContext:ControlsAudioContext,AudioWorkletNode:ControlsWorklet,fetch:async()=>({ok:true,json:async()=>[],blob:async()=>new Blob()})}});
 const flushPlayer=async()=>{for(let i=0;i<30;i++)await Promise.resolve();player.render();};
-const transport=()=>player.find(n=>n.type==='fixture-transport');
+const playControl=()=>player.find(n=>['Play music','Pause music'].includes(n.props?.['aria-label']));
+const trackLabel=()=>player.find(n=>n.props?.className==='pt-full-track').props.children.map(node=>node.props.children).join(' · ');
 const playerWave=()=>player.find(n=>n.type==='@/components/track-waveform').props;
-const curatedSelect=()=>player.find(n=>n.type==='@/components/music-track-picker');
-const dynamicsButtons=()=>collect(transport().props.tools,n=>n.type==='button');
+const curatedPickers=()=>collect(player.tree,n=>n.type==='@/components/music-track-picker');
+const bothPickersSelect=index=>curatedPickers().length===2 && curatedPickers().every(picker=>picker.props.selectedIndex===index);
+const dynamicsButtons=()=>collect(player.tree,n=>n.type==='button'&&/dynamics|dynamic range/i.test(n.props?.['aria-label']||''));
 const resetDynamics=()=>dynamicsButtons().find(n=>n.props['aria-label']==='Reset track dynamics');
-player.render();player.find(n=>n.type==='@/components/music-track-picker').props.onSelect(0);await flushPlayer();
-check(player.find(n=>n.type==='fixture-now-playing').props.title==='First fixture · Synthetic artist' && player.find(n=>n.type==='fixture-now-playing').props.source==='Music library' && controlsAudio.src==='/first-fixture.wav' && curatedSelect().props.selectedIndex===0,'Selecting a recording updates the current-song display, dropdown and single audio source together');
-player.find(n=>n.type==='audio').props.onLoadedMetadata();player.render();transport().props.onToggle();await flushPlayer();
+player.render();curatedPickers()[0].props.onSelect(0);await flushPlayer();
+player.find(n=>n.props?.['aria-controls']==='pt-playback-full').props.onClick();player.render();
+player.find(n=>n.props?.['aria-controls']==='pt-music-choices').props.onClick();player.render();
+check(trackLabel().startsWith('First fixture · Synthetic artist · Music library') && controlsAudio.src==='/first-fixture.wav' && bothPickersSelect(0),'Selecting a recording updates the current-song display, dropdown and single audio source together');
+player.find(n=>n.type==='audio').props.onLoadedMetadata();player.render();playControl().props.onClick();await flushPlayer();
 check(!playerWave().dynamicRangeDisabled && !resetDynamics(),'Ready playback has no dynamics reset when the original dynamics are unchanged');
 dynamicsButtons().find(n=>n.props['aria-label']==='Toggle Dynamic Range Compression/Expansion slider').props.onClick();player.render();
 check(playerWave().dynamicSliderEnabled,'The labeled Dynamics control reveals the existing waveform adjustment');
@@ -226,10 +304,10 @@ check(playerWave().dynamicRange===0 && audioMessages.at(-1).amount===0 && !reset
 const another=player.button('Random song');
 check(collect(player.tree,n=>n.type==='button'&&n.props.onClick===another.props.onClick).length===1,'There is exactly one random library-song action');
 another.props.onClick();await flushPlayer();
-check(controlsAudio.src==='/second-fixture.wav' && player.find(n=>n.type==='fixture-now-playing').props.title==='Second fixture · Synthetic artist' && player.find(n=>n.type==='fixture-now-playing').props.playing && curatedSelect().props.selectedIndex===1,'Random song updates the player, current-song display and dropdown without repeating the selected track');
+check(controlsAudio.src==='/second-fixture.wav' && trackLabel().startsWith('Second fixture · Synthetic artist · Music library') && playControl().props['aria-label']==='Pause music' && bothPickersSelect(1),'Random song updates the player, current-song display and dropdown without repeating the selected track');
 const localFixture=Object.assign(new Blob(['synthetic audio'],{type:'audio/wav'}),{name:'local-fixture.wav'});
 player.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[localFixture]}});await flushPlayer();
-check(curatedSelect().props.selectedIndex===-1 && controlsAudio.src.startsWith('blob:') && player.find(n=>n.type==='fixture-now-playing').props.title==='local-fixture.wav' && player.find(n=>n.type==='fixture-now-playing').props.source==='File on your device','Loading a local file clears the library selection and identifies the local audio source');
+check(bothPickersSelect(-1) && controlsAudio.src.startsWith('blob:') && trackLabel().startsWith('local-fixture.wav · File on your device'),'Loading a local file clears the library selection and identifies the local audio source');
 player.unmount();
 
 

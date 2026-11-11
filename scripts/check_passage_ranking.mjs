@@ -14,6 +14,8 @@ let votes=[],runs=[],owners=[];
 const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
 function load(file){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return fixtureModule.exports;}
 deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');
+deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
+deps['@/lib/target-labels']={oratoryInEarId:'oratory-fixture',oratoryInEarLabel:'oratory1990 in-ear (aka USOUND1v1 approximation)'};
 deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
 const route=load('app/api/research/route.ts');
 const interval=(side,start,end)=>({side,start,end,rate:1});

@@ -16,6 +16,10 @@ export function at(points: Point[], hz: number) {
   return points[points.length - 1][1];
 }
 
+export function automaticChannelCorrection(hz: number, left: Point[], right: Point[], leftLevelDb: number, rightLevelDb: number) {
+  return ((at(right, hz) + rightLevelDb) - (at(left, hz) + leftLevelDb)) / 2;
+}
+
 export function averageChannels(left: Point[], right: Point[]): Point[] {
   return Array.from({ length: 121 }, (_, i) => {
     const hz = 20 * 1000 ** (i / 120);
@@ -50,10 +54,9 @@ export function channelBalance(measurement: ChannelMatch | undefined, sampleRate
   const supplied = customAllowed && measurement?.channelMatchMode === "custom" && measurement.channelMatchPreset;
   if ((!left?.length || !right?.length) && !supplied) return null;
   const levels = [measurement?.leftLevelDb ?? 0, measurement?.rightLevelDb ?? 0];
-  const automatic = (hz: number) => ((at(right!, hz) + levels[1]) - (at(left!, hz) + levels[0])) / 2;
   const correction = (channel: number, hz: number) => supplied
     ? presetResponse(hz, supplied, channel as 0 | 1, sampleRate)
-    : (channel === 0 ? 1 : -1) * automatic(hz);
+    : (channel === 0 ? 1 : -1) * automaticChannelCorrection(hz, left!, right!, levels[0], levels[1]);
   const impulses: [Float32Array, Float32Array] = [new Float32Array(LENGTH), new Float32Array(LENGTH)];
   let maxBoostDb = 0;
   for (let channel = 0; channel < 2; channel++) {

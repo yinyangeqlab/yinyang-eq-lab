@@ -1,3 +1,4 @@
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { rankingEvidence } from "@/lib/ranking-evidence";
 import { rankPreferences } from "@/lib/preference-ranking";
@@ -18,7 +19,7 @@ export async function GET() {
   if (maintenance) return maintenance;
   const evidence = await rankingEvidence();
   const ratings = new Map(rankPreferences(evidence.targets,evidence.votes).rows.map(row=>[row.id,row]));
-  const rows = evidence.targets.map(target=>({...target,rating:ratings.get(target.id)?.rating??1500,wins:ratings.get(target.id)?.wins??0,losses:ratings.get(target.id)?.losses??0})).sort((a,b)=>b.rating-a.rating||a.id.localeCompare(b.id));
+  const rows = evidence.targets.filter(target => !sharedAutoEqTarget(target.id)).map(target=>({...target,rating:ratings.get(target.id)?.rating??1500,wins:ratings.get(target.id)?.wins??0,losses:ratings.get(target.id)?.losses??0})).sort((a,b)=>b.rating-a.rating||a.id.localeCompare(b.id));
   return Response.json(rows.map(({ points, measurement, ...row }) => ({ ...row, points: JSON.parse(points), measurement: measurement ? JSON.parse(measurement) : null })));
 }
 

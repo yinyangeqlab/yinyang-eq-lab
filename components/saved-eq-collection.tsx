@@ -1,8 +1,9 @@
 "use client";
+import Link from "next/link";
 
 import { useEffect, useMemo, useState } from "react";
 import { measurementChannelMatch, readLibraryEqs, removeLibraryEq, removeLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
-import { channelMatchText, channelMatchWav, downloadLocalFile, autoMatchFilename } from "@/lib/channel-match-export";
+import { downloadChannelMatch, downloadLocalFile } from "@/lib/channel-match-export";
 import { parseChannelMatchPreset } from "@/lib/peq-preset";
 import type { ChannelMatch } from "@/lib/channel-balance";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
@@ -31,9 +32,11 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   const matches = useMemo(() => new Map(measurements.map(row => [row.id, measurementChannelMatch(row)])), [measurements]);
   const pendingIds = deleteRequest?.filter(id => eqs.some(eq => eq.id === id)) ?? [];
   function act(action: () => void, success: string) { try { action(); setMessage(success); return true; } catch (error) { setMessage(error instanceof Error ? error.message : "Could not save this change."); return false; } }
-  function downloadMatch(match: ChannelMatch, name: string, custom = false) {
-    const filename = name.replace(/[^a-z0-9_-]/gi, "-").slice(0, 80) || "headphones";
-    act(() => downloadLocalFile(custom ? `${filename}-uploaded-channel-match.txt` : autoMatchFilename(name, match.channelMatchMode === "custom"), custom ? channelMatchText(match) : channelMatchWav(match), custom ? "text/plain" : "audio/wav"), "Channel match downloaded.");
+  function matchDownloads(match: ChannelMatch, name: string) {
+    return <div className="saved-eq-actions" role="group" aria-label={`Download ${match.channelMatchMode === "custom" ? "uploaded" : "automatic"} channel match for ${name}`}>
+      <button type="button" onClick={() => act(() => downloadChannelMatch(match, name, "txt"), "Channel match TXT downloaded.")}>Channel match TXT (IIR)</button>
+      <button type="button" onClick={() => act(() => downloadChannelMatch(match, name, "wav"), "Channel match WAV downloaded.")}>Channel match WAV (FIR)</button>
+    </div>;
   }
   async function upload(file: File | undefined) {
     if (!file || !model) return;
@@ -47,7 +50,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   return <section className="saved-eq-collection" aria-labelledby="saved-eq-title">
     <h2 id="saved-eq-title">Saved EQs &amp; channel matches</h2>
     <p>EQs saved from Tuning and Music library share this collection. Listen in either area, download settings, or delete EQs here. These copies stay in this browser unless you use account Sync.</p>
-    <div className="saved-eq-links"><a href="/preference-tuning#saved-eq-listening">Listen in Tuning</a><a href="/music-library">Listen in Music library</a></div>
+    <div className="saved-eq-links"><Link href="/preference-tuning#saved-eq-listening" prefetch={false}>Listen in Tuning</Link><a href="/music-library">Listen in Music library</a></div>
     {eqs.length ? <>
       <div className="saved-eq-selection" role="group" aria-label="Select saved EQs">
         <strong>{selectedIds.length} of {eqs.length} selected</strong>
@@ -65,9 +68,9 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
           <p>{eq.headphone && `${eq.headphone} · `}{eq.source} · {eq.filters.length} filters · {eq.preamp.toFixed(1)} dB preamp</p><small>{eq.channelMatch ? "Left/Right correction saved. Channel match is on by default while listening." : "No Left/Right channel correction saved."}</small>
           <div className="saved-eq-actions">
             <button type="button" onClick={() => act(() => downloadLocalFile("saved-eq.txt", `# ${eq.name.replace(/[\r\n]/g, " ")}\n# EQ only; channel match is a separate download.\nPreamp: ${eq.preamp} dB\n${eq.filters.map((f, i) => `Filter ${i + 1}: ON ${f.type || "PK"} Fc ${f.hz} Hz Gain ${f.gain} dB Q ${f.q}`).join("\n")}\n`, "text/plain"), "EQ settings downloaded.")}>Download EQ TXT</button>
-            {eq.channelMatch && <button type="button" onClick={() => downloadMatch(eq.channelMatch!, eq.name)}>Download channel match WAV</button>}
             <button type="button" onClick={() => act(() => removeLibraryEq(eq.id), "EQ deleted from My space, Tuning and Music library.")}>Delete EQ</button>
           </div>
+          {eq.channelMatch && matchDownloads(eq.channelMatch, eq.name)}
           <details className="saved-eq-correction"><summary>Channel correction</summary><p>This balances differences between your headphones’ Left and Right earpieces. Choose the same headphones this EQ was made for, then copy their correction into this EQ. Your EQ filters stay the same.</p>
             <label>Headphones for this EQ<select value={chosen?.id ?? ""} onChange={event => setEqModels(ids => ({ ...ids, [eq.id]: event.target.value }))}><option value="">Choose headphones</option>{measurements.map(row => <option key={row.id} value={row.id}>{row.name} · {row.device}</option>)}</select></label>
             <p>{match ? `A Left/Right correction is available for ${chosen?.name}.` : chosen ? "Add Left and Right responses or a two-channel preset in Headphones to enable correction." : "Choose a saved headphone measurement first."} Channel match starts on when a correction is available; you can turn it off while listening.</p>
@@ -77,13 +80,20 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
       })}</ul>
     </> : <p>No saved EQs yet. Finalize an EQ in Tuning and choose <b>Save EQ to My space</b>.</p>}
     <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
-      <div className="automatch-files" aria-label="Saved automatic channel matches">{measurements.filter(row=>row.leftPoints?.length && row.rightPoints?.length).map(row=><article key={row.id}><div><strong>YinYang AutoMatch · {row.device || row.name}</strong><small>{autoMatchFilename(row.device || row.name)}</small><p>{row.channelMatchPreset ? "Automatic correction and uploaded preset are both available." : "No uploaded file needed. Generated from your saved Left/Right responses."}</p></div><button type="button" onClick={()=>downloadMatch({...row,channelMatchMode:"auto"},row.device || row.name)}>Download WAV</button></article>)}</div>
+      <div className="automatch-files" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
+        <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>
+        {matchDownloads({ ...row, channelMatchMode: "auto" }, row.device || row.name)}
+      </article>)}</div>
       <label>Choose a saved headphone measurement<select value={modelId} onChange={event => setModelId(event.target.value)}><option value="">Choose headphones</option>{measurements.map(row => <option key={row.id} value={row.id}>{row.name} · {row.device}</option>)}</select></label>
       <p>Download this headphone’s Left/Right correction or add your own preset. To use it with a saved EQ, open Channel correction on that EQ above.</p>
       {model && <><p>{model.leftPoints && model.rightPoints ? "Automatic matching is available from this model’s Left and Right responses." : "Add Left and Right responses in Headphones to enable automatic matching."}</p>
-        <div className="saved-eq-actions">{model.leftPoints && model.rightPoints && <button type="button" onClick={() => downloadMatch({ ...model, channelMatchMode: "auto" }, model.name)}>Download YinYang AutoMatch WAV</button>}{model.channelMatchPreset && <button type="button" onClick={() => downloadMatch(model, model.name, true)}>Download uploaded match TXT</button>}</div>
+        {model.leftPoints && model.rightPoints && <><strong>Automatic channel match</strong>{matchDownloads({ ...model, channelMatchMode: "auto" }, model.name)}</>}
+        {model.channelMatchPreset && <><strong>Uploaded channel match</strong>{matchDownloads({ ...model, channelMatchMode: "custom" }, model.name)}</>}
         <label>Attach or replace this model’s channel-match preset<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/></label><a href="/shootout?tab=measurements#saved-measurements">Edit headphone responses and match mode</a></>}
-      <details><summary>Using channel-match downloads</summary><p>Auto Match WAV is a stereo 48 kHz convolution impulse, with Left then Right channels and protective headroom. Use it in a stereo convolution processor (for example, Equalizer APO’s Convolution command); it adds about 85 ms delay. It is not a music recording or a parametric EQ TXT. Use the same sample rate or a processor that resamples impulses. Turn off other channel matching before listening.</p></details>
+      <details><summary>Using channel-match downloads</summary>
+        <p><strong>TXT (IIR)</strong> contains editable left/right parametric EQ settings. AutoMatch TXT approximates the automatic correction. Uploaded TXT preserves the preset settings.</p>
+        <p><strong>WAV (FIR)</strong> is a 48 kHz stereo impulse. Load it into a stereo convolver at 48 kHz or use a convolver that resamples impulses. It adds about 85 ms of delay. Use one channel match at a time.</p>
+      </details>
     </section>
     {message && <p role="status">{message}</p>}
   </section>;

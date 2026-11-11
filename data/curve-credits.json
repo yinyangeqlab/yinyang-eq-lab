@@ -1,5 +1,5 @@
 {
-  "updated": "October 21, 2026",
+  "updated": "November 11, 2026",
   "previewOnly": false,
   "contact": "yinyangeqlab@gmail.com",
   "targets": [
@@ -425,13 +425,13 @@
     },
     {
       "id": "f424c849-5e3a-4184-9503-bb0461af6409",
-      "name": "oratory1990 in-ear",
-      "credit": "oratory1990; distributed by AutoEq",
+      "name": "oratory1990 in-ear (aka USOUND1v1 approximation)",
+      "credit": "oratory1990 / USound; approximation distributed by AutoEq",
       "status": "credited",
       "license": "",
       "sourceUrl": "https://github.com/jaakkopasanen/AutoEq/blob/master/targets/oratory1990%20in-ear.csv",
       "sourceLabel": "Imported source file",
-      "sourceNote": "Import record identifies Git blob 3bf863a60e05b6d6f462376103b92559e24ce22b. A repository’s software license is not assumed to license every underlying target or measurement.",
+      "sourceNote": "AutoEq’s approximation of the USOUND1v1 reference. Import record identifies Git blob 3bf863a60e05b6d6f462376103b92559e24ce22b. A repository’s software license is not assumed to license every underlying target or measurement.",
       "changes": "Imported numerical curve; normalized to 0 dB at 1 kHz.",
       "licenseUrl": "",
       "notice": "",

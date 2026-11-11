@@ -1,3 +1,21 @@
+## AutoEq target source library
+
+[Targets & credits](https://yinyangeq.com/curve-credits#autoeq-library) indexes all 61 CSV files at
+[AutoEq revision `7ae0f56`](https://github.com/jaakkopasanen/AutoEq/tree/7ae0f56d53074872b028649617a22bbb4232feb7/targets).
+The index includes original filenames, source credits, file fingerprints and source links.
+The [maintainer’s license clarification](https://github.com/jaakkopasanen/AutoEq/issues/790)
+covers code only. The app does not host these CSVs or seed their numerical data into D1.
+
+The site lists 65 listening curves from this source directory. Ten already had built-in
+target IDs. The other 55 use source links and stable IDs keyed to the parsed curve hash.
+The browser fetches the selected curve from AutoEq, checks the CSV and curve hashes,
+and holds the result in memory. Ranked trials and listening records use the same curve
+hashes. There are seven separately named columns from the combined Harman table.
+Two rig conversions remain reference entries. User-supplied local copies still work.
+
+The oratory1990 in-ear label includes “aka USOUND1v1 approximation”.
+[USound’s original reference](https://usound.com/how-headphones-should-sound/)
+
 # Live target inventory — October 17, 2026
 
 The live listening pool contains **41 approved target names** at this checkpoint. This file documents the names and category rules only. No sampled response points, target TXT/CSV files, presets, seeds, or target database exports are included in this source release. A listed name does not grant redistribution rights to its numerical curve.

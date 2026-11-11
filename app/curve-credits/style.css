@@ -19,3 +19,8 @@
 @media(max-width:600px) { .credits-intro { padding-top:24px; } }
 
 .credits-rationale{margin:0 0 34px;padding:22px;border:1px solid var(--credit-line);border-radius:12px;background:#091519}.credits-rationale h2{font-size:20px;font-weight:550;margin:0 0 12px}.credits-rationale p{font-size:13px;color:var(--credit-muted);max-width:900px}.credits-rationale p:last-child{margin-bottom:0}.badge-credited{color:#a7c9d4;border-color:#35545f;background:#0b2028}
+
+.autoeq-source-library { margin-top: 3rem; scroll-margin-top: 5rem; }
+.autoeq-source-library > p { color: var(--credit-muted); }
+.autoeq-source-library input[type=file] { width: 100%; min-width: 0; }
+.autoeq-source-library li { margin-block: .5rem; overflow-wrap: anywhere; }

@@ -1,17 +1,25 @@
-# Per-page link previews
+# Link previews
 
-Shared page URLs (Discord, Slack, iMessage, social sites) now preview the page they point to instead of Welcome. Source-only change on top of live update113: no migration, no data change, no new bindings.
+`lib/share-pages.mjs` defines the card, copy and canonical destination for each route. Redirect aliases use the destination card. Recognized listening modes, Research Rankings and Song suggestions retain the query that selects the view. Account pages, saved collections and private shootout results use neutral artwork and `noindex` metadata.
 
-Why it was wrong: the root layout set Open Graph data (Welcome title and image) and child layouts overrode only `title`; and the edge gate redirected link-preview crawlers from gated pages to sign-in/consent pages, which carry the generic preview.
+Known unfurl crawlers get metadata-only HTML from the edge for registered routes. Shared shootout and iframe pages supply metadata through their app routes. Discord crawlers receive the animation URL. Slack and other recognized preview crawlers receive a matching still. Preview clients control their own display size, animation playback and cache lifetime.
 
-## What changed
-- `lib/share-pages.mjs`: one table of preview copy for every page route (plus `/shootout` tab and mode variants). Private and account pages share one neutral card and are `noindex`.
-- Route layouts call `shareMetadata(path)` (`lib/share-metadata.ts`) so the app emits full Open Graph/Twitter metadata per page. Existing tab titles are unchanged.
-- `infra/pulumi/private-gate.mjs`: GET/HEAD from known unfurl crawlers on a listed path is answered at the edge with a metadata-only page. No session, database or app content is used, so crawlers no longer create open-tester rows. A spoofed User-Agent only ever receives public copy. All other requests follow the existing gate path unchanged. `infra/pulumi/index.ts` registers the new module.
-- `public/share/*.jpg`: generated 1200x630 cards. `infra/pulumi/public-assets.mjs` serves `/share/<slug>.jpg` as static assets (route pattern `!/share/*`).
-- Regenerate cards after editing copy: `node scripts/generate-share-cards.mjs`. Check: `node scripts/check_share_previews.mjs`.
+- The 24 stills are 2400 × 1260 JPEGs with full-resolution chroma.
+- Motion files are 1920 × 1008 at a nominal 60 fps. Illustrated cards use lossless WebP and Welcome uses 10-bit AVIF.
+- Image URLs carry an artwork revision so clients can request refreshed media. Previously cached cards can still load their GIF URLs.
 
-## Deploying
-Application build plus the infrastructure update (the gate Worker code and the `/share/*` static-asset route pattern). Confirm in the Pulumi plan that `!/share/*` is accepted, and that nothing else changes. After a verified deployment, update `LIVE_RELEASE.json`, `LIVE_STATE.md`, `HANDOFF.md` and `HOSTING_HANDOFF.md` together. No data export is needed (source-only), per the backup-scope owner preference.
+## Generate and check
 
-Verify: `curl -A "Discordbot/2.0" https://yinyangeq.com/preference-tuning` shows that page's `og:title`/`og:image`; then paste a link in a private Discord channel (Discord caches, so add `?v=2` when retesting).
+Install the locked project dependencies and use FFmpeg with `libwebp_anim` and `libsvtav1`. Welcome capture uses Chromium and Playwright. `CHROMIUM_PATH` selects an installed Chromium executable, and `--browser-module=/path/to/playwright-core/index.mjs` selects an external Playwright installation.
+
+```sh
+node scripts/generate-share-cards.mjs
+CHROMIUM_PATH=/path/to/chromium node scripts/generate-share-motion.mjs \
+  --browser-module=/path/to/playwright-core/index.mjs
+node scripts/check_share_previews.mjs
+node scripts/check_share_preview_routes.mjs
+```
+
+Use `--slug=<slug>` to regenerate a single card. The motion generator handles Welcome, with `--still-only` to render just its still. Use `--cards-only` to regenerate illustrated motion files without Chromium. Update the artwork revision when publishing regenerated files.
+
+After an authorized deployment, verify the canonical URL, title, MIME type, dimensions and actual image response for the Discord and static crawler user agents. Check the corresponding browser destinations. A fresh page URL can help with testing a new Discord unfurl when the earlier card is cached.

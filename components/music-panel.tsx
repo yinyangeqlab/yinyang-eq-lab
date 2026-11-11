@@ -507,7 +507,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
   function fitMetadata() {
     const current = engine.current;
     if (!current?.fitReady || !pairTargets?.[0] || !pairTargets[1]) return [];
-    const key = JSON.stringify([measurement?.points ?? [[20, 0], [20000, 0]], pairTargets.map(t => t!.points), fitter, current.context.sampleRate]);
+    const key = JSON.stringify([measurement?.points ?? [[20, 0], [20000, 0]], pairTargets.map(t => t!.points), fitter, measurement?.type, current.context.sampleRate]);
     if (current.fitKey !== key) return [];
     return current.fits?.map(fit => ({ method: fit.method, bands: fit.bands ?? fit.filters.length, filterCount: fit.filters.length, rms: fit.rms, preamp: fit.preamp, engine: fit.engine, engineVersion: fit.engineVersion, sampleRate: fit.sampleRate })) ?? [];
   }
@@ -542,7 +542,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
   function preparePlaybackFit() {
     const current = engine.current;
     if (!current || !pairTargets?.[0] || !pairTargets[1]) { setFitNotice("Choose two targets to prepare playback EQ."); return false; }
-    const key = JSON.stringify([measurement?.points ?? [[20, 0], [20000, 0]], pairTargets.map(t => t!.points), fitter, current.context.sampleRate]);
+    const key = JSON.stringify([measurement?.points ?? [[20, 0], [20000, 0]], pairTargets.map(t => t!.points), fitter, measurement?.type, current.context.sampleRate]);
     if (current.fitReady && current.fitKey === key) return true;
     void applyFit();
     return false;
@@ -551,7 +551,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
     const current = engine.current;
     if (!current || !pairTargets?.[0] || !pairTargets[1]) return false;
     const raw: Point[] = measurement?.points ?? [[20, 0], [20000, 0]];
-    const key = JSON.stringify([raw, pairTargets.map(t => t!.points), fitter, current.context.sampleRate]);
+    const key = JSON.stringify([raw, pairTargets.map(t => t!.points), fitter, measurement?.type, current.context.sampleRate]);
     if (current.fitKey !== key || current.fitAbort?.signal.aborted) {
       current.fitAbort?.abort(); current.fitAbort = new AbortController();
       closeInterval(); current.fitReady = false;
@@ -559,7 +559,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
       if (!current.fits?.length) { current.preamp.gain.cancelScheduledValues(current.context.currentTime); current.preamp.gain.setValueAtTime(0, current.context.currentTime); }
       current.fitKey = key;
       setFitNotice("Preparing headphone EQ…");
-      current.fitPromise = fitAutoEqAsync({ raw, targets: pairTargets.map(t => t!.points), kind: "shootout", ...(fixedReferenceProtocol ? {bands:10 as const} : fitter), sampleRate: current.context.sampleRate }, current.fitAbort.signal);
+      current.fitPromise = fitAutoEqAsync({ raw, targets: pairTargets.map(t => t!.points), kind: "shootout", ...(fixedReferenceProtocol ? {bands:10 as const} : fitter), headphoneType: measurement?.type, sampleRate: current.context.sampleRate }, current.fitAbort.signal);
     }
     try {
       const fits = await current.fitPromise!;
@@ -674,23 +674,24 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
       const bass=active?levels.slice(0,24).reduce((sum,value)=>sum+value,0)/24:0;
       const bounce=visualSpring(waveBounce.current[branch].level,waveBounce.current[branch].velocity,bass,delta);waveBounce.current[branch]=bounce;
       const base=canvas.height*.75,amplitude=canvas.height*.52;
+      const light = document.documentElement.dataset.siteTheme === "light";
+      const tint = branch === 0 ? (light ? "164,47,76" : "255,82,111") : (light ? "20,95,157" : "72,184,255");
       if(active&&document.documentElement.dataset.motion!=="reduced"){
-        const tint=branch===0?"255,82,111":"72,184,255",mid=(plotStart+plotEnd)/2;
+        const mid=(plotStart+plotEnd)/2;
         const glow=pen.createRadialGradient(mid,base,0,mid,base,Math.max(1,(plotEnd-plotStart)*.55));
         glow.addColorStop(0,`rgba(${tint},${.025+bounce.level*.09})`);glow.addColorStop(1,`rgba(${tint},0)`);
         pen.fillStyle=glow;pen.beginPath();pen.ellipse(mid,base,(plotEnd-plotStart)*(.25+bounce.level*.12),canvas.height*(.08+bounce.level*.18),0,0,Math.PI*2);pen.fill();
       }
       const y=(i:number)=>base-levels[i]*amplitude;
-      const tint=branch===0?"255,82,111":"72,184,255";
       pen.beginPath();pen.moveTo(plotStart,y(0));
       for(let i=1;i<count;i++){
         const lastX=waveX(i-1),x=waveX(i);
         pen.quadraticCurveTo(lastX,y(i-1),(lastX+x)/2,(y(i-1)+y(i))/2);
       }
       pen.lineTo(plotEnd,y(count-1));
-      pen.strokeStyle=active?`rgba(${tint},.98)`:"rgba(190,210,220,.25)";
+      pen.strokeStyle=active?`rgba(${tint},.98)`:light ? "#82999d" : "rgba(190,210,220,.25)";
       pen.lineWidth=active?2.2:1;pen.lineJoin="round";pen.lineCap="round";
-      pen.shadowColor=`rgba(${tint},.5)`;pen.shadowBlur=active?7:0;pen.stroke();
+      pen.shadowColor=`rgba(${tint},.5)`;pen.shadowBlur=active && !light ? 7 : 0;pen.stroke();
       pen.shadowBlur=0;pen.lineTo(plotEnd,base);pen.lineTo(plotStart,base);pen.closePath();
       const fill=pen.createLinearGradient(0,0,0,base);fill.addColorStop(0,`rgba(${tint},${active ? .2 : 0})`);fill.addColorStop(1,`rgba(${tint},${active ? .025 : 0})`);
       pen.fillStyle=fill;pen.fill();
