@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "37b1cbca250c6870e0702dffa83963081b631bbe",
+  "baseRevision": "2b21bd263d538275ff2ab2922d7f3dc5abc694a7",
   "recordedLiveUpdate": 132,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "7a7922379acd8cb1e788abcc60d31f9b58e1747509caf8ff9acd0e005eb1f4f4",
+      "sha256": "bc3061a41c47fa7419832e474e7dcb198a81efa45ae4ba1fcf6eedc0ec59187d",
       "executable": false
     },
     {
@@ -3818,6 +3818,16 @@
     {
       "path": "public/dynamic-range-worklet.js",
       "sha256": "59da07024618347fd3ae11b1845f96b23dec819681bc1c23d404b4840f11f610",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/eq-fitter-benchmark.png",
+      "sha256": "d9c678edbaa863c9eb31af9b918054e6175c0b8480b0193234cf8f8819e1f616",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/eq-fitter-scores.csv",
+      "sha256": "34a8021bed316780ba8a11ead0eb0afff1637b61f1064d23d3c566a227e5842f",
       "executable": false
     },
     {

@@ -75,6 +75,18 @@ Also available: a Listening Pool with stereo waveforms, source credits and song 
 
 **Community Preferences** is a separate, optional validation pilot (future Personal choices plus randomized reference checks). Its public numerical summaries are withheld pending independent listener validation and privacy review. It is not another name for Research Rankings, and listeners do not receive a skill rank.
 
+## EQ fitters and benchmark
+
+YinYang **Standard** uses fixed bands and **Precise** uses movable bands. **PEQdB AutoEQ** uses PEQdB’s optimizer and offers **Unsmoothed** (the default within PEQdB) and **Smoothed**. Unsmoothed follows finer measurement details. Smoothed softens narrow peaks and dips before fitting and may need less boost. PEQdB Studio uses the names Standard and Precise for its own smoothed and unsmoothed presets. YinYang uses a fixed level reference and a different optimization budget. [PEQdB Studio](https://peqdb.com/studio/) · [PEQdB AutoEQ source](https://github.com/peqdb/autoeq-c) · [Site fitter guide](https://yinyangeq.com/glossary#eq-fitting)
+
+![Median RMS through 10 kHz and 20 kHz and peak boost for six EQ setups across 14 cases](public/eq-fitting/eq-fitter-benchmark.png)
+
+We tested four in-ear and three over-ear measurement and target pairs, at 10 and 15 bands and 48 kHz. Every fitter used the same measurement, target and band count within each case. We removed one overall level offset per fit, then measured root mean square (RMS) error on a common logarithmic grid. Peak boost is the maximum gain of the combined filters before preamp attenuation. The chart reports medians across the 14 cases. The smoothed YinYang test used the same optimizer settings as its unsmoothed control apart from enabling PEQdB’s adaptive preprocessing.
+
+YinYang PEQdB led in 10 of 14 cases through 10 kHz and Studio Precise led in four. Across the full 20 kHz range, YinYang Movable Bands led in eight and YinYang PEQdB in six. Smoothing reduced peak boost in 13 of 14 cases and left more error through 10 kHz in all 14. The scores describe curve fit and headroom. Preference takes listening. [Per-case scores](public/eq-fitting/eq-fitter-scores.csv) · [AutoEq measurements](https://github.com/jaakkopasanen/AutoEq/tree/master/measurements/oratory1990) · [AutoEq targets](https://github.com/jaakkopasanen/AutoEq/tree/master/targets)
+
+**Why show 10 kHz and 20 kHz?** The two ranges show how the highest octave changes the score. Hearing thresholds from 9 to 20 kHz generally rise with frequency and age, and headphone placement can make measured upper treble less repeatable. Upper treble can still be audible. In one experiment with young listeners, speech changes from filtering above about 13 kHz were detectable on average. We use 10 kHz as a reporting boundary. [Rodríguez Valiente et al. (2014)](https://pubmed.ncbi.nlm.nih.gov/24749665/) · [Headphone placement study](https://www.sciencedirect.com/science/article/abs/pii/S0003682X15000341) · [Monson and Caravello (2019)](https://doi.org/10.1121/1.5140032)
+
 ## What this project can and cannot claim
 
 **Background from published sources (not results of this project)**
