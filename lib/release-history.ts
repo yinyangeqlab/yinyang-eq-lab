@@ -157,7 +157,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: candidateChanges },
+  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: candidateChanges,
+    github: { commit: "ec0269bfbb9c0f587747a1cd6265d76965d5aab0", releaseTag: "update149" } },
   { update: 148, date: "2026-11-11", title: "Sidebar controls and icon animations", changes: update148Changes },
   { update: 147, date: "2026-11-11", title: "AutoEq target source library", changes: update147Changes },
   { update: 146, date: "2026-11-11", title: "Homepage wallpapers and Sound A/B design", changes: update146Changes },

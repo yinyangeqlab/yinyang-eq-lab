@@ -13,7 +13,7 @@ The deployment passed 122 regression suites. Isolated Chromium checks covered ta
 
 Hosted validation for the matching encrypted off-device source and build recovery baseline passed on November 11, 2026 at 12:20 UTC. Independent reconstruction verified 1,117 application inputs and 3,266 compiled build files. The existing data snapshots and their timestamps were preserved. [Recovery verification](releases/update149-recovery-verification.json)
 
-[Update149 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149) · [Source provenance](releases/update149-source.json)
+[Update149 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149) · [Source provenance](releases/update149-source.json) · [Publication verification](releases/update149-publication.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "39b21e673d1f045b4d20bb9a718a67f89b209f49",
+  "baseRevision": "ec0269bfbb9c0f587747a1cd6265d76965d5aab0",
   "recordedLiveUpdate": 149,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "ed33738459711be74d2c49aa206efd07245a3693d5cc919c684032e79e74153c",
+      "sha256": "0fe5de582b530d32d26c56dfac9f9f0efa5190d2415e0a24d83c434aee648af8",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2a8315ae0b5983306acf426faf12ff142548d3de2f47612f938cb5b24110433e",
+      "sha256": "dd19c95ac3459d73738f21131126516ac98ba7c256cc89f5b3215b534d8e20ce",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "009c90105a11cec8f6b6550009e7effda5537b73957ea41e6e62a6b2c17adf5b",
+      "sha256": "28f67cadb293056508f8bc3e084a1c3a17e53f479473c1e9df154c84bd5d923d",
       "executable": false
     },
     {
@@ -2112,7 +2112,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "3b78fc96a474474336c69a5ba5a2e406e850bda7731707d5ffc0d703638efc89",
+      "sha256": "c2f75ad506c9ea9b627f985d9a55f5deb9ae0d73bb589b7474b8aba6c384750f",
       "executable": false
     },
     {
@@ -2478,6 +2478,11 @@
     {
       "path": "docs/releases/update132-verification.json",
       "sha256": "17ac14ec4c8f08bcbde48ffb88b05d07b108feb51508608b159a9d6bfdf28aeb",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update149-publication.json",
+      "sha256": "f95cf565412d280760673c7d372acfa2e1b06f0f399572a25db7d2bb74399548",
       "executable": false
     },
     {
@@ -3762,7 +3767,7 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "552a6a14ff3202b5fedf07a7216a2de1a0d392c1b5cbabc7025b5eb52d740ca2",
+      "sha256": "5abae9dea2135cfe3073b0b378fd3504cfa1ddc2feaa034a63c480c7b2a708f2",
       "executable": false
     },
     {

@@ -1,0 +1,19 @@
+{
+  "update": 149,
+  "deployedSourceCommit": "f07966b0b6b07a2502ba3c4e4b7c331ab3d72744",
+  "publishedSourceCommit": "ec0269bfbb9c0f587747a1cd6265d76965d5aab0",
+  "publicBaselineCommit": "39b21e673d1f045b4d20bb9a718a67f89b209f49",
+  "tag": "update149",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update149",
+  "publishedAt": "2026-11-11T12:37:37Z",
+  "githubLogin": "yinyangeqlab",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "ownerRecordsExcluded": true,
+  "recoveryVerification": "docs/releases/update149-recovery-verification.json",
+  "publicRegressionSuitesPassed": 116,
+  "typeScriptPassed": true,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1074
+}

@@ -36,11 +36,13 @@
     "branch": "work/update149-autoeq-direct-20261111",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "publicationAuthorized": true,
-    "baseMain": "39b21e673d1f045b4d20bb9a718a67f89b209f49"
+    "baseMain": "39b21e673d1f045b4d20bb9a718a67f89b209f49",
+    "publishedSourceCommit": "ec0269bfbb9c0f587747a1cd6265d76965d5aab0",
+    "publicationEvidence": "docs/releases/update149-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
