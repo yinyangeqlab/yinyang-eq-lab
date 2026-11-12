@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Source release · update155** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Published source · update155** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
@@ -19,7 +19,7 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
-Update155 adds a standalone EQ fitter benchmark guide and links to it from Research and Rankings. Glossary & Guides retains the existing section links. [Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152)
+Update155 adds a standalone EQ fitter benchmark guide and links to it from Research and Rankings. Glossary & Guides retains the existing section links. [Update155 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update155) · [Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152)
 
 The private [blind EQ comparison](docs/BLIND_EQ_COMPARISON.md) compares two user presets with independent per-song randomization; its presets, local audio and results stay in the tab.
 

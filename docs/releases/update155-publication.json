@@ -1,0 +1,37 @@
+{
+  "update": 155,
+  "deployedSourceCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
+  "publishedSourceCommit": "ce8704e878a782e68b90469f377a0475fabc5cbc",
+  "publicBaselineCommit": "66164aef2fda58d64c4d41e4f95ec08a9ef1a442",
+  "tag": "update155",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update155",
+  "publishedAt": "2026-11-12T07:24:21Z",
+  "githubLogin": "yinyangeqlab",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "matchingSourceAndBuildInputFiles": 923,
+  "testFixtureDifference": {
+    "path": "scripts/check_ear_practice.mjs",
+    "scope": "The public test generates its synthetic token at runtime."
+  },
+  "ownerRecordsExcluded": true,
+  "liveVerification": {
+    "exactWorkerModules": 347,
+    "exactClientAssets": 4,
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "discordBenchmarkPreviewVerified": true,
+    "researchGuideLinkVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true
+  },
+  "recoveryVerification": "docs/releases/update155-recovery-verification.json",
+  "publicRegressionSourceCommit": "ce8704e878a782e68b90469f377a0475fabc5cbc",
+  "publicRegressionSuitesPassed": 117,
+  "typeScriptPassed": true,
+  "scopedLintPassed": true,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1105
+}

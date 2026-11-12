@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-12T00:11:17Z |
 | Deployment | Verified by the [deployment receipt](docs/releases/update155-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication authorized in this record |
+| Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
