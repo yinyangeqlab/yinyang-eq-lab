@@ -1,0 +1,80 @@
+{
+  "update": 154,
+  "sourceCommit": "845654587be5ffbb331d3d5fab0c24c70e9099ae",
+  "deploymentVerification": {
+    "at": "2026-11-11T23:29:43Z",
+    "update": 154,
+    "revision": "845654587be5ffbb331d3d5fab0c24c70e9099ae",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 227,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 343,
+    "exactClientAssetsVerified": 4,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1DatabaseVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "845654587be5ffbb331d3d5fab0c24c70e9099ae",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      360,
+      320
+    ],
+    "engines": [
+      "Chromium"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": true,
+    "syntheticFixture": true,
+    "workflows": [
+      "Public glossary fitter guide",
+      "Chart and score links",
+      "Keyboard focus and version identity"
+    ]
+  },
+  "benchmarkDocumentationPublishedCommit": "2cc5512750d613f62d27a6d773475dae52e99e57",
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": [],
+  "recoveryRegistrationPending": true
+}

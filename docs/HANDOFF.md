@@ -1,15 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update153**, source `65fe2888e0f68e8468323cd95b042d2193eeba45`.
+Recorded deployment: **update155**, source `9e17dc4dbd8b98580ea7e37e616952069291f43a`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
-Update153 adds browser ID copying and one-time browser verification. It retains the Home rocket and My Collection changes from update152.
+Update155 adds a standalone EQ fitter benchmark guide, linked from Research and both Rankings sections. Glossary & Guides retains its existing section links, and the fitter guide shares the original benchmark chart.
 
-The deployment used the existing D1 database and applied migration 0044 for one-time verification codes. The deployment and encrypted off-device recovery were verified for the recorded source. [Deployment verification](releases/update153-verification.json) · [Recovery verification](releases/update153-recovery-verification.json)
+The live source was verified against the deployed Worker modules and public client assets. The encrypted off-device recovery handover updated the source baseline. [Deployment verification](releases/update155-verification.json) · [Recovery verification](releases/update155-recovery-verification.json) · [Source provenance](releases/update155-source.json)
 
-[Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Source provenance](releases/update153-source.json) · [Publication verification](releases/update153-publication.json) · [Update152 publication verification](releases/update152-publication.json)
+Earlier records include [update154 deployment verification](releases/update154-verification.json), [update154 recovery verification](releases/update154-recovery-verification.json), [update153 publication verification](releases/update153-publication.json) and [update152 publication verification](releases/update152-publication.json).
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

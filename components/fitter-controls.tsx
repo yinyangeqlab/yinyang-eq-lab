@@ -1,6 +1,7 @@
 "use client";
 import { useId } from "react";
 import { DEFAULT_FITTER, FIT_BANDS, fitterLabel, isPeqdbMethod, type FitterSettings } from "@/lib/fitter-settings";
+import { FITTER_GUIDE_PATH } from "@/lib/share-pages.mjs";
 import "./fitter-controls.css";
 
 export default function FitterControls({ value, defaultValue, onChange, onDefault, disabled = false, notice = "", advanced = false }: { value: FitterSettings; defaultValue: FitterSettings; onChange: (value: FitterSettings) => void; onDefault: (value: FitterSettings) => void; disabled?: boolean; notice?: string; advanced?: boolean }) {
@@ -37,7 +38,7 @@ export default function FitterControls({ value, defaultValue, onChange, onDefaul
           <li><strong>PEQdB</strong> fits bell filters and bass and treble shelves together. Unsmoothed follows finer measurement details. Smoothed softens narrow peaks and dips before fitting.</li>
         </ul>}
         {!advanced && isPeqdbMethod(value.method) && <p id={`${id}-peqdb-help`}>Unsmoothed follows finer details. Smoothed softens narrow peaks and dips before fitting.</p>}
-        <p><a href="/glossary#eq-fitting">Compare fitters and see the benchmark</a></p>
+        <p><a href={FITTER_GUIDE_PATH}>Compare fitters and see the benchmark</a></p>
         <label className="fitter-default"><input type="checkbox" checked={isDefault} onChange={event => onDefault(event.target.checked ? value : DEFAULT_FITTER)}/> Use this as my default</label>
         <p>Selections are temporary unless marked as your default. Applies to new listening sessions in this browser.</p>
       </fieldset>

@@ -45,11 +45,11 @@ const destinations: { id: Destination; label: string; href: string }[] = [
   { id: "space", label: PERSONAL_AREA_TITLE, href: "/shootout?tab=profile" },
   { id: "rankings", label: "Research", href: "/shootout?tab=rankings" },
   { id: "library", label: "Music library", href: "/music-library" },
-  { id: "terms", label: "Terms & definitions", href: "/glossary" },
+  { id: "terms", label: "Glossary & Guides", href: "/glossary" },
 ];
 
 function destinationFor(path: string, tab: string | null): Destination | null {
-  if (path === "/glossary" || path === "/glossary/") return "terms";
+  if (path === "/glossary" || path.startsWith("/glossary/")) return "terms";
   if (path === "/listen") return "listen";
   if (path.startsWith("/shootout/personal")) return "listen";
   if (path.startsWith("/shootout")) return isPersonalAreaSection(tab) ? "space" : tab === "rankings" ? "rankings" : tab === "music" ? "library" : "listen";

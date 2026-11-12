@@ -5,15 +5,15 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update153 |
-| Source | `65fe2888e0f68e8468323cd95b042d2193eeba45` |
-| Verified at | 2026-11-11T22:55:55Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update153-verification.json) |
+| Release | update155 |
+| Source | `9e17dc4dbd8b98580ea7e37e616952069291f43a` |
+| Verified at | 2026-11-12T00:11:17Z |
+| Deployment | Verified by the [deployment receipt](docs/releases/update155-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source recorded as pushed; publication authorized in this record |
-| Recovery | Matching recovery registration recorded as verified, including a separately recorded data export |
+| Publication | Source not pushed; publication authorized in this record |
+| Recovery | Matching source-only metadata handover recorded as verified |
 
-Source/build metadata registration is separate from a fresh data export. The recorded export has its own capture time and coverage; registration does not make it a new live-data capture. Generating this view performs no recovery operation.
+Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 
 The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](docs/rebuild-manifest.json).
 

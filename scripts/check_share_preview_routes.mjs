@@ -38,7 +38,7 @@ function checkDestination(href, expected = href) {
     assert.ok(html.includes(`<meta property="og:url" content="${destination}">`), href);
     assert.ok(html.includes(`href="${destination}">Open YinYang EQ</a>`), href);
     assert.ok(!html.includes("fixture-secret"), `Private input echoed by ${href}`);
-    const asset = animated ? shareAnimationUrl(page) : shareImageUrl(page);
+    const asset = (animated ? shareAnimationUrl(page) : null) ?? shareImageUrl(page);
     assert.ok(html.includes(`<meta property="og:image" content="${asset.url}">`), href);
     if (page.private || page.noIndex) assert.ok(html.includes('content="noindex,nofollow"'), href);
   }

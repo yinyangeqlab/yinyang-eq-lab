@@ -7,6 +7,8 @@ export type SharePage = {
 };
 export const SITE_ORIGIN: string;
 export const SITE_NAME: string;
+export const FITTER_GUIDE_PATH: string;
+export const EQ_FITTER_CHART: NonNullable<SharePage["image"]>;
 export const SHARE_IMAGE_SIZE: { width: number; height: number };
 export const SHARE_MOTION_SIZE: typeof SHARE_IMAGE_SIZE;
 export const SHARE_MOTION_FPS: number;

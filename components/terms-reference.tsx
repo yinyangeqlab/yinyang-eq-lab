@@ -27,7 +27,7 @@ export default function TermsReference() {
   }
 
   return <>
-    <div className="terms-search" role="search" aria-label="Terms and definitions" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) { setOpen(false); setActiveId(null); } }}>
+    <div className="terms-search" role="search" aria-label="Glossary" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) { setOpen(false); setActiveId(null); } }}>
       <label htmlFor="terms-query">Find a term</label>
       <div className="terms-search-control"><input ref={inputRef} id="terms-query" type="search" role="combobox" autoComplete="off" aria-autocomplete="list" aria-expanded={expanded} aria-controls="terms-suggestions" aria-activedescendant={expanded && activeIndex >= 0 ? `term-option-${activeId}` : undefined} aria-describedby="terms-search-help terms-result-count" placeholder="Search a term or idea, e.g. bass or volume" value={query} onFocus={() => setOpen(true)} onChange={event => { setQuery(event.target.value); setOpen(true); setActiveId(null); }} onKeyDown={event => {
         if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); move(event.key === "ArrowDown" ? 1 : -1); }
@@ -38,6 +38,6 @@ export default function TermsReference() {
       <div id="terms-suggestions" className="terms-suggestions" role="listbox" aria-label="Matching terms" hidden={!expanded}>{results.map(term => <div key={term.id} id={`term-option-${term.id}`} role="option" aria-selected={activeId === term.id} onMouseDown={event => event.preventDefault()} onClick={() => choose(term)}><strong>{term.title}</strong><span>{relatedGlossaryWords(term, query).join(" · ")}</span></div>)}</div>
     </div>
     <p id="terms-result-count" className="terms-result-count" role="status">{query.trim() ? `${results.length} matching ${results.length === 1 ? "term" : "terms"}` : `All ${glossaryTerms.length} terms`} · A–Z</p>
-    {results.length ? <dl>{results.map(term => <div key={term.id} id={term.id}><dt>{term.title}</dt><dd>{term.text}</dd></div>)}</dl> : <div className="terms-no-results"><h2>No matching terms</h2><p>Try a shorter word or another way to describe it, such as bass, volume or audio file.</p><button type="button" onClick={() => { setQuery(""); setOpen(false); inputRef.current?.focus(); }}>Show all terms</button></div>}
+    {results.length ? <dl>{results.map(term => <div key={term.id} id={term.id}><dt><a href={`#${term.id}`}>{term.title}</a></dt><dd>{term.text}</dd></div>)}</dl> : <div className="terms-no-results"><h2>No matching terms</h2><p>Try a shorter word or another way to describe it, such as bass, volume or audio file.</p><button type="button" onClick={() => { setQuery(""); setOpen(false); inputRef.current?.focus(); }}>Show all terms</button></div>}
   </>;
 }

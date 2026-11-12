@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { isPublicAsset, publicAssetBypassPatterns } from '../infra/pulumi/public-assets.mjs';
-import { SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, previewTitle } from '../lib/share-pages.mjs';
+import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, previewTitle } from '../lib/share-pages.mjs';
 
 // Every page route in app/ has its own preview entry (or is a documented alias / dynamic route).
 const routes = [];
@@ -172,14 +172,14 @@ for (const ua of ['Mozilla/5.0 (X11; Linux x86_64) Firefox/130.0', 'Googlebot/2.
 
 // The real gate fragments: crawler unfurl, then public shootout routing.
 const source = readFileSync(new URL('../infra/pulumi/private-gate.mjs', import.meta.url), 'utf8');
-const start = source.indexOf('    // Link-preview crawlers'), end = source.indexOf('    const publicLandingAsset =');
+const start = source.indexOf('    // Link-preview crawlers'), end = source.indexOf('    const password = env.PRIVATE_ACCESS_PASSWORD;', start);
 assert.ok(start > 0 && end > start);
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const gate = new AsyncFunction('request', 'env', 'context', 'app', 'preDatabaseGuard', 'boundedBody', 'sharePageFor', 'shareHtml', 'isUnfurlCrawler',
+const gate = new AsyncFunction('request', 'env', 'context', 'app', 'preDatabaseGuard', 'boundedBody', 'sharePageFor', 'shareHtml', 'isUnfurlCrawler', 'isPublicAsset',
   `const url=new URL(request.url),path=url.pathname;${source.slice(start, end)}return null;`);
 let forwarded = null;
 const app = { fetch: async request => { forwarded = request; return new Response('app'); } };
-const run = (path, init = {}, guard = async () => null) => { forwarded = null; return gate(new Request('https://fixture.invalid' + path, init), {}, {}, app, guard, async r => r, sharePageFor, shareHtml, isUnfurlCrawler); };
+const run = (path, init = {}, guard = async () => null) => { forwarded = null; return gate(new Request('https://fixture.invalid' + path, init), {}, {}, app, guard, async r => r, sharePageFor, shareHtml, isUnfurlCrawler, isPublicAsset); };
 
 const discord = { 'User-Agent': 'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)' };
 for (const path of [...sharePages.map(page => page.path), '/personal-tuning', '/shootout?mode=blind', '/shootout?mode=open', '/shootout?tab=rankings']) {
@@ -195,6 +195,18 @@ for (const agent of ['Slackbot-LinkExpanding 1.0', 'Twitterbot/1.0', 'facebookex
   const response = await run('/ear-tuning', { headers: { 'User-Agent': agent } });
   assert.deepEqual(openGraphImages(await response.text()), [shareImageUrl(sharePageFor('/ear-tuning')).url]);
 }
+const guide = sharePageFor(FITTER_GUIDE_PATH);
+assert.equal(previewTitle(guide), 'EQ fitter benchmark');
+assert.equal(shareAnimationUrl(guide), null, 'The original benchmark chart is the still preview');
+const guidePreview = await (await run(`${FITTER_GUIDE_PATH}#frequency-ranges`, { headers: discord })).text();
+assert.deepEqual(openGraphImages(guidePreview), [shareImageUrl(guide).url]);
+assert.equal(new URL(openGraphImages(guidePreview)[0]).pathname, EQ_FITTER_CHART.path);
+assert.ok(guidePreview.includes(`property="og:url" content="https://yinyangeq.com${FITTER_GUIDE_PATH}"`));
+assert.deepEqual(shareMetadataFields(FITTER_GUIDE_PATH).openGraph.images, [shareImageUrl(guide)]);
+for (const method of ['GET', 'HEAD']) assert.equal((await run(FITTER_GUIDE_PATH, { method })).status, 200);
+assert.equal(await run(FITTER_GUIDE_PATH, { method: 'POST' }), null, 'Only read requests bypass admission for the guide');
+assert.equal(await run(`${FITTER_GUIDE_PATH}/private`), null, 'Only the standalone guide path is public');
+assert.equal(previewTitle(sharePageFor('/glossary')), 'Glossary & Guides');
 assert.match(await (await run('/shootout?tab=rankings', { headers: discord })).text(), /rankings-motion\.webp/);
 assert.match(await (await run('/', { headers: discord })).text(), /welcome-motion\.avif/);
 assert.equal((await run('/preference-tuning', { method: 'HEAD', headers: discord })).status, 200);

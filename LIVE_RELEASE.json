@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 153,
+  "update": 155,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-11T22:55:55Z",
-  "sourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
-  "sourceBranch": "work/update153-browser-ownership-20261111",
-  "baselineCommit": "2b94fac545acde01b5e7b866af2e13872e784cbe",
-  "evidence": "docs/releases/update153-verification.json",
+  "verifiedAt": "2026-11-12T00:11:17Z",
+  "sourceCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
+  "sourceBranch": "work/update155-glossary-guides-20261111",
+  "baselineCommit": "845654587be5ffbb331d3d5fab0c24c70e9099ae",
+  "evidence": "docs/releases/update155-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "active": false
@@ -15,31 +15,31 @@
     "enabled": false
   },
   "gitSource": {
-    "implementationCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
-    "branch": "work/update153-browser-ownership-20261111",
+    "implementationCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
+    "branch": "work/update155-glossary-guides-20261111",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
-    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "2cc5512750d613f62d27a6d773475dae52e99e57",
-    "publicationEvidence": "docs/releases/update153-publication.json"
+    "pushed": false,
+    "publicationAuthorized": true,
+    "baseMain": "66164aef2fda58d64c4d41e4f95ec08a9ef1a442"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
-    "releaseMetadataHandover": {
-      "update": 153,
-      "dataExportPerformed": true,
-      "newDataSnapshots": 1,
-      "matchingPreparedSourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
-      "registered": true,
-      "hostedValidationPassed": true,
-      "preMigrationBackupVerified": true,
-      "matchingPostMigrationSnapshotPending": false,
-      "independentDownloadDecryptionVerified": true,
-      "fullReconstructionVerified": true,
-      "evidence": "docs/releases/update153-recovery-verification.json"
+    "sourceBaselineUpdate": 155,
+    "sourceBaselineVerifiedAt": "2026-11-12T00:28:21Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "update155SourceOnlyHandover": {
+      "registrationPending": false,
+      "metadataOnly": true,
+      "databaseExport": false,
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update155-recovery-verification.json"
     }
   },
   "documentationFiles": [],

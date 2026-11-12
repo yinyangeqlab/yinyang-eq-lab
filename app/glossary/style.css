@@ -27,3 +27,13 @@
 .eq-fitting-guide figure { margin: 18px 0; }
 .eq-fitting-guide figure img { display: block; width: 100%; height: auto; border-radius: 9px; }
 .eq-fitting-guide figcaption { margin-top: 8px; font-size: 13px; }
+
+
+.guide-jump-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font-size:14px}
+#glossary-terms,.eq-fitting-guide h3[id],.terms-page dl > div[id]{scroll-margin-top:72px}
+.terms-page dt a{color:inherit;text-decoration:none}
+.terms-page dt a:hover,.terms-page dt a:focus-visible{text-decoration:underline}
+.fitter-article{max-width:920px}
+.fitter-article header>a{font-size:14px}
+.fitter-article .eq-fitting-guide{margin-top:24px}
+.eq-fitting-guide .guide-section-link{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px;vertical-align:middle;border-radius:4px}

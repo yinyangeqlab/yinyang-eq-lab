@@ -7,6 +7,15 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Research and Rankings link directly to the EQ fitter benchmark and chart.",
+  "Glossary & Guides has shareable term and section links, and the full fitter guide has a Discord preview with the benchmark chart.",
+] as const;
+
+const update154Changes = [
+  "The EQ fitting guide explains why the benchmark changes at 20 kHz, how our PEQdB presets fit the curve, and what the scores say about listening.",
+] as const;
+
+const update153Changes = [
   "See and copy the ID for this browser in My data.",
   "Use an expiring one-time code to help the site owner verify a browser ID against a submission from your data session.",
 ] as const;
@@ -177,7 +186,9 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: candidateChanges },
+  { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: candidateChanges },
+  { update: 154, date: "2026-11-11", title: "Reading the EQ fitter benchmark", changes: update154Changes },
+  { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: update153Changes },
   { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: update152Changes },
   { update: 151, date: "2026-11-11", title: "Private admin table improvements", changes: update151Changes },
   { update: 150, date: "2026-11-11", title: "Terms of Use and target sharing", changes: update150Changes },

@@ -1,0 +1,13 @@
+{
+  "update": 155,
+  "tag": "update155",
+  "deployedSourceCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
+  "publicBaselineCommit": "66164aef2fda58d64c4d41e4f95ec08a9ef1a442",
+  "applicationSourceMatchesDeployment": true,
+  "matchingSourceAndBuildInputFiles": 923,
+  "publicArchiveIncludesDeploymentInputs": false,
+  "testFixtureDifference": {
+    "path": "scripts/check_ear_practice.mjs",
+    "scope": "The public test generates its synthetic token at runtime."
+  }
+}
