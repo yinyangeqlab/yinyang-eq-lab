@@ -1,0 +1,27 @@
+{
+  "update": 153,
+  "deployedSourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+  "publishedSourceCommit": "0ea0092ba4ef4b19eb1a347e2715f0de4b3e4279",
+  "publicBaselineCommit": "2cc5512750d613f62d27a6d773475dae52e99e57",
+  "tag": "update153",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153",
+  "publishedAt": "2026-11-12T03:33:16Z",
+  "githubLogin": "yinyangeqlab",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "matchingSourceAndBuildInputFiles": 919,
+  "testFixtureDifference": {
+    "path": "scripts/check_ear_practice.mjs",
+    "scope": "The public test generates its synthetic token at runtime."
+  },
+  "ownerRecordsExcluded": true,
+  "mainFitterGuideRetainedFromCommit": "2cc5512750d613f62d27a6d773475dae52e99e57",
+  "recoveryVerification": "docs/releases/update153-recovery-verification.json",
+  "publicRegressionSourceCommit": "0ea0092ba4ef4b19eb1a347e2715f0de4b3e4279",
+  "publicRegressionSuitesPassed": 117,
+  "typeScriptPassed": true,
+  "scopedLintPassed": true,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1095
+}

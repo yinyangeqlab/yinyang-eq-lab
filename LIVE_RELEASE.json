@@ -19,11 +19,12 @@
     "branch": "work/update153-browser-ownership-20261111",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "2cc5512750d613f62d27a6d773475dae52e99e57"
+    "baseMain": "2cc5512750d613f62d27a6d773475dae52e99e57",
+    "publicationEvidence": "docs/releases/update153-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,

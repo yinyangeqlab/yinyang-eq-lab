@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "2cc5512750d613f62d27a6d773475dae52e99e57",
+  "baseRevision": "0ea0092ba4ef4b19eb1a347e2715f0de4b3e4279",
   "recordedLiveUpdate": 153,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "45762f8975219c6688869b7c00d897136706ec1eefb64283ae98c1cf4ce981a1",
+      "sha256": "40293a072b46c1352a1e9bd072ce89a4f84a1e7392a55d68af8294c08c144148",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "6ad27ba540a2ff75dcee00071c5b474fe09547f6f3f971789e5ca7236df533c0",
+      "sha256": "cb1b0050b460b3bb1a460f966384eda81055c27b3a72a5b1acccb3fd20e01028",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "d46e25e1876ab83d47285e939d11b9bbc3a527319ab3fc178b77b3c9470a839e",
+      "sha256": "11678475fcf95fbdc08e2d91cf48650362a7f1d46428badb35b328b1ed323b11",
       "executable": false
     },
     {
@@ -557,7 +557,7 @@
     },
     {
       "path": "app/glossary/page.tsx",
-      "sha256": "2503c6d56fa0b887b344b9e526e0e2f194b73509b1c60743168e8c5f437bcfbb",
+      "sha256": "75d4a39b90f739094f04ad4b08524d0381ddaa359d5f93e75d8e935952c3c85d",
       "executable": false
     },
     {
@@ -2142,7 +2142,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "b0c78c496a80279e3084a57575e6e0c1a600e254d4bd36468cdeb882bcec5cb7",
+      "sha256": "4f1a2508a387b13b8af08c14c819708bd47b5d27b6f0c4137b5fdfd766152342",
       "executable": false
     },
     {
@@ -2568,6 +2568,11 @@
     {
       "path": "docs/releases/update152-verification.json",
       "sha256": "72cc94facefee97f36d55be3e1e1cee3c6c3bea814e59fb8dcffc6da3e8927ce",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update153-publication.json",
+      "sha256": "bdf09331fcf642889cbb89a520eff3ef49762a0060f1457c77aef546efecb483",
       "executable": false
     },
     {

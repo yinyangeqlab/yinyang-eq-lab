@@ -9,7 +9,7 @@ Update153 adds browser ID copying and one-time browser verification. It retains 
 
 The deployment used the existing D1 database and applied migration 0044 for one-time verification codes. The deployment and encrypted off-device recovery were verified for the recorded source. [Deployment verification](releases/update153-verification.json) · [Recovery verification](releases/update153-recovery-verification.json)
 
-[Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Source provenance](releases/update153-source.json) · [Update152 publication verification](releases/update152-publication.json)
+[Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Source provenance](releases/update153-source.json) · [Publication verification](releases/update153-publication.json) · [Update152 publication verification](releases/update152-publication.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-11T22:55:55Z |
 | Deployment | Verified by the [deployment receipt](docs/releases/update153-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication authorized in this record |
+| Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching recovery registration recorded as verified, including a separately recorded data export |
 
 Source/build metadata registration is separate from a fresh data export. The recorded export has its own capture time and coverage; registration does not make it a new live-data capture. Generating this view performs no recovery operation.

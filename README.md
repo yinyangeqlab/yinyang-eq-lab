@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Source release · update153** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Published source · update153** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
