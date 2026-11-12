@@ -270,6 +270,11 @@ export const privacySessions = sqliteTable("privacy_sessions", {
   subjectId: text("subject_id").notNull(),
   expiresAt: integer("expires_at").notNull(),
 });
+export const browserOwnershipCodes = sqliteTable("browser_ownership_codes", {
+  sessionHash: text("session_hash").primaryKey().notNull().references(() => privacySessions.tokenHash, { onDelete: "cascade" }),
+  codeHash: text("code_hash").notNull().unique(),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("browser_ownership_codes_expiry_idx").on(table.expiresAt)]);
 export const submissionOwners = sqliteTable("submission_owners", {
   recordKind: text("record_kind").notNull(), recordId: text("record_id").notNull(),
   subjectId: text("subject_id").notNull(), sessionHash: text("session_hash").notNull(),

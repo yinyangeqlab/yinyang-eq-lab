@@ -1,0 +1,26 @@
+.browser-ownership-proof .browser-proof-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-block: 10px;
+}
+
+.browser-ownership-proof code { overflow-wrap: anywhere; }
+.browser-ownership-proof label { display: block; margin-block: 12px; }
+.browser-ownership-proof input {
+  display: block;
+  box-sizing: border-box;
+  width: min(100%, 28rem);
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid #526c77;
+  border-radius: 7px;
+  background: #071116;
+  color: #e2eef1;
+  font: inherit;
+}
+.browser-ownership-proof :is(input, button):focus-visible {
+  outline: 2px solid #a4f4e3;
+  outline-offset: 2px;
+}

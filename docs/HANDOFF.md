@@ -1,17 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update152**, source `2b94fac545acde01b5e7b866af2e13872e784cbe`.
+Recorded deployment: **update153**, source `65fe2888e0f68e8468323cd95b042d2193eeba45`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
-Update152 refines the Home rocket orbit and the folder paper animation. My Collection brings together results, headphones, saved targets and EQs. The release keeps the direct AutoEq catalog, Terms of Use, and the private admin tables.
+Update153 adds browser ID copying and one-time browser verification. It retains the Home rocket and My Collection changes from update152.
 
-Production verification matched 340 Worker modules and eight client assets. The dedicated layout account checked both animations, both themes, keyboard navigation, and reduced motion at 1366, 720, 390, and 320 px. All 122 selected release regression suites passed. [Deployment verification](releases/update152-verification.json)
+The deployment used the existing D1 database and applied migration 0044 for one-time verification codes. The deployment and encrypted off-device recovery were verified for the recorded source. [Deployment verification](releases/update153-verification.json) · [Recovery verification](releases/update153-recovery-verification.json)
 
-Matching encrypted off-device source and build recovery passed independent reconstruction and hosted validation. Existing data snapshots retain their original timestamps. [Recovery verification](releases/update152-recovery-verification.json)
-
-[Update152 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update152) · [Source provenance](releases/update152-source.json) · [Publication verification](releases/update152-publication.json) · [Update149 publication verification](releases/update149-publication.json)
+[Update153 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update153) · [Source provenance](releases/update153-source.json) · [Update152 publication verification](releases/update152-publication.json)
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 

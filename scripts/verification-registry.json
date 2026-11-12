@@ -303,6 +303,17 @@
       "scope": "Existing blind eq workflow regression assertions; synthetic/source scope in the script"
     },
     {
+      "id": "browser-ownership-proof",
+      "path": "scripts/check_browser_ownership_proof.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": ["node_modules/typescript/package.json"],
+      "owner": "access-and-data",
+      "scope": "Actual verification routes with synthetic sessions, ownership evidence and single-use codes in migrated SQLite"
+    },
+    {
       "id": "browser-pairing",
       "path": "scripts/check_browser_pairing.mjs",
       "runtime": "node",

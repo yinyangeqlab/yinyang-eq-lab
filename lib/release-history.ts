@@ -7,6 +7,11 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "See and copy the ID for this browser in My data.",
+  "Use an expiring one-time code to help the site owner verify a browser ID against a submission from your data session.",
+] as const;
+
+const update152Changes = [
   "The Home rocket follows a smooth orbit. The My Collection papers fan out on hover and settle when the pointer leaves.",
   "My Collection brings together results, headphones, saved targets and EQs.",
 ] as const;
@@ -172,7 +177,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: candidateChanges },
+  { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: candidateChanges },
+  { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: update152Changes },
   { update: 151, date: "2026-11-11", title: "Private admin table improvements", changes: update151Changes },
   { update: 150, date: "2026-11-11", title: "Terms of Use and target sharing", changes: update150Changes },
   { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: update149Changes },

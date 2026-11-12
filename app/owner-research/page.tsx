@@ -12,6 +12,7 @@ import ServiceStatusPanel from "@/components/service-status-panel";
 import { targetDisplayName } from "@/lib/target-labels";
 import "./admin-layout.css";
 import {AdminLegacyReview} from "@/components/legacy-review";
+import { AdminBrowserOwnershipProof } from "@/components/browser-ownership-proof";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import StatisticsArchivePanel from "@/components/statistics-archive";
 import AdminReview from "@/components/admin-review";
@@ -342,6 +343,7 @@ export default function OwnerResearch() {
       <ServiceStatusPanel />
       <section id="admin-tools" aria-label="More admin tools">
         <h2>More tools</h2>
+        <AdminBrowserOwnershipProof />
         <AdminLegacyReview />
         <details className="admin-tool-group"><summary>Ranked practice participants</summary><EarPracticeLeaderboard owner /></details>
         <details className="admin-tool-group" id="protected-archive"><summary>Statistics archive and planning</summary><StatisticsArchivePanel /></details>

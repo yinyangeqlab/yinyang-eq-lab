@@ -1,0 +1,99 @@
+{
+  "update": 153,
+  "sourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+  "deploymentVerification": {
+    "at": "2026-11-11T22:55:55Z",
+    "update": 153,
+    "revision": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+    "deploymentVerified": true,
+    "migrations": [
+      {
+        "file": "0044_browser_ownership_codes.sql",
+        "sha256": "45c684b8f84f51e445bfef07d108ba7058331fe7966442c29130ef0f19d7a92a"
+      }
+    ],
+    "schemaDefinitions": 227,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 343,
+    "exactClientAssetsVerified": 15,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403,
+      "/api/my-data/browser-proof": 403,
+      "/api/owner-research/browser-proof": 403
+    },
+    "publicFitterGuideVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1DatabaseVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": false,
+    "productionAdminSessionUsed": false,
+    "termsSharingAndResearchConsentSourceUnchanged": true,
+    "preMigrationBackupVerified": true,
+    "newDataExport": true,
+    "newDataSnapshot": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1750,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      360
+    ],
+    "engines": [
+      "Chromium"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": true,
+    "syntheticFixture": true,
+    "workflows": [
+      "Browser ID and proof clipboard controls",
+      "Code expiry",
+      "Owner keyboard and replay feedback"
+    ]
+  },
+  "newDataExport": true,
+  "newDataSnapshot": true,
+  "migrations": [
+    {
+      "file": "0044_browser_ownership_codes.sql",
+      "sha256": "45c684b8f84f51e445bfef07d108ba7058331fe7966442c29130ef0f19d7a92a"
+    }
+  ],
+  "preMigrationBackup": {
+    "liveUpdate": 152,
+    "createdAt": "2026-11-11T22:51:24.777493+00:00",
+    "verifiedAt": "2026-11-11T22:53:44.298644+00:00",
+    "independentDatabaseDecryptionVerified": true
+  },
+  "recoveryRegistrationPending": true
+}

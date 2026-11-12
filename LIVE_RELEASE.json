@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 152,
+  "update": 153,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-11T22:28:47Z",
-  "sourceCommit": "2b94fac545acde01b5e7b866af2e13872e784cbe",
-  "sourceBranch": "work/update152-sidebar-motion-20261111",
-  "baselineCommit": "9d7c4a5d9a71e3fb628317c29e88a4d9b7f53d19",
-  "evidence": "docs/releases/update152-verification.json",
+  "verifiedAt": "2026-11-11T22:55:55Z",
+  "sourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+  "sourceBranch": "work/update153-browser-ownership-20261111",
+  "baselineCommit": "2b94fac545acde01b5e7b866af2e13872e784cbe",
+  "evidence": "docs/releases/update153-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "active": false
@@ -15,32 +15,30 @@
     "enabled": false
   },
   "gitSource": {
-    "implementationCommit": "2b94fac545acde01b5e7b866af2e13872e784cbe",
-    "branch": "work/update152-sidebar-motion-20261111",
+    "implementationCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+    "branch": "work/update153-browser-ownership-20261111",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "592743e272ee422ce3f20fc17abe93cc07ee5933",
-    "publicationEvidence": "docs/releases/update152-publication.json"
+    "baseMain": "2cc5512750d613f62d27a6d773475dae52e99e57"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
-    "sourceBaselineUpdate": 152,
-    "sourceBaselineVerifiedAt": "2026-11-11T22:48:05Z",
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "update152SourceOnlyHandover": {
-      "registrationPending": false,
-      "metadataOnly": true,
-      "databaseExport": false,
-      "newDataSnapshots": 0,
-      "evidence": "docs/releases/update152-recovery-verification.json"
+    "releaseMetadataHandover": {
+      "update": 153,
+      "dataExportPerformed": true,
+      "newDataSnapshots": 1,
+      "matchingPreparedSourceCommit": "65fe2888e0f68e8468323cd95b042d2193eeba45",
+      "registered": true,
+      "hostedValidationPassed": true,
+      "preMigrationBackupVerified": true,
+      "matchingPostMigrationSnapshotPending": false,
+      "independentDownloadDecryptionVerified": true,
+      "fullReconstructionVerified": true,
+      "evidence": "docs/releases/update153-recovery-verification.json"
     }
   },
   "documentationFiles": [],

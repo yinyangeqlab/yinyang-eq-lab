@@ -11,6 +11,7 @@ import { clearSiteBrowserData, comparisonLookup, deleteBrowserTrial, notifyShari
 import "./style.css";
 import AccountPageHeading from "@/components/account-page-heading";
 import {LegacyReviewPanel} from "@/components/legacy-review";
+import { BrowserOwnershipProof } from "@/components/browser-ownership-proof";
 import { ACTIVITY_MONITORING_NOTICE_VERSION } from "@/lib/activity-monitoring";
 
 type RecordRow = { kind: string; id: string; title: string; createdAt: number; localId?: string; trialId?: string };
@@ -22,7 +23,13 @@ export default function MyDataPage() {
   const invites = useInvitesEnabled();
   const [data,setData] = useState<MyData | null>(null), [error,setError] = useState(""), [message,setMessage] = useState(""), [busy,setBusy] = useState(false), [loading,setLoading] = useState(true);
   const [local,setLocal] = useState<Trial[]>([]), [query,setQuery] = useState(""), [pending,setPending] = useState<RecordRow | "all" | "browser" | null>(null), [confirmation,setConfirmation] = useState("");
-  const loadLocal = useCallback(() => { try { setLocal(JSON.parse(localStorage.getItem("target-lab-trials") || "[]")); } catch { setError("Some browser history could not be read. You can still clear this browser’s site data."); } }, []);
+  const [browserId, setBrowserId] = useState<string | null>(null);
+  const loadLocal = useCallback(() => {
+    try {
+      setBrowserId(localStorage.getItem("target-lab-voter"));
+      setLocal(JSON.parse(localStorage.getItem("target-lab-trials") || "[]"));
+    } catch { setError("Some browser history could not be read. You can still clear this browser’s site data."); }
+  }, []);
   const load = useCallback(async () => {
     if (!alive.current || erasing.current) return;
     const version = ++requestVersion.current;
@@ -54,7 +61,8 @@ export default function MyDataPage() {
   const required = pending === "all" ? "DELETE ALL MY DATA" : pending === "browser" ? "CLEAR THIS BROWSER" : "DELETE";
   const records = (data?.records || []).filter(row => !query || JSON.stringify(row).toLowerCase().includes(query.toLowerCase())).sort((a,b)=>b.createdAt-a.createdAt);
   return <main className="my-data alpha-account"><AccountPageHeading eyebrow="Privacy & sharing" title="My data" backHref="/" backLabel="Welcome" actions={<a href="/participation?review=1&return_to=/my-data">Review data choices</a>}><p>Your choices, saved results and contributions in one place. Review permissions or delete linked data at any time. You do not need to give a reason.</p></AccountPageHeading><nav className="data-top-links" aria-label="Related tools"><a href="/shootout?tab=profile">My results</a><a href="/privacy">Privacy notice</a><a href="/account-sync">Sync settings &amp; devices</a><a href="/sync">Connect a browser</a></nav>
-    <nav className="data-section-links" aria-label="Data page sections"><a href="#data-sharing">Sharing settings</a><a href="#data-submissions">Submitted data</a><a href="#data-browser">Browser results</a><a href="#data-retention">Retention &amp; deletion</a><a href="#data-account-tools">Nickname &amp; account</a></nav>
+    <nav className="data-section-links" aria-label="Data page sections"><a href="#data-sharing">Sharing settings</a><a href="#data-submissions">Submitted data</a><a href="#data-browser-id">Browser ID</a><a href="#data-browser">Browser results</a><a href="#data-retention">Retention &amp; deletion</a><a href="#data-account-tools">Nickname &amp; account</a></nav>
+    <BrowserOwnershipProof key={browserId} browserId={browserId} canVerify={!!data && !data.testOnly} />
 
     {loading && <p role="status">Loading your data…</p>}
     {data && <>{data.testOnly ? <p className="data-notice" role="status">Private Test Mode · listening and saved local tests remain available. This account cannot contribute research, public rankings, song votes or participant Sync.</p> : !data.submissionsEnabled && <p className="data-notice" role="status">Participation is off, so listening tools and optional music sharing are inactive. Your past submissions are still available below; you can delete them or review the agreement to opt back in.</p>}{!data.testOnly&&<AccountDeviceStatus/>}<section id="data-sharing"><h2>Data choices</h2><p>{data.testOnly?"Private Test Mode · no research or Community contributions.":"All current permissions are reviewed and saved together on one data choices page."}</p><dl className="data-saved-choices"><dt>Comparison-data participation</dt><dd data-choice-state={data.submissionsEnabled?"on":"off"}>{data.submissionsEnabled?"On":"Off"}</dd><dt>Music tags and file fingerprint</dt><dd data-choice-state={data.submissionsEnabled&&data.shareMusic?"on":"off"}>{data.submissionsEnabled&&data.shareMusic?"On":"Off"}</dd><dt>Identifiable activity monitoring</dt><dd data-choice-state={data.submissionsEnabled&&data.activityMonitoringEnabled&&data.activityMonitoringVersion===ACTIVITY_MONITORING_NOTICE_VERSION?"on":"off"}>{data.submissionsEnabled&&data.activityMonitoringEnabled&&data.activityMonitoringVersion===ACTIVITY_MONITORING_NOTICE_VERSION?"On":"Off"}</dd><dt>Private account sync</dt><dd data-choice-state={data.syncEnabled?"on":"off"}>{data.syncEnabled?"On":"Off"}</dd><dt>Personal research sharing</dt><dd data-choice-state={data.personalResearchEnabled&&data.communityEnabled?"on":data.personalResearchEnabled||data.communityEnabled?"partial":"off"}>{personalSharingLabel(data.personalResearchEnabled,data.communityEnabled)}</dd></dl>{!data.testOnly&&<a className="data-manage-choices" href="/participation?review=1&return_to=/my-data">Review or change all data choices →</a>}<p>Changing choices does not delete past submissions. Withdrawal closes listening-tool access. You can still view and delete linked data here. Ordinary activity logs expire after 30 days; protected YinYangEQ history is retained indefinitely, including after monitoring opt-out. Historical-study choices and file-specific contribution approvals are managed in that same data form. New studies appear there for review before permission can be granted.</p></section>
