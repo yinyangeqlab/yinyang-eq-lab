@@ -63,11 +63,23 @@ let checks = 0;
   assert.equal(h.document.activeElement, h.input); assert.equal(h.openRegion(), false); checks++;
   h.inputProps.onKeyDown({ key: 'ArrowDown', preventDefault() {} }); h.render(); h.frames();
   assert.equal(h.openRegion(), true); assert.equal(h.document.activeElement, h.option); checks++;
-  h.document.activeElement = h.input; h.inputProps.onKeyDown({ key: 'Escape' }); h.render();
+  h.document.activeElement = h.input;
+  let cancelledEscape = false;
+  h.inputProps.onKeyDown({ key: 'Escape', preventDefault() { cancelledEscape = true; } }); h.render();
+  assert.equal(cancelledEscape, true); assert.equal(h.openRegion(), false); checks++;
   h.inputProps.onKeyDown({ key: 'ArrowDown', preventDefault() {} }); h.render(); const other = {}; h.document.activeElement = other; h.frames();
   assert.equal(h.document.activeElement, other); checks++;
   h.button('Clear selected headphones').props.onClick(); h.render();
   assert.equal(h.props.selectedId, ''); assert.equal(h.document.activeElement, h.input); assert.equal(h.openRegion(), false); checks++;
+}
+{
+  const h = picker(); h.open(); await flush(); h.render();
+  const search = all(h.tree, n => n.props?.className === 'headphone-search')[0];
+  const currentTarget = { contains: target => target === h.option };
+  search.props.onBlur({ currentTarget, relatedTarget: h.option }); h.render();
+  assert.equal(h.openRegion(), true); checks++;
+  search.props.onBlur({ currentTarget, relatedTarget: {} }); h.render();
+  assert.equal(h.openRegion(), false); checks++;
 }
 for (const moved of [false, true]) {
   let resolve; const pending = new Promise(r => { resolve = r; }); const h = picker(() => pending); h.open(); await flush(); h.render(); h.document.activeElement = h.option;

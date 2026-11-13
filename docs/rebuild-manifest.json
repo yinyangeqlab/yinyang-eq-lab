@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "f09297bfe5a410197d56c77faff12fbc03a06c93",
+  "baseRevision": "9380c36816a6c110aef66af03176d8a39cc57e7b",
   "recordedLiveUpdate": 155,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -4847,7 +4847,7 @@
     },
     {
       "path": "scripts/check_first_time_journey.mjs",
-      "sha256": "1ac5f4ae0b11b046567c34f24deddb7087300a024cff44dc7a3e000d5e6473cd",
+      "sha256": "ec1069814edd87e059905700d3de9dc628f6fce8adeee045bf06140d6fc2fff5",
       "executable": false
     },
     {
