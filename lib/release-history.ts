@@ -7,6 +7,12 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Shootout votes use consistent labels and clearer contrast.",
+  "Search and sort Preference Tuning targets by name or global rank, and download target curves as CSV or TXT.",
+  "My Collection puts trial details first with headphone measurement and date filters, separate Personal Tournament history, and an all-dates ranking shortlist.",
+] as const;
+
+const update155Changes = [
   "Research and Rankings link directly to the EQ fitter benchmark and chart.",
   "Glossary & Guides has shareable term and section links, and the full fitter guide has a Discord preview with the benchmark chart.",
 ] as const;
@@ -186,7 +192,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: candidateChanges },
+  { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: candidateChanges },
+  { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: update155Changes },
   { update: 154, date: "2026-11-11", title: "Reading the EQ fitter benchmark", changes: update154Changes },
   { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: update153Changes },
   { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: update152Changes },

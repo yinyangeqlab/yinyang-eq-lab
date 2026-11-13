@@ -1099,3 +1099,26 @@
 .tuning-dock-compare button+button{border-left:0}
 .tuning-dock-actions button[aria-pressed=true]{box-shadow:none}
 .tuning-dock-actions .tuning-dock-loop{border-radius:10px}
+
+.pt-target-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.pt-target-selection { display: grid; gap: 5px; min-width: 0; }
+.pt-shell .sound-setup #tuning-target-search {
+  color: light-dark(var(--workbench-ink), #eaf8f4);
+  -webkit-text-fill-color: currentColor;
+}
+.pt-shell :is(#tuning-target-sort, #tuning-target-sort option) {
+  color-scheme: dark;
+  background-color: #091419;
+  color: #eaf8f4;
+}
+@media (max-width: 420px) {
+  .pt-target-tools { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  .pt-shell .sound-setup #tuning-target-search { min-height: 42px; font-size: 16px; }
+}

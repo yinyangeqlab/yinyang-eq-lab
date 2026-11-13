@@ -1,0 +1,66 @@
+@font-face {
+  font-family: "Public Sans Vote";
+  src: url("/fonts/public-sans/bold-latin-dace7416.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.vote-button-label[data-vote-choice] {
+  font-family: "Public Sans Vote", "Public Sans", Arial, sans-serif;
+  font-size: clamp(13px, 1.3vw, 16px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: normal;
+}
+
+.shell .shootout-content .choice-controls button > .vote-button-label[data-vote-choice],
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button > .vote-button-label[data-vote-choice] {
+  color: #fff;
+  text-shadow: none;
+  text-transform: none;
+  -webkit-text-stroke: 0;
+}
+
+.shell .shootout-content .choice-controls button.choice-tie:not(:disabled) > .vote-button-label[data-vote-choice],
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button.choice-tie:not(:disabled) > .vote-button-label[data-vote-choice] {
+  color: #17232d;
+}
+
+.shell .shootout-content .choice-controls button[data-locked="true"]:disabled > .vote-button-label[data-vote-choice],
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]:disabled > .vote-button-label[data-vote-choice] {
+  padding: 3px 5px;
+  border-radius: 4px;
+  background: #101820;
+}
+
+.shell .shootout-content .choice-controls button:focus-visible,
+.es-vote button:focus-visible,
+.eq-votes button:focus-visible,
+.community-votes button:focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal-edge), #a9f0e4);
+  outline-offset: 3px;
+}
+
+:is(.es-vote, .eq-votes, .community-votes) button:has(> [data-vote-choice]):disabled {
+  opacity: 1;
+  color: #c5d0da;
+  background: #202a33;
+  border-color: #59636e;
+}
+:is(.es-vote, .eq-votes, .community-votes) button:not(:disabled):has(> [data-vote-choice="a"]) {
+  color: #fff;
+  background: #972547;
+  border-color: #ed7b96;
+}
+:is(.es-vote, .eq-votes, .community-votes) button:not(:disabled):has(> [data-vote-choice="tie"]) {
+  color: #17232d;
+  background: #e7edf2;
+  border-color: #a0acba;
+}
+:is(.es-vote, .eq-votes, .community-votes) button:not(:disabled):has(> [data-vote-choice="b"]) {
+  color: #fff;
+  background: #09659d;
+  border-color: #68c8f5;
+}

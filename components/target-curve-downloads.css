@@ -1,0 +1,35 @@
+.target-curve-downloads { min-width: 0; font-size: 13px; }
+.target-curve-downloads > summary {
+  display: list-item;
+  width: fit-content;
+  padding: 8px 4px;
+  color: light-dark(var(--workbench-teal), #b7ece2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.target-curve-download-formats { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.target-curve-downloads .target-curve-download-formats > button {
+  min-height: 36px;
+  padding: 5px 10px;
+  border: 1px solid light-dark(var(--workbench-line), #4b7779);
+  border-radius: 6px;
+  background: light-dark(var(--workbench-soft), #152a32);
+  color: light-dark(var(--workbench-ink), #e4f5f3);
+  font: inherit;
+}
+.target-curve-downloads .target-curve-download-formats > button:disabled {
+  opacity: .65;
+  cursor: default;
+}
+.target-curve-downloads :is(summary, button):focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal-edge), #8fe9d9);
+  outline-offset: 2px;
+}
+@media (pointer: coarse) {
+  .target-curve-downloads > summary { padding-block: 13px; }
+  .target-curve-downloads .target-curve-download-formats > button { min-height: 44px; }
+}
+
+.revealed-target-downloads { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.revealed-target-downloads > div { min-width: 0; overflow-wrap: anywhere; }

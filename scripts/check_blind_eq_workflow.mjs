@@ -13,6 +13,11 @@ function load(path, require, globals = {}) { const mod = { exports: {} }; vm.run
 const search = load('lib/search.ts', id => { throw Error(id); });
 const model = load('lib/blind-eq.ts', id => { throw Error(id); });
 const text = node => node == null || typeof node === 'boolean' ? '' : typeof node === 'string' || typeof node === 'number' ? String(node) : Array.isArray(node) ? node.map(text).join('') : text(node.props?.children);
+const voteLabel = load('components/shootout-vote-label.tsx', id => {
+  if (id === './shootout-vote-label.css') return {};
+  if (id === 'react/jsx-runtime') return { jsx: (type, props) => ({ type, props }) };
+  throw Error(id);
+});
 function all(node, predicate, found = []) { if (node && typeof node === 'object') { if (!Array.isArray(node) && predicate(node)) found.push(node); for (const child of Array.isArray(node) ? node : [node.props?.children]) all(child, predicate, found); } return found; }
 function mount(path, imports, globals, props) {
   const hooks = [], pending = [], focus = []; let cursor = 0, active = true, lateUpdates = 0, tree;
@@ -22,7 +27,7 @@ function mount(path, imports, globals, props) {
     useMemo(fn, deps) { const i = cursor++; if (!hooks[i] || deps.some((d, j) => !Object.is(d, hooks[i].deps[j]))) hooks[i] = { value: fn(), deps }; return hooks[i].value; },
     useEffect(fn, deps) { const i = cursor++; if (!hooks[i] || deps.some((d, j) => !Object.is(d, hooks[i].deps[j]))) { const previous = hooks[i]?.cleanup; hooks[i] = { deps }; pending.push(() => { previous?.(); hooks[i].cleanup = fn(); }); } },
   };
-  const jsx = (type, props) => { const element = { type, props }; if (typeof type === 'string' && props?.ref) props.ref.current = { focus() { focus.push(text(element)); } }; return element; };
+  const jsx = (type, props) => { if (type === voteLabel.default) return type(props); const element = { type, props }; if (typeof type === 'string' && props?.ref) props.ref.current = { focus() { focus.push(text(element)); } }; return element; };
   const Component = load(path, id => id === 'react' ? React : id === 'react/jsx-runtime' ? { jsx, jsxs: jsx, Fragment: 'fragment' } : id in imports ? imports[id] : (() => { throw Error('Unexpected dependency ' + id); })(), globals).default;
   const render = () => { cursor = 0; tree = Component(props); while (pending.length) pending.shift()(); return tree; };
   render();
@@ -35,7 +40,7 @@ function pageFixture(sampleRate = 48000) {
   const document = { body: { appendChild() {} }, createElement() { return { click() { clicks++; }, remove() {} }; } };
   const URL = { createObjectURL(value) { if (failDownload) throw Error('Downloads unavailable'); blob = value; return 'blob:fixture'; }, revokeObjectURL() {} };
   const pool = Array.from({ length: 35 }, (_, i) => ({ title: 'Synthetic ' + i, artist: 'Fixture', fileUrl: '/tone.wav' }));
-  const h = mount('app/eq-compare/page.tsx', { '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
+  const h = mount('app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
   return Object.assign(h, { listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
     apply() { all(h.tree, n => n.type === Editor).forEach(n => n.props.onChange(flat('Same preset name'))); h.render(); },
     songs() { return all(h.tree, n => n.type === 'label' && n.props.className === 'eq-song').map(n => all(n, child => child.type === 'input')[0]); },
@@ -67,6 +72,7 @@ function pageFixture(sampleRate = 48000) {
   check(text(h.tree).includes('Song 2 of 3'), 'Double-click cannot record two songs using the old evidence');
   check(h.listener().props.initialVolume === .07, 'Comfortable listening volume persists on the next song');
   check(h.button('Prefer A').props.disabled, 'The next song starts with its own voting lock');
+  check(h.button('Unsure / Tie').props.disabled && h.button('Prefer B').props.disabled, 'All three shared vote choices observe the listening lock');
   let restoredFocus = false; const opener = { focus() { restoredFocus = true; } };
   h.button('Finish & reveal').props.onClick({ currentTarget: opener }); h.render();
   check(h.focus.at(-1) === 'End this session now?', 'Early-reveal confirmation receives keyboard focus');

@@ -1,4 +1,5 @@
 "use client";
+import ShootoutVoteLabel from "@/components/shootout-vote-label";
 import { useGraphTheme } from "@/lib/graph-theme";
 import { shortcutDecision } from "@/lib/playback-shortcuts";
 import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
@@ -329,9 +330,9 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
           <span className="es-hint">Space or S switches sounds here. Use Pause to stop playback.</span>
         </div>
         <div className="es-vote" role="group" aria-label="Which sounds better?">
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("a")} className="es-vote-a">A sounds better</button>
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("tie")} className="es-vote-tie">Can’t tell</button>
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("b")} className="es-vote-b">B sounds better</button>
+          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("a")} className="es-vote-a"><ShootoutVoteLabel choice="a"/></button>
+          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("tie")} className="es-vote-tie"><ShootoutVoteLabel choice="tie"/></button>
+          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("b")} className="es-vote-b"><ShootoutVoteLabel choice="b"/></button>
         </div>
         <p className="es-note es-center-text" role="status">{phase === "sending" ? "Sending your picks…" : busy ? "Preparing the next sound…" : canVote ? "Pick the one you prefer." : `Listen to both for ${MIN_HEARD} seconds each to unlock your pick.`}</p>
         {error && <p className="es-error" role="alert">{error} <button type="button" className="es-link" onClick={() => void submit()}>Try again</button></p>}

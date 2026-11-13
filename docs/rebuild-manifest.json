@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ce8704e878a782e68b90469f377a0475fabc5cbc",
+  "baseRevision": "f09297bfe5a410197d56c77faff12fbc03a06c93",
   "recordedLiveUpdate": 155,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -417,7 +417,7 @@
     },
     {
       "path": "app/community-preferences/page.tsx",
-      "sha256": "670f7016897e1b088f6f87155d241e2f0271a2837bb055135440c0e1ca075762",
+      "sha256": "27742025a9ee98660a4cc9b6cdd33258472ffb9bbf8cca6a3d9902d22a0e641c",
       "executable": false
     },
     {
@@ -487,7 +487,7 @@
     },
     {
       "path": "app/ear-tuning/page.tsx",
-      "sha256": "f49dc8f99cf73765a24d234256d37eba828d838dc63f659117c5dad7ce301015",
+      "sha256": "843b462141959972762651f0f1df280bb582472fc813b8bc4dcdb5fd747a422f",
       "executable": false
     },
     {
@@ -542,7 +542,7 @@
     },
     {
       "path": "app/eq-compare/page.tsx",
-      "sha256": "a1f3db44b9d1a9379438c13c93cc8eb1381380cedef869feb530c0d28e51f7d6",
+      "sha256": "491991da277f92da89e134c242347cdea83174befc3461fb0188cd05dd864ec4",
       "executable": false
     },
     {
@@ -552,7 +552,7 @@
     },
     {
       "path": "app/globals.css",
-      "sha256": "3bac3c9d4417fd69473e5122d2220fbd640fda4b0f9e07e87bcc78ee1b34a638",
+      "sha256": "333ca033c66878a9db657787ed35f42c3705e9af52500e3db56ee776cba59028",
       "executable": false
     },
     {
@@ -682,7 +682,7 @@
     },
     {
       "path": "app/preference-tuning/editor.tsx",
-      "sha256": "c702bdbb182b94370c4d0087cfeeea90a8dc78ffc2af108184825c950e4c62d8",
+      "sha256": "486d58ac28f777f6ca7209d9d084b8f80c1a2098d155e22ceaab04b35526502d",
       "executable": false
     },
     {
@@ -707,7 +707,7 @@
     },
     {
       "path": "app/preference-tuning/style.css",
-      "sha256": "d24e487a0910e8008f93474b2bd5668e59680cdc972c20d3005dd6f2ce1413a4",
+      "sha256": "e90eda2bb2b103ed52d65c488e0e0f151f953176954dbcb8268d997bdcbdc7ce",
       "executable": false
     },
     {
@@ -762,7 +762,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "089a7cc0de90f74703888d0de99b3f6c819fea40e749a0437a04b60fd644613e",
+      "sha256": "5eaa512a4498fc15a081d43e7111ce46d2252c1c511ad63fc295f96095836f24",
       "executable": false
     },
     {
@@ -772,7 +772,7 @@
     },
     {
       "path": "app/shootout/personal/page.tsx",
-      "sha256": "e137490819e0244bbd0b94d86310be272ea556098ae16a0e4b9c12c26cd3a358",
+      "sha256": "b42930da7655314f576f2832e180fcee0b7afea4680f9b9c5b00eaf45ffb78f3",
       "executable": false
     },
     {
@@ -1167,12 +1167,12 @@
     },
     {
       "path": "components/embed-shootout.css",
-      "sha256": "fe9345e669d2e1da876a946a8c76f78b3595f20d8775abb63c6cbbbe65529b27",
+      "sha256": "e68768d5f18f67db9a05bbc80a87d70c02426f7db40f48eb152695a08667d3b7",
       "executable": false
     },
     {
       "path": "components/embed-shootout.tsx",
-      "sha256": "ff8ca25365c78b742751d129316b315bdd80af7cbaf6b6ebe6fcf4b4baf97fda",
+      "sha256": "3e8665b533f5321703859014b9e4eac3cdf544cfee2a208ff0261f63b9dfaf4e",
       "executable": false
     },
     {
@@ -1217,12 +1217,12 @@
     },
     {
       "path": "components/generated-eq-comparison.tsx",
-      "sha256": "ed2d3c029b5f7afcddd1df5e9b0faf7d069ca00a6ce77f67ae6a218300ff7002",
+      "sha256": "46a84069150edbffb78cf9c9a7354db1cf89a2bc1d72695ed3115de2cebc1714",
       "executable": false
     },
     {
       "path": "components/headphone-picker.tsx",
-      "sha256": "983934291da100b2fb181830c211a6c7b2a175d70f06c8fc62d0a8904fee211c",
+      "sha256": "336a1befccc00bb733276aab4b1a084fedcb30601100973146ebe6b0f6e58414",
       "executable": false
     },
     {
@@ -1242,7 +1242,7 @@
     },
     {
       "path": "components/library-eq-panel.tsx",
-      "sha256": "6fa7b0a213218ac75bc9804d45ce747d492e991265be718b500e731a8dd5bdd7",
+      "sha256": "1b0683cf0aa171c5e61ed23d0988451f5056df83475e7d6196e5a310596709d4",
       "executable": false
     },
     {
@@ -1332,7 +1332,7 @@
     },
     {
       "path": "components/personal-podium.tsx",
-      "sha256": "c0e4b459c04354d118064750eec1151df475d7d651e5ee09cd9f07da11fc1cab",
+      "sha256": "d429ebb99dfaff43f165a869b96e0e6458a8cc0c577b3c3cb238ce74083f56e6",
       "executable": false
     },
     {
@@ -1347,12 +1347,12 @@
     },
     {
       "path": "components/personal-target-picker.css",
-      "sha256": "83b70e005ec6912ba4bfa94f360aa61d2d4f5af81ddc4493710d43b108b6d774",
+      "sha256": "806617fd183aebae32da39ac1aff88daa74732c3cef4d929de990509e2ec3d54",
       "executable": false
     },
     {
       "path": "components/personal-target-picker.tsx",
-      "sha256": "de923fd97b4f374a51f47d4aae3b57db3a06a479d37eee3b979996cc61b14499",
+      "sha256": "bd51477d7c80c72a11cb853226064b2b9f412bd3da448d76f1d6ed7f14391aba",
       "executable": false
     },
     {
@@ -1447,12 +1447,12 @@
     },
     {
       "path": "components/results-profile.css",
-      "sha256": "c6b40cdca115dd0b25fc7eb7949883fce422659d3081ef97b1425d6f8a93d480",
+      "sha256": "03180fa6f2de32f5f45e462a75ed4ac0ce237072b9059f2d73b490104822a534",
       "executable": false
     },
     {
       "path": "components/results-profile.tsx",
-      "sha256": "f524536182619be9130a24b622845b95e65f4a83a4357fd602d2179f636a20cd",
+      "sha256": "fdb4ed40a631f36c6a9471102621ec55f69137075c12a58e4398ecfdd6f283a3",
       "executable": false
     },
     {
@@ -1497,7 +1497,17 @@
     },
     {
       "path": "components/shootout-organization.css",
-      "sha256": "a376d6b8932708067f46122d00142a9d05c705bbf69f0bb85c85a56c8f63355f",
+      "sha256": "56c19777c9abbd5e28352ff360a2c93c86acb4769d6f92195c5d7fac4cd1b06d",
+      "executable": false
+    },
+    {
+      "path": "components/shootout-vote-label.css",
+      "sha256": "d2860287b131d3fb98f68d5443a47e3d93275241a2f498b8bdfb204370241fe1",
+      "executable": false
+    },
+    {
+      "path": "components/shootout-vote-label.tsx",
+      "sha256": "37ae4c8f5e1f9b909c5be346a16e29b01a32d4b8960cb8a92c6e09607df8682e",
       "executable": false
     },
     {
@@ -1563,6 +1573,16 @@
     {
       "path": "components/statistics-archive.tsx",
       "sha256": "6f785881380afe8c9324b27bb77d76ab8b8f8f9285f9d09e0eca63d50982f80a",
+      "executable": false
+    },
+    {
+      "path": "components/target-curve-downloads.css",
+      "sha256": "2e8e4e5914e5d9467b2c133bb07960faf9eb5af9853e7d3d06c236224c715fb4",
+      "executable": false
+    },
+    {
+      "path": "components/target-curve-downloads.tsx",
+      "sha256": "fc461d60242826c4eef2f1f23a0b7955d128d80d697cf377a9c12354d50f2419",
       "executable": false
     },
     {
@@ -2152,7 +2172,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "686df120a2878378fb94e366081387e081152b19979b36fbd96bebd359f9e707",
+      "sha256": "23dbaee0e43fefc0d84861f3e68cdb4da5edce455c0ef2c0c0a71c6fcec16bf0",
       "executable": false
     },
     {
@@ -3837,7 +3857,7 @@
     },
     {
       "path": "lib/personal-shootout.ts",
-      "sha256": "f6e4bc5e833f4df43f0c51e24bac5b5482308e943cdb5d825bfba830dc905dc1",
+      "sha256": "af52e4ef08e461d9f54f96760248bda0f5943c533f41829ccf76812814744f84",
       "executable": false
     },
     {
@@ -3907,12 +3927,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "180ef5db489b836798d2bf81a86077fe1015f1f7a6a42662c9c75b46f20197d8",
+      "sha256": "ed77a23a4cb0ebf4f8714399a88ac67acb31c8e5acb34d01203c27632d55f379",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "fa584e66beeda23fa68f6822fd0038f7d4a2c52f23004fd2a10c25f42455f221",
+      "sha256": "1e33692ed8cb452275a7af55a83f33a42a70010d6ab659759b67dfe31a8faca7",
       "executable": false
     },
     {
@@ -4747,7 +4767,7 @@
     },
     {
       "path": "scripts/check_blind_eq_workflow.mjs",
-      "sha256": "d7b36445476aa187631a456b2d02902ba95a769326b8f7b650bff8080dbf64c3",
+      "sha256": "173adb8bc5d27dd1a71382d4584272307498013a6ae622b85c1ecc33db614187",
       "executable": false
     },
     {

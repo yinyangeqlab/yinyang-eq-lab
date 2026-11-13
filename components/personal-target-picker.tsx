@@ -1,5 +1,6 @@
 "use client";
 
+import { TargetCurveDownloads } from "@/components/target-curve-downloads";
 import { useId, useMemo, useState } from "react";
 import { MIN_CUSTOM_POOL, personalPool, shortStarterPool, type LocalPoolTarget, type PoolChoice, type PoolTarget } from "@/lib/personal-target-pool";
 import { MAX_PERSONAL_CANDIDATES } from "@/lib/personal-shootout";
@@ -60,10 +61,10 @@ export default function PersonalTargetPicker({ publicTargets, defaultPublicTarge
         </div>
         <p className={`target-pool-count${tooSmall ? " is-short" : ""}`} role="status">{pool.length} chosen · {tooSmall ? `choose at least ${MIN_CUSTOM_POOL} to start` : pool.length > MAX_PERSONAL_CANDIDATES ? `choose up to ${MAX_PERSONAL_CANDIDATES} to start` : `up to ${MAX_PERSONAL_CANDIDATES} per run`}</p>
         <fieldset className="target-pool-group"><legend>Your targets <small>private to you</small></legend>
-          {shownLocal.length ? shownLocal.map(row => <label key={row.id} className="target-pool-item"><input type="checkbox" checked={chosen.has(row.id)} disabled={disabled || (!chosen.has(row.id) && pool.length >= MAX_PERSONAL_CANDIDATES)} onChange={() => toggle(row.id)}/><span>{row.name}</span><em>{row.pending ? "Pending review" : "Private"}</em></label>) : <p className="footnote">{eligibleLocal.length ? "No private targets match. Clear the search to see your targets." : "No private targets saved yet. Add one under Upload."}</p>}
+          {shownLocal.length ? shownLocal.map(row => <div key={row.id} className="target-pool-row"><label className="target-pool-item"><input type="checkbox" checked={chosen.has(row.id)} disabled={disabled || (!chosen.has(row.id) && pool.length >= MAX_PERSONAL_CANDIDATES)} onChange={() => toggle(row.id)}/><span>{row.name}</span><em>{row.pending ? "Pending review" : "Private"}</em></label><TargetCurveDownloads target={row}/></div>) : <p className="footnote">{eligibleLocal.length ? "No private targets match. Clear the search to see your targets." : "No private targets saved yet. Add one under Upload."}</p>}
         </fieldset>
         <fieldset className="target-pool-group"><legend>Public targets <small>{shownPublic.length} of {eligiblePublic.length}</small></legend>
-          <div className="target-pool-list">{shownPublic.map(row => <label key={row.id} className="target-pool-item"><input type="checkbox" checked={chosen.has(row.id)} disabled={disabled || (!chosen.has(row.id) && pool.length >= MAX_PERSONAL_CANDIDATES)} onChange={() => toggle(row.id)}/><span>{row.name}</span></label>)}{!shownPublic.length && <p>No public targets match. Clear the search to try again.</p>}</div>
+          <div className="target-pool-list">{shownPublic.map(row => <div key={row.id} className="target-pool-row"><label className="target-pool-item"><input type="checkbox" checked={chosen.has(row.id)} disabled={disabled || (!chosen.has(row.id) && pool.length >= MAX_PERSONAL_CANDIDATES)} onChange={() => toggle(row.id)}/><span>{row.name}</span></label><TargetCurveDownloads target={row}/></div>)}{!shownPublic.length && <p>No public targets match. Clear the search to try again.</p>}</div>
         </fieldset>
         <p className="target-pool-note">Comparisons that include a private target stay on this device: nothing from that run is sent to research or community sharing, even if you opted in elsewhere.</p>
       </>}

@@ -1,4 +1,3 @@
-@font-face{font-family:"Public Sans Vote";src:url("/fonts/public-sans/bold-latin-dace7416.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap}
 /* Shared measurement entry across Tournament modes. */
 .measurement-entry-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .measurement-entry-actions button,.browse-measurement-button,.measurement-show-all{min-height:44px;padding:10px 14px;border:1px solid light-dark(var(--workbench-line), #42615e);border-radius:8px;background:light-dark(var(--workbench-soft), #122521);color:light-dark(var(--workbench-teal), #def1eb);font:inherit;font-size:13px;cursor:pointer}
@@ -56,9 +55,8 @@
 /* Compact vote plates retain the original decorative SVGs. */
 .shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b),
 .shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button:is(.choice-a,.choice-tie,.choice-b)[data-locked="true"]:disabled{display:flex;align-items:center;justify-content:center;min-height:56px;height:56px;padding:6px 0;font-size:15px;line-height:1.2;white-space:normal;color:light-dark(var(--workbench-ink), #fff);opacity:1}
-.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::before{inset:50% auto auto 50%;width:26px;height:29px;transform:translate(-50%,-50%)}
+.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::before{inset:50% auto auto 7px;width:16px;height:18px;transform:translateY(-50%)}
 .shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::after{height:100%;background-size:100% 100%;background-position:center}
-.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:4px 10px;border-radius:5px;background:light-dark(color-mix(in srgb, var(--workbench-surface) 96%, transparent), #081015f5);color:light-dark(var(--workbench-ink), #fff);font-weight:750;line-height:1.25;text-shadow:none;box-shadow:0 0 0 1px #ffffff20,0 1px 3px #0009}
 .shell.alpha-listening.personal-shootout .comparison-votes-first .alpha-session-utilities{gap:6px;margin:6px 0 0}
 .shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .alpha-session-utilities button{min-height:34px;padding:5px 12px}
 .shell.alpha-listening.personal-shootout .compare-strip{gap:6px;padding:8px 10px;margin-bottom:6px}
@@ -70,12 +68,10 @@
 .shell.alpha-listening.personal-shootout .compare-strip .strip-btn{min-height:34px;padding:0 12px}
 .shell.alpha-listening.personal-shootout .compare-strip .strip-meter progress{height:6px}
 .shell.alpha-listening.personal-shootout .compare-strip .strip-meter b{width:20px;height:20px;border-radius:5px}
-@media(max-width:600px){.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:4px 6px;font-size:13px}.shell.alpha-listening.personal-shootout .compare-strip .strip-times{flex-basis:100%;justify-content:space-between}.shell.alpha-listening.personal-shootout .compare-strip .strip-copy{flex-basis:100%}}
+@media(max-width:600px){.shell.alpha-listening.personal-shootout .compare-strip .strip-times{flex-basis:100%;justify-content:space-between}.shell.alpha-listening.personal-shootout .compare-strip .strip-copy{flex-basis:100%}}
 @media(pointer:coarse){.shell.alpha-listening.personal-shootout .compare-strip .strip-btn,.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .alpha-session-utilities button{min-height:44px}}
 
-/* Softer text halo leaves the original centered lock visible. */
-.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{padding:2px 5px;border:0;background:none;box-shadow:none;font-size:18px;line-height:1.15;color:light-dark(var(--workbench-ink), #fff8fa);font-family:"Public Sans Vote","Public Sans",Arial,sans-serif;letter-spacing:.025em;text-transform:uppercase;-webkit-text-stroke:.7px #05090e;paint-order:stroke fill;text-shadow:0 1px 1px #0007;font-weight:700}
-.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button[data-locked="true"]::before{width:32px;height:36px}
+.shell.alpha-listening.personal-shootout .shootout-content .comparison-votes-first .personal-votes.choice-controls button[data-locked="true"]:disabled{padding-inline:24px 4px}
 .shell.alpha-listening.personal-shootout .music-panel-host:not(.persistent) .alpha-audio-deck{padding:0;gap:4px}
 .shell.alpha-listening.personal-shootout .comparison-votes-first{margin:0 0 4px}
 .shell.alpha-listening.personal-shootout .comparison-votes-first .alpha-session-utilities{padding:0;margin:4px 0;gap:6px}
@@ -147,7 +143,6 @@
 .shell.alpha-listening.personal-shootout .compare-strip{margin-bottom:0}
 .shell.alpha-listening.personal-shootout .compare-strip .strip-copy:empty{display:none}
 
-@media(max-width:600px){.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .vote-button-label{font-size:14px;letter-spacing:.01em;padding-inline:3px}}
 
 /* Each diagonal reaches opposite corners without stretching the original links. */
 .shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls button{container-type:inline-size}
@@ -201,7 +196,6 @@ button[data-locked="true"]>.vote-chain-strands{display:block}
 .shell.alpha-listening.personal-shootout .shootout-setup-control{margin-bottom:2px}
 @media(pointer:coarse){.shell.alpha-listening.personal-shootout .personal-session-bar>button{min-height:44px}}
 
-.shell.alpha-listening.personal-shootout .comparison-votes-first .choice-controls .choice-tie:not(:disabled) .vote-button-label{color:#17232d;-webkit-text-stroke:.45px #05090e;text-shadow:0 1px 0 #ffffff70}
 
 /* Keep the lock reason beside the votes without enlarging the controls. */
 .personal-vote-availability{display:inline-flex;align-items:center;flex-wrap:wrap;gap:4px 6px;min-width:0}

@@ -10,6 +10,7 @@ import { type PeqFilter, response } from "@/lib/autoeq";
 import { fitAutoEqAsync } from "@/lib/autoeq-client";
 import type { AutoEqFit } from "@/lib/autoeq-fit";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
+import { TargetCurveDownloads } from "@/components/target-curve-downloads";
 import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
 import { autoEqPickerTargets, autoEqTargetStorageKey, isSourceAutoEqTarget, readLocalAutoEqTargets } from "@/lib/autoeq-target-sources";
 import { downloadLocalFile } from "@/lib/channel-match-export";
@@ -408,6 +409,7 @@ export default function EarTuningPage() {
         <label>Target<select value={targetId} onChange={event => { changeSetup(); setTargetId(event.target.value); }}>
           {targets.map(row => <option key={row.id} value={row.id}>{row.name}</option>)}
         </select></label>
+        <TargetCurveDownloads key={selectedTarget.id} target={selectedTarget}/>
         <AutoEqCurveStatus {...sourceCurves}/>
         <button type="button" disabled={!measurement || fitting || !sourceCurves.ready} onClick={() => void fitTarget()}>{fitting ? "Fitting target…" : currentBase ? "Rebuild reference EQ" : "Prepare reference EQ"}</button>
         {!measurement && <p><Link href="/preference-tuning">Add a headphone measurement in Tuning</Link> to fit a target.</p>}

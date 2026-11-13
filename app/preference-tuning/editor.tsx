@@ -5,6 +5,7 @@ import { shortcutDecision } from "@/lib/playback-shortcuts";
 import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
 import { useConsentPrompt } from "@/components/use-consent-prompt";
 import "@/components/alpha-audio-workbench.css";
+import { TargetCurveDownloads } from "@/components/target-curve-downloads";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
 import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
 import { autoEqPickerTargets, autoEqTargetStorageKey, isLocalAutoEqTarget, isSourceAutoEqTarget, readLocalAutoEqTargets } from "@/lib/autoeq-target-sources";
@@ -77,6 +78,7 @@ function formatToneGain(value: number) {
   return `${gain > 0 ? "+" : ""}${gain}`;
 }
 const fallback: Target = { id: "flat", name: "Flat reference", creator: "Reference", points: [[20, 0], [20000, 0]] };
+const targetNames = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
 type EditSnapshot = { settings: Settings; selected: string; expanded: boolean };
 type PlacementKey = "bassHz" | "earHz" | "trebleHz";
 const GAIN_CONTROLS: { key: GainKey; limit: number; hint: string; placement?: PlacementKey; fixed?: number }[] = [
@@ -615,6 +617,7 @@ function RouteWatcher({ onRoute }: { onRoute: () => void }) {
 export default function TuningEditor({ visible = true }: { visible?: boolean }) {
   const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
   const [targetQuery, setTargetQuery] = useState("");
+  const [targetSort, setTargetSort] = useState<"rank" | "name">("rank");
   const [targets, setTargets] = useState<Target[]>([fallback]);
   const [curatedRanking, setCuratedRanking] = useState<{ id: string; name: string; rank: number }[]>([]);
   const curatedLeader = curatedRanking.find(row => row.rank === 1) ?? null;
@@ -844,7 +847,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
         try { localAutoEqTargets = readLocalAutoEqTargets(localStorage.getItem(autoEqTargetStorageKey)); } catch {}
         if (stopped) return;
         const available=[fallback, ...approved.filter(t => Array.isArray(t.points)), ...privateTargets.filter(t => Array.isArray(t.points)), ...autoEqPickerTargets, ...localAutoEqTargets];
-        setTargets(available);
+        setTargets(current => [...available, ...current.filter(row => row.id === "imported")]);
         // A ?target= deep link is applied by the route effect below once the targets are in; it also outranks the default leader.
         if (new URLSearchParams(window.location.search).get("target")) hadSavedSelection.current = true;
         setTargetsReady(true);
@@ -918,7 +921,6 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   }, [soundMode, sourceCurves.ready]);
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
   const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
-  const targetOptions = useMemo(() => [...targets].sort((a, b) => (curatedRanks.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (curatedRanks.get(b.id) ?? Number.MAX_SAFE_INTEGER)), [targets, curatedRanks]);
   const filters = useMemo(() => filtersFor(settings), [settings]);
   const savedEq = presets.find(eq => eq.id === presetId);
   const measurement = measurements.find(row => row.id === (soundMode === "saved" ? savedEq?.measurementId : measurementId));
@@ -927,8 +929,15 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const tweaksChanged = filters.some(filter => Math.abs(filter.gain) > .0001);
   const eqAvailable = soundMode === "target" ? sourceCurves.ready : !!savedEq;
   const eqOn = !bypass && eqAvailable;
+  const shownTargetOptions = useMemo(() => {
+    const matches = searchRows(targets, targetQuery, row => [row.name, row.creator ?? ""]);
+    const rank = (id: string) => curatedRanks.get(id) ?? Number.MAX_SAFE_INTEGER;
+    return matches.sort((a, b) =>
+      (targetSort === "rank" ? rank(a.id) - rank(b.id) : 0) ||
+      targetNames.compare(a.name, b.name) || targetNames.compare(a.creator ?? "", b.creator ?? ""));
+  }, [targets, targetQuery, targetSort, curatedRanks]);
+  const selectedOutsideSearch = !shownTargetOptions.some(row => row.id === target.id);
   // Snapshots belong to one starting sound: the target (by id and curve content) with its headphone measurement, or one saved EQ.
-  const shownTargetOptions = targetQuery.trim() ? searchRows(targetOptions, targetQuery, row => [row.name, row.creator]) : targetOptions;
   const targetPrint = useMemo(() => curveFingerprint(normalized), [normalized]);
   const snapshotScope = soundMode === "saved" ? savedEq ? `eq:${savedEq.id}` : null : `target:${target.id}:${targetPrint}:${measurement?.id ?? "none"}`;
   const snapshots = snapshotState.scope === snapshotScope && snapshotScope ? snapshotState.rows : NO_SNAPSHOTS;
@@ -1691,7 +1700,32 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
           <AutoEqCurveStatus {...sourceCurves}/>
           <div className="pt-sound-body" id="pt-sound-body" hidden={!setupOpen}><SoundSetup mode={soundMode} onMode={changeSoundMode} presets={presets} presetId={presetId} onPreset={chooseSavedEq}
             headphones={<div className="shootout-content pt-headphones"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div>}
-            target={<><div><label>Find a target<input type="search" value={targetQuery} onChange={event => setTargetQuery(event.currentTarget.value)} placeholder="Search names and sources"/></label><label className="pt-visually-hidden" htmlFor="tuning-target">Target curve</label><div className="sound-source-actions"><select id="tuning-target" aria-label="Target curve" value={selected} onChange={event => changeTarget(event.target.value)}>{targetQuery && !shownTargetOptions.some(row => row.id === selected) && <option value={selected}>{target.name} · selected</option>}{shownTargetOptions.map(row => <option key={row.id} value={row.id}>{row.name} · {isLocalAutoEqTarget(row.id) ? "private copy · " : ""}{row.creator}</option>)}{!shownTargetOptions.length && <option disabled>No matching targets</option>}</select><label className="pt-import" title="Import a target CSV or TXT"><Upload size={15}/><span>Import</span><input type="file" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.target.files?.[0])}/></label></div><a href="/curve-credits#autoeq-library">AutoEq sources and credits</a></div><p>{measurement ? `Fitted for ${measurement.name}.` : "Choose your headphones to hear this target applied to their measurement."}</p></>}>
+            target={<>
+              <div className="pt-target-tools">
+                <label htmlFor="tuning-target-search">Search targets<input id="tuning-target-search" type="search" value={targetQuery} onChange={event => setTargetQuery(event.currentTarget.value)} placeholder="Name or source" autoComplete="off"/></label>
+                <label htmlFor="tuning-target-sort">Sort targets<select id="tuning-target-sort" value={targetSort} onChange={event => setTargetSort(event.currentTarget.value === "name" ? "name" : "rank")}>
+                  <option value="rank">Global rank</option><option value="name">Alphabetical (A–Z)</option>
+                </select></label>
+              </div>
+              <div className="pt-target-selection">
+                <label htmlFor="tuning-target">Target curve</label>
+                <div className="sound-source-actions">
+                  <select id="tuning-target" value={target.id} onChange={event => changeTarget(event.currentTarget.value)}>
+                    {selectedOutsideSearch && <option value={target.id}>{curatedRanks.has(target.id) ? `#${curatedRanks.get(target.id)} · ` : ""}{target.name} · current selection</option>}
+                    {shownTargetOptions.map(row => {
+                      const rank = curatedRanks.get(row.id);
+                      return <option key={row.id} value={row.id}>{rank ? `#${rank} · ` : ""}{row.name}{row.creator ? ` · ${row.creator}` : ""}{isLocalAutoEqTarget(row.id) ? " · private copy" : ""}</option>;
+                    })}
+                    {!shownTargetOptions.length && <option value="" disabled>No matching targets</option>}
+                  </select>
+                  <label className="pt-import" title="Import a target CSV or TXT"><Upload size={15} aria-hidden="true"/><span>Import</span><input type="file" aria-label="Import a target CSV or TXT" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.currentTarget.files?.[0])}/></label>
+                </div>
+                {targetQuery.trim() && <p role="status">{shownTargetOptions.length ? `${shownTargetOptions.length} matching target${shownTargetOptions.length === 1 ? "" : "s"}` : "No matching targets"}</p>}
+                <TargetCurveDownloads key={selectedTarget.id} target={selectedTarget}/>
+                <a href="/curve-credits#autoeq-library">AutoEq sources and credits</a>
+              </div>
+              <p>{measurement ? `Fitted for ${measurement.name}.` : "Choose your headphones to hear this target applied to their measurement."}</p>
+            </>}>
             {soundMode === "saved" && savedEq && !measurement && <p className="sound-state">{savedEq.measurementId ? "The linked headphone measurement is unavailable in this browser. Saved filters still work; raw and predicted headphone overlays need that measurement." : "This EQ has no linked headphone measurement. Saved filters still work; headphone response overlays are unavailable."}</p>}
           </SoundSetup></div>
           {managerOpen && <div className="pt-manager"><button type="button" className="pt-reset" onClick={() => setManagerOpen(false)}>Close measurement editor</button><div className="shootout-content"><MeasurementManager key={editId || "new"} rows={measurements} selectedId={measurementId} editId={editId} onAdd={row => { addMeasurement(row); setManagerOpen(false); }} onUpdate={row => { saveMeasurements(measurements.map(item => item.id === row.id ? row : item)); setManagerOpen(false); }} onDelete={deleteMeasurement} onSelect={chooseMeasurement}/></div></div>}

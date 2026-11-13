@@ -63,6 +63,7 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
       const response = await fetch("/api/headphone-catalog");
       if (!response.ok) throw new Error("We couldn’t load the headphone list. Try again, or use a measurement saved in this browser.");
       const data = await response.json() as { entries: CatalogMeasurement[] };
+      if (!Array.isArray(data.entries)) throw new Error("We couldn’t load the headphone list. Try again, or use a measurement saved in this browser.");
       setCatalog(data.entries);
       setStatus(`${data.entries.length.toLocaleString()} measurements available.`);
     } catch (error) { setStatus(error instanceof Error ? error.message : "We couldn’t load the headphone list. Try again, or use a measurement saved in this browser."); }
@@ -100,8 +101,12 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
       <button type="button" data-headphone-type="ie" className={headphoneType === "ie" ? "active" : ""} aria-pressed={headphoneType === "ie"} onClick={() => onType("ie")} aria-label="In-Ear"><span>In-</span><span>Ear</span></button>
       <button type="button" data-headphone-type="oe" className={headphoneType === "oe" ? "active" : ""} aria-pressed={headphoneType === "oe"} onClick={() => onType("oe")} aria-label="Over-Ear"><span>Over-</span><span>Ear</span></button>
     </div>
-    <div className="headphone-search" ref={host}>
-      <input ref={input} type="search" title={selected?.name} aria-label="Find your headphone model" aria-controls={open ? resultsId : undefined} aria-describedby={`${resultsId}-help`} autoComplete="off" spellCheck={false} placeholder="Search headphone brand or model" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); setLimit(30); setOpen(true); }} onKeyDown={event => { if (event.key === "Escape") { setOpen(false); setEditingQuery(false); } if(event.key==="ArrowDown"){event.preventDefault();if(open)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();else{setOpen(true);requestAnimationFrame(()=>{if(document.activeElement===input.current)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();});}} }} />
+    <div className="headphone-search" ref={host} onBlur={event => {
+      if (event.currentTarget.contains(event.relatedTarget)) return;
+      setOpen(false);
+      setEditingQuery(false);
+    }}>
+      <input ref={input} type="search" title={selected?.name} aria-label="Find your headphone model" aria-controls={open ? resultsId : undefined} aria-describedby={`${resultsId}-help`} autoComplete="off" spellCheck={false} placeholder="Search headphone brand or model" value={open && editingQuery ? query : selected?.name ?? ""} onFocus={event => { setOpen(true); setEditingQuery(false); setQuery(""); if (selected) event.currentTarget.select(); void load(); }} onChange={event => { setEditingQuery(true); setQuery(event.target.value); setLimit(30); setOpen(true); }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); setOpen(false); setEditingQuery(false); } if(event.key==="ArrowDown"){event.preventDefault();if(open)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();else{setOpen(true);requestAnimationFrame(()=>{if(document.activeElement===input.current)host.current?.querySelector<HTMLButtonElement>('[data-measurement-option]')?.focus();});}} }} />
 
 
       <span id={`${resultsId}-help`} className="sr-only">Press Down to enter measurement results, Tab to move through their actions, and Escape to close results.</span>

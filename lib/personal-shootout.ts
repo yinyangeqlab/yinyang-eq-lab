@@ -14,6 +14,7 @@ export type PersonalMusic = { mode: "pool" | "song" | "playlist" | "upload"; ids
 export type PersonalCheckpoint = { at: number; choices: number; comparisons: number; explored: number; phase: "explore" | "confirm"; favorite: string | null; leaders: { id: string; name: string; wins: number; losses: number; ties: number }[] };
 export type PersonalRun = {
   version: 1; schedulerVersion?: "personal-v2"; adminTestOnly?:boolean; requireMatchedPassage?:boolean;context: string; label: string; candidates: Candidate[]; music?: PersonalMusic; playback?: PersonalPlayback; fitter?: FitterSettings;
+  measurement?: { id: string; name: string; device: string; rig: string };
   choices: PersonalChoice[]; excluded: string[]; restored: string[];
   pending: [string, string] | null; phase: "explore" | "confirm";
   finalists: string[]; budget: number; checkpoint: number; updatedAt: number;
@@ -209,6 +210,8 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
   for (const value of runs) {
     const r = value as PersonalRun;
     if (!r || r.version !== 1 || typeof r.context !== "string" || typeof r.label !== "string" || !Number.isFinite(r.updatedAt) || !Array.isArray(r.candidates) || r.candidates.length < 2 || r.candidates.length > MAX_PERSONAL_CANDIDATES || !Array.isArray(r.choices) || r.choices.length > 500 || !Array.isArray(r.excluded) || !Array.isArray(r.restored) || !Array.isArray(r.finalists) || ![10,20,40].includes(r.budget) || !Number.isInteger(r.checkpoint) || r.checkpoint < 0 || !["explore", "confirm"].includes(r.phase)) throw Error("Invalid saved personal run.");
+    if (r.measurement !== undefined && (!r.measurement ||
+      [r.measurement.id, r.measurement.name, r.measurement.device, r.measurement.rig].some(value => typeof value !== "string"))) throw Error("Invalid saved headphone measurement.");
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
     if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2") throw Error("Unsupported saved scheduler version.");
