@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "9380c36816a6c110aef66af03176d8a39cc57e7b",
+  "baseRevision": "3f0df01ddae502db93a140eb998915748bae06b1",
   "recordedLiveUpdate": 155,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -682,7 +682,7 @@
     },
     {
       "path": "app/preference-tuning/editor.tsx",
-      "sha256": "486d58ac28f777f6ca7209d9d084b8f80c1a2098d155e22ceaab04b35526502d",
+      "sha256": "e69d3cab5f7d30c901e2044226596a3c913e798205b873cd3d41e4ca2d81ac85",
       "executable": false
     },
     {
@@ -5222,7 +5222,7 @@
     },
     {
       "path": "scripts/check_tuning_unified.mjs",
-      "sha256": "191970ba6a87a6477aacd21b3fd4cccff75ad8419231ce20a21b44cd26a1ee66",
+      "sha256": "052811c4922e93a08079d21e523233040324d6e8cf26fe4be4a7a8fd75ae6b1d",
       "executable": false
     },
     {

@@ -50,6 +50,19 @@ import { FIRST_CUT_DB, LOOP_DEFAULT_SECONDS, LOOP_MIN_SECONDS, LOUDNESS_MIN_FRAM
 import "./style.css";
 
 type Target = { id: string; name: string; creator: string; points: Point[] };
+type RankedTarget = { id: string; name: string };
+type TuningRankingView = { protocols?: { current?: { all?: { rows?: RankedTarget[] } } } };
+type TuningRankingResponse = TuningRankingView & { fitterCohorts?: { key: string; view: TuningRankingView }[] };
+
+function tuningTargetRanking(ranking: TuningRankingResponse) {
+  const standard = ranking.protocols?.current?.all?.rows ?? [];
+  const earlier = ranking.fitterCohorts?.find(cohort => cohort.key === "historical")?.view.protocols?.current?.all?.rows ?? [];
+  const fallback = standard.length === 0 && earlier.length > 0;
+  return {
+    rows: (fallback ? earlier : standard).map((row, index) => ({ ...row, rank: index + 1 })),
+    earlier: fallback,
+  };
+}
 type GainKey = "sub" | "bass" | "body" | "ear" | "air" | "treble";
 type FilterType = PresetFilter["type"];
 type FocusedFilter = Pick<PresetFilter, "hz" | "gain" | "q">;
@@ -619,8 +632,8 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [targetQuery, setTargetQuery] = useState("");
   const [targetSort, setTargetSort] = useState<"rank" | "name">("rank");
   const [targets, setTargets] = useState<Target[]>([fallback]);
-  const [curatedRanking, setCuratedRanking] = useState<{ id: string; name: string; rank: number }[]>([]);
-  const curatedLeader = curatedRanking.find(row => row.rank === 1) ?? null;
+  const [targetRanking, setTargetRanking] = useState<ReturnType<typeof tuningTargetRanking>>({ rows: [], earlier: false });
+  const curatedLeader = targetRanking.earlier ? null : targetRanking.rows[0] ?? null;
   const [selected, setSelected] = useState("flat");
   const [settings, setSettings] = useState<Settings>(defaults);
   const [expanded, setExpanded] = useState(false);
@@ -858,11 +871,10 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
           try {
             const rankingResponse = await fetch("/api/research", { cache: "no-store" });
             if (!rankingResponse.ok) return;
-            const ranking = await rankingResponse.json() as { protocols?: { current?: { all?: { rows?: { id: string; name: string }[] } } } };
+            const ranking = tuningTargetRanking(await rankingResponse.json() as TuningRankingResponse);
             if (stopped || request !== rankingRequest) return;
-            const rows = (ranking.protocols?.current?.all?.rows ?? []).map((row, index) => ({ ...row, rank: index + 1 }));
-            setCuratedRanking(rows);
-            const leader = rows.find(row => row.rank === 1 && approved.some(target => target.id === row.id));
+            setTargetRanking(ranking);
+            const leader = !ranking.earlier && approved.some(target => target.id === ranking.rows[0]?.id) ? ranking.rows[0] : null;
             if (firstRankingLoad && leader && !hadSavedSelection.current) {
               editRef.current = { ...editRef.current, selected: leader.id }; setSelected(leader.id);
             }
@@ -920,7 +932,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     if (soundMode === "target" && !sourceCurves.ready) media.current?.pause();
   }, [soundMode, sourceCurves.ready]);
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
-  const curatedRanks = useMemo(() => new Map(curatedRanking.map(row => [row.id, row.rank])), [curatedRanking]);
+  const curatedRanks = useMemo(() => new Map(targetRanking.rows.map(row => [row.id, row.rank])), [targetRanking]);
   const filters = useMemo(() => filtersFor(settings), [settings]);
   const savedEq = presets.find(eq => eq.id === presetId);
   const measurement = measurements.find(row => row.id === (soundMode === "saved" ? savedEq?.measurementId : measurementId));
@@ -1703,10 +1715,13 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
             target={<>
               <div className="pt-target-tools">
                 <label htmlFor="tuning-target-search">Search targets<input id="tuning-target-search" type="search" value={targetQuery} onChange={event => setTargetQuery(event.currentTarget.value)} placeholder="Name or source" autoComplete="off"/></label>
-                <label htmlFor="tuning-target-sort">Sort targets<select id="tuning-target-sort" value={targetSort} onChange={event => setTargetSort(event.currentTarget.value === "name" ? "name" : "rank")}>
+                <label htmlFor="tuning-target-sort">Sort targets<select id="tuning-target-sort" aria-describedby="tuning-target-rank-source" value={targetSort} onChange={event => setTargetSort(event.currentTarget.value === "name" ? "name" : "rank")}>
                   <option value="rank">Global rank</option><option value="name">Alphabetical (A–Z)</option>
                 </select></label>
               </div>
+              <p id="tuning-target-rank-source">{targetRanking.rows.length
+                ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use Standard 10-band matched-passage results."
+                : "Global ranks appear when matched-passage results are available."}</p>
               <div className="pt-target-selection">
                 <label htmlFor="tuning-target">Target curve</label>
                 <div className="sound-source-actions">
