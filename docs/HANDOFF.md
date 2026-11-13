@@ -1,15 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update155**, source `9e17dc4dbd8b98580ea7e37e616952069291f43a`.
+Recorded deployment: **update156**, source `79193036fbcf0aba496efa12507bda04ac78da86`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
-## Update156 release candidate
+## Update156
 
-The candidate is based on fetched public main `f09297bfe5a410197d56c77faff12fbc03a06c93`, which matches the application source from update155. It standardizes Shootout vote labels, adds target search and rank sorting in Preference Tuning, puts CSV and TXT downloads beside target selection, and organizes My Collection around dated trials and a separate Personal Tournament view. The shortlist totals use all dates for the selected shootout and measurement. Earlier Personal runs without a saved measurement ID remain available by their recorded setup.
+Shootout voting uses Prefer A, Unsure / Tie and Prefer B. Preference Tuning offers target search, A–Z or global-rank sorting, and local CSV and TXT downloads. While the Standard cohort is empty, rank numbers use the separately labeled earlier matched-passage cohort. My Collection shows dated trials by headphone measurement and keeps Personal Tournament history in a separate view.
 
-The production compilation and 15 focused suites passed on Node 26.12.0 and npm 12.2.1. Disposable Chromium fixtures at 1366 and 360 pixels verified search, sorting, downloads, source retry, trial filters and readable locked vote labels. Keyboard selection and option colors were checked for native selects. Expanded popup pixels were unavailable in the capture. Production remains on update155 with its existing recovery point. The update156 candidate is authorized for deployment and GitHub publication. The recorded live state changes after deployment verification.
+The deployed source is `79193036fbcf0aba496efa12507bda04ac78da86`. All 123 selected suites passed. The dedicated non-contributing layout account verified the fixes at 1366 and 360 pixels. [Deployment verification](releases/update156-verification.json)
 
 Update155 adds a standalone EQ fitter benchmark guide, linked from Research and both Rankings sections. Glossary & Guides retains its existing section links, and the fitter guide shares the original benchmark chart.
 

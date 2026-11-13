@@ -1,46 +1,59 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 155,
+  "update": 156,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-12T00:11:17Z",
-  "sourceCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
-  "sourceBranch": "work/update155-glossary-guides-20261111",
-  "baselineCommit": "845654587be5ffbb331d3d5fab0c24c70e9099ae",
-  "evidence": "docs/releases/update155-verification.json",
+  "verifiedAt": "2026-11-13T12:28:37Z",
+  "sourceCommit": "79193036fbcf0aba496efa12507bda04ac78da86",
+  "sourceBranch": "release/update156-20261113",
+  "baselineCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
+  "evidence": "docs/releases/update156-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
-    "active": false
+    "activatedAt": "2026-10-19T04:58:44.142Z",
+    "expiresAt": 1792389524011,
+    "expiresISO": "2026-10-19T05:58:44.011Z",
+    "expiresPacific": "Oct 18, 2026, 10:58 PM",
+    "message": "Major updates are underway. Shootouts are unavailable for one hour. Listening Pool and Preference Tuning remain available. Your saved results are preserved.",
+    "active": false,
+    "pauseSubmissions": false,
+    "researchRecordsChanged": false,
+    "verificationTime": "2026-10-20T02:35:34.085141+00:00",
+    "scope": [
+      "shootouts"
+    ],
+    "automaticExpiry": true,
+    "originalExpiryPreserved": true
   },
   "ownerOnlyMaintenance": {
-    "enabled": false
+    "enabled": false,
+    "automaticExpiry": false,
+    "reopeningAuthorizedByOwner": true,
+    "adminLogin": "https://yinyangeq.com/admin-login",
+    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "9e17dc4dbd8b98580ea7e37e616952069291f43a",
-    "branch": "work/update155-glossary-guides-20261111",
+    "implementationCommit": "79193036fbcf0aba496efa12507bda04ac78da86",
+    "branch": "release/update156-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
-    "baseMain": "66164aef2fda58d64c4d41e4f95ec08a9ef1a442",
-    "publicationEvidence": "docs/releases/update155-publication.json"
+    "baseMain": "f09297bfe5a410197d56c77faff12fbc03a06c93"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": false,
-    "sourceBaselineUpdate": 155,
-    "sourceBaselineVerifiedAt": "2026-11-12T00:28:21Z",
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "update155SourceOnlyHandover": {
-      "registrationPending": false,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
+    "metadataOnlyHandoverVerified": false,
+    "metadataValidationPassed": false,
+    "update156SourceOnlyHandover": {
       "metadataOnly": true,
-      "databaseExport": false,
+      "newDataExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update155-recovery-verification.json"
+      "registrationPending": true,
+      "sourceCommit": "79193036fbcf0aba496efa12507bda04ac78da86"
     }
   },
   "documentationFiles": [],

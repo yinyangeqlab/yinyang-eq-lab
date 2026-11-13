@@ -1,0 +1,90 @@
+{
+  "update": 156,
+  "sourceCommit": "79193036fbcf0aba496efa12507bda04ac78da86",
+  "deploymentVerification": {
+    "at": "2026-11-13T12:28:37Z",
+    "update": 156,
+    "revision": "79193036fbcf0aba496efa12507bda04ac78da86",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 227,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "allBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 348,
+    "exactClientAssetsVerified": 7,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "discordBenchmarkPreviewVerified": true,
+    "researchGuideLinkVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1DatabaseVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "79193036fbcf0aba496efa12507bda04ac78da86",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1848,
+    "initialRolloutClientFilesVerifiedRetained": 1989,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "isolatedBrowserWidths": [
+      1366,
+      360
+    ],
+    "engines": [
+      "Chromium"
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "productionAdminSessionUsed": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "localOnly": false,
+    "syntheticFixture": true,
+    "dedicatedNonContributingLayoutAccount": true,
+    "fixtureSessionRetired": true,
+    "earlierRankFallbackVerifiedAgainstLiveEvidence": true,
+    "workflows": [
+      "Open vote labels and locked contrast",
+      "Preference Tuning search and actual global rank",
+      "CSV and TXT download contents",
+      "Measurement and date filters, all-dates shortlist and separate Personal history"
+    ]
+  },
+  "initialRolloutSourceCommit": "3f0df01ddae502db93a140eb998915748bae06b1",
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": [],
+  "recoveryRegistrationPending": true
+}
