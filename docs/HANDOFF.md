@@ -11,6 +11,8 @@ Shootout voting uses Prefer A, Unsure / Tie and Prefer B. Preference Tuning offe
 
 The deployed source is `79193036fbcf0aba496efa12507bda04ac78da86`. All 123 selected suites passed. The dedicated non-contributing layout account verified the fixes at 1366 and 360 pixels. [Deployment verification](releases/update156-verification.json)
 
+Matching encrypted off-device source-only recovery and hosted validation passed. [Recovery verification](releases/update156-recovery-verification.json)
+
 [Update156 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update156) · [Publication verification](releases/update156-publication.json)
 
 Update155 adds a standalone EQ fitter benchmark guide, linked from Research and both Rankings sections. Glossary & Guides retains its existing section links, and the fitter guide shares the original benchmark chart.
