@@ -642,6 +642,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [audioUrl, setAudioUrl] = useState("");
   const [audioAnalysis, setAudioAnalysis] = useState<TrackAnalysis | null>(null);
   const [queue, setQueue] = useState<File[]>([]);
+  const [folderTrack, setFolderTrack] = useState("");
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -1372,6 +1373,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     if (!queue.length) return;
     const currentIndex = queue.findIndex(file => file.name === audioName);
     const nextIndex = queue.length === 1 ? 0 : currentIndex < 0 ? Math.floor(Math.random() * queue.length) : (() => { const pick = Math.floor(Math.random() * (queue.length - 1)); return pick >= currentIndex ? pick + 1 : pick; })();
+    setFolderTrack(String(nextIndex));
     void loadAudio(queue[nextIndex]);
   }
   async function loadCurve(file: File | undefined) {
@@ -1680,11 +1682,15 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
         <h4 id="pt-device-music">From your device</h4>
         <div className="pt-music-actions">
           <label className="pt-btn pt-file-btn"><FileAudio size={14} aria-hidden="true"/>Audio file<input type="file" accept={audioFileTypes} onChange={e => void loadAudio(e.target.files?.[0])}/></label>
-          <label className="pt-btn pt-file-btn"><FolderOpen size={14} aria-hidden="true"/>Music folder<input type="file" accept={audioFileTypes} multiple {...{ webkitdirectory: "" }} onChange={e => { const files = Array.from(e.target.files || []).filter(file => /\.(mp3|m4a|flac|wav|ogg|opus|aac)$/i.test(file.name)); setQueue(files); if (files[0]) void loadAudio(files[0]); }}/></label>
+          <label className="pt-btn pt-file-btn"><FolderOpen size={14} aria-hidden="true"/>Music folder<input type="file" accept={audioFileTypes} multiple {...{ webkitdirectory: "" }} onChange={e => { const files = Array.from(e.target.files || []).filter(file => /\.(mp3|m4a|flac|wav|ogg|opus|aac)$/i.test(file.name)); setQueue(files); setFolderTrack(files.length ? "0" : ""); if (files[0]) void loadAudio(files[0]); }}/></label>
         </div>
         {queue.length > 0 && <div className="pt-music-actions pt-music-folder">
           <button type="button" className="pt-btn" onClick={shuffleFolder}><Shuffle size={14} aria-hidden="true"/>Shuffle folder</button>
-          <select aria-label="Choose a track from the folder" value="" onChange={e => e.target.value === "shuffle" ? shuffleFolder() : void loadAudio(queue[Number(e.target.value)])}><option value="" disabled hidden>{queue.length} folder tracks</option><option value="shuffle">↝ Shuffle folder tracks</option>{queue.map((file, index) => <option key={index} value={index}>{file.name}</option>)}</select>
+          <select aria-label="Choose a track from the folder" value={folderTrack} onChange={event => setFolderTrack(event.target.value)}>
+            <option value="" disabled>Choose from {queue.length} tracks</option>
+            {queue.map((file, index) => <option key={index} value={index}>{file.name}</option>)}
+          </select>
+          <button type="button" className="pt-btn" disabled={!folderTrack} onClick={() => void loadAudio(queue[Number(folderTrack)])}>Load track</button>
         </div>}
         <p className="pt-full-hint">Files play in this browser and stay on your device.</p>
       </div>
@@ -1697,7 +1703,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     {audioUrl && <div className="pt-wave-clock"><PlaybackTime position={position} duration={duration}/></div>}
     <label className="pt-vol" title="Volume"><Volume2 size={15} aria-hidden="true"/><span className="pt-visually-hidden">Volume</span><input type="range" aria-label="Volume" min={0} max={1} step={.01} value={volume} aria-valuetext={`${volumePercent} percent`} style={{ "--pt-level": `${volumePercent}%` } as import("react").CSSProperties} onChange={event => setVolume(Number(event.target.value))}/><output aria-hidden="true">{volumePercent}%</output></label>
     <div className="pt-wave-dynamics" role="group" aria-label="Dynamics">
-      <button type="button" className="pt-chip-toggle" aria-label="Toggle Dynamic Range Compression/Expansion slider" aria-pressed={dynamicSliderEnabled} disabled={!dynamicsReady || !duration} onClick={() => setDynamicSliderEnabled(value => !value)} title="Adjust the difference between quiet and loud moments"><AudioLines size={14} aria-hidden="true"/>Dynamics</button>
+      <button type="button" className="pt-chip-toggle" aria-label="Dynamics: show or hide the adjustment slider" aria-pressed={dynamicSliderEnabled} disabled={!dynamicsReady || !duration} onClick={() => setDynamicSliderEnabled(value => !value)} title="Adjust the difference between quiet and loud moments"><AudioLines size={14} aria-hidden="true"/>Dynamics</button>
       {dynamicsChanged && <button type="button" className="pt-chip-toggle pt-chip-reset" aria-label="Reset track dynamics" title="Back to the original dynamics (0%)" disabled={!dynamicsReady} onClick={() => updateDynamicRange(0)}><RotateCcw size={13} aria-hidden="true"/>Reset · {dynamicRange > 0 ? "+" : ""}{Math.round(dynamicRange * 100)}%</button>}
     </div>
   </div>;

@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 158,
+  "update": 159,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T03:17:15Z",
-  "sourceCommit": "d637e8c28644618b78bc17bb99715af2a428ee80",
-  "sourceBranch": "release/update158-20261113",
-  "baselineCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
-  "evidence": "docs/releases/update158-verification.json",
+  "verifiedAt": "2026-11-14T03:43:55Z",
+  "sourceCommit": "dd8a6f853e9828ae6ceefad31e5ef7d1e5e36baf",
+  "sourceBranch": "work/update159-audit-fixes-20261113",
+  "baselineCommit": "d637e8c28644618b78bc17bb99715af2a428ee80",
+  "evidence": "docs/releases/update159-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,17 +32,14 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "d637e8c28644618b78bc17bb99715af2a428ee80",
-    "branch": "release/update158-20261113",
+    "implementationCommit": "dd8a6f853e9828ae6ceefad31e5ef7d1e5e36baf",
+    "branch": "work/update159-audit-fixes-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "pushed": true,
-    "publicationAuthorized": true,
-    "baseMain": "151f5a82868aa0d14efadb911e5a787919fee354",
-    "publishedSourceCommit": "679693ee9ae543669295ca9e4f601ccad5a148be",
-    "publicationEvidence": "docs/releases/update158-publication.json"
+    "pushed": false,
+    "publicationAuthorized": true
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
@@ -50,16 +47,16 @@
     "hostedValidationPassed": true,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update158SourceOnlyHandover": {
+    "sourceBaselineUpdate": 159,
+    "sourceBaselineVerifiedAt": "2026-11-14T04:05:27Z",
+    "dailyWorkflowActiveAtVerification": true,
+    "update159SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update158-recovery-verification.json"
-    },
-    "sourceBaselineUpdate": 158,
-    "sourceBaselineVerifiedAt": "2026-11-14T03:35:02Z",
-    "dailyWorkflowActiveAtVerification": true
+      "evidence": "docs/releases/update159-recovery-verification.json"
+    }
   },
   "documentationFiles": [],
   "scope": "Public release record. The owner retains the immutable deployment and recovery inputs."

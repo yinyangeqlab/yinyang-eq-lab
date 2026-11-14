@@ -405,7 +405,21 @@ const worker = {
     if (!embeddable) headers.set("X-Frame-Options", "DENY");
     if (!headers.has("Referrer-Policy")) headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-    if (headers.get("Content-Type")?.includes("text/html")) headers.append("Content-Security-Policy", `frame-ancestors ${embeddable ? "*" : "'none'"}; base-uri 'self'; form-action 'self'`);
+    if (headers.get("Content-Type")?.includes("text/html")) {
+      headers.append("Content-Security-Policy", `frame-ancestors ${embeddable ? "*" : "'none'"}; base-uri 'self'; form-action 'self'`);
+      if (env.CSP_REPORT_ONLY === "true") {
+        headers.set("Content-Security-Policy-Report-Only", [
+          "default-src 'self'", "script-src 'self' 'wasm-unsafe-eval'",
+          "style-src 'self' 'unsafe-inline'", "img-src 'self' data: blob:",
+          "media-src 'self' blob:", "worker-src 'self' blob:",
+          "object-src 'none'", "base-uri 'self'", "form-action 'self'",
+        ].join("; "));
+      }
+    }
+    const requestUrl = new URL(request.url);
+    if (env.HSTS_CANONICAL === "true" && requestUrl.protocol === "https:" && requestUrl.origin === env.CANONICAL_ORIGIN) {
+      headers.set("Strict-Transport-Security", "max-age=86400");
+    }
     return withMediaLength(request, new Response(response.body, { status: response.status, statusText: response.statusText, headers }));
   },
 };

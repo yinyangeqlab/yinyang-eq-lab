@@ -20,10 +20,10 @@ export default function SiteTopbar({ title, inert, navigationControl }: {
         <span className="site-topbar-title" title={title}>{title}</span>
       </div>
       <div className="site-topbar-actions">
-        <a className="site-topbar-version" href="/version" aria-label={`About version ${buildLabel}`} title="About this version, changes and licensing">
+        <a className="site-topbar-version" href="/version" title="About this version, changes and licensing">
           <span className="site-topbar-version-long">{updateLabel}</span>
-          <span className="site-topbar-version-compact">v{releaseInfo.build.update}</span>
-          <span className="site-topbar-version-badge">{releaseInfo.build.preview ? `PREVIEW ${releaseInfo.build.preview}` : "BETA"}</span>
+          <span className="site-topbar-version-compact">v{releaseInfo.build.update}{releaseInfo.build.preview ? `p${releaseInfo.build.preview}` : ""}</span>
+          {" "}<span className="site-topbar-version-badge">{releaseInfo.build.preview ? `PREVIEW ${releaseInfo.build.preview}` : "BETA"}</span>
         </a>
         <SiteDataMenu />
       </div>

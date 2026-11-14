@@ -51,8 +51,12 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
  check(text(h.tree).includes('Loading suggestions')&&!text(h.tree).includes('No suggestions yet'),'Suggestions do not claim empty while loading');await flush();h.render();check(text(h.tree).includes('Synthetic unavailable')&&!text(h.tree).includes('No suggestions yet'),'Failed suggestions are distinct from empty');fail=false;h.button('Try again').props.onClick();h.render();await flush();h.render();check(reads===2&&text(h.tree).includes('No suggestions yet'),'Retry can confirm the actual empty suggestion list');h.unmount();
 }
 {
- const key='a'.repeat(43);let hash='#key='+key,copied='';const h=mount('components/embed-results.tsx',{props:{id:'abcdefghij'},globals:{location:{get hash(){return hash;},pathname:'/s/abcdefghij/results',search:'',origin:'https://fixture.invalid'},history:{replaceState(){hash='';}},navigator:{clipboard:{writeText:async value=>{copied=value;}}},fetch:async()=>({ok:true,json:async()=>({id:'abcdefghij',title:'Fixture',createdAt:1,expiresAt:2,targets:[],runs:[],summary:{runs:0,sideBias:{decided:0},targets:[],pairs:[],byKind:{},bySignal:{},timeline:[]},ownerShare:{}})})}});
- await flush();h.render();check(hash==='','The saved key can be removed from the address bar');const link=h.find(n=>n.type==='input'&&n.props['aria-label']==='Private results access link');check(link.props.value.endsWith('#key='+key),'The displayed recovery link still contains its complete key');await h.button('Copy private results link').props.onClick();await flush();check(copied===link.props.value,'Private-link copy exports the full recovery URL');h.unmount();
+ const key='a'.repeat(43);let hash='#key='+key;const h=mount('components/embed-results.tsx',{props:{id:'abcdefghij'},globals:{location:{get hash(){return hash;},pathname:'/s/abcdefghij/results',search:'',origin:'https://fixture.invalid'},history:{replaceState(){hash='';}},fetch:async()=>({ok:true,json:async()=>({id:'abcdefghij',title:'Fixture',createdAt:1,expiresAt:2,targets:[],runs:[],summary:{runs:0,sideBias:{decided:0},targets:[],pairs:[],byKind:{},bySignal:{},timeline:[]},ownerShare:{}})})}});
+ await flush();h.render();
+ check(hash==='','The saved key can be removed from the address bar');
+ const field=h.find(n=>typeof n.type==='function'&&n.props.label==='Private results access link');
+ check(field.props.value.endsWith('#key='+key),'The displayed recovery link still contains its complete key');
+ h.unmount();
 }
 {
  const ast=ts.createSourceFile('page.tsx',fs.readFileSync('app/shootout/page.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let found=0;

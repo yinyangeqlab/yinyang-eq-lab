@@ -251,7 +251,12 @@ export default function WelcomeLandscape({ running, showFlights, artwork = defau
     const container = host.current, surface = canvas.current;
     const picture = new Image();
     const ready = (value: boolean) => { container.dataset.rendered = String(value); };
-    const engine = createLandscapeRenderer(surface, picture, ready);
+    const engine = createLandscapeRenderer(surface, picture, ready, {
+      getArtworkAnchor: () => {
+        const percent = Number.parseFloat(getComputedStyle(container).getPropertyValue("--welcome-art-anchor"));
+        return Number.isFinite(percent) ? percent / 100 : .25;
+      },
+    });
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let onScreen = true;
     const preference = () => {

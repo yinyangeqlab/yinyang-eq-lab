@@ -19,7 +19,9 @@ const migrations = readdirSync(new URL("../drizzle/", import.meta.url)).filter(n
 mkdirSync(new URL("../.wrangler/", import.meta.url), { recursive: true });
 const sqlPath = new URL("../.wrangler/local-schema.sql", import.meta.url);
 try {
-  writeFileSync(sqlPath, migrations.map(name => readFileSync(new URL(`../drizzle/${name}`, import.meta.url), "utf8")).join("\n"));
+  const schema = migrations.map(name => readFileSync(new URL(`../drizzle/${name}`, import.meta.url), "utf8"));
+  schema.push(readFileSync(new URL("../db/service-status.sql", import.meta.url), "utf8"));
+  writeFileSync(sqlPath, schema.join("\n"));
   run(["--file", fileURLToPath(sqlPath)]);
 } finally { if (existsSync(sqlPath)) unlinkSync(sqlPath); }
 const vars = new URL("../.dev.vars", import.meta.url);
@@ -27,4 +29,4 @@ if (!existsSync(vars)) {
   writeFileSync(vars, `ABUSE_RATE_SECRET=${randomBytes(32).toString("hex")}\nOWNER_ANALYTICS_TOKEN=${randomBytes(32).toString("hex")}\n`, { mode: 0o600, flag: "wx" });
   console.log("Created ignored development-only secrets in .dev.vars.");
 } else console.log("Preserved existing .dev.vars; check that both required development secrets are present.");
-console.log(`Initialized local DB with ${migrations.length} migrations. No production data or target curves were installed. Run npm run dev.`);
+console.log(`Initialized local DB with ${migrations.length} migrations and the service status schema. No production data or target curves were installed. Run npm run dev.`);

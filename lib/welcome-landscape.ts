@@ -29,6 +29,7 @@ precision highp float;
 uniform sampler2D artwork;
 uniform vec2 imageSize;
 uniform vec2 viewSize;
+uniform float artworkAnchorY;
 uniform float time;
 uniform vec4 rhythmStrengths[4];
 uniform float rhythmLength;
@@ -179,7 +180,7 @@ float nightStars(vec2 uv){
 void main(){
  float aspect=imageSize.x/imageSize.y, viewport=viewSize.x/viewSize.y;
  vec2 span=viewport>aspect?vec2(1.,aspect/viewport):vec2(viewport/aspect,1.);
- vec2 uv=screenUv*span+vec2((1.-span.x)*.5,(1.-span.y)*.25);
+ vec2 uv=screenUv*span+vec2((1.-span.x)*.5,(1.-span.y)*artworkAnchorY);
  // Clear the baked orb at plate. The drawn orb floats along the centre line.
  vec2 plate=vec2(${LANDSCAPE_ORB.x},${LANDSCAPE_ORB.y});
  float radius=${LANDSCAPE_ORB.radius};
@@ -385,7 +386,11 @@ export function createLandscapeRenderer(
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
   ready: (value: boolean) => void,
-  { maxWidth = 1280, maxHeight = 800 } = {},
+  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25 }: {
+    maxWidth?: number;
+    maxHeight?: number;
+    getArtworkAnchor?: () => number;
+  } = {},
 ): LandscapeRenderer | null {
   const gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false });
   if (!gl) return null;
@@ -408,7 +413,7 @@ export function createLandscapeRenderer(
     texture = gl.createTexture(); if (!texture) throw new Error("Decorative texture unavailable"); gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    const uniforms = Object.fromEntries(["imageSize","viewSize","time","rhythmLength","rhythmStrengths[0]"].map(name => [name, gl.getUniformLocation(program!, name)]));
+    const uniforms = Object.fromEntries(["imageSize","viewSize","artworkAnchorY","time","rhythmLength","rhythmStrengths[0]"].map(name => [name, gl.getUniformLocation(program!, name)]));
     let rhythm = rhythmPatterns.length - 1; // Open with the double-tap groove.
     let nextRhythmChange = rhythmChangeSeconds + pulseDelaySeconds;
     const strengths = new Float32Array(16);
@@ -428,6 +433,7 @@ export function createLandscapeRenderer(
       const scale = Math.min(window.devicePixelRatio || 1, 1.25, maxWidth / Math.max(rect.width, 1), maxHeight / Math.max(rect.height, 1));
       canvas.width = Math.max(1, Math.round(rect.width * scale)); canvas.height = Math.max(1, Math.round(rect.height * scale));
       gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(uniforms.viewSize, Math.max(1, rect.width), Math.max(1, rect.height));
+      gl.uniform1f(uniforms.artworkAnchorY, getArtworkAnchor());
       draw();
     };
     const tick = (now: number) => {

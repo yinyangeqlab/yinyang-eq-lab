@@ -31,6 +31,8 @@ const ownerOnlyMaintenance = config.getBoolean("ownerOnlyMaintenance") ?? false;
 const ownerOnlyMaintenanceMessage = config.get("ownerOnlyMaintenanceMessage");
 const shootoutFailuresQueryUrl = config.get("shootoutFailuresQueryUrl");
 if (ownerOnlyMaintenanceMessage !== undefined && (!ownerOnlyMaintenanceMessage.trim() || ownerOnlyMaintenanceMessage.length > 500)) throw new Error("ownerOnlyMaintenanceMessage must contain 1–500 characters");
+const cspReportOnly = config.getBoolean("cspReportOnly") ?? false;
+const hstsCanonical = config.getBoolean("hstsCanonical") ?? false;
 const canonicalOrigin = config.get("canonicalOrigin") ?? "https://yinyangeq.com";
 const canonicalUrl = new URL(canonicalOrigin);
 if(canonicalUrl.protocol !== "https:" || canonicalUrl.pathname !== "/" || canonicalUrl.username || canonicalUrl.password || canonicalUrl.search || canonicalUrl.hash) throw new Error("canonicalOrigin must be an HTTPS origin");
@@ -144,6 +146,8 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     { name: "ASSETS", type: "assets" },
     { name: "DB", type: "d1", databaseId: database.uuid },
     { name: "CANONICAL_ORIGIN", type: "plain_text", text: canonicalUrl.origin },
+    ...(cspReportOnly ? [{ name: "CSP_REPORT_ONLY" as const, type: "plain_text" as const, text: "true" }] : []),
+    ...(hstsCanonical ? [{ name: "HSTS_CANONICAL" as const, type: "plain_text" as const, text: "true" }] : []),
     { name: "MAINTENANCE_MODE", type: "plain_text", text: String(maintenanceMode) },
     { name: "OWNER_ONLY_MAINTENANCE", type: "plain_text", text: String(ownerOnlyMaintenance) },
     ...(ownerOnlyMaintenanceMessage ? [{ name: "OWNER_ONLY_MAINTENANCE_MESSAGE", type: "plain_text", text: ownerOnlyMaintenanceMessage }] : []),

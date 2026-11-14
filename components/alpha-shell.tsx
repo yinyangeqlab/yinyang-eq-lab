@@ -337,7 +337,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
         {!phone && layout !== "hidden" && navigationToggle}
         <aside id="alpha-navigation" className="alpha-navigation" aria-label="Main navigation" inert={layout === "hidden"} aria-hidden={layout === "hidden"}>
           {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
-          <Link className="alpha-brand" href="/" prefetch={false} aria-label="YinYang EQ home" onClick={followNavigation}><img src={`/brand-mark.svg?v=${buildLabel}`} alt=""/><span>YinYang EQ<small>Find your sound.</small></span></Link>
+          <Link className="alpha-brand" href="/" prefetch={false} onClick={followNavigation}><img src={`/brand-mark.svg?v=${buildLabel}`} alt=""/><span>YinYang EQ<small>Find your sound.</small></span></Link>
 
           <nav aria-label="Main destinations">{destinations.map(d => {
             // Enter Finder with a document navigation so Back can warn about an unfinished ranked challenge.

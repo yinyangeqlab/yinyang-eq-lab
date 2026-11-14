@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 /** Validate and project runtime results onto the public connector response. */
 export function connectorResponse(result: unknown): Response {

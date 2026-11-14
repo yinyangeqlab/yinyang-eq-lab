@@ -81,7 +81,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
       })}</ul>
     </> : <p>No saved EQs yet. Finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
     <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
-      <div className="automatch-files" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
+      <div className="automatch-files" role="group" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
         <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>
         {matchDownloads({ ...row, channelMatchMode: "auto" }, row.device || row.name)}
       </article>)}</div>

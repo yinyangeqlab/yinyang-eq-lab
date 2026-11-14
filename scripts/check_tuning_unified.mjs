@@ -352,7 +352,7 @@ player.find(n=>n.props?.['aria-controls']==='pt-music-choices').props.onClick();
 check(trackLabel().startsWith('First fixture · Synthetic artist · Music library') && controlsAudio.src==='/first-fixture.wav' && bothPickersSelect(0),'Selecting a recording updates the current-song display, dropdown and single audio source together');
 player.find(n=>n.type==='audio').props.onLoadedMetadata();player.render();playControl().props.onClick();await flushPlayer();
 check(!playerWave().dynamicRangeDisabled && !resetDynamics(),'Ready playback has no dynamics reset when the original dynamics are unchanged');
-dynamicsButtons().find(n=>n.props['aria-label']==='Toggle Dynamic Range Compression/Expansion slider').props.onClick();player.render();
+dynamicsButtons().find(n=>n.props['aria-label']==='Dynamics: show or hide the adjustment slider').props.onClick();player.render();
 check(playerWave().dynamicSliderEnabled,'The labeled Dynamics control reveals the existing waveform adjustment');
 playerWave().onDynamicRangeChange(.4);player.render();
 check(playerWave().dynamicRange===.4 && resetDynamics() && !resetDynamics().props.disabled && audioMessages.at(-1).amount===.4,'Changing dynamics updates the actual worklet amount and enables its reset action');

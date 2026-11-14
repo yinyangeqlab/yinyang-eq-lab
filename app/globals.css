@@ -1395,6 +1395,11 @@ button:disabled { opacity:.46; cursor:not-allowed; box-shadow:none; }
 .shootout-content .listen-card .card-bottom > div { display:flex; align-items:baseline; gap:10px; min-width:0; width:100%; white-space:nowrap; }
 .shootout-content .listen-card .card-bottom strong,
 .shootout-content .listen-card .card-bottom small { display:block; flex:0 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin:0; line-height:1.25; }
+@media (max-width:600px) {
+  .shootout-content .listen-card .card-bottom > div { display:grid; gap:2px; }
+  .shootout-content .listen-card .card-bottom strong,
+  .shootout-content .listen-card .card-bottom small { white-space:normal; overflow-wrap:anywhere; }
+}
 @media(max-height:850px) { .shootout-content .listen-card .curve-frame { height:235px; } }
 @media(max-height:750px) { .shootout-content .listen-card .curve-frame { height:205px; } }
 @media(max-height:680px) { .shootout-content .listen-card .curve-frame { height:160px; } }

@@ -78,3 +78,5 @@
 @media(max-width:400px){.eq-filter-row>label:nth-of-type(2),.eq-filter-row>label:nth-of-type(3){grid-column:1/-1}}
 
 .eq-song-row{display:flex;align-items:center;border-bottom:1px solid light-dark(var(--workbench-line), #293e50)}.eq-song-row>.eq-song{flex:1;min-width:0;border-bottom:0}.eq-song-row>.eq-song-remove{flex:none;margin:8px;padding:8px;font-size:12px}
+
+.eq-format-note a { text-decoration: underline; text-underline-offset: .16em; }

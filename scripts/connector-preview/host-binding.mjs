@@ -1,7 +1,7 @@
 import { Readable } from "node:stream";
 import { setMaxListeners } from "node:events";
 import getRawBody from "raw-body";
-import { z } from "zod/v4";
+import { z } from "zod";
 import {
   grantSchema,
   invocationSchema,

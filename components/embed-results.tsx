@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EMBED_LISTENER_KINDS, EMBED_SIGNAL_CODES, KIND_LABELS, SIGNAL_LABELS } from "@/lib/embed-shootout";
 import { TARGET_COLORS, copyText, embedSnippet, forgetShootout, readSaved, saveShootout, siteOrigin, type EmbedResults } from "@/components/embed-common";
 import "./embed-shootout.css";
@@ -7,6 +7,20 @@ import "./embed-manage.css";
 
 const pct = (value: number) => `${Math.round(value * 100)}%`;
 const day = (ms: number) => new Date(ms).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+
+function ResultCopyField({ label, buttonLabel, value }: { label: string; buttonLabel: string; value: string }) {
+  const [feedback, setFeedback] = useState("");
+  async function copy() {
+    setFeedback(await copyText(value) ? "Copied." : "Couldn’t copy automatically. Select the field and copy it manually.");
+  }
+  return <>
+    <div className="em-copy">
+      <input readOnly value={value} aria-label={label} onFocus={event => event.currentTarget.select()} />
+      <button className="es-button" type="button" onClick={() => void copy()}>{buttonLabel}</button>
+    </div>
+    <p className="em-copy-status" role="status">{feedback}</p>
+  </>;
+}
 
 function download(name: string, type: string, text: string) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -22,14 +36,30 @@ export default function EmbedResultsView({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [copied, setCopied] = useState("");
+  const [keyError, setKeyError] = useState(false);
+  const [shareStatus, setShareStatus] = useState("");
+  const [shareError, setShareError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const deleteTrigger = useRef<HTMLButtonElement>(null);
+  const keepButton = useRef<HTMLButtonElement>(null);
+  const deletedHeading = useRef<HTMLHeadingElement>(null);
+  const restoreDeleteFocus = useRef(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [keySaved, setKeySaved] = useState(true);
   const origin = siteOrigin();
 
+  useEffect(() => {
+    if (deleted) deletedHeading.current?.focus();
+    else if (confirmDelete) keepButton.current?.focus();
+    else if (restoreDeleteFocus.current) {
+      restoreDeleteFocus.current = false;
+      deleteTrigger.current?.focus();
+    }
+  }, [confirmDelete, deleted]);
+
   const load = useCallback(async (manageKey: string) => {
-    setLoading(true); setError("");
+    setLoading(true); setError(""); setKeyError(false);
     try {
       const response = await fetch(`/api/embed-shootouts/${id}/results`, { headers: { Authorization: `Bearer ${manageKey}` }, cache: "no-store" });
       const body = await response.json().catch(() => ({})) as EmbedResults & { error?: string };
@@ -51,26 +81,29 @@ export default function EmbedResultsView({ id }: { id: string }) {
   }, [id, load]);
 
   async function setShare(enabled: boolean) {
-    setBusy(true); setError("");
+    setBusy(true); setShareError(""); setShareStatus("Saving…");
     try {
       const response = await fetch(`/api/embed-shootouts/${id}/results`, { method: "PATCH", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, body: JSON.stringify({ ownerShare: enabled }) });
       const body = await response.json().catch(() => ({})) as EmbedResults & { error?: string };
-      if (!response.ok) setError(body.error || "Your choice could not be saved."); else setData(body);
-    } catch { setError("Your choice could not be saved. Check your connection."); }
+      if (!response.ok) throw new Error(body.error || "Your choice could not be saved.");
+      setData(body);
+      setShareStatus(body.ownerShare.enabled ? "Results are now shared." : "Sharing stopped.");
+    } catch (cause) {
+      setShareStatus("");
+      setShareError(cause instanceof Error ? cause.message : "Your choice could not be saved.");
+    }
     finally { setBusy(false); }
   }
 
   async function remove() {
-    setBusy(true); setError("");
+    setBusy(true); setDeleteError("");
     try {
       const response = await fetch(`/api/embed-shootouts/${id}/results`, { method: "DELETE", headers: { Authorization: `Bearer ${key}` } });
-      if (!response.ok) { setError("The shootout could not be deleted. Try again."); return; }
+      if (!response.ok) { setDeleteError("The shootout could not be deleted. Try again."); return; }
       forgetShootout(id); setDeleted(true); setData(null);
-    } catch { setError("The shootout could not be deleted. Check your connection."); }
+    } catch { setDeleteError("The shootout could not be deleted. Check your connection."); }
     finally { setBusy(false); }
   }
-
-  const copy = async (label: string, text: string) => { if (await copyText(text)) { setCopied(label); setTimeout(() => setCopied(""), 1800); } else { setCopied("failed"); } };
 
   const rows = useMemo(() => {
     if (!data) return [];
@@ -78,9 +111,15 @@ export default function EmbedResultsView({ id }: { id: string }) {
     return data.runs.map(run => run.picks.map((pick, round) => ({ hour: run.hour, kind: run.kind, sighted: run.sighted, round: round + 1, a: names[pick[0]], b: names[pick[1]], result: pick[2] === 2 ? "tie" : pick[2] === 0 ? names[pick[0]] : names[pick[1]], aShownSecond: pick[3] === 1, sound: EMBED_SIGNAL_CODES[pick[4]] })));
   }, [data]);
 
+  function leaders(scores: number[], targets: NonNullable<typeof data>["targets"]) {
+    const best = Math.max(...scores);
+    const names = scores.flatMap((score, index) => score === best && targets[index] ? [targets[index].name] : []);
+    return names.length > 1 ? `Tie: ${names.join(", ")}` : names[0];
+  }
+
   const shareUrl = `${origin}/s/${id}`;
   const privateResultsUrl = `${origin}/s/${id}/results#key=${encodeURIComponent(key)}`;
-  if (deleted) return <div className="em-root"><main className="em-card em-center">{copied === "failed" && <p role="status">Couldn’t copy automatically. Select the link text and copy it yourself.</p>}<h1>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
+  if (deleted) return <div className="em-root"><main className="em-card em-center"><h1 ref={deletedHeading} tabIndex={-1}>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
 
   return <div className="em-root">
     <main className="em-wrap" aria-busy={loading}>
@@ -88,12 +127,26 @@ export default function EmbedResultsView({ id }: { id: string }) {
       {!keySaved && data && <p className="es-error" role="alert">Browser storage could not save your private results key. Keep the private results link bookmarked or copied before leaving.</p>}
       {loading && <p className="es-status">Loading results…</p>}
 
-      {!loading && !data && <section className="em-card"><h1>Private results</h1>
-        <p>{error || "This page needs the private results link you saved when you created the shootout."}</p>
-        <form onSubmit={event => { event.preventDefault(); const match = pasted.match(/key=([A-Za-z0-9_-]{43})/) || pasted.trim().match(/^([A-Za-z0-9_-]{43})$/); if (match) void load(match[1]); else setError("That does not look like a results link or key."); }}>
+      {!data && <section className="em-card"><h1>Private results</h1>
+        <p id="em-paste-help">Use the private results link you saved when you created the shootout.</p>
+        <form onSubmit={event => {
+          event.preventDefault();
+          if (loading) return;
+          const match = pasted.match(/key=([A-Za-z0-9_-]{43})/) || pasted.trim().match(/^([A-Za-z0-9_-]{43})$/);
+          if (match) void load(match[1]);
+          else {
+            setKeyError(true);
+            setError("That does not look like a results link or key.");
+          }
+        }}>
           <label className="em-label" htmlFor="em-paste">Paste your results link or key</label>
-          <input id="em-paste" className="em-input" value={pasted} onChange={event => setPasted(event.target.value)} autoComplete="off" spellCheck={false} />
-          <button className="es-button es-primary" type="submit">Open results</button>
+          <input id="em-paste" className="em-input" value={pasted} onChange={event => {
+            setPasted(event.target.value);
+            setKeyError(false);
+            setError("");
+          }} aria-describedby={error ? "em-paste-help em-paste-error" : "em-paste-help"} aria-invalid={keyError || undefined} autoComplete="off" spellCheck={false} />
+          <button className="es-button es-primary" type="submit" aria-disabled={loading}>Open results</button>
+          <p id="em-paste-error" role="alert">{error}</p>
         </form></section>}
 
       {data && <>
@@ -101,9 +154,10 @@ export default function EmbedResultsView({ id }: { id: string }) {
           <p className="es-eyebrow">Your private results</p>
           <h1>{data.title}</h1>
           <p className="em-muted">{data.targets.length} targets · created {day(data.createdAt)} · kept until {day(data.expiresAt)} (opening this page extends it)</p>
-          <div className="em-links"><div><span className="em-label">Keep this private results link</span><p>Anyone with this link can view results or delete this comparison. Save the complete link below; the address bar may omit its access key.</p><div className="em-copy"><input readOnly value={privateResultsUrl} aria-label="Private results access link" onFocus={event => event.currentTarget.select()}/><button className="es-button" type="button" onClick={() => void copy("private",privateResultsUrl)}>{copied === "private" ? "Copied" : "Copy private results link"}</button></div></div>
-            <div><span className="em-label">Share link</span><div className="em-copy"><input readOnly value={shareUrl} aria-label="Share link" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("link", shareUrl)}>{copied === "link" ? "Copied" : "Copy"}</button></div></div>
-            <div><span className="em-label">Add to a website · embed code (advanced)</span><div className="em-copy"><input readOnly value={embedSnippet(id, origin)} aria-label="Embed code" onFocus={event => event.currentTarget.select()} /><button className="es-button" type="button" onClick={() => void copy("embed", embedSnippet(id, origin))}>{copied === "embed" ? "Copied" : "Copy"}</button></div></div>
+          <div className="em-links">
+            <div><span className="em-label">Keep this private results link</span><p>Anyone with this link can view results or delete this comparison. Save the complete link below. The address bar may omit its access key.</p><ResultCopyField label="Private results access link" buttonLabel="Copy private results link" value={privateResultsUrl} /></div>
+            <div><span className="em-label">Share link</span><ResultCopyField label="Share link" buttonLabel="Copy share link" value={shareUrl} /></div>
+            <div><span className="em-label">Add to a website · embed code (advanced)</span><ResultCopyField label="Embed code" buttonLabel="Copy embed code" value={embedSnippet(id, origin)} /></div>
           </div>
           <p className="em-note">Paste the share link in Discord, Slack or a message and a preview card appears. Discord cannot play interactive embeds, so the card opens the shootout in the browser; the embed code works on pages that allow iframes.</p>
         </section>
@@ -117,10 +171,10 @@ export default function EmbedResultsView({ id }: { id: string }) {
 
         {data.summary.runs === 0 ? <section className="em-card"><h2>Waiting for the first listener</h2><p>Share the link above. Results appear here as soon as someone finishes. Only completed runs are counted; people who leave halfway send nothing.</p></section> : <>
           <section className="em-card"><h2>How the targets rank</h2>
-            <p className="em-muted">Score is the share of rounds a target won (a tie counts half). Whiskers show a 95% range; wide bars indicate an uncertain order in this model. These are descriptive results from completed runs, not a verified sample of distinct people; more runs alone do not guarantee a trustworthy population ranking.</p>
+            <p className="em-muted">Score is the share of rounds a target won (a tie counts half). Whiskers show a descriptive range using a model that treats rounds as independent. Repeated rounds and ties limit what the range can tell you about listeners as a group.</p>
             <ol className="em-bars">{[...data.summary.targets].sort((a, b) => b.score - a.score).map(stat => <li key={stat.index}>
               <div className="em-bar-label"><span className="es-dot" style={{ background: TARGET_COLORS[stat.index] }} aria-hidden="true" /><strong>{data.targets[stat.index]?.name}</strong><span>{pct(stat.score)} · {stat.wins}W {stat.losses}L {stat.ties}T</span></div>
-              <div className="em-track" role="img" aria-label={`${data.targets[stat.index]?.name}: score ${pct(stat.score)}, 95% range ${pct(stat.low)} to ${pct(stat.high)}`}>
+              <div className="em-track" role="img" aria-label={`${data.targets[stat.index]?.name}: score ${pct(stat.score)}, descriptive range ${pct(stat.low)} to ${pct(stat.high)}`}>
                 <i style={{ width: pct(stat.score), background: TARGET_COLORS[stat.index] }} />
                 <b style={{ left: pct(stat.low), width: `${Math.max(0.5, (stat.high - stat.low) * 100)}%` }} />
                 <u />
@@ -149,11 +203,11 @@ export default function EmbedResultsView({ id }: { id: string }) {
 
           <section className="em-card"><h2>By listening setup</h2>
             <table className="em-table"><thead><tr><th scope="col">Setup</th><th scope="col">Completed runs</th><th scope="col">Top scoring target</th></tr></thead><tbody>
-              {EMBED_LISTENER_KINDS.flatMap(kind => { const tally = data.summary.byKind[kind]; if (!tally) return []; const best = tally.scores.indexOf(Math.max(...tally.scores)); return [<tr key={kind}><th scope="row">{KIND_LABELS[kind]}</th><td>{tally.runs}</td><td>{data.targets[best]?.name}</td></tr>]; })}
+              {EMBED_LISTENER_KINDS.flatMap(kind => { const tally = data.summary.byKind[kind]; if (!tally) return []; return [<tr key={kind}><th scope="row">{KIND_LABELS[kind]}</th><td>{tally.runs}</td><td>{leaders(tally.scores, data.targets)}</td></tr>]; })}
             </tbody></table>
             <h2 className="em-sub">By sound</h2>
             <table className="em-table"><thead><tr><th scope="col">Sound</th><th scope="col">Completed runs</th><th scope="col">Top scoring target</th></tr></thead><tbody>
-              {EMBED_SIGNAL_CODES.flatMap(signal => { const tally = data.summary.bySignal[signal]; if (!tally) return []; const best = tally.scores.indexOf(Math.max(...tally.scores)); return [<tr key={signal}><th scope="row">{SIGNAL_LABELS[signal]}</th><td>{tally.runs}</td><td>{data.targets[best]?.name}</td></tr>]; })}
+              {EMBED_SIGNAL_CODES.flatMap(signal => { const tally = data.summary.bySignal[signal]; if (!tally) return []; return [<tr key={signal}><th scope="row">{SIGNAL_LABELS[signal]}</th><td>{tally.runs}</td><td>{leaders(tally.scores, data.targets)}</td></tr>]; })}
             </tbody></table>
           </section>
         </>}
@@ -170,17 +224,25 @@ export default function EmbedResultsView({ id }: { id: string }) {
         <section className="em-card em-consent" aria-labelledby="em-consent-title">
           <h2 id="em-consent-title">Share this data with the YinYang EQ Lab owner?</h2>
           <p>Your results are private to you by default. If you choose to share, the lab owner can read this shootout&rsquo;s totals and the anonymous run rows described above, to learn which targets listeners prefer. Because no identifiers are stored, there is nothing more to share. You can switch this off at any time and the owner will no longer see it; anything already exported before you did cannot be recalled. Deleting the shootout removes it entirely.</p>
-          <label className="em-switch"><input type="checkbox" role="switch" checked={data.ownerShare.enabled} disabled={busy} onChange={event => void setShare(event.target.checked)} /><span>{data.ownerShare.enabled ? "Sharing with the lab owner" : "Not shared"}</span></label>
-          {data.ownerShare.enabled && data.ownerShare.at && <p className="em-note">Sharing since {day(data.ownerShare.at)} (notice {data.ownerShare.notice}).</p>}
+          <label className="em-switch"><input type="checkbox" role="switch" checked={data.ownerShare.enabled} aria-disabled={busy} onChange={event => {
+            if (!busy) void setShare(event.target.checked);
+          }} /><span>Share results with the lab owner</span></label>
+          <p className="em-note" role="status">{shareStatus || (data.ownerShare.enabled && data.ownerShare.at ? `Sharing since ${day(data.ownerShare.at)}.` : "")}</p>
+          <p role="alert">{shareError}</p>
         </section>
 
         <section className="em-card em-danger"><h2>Delete this shootout</h2>
           <p>Removes the link, the results and every anonymous run permanently. People who open the link afterwards see that it has ended.</p>
-          {confirmDelete ? <div className="es-actions"><button className="es-button em-delete" type="button" disabled={busy} onClick={() => void remove()}>Yes, delete everything</button><button className="es-button" type="button" onClick={() => setConfirmDelete(false)}>Keep it</button></div>
-            : <button className="es-button" type="button" onClick={() => setConfirmDelete(true)}>Delete shootout…</button>}
+          {confirmDelete ? <div className="es-actions"><button className="es-button em-delete" type="button" aria-disabled={busy} onClick={() => { if (!busy) void remove(); }}>Yes, delete everything</button><button className="es-button" ref={keepButton} type="button" aria-disabled={busy} onClick={() => {
+            if (busy) return;
+            restoreDeleteFocus.current = true;
+            setDeleteError("");
+            setConfirmDelete(false);
+          }}>Keep it</button></div>
+            : <button className="es-button" ref={deleteTrigger} type="button" onClick={() => setConfirmDelete(true)}>Delete shootout…</button>}
+          <p role="alert">{deleteError}</p>
         </section>
       </>}
-      {error && data && <p className="es-error" role="alert">{error}</p>}
     </main>
   </div>;
 }

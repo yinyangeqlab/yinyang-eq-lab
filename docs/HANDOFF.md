@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update158**, source `d637e8c28644618b78bc17bb99715af2a428ee80`.
+Recorded deployment: **update159**, source `dd8a6f853e9828ae6ceefad31e5ef7d1e5e36baf`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update159
+
+Home keeps its main action visible on ultrawide screens. Blind Research fits target and identity labels on narrow screens. The release improves accessibility labels, feedback for private results, and keyboard controls for folder tracks in Preference Tuning.
+
+The deployed source passed all 123 release checks. The isolated browser review covered narrow and wide layouts, dropdowns, keyboard interaction, and protected playback. The post-deployment infrastructure preview found no drift. [Deployment verification](releases/update159-verification.json)
+
+Encrypted off-device source-only recovery and hosted validation passed. The existing data snapshot and its timestamp were retained. [Recovery verification](releases/update159-recovery-verification.json)
 
 ## Update158
 

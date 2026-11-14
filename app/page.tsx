@@ -26,6 +26,7 @@ function WelcomeComparison() {
 export default function Welcome() {
   const invites = useInvitesEnabled();
   const [motion, setMotion] = useState(true);
+  const [systemReduced, setSystemReduced] = useState(false);
   const [showFlights, setShowFlights] = useState(true);
   const [inView, setInView] = useState(true);
   const [visible, setVisible] = useState(true);
@@ -33,6 +34,7 @@ export default function Welcome() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const preference = (value: DisplayPreferences) => {
+      setSystemReduced(reduced.matches);
       setMotion(!reduced.matches && value.motion !== "reduced");
       setShowFlights(value.welcomeFlights);
     };
@@ -55,13 +57,13 @@ export default function Welcome() {
         <h1 id="welcome-title">Find your sound.<br /><strong>Let your ears decide.</strong></h1>
         <p>Hear the same music with two sound settings. Choose the one you enjoy more. Find your personal favorites, and help explore what the community prefers.</p>
         <div className="welcome-actions"><a className="welcome-primary" href="/shootout/personal">{invites ? "Enter with invitation" : "Find a sound I like"} <span aria-hidden="true">→</span></a><a className="welcome-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a></div>
-        <div className="welcome-sync-note"><p>Already used this in another browser?</p><a className="welcome-sync-button" href="/sync"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.36-6.36L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.36 6.36L3 16M8 16H3v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg><span>Sync this browser</span><span aria-hidden="true">↗</span></a></div>
-        <p className="welcome-access-note">{invites ? "Invited testers" : "Listeners"} must agree to comparison-data collection before using the listening tools. Sharing details from your own music is optional.</p>
+        <div className="welcome-sync-note"><p>Already used this in another browser?</p><a className="welcome-sync-button" href="/sync"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.36-6.36L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.36 6.36L3 16M8 16H3v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg><span>Sync this browser</span></a></div>
+        <p className="welcome-access-note">Personal choices stay in this browser by default. Research modes ask you to agree before submitting comparisons. <a href="/listen#ranking-guide">See what each mode shares</a>.</p>
       </div>
       <div className="welcome-hero-foot">
         <WelcomeComparison />
         <div className="welcome-art-controls" role="group" aria-label="Background controls">
-          <button
+          {systemReduced ? <span className="welcome-motion-note">Background paused by your device’s motion setting</span> : <button
             type="button"
             onClick={() => {
               const next = !motion;
@@ -71,8 +73,8 @@ export default function Welcome() {
             title={motion ? "Pause the animated background" : "Resume the animated background"}
           >
             {motion ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}
-            <span>{motion ? "Pause background" : "Resume background"}</span>
-          </button>
+            <span>{motion ? "Reduce site motion" : "Use site animations"}</span>
+          </button>}
           <button
             type="button"
             aria-describedby="welcome-flights-description"

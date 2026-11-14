@@ -60,6 +60,11 @@ export default function TuningTargetPicker({ targets, selected, onSelect }: {
         <div className="pt-target-input" ref={anchor}>
           <Combobox.Input ref={input} id="tuning-target-search" type="search" placeholder="Name or source" autoComplete="off" spellCheck={false}
             onFocus={event => event.currentTarget.select()}
+            onKeyDown={event => {
+              if (event.key !== "Tab" || !open) return;
+              setOpen(false);
+              setQuery(null);
+            }}
             onClick={event => { if (!open) event.currentTarget.select(); }} />
           <Combobox.Trigger className="pt-target-trigger" aria-label="Show targets" tabIndex={-1}><ChevronDown size={16} aria-hidden="true"/></Combobox.Trigger>
         </div>

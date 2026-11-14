@@ -7,7 +7,7 @@ export const releaseInfo = {
     label: "update103",
     commit: "e5399cb869d1b7626f2abf779083d3b1f8c9a50a",
   },
-  build: { update: 158, preview: 0, basedOn: 157, date: "2026-11-13" },
+  build: { update: 159, preview: 0, basedOn: 158, date: "2026-11-13" },
 } as const;
 
 export const updateLabel = `update${releaseInfo.build.update}`;

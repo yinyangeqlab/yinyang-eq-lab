@@ -135,6 +135,11 @@ export default function Home() {
   const [measurementEditorOpened,setMeasurementEditorOpened] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- Reconcile browser restoration, selected setup and comparison validity; these guarded updates settle after the transition.
   useEffect(()=>{if(tab === "measurements")setMeasurementEditorOpened(true);},[tab]);
+  useEffect(() => {
+    if (tab === "eqs" && window.location.hash === "#channel-matches") {
+      document.getElementById("channel-matches")?.scrollIntoView({ block: "start" });
+    }
+  }, [tab]);
   const router = useRouter();
   function changeSection(next: Tab) {
     setTargetEditorOpen(false);

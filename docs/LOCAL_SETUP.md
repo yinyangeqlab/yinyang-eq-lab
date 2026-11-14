@@ -10,7 +10,7 @@ npm run setup:local
 npm run dev
 ```
 
-Open the URL printed by the server, normally `http://localhost:5173`. The setup command uses Wrangler's local D1 emulator with the same placeholder database ID and `.wrangler/state` directory as the Vite preview. It reads every checked-in SQL file in filename order, including both historical `0012` migrations. It creates ignored `.dev.vars` values for `ABUSE_RATE_SECRET` and `OWNER_ANALYTICS_TOKEN` using local random bytes. It does not contact or seed a production database. An existing `.dev.vars` is preserved; both values must be at least 32 characters long.
+Open the URL printed by the server, normally `http://localhost:5173`. The setup command uses Wrangler's local D1 emulator with the same placeholder database ID and `.wrangler/state` directory as the Vite preview. It reads every checked-in SQL file in filename order, including both historical `0012` migrations, then installs `db/service-status.sql`. For an existing local database that lacks the service status table, apply that SQL file with the same local Wrangler configuration shown below. It creates ignored `.dev.vars` values for `ABUSE_RATE_SECRET` and `OWNER_ANALYTICS_TOKEN` using local random bytes. It does not contact or seed a production database. An existing `.dev.vars` is preserved; both values must be at least 32 characters long.
 
 Setup refuses a database that already contains application tables. It is an initializer, not a migration-history detector. If initialization fails partway through, inspect the local schema before retrying; preserve any data you need. The checked-in migration journal and current schema snapshot describe the source schema, not the migration state of a database you already operate.
 
@@ -55,3 +55,8 @@ Build with `npm run build` and package public-clone assets with `node scripts/pa
 ## PEQdB AutoEQ source package
 
 The AutoEQ worker uses a separately prepared LGPL engine package, with the original TypeScript fitter retained as fallback. Follow [PEQDB_AUTOEQ.md](PEQDB_AUTOEQ.md) to build the pinned WASM and its corresponding source/notices outside Git. Development previews can use fallback when the package is absent; packaging a PEQdB-enabled build requires the complete verified binary/source/license package. No deployment is implied.
+
+
+### Security header rollout
+
+The separate production gate supports optional Pulumi settings for staged header verification. Enable `cspReportOnly` in a review environment and inspect browser policy notices while exercising hydration, inline scripts, worklets, WASM, local audio and iframe playback. The candidate policy only reports in the browser and has no reporting endpoint configured. Review observed violations before deciding on enforcement. Verify canonical HTTPS and edge redirects before enabling `hstsCanonical`. The initial HSTS header lasts one day and applies only to the canonical HTTPS origin.
