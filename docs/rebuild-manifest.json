@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "5c0aa18b020582ce542a3ed835c867e608d28d50",
+  "baseRevision": "118e051dc5e32a096c10a7e365091450bd4edb67",
   "recordedLiveUpdate": 160,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "0985f9a46719260edb0afae1c339869a2d1ef010b622749cf98bf7f49595246a",
+      "sha256": "c94c9d30100ba7e0e56b687965eb40677193d681fda26c47ad160e318e33cb01",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "1859e3950fab28a897da954534dc6dc323fe64bc321c2af70647d9e362917e06",
+      "sha256": "5d0471fc8de921a30ab4e4a85cef6381f59c7c82e26db20d28fbb5011db85c2c",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "c5d2955f837c4d0073939740918799be6a4c389f748ed1d88d9b326e7d9b2973",
+      "sha256": "7c30936998da220a22c1a55f468f4f44860b78e6df25e4b4ae7bdbbe049b8144",
       "executable": false
     },
     {
@@ -2177,7 +2177,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ffce130c6b798135946279f5d2767b2c65aa23697b9a4925b16b8197ebad60f9",
+      "sha256": "4ce18e280ccbe257b7971c71028a549ea827c50910f311fa1b8670b3d6592f10",
       "executable": false
     },
     {
@@ -2713,6 +2713,11 @@
     {
       "path": "docs/releases/update159-verification.json",
       "sha256": "ccd6a8790c461027e783eaf20d2fba32203c2b9bbb3ed8e42454aa986d52750e",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update160-publication.json",
+      "sha256": "b0724263d274a62022bd7ef12844cb438268ec7aa1059b5a821a59dc0113553e",
       "executable": false
     },
     {
@@ -4002,7 +4007,7 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "bab32901cb4921b916ff4c5c2d44ea6759e8f04323efb427551efb075e347abf",
+      "sha256": "3081e1e301a2dd1687c3572b48cd714d5aa9595d11fef5f451cb77b3a6990693",
       "executable": false
     },
     {

@@ -13,6 +13,8 @@ The deployed source passed all 123 release checks. The isolated browser review c
 
 Encrypted off-device source-only recovery and hosted validation passed. The existing data snapshot and its timestamp were retained. [Recovery verification](releases/update160-recovery-verification.json)
 
+[Update160 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update160) · [Publication verification](releases/update160-publication.json)
+
 ## Update159
 
 Home keeps its main action visible on ultrawide screens. Blind Research fits target and identity labels on narrow screens. The release improves accessibility labels, feedback for private results, and keyboard controls for folder tracks in Preference Tuning.
