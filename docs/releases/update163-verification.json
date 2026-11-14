@@ -1,0 +1,82 @@
+{
+  "update": 163,
+  "sourceCommit": "b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7",
+  "deploymentVerification": {
+    "at": "2026-11-14T09:36:53Z",
+    "update": 163,
+    "revision": "b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "existingD1BindingVerified": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "exactServerModulesVerified": 350,
+    "exactClientAssetsVerified": 11,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "cloudflareQueryBindingVerified": true,
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "discordBenchmarkPreviewVerified": true,
+    "researchGuideLinkVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "currentBuildHasNoMismatchedReleaseLink": true,
+    "update159HistoryLinkVerified": true,
+    "privateCollectorVerified": true,
+    "collectorSamplesAllFailures": true,
+    "mainWorkerSampleRate": 0.1
+  },
+  "candidateVerification": {
+    "sourceRevision": "b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2083
+  },
+  "browserVerification": {
+    "dedicatedNonContributingLayoutAccount": true,
+    "fixtureSessionRetired": true,
+    "productionAdminSessionUsed": false,
+    "noTestVotesSubmitted": true,
+    "bothRankingCountsStable": true,
+    "zeroTestContributionAndSyncRecordsVerified": true,
+    "privateCollectorVerifiedFromLiveLogs": true,
+    "isolatedProbeResults": [
+      {
+        "endpoint": "/api/listening-runs",
+        "status": 403
+      },
+      {
+        "endpoint": "/api/votes",
+        "status": 403
+      }
+    ]
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": [],
+  "recoveryRegistrationPending": true
+}

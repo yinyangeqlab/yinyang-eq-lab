@@ -1,7 +1,7 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update162**, source `2aee7341bedd12d6fd07bb9b41b65f21ab938f04`.
+Recorded deployment: **update163**, source `b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
@@ -10,6 +10,8 @@ Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_ST
 Failed POSTs to `/api/listening-runs` and `/api/votes` go to a private Cloudflare Worker configured for 100% log sampling. The main Worker keeps its 10% sample. The existing owner-only query still finds `shootout_submission_failed`; rows include the route, HTTP status, stage and reason code. Isolated test-account denials are labeled `test_account`.
 
 The collector receives no submission content and has no access to the rankings database. Coverage starts at the site Worker. Errors before a browser sends a request and blocks before Cloudflare invokes the site Worker are outside this diagnostic.
+
+Cloudflare recorded one expected 403 denial from each endpoint using the isolated test account. Both live ranking counts stayed unchanged. [Deployment verification](releases/update163-verification.json)
 
 ## Update162
 

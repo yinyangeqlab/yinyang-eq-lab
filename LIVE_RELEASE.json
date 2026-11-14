@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 162,
+  "update": 163,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T07:01:25Z",
-  "sourceCommit": "2aee7341bedd12d6fd07bb9b41b65f21ab938f04",
-  "sourceBranch": "deploy/update162-personal-tournament-20261113",
-  "baselineCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
-  "evidence": "docs/releases/update162-verification.json",
+  "verifiedAt": "2026-11-14T09:36:53Z",
+  "sourceCommit": "b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7",
+  "sourceBranch": "work/shootout-failure-logging-20261114",
+  "baselineCommit": "80eaced3d52e9d964f091e58d652708c825b26ae",
+  "evidence": "docs/releases/update163-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,33 +32,27 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "2aee7341bedd12d6fd07bb9b41b65f21ab938f04",
-    "branch": "deploy/update162-personal-tournament-20261113",
+    "implementationCommit": "b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7",
+    "branch": "work/shootout-failure-logging-20261114",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "e0818376dd7f8debe75dd691a54431419cb3cbcc",
-    "publishedSourceCommit": "e2ab7a147004882b60636ec57914ef6966ae4d62",
-    "publicationEvidence": "docs/releases/update162-publication.json"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
     "sourceBaselineUpdate": 162,
-    "sourceBaselineVerifiedAt": "2026-11-14T07:19:05Z",
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "update162SourceOnlyHandover": {
-      "registrationPending": false,
+    "metadataOnlyHandoverVerified": false,
+    "metadataValidationPassed": false,
+    "update163SourceOnlyHandover": {
+      "registrationPending": true,
       "metadataOnly": true,
       "databaseExport": false,
-      "newDataSnapshots": 0,
-      "evidence": "docs/releases/update162-recovery-verification.json"
+      "newDataSnapshots": 0
     }
   },
   "documentationFiles": [],
