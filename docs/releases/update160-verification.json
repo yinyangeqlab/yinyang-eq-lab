@@ -1,0 +1,92 @@
+{
+  "update": 160,
+  "sourceCommit": "57a1d9cd75e97d6081747113849acb1cd28d985d",
+  "deploymentVerification": {
+    "at": "2026-11-14T06:24:17Z",
+    "update": 160,
+    "revision": "57a1d9cd75e97d6081747113849acb1cd28d985d",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 349,
+    "exactClientAssetsVerified": 10,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "cloudflareQueryBindingVerified": true,
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "discordBenchmarkPreviewVerified": true,
+    "researchGuideLinkVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1BindingVerified": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "57a1d9cd75e97d6081747113849acb1cd28d985d",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1998,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "verifiedPackagedSuites": 3
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "fixtureSessionRetired": true,
+    "liveSidebarWidth": 1440,
+    "sidebarChecks": [
+      {
+        "layout": "full",
+        "width": 32,
+        "hoverDuration": "0.26s",
+        "fadeIn": true,
+        "fadeOut": true
+      },
+      {
+        "layout": "icons",
+        "width": 24,
+        "hoverDuration": "0.26s",
+        "fadeIn": true,
+        "fadeOut": true
+      }
+    ],
+    "keyboardFocusVerified": true,
+    "reducedMotionVerified": true,
+    "livePhoneMenuWidth": 390,
+    "zeroTestContributionAndSyncRecordsVerified": true
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": [],
+  "recoveryRegistrationPending": true
+}

@@ -52,7 +52,7 @@
   color: var(--site-light-ink);
 }
 
-[data-site-theme="light"] :is(.site-topbar, .alpha-navigation-frame, .alpha-navigation) {
+[data-site-theme="light"] :is(.site-topbar, .alpha-navigation) {
   background: var(--site-light-surface);
   color: var(--site-light-ink);
   border-color: var(--site-light-line);
@@ -72,15 +72,17 @@
   border-color: var(--site-light-line);
 }
 
-[data-site-theme="light"] .alpha-app :is(.alpha-navigation-frame > .alpha-sidebar-divider, .alpha-sidebar-peek) {
-  --sidebar-control-bright: color-mix(in srgb, var(--site-light-accent) 65%, transparent);
-  --sidebar-texture-center: #c1d9d4b0;
-  --sidebar-texture-film: linear-gradient(90deg, #f8fcfbdc, #edf5f37a);
-  --sidebar-idle-surface: var(--site-light-surface);
-  color: var(--site-light-muted);
-}
-[data-site-theme="light"] .alpha-sidebar-divider:is(:focus-visible, :hover) svg {
-  color: var(--site-light-accent);
+[data-site-theme="light"] .alpha-sidebar-divider {
+  --sidebar-glass-inner: #edf7f2ed;
+  --sidebar-glass-outer: #d8ebe3d9;
+  --sidebar-glass-edge: #315f592d;
+  --sidebar-glass-halo: #48bb9330;
+  --sidebar-glass-rim: #38897749;
+  --sidebar-glass-ink: var(--site-light-ink);
+  --sidebar-glass-active-ink: #084f48;
+  --sidebar-glass-focus: var(--site-light-accent);
+  --sidebar-glass-shadow: #fff9;
+  --sidebar-glass-glow: #30b08043;
 }
 [data-site-theme="light"] :is(.alpha-destination, .alpha-secondary-navigation a) {
   --alpha-marker: var(--site-light-accent);

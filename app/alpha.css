@@ -23,55 +23,69 @@
 /* The rail and workspace share a width, so their edges move together. */
 .alpha-navigation-frame{
  position:fixed;inset:0 auto 0 0;width:var(--alpha-nav-width);z-index:40;
- overflow:hidden;background:#000;pointer-events:none;transition:width var(--alpha-nav-motion);
+ overflow:hidden;pointer-events:none;transition:width var(--alpha-nav-motion);
 }
 .alpha-navigation-frame>.alpha-navigation{pointer-events:auto}
 .alpha-sidebar-divider{
+ --sidebar-glass-inner:#0b151bed;
+ --sidebar-glass-outer:#162e30d9;
+ --sidebar-glass-edge:#b2f3e426;
+ --sidebar-glass-halo:#70ffce32;
+ --sidebar-glass-rim:#a3f5e64d;
+ --sidebar-glass-ink:#e0f4f4;
+ --sidebar-glass-active-ink:#c5fff0;
+ --sidebar-glass-focus:#a7e8e1;
+ --sidebar-glass-shadow:#000b;
+ --sidebar-glass-glow:#59ffc352;
  width:44px;height:44px;padding:0;border:0;display:grid;place-items:center;
- background:transparent;color:#e0f4f4;cursor:pointer;touch-action:manipulation;
+ background:transparent;color:var(--sidebar-glass-ink);cursor:pointer;touch-action:manipulation;
  -webkit-tap-highlight-color:transparent;
 }
 .alpha-navigation-frame>.alpha-sidebar-divider{
  position:absolute;inset-block:0;inset-inline-end:0;z-index:42;
- width:var(--alpha-toggle-width);height:auto;pointer-events:auto;--sidebar-texture-width:24px;
+ width:var(--alpha-toggle-width);height:auto;pointer-events:auto;
+}
+.alpha-sidebar-divider::before,.alpha-sidebar-divider::after{
+ content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+}
+.alpha-sidebar-divider::before{
+ background:
+  linear-gradient(var(--sidebar-glass-edge),var(--sidebar-glass-edge)) right / 1px 100% no-repeat,
+  linear-gradient(90deg,var(--sidebar-glass-inner),var(--sidebar-glass-outer));
+ backdrop-filter:blur(7px) saturate(.9);
+}
+.alpha-sidebar-divider::after{
+ background:
+  linear-gradient(transparent,var(--sidebar-glass-rim),transparent) right center / 1px 106px no-repeat,
+  radial-gradient(ellipse 96% 40px at center,var(--sidebar-glass-halo),transparent);
+ opacity:0;
+ transition:opacity .26s ease;
 }
 .alpha-divider-grip{
- display:grid;place-items:center;width:24px;height:32px;border-radius:9px;position:relative;z-index:1;
+ display:grid;grid-template-columns:minmax(0,1fr);place-items:center;width:calc(100% - 4px);max-width:28px;height:34px;
+ border-radius:8px;position:relative;z-index:1;
 }
 .alpha-divider-grip svg{
- width:22px;height:22px;opacity:.87;transition:opacity .16s ease,scale .16s ease;
+ width:16px;height:24px;opacity:.96;
+ filter:drop-shadow(0 0 2px var(--sidebar-glass-shadow)) drop-shadow(0 0 3px transparent);
+ transition:color .26s ease,opacity .26s ease,filter .26s ease;
 }
 .alpha-app .alpha-sidebar-divider:is(:hover,:focus-visible,:active){
- background:transparent;box-shadow:none;filter:none;transform:none;color:#e0f4f4;
+ background:transparent;box-shadow:none;filter:none;transform:none;color:var(--sidebar-glass-ink);
 }
-.alpha-sidebar-divider:focus-visible svg{opacity:1}
+.alpha-sidebar-divider:is(:focus-visible,:active,[data-pointer-near])::after{opacity:1}
+.alpha-sidebar-divider:is(:focus-visible,:active,[data-pointer-near]) svg{
+ color:var(--sidebar-glass-active-ink);opacity:1;
+ filter:drop-shadow(0 0 2px var(--sidebar-glass-shadow)) drop-shadow(0 0 3px var(--sidebar-glass-glow));
+}
 .alpha-app .alpha-sidebar-divider:focus-visible{outline:none}
-.alpha-sidebar-divider:focus-visible .alpha-divider-grip{outline:2px solid #a7e8e1;outline-offset:0}
-@media(min-width:601px) and (hover:hover){
- /* Share the reveal texture without changing the hit area of any divider. */
- .alpha-sidebar-divider:hover::after{
-  content:"";position:absolute;inset-block:0;inset-inline-start:0;width:var(--sidebar-texture-width,100%);
-  max-width:100%;pointer-events:none;
-  background:linear-gradient(180deg,transparent 8%,var(--sidebar-control-bright,#93ded780) 49%,transparent 92%) right / 1px 100% no-repeat,
-    radial-gradient(ellipse 155% 24% at 0 50%,var(--sidebar-texture-center,#0d1b1db0),transparent),
-    var(--sidebar-texture-film,linear-gradient(90deg,#020404dc,#060b0c7a));
-  backdrop-filter:blur(4px);
+.alpha-sidebar-divider:focus-visible .alpha-divider-grip{outline:2px solid var(--sidebar-glass-focus);outline-offset:0}
+@media(hover:hover){
+ .alpha-sidebar-divider:hover::after{opacity:1}
+ .alpha-sidebar-divider:hover svg{
+  color:var(--sidebar-glass-active-ink);opacity:1;
+  filter:drop-shadow(0 0 2px var(--sidebar-glass-shadow)) drop-shadow(0 0 3px var(--sidebar-glass-glow));
  }
- .alpha-sidebar-divider:hover .alpha-divider-grip svg{scale:1.25;opacity:1}
- .alpha-app[data-alpha-layout=icons]{--alpha-toggle-width:14px}
- .alpha-app[data-alpha-layout=icons] .alpha-navigation-frame{overflow:visible}
- .alpha-app[data-alpha-layout=icons] .alpha-navigation-frame>.alpha-sidebar-divider{
-  inset-inline-start:calc(100% - var(--alpha-toggle-width));inset-inline-end:auto;--sidebar-texture-width:16px;
-  justify-items:start;
-  transition:width .2s ease;
- }
- .alpha-app[data-alpha-layout=icons] .alpha-navigation-frame>.alpha-sidebar-divider .alpha-divider-grip{
-  width:var(--alpha-toggle-width);grid-template-columns:minmax(0,1fr);
- }
- .alpha-app[data-alpha-layout=icons] .alpha-sidebar-divider .alpha-divider-grip svg{
-  width:18px;height:22px;
- }
- .alpha-app[data-alpha-layout=icons] .alpha-navigation-frame>.alpha-sidebar-divider:is(:hover,:focus-visible){width:32px}
 }
 .alpha-navigation-state{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;pointer-events:none}
 .alpha-brand{display:flex;gap:10px;align-items:center;padding:0 8px;color:#e8f4f5;text-decoration:none;white-space:nowrap;min-width:0;min-height:35px;transition:padding var(--alpha-nav-motion),gap var(--alpha-nav-motion)}.alpha-brand img{width:35px;height:35px;object-fit:contain;flex:none}.alpha-brand>span{font-size:15px;font-weight:600;letter-spacing:-.025em}.alpha-brand small{display:block;font-size:12px;letter-spacing:.01em;color:#a2bac3;font-weight:400;margin-top:3px}
@@ -277,15 +291,14 @@
 /* The touch handle stays visible. A mouse gets a full-height reveal at the edge. */
 .alpha-app[data-alpha-layout=hidden]>.alpha-sidebar-peek{
  position:fixed;inset-inline-start:0;inset-block-start:50%;z-index:41;
- width:44px;height:64px;translate:0 -50%;overflow:hidden;justify-items:start;
+ width:44px;height:64px;translate:0 -50%;overflow:hidden;justify-items:start;border-radius:0 10px 10px 0;
 }
-.alpha-app .alpha-sidebar-peek:not(:hover){background:var(--sidebar-idle-surface,#000)}
 .alpha-sidebar-peek .alpha-divider-grip{width:28px}
-.alpha-sidebar-peek .alpha-divider-grip svg{opacity:1}
+.alpha-sidebar-peek .alpha-divider-grip svg{opacity:1;transform:scaleX(-1)}
 @media(any-hover:hover) and (any-pointer:fine){
  .alpha-app[data-alpha-layout=hidden]>.alpha-sidebar-peek{
   --alpha-peek-motion:650ms cubic-bezier(.22,.61,.36,1);
-  inset-block:0;width:16px;height:auto;translate:0;justify-items:center;
+  inset-block:0;width:16px;height:auto;translate:0;justify-items:center;border-radius:0;
   pointer-events:none;
   transition:width var(--alpha-peek-motion);
  }
@@ -293,10 +306,9 @@
   width:48px;pointer-events:auto;
  }
  .alpha-sidebar-peek .alpha-divider-grip{
-  width:16px;opacity:.86;pointer-events:auto;
+  width:12px;opacity:.86;pointer-events:auto;
   transition:width var(--alpha-peek-motion),opacity var(--alpha-peek-motion);
  }
- .alpha-sidebar-peek .alpha-divider-grip svg{width:15px;height:21px}
  .alpha-sidebar-peek:is([data-pointer-near],:focus-visible) .alpha-divider-grip{width:28px;opacity:1}
 }
 @media(prefers-reduced-motion:reduce){.alpha-app *,.alpha-app *::before,.alpha-app *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

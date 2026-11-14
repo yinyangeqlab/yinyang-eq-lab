@@ -288,17 +288,15 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
     }
     setLayout(nextLayout);
   }
+  const sidebarChevron = (
+    <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11.75 3.5 4 12l7.75 8.5"/>
+    </svg>
+  );
   const navigationToggle = (
     <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded="true" aria-describedby="alpha-navigation-state" data-next-layout={nextLayout}>
-      <span className="alpha-divider-grip" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 6.5 9 12l5.5 5.5"/></svg>
-      </span>
+      <span className="alpha-divider-grip" aria-hidden="true">{sidebarChevron}</span>
     </button>
-  );
-  const reopenIcon = (
-    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m9.5 6.5 5.5 5.5-5.5 5.5"/>
-    </svg>
   );
 
   return <div className="alpha-app" data-alpha-layout={layout} data-phone-menu-open={phone && phoneMenuOpen || undefined} data-alpha-layout-ready={layoutLoaded || undefined} data-alpha-destination={active || "utility"}>
@@ -315,7 +313,7 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
         inert={modalOpen}
         onClick={cycleLayout}
       >
-        <span className="alpha-divider-grip" aria-hidden="true">{reopenIcon}</span>
+        <span className="alpha-divider-grip" aria-hidden="true">{sidebarChevron}</span>
       </button>
     )}
     <div className="alpha-workspace">

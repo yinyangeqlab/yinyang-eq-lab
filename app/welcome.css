@@ -350,6 +350,18 @@
  aspect-ratio:2/1;
 }
 .alpha-route-content .welcome-art { z-index:0; }
+@media (min-width:601px) {
+ /* Extend the scene behind the glass divider while its grid keeps the original dimensions. */
+ .alpha-app:is([data-alpha-layout=full],[data-alpha-layout=icons]) .welcome-hero {
+  overflow:visible;
+  clip-path:inset(0 0 0 calc(0px - var(--alpha-toggle-width)));
+ }
+ .alpha-app:is([data-alpha-layout=full],[data-alpha-layout=icons]) .alpha-route-content :is(.welcome-art,.welcome-shade) {
+  margin-inline-start:calc(0px - var(--alpha-toggle-width));
+  padding-inline-start:var(--alpha-toggle-width);
+  box-sizing:content-box;
+ }
+}
 .alpha-route-content .welcome-shade {
  z-index:2;
  background:linear-gradient(180deg,transparent 62%,var(--welcome-surface) 100%);

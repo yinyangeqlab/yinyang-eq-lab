@@ -7,6 +7,10 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "The sidebar handle uses smoky teal glass and a taller, wider chevron with a subtle mint glow on hover.",
+] as const;
+
+const update159Changes = [
   "Copy private results links with clear feedback and keep keyboard focus during deletion.",
   "See what each listening mode saves and shares, with clearer keyboard and voice labels.",
   "Keep Home’s main action visible on ultrawide screens and fit populated private results on narrow phones.",
@@ -208,7 +212,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 159, date: "2026-11-13", title: "Layout, accessibility and site review fixes", changes: candidateChanges, github: { commit: "7fd72eeaca962c567c44c37477d173eae1ae2f87", releaseTag: "update159" } },
+  { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: candidateChanges },
+  { update: 159, date: "2026-11-13", title: "Layout, accessibility and site review fixes", changes: update159Changes, github: { commit: "7fd72eeaca962c567c44c37477d173eae1ae2f87", releaseTag: "update159" } },
   { update: 158, date: "2026-11-13", title: "Preference Tuning target picker and downloads", changes: update158Changes, github: { commit: "679693ee9ae543669295ca9e4f601ccad5a148be", releaseTag: "update158" } },
   { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: update157Changes, github: { commit: "890be93afa4e0b77459c4ad46b3efe13356636e8", releaseTag: "update157" } },
   { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: update156Changes, github: { commit: "f465c1d2ed3ce5361387aeafdcb8ecec4d178443" } },

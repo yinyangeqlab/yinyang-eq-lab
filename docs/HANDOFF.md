@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update159**, source `dd8a6f853e9828ae6ceefad31e5ef7d1e5e36baf`.
+Recorded deployment: **update160**, source `57a1d9cd75e97d6081747113849acb1cd28d985d`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update160
+
+The full and icons-only sidebar handles use smoky teal glass. The larger chevron gains a subtle mint glow on hover.
+
+The deployed source passed all 123 release checks. The isolated browser review covered both sidebar widths, keyboard focus, reduced motion, and the phone menu. The post-deployment infrastructure preview found no drift. [Deployment verification](releases/update160-verification.json)
+
+Encrypted off-device source-only recovery and hosted validation passed. The existing data snapshot and its timestamp were retained. [Recovery verification](releases/update160-recovery-verification.json)
 
 ## Update159
 
