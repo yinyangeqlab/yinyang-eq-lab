@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "df4dec7b061a05f943630a20768843bad7132acf",
+  "baseRevision": "f41a8036a0fd7082a310533b7269471e4c136c4a",
   "recordedLiveUpdate": 163,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -3812,7 +3812,7 @@
     },
     {
       "path": "lib/github-release.ts",
-      "sha256": "fe944a37dc6725856de3df6a87160c15513e59f14774fb2ea39153aab6e1217b",
+      "sha256": "db8474ba1d9eefe4ff6d528d99eebea4e9ee93f1a923c0057e5b20f2c752abbc",
       "executable": false
     },
     {
@@ -5002,7 +5002,7 @@
     },
     {
       "path": "scripts/check_foundation.mjs",
-      "sha256": "255690d799ee54a2e55b3dbff64ebb5e5a988e5adef7f864fdc753b04840f5e6",
+      "sha256": "d2e0b6cc73d13ed1cc2830f495290250bc57704fa4d7a99f5a510ea08c2fe432",
       "executable": false
     },
     {

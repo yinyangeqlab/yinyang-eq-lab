@@ -89,7 +89,7 @@ try {
   globalThis.fetch = async (url, options) => {
     requests += 1;
     assert.equal(url, `https://api.github.com/repos/yinyangeqlab/yinyang-eq-lab/releases/tags/${tag}`);
-    assert.equal(options.redirect, 'error');
+    assert.equal(options.redirect, 'manual');
     assert.equal(options.cache, 'no-store');
     assert.ok(!new Headers(options.headers).has('authorization'));
     return response();
@@ -111,6 +111,7 @@ try {
       () => releaseResponse({ html_url: 'https://example.com/' }),
       () => releaseResponse({ published_at: null }),
       () => new Response('bad JSON'),
+      () => Response.redirect('https://example.com/', 302),
       () => new Response(null, { status: 429 }),
       () => { throw new Error('network unavailable'); },
     ]) {

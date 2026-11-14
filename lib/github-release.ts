@@ -8,7 +8,7 @@ async function checkGitHub(endpoint: string, tag: string, publicReleaseUrl: stri
   try {
     const response = await fetch(endpoint, {
       headers: { Accept: "application/vnd.github+json", "User-Agent": "YinYang-EQ-Version" },
-      redirect: "error",
+      redirect: "manual",
       cache: "no-store",
       signal: AbortSignal.timeout(2_000),
     });
