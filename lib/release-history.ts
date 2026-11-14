@@ -227,7 +227,7 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: candidateChanges },
+  { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: candidateChanges, github: { commit: "77a20497340c0cb90262d6e395470be37aca34c7", releaseTag: "update163" } },
   { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: update162Changes, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },
   { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: update161Changes, github: { commit: "5e0abc5d4e8e442fed3fa30e754d6b077efa5065", releaseTag: "update161" } },
   { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes },

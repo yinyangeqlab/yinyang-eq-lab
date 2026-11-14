@@ -1,16 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "1250ebed31bb89f8d6aafa3bf1f43ab3eb247e4c",
+  "baseRevision": "b9104d781c42d9c9f38d9e48589e3581c74c8b99",
   "recordedLiveUpdate": 163,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [
-    "docs/releases/update163-recovery-verification.json"
-  ],
+  "reviewedUntrackedFiles": [],
   "files": [
     {
       "path": ".gitignore",
@@ -4064,7 +4062,7 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "0b195548958399aaafb9eea0245b38130e1fd0bb5e5dd44db4168254e4c48721",
+      "sha256": "9c60e2c3c2542e5bcaad049863c4b881f903eb0b8bbe6c91b2cbb5fe11b3f7b5",
       "executable": false
     },
     {
