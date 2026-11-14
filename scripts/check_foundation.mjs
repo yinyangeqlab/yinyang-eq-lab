@@ -228,6 +228,10 @@ try {
   });
   const docs = join(temp, 'docs-fixture');
   writeJson(join(docs, 'LIVE_RELEASE.json'), state); writeJson(join(docs, state.evidence), receipt);
+  if (state.deploymentRefresh) {
+    const previous = state.deploymentRefresh.previousEvidence;
+    writeJson(join(docs, previous), json(join(root, previous)));
+  }
   write(join(docs, 'LIVE_STATE.md'), 'stale\n');
   for (const path of handoffs) write(join(docs, path), '# Fixture\n<!-- release-state:start -->\nstale\n<!-- release-state:end -->\nKeep this text.\n');
   const receiptBefore = readFileSync(join(docs, state.evidence), 'utf8');

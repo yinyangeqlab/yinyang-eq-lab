@@ -21,6 +21,8 @@ The historical demo videos have been retired. The remaining screenshots show the
 
 Update164 adds browser-based Site Help and guided walkthroughs. [Update164 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164)
 
+The [update164 Version page refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164-version-link-refresh) links directly to the verified GitHub release.
+
 Update163 captures Blind Shootout submission errors independently of routine site logging. [Update163 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update163)
 
 Update162 plays leading curves more often in Personal Tournament and shows progress toward leaving rotation after a vote and in personal rankings. [Update162 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update162)

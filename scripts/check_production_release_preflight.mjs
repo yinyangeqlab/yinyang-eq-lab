@@ -15,7 +15,9 @@ const lock = join(privateRoot, 'run.lock');
 const state = JSON.parse(readFileSync(join(root, 'LIVE_RELEASE.json')));
 const label = `update${state.update}`;
 const snapshot = 'work/fixture';
-const recoveryPath = `docs/releases/${label}-recovery-verification.json`;
+const artifact = state.deploymentRefresh?.slug ?? label;
+const recoveryLabel = state.deploymentRefresh ? `${label}-${artifact}` : label;
+const recoveryPath = `docs/releases/${recoveryLabel}-recovery-verification.json`;
 const verifiedAt = new Date(Date.parse(state.verifiedAt) + 60_000).toISOString();
 const recoveryRecord = {
   update: state.update, sourceCommit: state.sourceCommit, verifiedAt, sourceOnlyHandoverPassed: true,
@@ -62,11 +64,15 @@ try {
   };
   write(workspace, 'LIVE_RELEASE.json', state);
   write(workspace, state.evidence, readFileSync(join(root, state.evidence), 'utf8'));
+  if (state.deploymentRefresh) {
+    const previous = state.deploymentRefresh.previousEvidence;
+    write(workspace, previous, readFileSync(join(root, previous), 'utf8'));
+  }
   write(workspace, recoveryPath, recoveryRecord);
   write(workspace, 'LIVE_STATE.md', 'stale\n');
   for (const path of handoffs) write(workspace, path, '<!-- release-state:start -->\nstale\n<!-- release-state:end -->\n');
   verifyOrRefresh(workspace, true);
-  write(workspace, `${snapshot}/artifacts/${label}/handover-verification.private.json`, {
+  write(workspace, `${snapshot}/artifacts/${artifact}/handover-verification.private.json`, {
     deployment, deploymentVerified: true, revision: state.sourceCommit,
   });
   write(privateRoot, settingsPath, settings);
@@ -104,7 +110,7 @@ try {
   await assert.rejects(verify(deployment, { ...target, scriptName: 'different-worker' }), /Pulumi target does not match/);
 
   const refreshed = structuredClone(state);
-  const slug = 'version-link-refresh';
+  const slug = artifact === 'version-link-refresh' ? 'subsequent-refresh' : 'version-link-refresh';
   const refreshedRecovery = `docs/releases/${label}-${slug}-recovery-verification.json`;
   const revision = 'f'.repeat(40);
   refreshed.baselineCommit = state.sourceCommit;

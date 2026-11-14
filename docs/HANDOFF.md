@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update164**, source `c265820e285fd19d2baf155da15344469729e1b2`.
+Recorded deployment: **update164**, source `069253c28566b1a1b0c726ae4ca8913dcabd108d`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update164 Version page refresh
+
+The Version page displays the verified update164 GitHub link without waiting for GitHub’s API. The live link opened the original [update164 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164).
+
+The shared rollout guard passed, and all 125 selected release checks passed. The refreshed build’s encrypted source-only backup passed independent reconstruction and hosted validation. The job created zero new data snapshots.
+
+[Refresh source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164-version-link-refresh) · [Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json)
 
 ## Update164
 
