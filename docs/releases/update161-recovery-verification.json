@@ -1,0 +1,24 @@
+{
+  "update": 161,
+  "sourceCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
+  "verifiedAt": "2026-11-14T11:33:07Z",
+  "recoveryPoint": "historical-source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "isolatedVerification": {
+    "exactBuildVerified": true,
+    "appStartedOnLoopback": true,
+    "rankedAndRapidShootoutLoaded": true,
+    "standardAndFreeListeningRankingsSeparate": true,
+    "protectedAudioBytesVerified": true,
+    "testAccountWritesBlocked": true,
+    "usedSyntheticData": true,
+    "recoveryChecksPassed": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

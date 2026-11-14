@@ -33,7 +33,7 @@ Play both segments shows Preparing audio… while the track and EQ load. Ranked 
 
 The isolated account verified both modes live without submitting a public vote. In a disposable database, a Ranked vote updated Standard and a Rapid choice updated Free Listening. [Deployment verification](releases/update161-verification.json)
 
-Update162 went live before update161 completed source-only recovery. Hosted validation later passed for update162, and the daily backup schedule was active at that verification. See the live state above for current recovery status. [Recovery verification for update162](releases/update162-recovery-verification.json)
+Update162 superseded update161 during the live backup handover. On November 14, 2026, a separate encrypted off-device source-only recovery point for update161 passed an isolated restore. A fresh download matched the preserved build, and the restored app ran locally with synthetic data. Both Shootout modes, separate ranking views, protected audio and test account write restrictions passed. No database export was performed. [Update161 recovery verification](releases/update161-recovery-verification.json)
 
 [Update161 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update161) · [Publication verification](releases/update161-publication.json)
 
