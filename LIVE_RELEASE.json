@@ -45,18 +45,21 @@
     "publicationEvidence": "docs/releases/update163-publication.json"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "sourceBaselineUpdate": 162,
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "sourceBaselineUpdate": 163,
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
     "update163SourceOnlyHandover": {
-      "registrationPending": true,
+      "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
-      "newDataSnapshots": 0
-    }
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update163-recovery-verification.json"
+    },
+    "sourceBaselineVerifiedAt": "2026-11-14T10:04:17Z",
+    "dailyWorkflowActive": true
   },
   "documentationFiles": [],
   "scope": "Public release record. The owner retains the immutable deployment and recovery inputs."

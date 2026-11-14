@@ -13,6 +13,8 @@ The collector receives no submission content and has no access to the rankings d
 
 Cloudflare recorded one expected 403 denial from each endpoint using the isolated test account. Both live ranking counts stayed unchanged. [Deployment verification](releases/update163-verification.json)
 
+Encrypted off-device source-only recovery and hosted validation passed. The daily backup schedule was verified active at 3 a.m. Pacific. The existing data snapshot was retained with its original timestamp. [Recovery verification](releases/update163-recovery-verification.json)
+
 [Update163 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update163) · [Publication verification](releases/update163-publication.json)
 
 ## Update162
