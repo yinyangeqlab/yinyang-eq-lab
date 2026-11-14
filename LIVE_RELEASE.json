@@ -36,10 +36,13 @@
     "branch": "work/shootout-failure-logging-20261114",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "baseMain": "cf75e47a12abe4402410bff8626b75f96e95551a",
+    "publishedSourceCommit": "77a20497340c0cb90262d6e395470be37aca34c7",
+    "publicationEvidence": "docs/releases/update163-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": true,

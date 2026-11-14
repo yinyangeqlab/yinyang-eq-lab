@@ -13,6 +13,8 @@ The collector receives no submission content and has no access to the rankings d
 
 Cloudflare recorded one expected 403 denial from each endpoint using the isolated test account. Both live ranking counts stayed unchanged. [Deployment verification](releases/update163-verification.json)
 
+[Update163 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update163) · [Publication verification](releases/update163-publication.json)
+
 ## Update162
 
 Personal Tournament plays leading curves more often. Progress bars show how close each curve is to leaving rotation after a vote, in tournament results, and in My Collection. Listeners can restore curves that leave rotation.
