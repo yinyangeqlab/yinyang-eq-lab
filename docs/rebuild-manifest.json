@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "681876ecf395ae517b6a8214337a7443d2698c92",
+  "baseRevision": "df4dec7b061a05f943630a20768843bad7132acf",
   "recordedLiveUpdate": 163,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -827,7 +827,7 @@
     },
     {
       "path": "app/version/page.tsx",
-      "sha256": "88eff86c012f1673e010ae3cd1f7165876d4c96879592ce498899128bda9588b",
+      "sha256": "d08a245ac03850c10558028d04e7eaa9e613b4b813474c6a6992b14a6dd50559",
       "executable": false
     },
     {
@@ -3811,6 +3811,11 @@
       "executable": false
     },
     {
+      "path": "lib/github-release.ts",
+      "sha256": "fe944a37dc6725856de3df6a87160c15513e59f14774fb2ea39153aab6e1217b",
+      "executable": false
+    },
+    {
       "path": "lib/glossary.ts",
       "sha256": "cbe3c4741657aac073162ab50cdff38c5cef14ca3a93200f0b792e8f0ed36adb",
       "executable": false
@@ -4997,7 +5002,7 @@
     },
     {
       "path": "scripts/check_foundation.mjs",
-      "sha256": "4a321ffc371743ed7b09a4302fc874676397af972a72c1fa9f6bc4a3eefb696f",
+      "sha256": "255690d799ee54a2e55b3dbff64ebb5e5a988e5adef7f864fdc753b04840f5e6",
       "executable": false
     },
     {
@@ -5602,7 +5607,7 @@
     },
     {
       "path": "scripts/release-state.mjs",
-      "sha256": "db284a9beaff5e57eba121207a9c606dc751af25c84ea63f7326796c5bfd65b6",
+      "sha256": "11c3fa97bc1ac7b14704bf0a88744d9849f72204e726d4736b0124d65890d6bf",
       "executable": false
     },
     {

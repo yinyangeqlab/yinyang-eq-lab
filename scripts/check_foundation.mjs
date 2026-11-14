@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { validateRegistry, parseOptions, runSuite, runVerification } from './verify.mjs';
 import { validateRelease, verifyOrRefresh, handoffs, recoveryState, renderState } from './release-state.mjs';
 import { candidateChanges, releaseHistory } from '../lib/release-history.ts';
-import { buildLabel, bugReportUrl, releaseInfo } from '../lib/release-info.ts';
+import { buildLabel, bugReportUrl, releaseInfo, repositoryUrl } from '../lib/release-info.ts';
+import { createPublishedBuildLookup } from '../lib/github-release.ts';
 import { refreshSource } from './refresh-rebuild-manifest.mjs';
 import { fileRecord, sha256, sourceFiles, sourceIdentity } from './verification/source.mjs';
 
@@ -64,9 +65,72 @@ const sourceOnlyFixture = state => {
   return value;
 };
 try {
+  const originalFetch = globalThis.fetch;
+  const originalNow = Date.now;
+  let time = originalNow(), requests = 0;
+  let response = () => new Response(null, { status: 404 });
+  let expiry = 0;
+  let cached;
+  const tag = `update${build.update}`;
+  const publishedBuildTag = createPublishedBuildLookup(repositoryUrl, tag);
+  const releaseUrl = `https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/${tag}`;
+  const releaseResponse = (overrides = {}) => Response.json({
+    tag_name: tag, html_url: releaseUrl, draft: false, published_at: '2026-11-14T00:00:00Z', ...overrides,
+  });
+  Date.now = () => time;
+  const originalCaches = Object.getOwnPropertyDescriptor(globalThis, 'caches');
+  Object.defineProperty(globalThis, 'caches', { configurable: true, value: { default: {
+    match: async () => expiry > time ? cached.clone() : undefined,
+    put: async (_, value) => {
+      cached = value;
+      expiry = time + Number(value.headers.get('Cache-Control').split('max-age=')[1]) * 1000;
+    },
+  } } });
+  globalThis.fetch = async (url, options) => {
+    requests += 1;
+    assert.equal(url, `https://api.github.com/repos/yinyangeqlab/yinyang-eq-lab/releases/tags/${tag}`);
+    assert.equal(options.redirect, 'error');
+    assert.equal(options.cache, 'no-store');
+    assert.ok(!new Headers(options.headers).has('authorization'));
+    return response();
+  };
+  try {
+    assert.deepEqual(await Promise.all([publishedBuildTag(), publishedBuildTag()]), [undefined, undefined]);
+    assert.equal(requests, 1);
+    assert.equal(await publishedBuildTag(tag), undefined, 'a confirmed missing release stays hidden');
+    response = () => releaseResponse();
+    time += 299_000;
+    assert.equal(await publishedBuildTag(), undefined);
+    time += 1_001;
+    assert.equal(await publishedBuildTag(), tag, 'a new publication appears after the cached miss expires');
+    assert.equal(await publishedBuildTag(), tag);
+    assert.equal(requests, 2);
+    for (const invalid of [
+      () => releaseResponse({ draft: true }),
+      () => releaseResponse({ tag_name: 'update159' }),
+      () => releaseResponse({ html_url: 'https://example.com/' }),
+      () => releaseResponse({ published_at: null }),
+      () => new Response('bad JSON'),
+      () => new Response(null, { status: 429 }),
+      () => { throw new Error('network unavailable'); },
+    ]) {
+      response = invalid;
+      time += 3_600_001;
+      assert.equal(await publishedBuildTag(), undefined);
+      assert.equal(await publishedBuildTag('update0'), undefined);
+    }
+    assert.equal(await publishedBuildTag(tag), tag, 'a transient failure can use matching recorded metadata');
+    checks++;
+    console.log('PASS current-build lookup checks exact public publication and caches the post-publication transition');
+  } finally {
+    globalThis.fetch = originalFetch;
+    Date.now = originalNow;
+    if (originalCaches) Object.defineProperty(globalThis, 'caches', originalCaches);
+    else delete globalThis.caches;
+  }
   const state = json(join(root, 'LIVE_RELEASE.json')), receipt = json(join(root, state.evidence));
   test('current release contract', () => validateRelease(state, receipt));
-  test('deployment refresh has its own receipt path', () => {
+  test('deployment refresh preserves previous receipts on successive refreshes', () => {
     const refreshed = clone(state);
     refreshed.deploymentRefresh = {
       slug: 'version-link-refresh',
@@ -74,6 +138,13 @@ try {
     };
     refreshed.evidence = `docs/releases/update${state.update}-version-link-refresh-verification.json`;
     validateRelease(refreshed, receipt);
+    refreshed.deploymentRefresh.previousEvidence = refreshed.evidence;
+    refreshed.deploymentRefresh.slug = 'automatic-version-link';
+    refreshed.evidence = `docs/releases/update${state.update}-automatic-version-link-verification.json`;
+    validateRelease(refreshed, receipt);
+    refreshed.deploymentRefresh.previousEvidence = refreshed.evidence;
+    assert.throws(() => validateRelease(refreshed, receipt), /preserve the previous deployment receipt/);
+    refreshed.deploymentRefresh.previousEvidence = `docs/releases/update${state.update}-version-link-refresh-verification.json`;
     refreshed.evidence = refreshed.deploymentRefresh.previousEvidence;
     assert.throws(() => validateRelease(refreshed, receipt), /identify this deployment refresh/);
   });

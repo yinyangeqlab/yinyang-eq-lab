@@ -1,19 +1,22 @@
 import ReleaseAvailability from "@/components/release-availability";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { bugReportUrl, buildLabel, releaseInfo, repositoryUrl } from "@/lib/release-info";
+import { createPublishedBuildLookup } from "@/lib/github-release";
+import { bugReportUrl, buildLabel, releaseInfo, repositoryUrl, updateLabel } from "@/lib/release-info";
 import { shareMetadata } from "@/lib/share-metadata";
 import { candidateChanges, releaseHistory } from "@/lib/release-history";
 import "./style.css";
 
 export const metadata: Metadata = shareMetadata("/version");
+export const dynamic = "force-dynamic";
 const repository = repositoryUrl;
 const releaseUrl = (tag: string) => `${repository}/releases/tag/${encodeURIComponent(tag)}`;
+const publishedBuildTag = createPublishedBuildLookup(repository, updateLabel);
 
-export default function VersionPage() {
+export default async function VersionPage() {
   const currentReleaseTag = releaseInfo.build.preview
     ? undefined
-    : releaseHistory.find(entry => entry.update === releaseInfo.build.update)?.github?.releaseTag;
+    : await publishedBuildTag(releaseHistory.find(entry => entry.update === releaseInfo.build.update)?.github?.releaseTag);
   return <main className="alpha-help-page alpha-version-page">
     <span className="alpha-version-eyebrow">YinYang EQ</span>
     <h1>About this version</h1>
@@ -35,11 +38,12 @@ export default function VersionPage() {
       </div>
       {releaseHistory.map((entry, index) => {
         const previous = releaseHistory[index + 1]?.github;
+        const releaseTag = entry.github?.releaseTag ?? (entry.update === releaseInfo.build.update ? currentReleaseTag : undefined);
         return <details key={entry.update} open={index === 0 && entry.update !== releaseInfo.build.update} id={`update${entry.update}`}>
           <summary><strong>update{entry.update}</strong><span>{entry.title}</span><time dateTime={entry.date}>{entry.date}</time></summary>
           <ul>{entry.changes.map(change => <li key={change}>{change}</li>)}</ul>
           <div className="alpha-version-links">
-            {entry.github?.releaseTag && <a href={releaseUrl(entry.github.releaseTag)}>GitHub release</a>}
+            {releaseTag && <a href={releaseUrl(releaseTag)}>GitHub release</a>}
             {entry.github && <a href={`${repository}/commit/${entry.github.commit}`}>GitHub commit</a>}
             {entry.github && previous && <a href={`${repository}/compare/${previous.commit}..${entry.github.commit}`}>Compare published updates</a>}
             {entry.github?.pull && <a href={`${repository}/pull/${entry.github.pull}`}>Pull request #{entry.github.pull}</a>}

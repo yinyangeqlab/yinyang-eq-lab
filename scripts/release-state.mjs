@@ -60,10 +60,14 @@ function checkEvidencePath(state) {
     check(state.evidence === original, 'evidence path must identify this update');
     return;
   }
-  check(state.deploymentRefresh.previousEvidence === original, 'refresh must preserve the original deployment receipt');
   const slug = state.deploymentRefresh.slug;
   check(typeof slug === 'string' && /^[a-z]+(?:-[a-z]+)*$/.test(slug), 'invalid deployment refresh name');
   check(state.evidence === `${update}-${slug}-verification.json`, 'evidence path must identify this deployment refresh');
+  const prior = state.deploymentRefresh.previousEvidence;
+  const priorSlug = typeof prior === 'string' && prior.startsWith(`${update}-`) && prior.endsWith('-verification.json')
+    && prior.slice(update.length + 1, -'-verification.json'.length);
+  check(prior !== state.evidence && (prior === original || (typeof priorSlug === 'string' && /^[a-z]+(?:-[a-z]+)*$/.test(priorSlug))),
+    'refresh must preserve the previous deployment receipt');
 }
 
 // Validate the selected current contract. Historical nested records remain intact.
@@ -148,9 +152,9 @@ export function verifyOrRefresh(directory, write = false) {
   const state = JSON.parse(readFileSync(resolve(directory, 'LIVE_RELEASE.json'), 'utf8'));
   checkEvidencePath(state);
   if (state.deploymentRefresh) {
-    const original = JSON.parse(readFileSync(resolve(directory, state.deploymentRefresh.previousEvidence), 'utf8'));
-    check(original.update === state.update && original.deploymentVerification?.deploymentVerified === true, 'original deployment receipt is missing or unverified');
-    check(original.sourceCommit === state.baselineCommit, 'refresh baseline differs from the original deployment');
+    const previous = JSON.parse(readFileSync(resolve(directory, state.deploymentRefresh.previousEvidence), 'utf8'));
+    check(previous.update === state.update && previous.deploymentVerification?.deploymentVerified === true, 'previous deployment receipt is missing or unverified');
+    check(previous.sourceCommit === state.baselineCommit, 'refresh baseline differs from the previous deployment');
   }
   const receipt = JSON.parse(readFileSync(resolve(directory, state.evidence), 'utf8'));
   validateRelease(state, receipt);
