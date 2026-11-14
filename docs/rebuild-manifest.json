@@ -1,16 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "77a20497340c0cb90262d6e395470be37aca34c7",
+  "baseRevision": "71eb21655a5fe53f77bd2051295bed7c7df4f2ae",
   "recordedLiveUpdate": 163,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [
-    "docs/releases/update163-publication.json"
-  ],
+  "reviewedUntrackedFiles": [],
   "files": [
     {
       "path": ".gitignore",
@@ -2189,7 +2187,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "296b795b358313e82935965d8870872b63bc6864fc139896a5f7cd2609994cc8",
+      "sha256": "a84077a296b663fadfccf87989ebe1446fa3615dfb277a7989af6d62d0e106e2",
       "executable": false
     },
     {

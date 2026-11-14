@@ -31,7 +31,7 @@ Play both segments shows Preparing audio… while the track and EQ load. Ranked 
 
 The isolated account verified both modes live without submitting a public vote. In a disposable database, a Ranked vote updated Standard and a Rapid choice updated Free Listening. [Deployment verification](releases/update161-verification.json)
 
-Update162 went live before update161 completed source-only recovery. Hosted validation passed for update162, which is the current recovery baseline. The daily backup schedule was verified active. [Recovery verification for update162](releases/update162-recovery-verification.json)
+Update162 went live before update161 completed source-only recovery. Hosted validation later passed for update162, and the daily backup schedule was active at that verification. See the live state above for current recovery status. [Recovery verification for update162](releases/update162-recovery-verification.json)
 
 [Update161 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update161) · [Publication verification](releases/update161-publication.json)
 
