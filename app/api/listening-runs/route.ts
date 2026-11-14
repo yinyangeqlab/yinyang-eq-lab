@@ -81,6 +81,10 @@ export async function POST(request: Request) {
         : "Only current approved targets can be collected.";
       return reject("target_unavailable", 400, error);
     }
+    // Only new Blind choices from a page that disclosed the Free Listening ranking qualify.
+    const countedInFreeListening = data.rankFreeListening === true && !matchedPassageRequired &&
+      testMode !== "open" && targetAId !== targetBId;
+    if (countedInFreeListening) cleanContext.freeListeningRanking = true;
     cleanContext.targetVersions = targetVersions;
     if((trialId && JSON.stringify(issuedVersions)!==JSON.stringify(cleanContext.targetVersions)) || JSON.stringify(context.targetVersions)!==JSON.stringify(cleanContext.targetVersions)) return reject("target_version_mismatch", 409, "Target curves changed or this page uses an older protocol. Refresh the page and start a new pairing.");
     stage = "save";
@@ -92,7 +96,7 @@ export async function POST(request: Request) {
       songTitle: song("songTitle"), songArtist: song("songArtist"), songAlbum: song("songAlbum"), recordingId: song("recordingId", 80),
       createdAt: Date.now(),
     }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"run",recordId:id,comparisonId:trialId || id})]);
-    return Response.json({ ok: true }, { status: 201 });
+    return Response.json({ ok: true, countedInFreeListening }, { status: 201 });
   } catch (error) {
     if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return reject("comparison_changed", 409, "This comparison was erased or changed while saving. Start a new comparison.");
     const inputError = requestInputResponse(error);

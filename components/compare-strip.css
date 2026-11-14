@@ -56,6 +56,13 @@
 .strip-switch:disabled{opacity:.45;cursor:default}
 
 /* Row 3: status, requirement switch, help. */
+.compare-strip-modes{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;min-width:0;margin:0 0 12px;padding:0;border:0}
+.compare-strip-modes legend{padding:0;margin:0 0 3px;color:light-dark(var(--workbench-muted), #b6c9d1);font-size:12px;font-weight:700}
+.compare-strip-modes label{display:inline-flex;align-items:center;gap:7px;min-height:30px;color:light-dark(var(--workbench-ink), #eef7f8);font-size:13px;cursor:pointer}
+.compare-strip-modes input{margin:0;accent-color:light-dark(var(--workbench-teal), #8cf0e0)}
+.compare-strip-modes input:focus-visible{outline:2px solid light-dark(var(--workbench-teal), #e6fff6);outline-offset:3px}
+.compare-strip-modes:disabled label{opacity:.65;cursor:not-allowed}
+.compare-strip-modes p{flex-basis:100%;margin:0;color:light-dark(var(--workbench-muted), #b6c9d1);font-size:12px}
 .compare-strip-status{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px}
 .compare-strip-message{display:flex;align-items:center;gap:8px;flex:1 1 260px;min-width:0;margin:0;color:light-dark(var(--workbench-muted), #b9ccd3);font-size:13px;line-height:1.4}
 .compare-strip-icon{display:grid;place-items:center;flex:none;width:20px;height:20px;border:1.5px solid light-dark(var(--workbench-line), #6d8791);border-radius:50%;color:light-dark(var(--workbench-muted), #9fb4bd);font-size:11px;font-weight:800;line-height:1}

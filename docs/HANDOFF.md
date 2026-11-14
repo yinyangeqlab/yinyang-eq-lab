@@ -1,9 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update160**, source `57a1d9cd75e97d6081747113849acb1cd28d985d`.
+Recorded deployment: **update161**, source `b2d362db0db40d43d514f8bfc24fd8e7248320ed`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update161
+
+Play both segments shows Preparing audio… while the track and EQ load. Ranked Blind Shootout requires five seconds of the same passage per side. Eligible new Rapid choices count in a separate Free Listening ranking with no playback minimum.
+
+The isolated account verified both modes live without submitting a public vote. In a disposable database, a Ranked vote updated Standard and a Rapid choice updated Free Listening. [Deployment verification](releases/update161-verification.json)
 
 ## Update160
 

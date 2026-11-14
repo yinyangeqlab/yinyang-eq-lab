@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 160,
+  "update": 161,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T06:24:17Z",
-  "sourceCommit": "57a1d9cd75e97d6081747113849acb1cd28d985d",
-  "sourceBranch": "release/update160-sidebar-20261113",
-  "baselineCommit": "dd8a6f853e9828ae6ceefad31e5ef7d1e5e36baf",
-  "evidence": "docs/releases/update160-verification.json",
+  "verifiedAt": "2026-11-14T06:50:43Z",
+  "sourceCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
+  "sourceBranch": "work/blind-playback-readiness-20261113",
+  "baselineCommit": "57a1d9cd75e97d6081747113849acb1cd28d985d",
+  "evidence": "docs/releases/update161-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,33 +32,28 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "57a1d9cd75e97d6081747113849acb1cd28d985d",
-    "branch": "release/update160-sidebar-20261113",
+    "implementationCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
+    "branch": "work/blind-playback-readiness-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
-    "baseMain": "5c0aa18b020582ce542a3ed835c867e608d28d50",
-    "publishedSourceCommit": "118e051dc5e32a096c10a7e365091450bd4edb67",
-    "publicationEvidence": "docs/releases/update160-publication.json"
+    "publicationSeparateFromDeployment": true,
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
     "sourceBaselineUpdate": 160,
     "sourceBaselineVerifiedAt": "2026-11-14T06:47:09Z",
-    "dailyWorkflowActiveAtVerification": true,
-    "update160SourceOnlyHandover": {
-      "registrationPending": false,
+    "metadataOnlyHandoverVerified": false,
+    "metadataValidationPassed": false,
+    "update161SourceOnlyHandover": {
+      "registrationPending": true,
       "metadataOnly": true,
-      "databaseExport": false,
-      "newDataSnapshots": 0,
-      "evidence": "docs/releases/update160-recovery-verification.json"
+      "newDataExport": false,
+      "newDataSnapshots": 0
     }
   },
   "documentationFiles": [],

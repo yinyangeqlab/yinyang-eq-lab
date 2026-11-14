@@ -32,6 +32,20 @@ function reset(){subject='participant';consent=true;shareMusic=false;stored=[];o
 async function post(route,data){return route.POST(new Request('http://local.test/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)}));}
 let checks=0;
 for(const mode of ['blind','bring','open'])for(const seconds of [0,6]){reset();const intervals=seconds?[0,1].map(side=>({side,start:2,end:2+seconds,rate:1})):[];assert.equal((await post(runs,{...body,testMode:mode,intervals})).status,201);const row=stored[0],context=JSON.parse(row.researchContext);assert.equal(row.protocolVersion,protocol.FREE_LISTENING_PROTOCOL);assert.equal(row.trialId,null);assert.equal(row.heardA,seconds);assert.equal(row.overlapSeconds,seconds);assert.equal(context.matchedPassageRequired,false);assert.equal(context.matchedPassage,seconds>=5);if(mode!=='blind'){assert.equal(row.songTitle,null);assert.equal(context.sha256,undefined);}assert.equal(writes.length,3);checks++;}
+for (const [patch, counted] of [
+  [{rankFreeListening:true}, true],
+  [{rankFreeListening:true,testMode:'blind'}, true],
+  [{rankFreeListening:true,testMode:'open'}, false],
+  [{rankFreeListening:true,targetBId:body.targetAId}, false],
+  [{researchContext:{...body.researchContext,freeListeningRanking:true}}, false],
+]) {
+  reset();
+  const response=await post(runs,{...body,...patch});
+  assert.equal(response.status,201);
+  assert.equal((await response.json()).countedInFreeListening,counted);
+  assert.equal(JSON.parse(stored[0].researchContext).freeListeningRanking,counted ? true : undefined);
+  checks++;
+}
 for(const mutate of [()=>consent=false,()=>subject='owner',()=>subject='invite:layout-test-only']){reset();mutate();assert.equal((await post(runs,body)).status,403);assert.equal(writes.length,0);checks++;}
 for(const patch of [{matchedPassageRequired:'false'},{intervals:[{side:0,start:0,end:-1,rate:1}]},{intervals:null},{voteDataNoticeVersion:'old'},{researchContext:{targetVersions:['stale','version']}},{targetBId:id(8)}]){reset();assert.ok((await post(runs,{...body,...patch})).status>=400);assert.equal(writes.length,0);checks++;}
 reset();assert.equal((await post(runs,{...body,headphoneType:'oe'})).status,201,'Target provenance never restricts which headphones can compare it');assert.equal(stored[0].headphoneType,'oe','Actual listening headphone type is retained');checks++;

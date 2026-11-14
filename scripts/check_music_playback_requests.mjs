@@ -7,7 +7,7 @@ import ts from 'typescript';
 // that a local, instantly buffered audio fixture cannot reliably reproduce.
 const source = fs.readFileSync('components/music-panel.tsx', 'utf8');
 const ast = ts.createSourceFile('music-panel.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-const names = ['playContinuous', 'cancelPassage', 'markPlaybackStopped', 'startPlayback', 'listenToSide', 'toggleMusicPlayback', 'clearMusicSource', 'processFileData', 'fitMetadata', 'playPassageSide'];
+const names = ['playContinuous', 'cancelPassage', 'markPlaybackStopped', 'startPlayback', 'listenToSide', 'toggleMusicPlayback', 'clearMusicSource', 'processFileData', 'fitMetadata', 'playPassageSide', 'playPassage'];
 const bodies = new Map();
 function visit(node) {
   if (ts.isFunctionDeclaration(node) && names.includes(node.name?.text)) bodies.set(node.name.text, node.getText(ast));
@@ -25,7 +25,7 @@ const failure = name => Object.assign(new Error(name), { name });
 function fixture() {
   const errors = [], calls = [], plays = [], resumes = [];
   const audio = { paused: true, play() { calls.push('play'); this.paused = false; const p = deferred(); plays.push(p); return p.promise; }, pause() { this.paused = true; }, removeAttribute() {}, load() {} };
-  const state = {fitter:{method:"standard",bands:10},
+  const state = {fitter:{method:"standard",bands:10},fitInputs:null,
     audioRef: { current: audio }, playbackRequestRef: { current: 0 }, sourceSerialRef: { current: 1 }, folderSerialRef: { current: 0 }, passageRunRef: { current: null },
     beforePlayback: undefined, file: { name: 'synthetic.wav' }, setupEngine() {}, applyFit() {}, preparePlaybackFit() { return true; }, selectSide() {},
     setPassageRun() {}, setSourceError: value => errors.push(value), mediaRecovery: { current: { retry: () => false } },
@@ -40,6 +40,25 @@ function fixture() {
   return { state, errors, calls, plays, resumes, audio };
 }
 let checks = 0;
+{
+  const f = fixture();
+  Object.assign(f.state, {
+    pair: ['a', 'b'], measurement: {}, passage: { start: 1, end: 6 },
+    comparisonComplete: false, passageReady: false, setPassageDone() {}, setPassageOverride() {},
+    comparisonOrder: () => [0, 1],
+  });
+  f.state.closeInterval = () => {};
+  f.state.setPosition = () => {};
+  assert.equal(await f.state.playPassage(), false);
+  assert.deepEqual(f.calls, [], 'Preparing a passage must not start audio');
+  f.state.passageReady = true;
+  const pending = f.state.playPassage();
+  assert.deepEqual(f.calls, ['resume', 'play'], 'The first ready click starts inside the gesture');
+  f.resumes[0].resolve(); f.plays[0].resolve();
+  assert.equal(await pending, true);
+  checks++;
+}
+
 {
   const f = fixture(), run = { order: [0, 1], step: 0, range: { start: 2, end: 4 } };
   f.state.closeInterval = () => {}; f.state.setPosition = () => {}; f.state.passageRunRef.current = run;
@@ -65,9 +84,10 @@ let checks = 0;
   assert.equal(f.state.fitMetadata().length, 0, 'Pending setup never reports the previous fits');
   f.state.engine.current.fitReady = true; f.state.engine.current.fitKey = 'old pair';
   assert.equal(f.state.fitMetadata().length, 0, 'A ready but mismatched pair never enters vote metadata');
-  f.state.engine.current.fitKey = JSON.stringify([points, [points, points], {method:"standard",bands:10}, "oe", 48000]);
+  f.state.fitInputs = JSON.stringify([points, [points, points], {method:"standard",bands:10}, "oe", false]);
+  f.state.engine.current.fitKey = JSON.stringify([f.state.fitInputs, 48000]);
   assert.equal(f.state.fitMetadata().length, 2);
-  f.state.measurement = { points, type: "ie" };
+  f.state.fitInputs = JSON.stringify([points, [points, points], {method:"standard",bands:10}, "ie", false]);
   assert.equal(f.state.fitMetadata().length, 0, "A changed headphone type invalidates earlier fit metadata"); checks++;
 }
 {

@@ -1,14 +1,16 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "118e051dc5e32a096c10a7e365091450bd4edb67",
-  "recordedLiveUpdate": 160,
+  "baseRevision": "6db7e5686ad9721c08c389bd74142e2ad24f3d49",
+  "recordedLiveUpdate": 161,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [],
+  "reviewedUntrackedFiles": [
+    "docs/releases/update161-verification.json"
+  ],
   "files": [
     {
       "path": ".gitignore",
@@ -47,12 +49,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "f523996a3b8d9385afd4f862438ed65c6bf5e0fb89d232183e5f6259b9dd1259",
+      "sha256": "c67781b709021472d2d5bf328bc6de5ed5cc8531dfb2a71ec192cf28340c6f71",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "3e045e18271768afd24a18d9fdb6a40ea3d0d7ab640fbbba05898fb91d5efd26",
+      "sha256": "093abf9777175f1bf85f8253bf6359b2d17340f23c213786aef648e5cf288052",
       "executable": false
     },
     {
@@ -67,12 +69,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "c94c9d30100ba7e0e56b687965eb40677193d681fda26c47ad160e318e33cb01",
+      "sha256": "babb77b0e247f78d0d48b0f79e8d7ded4bc4dfe2120757c54126d340d1c09529",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "5d0471fc8de921a30ab4e4a85cef6381f59c7c82e26db20d28fbb5011db85c2c",
+      "sha256": "95b9e690f5b211c3ece1212fa1ed969d8087b035c6253ff2930542dfdce9b961",
       "executable": false
     },
     {
@@ -87,7 +89,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "7c30936998da220a22c1a55f468f4f44860b78e6df25e4b4ae7bdbbe049b8144",
+      "sha256": "a52f336cf0be8e9f717a7e2455a4a9397df7c11e061e6a251abd1bc0ea68d7be",
       "executable": false
     },
     {
@@ -192,7 +194,7 @@
     },
     {
       "path": "app/api/listening-runs/route.ts",
-      "sha256": "28b6bc425a3c7bec831d98a15d11dd5a8b1f77f76e8e8032774021bd82afbeb0",
+      "sha256": "8b499e03e9ba593d2e76b2f0293aa817f099b8b2d010ad3c34edf38fdbbdd8f5",
       "executable": false
     },
     {
@@ -372,7 +374,7 @@
     },
     {
       "path": "app/api/research/route.ts",
-      "sha256": "42656e7b12a6459839bd086f220ebce02f93ca4db324a47296ae23a81a349259",
+      "sha256": "ba560d804609a961ac28d0f481e910f218b484b3789bdcbb5d5f26a6ba875cf2",
       "executable": false
     },
     {
@@ -722,7 +724,7 @@
     },
     {
       "path": "app/privacy/page.tsx",
-      "sha256": "75e218a10c7a8c162ea303ae51aaf11a73785d113c127c5f148a4d0ce2a28b96",
+      "sha256": "75962ea53a1fcd5009db9479f86776ae7d569a5e2161088239ceac22a71f801f",
       "executable": false
     },
     {
@@ -767,7 +769,7 @@
     },
     {
       "path": "app/shootout/page.tsx",
-      "sha256": "d4e5e65c0197047d1a0d51d40f023fabbb70a7e254669dc548aa8d696df294bd",
+      "sha256": "b53a944427802d1b5ded0edb1f31ba03276e64cfdb7cc80f04138826b1a70abc",
       "executable": false
     },
     {
@@ -1102,7 +1104,7 @@
     },
     {
       "path": "components/compare-strip.css",
-      "sha256": "4a864c04c27962a8911bc635f972414b1b7baa3a5a172da48062425fe0d013bf",
+      "sha256": "114a7b95709a94e8229964d8ff5497097203e61f8e6b05d7f0864dbe5d86890c",
       "executable": false
     },
     {
@@ -1117,7 +1119,7 @@
     },
     {
       "path": "components/comparison-data-settings.tsx",
-      "sha256": "2c89856a240aae9d068514135fbf4568bdddba3e3da7aae2f13cd84e270cf44d",
+      "sha256": "da0ce2840cd5bf77451807e98fda9c8af7955587172c8c79e871c1136d9bf27b",
       "executable": false
     },
     {
@@ -1277,7 +1279,7 @@
     },
     {
       "path": "components/matched-passage-control.tsx",
-      "sha256": "c7dff856d55e60207d6d502eab91a3b41e3a0204a0e7f48c6cdf349f61fca4fb",
+      "sha256": "862f7b6f7d948b8cf50d2235c59506d06f3f0673ecd1fac36c974a342e3b196f",
       "executable": false
     },
     {
@@ -1302,7 +1304,7 @@
     },
     {
       "path": "components/music-panel.tsx",
-      "sha256": "376b4ea16a3254a0445276bb9de5a579d22d2181d4be164cbde1ef4e8a263b6e",
+      "sha256": "a57cc111b9418b32249ab93b95685c3aa20fc95676fe7444d45c38ed2b99805b",
       "executable": false
     },
     {
@@ -2177,7 +2179,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "4ce18e280ccbe257b7971c71028a549ea827c50910f311fa1b8670b3d6592f10",
+      "sha256": "57fd6d95308b144c41558fae380fbb95d8c4ac1b7d1e17ac2df53503c871c9aa",
       "executable": false
     },
     {
@@ -2262,7 +2264,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "d56257eb56c02900106691119b43fedbb50194188fab6598d1b26a75c3e58a5b",
+      "sha256": "588f0089ab2acc1d2db9d7d1c757909aaaa8ace400f2a95980812699c933f26e",
       "executable": false
     },
     {
@@ -2272,7 +2274,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "198d1773f3cd53c89647fd63f110fa20b35d8e27afcb6c5a87ca9a8563821188",
+      "sha256": "184da7db83900f1b010f939f9eb6284227aa8ae2f73cdcdf300cd6c1ca0a1ab8",
       "executable": false
     },
     {
@@ -2722,12 +2724,17 @@
     },
     {
       "path": "docs/releases/update160-recovery-verification.json",
-      "sha256": "03761f07f3625674745766615592888fb4d857c6a01283789965c486b55a5db1",
+      "sha256": "c079d4f9e2bfd94f1be2cc1a1fa8d8f3228ffdb28ec159653f68c0af1dddd0de",
       "executable": false
     },
     {
       "path": "docs/releases/update160-verification.json",
       "sha256": "bf03e5233f6bcf19c18f725d390b20876069164d14d130a50b9fd9c307243ddf",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update161-verification.json",
+      "sha256": "af0fd8c26a361d18de34374bba5457a6becb49098da58c272156817a5e106d14",
       "executable": false
     },
     {
@@ -3997,7 +4004,7 @@
     },
     {
       "path": "lib/ranking-evidence.ts",
-      "sha256": "d0b455e5957fd23fb16f8191ae81ff9a3b72275cc6d24c08f167e4f43b57c86e",
+      "sha256": "76d7cfb47e8d4dd0ec63c9fd2c0226f7d06aefbe9b1a861a45007c511a4541c9",
       "executable": false
     },
     {
@@ -4007,12 +4014,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "3081e1e301a2dd1687c3572b48cd714d5aa9595d11fef5f451cb77b3a6990693",
+      "sha256": "5b7ece9d5507abaa74d27f4f900fb4a92c9aadff4b90272258057c50d3dc704c",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "c19bd46a9ef4fc2f1e49cb6cf8491db4f258bfc6b4e21635e17378611f5e5983",
+      "sha256": "dc5e79ecdacd1f1f418ac5d22dec791dcb7d94923079d8cc47fd4023c86632e3",
       "executable": false
     },
     {
@@ -4842,7 +4849,7 @@
     },
     {
       "path": "scripts/check_blind_completion.mjs",
-      "sha256": "f98304aee6255fae17d941f0e0110b0ad3d8ae0491c32582c43ee9412305e4f2",
+      "sha256": "c5136de11432b0876cb837beccf4a684ac52832bd18cec802ebfea7be8de9f11",
       "executable": false
     },
     {
@@ -4887,7 +4894,7 @@
     },
     {
       "path": "scripts/check_comparison_passage.mjs",
-      "sha256": "cffc67715aedd67e18f0508e9869fd6ab687812e43ffd7f6fe2d49041fce840f",
+      "sha256": "c09457550325bb46a2ebcde5a4852321f1a2e967d2b63d09bc3d947a7ffc1633",
       "executable": false
     },
     {
@@ -4942,7 +4949,7 @@
     },
     {
       "path": "scripts/check_free_listening.mjs",
-      "sha256": "dc9015d4cfc675b2f056d46e7196730cab7141ca8c738b36490e860ab2146d03",
+      "sha256": "f0da6a7fee97ecaf2b761affa72d25f1d44c343db9c50d0317c3ee9db669cefe",
       "executable": false
     },
     {
@@ -5037,7 +5044,7 @@
     },
     {
       "path": "scripts/check_music_playback_requests.mjs",
-      "sha256": "cfca326a07cf5173d7411c493e2f71e02e03b5f54d12ab88d1492788b0d44b02",
+      "sha256": "e3f1dc430005fae69636ba50c50d1b1685a4a40781d0d995d9c5a27b01953015",
       "executable": false
     },
     {
@@ -5102,7 +5109,7 @@
     },
     {
       "path": "scripts/check_passage_ranking.mjs",
-      "sha256": "9c99dfb323f072446fc81a70c689f95ed0caba553d2a866a547e8694ff32915d",
+      "sha256": "9a54e9fb305f6e233d1fe25ea9f9b3d601b28fce3ca8078d7ee13726dba8e045",
       "executable": false
     },
     {
@@ -5182,7 +5189,7 @@
     },
     {
       "path": "scripts/check_player_picker_rereview.mjs",
-      "sha256": "dea0c8edbc03b200bbeff274698e0a79c909126792a22680b9301896fd61db7b",
+      "sha256": "b11473bf1ba1c0beb80d42792d09dab59f1c6ec715e410e06a135c395ebdf853",
       "executable": false
     },
     {
@@ -5212,7 +5219,7 @@
     },
     {
       "path": "scripts/check_ranking_view.mjs",
-      "sha256": "3b2374c96387ea055ce27020b34073087b3679d18b1c4e822b8bea919b22a1bf",
+      "sha256": "aec64f44accc5bb2866c3350fa635c8f3561d5201305176f3c8be2a532a121c9",
       "executable": false
     },
     {

@@ -43,7 +43,7 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,pa
     setRevealed: value => { state.revealed = value; }, setBusy: value => { state.busy = value; },
     setMessage: value => { state.message = value; }, setSessionFinished: value => { state.sessionFinished = value; },
     setPair: value => { state.pair = value; }, setTab: value => { state.tab = value; }, refresh: async () => {},
-    fetch: async url => {
+    fetch: async (url, request) => {
       calls.push(url);
       // The answer must already be visible and stored while either write is pending.
       assert.equal(state.revealed, true);
@@ -52,6 +52,11 @@ function harness({ mode = "blind", voteStatus = 200, runStatus = 201, failure,pa
       const status = url === "/api/votes" ? voteStatus : runStatus;
       return { ok: status < 400, json: async () => {
         if (failure === "json" && url === "/api/votes") throw new SyntaxError("Invalid JSON");
+        if (url === "/api/listening-runs" && status === 201) {
+          const body = JSON.parse(request.body);
+          assert.equal(body.rankFreeListening,!passageRequired && mode!=="open");
+          return { countedInFreeListening:body.rankFreeListening };
+        }
         return { error: status === 429 ? "Submission limit reached. Please try again later." : "Submission failed." };
       } };
     },
@@ -133,8 +138,8 @@ assert.equal(privateOpen.calls.length,0,"Private-target Open choices never make 
 assert.match(privateOpen.state.message,/only to My results/);
 console.log("Private-target Open comparison remains local without a research API call.");
 
-for(const mode of ["blind","bring","open"]){for(const seconds of [0,6]){const free=harness({mode,passageRequired:false});free.state.musicPanelRef.current.heard=()=>[seconds,seconds];free.state.musicPanelRef.current.snapshot=()=>({overlapSeconds:seconds});free.state.musicPanelRef.current.finish=()=>({heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[]});free.state.trialId=null;await vm.runInContext("vote(0)",free.context);assert.deepEqual(free.calls,["/api/listening-runs"],"consented unchecked comparisons save research without a ranked vote");assert.equal(free.state.trials.length,1);assert.equal(free.state.trials[0].matchedPassageRequired,false);assert.equal(free.state.trials[0].matchedPassage,seconds>=5);assert.equal(free.state.trials[0].researchRecorded,true);assert.equal(free.state.trials[0].recorded,false);assert.match(free.state.message,/actual timing/);}}
-console.log("PASS consented free-listening modes collect real timing separately from ranked votes.");
+for(const mode of ["blind","bring","open"]){for(const seconds of [0,6]){const free=harness({mode,passageRequired:false});free.state.musicPanelRef.current.heard=()=>[seconds,seconds];free.state.musicPanelRef.current.snapshot=()=>({overlapSeconds:seconds});free.state.musicPanelRef.current.finish=()=>({heardA:seconds,heardB:seconds,overlapSeconds:seconds,intervals:[]});free.state.trialId=null;await vm.runInContext("vote(0)",free.context);assert.deepEqual(free.calls,["/api/listening-runs"],"consented unchecked comparisons save research without a ranked vote");assert.equal(free.state.trials.length,1);assert.equal(free.state.trials[0].matchedPassageRequired,false);assert.equal(free.state.trials[0].matchedPassage,seconds>=5);assert.equal(free.state.trials[0].researchRecorded,true);assert.equal(free.state.trials[0].recorded,false);assert.match(free.state.message,mode==="open"?/private owner research/:/counted toward the Free Listening ranking/);}}
+console.log("PASS consented free-listening modes collect actual timing and count only eligible Blind choices in Free Listening.");
 
 for(const mode of ["blind","bring","open"]){const h=harness({mode,sharedAdmin:true});h.state.trialId=null;await vm.runInContext("vote(0)",h.context);assert.equal(h.calls.length,0);assert.equal(h.state.trials.length,1);assert.equal(h.state.trials[0].adminTestOnly,true);assert.equal(h.state.trials[0].recorded,false);}
 console.log("PASS admin comparisons in every mode remain private even with matched listening and no server trial.");

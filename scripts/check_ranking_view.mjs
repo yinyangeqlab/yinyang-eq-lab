@@ -40,11 +40,11 @@ function cohort(offset){
  const categories=Object.fromEntries(modes.map((mode,i)=>[mode,{ie:rows(offset+i,2),oe:rows(offset+i+5,3)}]));
  return {...Object.fromEntries(modes.map(mode=>[mode,{rows:categories[mode].ie,voteCount:0,...(mode==='curated'?{trackCount:20}:{})}])),categories};
 }
-const research={...cohort(20),protocols:{current:cohort(1),legacy:cohort(10)}};
+const research={...cohort(20),freeListening:cohort(30),protocols:{current:cohort(1),legacy:cohort(10)}};
 const plain=s=>s.replace(/<[^>]*>/g,'').replace(/&#x27;/g,"'").replace(/&amp;/g,'&');
 let cases=0;
-for(const protocol of ['all','current','legacy'])for(const type of ['ie','oe'])for(const mode of modes){
- const view=protocol==='all'?research:research.protocols[protocol];
+for(const protocol of ['all','current','legacy','free'])for(const type of ['ie','oe'])for(const mode of modes){
+ const view=protocol==='free'?research.freeListening:protocol==='all'?research:research.protocols[protocol];
  const markup=renderToStaticMarkup(context.exports.ranking({research,rankProtocol:protocol,rankMode:mode,rankType:type}));
  const expected=key=>view.categories[key][type][0].comparisons;
  const countPill=plain(markup.match(/<span class="count-pill">(.*?)<\/span>/s)?.[1]??'');

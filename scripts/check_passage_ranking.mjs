@@ -10,8 +10,8 @@ import {LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_S
 import {rankPreferences} from '../lib/preference-ranking.ts';
 const targets=[{id:'a',name:'Alpha',creator:'QA',status:'approved'},{id:'b',name:'Beta',creator:'QA',status:'approved'}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
-let votes=[],runs=[],owners=[];
-const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=>()=>true},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
+let votes=[],runs=[],owners=[],inactive=new Set();
+const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!inactive.has(`${kind}:${id}`)},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
 function load(file){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return fixtureModule.exports;}
 deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');
 deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
@@ -41,6 +41,29 @@ votes=[row('check',pair(0,8),{loserId:'a'})];await expectCount('Identical-target
 votes=[];runs=[{...row('tie',pair(0,6)),trialId:'tie-trial',targetAId:'a',targetBId:'b',result:'tie'}];await expectCount('Valid current-protocol ties qualify',1);
 runs=[{...runs[0],intervals:JSON.stringify([interval(0,0,6),interval(1,10,16)])}];await expectCount('Current-protocol ties also require shared passage evidence',0);
 runs=[];votes=[row('listener-one',pair(0,6)),row('listener-two',pair(20,26))];const sameFile=await expectCount('Two participants on the same recording qualify separately',2);assert.equal(sameFile.verified.voteCount,2,'Existing same-file cohort matches recordings, not excerpts across people');checks++;
+const freeRun = (id, result, extra={}) => ({
+  ...row(id, [], {testMode:'blind',protocolVersion:FREE_LISTENING_PROTOCOL,heardA:0,heardB:0,overlapSeconds:0}),
+  targetAId:'a',targetBId:'b',trialId:null,result,researchContext:JSON.stringify({freeListeningRanking:true}),...extra,
+});
+runs=[freeRun('rapid-a','a'),freeRun('rapid-b','b'),freeRun('rapid-tie','tie',{testMode:'bring'}),
+  freeRun('old','b',{researchContext:'{}'}),freeRun('open-rapid','b',{testMode:'open'}),
+  freeRun('same','b',{targetBId:'a'}),freeRun('private','b',{targetBId:'unapproved'}),
+  freeRun('owned-test','b'),freeRun('unowned','b'),freeRun('inactive','b'),freeRun('linked-trial','b',{trialId:'different-trial'})];
+owners=runs.filter(run=>run.id!=='unowned').map(run=>({
+  recordKind:'run',recordId:run.id,subjectId:run.id==='owned-test'?'invite:layout-test-only':'participant:'+run.id,
+}));
+inactive.add('run:inactive');
+const latest=await (await route.GET()).json();
+assert.equal(latest.freeListening.all.voteCount,3);
+assert.equal(latest.freeListening.random.voteCount,2);
+assert.equal(latest.freeListening.bring.voteCount,1);
+for (const row of latest.freeListening.all.rows) assert.deepEqual([row.wins,row.losses,row.ties],[1,1,1]);
+assert.equal(latest.protocols.current.all.voteCount,0);
+assert.equal(latest.protocols.legacy.all.voteCount,0);
+assert.equal(latest.fitterCohorts.find(cohort=>cohort.key==='historical').view.protocols.current.all.voteCount,2);
+checks++;
+console.log('PASS newly disclosed rapid A/B choices and ties rank on their own without a playback minimum; legacy, open, unowned, isolated, inactive and invalid choices stay excluded');
+runs=[];owners=[];inactive.clear();
 // Optional real browser fixture is explicit; the default suite is self-contained.
 const fixtureIndex=process.argv.indexOf('--browser-events');
 let browserFixtureChecked=false,browserPlayback=null;

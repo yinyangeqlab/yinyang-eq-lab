@@ -18,9 +18,11 @@ export async function rankingEvidence() {
  const official=(kind:string,id:string)=>!isTestSubject(ownership.get(`${kind}:${id}`)||"");
  const approved=new Set(allTargets.filter(t=>t.status==="approved"&&official("target",t.id)).map(t=>t.id));
  const participant=(kind:string,id:string,browser:string)=>{const owner=ownership.get(`${kind}:${id}`);return owner?`account:${owner}`:`browser:${browser}`;};
+ const validPair = (mode: string, a: string, b: string) =>
+   (mode === "blind" || mode === "bring") && a !== b && approved.has(a) && approved.has(b);
  const valid=(mode:string,a:string,b:string,heardA:number|null,heardB:number|null,protocolVersion:string,intervals:string|null)=>{
   if(protocolVersion===FREE_LISTENING_PROTOCOL)return false;
-  if(!["blind","bring"].includes(mode)||a===b||!approved.has(a)||!approved.has(b)||(heardA||0)<MIN_SIDE_SECONDS||(heardB||0)<MIN_SIDE_SECONDS)return false;
+  if(!validPair(mode,a,b)||(heardA||0)<MIN_SIDE_SECONDS||(heardB||0)<MIN_SIDE_SECONDS)return false;
   // Historical cohorts retain their original rules. Current-protocol evidence
   // must independently meet the same-passage rule when rankings are read, too.
   if(protocolVersion!==LISTENING_PROTOCOL)return true;
@@ -37,7 +39,29 @@ export async function rankingEvidence() {
  }
  const decisive=allVotes.filter(v=>official("vote",v.id)&&official("trial",v.id)&&(!isTestSubject(v.voterId)||ownership.has(`vote:${v.id}`))&&active("vote",v.id)&&!excludedTrials.has(v.id)&&v.eligible===1&&valid(v.testMode,v.winnerId,v.loserId,v.heardA,v.heardB,v.protocolVersion,v.intervals)).map(v=>({...v,voterId:participant("vote",v.id,v.voterId),result:"preference", fitterCohort:runCohorts.get(v.id) ?? fitterCohort(null)}));
  const ties=runs.filter(run=>run.result==="tie"&&official("run",run.id)&&(!run.trialId||official("trial",run.trialId)&&official("vote",run.trialId))&&(!isTestSubject(run.voterId)||ownership.has(`run:${run.id}`))&&active("run",run.id)&&(!run.trialId||active("vote",run.trialId))&&valid(run.testMode,run.targetAId,run.targetBId,run.heardA,run.heardB,run.protocolVersion,run.intervals)).map(run=>({...run,id:`tie:${run.id}`,voterId:participant("run",run.id,run.voterId),winnerId:run.targetAId,loserId:run.targetBId,sha256:runFileFingerprint(run.researchContext),audioFormat:null,sampleRate:null,bitrate:null,duration:null,reasonTags:"[]",result:"tie", fitterCohort:fitterCohort(run.researchContext)}));
+ const freeListeningVotes: EvidenceVote[] = [];
+ for (const run of runs) {
+   if (run.protocolVersion !== FREE_LISTENING_PROTOCOL || run.trialId ||
+     !validPair(run.testMode, run.targetAId, run.targetBId) ||
+     !official("run", run.id) || !ownership.has(`run:${run.id}`) ||
+     isTestSubject(run.voterId) || !active("run", run.id)) continue;
+   if (run.result !== "a" && run.result !== "b" && run.result !== "tie") continue;
+   try {
+     if (JSON.parse(run.researchContext || "{}")?.freeListeningRanking !== true) continue;
+   } catch {
+     continue;
+   }
+   freeListeningVotes.push({
+     ...run,
+     voterId: participant("run", run.id, run.voterId),
+     winnerId: run.result === "b" ? run.targetBId : run.targetAId,
+     loserId: run.result === "b" ? run.targetAId : run.targetBId,
+     result: run.result === "tie" ? "tie" : "preference",
+     sha256: runFileFingerprint(run.researchContext),
+     reasonTags: "[]",
+   });
+ }
  const allFitterVotes = [...decisive,...ties].filter(v=>v.fitterCohort.key!=="mixed");
- return {targets:allTargets.filter(t=>approved.has(t.id)),votes:allFitterVotes.filter(v=>v.fitterCohort.key===MAIN_FITTER_COHORT),allFitterVotes};
+ return {targets:allTargets.filter(t=>approved.has(t.id)),votes:allFitterVotes.filter(v=>v.fitterCohort.key===MAIN_FITTER_COHORT),allFitterVotes,freeListeningVotes};
 }
 export type EvidenceVote=RankingVote & {fitterCohort?:{key:string;label:string};testMode:string;headphoneType:string|null;protocolVersion:string;songTitle:string|null;songArtist:string|null;songAlbum:string|null;recordingId:string|null;sha256:string|null;reasonTags:string|null};

@@ -43,5 +43,5 @@ export async function GET() {
   const view = (votes: EvidenceVote[]) => ({...build(votes),protocols:{current:build(votes.filter(v=>v.protocolVersion===LISTENING_PROTOCOL)),legacy:build(votes.filter(v=>v.protocolVersion!==LISTENING_PROTOCOL))}});
   const cohorts = new Map<string, string>([[MAIN_FITTER_COHORT, "Standard · 10 bands · main reference"]]);
   for (const vote of evidence.allFitterVotes) if (vote.fitterCohort) cohorts.set(vote.fitterCohort.key, vote.fitterCohort.key === MAIN_FITTER_COHORT ? "Standard · 10 bands · main reference" : vote.fitterCohort.label);
-  return Response.json({...view(qualified),mainFitterCohort:MAIN_FITTER_COHORT,fitterCohorts:[...cohorts].map(([key,label])=>({key,label,view:view(evidence.allFitterVotes.filter(v=>v.fitterCohort?.key===key))}))});
+  return Response.json({...view(qualified),freeListening:build(evidence.freeListeningVotes),mainFitterCohort:MAIN_FITTER_COHORT,fitterCohorts:[...cohorts].map(([key,label])=>({key,label,view:view(evidence.allFitterVotes.filter(v=>v.fitterCohort?.key===key))}))});
 }
