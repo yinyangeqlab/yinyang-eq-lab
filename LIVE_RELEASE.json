@@ -36,10 +36,13 @@
     "branch": "deploy/update162-personal-tournament-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "baseMain": "e0818376dd7f8debe75dd691a54431419cb3cbcc",
+    "publishedSourceCommit": "e2ab7a147004882b60636ec57914ef6966ae4d62",
+    "publicationEvidence": "docs/releases/update162-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,

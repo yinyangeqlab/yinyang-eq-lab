@@ -13,6 +13,8 @@ All 123 selected release checks passed. The dedicated layout account verified vo
 
 Encrypted off-device source-only recovery and hosted validation passed. [Recovery verification](releases/update162-recovery-verification.json)
 
+[Update162 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update162) · [Publication verification](releases/update162-publication.json)
+
 ## Update161
 
 Play both segments shows Preparing audio… while the track and EQ load. Ranked Blind Shootout requires five seconds of the same passage per side. Eligible new Rapid choices count in a separate Free Listening ranking with no playback minimum.

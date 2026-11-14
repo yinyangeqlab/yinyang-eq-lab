@@ -1,0 +1,18 @@
+{
+  "update": 162,
+  "deployedSourceCommit": "2aee7341bedd12d6fd07bb9b41b65f21ab938f04",
+  "publishedSourceCommit": "e2ab7a147004882b60636ec57914ef6966ae4d62",
+  "publicBaselineCommit": "e0818376dd7f8debe75dd691a54431419cb3cbcc",
+  "tag": "update162",
+  "githubLogin": "yinyangeqlab",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update162",
+  "publishedAt": "2026-11-14T07:57:01Z",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "ownerRecordsExcluded": true,
+  "filesVerifiedInEachArchive": 1133,
+  "publicZipAndTarDownloadsVerified": true,
+  "liveVerification": "docs/releases/update162-verification.json",
+  "recoveryVerification": "docs/releases/update162-recovery-verification.json"
+}
