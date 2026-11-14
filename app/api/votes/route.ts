@@ -12,43 +12,52 @@ import { intervalStats, parseIntervals } from "@/lib/listening";
 import { cleanFeedback } from "@/lib/feedback";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
+import { logShootoutSubmissionFailure, type ShootoutSubmissionFailureReason, type ShootoutSubmissionStage } from "@/lib/shootout-submission-logs";
 
 export async function POST(request: Request) {
+  let stage: ShootoutSubmissionStage = "identity";
+  const reject = (reason: ShootoutSubmissionFailureReason, status: number, error: string) =>
+    logShootoutSubmissionFailure("/api/votes", stage, reason, Response.json({ error }, { status }));
   try {
     const ownership = await submissionContext("vote");
+    stage = "write_gate";
     const limited = await publicWriteGate(request);
-    if (limited) return limited;
+    if (limited) return logShootoutSubmissionFailure("/api/votes", stage, "write_blocked", limited);
+    stage = "request_body";
     const data = await readJsonObject(request, 32768);
     if (data.testMode !== "blind" && !ownership.shareMusic) for (const key of ["songTitle","songArtist","songAlbum","recordingId","sha256"]) delete data[key];
     const { winnerId, loserId, voterId, trialId } = data as Record<string, string>;
     if (!winnerId || !loserId || winnerId === loserId || !/^[a-f0-9-]{36}$/.test(voterId ?? "") || !/^[a-f0-9-]{36}$/.test(trialId ?? "")) {
-      return Response.json({ error: "Invalid vote." }, { status: 400 });
+      return reject("invalid_vote", 400, "Invalid vote.");
     }
     if (!(["blind", "bring"].includes(String(data.testMode))) || typeof data.heardA !== "number" || typeof data.heardB !== "number" || !Number.isFinite(data.heardA) || !Number.isFinite(data.heardB) || data.heardA < 5 || data.heardB < 5) {
-      return Response.json({ error: "Blind votes require at least 5 seconds of playback on each side." }, { status: 400 });
+      return reject("insufficient_playback", 400, "Blind votes require at least 5 seconds of playback on each side.");
     }
     if (data.headphoneType !== "ie" && data.headphoneType !== "oe") {
-      return Response.json({ error: "Choose In-Ear or Over-Ear before voting." }, { status: 400 });
+      return reject("invalid_headphone_category", 400, "Choose In-Ear or Over-Ear before voting.");
     }
+    stage = "trial";
     const db = getDb();
     const assigned = await db.select().from(rankedTrials).where(eq(rankedTrials.id, trialId)).limit(1);
     const trial = assigned[0];
     if (!trial || trial.voterId !== voterId || trial.testMode !== data.testMode ||
         !((trial.sideA === winnerId && trial.sideB === loserId) || (trial.sideA === loserId && trial.sideB === winnerId))) {
-      return Response.json({ error: "This vote does not match a server-assigned trial." }, { status: 403 });
+      return reject("trial_mismatch", 403, "This vote does not match a server-assigned trial.");
     }
     await ownership.requireTrial(trialId);
     const trialAge = Date.now() - trial.issuedAt;
-    if (trialAge < 10000) return Response.json({ error: "The trial has not been open long enough to listen to both sides." }, { status: 403 });
-    if (trialAge > 7200000) return Response.json({ error: "This trial expired. Start a new pairing." }, { status: 410 });
+    if (trialAge < 10000) return reject("insufficient_playback", 403, "The trial has not been open long enough to listen to both sides.");
+    if (trialAge > 7200000) return reject("trial_expired", 410, "This trial expired. Start a new pairing.");
     const alreadyUsed = await db.select({ id: votes.id }).from(votes).where(eq(votes.id, trialId)).limit(1);
-    if (alreadyUsed.length) return Response.json({ error: "This trial has already been submitted." }, { status: 409 });
+    if (alreadyUsed.length) return reject("vote_already_saved", 409, "This trial has already been submitted.");
+    stage = "listening_record";
     const completed = await db.select().from(listeningRuns).where(eq(listeningRuns.trialId,trialId)).get();
-    if (!completed || completed.voterId!==voterId || completed.testMode!==data.testMode || completed.headphoneType!==data.headphoneType || completed.targetAId!==trial.sideA || completed.targetBId!==trial.sideB || completed.result==="tie" || (completed.result==="a" ? trial.sideA : trial.sideB)!==winnerId || completed.protocolVersion!==LISTENING_PROTOCOL || trial.protocolVersion!==LISTENING_PROTOCOL) return Response.json({error:"A matching completed listening record is required before a ranked vote."},{status:409});
+    if (!completed || completed.voterId!==voterId || completed.testMode!==data.testMode || completed.headphoneType!==data.headphoneType || completed.targetAId!==trial.sideA || completed.targetBId!==trial.sideB || completed.result==="tie" || (completed.result==="a" ? trial.sideA : trial.sideB)!==winnerId || completed.protocolVersion!==LISTENING_PROTOCOL || trial.protocolVersion!==LISTENING_PROTOCOL) return reject("listening_record_mismatch", 409, "A matching completed listening record is required before a ranked vote.");
     const owner = await env.DB!.prepare("SELECT subject_id FROM submission_owners WHERE record_kind='run' AND record_id=?").bind(completed.id).first<{subject_id:string}>();
-    if(owner?.subject_id!==ownership.subjectId) return Response.json({error:"The listening record is not owned by your sign-in."},{status:403});
+    if(owner?.subject_id!==ownership.subjectId) return reject("listening_record_not_owned", 403, "The listening record is not owned by your sign-in.");
     const activeRun=await activeSubmissions();
-    if(!activeRun("run",completed.id)) return Response.json({error:"This listening record was excluded from research."},{status:409});
+    if(!activeRun("run",completed.id)) return reject("listening_record_excluded", 409, "This listening record was excluded from research.");
+    stage = "feedback";
     const now = Date.now();
     const recentVotes = await db.select({ createdAt: votes.createdAt, otherReason: votes.otherReason }).from(votes)
       .where(and(eq(votes.voterId, voterId), gte(votes.createdAt, now - 86400000)))
@@ -57,26 +66,29 @@ export async function POST(request: Request) {
     // edge write limits and one-use trial validation still protect rankings.
     const feedback = cleanFeedback(data);
     if (feedback.otherReason && recentVotes.filter(row => row.otherReason?.toLowerCase() === feedback.otherReason.toLowerCase()).length >= 2) {
-      return Response.json({ error: "This feedback was already submitted. Add details specific to this comparison." }, { status: 429 });
+      return reject("repeated_feedback", 429, "This feedback was already submitted. Add details specific to this comparison.");
     }
     async function status(id: string) {
       if (sharedAutoEqTarget(id)) return "approved";
       return (await db.select().from(targets).where(and(eq(targets.id, id),publicTargetPredicate)))[0]?.status;
     }
+    stage = "targets";
     const [winnerStatus, loserStatus] = await Promise.all([status(winnerId), status(loserId)]);
-    if (!winnerStatus || !loserStatus) return Response.json({ error: "Target not found." }, { status: 404 });
-    if (winnerStatus !== "approved" || loserStatus !== "approved") return Response.json({ error: "Both targets need owner approval before votes can be collected." }, { status: 403 });
-    if (data.result !== undefined && data.result !== "preference") return Response.json({ error: "Submit a tie through its completed listening record; this endpoint accepts decisive votes." }, { status: 400 });
+    if (!winnerStatus || !loserStatus) return reject("target_unavailable", 404, "Target not found.");
+    if (winnerStatus !== "approved" || loserStatus !== "approved") return reject("target_unapproved", 403, "Both targets need owner approval before votes can be collected.");
+    stage = "listening_evidence";
+    if (data.result !== undefined && data.result !== "preference") return reject("invalid_result_type", 400, "Submit a tie through its completed listening record; this endpoint accepts decisive votes.");
     const safeNumber = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
     const intervals = parseIntervals(JSON.parse(completed.intervals));
     const stats = intervalStats(intervals);
-    if(stats.heardA<5||stats.heardB<5||stats.overlapSeconds<5) return Response.json({error:"The completed run does not meet the same-passage listening requirement."},{status:400});
+    if(stats.heardA<5||stats.heardB<5||stats.overlapSeconds<5) return reject("insufficient_overlap", 400, "The completed run does not meet the same-passage listening requirement.");
     const shareDetails=data.testMode==="blind" || ownership.shareMusic;
     const provenance = shareDetails ? JSON.parse(completed.researchContext || "{}") : {};
     const sha256 = String(provenance.sha256 ?? "");
-    if (sha256 && !/^[a-f0-9]{64}$/.test(sha256)) return Response.json({ error: "Invalid file hash." }, { status: 400 });
+    if (sha256 && !/^[a-f0-9]{64}$/.test(sha256)) return reject("invalid_recording_fingerprint", 400, "Invalid file hash.");
     // Check outcomes remain diagnostics; no unvalidated hearing-ability weights.
     const reliabilityWeight = 1;
+    stage = "save";
     await db.batch([
       db.insert(votes).values({
         id: trialId, protocolVersion: LISTENING_PROTOCOL, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
@@ -97,12 +109,12 @@ export async function POST(request: Request) {
     ]);
     return Response.json({ ok: true });
   } catch (error) {
-    if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return Response.json({error:"This comparison was erased or changed while saving. Start a new comparison."},{status:409});
+    if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return reject("comparison_changed", 409, "This comparison was erased or changed while saving. Start a new comparison.");
     const inputError = requestInputResponse(error);
-    if (inputError) return inputError;
+    if (inputError) return logShootoutSubmissionFailure("/api/votes", stage, "request_input", inputError);
     if (String(error).includes("UNIQUE constraint failed") || String((error as { cause?: unknown })?.cause).includes("UNIQUE constraint failed")) {
-      return Response.json({ error: "This trial has already been submitted." }, { status: 409 });
+      return reject("vote_already_saved", 409, "This trial has already been submitted.");
     }
-    return Response.json({ error: "Vote could not be saved." }, { status: 500 });
+    return reject("internal_error", 500, "Vote could not be saved.");
   }
 }

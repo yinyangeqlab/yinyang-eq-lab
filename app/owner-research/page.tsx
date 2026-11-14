@@ -34,7 +34,7 @@ type SongSuggestion = SubmissionIdentity & { id: string; title: string; artist: 
 type ResearchChoice = SubmissionIdentity & {
   id: string; targetAId: string; targetBId: string; result: string | null; phase: string; recordingId: string; createdAt: number | null;
 };
-type Data = { songSuggestions: SongSuggestion[]; personalChoices: ResearchChoice[]; communityChoices: ResearchChoice[]; referenceChoices: ResearchChoice[]; deletionTotals: { day: string; recordKind: string; deletedCount: number }[]; moderationEvents: ModerationEvent[]; votes: Vote[]; feedback: Feedback[]; targets: Target[]; openChoices: OpenChoice[]; listeningRuns: ListeningRun[]; researchMeasurements: ResearchMeasurement[]; preferenceExports: PreferenceExport[]; musicVotes: MusicVote[] };
+type Data = { shootoutFailuresQueryUrl: string | null; songSuggestions: SongSuggestion[]; personalChoices: ResearchChoice[]; communityChoices: ResearchChoice[]; referenceChoices: ResearchChoice[]; deletionTotals: { day: string; recordKind: string; deletedCount: number }[]; moderationEvents: ModerationEvent[]; votes: Vote[]; feedback: Feedback[]; targets: Target[]; openChoices: OpenChoice[]; listeningRuns: ListeningRun[]; researchMeasurements: ResearchMeasurement[]; preferenceExports: PreferenceExport[]; musicVotes: MusicVote[] };
 const newest = <T extends { createdAt?: number | null; id: string }>(a: T, b: T) => (b.createdAt ?? 0) - (a.createdAt ?? 0) || a.id.localeCompare(b.id);
 const latestFirst = { key: "date", descending: true };
 const byId = <T extends { id: string }>(row: T) => row.id;
@@ -340,6 +340,10 @@ export default function OwnerResearch() {
         </section>)}
       </details>
       <ActivityMonitoringPanel />
+      {data.shootoutFailuresQueryUrl && <section aria-labelledby="shootout-diagnostics">
+        <h2 id="shootout-diagnostics">Shootout diagnostics</h2>
+        <p><a href={data.shootoutFailuresQueryUrl} target="_blank" rel="noreferrer">View submission failures in Cloudflare (opens in a new tab)</a></p>
+      </section>}
       <ServiceStatusPanel />
       <section id="admin-tools" aria-label="More admin tools">
         <h2>More tools</h2>

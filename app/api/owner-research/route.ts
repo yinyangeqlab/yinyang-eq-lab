@@ -6,6 +6,11 @@ import { communityPersonalChoices, communityReferenceAssignments, communityRefer
 
 const headers = { "Cache-Control": "private, no-store", Vary: "Cookie" };
 
+function shootoutFailuresQueryUrl(value: string | undefined) {
+  const savedQuery = /^https:\/\/dash\.cloudflare\.com\/[a-f0-9]{32}\/observability\/queries\/[a-z0-9]+\/events$/;
+  return value && savedQuery.test(value) ? value : null;
+}
+
 export async function GET(request: Request) {
   const denied = await ownerAccessResponse(request);
   if (denied) return denied;
@@ -67,6 +72,7 @@ export async function GET(request: Request) {
       })),
       musicVotes: musicVoteRows.map(row => ({ ...row, ...attribution("music", JSON.stringify([row.userId, row.trackUrl]), null, row.userId) })),
       moderationEvents: reviewEvents, deletionTotals,
+      shootoutFailuresQueryUrl: shootoutFailuresQueryUrl(env.SHOOTOUT_FAILURES_QUERY_URL),
     }, { headers });
   } catch {
     return Response.json({ error: "Research data could not be loaded. Try again." }, { status: 500, headers });

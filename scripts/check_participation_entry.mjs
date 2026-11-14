@@ -8,6 +8,7 @@ const end = gate.indexOf('if (!owner && (["/shootout"', start);
 assert.ok(practiceScores && start > 0 && end > start);
 const check = new Function('request', 'data', 'owner', 'tester', 'dataRoute', 'json', 'finish', `
   const url = new URL(request.url), path = url.pathname;
+  const blockedSubmission = (_reason, response) => response;
   ${practiceScores}
   ${gate.slice(start, end)}
   return null;

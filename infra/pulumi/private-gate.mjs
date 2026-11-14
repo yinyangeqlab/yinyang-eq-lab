@@ -171,15 +171,25 @@ async function admin(request, env, path) {
   }
   return json({ error: "Not found." }, 404);
 }
+function logBlockedShootoutSubmission(request, endpoint, reason, response) {
+  if (request.method === "POST" && (endpoint === "/api/listening-runs" || endpoint === "/api/votes")) {
+    const event = { event: "shootout_submission_failed", endpoint, stage: "edge", reason, status: response.status };
+    if (response.status >= 500) console.error(event);
+    else console.warn(event);
+  }
+  return response;
+}
+
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
+    const blockedSubmission = (reason, response) => logBlockedShootoutSubmission(request, path, reason, response);
     // Evaluate before public pages, crawler previews, shared shootouts and media.
     // Only the existing signed, host-only admin cookie grants the exception.
     if (["true", "1"].includes(String(env.OWNER_ONLY_MAINTENANCE)) && !["/admin-login", "/owner-login"].includes(path)) {
       const secret = env.PRIVATE_ACCESS_PASSWORD;
       const owner = typeof secret === "string" && secret.length >= 32 && await validOwnerSession(request, secret);
-      if (!owner) return ownerOnlyMaintenanceResponse(request, env.OWNER_ONLY_MAINTENANCE_MESSAGE);
+      if (!owner) return blockedSubmission("maintenance", ownerOnlyMaintenanceResponse(request, env.OWNER_ONLY_MAINTENANCE_MESSAGE));
     }
     // Link-preview crawlers (Discord, Slack, iMessage...) cannot sign in, so gated
     // pages would redirect them to a generic page. Answer with public copy only:
@@ -218,11 +228,11 @@ const privateGate = {
       return app.fetch(new Request(request, { headers }), env, context);
     }
     const password = env.PRIVATE_ACCESS_PASSWORD;
-    if (typeof password !== "string" || password.length < 32 || !env.DB) return new Response("Private access is not configured.", { status: 503, headers: { "Cache-Control": "no-store" } });
+    if (typeof password !== "string" || password.length < 32 || !env.DB) return blockedSubmission("access_unavailable", new Response("Private access is not configured.", { status: 503, headers: { "Cache-Control": "no-store" } }));
     try {
       const hasOwnerSession = await validOwnerSession(request, password);
       const admission = await preDatabaseGuard(request, env, hasOwnerSession);
-      if(admission)return admission;
+      if (admission) return blockedSubmission("edge_guard", admission);
       if(path==="/admin-logout")return adminSignOut(request);
       if(path==="/api/admin-session"){
         if(!["GET","HEAD"].includes(request.method))return json({error:"Method not allowed."},405);
@@ -231,7 +241,7 @@ const privateGate = {
         return Response.json({admin:hasOwnerSession,expiresAt:issued===null?null:(issued+ownerSeconds)*1000},{headers:{"Cache-Control":"private, no-store","Vary":"Cookie"}});
       }
       if(request.method !== "GET" && request.method !== "HEAD" && (hasOwnerSession || ["/access","/admin-login","/owner-login"].includes(path))) {
-        const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
+        const bounded=await boundedBody(request);if(bounded instanceof Response)return blockedSubmission("request_body", bounded);request=bounded;
       }
       const enabled = await invitesEnabled(env.DB);
       if (path === "/api/invite-system" && request.method === "GET") return json({enabled});
@@ -265,7 +275,7 @@ const privateGate = {
         return app.fetch(new Request(bounded,{headers:clean}),env,context);
       }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
-      if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method) && !(path==="/api/my-data"&&request.method==="PATCH"))return json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403);
+      if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method) && !(path==="/api/my-data"&&request.method==="PATCH"))return blockedSubmission("test_account", json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403));
       if(tester?.id==="layout-test-only" && (path==="/sync" || path==="/pair" || path.startsWith("/devices"))) return htmlResponse('<h1>Private test account</h1><p>Browser Sync is unavailable for this hidden test account. Its local tests stay in this browser and cannot be copied into a participant account.</p><p><a href="/test-history">Review local test history</a></p><p><a href="/shootout/personal">Return to Personal Tournament</a></p>',403);
       // Open access still uses host-only credentials and the existing ownership,
       // consent, erasure and sync tables. No usable invitation code is created.
@@ -296,14 +306,14 @@ const privateGate = {
       };
       if (path === "/sync" || path === "/pair" || path === "/pair/reset" || path === "/devices" || path.startsWith("/devices/")) return finish(await browserPairing(request, env, tester, owner, enabled));
 
-      if(tester){const limited=await listenerGuard(request,env,testerSubject(tester.id));if(limited)return limited;}
+      if(tester){const limited=await listenerGuard(request,env,testerSubject(tester.id));if(limited)return blockedSubmission("listener_guard", limited);}
       if(tester && request.method!=="GET" && request.method!=="HEAD") {
-        const bounded=await boundedBody(request);if(bounded instanceof Response)return bounded;request=bounded;
+        const bounded=await boundedBody(request);if(bounded instanceof Response)return blockedSubmission("request_body", bounded);request=bounded;
       }
       const data = (owner || tester || dataRoute) ? await dataSession(request, env, owner ? "owner" : tester ? testerSubject(tester.id) : null, tester?.linkedSessionHash) : null;
       // Management-only cookies remain isolated after the tester session expires.
       if(data?.subject==="invite:layout-test-only"&&!tester){
-        if(!["GET","HEAD","OPTIONS"].includes(request.method))return json({error:"Sign in again with the isolated test account before saving consent."},403);
+        if(!["GET","HEAD","OPTIONS"].includes(request.method))return blockedSubmission("test_account", json({error:"Sign in again with the isolated test account before saving consent."},403));
         if(path.includes("sync")||path.includes("devices"))return json({error:"Sync is disabled for the isolated test account."},403);
       }
       if (path === "/home" && (request.method === "GET" || request.method === "HEAD")) {
@@ -314,7 +324,7 @@ const privateGate = {
       if (!owner && path === "/owner-research") return Response.redirect(new URL("/admin-login", request.url), 303);
       if (!owner && path.startsWith("/api/owner-research")) return json({ error: "Admin access denied." }, 403);
       if (!owner && !tester && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
-        if (path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD") return json({ error: enabled ? "Sign in with an approved invitation to use this site." : "Open Shootout to start this browser session." }, 401);
+        if (path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD") return blockedSubmission("sign_in_required", json({ error: enabled ? "Sign in with an approved invitation to use this site." : "Open Shootout to start this browser session." }, 401));
         const signIn = new URL(enabled ? "/access" : "/shootout", request.url);
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);
         return new Response(null, { status: 303, headers: { Location: signIn.toString(), "Cache-Control": "no-store" } });
@@ -326,11 +336,11 @@ const privateGate = {
           ? json({ error:"Agreement to comparison-data collection is required. Review the notice at /participation; My data remains available for withdrawal and deletion." },403)
           : new Response(null,{status:303,headers:{Location:"/participation?return_to="+encodeURIComponent(url.pathname),"Cache-Control":"no-store"}});
         if(data?.setCookie) blocked.headers.append("Set-Cookie",data.setCookie);
-        return finish(blocked);
+        return finish(blockedSubmission("agreement_required", blocked));
       }
       if (!owner && (["/shootout","/music-library","/preference-tuning","/personal-tuning"].includes(path.replace(/\/$/,"")) || path.startsWith("/shootout/") || !["GET","HEAD","OPTIONS"].includes(request.method) && !dataRoute)) {
         const paused = featureMaintenanceResponse(request, await readServiceStatus());
-        if (paused) { if(data?.setCookie)paused.headers.append("Set-Cookie",data.setCookie); return finish(paused); }
+        if (paused) { if(data?.setCookie)paused.headers.append("Set-Cookie",data.setCookie); return finish(blockedSubmission("maintenance", paused)); }
       }
       const headersForApp = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headersForApp.delete(name);
@@ -377,7 +387,7 @@ const privateGate = {
     } catch {
       // Keep credentials, invitation codes, cookies and request bodies out of logs.
       console.error("private_gate_request_failed");
-      return new Response("Private access is temporarily unavailable.", { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "60" } });
+      return blockedSubmission("edge_error", new Response("Private access is temporarily unavailable.", { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "60" } }));
     }
   },
 };

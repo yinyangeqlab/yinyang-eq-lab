@@ -34,3 +34,21 @@ const counters=[];const rateEnv={ABUSE_RATE_SECRET:'fixture-only-secret'.repeat(
 assert.equal(await preDatabaseGuard(new Request('https://fixture.invalid/api/profile-access',{method:'POST',headers:{'CF-Connecting-IP':'192.0.2.1'}}),rateEnv,false),null);assert.ok(counters.includes('SIGNIN_LIMIT'));
 assert.equal((await preDatabaseGuard(new Request('https://fixture.invalid/api/profile-access',{method:'POST',headers:{'CF-Connecting-IP':'192.0.2.1','Content-Length':'2049'}}),rateEnv,false)).status,413);
 console.log('PASS actual gate fragments: read-only public profile, trusted-header stripping, protected media retained, sign-in isolation and existing six abuse bindings/sign-in body limits.');
+
+const helperStart=source.indexOf('function logBlockedShootoutSubmission(');
+const helperEnd=source.indexOf('const privateGate =',helperStart);
+const eventRows=[];
+const logger={warn:event=>eventRows.push(['warn',event]),error:event=>eventRows.push(['error',event])};
+const logBlocked=new Function('console',source.slice(helperStart,helperEnd)+'return logBlockedShootoutSubmission;')(logger);
+const rejected=new Response('private detail',{status:403,headers:{'Retry-After':'60'}});
+for(const path of ['/api/listening-runs','/api/votes','/api/other']) {
+ for(const method of ['GET','POST']) {
+  const request=new Request('https://fixture.invalid'+path+'?secret=fixture',{method,headers:{Cookie:'private fixture'}});
+  assert.equal(logBlocked(request,path,'test_account',rejected),rejected);
+ }
+}
+assert.deepEqual(eventRows, ['/api/listening-runs','/api/votes'].map(endpoint=>['warn',{
+ event:'shootout_submission_failed',endpoint,stage:'edge',reason:'test_account',status:403,
+}]));
+assert.match(source,/return blockedSubmission\("test_account", json\(\{error:"Private test account:/);
+console.log('PASS submission edge logs are restricted to the two POST routes and fixed fields, with test denials labeled.');

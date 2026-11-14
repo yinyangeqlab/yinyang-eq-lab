@@ -18,6 +18,13 @@ const match=(row,c)=>!c||c.every(({key,value})=>row[key]===value);
 const db={insert:table=>({values:value=>({table,value})}),batch:async commands=>{writes.push(...commands);for(const c of commands){if(c.table===schema.listeningRuns)stored.push(c.value);if(c.table===schema.submissionOwners)owner.push(c.value);}},select:()=>({from:table=>({where:condition=>{const rows=table===schema.targets?targetRows:table===schema.listeningRuns?stored:table===schema.submissionOwners?owner:[];const result=rows.filter(row=>match(row,condition));const query={then:(yes,no)=>Promise.resolve(result).then(yes,no),limit:async n=>result.slice(0,n),get:async()=>result[0],orderBy:()=>({limit:async n=>result.slice(0,n)})};return query;}})})};
 const linked={id:id(75),status:'approved',points:'[]',version:'pinned-source-version'};
 const deps={'@/lib/autoeq-target-sources':{autoEqRankingTargets:[linked],sharedAutoEqTarget:key=>key===linked.id?linked:undefined},'@/lib/target-type':{targetHeadphoneType},'@/db':{getDb:()=>db},'@/db/schema':schema,'@/lib/public-targets':{publicTargetPredicate:null},'drizzle-orm':{eq:(key,value)=>[{key,value}],and:(...c)=>c.flat().filter(Boolean),gte:()=>[],desc:x=>x},'@/lib/submission-ownership':{submissionContext:async kind=>{if(!consent||['owner','invite:layout-test-only'].includes(subject))throw new input.RequestInputError('Not permitted',403);return {subjectId:subject,shareMusic,record:recordId=>({table:schema.submissionOwners,value:{recordKind:kind,recordId,subjectId:subject}}),requireTrial:async()=>{throw new input.RequestInputError('Not owned',403);}};}},'@/lib/curve-version':{curveVersion:async()=> 'version'},'@/lib/listening-protocol':protocol,'@/lib/listening':listening,'@/lib/request-json':input,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'fixture'},'@/lib/public-write-gate':{publicWriteGate:async()=>null},'@/lib/feedback':{cleanFeedback}};
+const emitted=[];
+const loggingCode=ts.transpileModule(readFileSync('lib/shootout-submission-logs.ts','utf8'),{
+  compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS},
+}).outputText;
+const loggingContext={exports:{},console:{warn:event=>emitted.push({...event}),error:event=>emitted.push({...event})}};
+vm.runInNewContext(loggingCode,loggingContext);
+deps['@/lib/shootout-submission-logs']=loggingContext.exports;
 function load(path){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:key=>{if(key==="@/lib/fitter-settings")return fitters;assert.ok(key in deps,key);return deps[key];},Response,crypto:webcrypto,Date});return exports;}
 const runs=load('app/api/listening-runs/route.ts'),feedback=load('app/api/feedback/route.ts');
 const body={id:id(1),voterId:id(2),targetAId:id(3),targetBId:id(4),headphoneType:'ie',result:'a',testMode:'bring',matchedPassageRequired:false,intervals:[],voteDataNoticeVersion:'fixture',shareSong:true,songTitle:'Private song',researchContext:{targetVersions:['version','version'],recordingId:'private',sha256:'a'.repeat(64),rig:'Synthetic',duration:200}};
@@ -41,6 +48,21 @@ const description={participantId:id(2),comparisonId:id(1),targetAId:id(3),target
 reset();await post(runs,body);writes=[];assert.equal((await post(feedback,description)).status,201);checks++;
 for(const patch of [{participantId:id(9)},{comparisonId:id(9)},{targetAId:id(4)},{testMode:'open'}]){reset();await post(runs,body);writes=[];assert.equal((await post(feedback,{...description,...patch})).status,403);assert.equal(writes.length,0);checks++;}
 for(const mutate of [()=>subject='other-participant',()=>consent=false,()=>stored[0].protocolVersion=protocol.LISTENING_PROTOCOL,()=>stored=[]]){reset();await post(runs,body);writes=[];mutate();assert.equal((await post(feedback,description)).status,403);assert.equal(writes.length,0);checks++;}
+emitted.length=0;
+reset();
+const result=await post(runs,{...body,researchContext:{...body.researchContext,targetVersions:['private-fingerprint','version']}});
+assert.equal(result.status,409);
+assert.match((await result.json()).error,/Target curves changed/);
+assert.deepEqual(emitted.splice(0),[{event:'shootout_submission_failed',endpoint:'/api/listening-runs',stage:'targets',reason:'target_version_mismatch',status:409}]);
+await post(runs,body);
+assert.deepEqual(emitted,[],'Successful saves emit no failure logs');
+const batch=db.batch;
+try {
+  db.batch=async()=>{throw new Error('private statement', {cause:'private bindings'});};
+  assert.equal((await post(runs,body)).status,500);
+  assert.deepEqual(emitted,[{event:'shootout_submission_failed',endpoint:'/api/listening-runs',stage:'save',reason:'internal_error',status:500}]);
+} finally {db.batch=batch;}
+console.log('PASS listening-run logs contain only fixed failure codes and HTTP status, including database errors.');
 console.log(`PASS ${checks} free-listening API cases: actual timing, protocol separation, consent changes, private targets, category/input validation, admin/test denials, song privacy and owned feedback context.`);
 
 // The real migration chain must roll back the entire run when consent/session

@@ -6,12 +6,17 @@ import ts from "typescript";
 // Run the real vote route against a controlled database, never production votes.
 const source = readFileSync(new URL("../app/api/votes/route.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+const logSource = readFileSync(new URL("../lib/shootout-submission-logs.ts", import.meta.url), "utf8");
+const logCode = ts.transpileModule(logSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const voterId = "11111111-1111-4111-8111-111111111111";
 const trialId = "22222222-2222-4222-8222-222222222222";
 const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPairClaims", "listeningRuns", "comparisonRecords"].map(table => [table, new Proxy({ table }, { get: (target, key) => target[key] ?? key })]));
 async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [], linked = false } = {}) {
   let batches = 0; let savedVote;
   let targetRead = 0;
+  const events = [];
+  const logs = { exports: {}, console: { warn: event => events.push({ ...event }), error: event => events.push({ ...event }) } };
+  vm.runInNewContext(logCode, logs);
   const db = {
     select(fields) {
       let table;
@@ -46,6 +51,7 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     "@/lib/feedback": { cleanFeedback: () => ({ otherReason: "", reasonSide: "a", reasonTags: [] }) },
     "@/lib/target-type": { targetHeadphoneType: () => "ie" },
     "@/lib/request-json": { readJsonObject: request => request.json(), requestInputResponse: () => null },
+    "@/lib/shootout-submission-logs": logs.exports,
     "@/lib/public-write-gate": { publicWriteGate: async () => gate ? Response.json({ error: "Submission limit reached." }, { status: 429 }) : null },
   };
   const context = vm.createContext({ exports: {}, require: name => { assert.ok(imports[name], name); return imports[name]; }, Response, Date });
@@ -54,6 +60,12 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ winnerId: "a", loserId: "b", voterId, trialId, testMode: "blind", headphoneType: "ie", result, heardA: heard, heardB: heard, intervals: [] }),
   }));
+  if (response.ok) assert.deepEqual(events, []);
+  else {
+    const reason = gate ? "write_blocked" : used ? "vote_already_saved" : age < 10000 || heard < 5 ? "insufficient_playback" : "invalid_result_type";
+    const stage = gate ? "write_gate" : used || age < 10000 ? "trial" : heard < 5 ? "request_body" : "listening_evidence";
+    assert.deepEqual(events, [{ event: "shootout_submission_failed", endpoint: "/api/votes", stage, reason, status: response.status }]);
+  }
   return { status: response.status, batches, ...(checks.length ? { reliabilityWeight: savedVote?.reliabilityWeight } : {}) };
 }
 for (const recentCount of [0, 6, 50, 60]) {

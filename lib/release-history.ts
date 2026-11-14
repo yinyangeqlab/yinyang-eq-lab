@@ -7,6 +7,10 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "The server records why Shootout submissions fail, and the owner can open the saved Cloudflare query from Admin.",
+] as const;
+
+const update156Changes = [
   "Shootout votes use consistent labels and clearer contrast.",
   "Search and sort Preference Tuning targets by name or global rank, and download target curves as CSV or TXT.",
   "My Collection puts trial details first with headphone measurement and date filters, separate Personal Tournament history, and an all-dates ranking shortlist.",
@@ -192,7 +196,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: candidateChanges },
+  { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: candidateChanges },
+  { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: update156Changes, github: { commit: "f465c1d2ed3ce5361387aeafdcb8ecec4d178443" } },
   { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: update155Changes },
   { update: 154, date: "2026-11-11", title: "Reading the EQ fitter benchmark", changes: update154Changes },
   { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: update153Changes },

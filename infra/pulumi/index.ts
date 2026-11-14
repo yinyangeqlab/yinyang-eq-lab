@@ -29,6 +29,7 @@ const scriptName = config.get("scriptName") ?? "yinyangeq-staging";
 const maintenanceMode = config.getBoolean("maintenanceMode") ?? true;
 const ownerOnlyMaintenance = config.getBoolean("ownerOnlyMaintenance") ?? false;
 const ownerOnlyMaintenanceMessage = config.get("ownerOnlyMaintenanceMessage");
+const shootoutFailuresQueryUrl = config.get("shootoutFailuresQueryUrl");
 if (ownerOnlyMaintenanceMessage !== undefined && (!ownerOnlyMaintenanceMessage.trim() || ownerOnlyMaintenanceMessage.length > 500)) throw new Error("ownerOnlyMaintenanceMessage must contain 1–500 characters");
 const canonicalOrigin = config.get("canonicalOrigin") ?? "https://yinyangeq.com";
 const canonicalUrl = new URL(canonicalOrigin);
@@ -146,6 +147,7 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     { name: "MAINTENANCE_MODE", type: "plain_text", text: String(maintenanceMode) },
     { name: "OWNER_ONLY_MAINTENANCE", type: "plain_text", text: String(ownerOnlyMaintenance) },
     ...(ownerOnlyMaintenanceMessage ? [{ name: "OWNER_ONLY_MAINTENANCE_MESSAGE", type: "plain_text", text: ownerOnlyMaintenanceMessage }] : []),
+    ...(shootoutFailuresQueryUrl ? [{ name: "SHOOTOUT_FAILURES_QUERY_URL", type: "plain_text", text: shootoutFailuresQueryUrl }] : []),
     { name: "ABUSE_RATE_SECRET", type: "secret_text", text: requiredSecret("abuseRateSecret") },
     { name: "OWNER_ANALYTICS_TOKEN", type: "secret_text", text: requiredSecret("ownerAnalyticsToken") },
     { name: "PRIVATE_ACCESS_PASSWORD", type: "secret_text", text: requiredSecret("privateAccessPassword") },

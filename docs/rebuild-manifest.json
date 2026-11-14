@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ec3000022a34f14963ed15513caf0d50bed47da6",
+  "baseRevision": "6c0ea18dbf6357a246c8c86b033c74dff0745104",
   "recordedLiveUpdate": 156,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -192,7 +192,7 @@
     },
     {
       "path": "app/api/listening-runs/route.ts",
-      "sha256": "0094836881786c4370ea02db2a1bf9d9f3a461a767d6e33b1bba7ec28a066e9d",
+      "sha256": "28b6bc425a3c7bec831d98a15d11dd5a8b1f77f76e8e8032774021bd82afbeb0",
       "executable": false
     },
     {
@@ -307,7 +307,7 @@
     },
     {
       "path": "app/api/owner-research/route.ts",
-      "sha256": "a7b12db626c64d92c485833c44465d40ad859d67b34e950b2019c8391fcf19af",
+      "sha256": "8d8d48608cfdfc5c141279a3062c6ace3540c3a68947ff9badf3d2f27af2afc7",
       "executable": false
     },
     {
@@ -397,7 +397,7 @@
     },
     {
       "path": "app/api/votes/route.ts",
-      "sha256": "964dde99bc97968dcf9dfec4a94d37e3a3c789e32433c577917a98bd195efc24",
+      "sha256": "e1961526efad505421ef420f8e7cfaa9bbf3443d4a22a8ba4e6214d9665178d1",
       "executable": false
     },
     {
@@ -657,7 +657,7 @@
     },
     {
       "path": "app/owner-research/page.tsx",
-      "sha256": "04c66ad5ce3054148e4a8aec66417ed83a28e3a2559d1b564efb43d4877ace46",
+      "sha256": "6d85fb54051458e02d3fc526e777495ebdce663a45775525637195dde4dcf833",
       "executable": false
     },
     {
@@ -927,7 +927,7 @@
     },
     {
       "path": "cloudflare-env.d.ts",
-      "sha256": "8b0eca84aa3364cc7ccc43cc3af6beb88dd34ebd410de08690bf094ce39fbcb0",
+      "sha256": "8faa7435ac2d15320fad8b41edfbad939a4099f2f5d268785c2a196204e3dade",
       "executable": false
     },
     {
@@ -3287,7 +3287,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "47a942c59afad1a76ca57a6eb0c80b863df7ba396ccf069c2e94465b34402052",
+      "sha256": "a6d65bac39d73e2028b1763ecdc4bf0b3af6cbbca69c32805fb151729e478f49",
       "executable": false
     },
     {
@@ -3302,7 +3302,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "45247c16209123e231ce4ff9a75bd7fd42a3f7c1e133ec61696d6648b69a8cdc",
+      "sha256": "219e9ddf95ef4837d4619c98ad46e1237ebf0ef8a051a21dc69b154899a96687",
       "executable": false
     },
     {
@@ -3942,12 +3942,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "ed77a23a4cb0ebf4f8714399a88ac67acb31c8e5acb34d01203c27632d55f379",
+      "sha256": "479191a82428c6be0e9028bfb9a64a66bf5e4f7e76323b6f3e6857b7a585b54f",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "1e33692ed8cb452275a7af55a83f33a42a70010d6ab659759b67dfe31a8faca7",
+      "sha256": "948a539ee7803bca505c181e69ce477fb8e687b47646ffdcedd6b7ab762d5936",
       "executable": false
     },
     {
@@ -4003,6 +4003,11 @@
     {
       "path": "lib/share-pages.mjs",
       "sha256": "e9e84c205d60e5f943a9b4693ebb4fa5d9fbe4b0c90cdfa81804dd0069fc8a1a",
+      "executable": false
+    },
+    {
+      "path": "lib/shootout-submission-logs.ts",
+      "sha256": "6590da6feee388268b71c03dbe47405f53ab133fb8da9d639a9e62640071e2c1",
       "executable": false
     },
     {
@@ -4742,7 +4747,7 @@
     },
     {
       "path": "scripts/check_admin_contributions.mjs",
-      "sha256": "a2b36ef5dfa0ef9445aa2367224cfefe2fcbc3c230c7eb28212f4040b84e84e2",
+      "sha256": "85d13c722fe3e6526e7ac1336fc13e7ac7ad4e442b0d41ee6c60b7ac01a2b19f",
       "executable": false
     },
     {
@@ -4762,7 +4767,7 @@
     },
     {
       "path": "scripts/check_audit_privacy.mjs",
-      "sha256": "30760a6787080fe0b9bd57e5b946882bb443b8bba2aea1a1c59f1f35af31e0c5",
+      "sha256": "3dd2261ad7a5de9305b04abfce0d4f09a8d81d4ba13c344a8a116cf9bc7f20b3",
       "executable": false
     },
     {
@@ -4872,7 +4877,7 @@
     },
     {
       "path": "scripts/check_free_listening.mjs",
-      "sha256": "fd5107ac0d68500283d2ef5ff448f771f1c4fbcc39cc770e7ea358794404426a",
+      "sha256": "dc9015d4cfc675b2f056d46e7196730cab7141ca8c738b36490e860ab2146d03",
       "executable": false
     },
     {
@@ -5007,7 +5012,7 @@
     },
     {
       "path": "scripts/check_participation_entry.mjs",
-      "sha256": "686a733096fd8253e6ba2cab234291935e821591f49ac89eeb5f1f86cd714fff",
+      "sha256": "df48c3296472e002bbc8f4a9bb539bff1280feb968c7582aaccafb894d6afaea",
       "executable": false
     },
     {
@@ -5247,7 +5252,7 @@
     },
     {
       "path": "scripts/check_vote_limits.mjs",
-      "sha256": "c34d5da165096cb9c27c756d0e8629e65db8ce0fcdc0a7f1c4ff5178f6e1b0ef",
+      "sha256": "5f5e769cd186bcb3e9b9fef56a21c240a0d6ea42b98aa392f7ada48bbf23c776",
       "executable": false
     },
     {
@@ -5297,7 +5302,7 @@
     },
     {
       "path": "scripts/check_yinyangeq_gate.mjs",
-      "sha256": "fee5b0af716ccd9c8d42db606adb0f7979e50b0e2cbd9bcfc0b3805ff9324053",
+      "sha256": "5dc7368df26f8cd06827cbe81e9266619488bc9e7238a0058cd83f107f740201",
       "executable": false
     },
     {
