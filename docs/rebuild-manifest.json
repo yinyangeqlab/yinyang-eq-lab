@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "151f5a82868aa0d14efadb911e5a787919fee354",
+  "baseRevision": "679693ee9ae543669295ca9e4f601ccad5a148be",
   "recordedLiveUpdate": 158,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -9,8 +9,7 @@
     "npm": "npm@12.2.1"
   },
   "reviewedUntrackedFiles": [
-    "docs/releases/update158-recovery-verification.json",
-    "docs/releases/update158-verification.json"
+    "docs/releases/update158-publication.json"
   ],
   "files": [
     {
@@ -70,12 +69,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "9d9bd80f86dd6af1e2f80521dce71634736ac41b00f141a3cff159250e4db707",
+      "sha256": "7f4af04798c0380cec01bd6ef39163f97eee6c43277639f96e6bf78d2e16eee2",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "4875e56c374fb599f208de93fef1293d9c3b1869b5fac527f4b16ee9cce47d22",
+      "sha256": "f4da18ec5eb3e5b7591cd9d6b1fd152b8946b7c486f8f4f7341fe130fff527e8",
       "executable": false
     },
     {
@@ -90,7 +89,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "dd30e15f50676b226993ac7edb8ba7dfdbadcd88f172734f74d5ecfe634eb016",
+      "sha256": "ff9a95d3e93b7b4a176a1803c6ae4bd37ae8cd7be10a1566912d8af1ec35964f",
       "executable": false
     },
     {
@@ -2180,7 +2179,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "8e3dbd5642b440fc51587afff568c36b7e357e09e6a5800ca3304facb9fbf250",
+      "sha256": "b4b1a01d9132a48c1c9c962ed68891d493f154af10bde44a40b4f0f3a4b18eda",
       "executable": false
     },
     {
@@ -2686,6 +2685,11 @@
     {
       "path": "docs/releases/update157-verification.json",
       "sha256": "046fa882c9bbbd91f8b89a23715ffd139c08a8f9f060222b265049010cd0612f",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update158-publication.json",
+      "sha256": "8b09907fe2833ed685791b512c22a18e9b5223df0f233d12e5d35febbbdcff5b",
       "executable": false
     },
     {
@@ -3975,7 +3979,7 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "283e027f02c88a34bef337ecb4f8ef1d8141ae57f4c163325fecb804f263bafb",
+      "sha256": "f716f53e4bd0dbbe492f5fa3391f01a9a148ff7aa93a40037dc699e6f46111c8",
       "executable": false
     },
     {

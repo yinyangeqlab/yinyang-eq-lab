@@ -13,6 +13,8 @@ Deployed source `d637e8c28644618b78bc17bb99715af2a428ee80` passed all 123 select
 
 Encrypted off-device source-only recovery and hosted validation passed. Daily scheduled backups were active at verification on November 13, 2026 at 7:35 p.m. Pacific. The existing data snapshot was retained and no database export was performed. [Recovery verification](releases/update158-recovery-verification.json)
 
+[Update158 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update158) · [Publication verification](releases/update158-publication.json)
+
 ## Update157
 
 The server logs sampled failure reasons for listening runs and votes. Research Admin links to the saved Cloudflare query for the owner.
