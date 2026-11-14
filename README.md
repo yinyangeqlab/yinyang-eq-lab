@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Published source · update156** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Published source · update157** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
@@ -18,6 +18,8 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
+
+Update157 logs the reasons for Shootout listening-run and vote failures. Research Admin links to the saved Cloudflare query. [Update157 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update157)
 
 Update156 improves Shootout voting contrast, adds target search and rank sorting in Preference Tuning, puts CSV and TXT downloads near target selection, and organizes My Collection around dated trials. [Update156 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update156)
 

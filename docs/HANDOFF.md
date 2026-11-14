@@ -13,6 +13,8 @@ The deployed source is `68d486c95a6c246b41ca373780917cbfcf247b70`. All 123 selec
 
 Encrypted source-only recovery registration and hosted validation are pending.
 
+[Update157 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update157) · [Publication verification](releases/update157-publication.json)
+
 ## Update156
 
 Shootout voting uses Prefer A, Unsure / Tie and Prefer B. Preference Tuning offers target search, A–Z or global-rank sorting, and local CSV and TXT downloads. While the Standard cohort is empty, rank numbers use the separately labeled earlier matched-passage cohort. My Collection shows dated trials by headphone measurement and keeps Personal Tournament history in a separate view.

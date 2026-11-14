@@ -196,7 +196,7 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: candidateChanges },
+  { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: candidateChanges, github: { commit: "890be93afa4e0b77459c4ad46b3efe13356636e8", releaseTag: "update157" } },
   { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: update156Changes, github: { commit: "f465c1d2ed3ce5361387aeafdcb8ecec4d178443" } },
   { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: update155Changes },
   { update: 154, date: "2026-11-11", title: "Reading the EQ fitter benchmark", changes: update154Changes },

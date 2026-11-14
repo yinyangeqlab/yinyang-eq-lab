@@ -1,0 +1,17 @@
+{
+  "update": 157,
+  "deployedSourceCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
+  "publishedSourceCommit": "890be93afa4e0b77459c4ad46b3efe13356636e8",
+  "publicBaselineCommit": "6c0ea18dbf6357a246c8c86b033c74dff0745104",
+  "tag": "update157",
+  "githubLogin": "yinyangeqlab",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update157",
+  "publishedAt": "2026-11-14T02:47:54Z",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "applicationSourceMatchesDeployment": true,
+  "ownerRecordsExcluded": true,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1115,
+  "liveVerification": "docs/releases/update157-verification.json"
+}

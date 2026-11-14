@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-14T02:32:15Z |
 | Deployment | Verified by the [deployment receipt](docs/releases/update157-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication authorized in this record |
+| Publication | Reviewed source published as `890be93afa4e0b77459c4ad46b3efe13356636e8`; publication authorized in this record |
 | Recovery | Matching source-only handover pending; do not claim this release has a registered recovery baseline |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
