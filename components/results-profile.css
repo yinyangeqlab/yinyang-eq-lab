@@ -61,3 +61,11 @@
 .collection-checkpoints > article { padding: 8px; overflow-wrap: anywhere; }
 .collection-checkpoints > article + article { border-top: 1px solid light-dark(var(--workbench-line), #30434b); }
 .collection-checkpoints > article > p { margin: 4px 0; }
+
+.collection-tournament-ranking + .collection-tournament-ranking {
+  margin-top: 18px;
+}
+.collection-tournament-ranking .personal-model-row > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

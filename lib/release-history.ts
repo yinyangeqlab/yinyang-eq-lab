@@ -7,6 +7,11 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Personal Tournament plays leading curves more often and lets you restore curves that leave rotation.",
+  "See each curve’s progress toward leaving rotation after you save a choice and in Personal Tournament results.",
+] as const;
+
+const update161Changes = [
   "Play both segments shows Preparing audio… while the EQ is getting ready.",
   "Rapid Shootout lets listeners choose without a playback minimum. Eligible new choices count toward a separate Free Listening ranking.",
   "Ranked Blind Shootout still requires five seconds of the same passage on both sides.",
@@ -218,8 +223,9 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: candidateChanges },
-  { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes, github: { commit: "118e051dc5e32a096c10a7e365091450bd4edb67", releaseTag: "update160" } },
+  { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: candidateChanges },
+  { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: update161Changes, github: { commit: "5e0abc5d4e8e442fed3fa30e754d6b077efa5065", releaseTag: "update161" } },
+  { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes },
   { update: 159, date: "2026-11-13", title: "Layout, accessibility and site review fixes", changes: update159Changes, github: { commit: "7fd72eeaca962c567c44c37477d173eae1ae2f87", releaseTag: "update159" } },
   { update: 158, date: "2026-11-13", title: "Preference Tuning target picker and downloads", changes: update158Changes, github: { commit: "679693ee9ae543669295ca9e4f601ccad5a148be", releaseTag: "update158" } },
   { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: update157Changes, github: { commit: "890be93afa4e0b77459c4ad46b3efe13356636e8", releaseTag: "update157" } },

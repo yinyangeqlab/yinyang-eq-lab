@@ -3,7 +3,8 @@
 import { targetDisplayName, trialDisplayLabels } from "@/lib/target-labels";
 import { useEffect, useMemo, useState } from "react";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
-import { parsePersonalRuns, PERSONAL_KEY, type PersonalChoice, type PersonalRun } from "@/lib/personal-shootout";
+import { parsePersonalRuns, personalAppearance, personalStandings, PERSONAL_KEY, PERSONAL_RETIREMENT_RULE, PERSONAL_TOURNAMENT_SCHEDULER, type PersonalChoice, type PersonalRun } from "@/lib/personal-shootout";
+import PersonalAppearanceBar from "@/components/personal-appearance";
 import "./results-profile.css";
 import ComparisonDataActions from "@/components/comparison-data-actions";
 import { checkReliability } from "@/lib/preference-ranking";
@@ -90,9 +91,17 @@ const isDistinct = (entry: Entry) => entry.pair[0] !== entry.pair[1] && !(entry.
 const isAnswered = (entry: Entry) => !!entry.result && entry.result !== "skip";
 const pairKey = (entry: Entry) => JSON.stringify([entry.measurementKey, entry.kind === "personal" ? entry.run.context : entry.trial.mode || "open", ...[...entry.pair].sort()]);
 
-function ResultsShortlist({ entries }: { entries: Entry[] }) {
+function ResultsShortlist({ entries, personal }: { entries: Entry[]; personal: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const comparisons = entries.filter(entry => isDistinct(entry) && isAnswered(entry));
+  if (personal) {
+    const runs = [...new Set(comparisons.flatMap(entry => entry.kind === "personal" ? [entry.run] : []))];
+    return <section className="private-list collection-results-panel" aria-label="Personal Tournament rankings">
+      <h2>Personal Tournament rankings</h2>
+      {runs.some(run => run.schedulerVersion === PERSONAL_TOURNAMENT_SCHEDULER) && <p className="footnote">{PERSONAL_RETIREMENT_RULE}</p>}
+      {runs.length ? runs.map(run => <TournamentRanking key={run.context} run={run}/>) : <p className="footnote">Answer a tournament comparison to build your rankings.</p>}
+    </section>;
+  }
   type Tally = { id: string; name: string; wins: number; losses: number; ties: number; total: number };
   const tallies = new Map<string, Tally>();
   for (const entry of comparisons) {
@@ -119,6 +128,27 @@ function ResultsShortlist({ entries }: { entries: Entry[] }) {
       </div>)}
       {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show shortlist" : `Show all ${rows.length} targets`}</button>}
     </> : <p className="footnote">Answer a trial with two different targets to build this shortlist.</p>}
+  </section>;
+}
+
+function TournamentRanking({ run }: { run: PersonalRun }) {
+  const [expanded, setExpanded] = useState(false);
+  const standings = useMemo(() => personalStandings(run), [run]);
+  const rows = standings.filter(row => row.heard > 0 && !run.excluded.includes(row.id))
+    .concat(standings.filter(row => !row.heard || run.excluded.includes(row.id)));
+  const appearance = useMemo(() => personalAppearance(run, standings), [run, standings]);
+  return <section className="collection-tournament-ranking">
+    <h3>{run.label}</h3>
+    <div className="personal-model-head" aria-hidden="true"><span>Target</span><span>Wins / losses / ties</span><span>Preferred</span></div>
+    {(expanded ? rows : rows.slice(0, 5)).map(row => {
+      const name = targetDisplayName(row.id, row.name);
+      return <div className="personal-model-row" key={row.id}>
+        <div><b>{name}</b><PersonalAppearanceBar appearance={appearance.get(row.id)} name={name}/></div>
+        <span aria-label={`${row.wins} wins, ${row.losses} losses, ${row.ties} ties`}>{row.wins} / {row.losses} / {row.ties}</span>
+        <strong>{row.heard ? `${Math.round((row.wins + row.ties * .5) / row.heard * 100)}%` : "—"}</strong>
+      </div>;
+    })}
+    {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show shortlist" : `Show all ${rows.length} targets`}</button>}
   </section>;
 }
 
@@ -192,8 +222,10 @@ function PersonalCheckpoints({ entries, date }: { entries: Entry[]; date: string
       return <article key={`${run.context}:${checkpoint.at}:${index}`}>
         <strong>{new Date(checkpoint.at).toLocaleString()}</strong>
         <p>{run.label} · {checkpoint.comparisons} comparisons</p>
-        <p>{favorite ? `Favorite · ${targetDisplayName(favorite.id, favorite.name)}` :
-          checkpoint.leaders.length ? `Shortlist · ${checkpoint.leaders.map(row => targetDisplayName(row.id, row.name)).join(" · ")}` : "No answered comparisons at this checkpoint"}</p>
+        {checkpoint.leaders.length ? <ol>{checkpoint.leaders.map(row => {
+          const name = targetDisplayName(row.id, row.name);
+          return <li key={row.id}>{row === favorite && "Favorite · "}{name}<PersonalAppearanceBar appearance={row.appearance} name={name}/></li>;
+        })}</ol> : <p>No answered comparisons at this checkpoint</p>}
       </article>;
     })}
     {checkpoints.length > limit && <button type="button" onClick={() => setLimit(value => value + 10)}>Show more checkpoints</button>}
@@ -290,6 +322,6 @@ export default function ResultsProfile({ trials, measurements, onDeleteBrowser }
       {mode === "personal" && <PersonalCheckpoints key={`${activeMeasurement}:${activeDate}`} entries={scope} date={activeDate}/>}
       {mode === "trials" && scope.length > 0 && <TrialDiagnostics entries={scope} pairs={pairs}/>}
     </section>
-    <ResultsShortlist key={`${mode}:${test}:${activeMeasurement}`} entries={scope}/>
+    <ResultsShortlist key={`${mode}:${test}:${activeMeasurement}`} entries={scope} personal={mode === "personal"}/>
   </div>;
 }

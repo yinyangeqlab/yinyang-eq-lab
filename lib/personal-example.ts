@@ -1,8 +1,8 @@
-import { checkpointPersonalRun, createPersonalRun, recordPersonalChoice, type Candidate } from "./personal-shootout";
+import { checkpointPersonalRun, createPersonalRun, PERSONAL_TOURNAMENT_SCHEDULER, recordPersonalChoice, type Candidate } from "./personal-shootout";
 
 /** Read-only, in-memory fixture. Never persist or submit these choices. */
 export function createPersonalExample(candidates: Candidate[], now: number) {
-  let run = createPersonalRun("local-example-results", "Example headphones · Over-Ear", candidates.slice(0,12), 20);
+  let run = createPersonalRun("local-example-results", "Example headphones · Over-Ear", candidates.slice(0,12), 20, PERSONAL_TOURNAMENT_SCHEDULER);
   const at = () => now - 7 * 86400000 + run.choices.length * 60000;
   for (let repeat=0; repeat<2; repeat++) for (let a=0; a<run.candidates.length; a++) for (let b=a+1; b<run.candidates.length; b++) {
     run.pending=[run.candidates[a].id,run.candidates[b].id];

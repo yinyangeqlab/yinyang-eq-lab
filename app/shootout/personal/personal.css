@@ -308,3 +308,25 @@
 }
 
 @media(prefers-reduced-motion:reduce){.personal-duel-progress progress::-webkit-progress-value{transition:none}}
+
+.personal-choice-review {
+  padding: 16px;
+  border: 1px solid light-dark(var(--workbench-line), #345449);
+  border-radius: 10px;
+  background: light-dark(var(--workbench-surface), #101a20);
+}
+.personal-choice-review h2 { margin: 0; font-size: clamp(19px, 2.1vw, 25px); }
+.personal-choice-review p { margin: 6px 0 13px; }
+.personal-choice-review-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.personal-choice-review-side {
+  padding: 9px 11px;
+  border: 1px solid light-dark(var(--workbench-line), #345449);
+  border-radius: 7px;
+}
+.personal-choice-review .personal-actions { margin-top: 12px; }
+.personal-curve-caption .personal-appearance { flex-basis: 100%; }
+.personal-contender > span { min-width: 0; overflow-wrap: anywhere; }

@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update161**, source `b2d362db0db40d43d514f8bfc24fd8e7248320ed`.
+Recorded deployment: **update162**, source `2aee7341bedd12d6fd07bb9b41b65f21ab938f04`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update162
+
+Personal Tournament plays leading curves more often. Progress bars show how close each curve is to leaving rotation after a vote, in tournament results, and in My Collection. Listeners can restore curves that leave rotation.
+
+All 123 selected release checks passed. The dedicated layout account verified vote review, progress bars, standings, keyboard navigation and Restore at desktop and phone widths with synthetic curves and audio. [Deployment verification](releases/update162-verification.json)
+
+Encrypted off-device source-only recovery and hosted validation passed. [Recovery verification](releases/update162-recovery-verification.json)
 
 ## Update161
 

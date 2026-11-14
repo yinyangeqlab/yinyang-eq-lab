@@ -34,8 +34,17 @@ for(const scenario of ['ready','other-focus','other-tab','waiting-pair','not-pen
  checks++;
 }
 const personalFocus=effect('app/shootout/personal/page.tsx','const duel=document.querySelector');
-for(const scenario of ['ready','other-focus','results','no-duel']){
- let focuses=0;const body={},state={results:scenario==='results',nextComparisonFocusPending:{current:true},document:{body,activeElement:scenario==='other-focus'?{}:body,querySelector:()=>scenario==='no-duel'?null:{}},focusComparisonPlayback:()=>focuses++};vm.createContext(state);vm.runInContext(personalFocus,state);assert.equal(focuses,scenario==='ready'?1:0);assert.equal(state.nextComparisonFocusPending.current,false);checks++;
+for(const scenario of ['ready','card-fallback','other-focus','results','no-duel']){
+ let focuses=0,cardFocuses=0;
+ const duel={querySelector:selector=>{
+  assert.equal(selector,'.listen-card');
+  return {focus:options=>{assert.equal(options.preventScroll,true);cardFocuses++;}};
+ }};
+ const body={},state={results:scenario==='results',nextComparisonFocusPending:{current:true},document:{body,activeElement:scenario==='other-focus'?{}:body,querySelector:()=>scenario==='no-duel'?null:duel},focusComparisonPlayback:()=>{focuses++;return scenario!=='card-fallback';}};
+ vm.createContext(state);vm.runInContext(personalFocus,state);
+ assert.equal(focuses,['ready','card-fallback'].includes(scenario)?1:0);
+ assert.equal(cardFocuses,scenario==='card-fallback'?1:0);
+ assert.equal(state.nextComparisonFocusPending.current,false);checks++;
 }
 {
  const state={};vm.createContext(state);vm.runInContext(functions('lib/comparison-focus.ts',['focusComparisonPlayback']).replace(/^export /m,''),state);

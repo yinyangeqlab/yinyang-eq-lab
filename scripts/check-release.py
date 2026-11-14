@@ -74,8 +74,8 @@ public_evidence = {
 # every credential/path guard still applies, and any edited/new fixture fails closed.
 reviewed_synthetic_target_fixtures = {
     "scripts/check_audit_privacy.mjs": "30760a6787080fe0b9bd57e5b946882bb443b8bba2aea1a1c59f1f35af31e0c5",
-    "scripts/check_personal_research.mjs": "ccf8d260947b7c82491df4cba89d10a079907bd831927e9042bbe7d0079152a7",
-    "scripts/check_community_reference.mjs": "9e847bdc8cced7da53bed2620831b2cfd6e2a19ba9bd449db6199495ce3ec4cd",
+    "scripts/check_personal_research.mjs": "35423af6c7764275eb827d1fa29f232b7334a14b2ebae05b642596d42aa803c8",
+    "scripts/check_community_reference.mjs": "e8bf592e13aa7eca125e058df92284a0c0f5f46ec10c619e23f2b80dab5ce51b",
     "scripts/check_target_context_and_changes.mjs": "282e850e0d933ed2a22dba74ab39e5ebda60a937b7ada58665d76e38ee68f73c",
     "scripts/check_yinyangeq_history.mjs": "fc811f283acee3bef28755d54b30a067ee9433e9f7e9a6c21948a4694cab1466",
 }

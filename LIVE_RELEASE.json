@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 161,
+  "update": 162,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T06:50:43Z",
-  "sourceCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
-  "sourceBranch": "work/blind-playback-readiness-20261113",
-  "baselineCommit": "57a1d9cd75e97d6081747113849acb1cd28d985d",
-  "evidence": "docs/releases/update161-verification.json",
+  "verifiedAt": "2026-11-14T07:01:25Z",
+  "sourceCommit": "2aee7341bedd12d6fd07bb9b41b65f21ab938f04",
+  "sourceBranch": "deploy/update162-personal-tournament-20261113",
+  "baselineCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
+  "evidence": "docs/releases/update162-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,31 +32,30 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "b2d362db0db40d43d514f8bfc24fd8e7248320ed",
-    "branch": "work/blind-playback-readiness-20261113",
+    "implementationCommit": "2aee7341bedd12d6fd07bb9b41b65f21ab938f04",
+    "branch": "deploy/update162-personal-tournament-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "baseMain": "6db7e5686ad9721c08c389bd74142e2ad24f3d49",
-    "publishedSourceCommit": "5e0abc5d4e8e442fed3fa30e754d6b077efa5065",
-    "publicationEvidence": "docs/releases/update161-publication.json"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "sourceBaselineUpdate": 160,
-    "sourceBaselineVerifiedAt": "2026-11-14T06:47:09Z",
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "update161SourceOnlyHandover": {
-      "registrationPending": true,
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "sourceBaselineUpdate": 162,
+    "sourceBaselineVerifiedAt": "2026-11-14T07:19:05Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "update162SourceOnlyHandover": {
+      "registrationPending": false,
       "metadataOnly": true,
-      "newDataExport": false,
-      "newDataSnapshots": 0
+      "databaseExport": false,
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update162-recovery-verification.json"
     }
   },
   "documentationFiles": [],

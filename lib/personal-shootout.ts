@@ -4,6 +4,16 @@ import type { PersonalPlayback } from "@/lib/personal-playback";
 // best-arm identification procedure or a population preference estimator.
 export const MAX_PERSONAL_CANDIDATES = 200;
 export const PERSONAL_KEY = "target-lab-personal-shootouts-v1";
+export const PERSONAL_TOURNAMENT_SCHEDULER = "personal-v3";
+const RETIRE_LOSSES = 8;
+const RETIRE_LOSS_RATE = .8;
+const RETIRE_OPPONENTS = 3;
+export const PERSONAL_RETIREMENT_RULE = "A curve leaves rotation after at least eight losses, losses in at least 80% of its answered comparisons, and losses to three different opponents (or every other curve in a smaller pool). Ties are answered comparisons. Two curves always stay available.";
+const appearanceStatuses = ["unheard", "active", "contender", "rare", "retired", "retained", "restored", "excluded"] as const;
+export type PersonalAppearance = {
+  progress: number;
+  status: typeof appearanceStatuses[number];
+};
 export type Candidate = { id: string; name: string; family: string };
 export type PersonalChoice = {
   eqFits?: FitProvenance[]; pair: [string, string]; result: "a" | "b" | "tie" | "skip";
@@ -11,9 +21,9 @@ export type PersonalChoice = {
   matchedPassageRequired?:boolean;matchedPassage?:boolean;recording: string; start: number; end: number; at: number; phase: "explore" | "confirm";
 };
 export type PersonalMusic = { mode: "pool" | "song" | "playlist" | "upload"; ids: string[] };
-export type PersonalCheckpoint = { at: number; choices: number; comparisons: number; explored: number; phase: "explore" | "confirm"; favorite: string | null; leaders: { id: string; name: string; wins: number; losses: number; ties: number }[] };
+export type PersonalCheckpoint = { at: number; choices: number; comparisons: number; explored: number; phase: "explore" | "confirm"; favorite: string | null; leaders: { id: string; name: string; wins: number; losses: number; ties: number; appearance?: PersonalAppearance }[] };
 export type PersonalRun = {
-  version: 1; schedulerVersion?: "personal-v2"; adminTestOnly?:boolean; requireMatchedPassage?:boolean;context: string; label: string; candidates: Candidate[]; music?: PersonalMusic; playback?: PersonalPlayback; fitter?: FitterSettings;
+  version: 1; schedulerVersion?: "personal-v2" | typeof PERSONAL_TOURNAMENT_SCHEDULER; adminTestOnly?:boolean; requireMatchedPassage?:boolean;context: string; label: string; candidates: Candidate[]; music?: PersonalMusic; playback?: PersonalPlayback; fitter?: FitterSettings;
   measurement?: { id: string; name: string; device: string; rig: string };
   choices: PersonalChoice[]; excluded: string[]; restored: string[];
   pending: [string, string] | null; phase: "explore" | "confirm";
@@ -25,11 +35,14 @@ export function targetFamily(target: { id: string; name: string; parentTargetId?
   if (/^MrChillStorm ISO 226 85 phon (?:0\.00|0\.25|0\.3661543|0\.50|0\.75|1\.00)$/.test(target.name)) return "mrchillstorm-iso226-85";
   return target.parentTargetId || target.id;
 }
-export function createPersonalRun(context: string, label: string, candidates: Candidate[], budget = 20): PersonalRun {
+export function createPersonalRun(context: string, label: string, candidates: Candidate[], budget = 20, schedulerVersion: PersonalRun["schedulerVersion"] = "personal-v2"): PersonalRun {
   if (candidates.length < 2 || candidates.length > MAX_PERSONAL_CANDIDATES) throw Error(`Choose 2–${MAX_PERSONAL_CANDIDATES} targets before starting. Your saved runs are unchanged.`);
-  return { version: 1, schedulerVersion: "personal-v2", context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
+  return { version: 1, schedulerVersion, context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
 }
 const pairKey = (pair: string[]) => [...pair].sort().join("|");
+function shouldBench(row: { heard: number; wins: number; losses: number; ties: number; lostTo: Set<string> }, minimumOpponents = 3) {
+  return row.heard >= 5 && row.losses - row.wins >= 4 && row.lostTo.size >= minimumOpponents && (row.wins + .5 * row.ties) / row.heard < .35;
+}
 export function personalStandings(run: PersonalRun) {
   const rows = run.candidates.map(candidate => ({ ...candidate, heard: 0, wins: 0, losses: 0, ties: 0, opponents: new Set<string>(), lostTo: new Set<string>(), score: 0, benched: false }));
   const index = new Map(rows.map((row, i) => [row.id, i]));
@@ -55,15 +68,52 @@ export function personalStandings(run: PersonalRun) {
     }
     rows.forEach((row, i) => { row.score += .8 * gradient[i] / counts[i]; });
   }
-  for (const row of rows) row.benched = !run.restored.includes(row.id) && row.heard >= 5 && row.losses - row.wins >= 4 && row.lostTo.size >= 3 && (row.wins + .5 * row.ties) / row.heard < .35;
+  for (const row of rows) row.benched = !run.restored.includes(row.id) && shouldBench(row);
   return rows.sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
+}
+
+/** Compute appearance from the same run and opponent-adjusted order used for scheduling. */
+export function personalAppearance(run: PersonalRun, rows = personalStandings(run)) {
+  if (run.schedulerVersion !== PERSONAL_TOURNAMENT_SCHEDULER) return new Map<string, PersonalAppearance>();
+  const excluded = new Set(run.excluded);
+  const restored = new Set(run.restored);
+  const available = rows.filter(row => !excluded.has(row.id));
+  const minimumOpponents = Math.min(RETIRE_OPPONENTS, run.candidates.length - 1);
+  const progressFor = (row: typeof rows[number]) => {
+    const lossRate = row.heard ? row.losses / row.heard : 0;
+    return Math.floor(100 * Math.min(1, row.losses / RETIRE_LOSSES, lossRate / RETIRE_LOSS_RATE, row.lostTo.size / minimumOpponents));
+  };
+  const qualified = available.filter(row => !restored.has(row.id) && progressFor(row) === 100);
+  // If many curves qualify, keep the strongest available curves so there is still a pair.
+  const retired = new Set(qualified.slice(Math.max(0, 2 - (available.length - qualified.length))).map(row => row.id));
+  const benched = new Set(available.filter(row => !restored.has(row.id) && shouldBench(row, minimumOpponents)).map(row => row.id));
+  const regular = available.filter(row => !retired.has(row.id) && (!benched.has(row.id) || progressFor(row) === 100));
+  const contenders = new Set(regular.filter(row => row.heard > 0).slice(0, 4).map(row => row.id));
+  return new Map(rows.map(row => {
+    const progress = progressFor(row);
+    let appearance: PersonalAppearance;
+    if (excluded.has(row.id)) appearance = { progress: 100, status: "excluded" };
+    else if (restored.has(row.id)) appearance = { progress: 0, status: "restored" };
+    else if (retired.has(row.id)) appearance = { progress: 100, status: "retired" };
+    else if (progress === 100) appearance = { progress, status: "retained" };
+    else if (!row.heard) appearance = { progress, status: "unheard" };
+    else if (benched.has(row.id) && regular.length >= 2) appearance = { progress, status: "rare" };
+    else if (row.wins > row.losses && contenders.has(row.id)) appearance = { progress, status: "contender" };
+    else appearance = { progress, status: "active" };
+    return [row.id, appearance] as const;
+  }));
+}
+
+export function personalRotation(run: PersonalRun, rows = personalStandings(run)) {
+  const appearance = personalAppearance(run, rows);
+  return rows.filter(row => !run.excluded.includes(row.id) && appearance.get(row.id)?.status !== "retired");
 }
 export function confirmationEvidence(run: PersonalRun, pair: string[]) {
   return new Set(run.choices.filter(c => c.phase === "confirm" && c.result !== "skip" && (c.matchedPassage !== false || run.requireMatchedPassage !== true && c.matchedPassageRequired === false && c.heardSeconds?.every(seconds => seconds > 0)) && !!c.recording && pairKey(c.pair) === pairKey(pair)).map(c => c.recording));
 }
 export function personalFavorite(run: PersonalRun) {
-  if (run.schedulerVersion === "personal-v2" && !confirmationComplete(run)) return null;
-  const shortlist = personalStandings(run).filter(row => row.heard > 0 && !run.excluded.includes(row.id) && (run.schedulerVersion!=="personal-v2" || run.finalists.includes(row.id))).slice(0,3);
+  if (run.schedulerVersion && !confirmationComplete(run)) return null;
+  const shortlist = personalStandings(run).filter(row => row.heard > 0 && !run.excluded.includes(row.id) && (!run.schedulerVersion || run.finalists.includes(row.id))).slice(0,3);
   if (shortlist.length < 2) return null;
   const leader = shortlist[0];
   // Do not turn a model's arbitrary tie-break or a preference cycle into a winner.
@@ -79,7 +129,14 @@ export function personalFavorite(run: PersonalRun) {
 }
 export function checkpointPersonalRun(run: PersonalRun): PersonalRun {
   const rows = personalStandings(run);
-  const snapshot: PersonalCheckpoint = { at: Date.now(), choices: run.choices.length, comparisons: run.choices.filter(c => c.result !== "skip").length, explored: rows.filter(row => row.heard > 0).length, phase: run.phase, favorite: personalFavorite(run), leaders: rows.filter(row => row.heard > 0 && !run.excluded.includes(row.id)).slice(0,3).map(({id,name,wins,losses,ties}) => ({id,name,wins,losses,ties})) };
+  const appearance = personalAppearance(run, rows);
+  const leaders = run.phase === "confirm" && run.schedulerVersion === PERSONAL_TOURNAMENT_SCHEDULER
+    ? rows.filter(row => run.finalists.includes(row.id) && !run.excluded.includes(row.id))
+    : personalRotation(run, rows);
+  const snapshot: PersonalCheckpoint = { at: Date.now(), choices: run.choices.length, comparisons: run.choices.filter(c => c.result !== "skip").length, explored: rows.filter(row => row.heard > 0).length, phase: run.phase, favorite: personalFavorite(run), leaders: leaders.filter(row => row.heard > 0).slice(0,3).map(({id,name,wins,losses,ties}) => {
+    const rotation = appearance.get(id);
+    return { id, name, wins, losses, ties, ...(rotation && { appearance: rotation }) };
+  }) };
   const history = run.history ?? [], last = history.at(-1);
   if (last && last.choices === snapshot.choices && last.phase === snapshot.phase && JSON.stringify(last.leaders) === JSON.stringify(snapshot.leaders)) return run;
   if (history.length >= 1000) throw Error("Checkpoint history is full. Export this run before starting a new one.");
@@ -107,7 +164,7 @@ export function nextPersonalPair(run: PersonalRun, random = Math.random): [strin
     const pair = pick(pairs.filter(pair => confirmationEvidence(run, pair).size === min));
     return orient(...pair);
   }
-  if (run.schedulerVersion === "personal-v2") return progressivePair(run,rows,random);
+  if (run.schedulerVersion) return progressivePair(run, rows, random);
   const last: string[] = run.choices.at(-1)?.pair ?? [];
   const active = rows.filter(row => !row.benched);
   const available = active.length >= 2 ? active : rows;
@@ -153,13 +210,16 @@ function progressivePair(run: PersonalRun, rows: ReturnType<typeof personalStand
   const pick = <T,>(items:T[]) => items[Math.min(items.length-1,Math.floor(random()*items.length))];
   const orient = (a:string,b:string):[string,string] => random()<.5?[a,b]:[b,a];
   const last:string[]=run.choices.at(-1)?.pair??[];
-  const active=rows.filter(row=>!row.benched),available=active.length>=2?active:rows;
+  const appearance = run.schedulerVersion === PERSONAL_TOURNAMENT_SCHEDULER ? personalAppearance(run, rows) : null;
+  const rotation = rows.filter(row => appearance?.get(row.id)?.status !== "retired");
+  const active = rotation.filter(row => appearance ? appearance.get(row.id)?.status !== "rare" : !row.benched);
+  const available = active.length >= 2 ? active : rotation;
   const known=available.filter(row=>row.heard>0),unseen=available.filter(row=>row.heard===0);
   const meetings=(a:string,b:string)=>run.choices.filter(c=>c.result!=="skip"&&pairKey(c.pair)===pairKey([a,b])).length;
   const contenders=()=>{
     const top=known.slice(0,Math.min(6,known.length));
-    const leaderScore=top[0].score;
-    const a=pick(top.filter(row=>row.score>=leaderScore-.1));
+    const leaderScore = top[0].score;
+    const a = pick(top.filter(row => row.score >= leaderScore - (appearance ? 1e-8 : .1)));
     let others=top.filter(row=>row.id!==a.id);
     const notLast=others.filter(row=>pairKey([a.id,row.id])!==pairKey(last));if(notLast.length)others=notLast;
     const fewest=Math.min(...others.map(row=>meetings(a.id,row.id)));
@@ -168,14 +228,29 @@ function progressivePair(run: PersonalRun, rows: ReturnType<typeof personalStand
     return orient(a.id,pick(fresh.filter(row=>row.score>=best-.1)).id);
   };
   // Every third decision connects likely contenders, even while the pool is still being introduced.
-  if(known.length>=2 && run.choices.length%3===2)return contenders();
+  if(known.length>=2 && run.choices.length%3===2 && (!appearance || unseen.length))return contenders();
   if(unseen.length){
-    const a=pick(unseen),winners=known.filter(row=>row.wins>0||row.ties>0),anchors=(winners.length?winners:known).slice(0,6);
+    const a=pick(unseen),winners=known.filter(row=>row.wins>0||row.ties>0),anchors=(winners.length?winners:known).slice(0,appearance ? 3 : 6);
     if(!anchors.length){const other=unseen.filter(row=>row.id!==a.id);return orient(a.id,pick(other).id);}
+    if (appearance) return orient(a.id, anchors[0].id);
     const cooled=anchors.filter(row=>!last.includes(row.id));const options=cooled.length?cooled:anchors;
     const least=Math.min(...options.map(row=>row.heard));return orient(a.id,pick(options.filter(row=>row.heard===least)).id);
   }
-  // Continue some coverage and periodically give benched targets another chance.
+  if (appearance) {
+    // Use three rounds out of four for contenders after every curve has been heard.
+    if (run.choices.length % 4 !== 3) return contenders();
+    const rare = rotation.filter(row => appearance.get(row.id)?.status === "rare");
+    const pool = run.choices.length % 8 === 7 && rare.length ? rare : available;
+    const least = Math.min(...pool.map(row => row.heard));
+    const a = pick(pool.filter(row => row.heard === least));
+    const opponents = available.filter(row => row.id !== a.id);
+    const differentOpponents = rare.includes(a) ? opponents.filter(row => !a.lostTo.has(row.id)) : [];
+    const options = differentOpponents.length ? differentOpponents : opponents;
+    const fewest = Math.min(...options.map(row => meetings(a.id, row.id)));
+    const fresh = options.filter(row => meetings(a.id, row.id) === fewest);
+    return orient(a.id, fresh[0].id);
+  }
+  // Legacy discovery periodically gives benched targets another chance.
   const rescue=run.choices.length%10===9?rows.filter(row=>row.benched):[];
   if(rescue.length||random()<.25){
     const pool=rescue.length?rescue:available,least=Math.min(...pool.map(row=>row.heard));const a=pick(pool.filter(row=>row.heard===least));
@@ -186,18 +261,27 @@ function progressivePair(run: PersonalRun, rows: ReturnType<typeof personalStand
 }
 
 export function personalFinalistReadiness(run:PersonalRun) {
-  const rows=personalStandings(run).filter(row=>!run.excluded.includes(row.id));
-  const shortlist=rows.filter(row=>row.heard>0&&!row.benched).slice(0,3);
-  if(run.schedulerVersion!=="personal-v2")return {ready:shortlist.length>=2,reason:"",ids:shortlist.map(row=>row.id)};
+  const standings = personalStandings(run);
+  const rows = personalRotation(run, standings);
+  const appearance = personalAppearance(run, standings);
+  const preferred = rows.filter(row => appearance.size ? appearance.get(row.id)?.status !== "rare" : !row.benched);
+  const ranked = preferred.filter(row => row.heard > 0);
+  const shortlist = ranked.slice(0, 3);
+  if (!run.schedulerVersion) return {ready:shortlist.length>=2,reason:"",ids:shortlist.map(row=>row.id)};
   const unseen=rows.filter(row=>row.heard===0).length;
   const result=(ready:boolean,reason:string)=>({ready,reason,ids:shortlist.map(row=>row.id)});
   if(unseen)return result(false,`${unseen} targets in this pool are still unheard. These are early contenders, not a confirmed shortlist.`);
   const minimumOpponents=Math.min(2,rows.length-1);
   if(shortlist.length<2||shortlist.some(row=>row.heard<3||row.opponents.size<minimumOpponents))return result(false,"Leading targets need at least three comparisons and more than one opponent before finalist checks.");
-  const fourth=rows.filter(row=>row.heard>0&&!row.benched)[3];
+  const fourth=ranked[3];
   if(fourth&&Math.abs(fourth.score-shortlist[2].score)<1e-8)return result(false,"More than three contenders remain tied. Continue listening rather than choosing finalists by name or ID.");
   return result(true,"Ready to compare the leading targets on different songs.");
 }
+
+function validPersonalAppearance(value: PersonalAppearance | undefined) {
+  return value === undefined || !!value && Number.isInteger(value.progress) && value.progress >= 0 && value.progress <= 100 && appearanceStatuses.includes(value.status);
+}
+
 export function recordPersonalChoice(run: PersonalRun, choice: PersonalChoice): PersonalRun {
   if (!run.pending || pairKey(run.pending) !== pairKey(choice.pair) || run.pending[0] !== choice.pair[0]) throw Error("This matchup has changed. Please listen again.");
   if (run.choices.length >= 500) throw Error("This run has reached 500 comparisons. Export it, then start a new run.");
@@ -214,7 +298,7 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
       [r.measurement.id, r.measurement.name, r.measurement.device, r.measurement.rig].some(value => typeof value !== "string"))) throw Error("Invalid saved headphone measurement.");
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
-    if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2") throw Error("Unsupported saved scheduler version.");
+    if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2" && r.schedulerVersion !== PERSONAL_TOURNAMENT_SCHEDULER) throw Error("Unsupported saved scheduler version.");
     if (r.fitter && (!["standard", "precise", "peqdb", "peqdb-smoothed"].includes(r.fitter.method) || ![10, 15, 20, 30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
     if (r.playback && (!["-14","-16","-18","off"].includes(r.playback.loudnessTarget)||!["auto","uploaded","off"].includes(r.playback.channelMode))) throw Error("Invalid saved playback settings.");
     if (r.music && (!["pool","song","playlist","upload"].includes(r.music.mode) || !Array.isArray(r.music.ids) || r.music.ids.length > 200 || r.music.ids.some(id => typeof id !== "string") || r.music.mode === "song" && r.music.ids.length !== 1)) throw Error("Invalid saved music choices.");
@@ -223,7 +307,7 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
     if (r.paused !== undefined && typeof r.paused !== "boolean") throw Error("Invalid saved pause state.");
     if (r.history !== undefined) {
       if (!Array.isArray(r.history) || r.history.length > 1000) throw Error("Invalid checkpoint history.");
-      for (const h of r.history) if (!h || !Number.isFinite(h.at) || !Number.isInteger(h.choices) || h.choices < 0 || h.choices > r.choices.length || !Number.isInteger(h.comparisons) || h.comparisons < 0 || h.comparisons > h.choices || !Number.isInteger(h.explored) || h.explored < 0 || h.explored > ids.size || !["explore","confirm"].includes(h.phase) || h.favorite !== null && !ids.has(h.favorite) || !Array.isArray(h.leaders) || h.leaders.length > 3 || h.leaders.some(t => !t || !ids.has(t.id) || typeof t.name !== "string" || ![t.wins,t.losses,t.ties].every(n => Number.isInteger(n) && n >= 0))) throw Error("Invalid saved checkpoint.");
+      for (const h of r.history) if (!h || !Number.isFinite(h.at) || !Number.isInteger(h.choices) || h.choices < 0 || h.choices > r.choices.length || !Number.isInteger(h.comparisons) || h.comparisons < 0 || h.comparisons > h.choices || !Number.isInteger(h.explored) || h.explored < 0 || h.explored > ids.size || !["explore","confirm"].includes(h.phase) || h.favorite !== null && !ids.has(h.favorite) || !Array.isArray(h.leaders) || h.leaders.length > 3 || h.leaders.some(t => !t || !ids.has(t.id) || typeof t.name !== "string" || !validPersonalAppearance(t.appearance) || ![t.wins,t.losses,t.ties].every(n => Number.isInteger(n) && n >= 0))) throw Error("Invalid saved checkpoint.");
     }
     const validPair = (pair: unknown): pair is [string,string] => Array.isArray(pair) && pair.length === 2 && pair[0] !== pair[1] && pair.every(id => typeof id === "string" && ids.has(id));
     if (r.pending !== null && !validPair(r.pending) || [...r.excluded,...r.restored,...r.finalists].some(id => !ids.has(id)) || r.finalists.length > 3) throw Error("Invalid saved pairing.");

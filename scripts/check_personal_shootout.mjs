@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';import ts from 'typescript';import{parseCurve}from'../lib/curves.ts';
-import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,personalFinalistReadiness,targetFamily,PERSONAL_KEY} from '../lib/personal-shootout.ts';
+import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,personalFinalistReadiness,personalAppearance,targetFamily,PERSONAL_KEY,PERSONAL_TOURNAMENT_SCHEDULER} from '../lib/personal-shootout.ts';
 import {captureSyncPayload,replaceSyncStorage} from '../lib/browser-sync.mjs';
 let checks=0;const check=(description,action)=>{action();checks++;console.log('PASS',description);};
 const candidates=Array.from({length:12},(_,i)=>({id:`t${i}`,name:`Target ${i}`,family:i<6?'variants':`family${i}`}));
@@ -14,6 +14,85 @@ check('Early coverage visits every candidate and spreads family exposure',()=>{l
 check('One loss never benches a target; ties do not bench targets',()=>{let r=initial();r.pending=['t0','t1'];r=choose(r,'b');assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,false);for(let i=0;i<10;i++){r.pending=['t0','t1'];r=choose(r,'tie');}assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,false);});
 check('Benching requires losses to multiple opponents; restore overrides it',()=>{let r=initial();for(let i=0;i<5;i++){r.pending=['t0',`t${i%3+1}`];r=choose(r,'b');}assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,true);r.restored=['t0'];assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,false);});
 check('Explicit exclusions never reappear; automatic bench receives second chances',()=>{let r=initial();for(let i=0;i<9;i++){r.pending=['t0',`t${i%3+1}`];r=choose(r,'b');}r.candidates=r.candidates.slice(0,4);assert.ok(nextPersonalPair(r,rng(5)).includes('t0'));r.excluded=['t0'];for(let i=0;i<40;i++)assert.ok(!nextPersonalPair(r,rng(i)).includes('t0'));});
+const tournament = size => createPersonalRun('rotation', 'Synthetic tournament', candidates.slice(0, size), 20, PERSONAL_TOURNAMENT_SCHEDULER);
+function voteForPair(run, a, b, result = 'b') {
+  return choose({ ...run, pending: [a, b] }, result);
+}
+check('Tournament progress follows loss count, loss rate and opponent diversity', () => {
+  let run = tournament(5);
+  const status = () => personalAppearance(run).get('t0');
+  assert.deepEqual(status(), { progress: 0, status: 'unheard' });
+  for (let i = 0; i < 7; i++) run = voteForPair(run, 't0', `t${i % 3 + 1}`);
+  assert.deepEqual(status(), { progress: 87, status: 'rare' });
+  run = voteForPair(run, 't0', 't1', 'skip');
+  assert.equal(status().progress, 87);
+  for (let i = 0; i < 3; i++) run = voteForPair(run, 't0', 't1', 'tie');
+  run = voteForPair(run, 't0', 't1');
+  assert.equal(status().progress, 90);
+  assert.notEqual(status().status, 'retired');
+  run = voteForPair(run, 't0', 't1');
+  assert.equal(status().progress, 93);
+  for (let i = 0; i < 3; i++) run = voteForPair(run, 't0', 't1');
+  assert.deepEqual(status(), { progress: 100, status: 'retired' });
+
+  run = tournament(5);
+  for (let i = 0; i < 12; i++) run = voteForPair(run, 't0', 't1');
+  assert.equal(status().progress, 33);
+  run = voteForPair(run, 't0', 't2');
+  assert.equal(status().progress, 66);
+  run = voteForPair(run, 't0', 't3');
+  assert.equal(status().status, 'retired');
+});
+check('Retired targets stay out of discovery; undo and Restore update eligibility', () => {
+  let run = tournament(5);
+  for (let i = 0; i < 8; i++) run = voteForPair(run, 't0', `t${i % 3 + 1}`);
+  assert.equal(personalAppearance(run).get('t0').status, 'retired');
+  assert.equal(personalAppearance({ ...run, choices: run.choices.slice(0, -1) }).get('t0').status, 'rare');
+  const random = rng(442);
+  for (let i = 0; i < 32; i++) {
+    run.pending = nextPersonalPair(run, random);
+    assert.ok(!run.pending.includes('t0'));
+    run = choose(run, 'tie');
+  }
+  const restored = { ...run, restored: ['t0'] };
+  assert.deepEqual(personalAppearance(restored).get('t0'), { progress: 0, status: 'restored' });
+  assert.equal(personalAppearance({ ...restored, excluded: ['t0'] }).get('t0').status, 'excluded');
+  assert.ok(personalFinalistReadiness(run).ids.every(id => id !== 't0'));
+  const snapshot = checkpointPersonalRun(run);
+  assert.deepEqual(parsePersonalRuns(JSON.stringify([snapshot]))[0], snapshot);
+  assert.ok(snapshot.history[0].leaders.every(row => row.appearance));
+  snapshot.history[0].leaders[0].appearance.progress = 101;
+  assert.throws(() => parsePersonalRuns(JSON.stringify([snapshot])));
+});
+check('Small pools retire a repeated loser only if two targets remain', () => {
+  let run = tournament(3);
+  for (let i = 0; i < 8; i++) run = voteForPair(run, 't0', `t${i % 2 + 1}`);
+  assert.equal(personalAppearance(run).get('t0').status, 'retired');
+  assert.equal(personalAppearance({ ...run, excluded: ['t1'] }).get('t0').status, 'retained');
+  assert.ok(nextPersonalPair({ ...run, excluded: ['t1'] }, rng(1)).includes('t0'));
+  run = tournament(2);
+  for (let i = 0; i < 8; i++) run = voteForPair(run, 't0', 't1');
+  assert.equal(personalAppearance(run).get('t0').status, 'retained');
+  assert.ok(nextPersonalPair(run, rng(4)).includes('t0'));
+});
+check('A clear favorite becomes a regular matchup and every curve gets introduced', () => {
+  function simulate(run) {
+    const random = rng(1729);
+    for (let i = 0; i < 60; i++) {
+      run.pending = nextPersonalPair(run, random);
+      const [a, b] = run.pending.map(id => Number(id.slice(1)));
+      run = choose(run, a < b ? 'a' : 'b');
+    }
+    return run;
+  }
+  const run = simulate(tournament(12));
+  const previous = simulate(createPersonalRun('previous', 'Previous scheduler', candidates));
+  const rows = personalStandings(run);
+  assert.equal(rows[0].id, 't0');
+  assert.equal(rows.filter(row => row.heard > 0).length, 12);
+  assert.ok(rows[0].heard > personalStandings(previous).find(row => row.id === 't0').heard);
+  assert.equal(personalAppearance(run).get('t0').status, 'contender');
+});
 check('Skip changes neither preference scores nor exposure; stale submissions fail',()=>{let r=initial();const before=personalStandings(r);r.pending=['t0','t1'];r=choose(r,'skip','');assert.deepEqual(personalStandings(r),before);assert.throws(()=>recordPersonalChoice(r,{pair:['t0','t1'],result:'a',recording:'x',start:0,end:5,at:0,phase:'explore'}));});
 check('Finalists need two different song families per pair; repetitions do not substitute',()=>{let r=initial();r.phase='confirm';r.finalists=['t0','t1','t2'];for(const pair of [['t0','t1'],['t0','t2'],['t1','t2']])for(let i=0;i<3;i++){r.pending=pair;r=choose(r,'tie','same-song');}assert.equal(confirmationComplete(r),false);assert.equal(confirmationEvidence(r,['t0','t1']).size,1);for(const pair of [['t0','t1'],['t0','t2'],['t1','t2']]){r.pending=pair;r=choose(r,'tie','another-song');}assert.equal(confirmationComplete(r),true);assert.equal(nextPersonalPair(r),null);});
 check('Ties and cycles never produce an arbitrary favorite',()=>{let r=initial();for(const pair of [['t0','t1'],['t1','t2'],['t2','t0']]){r.pending=pair;r=choose(r,'a');}assert.equal(personalFavorite(r),null);r=initial();r.pending=['t0','t1'];r=choose(r,'tie');assert.equal(personalFavorite(r),null);r.pending=['t0','t1'];r=choose(r,'a');assert.equal(personalFavorite(r),'t0');});
@@ -24,7 +103,7 @@ check('Known variants share a family; unrelated curves remain separate',()=>{ass
 class Storage{constructor(values={}){this.values=new Map(Object.entries(values));}get length(){return this.values.size;}key(i){return [...this.values.keys()][i]??null;}getItem(k){return this.values.get(k)??null;}setItem(k,v){this.values.set(k,v);}removeItem(k){this.values.delete(k);}}
 check('Explicit Sync carries personal progress without creating research votes',()=>{const src=new Storage({'target-lab-voter':'11111111-1111-4111-8111-111111111111',[PERSONAL_KEY]:JSON.stringify([initial()])});const payload=captureSyncPayload(src),dest=new Storage();replaceSyncStorage(dest,payload);assert.equal(dest.getItem(PERSONAL_KEY),src.getItem(PERSONAL_KEY));assert.equal(dest.getItem('target-lab-trials'),null);});
 check('Personal comparisons stay separate from public votes; song ratings use their own handler',()=>{const page=readFileSync('app/shootout/personal/page.tsx','utf8'),player=readFileSync('components/music-panel.tsx','utf8');assert.ok(!/\/api\/(votes|trials|listening-runs|open-choices|feedback)/.test(page));assert.ok(page.includes('personalOnly'));assert.ok(player.includes('async function voteForMusic('));assert.ok(player.includes('Private test ratings stay in this browser'));assert.ok(!player.includes('{!personalOnly && <div className="shootout-music-vote"'));});
-check('Actual-page sample results include bronze and history without modifying candidates',()=>{const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-example.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:()=>({checkpointPersonalRun,createPersonalRun,recordPersonalChoice})});const before=JSON.stringify(candidates);const sample=exports.createPersonalExample(candidates,1792350000000);assert.equal(sample.candidates.length,12);assert.equal(personalStandings(sample).filter(row=>row.heard>0).length,12);assert.equal(confirmationComplete(sample),true);assert.equal(sample.pending,null);assert.equal(sample.paused,true);assert.ok(sample.history.length>=5);assert.equal(JSON.stringify(candidates),before);const page=readFileSync('app/shootout/personal/page.tsx','utf8');assert.ok(page.includes('if (sampleRun) throw Error('));assert.ok(page.includes('window.location.hostname'));assert.ok(page.includes('pool.every(target=>target.name.startsWith("Preview synthetic"))'));assert.ok(page.includes('!sampleRun && <PersonalResearchSharing'));});
+check('Actual-page sample results include bronze and history without modifying candidates',()=>{const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-example.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:()=>({checkpointPersonalRun,createPersonalRun,PERSONAL_TOURNAMENT_SCHEDULER,recordPersonalChoice})});const before=JSON.stringify(candidates);const sample=exports.createPersonalExample(candidates,1792350000000);assert.equal(sample.candidates.length,12);assert.equal(personalStandings(sample).filter(row=>row.heard>0).length,12);assert.equal(confirmationComplete(sample),true);assert.equal(sample.pending,null);assert.equal(sample.paused,true);assert.ok(sample.history.length>=5);assert.ok([...personalAppearance(sample).values()].some(row => row.status === 'retired'));assert.equal(JSON.stringify(candidates),before);const page=readFileSync('app/shootout/personal/page.tsx','utf8');assert.ok(page.includes('if (sampleRun) throw Error('));assert.ok(page.includes('window.location.hostname'));assert.ok(page.includes('pool.every(target=>target.name.startsWith("Preview synthetic"))'));assert.ok(page.includes('!sampleRun && <PersonalResearchSharing'));});
 check('Progressive discovery compares contenders before full coverage instead of producing disconnected 1/1 winners',()=>{
  const pool=Array.from({length:60},(_,i)=>({id:`x${i}`,name:`X${i}`,family:`f${i}`}));let run=createPersonalRun('new','New',pool);const random=rng(7823);
  for(let i=0;i<20;i++){run.pending=nextPersonalPair(run,random);const [a,b]=run.pending.map(id=>Number(id.slice(1)));run=choose(run,a<b?'a':'b',`song${i}`);}

@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Published source · update161** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Published source · update162** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
@@ -18,6 +18,8 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
+
+Update162 plays leading curves more often in Personal Tournament and shows progress toward leaving rotation after a vote and in personal rankings. [Update162 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update162)
 
 Update161 shows audio preparation before paired playback starts and adds Rapid Shootout, with a separate Free Listening ranking. [Update161 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update161)
 
