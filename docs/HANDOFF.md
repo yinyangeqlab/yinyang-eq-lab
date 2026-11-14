@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update163**, source `b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7`.
+Recorded deployment: **update164**, source `c265820e285fd19d2baf155da15344469729e1b2`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update164
+
+Site Help answers questions about Personal Tournament, Preference Tuning, My data, and related listening tools. Show me walks through reviewed steps and highlights the relevant control. Questions stay in the browser.
+
+The rollout used the shared guard and accepted the active update163 recovery before applying. [Deployment verification](releases/update164-verification.json) · [Prior recovery verification](releases/update163-automatic-version-link-worker-recovery-verification.json)
+
+Matching encrypted off-device source-only recovery passed hosted validation and independent reconstruction. The existing data snapshot retained its timestamp. [Recovery verification](releases/update164-recovery-verification.json)
 
 ## Update163
 

@@ -5,18 +5,18 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update163 |
-| Source | `b7aca62fa3bd8c1d7776eb82f30c76eadebc9ef7` |
-| Verified at | 2026-11-14T09:36:53Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update163-verification.json) |
+| Release | update164 |
+| Source | `c265820e285fd19d2baf155da15344469729e1b2` |
+| Verified at | 2026-11-14T12:33:33Z |
+| Deployment | Verified by the [deployment receipt](docs/releases/update164-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Reviewed source published as `77a20497340c0cb90262d6e395470be37aca34c7`; publication authorized in this record |
+| Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 
 The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](docs/rebuild-manifest.json).
 
-The deployment receipt records 123 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
+The deployment receipt records 125 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
 
 Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.
