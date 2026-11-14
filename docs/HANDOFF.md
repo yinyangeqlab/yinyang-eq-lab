@@ -11,6 +11,8 @@ Play both segments shows Preparing audio… while the track and EQ load. Ranked 
 
 The isolated account verified both modes live without submitting a public vote. In a disposable database, a Ranked vote updated Standard and a Rapid choice updated Free Listening. [Deployment verification](releases/update161-verification.json)
 
+[Update161 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update161) · [Publication verification](releases/update161-publication.json)
+
 ## Update160
 
 The full and icons-only sidebar handles use smoky teal glass. The larger chevron gains a subtle mint glow on hover.

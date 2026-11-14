@@ -36,10 +36,13 @@
     "branch": "work/blind-playback-readiness-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "baseMain": "6db7e5686ad9721c08c389bd74142e2ad24f3d49",
+    "publishedSourceCommit": "5e0abc5d4e8e442fed3fa30e754d6b077efa5065",
+    "publicationEvidence": "docs/releases/update161-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": true,
