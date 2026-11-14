@@ -11,7 +11,7 @@ The server logs sampled failure reasons for listening runs and votes. Research A
 
 The deployed source is `68d486c95a6c246b41ca373780917cbfcf247b70`. All 123 selected suites passed. The isolated test account verified Blind Shootout curve loading, playback, local choices and denied submissions. Global vote counts stayed unchanged. Cloudflare retained diagnostic events for both endpoints. [Deployment verification](releases/update157-verification.json)
 
-Encrypted source-only recovery registration and hosted validation are pending.
+Encrypted off-device source-only recovery and hosted validation passed on November 13, 2026 at 7:14 p.m. Pacific. Daily scheduled backups were active at verification. The existing data snapshot was retained with no new database export. [Recovery verification](releases/update157-recovery-verification.json)
 
 [Update157 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update157) · [Publication verification](releases/update157-publication.json)
 
