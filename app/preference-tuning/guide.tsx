@@ -152,9 +152,9 @@ const TOPICS: Topic[] = [
     rows: [
       ["Kept as you go", "With a target, your tuning is saved in this browser as you work. Save & export jumps to the export section."],
       ["Make my EQ", "Fits finished EQ settings for your headphones to your adjusted curve. It needs a headphone measurement, and asks once for agreement because viewing or exporting keeps the file, curve and settings for private research. Regenerate EQ does it again after more tuning. A note appears when your sound or headphones have changed since the last set."],
-      ["EQ results", `Several ready-made versions with different numbers of bands. Start with the recommended one, which favors smaller boosts, especially in deep bass, and listen to the closer fit too when it differs. Each can be compared by ear, saved to ${PERSONAL_AREA_TITLE} (where Tuning and the Music library can use it), or downloaded.`],
-      ["View generated EQ results", "Jumps to the most recent results for this setup. Choose the Recommended EQ or Closer fit card to change which version you’ll save or download."],
-      ["Listen to both EQs", "When the recommendation and closer fit differ, this opens a listening comparison using the same recording for both."],
+      ["EQ results", `Target match is selected by default and has the lowest fit error. Lower boost is available when another result reduces boost. Each EQ can be compared by ear, saved to ${PERSONAL_AREA_TITLE}, or downloaded.`],
+      ["View generated EQ results", "Jumps to the most recent results for this setup. Select a result to change which EQ you’ll save or download."],
+      ["Listen to both EQs", "Compares Target match and Lower boost using the same recording."],
       ["Result graph", "Response shows the predicted sound. Deviation from target shows how far the fit is above or below the adjusted target. Show all EQs overlays the generated results. Show selected EQ isolates the version you chose."],
       ["Advanced EQ results", "Opens the full set of fitters and band counts. Choose a result to inspect its fit or use Compare generated EQ results to audition a shortlist."],
       [`Download selected EQ and Save selected EQ to ${PERSONAL_AREA_TITLE}`, `Download uses the selected format. Save adds the selected filters to ${PERSONAL_AREA_TITLE}, where you can load them in Tuning or Music library.`],

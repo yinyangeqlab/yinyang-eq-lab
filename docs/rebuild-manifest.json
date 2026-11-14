@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
-  "recordedLiveUpdate": 164,
+  "baseRevision": "cfac7efc90e04b42433447a354993a6f0c327976",
+  "recordedLiveUpdate": 165,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -47,12 +47,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "f47a4aa394aa1fdd6dd3cf91f5b11dfbcee5dc0eb6fa5364eb1e2804013a6f72",
+      "sha256": "f742ce626c7de72807eb7060888b3db7e2e15f7843f8e0b32b3b5ce692fd17d9",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "76ed6f46a83de12972cfaaff246d172507e7a6b3a554cb39ed142dc2952ff34a",
+      "sha256": "95fae3cca7aa190d51b6802891c0741f319b0cbc574fcf705ba66ee191b500cd",
       "executable": false
     },
     {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "0fed94ca7e0b59cf103d120803f14583ad0f493964b1d9acf994097db6122c20",
+      "sha256": "626fbc1db8b75c61eca3a6f73ff48be0b32e23e7b00330cbefc6dd405a913ed4",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "998c0fd510fe4c96db3ac8d0cd8a14d6cdc7313caa137234f7ea2a4c9a35a727",
+      "sha256": "2775de04ebc2fed6e61110a7a2aefec49f6a71373e8bfad53a5199fa35f0721d",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "3f7576b32b3c62a4b46aa676b4e561c4ce7c271eef294b80ba5c98eac24223c7",
+      "sha256": "b9678f8d571f6f28ac0b00fcec313fa80a9dce6254ae2bf59184fd8a61cb7a4f",
       "executable": false
     },
     {
@@ -682,12 +682,12 @@
     },
     {
       "path": "app/preference-tuning/editor.tsx",
-      "sha256": "14fc982986713a010c744e097860dc63b681199fcfd5643ca84315d2553c3472",
+      "sha256": "f983f4386203cc3af81877efcb41ee69304a1931cab1f476a7a0b378d330713b",
       "executable": false
     },
     {
       "path": "app/preference-tuning/guide.tsx",
-      "sha256": "a918da88d309833281e4c23b94063628f07e72a7dfc536f82c79bafb3030bafc",
+      "sha256": "ad7f34e5c92cf38f1a85e2776b8ea3e52a8b17e9dc2647c04855c9c6a2e5307b",
       "executable": false
     },
     {
@@ -1187,7 +1187,7 @@
     },
     {
       "path": "components/eq-candidate-results.tsx",
-      "sha256": "4ce859ae2dc00405f29c9dbf748d4a7e38ec0a8d7b36c50ff47f3b6cfe8d1187",
+      "sha256": "c49f9bb6c866a571437b62eb2d31f32da40977f5881f0b2f7b7adbbe682edb93",
       "executable": false
     },
     {
@@ -1222,7 +1222,7 @@
     },
     {
       "path": "components/generated-eq-comparison.tsx",
-      "sha256": "46a84069150edbffb78cf9c9a7354db1cf89a2bc1d72695ed3115de2cebc1714",
+      "sha256": "73d1b92b56c8ecc8892fa12612f12d062a7b94cd78d4239de0f1871ca40b15ac",
       "executable": false
     },
     {
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "e001118e13737977c02752e7e77ce9dad4b1b9af8b1bc6378526e29adca7519c",
+      "sha256": "a86cd569325ce2d4e349e17395dda20759c227ce0122b8c24004892d4b5f0db0",
       "executable": false
     },
     {
@@ -2287,7 +2287,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "121ff6554ef13aef5fe74772e48eceb43424da63456aefa5872f773cf7e535bb",
+      "sha256": "c7b7e81d5fb302254f37b320c7be246ab667e25e55d682478ecbad3617e18531",
       "executable": false
     },
     {
@@ -2297,7 +2297,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "b83e8cfd50757807aaa8a92887d312cfeb130bcf11b63f883c5b129815c7d539",
+      "sha256": "5603cc6636e753fde6578821e2e774458a5f8b415be80eb67557c6fa37a8d65b",
       "executable": false
     },
     {
@@ -2823,6 +2823,16 @@
     {
       "path": "docs/releases/update164-version-link-refresh-verification.json",
       "sha256": "33777ba6a9d714e8e9e652289cafef64de48c4190fd6833f31d111a128e35cc9",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update165-recovery-verification.json",
+      "sha256": "4e0762739dedb3bfbf87167f8fb139e8ee66f5c4e6fff25918c6cd1b67260017",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update165-verification.json",
+      "sha256": "984a76799d0cdaaa5adce4eb4b74fadd137f55bac3d3049ebf0bb4223e8635b2",
       "executable": false
     },
     {
@@ -3822,7 +3832,7 @@
     },
     {
       "path": "lib/eq-recommendation.ts",
-      "sha256": "365ee4eba019e60c2debd25f4f08a4b60411d70422989f94f02bde0d0339b213",
+      "sha256": "d0c522d7a9d0c652ca0a701965bb3570eafe835822c9163ec3965850fd807ef6",
       "executable": false
     },
     {
@@ -4112,12 +4122,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "5a48a65d3313c1f28cfb0d8a9a48ee1b86701d46037bd404404191cfc550ff2c",
+      "sha256": "cce0cddb1e1815404259b8c853c0e6d4355ef79249fdbccf8c06f35f6c952fdc",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "4546d44c2c31c47560ed51daa65ba0b15cd75049b36e7b384b27e0bf22984c95",
+      "sha256": "a0752e330ba36ee8a3107bd155512bb62e927fa168776de043e041f815ab9793",
       "executable": false
     },
     {
@@ -5117,7 +5127,7 @@
     },
     {
       "path": "scripts/check_listening_controls.mjs",
-      "sha256": "336359c67d7cf4260bbc0dbdf15be47012ed048f7b63ffd7b6e6b662862db1eb",
+      "sha256": "5adab781794e243abac6d526b38d57ae00da864d6965e9909e7647cb9559403c",
       "executable": false
     },
     {

@@ -2075,7 +2075,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
         </section>
         {soundMode === "target" && <section className="pt-finalize" id="tuning-export" aria-label="Make EQ settings">
           <div className="pt-finalize-intro">
-            <div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings to use in this site’s music library or a compatible EQ app. Start with the recommended EQ, which favors smaller boosts, especially in deep bass. Listen to the closer fit too when it differs.</p></div>
+            <div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings for this site’s music library or a compatible EQ app. The default EQ has the lowest fit error for your target.</p></div>
             <div className="pt-finalize-action">
               <button ref={finalizeButton} type="button" className="pt-finalize-button"
                 disabled={finalizing || !sourceCurves.ready} aria-describedby={!measurement?.points?.length ? "pt-finalize-requirement" : undefined}

@@ -10,7 +10,7 @@ export function deepBassBoost(fit: FinalizedVariant) {
   ));
 }
 
-// Product defaults for a smaller correction when all close fits need large boosts.
+// Limits for the optional lower-boost correction.
 const deepBassLimit = 6;
 const overallBoostLimit = 8;
 const boostScale = (deepBass: number, peak: number) => Math.min(1, deepBassLimit / deepBass, overallBoostLimit / peak);
@@ -54,12 +54,21 @@ export function recommendCandidates(fits: FinalizedVariant[], tuning?: { raw: Po
       return { fit, deepBass, score: fit.rms + .15 * deepBass + .05 * fit.peakBoost };
     }).sort((a, b) => a.score - b.score || a.fit.bands - b.fit.bands || a.fit.rms - b.fit.rms);
     const { fit, deepBass } = ranked[0];
-    const recommended = reduceBoost(fit, deepBass, tuning.raw, tuning.target);
-    return { recommended, bestError, leastHeadroom: recommended.preamp > leastHeadroom.preamp ? recommended : leastHeadroom };
+    const gentler = reduceBoost(fit, deepBass, tuning.raw, tuning.target);
+    const lowerBoost = gentler !== bestError &&
+      (deepBassBoost(gentler) < deepBassBoost(bestError) || gentler.peakBoost < bestError.peakBoost)
+      ? gentler
+      : null;
+    return {
+      recommended: bestError,
+      bestError,
+      lowerBoost,
+      leastHeadroom: lowerBoost && lowerBoost.preamp > leastHeadroom.preamp ? lowerBoost : leastHeadroom,
+    };
   }
   const bounded = valid.filter(f=>f.filters.every(filter=>filter.q<=4));
   const pool = bounded.length ? bounded : valid;
   const bestBounded = Math.min(...pool.map(f=>f.rms));
   const recommended = pool.filter(f=>f.rms<=bestBounded+.15).sort((a,b)=>a.bands-b.bands || b.preamp-a.preamp || a.rms-b.rms)[0];
-  return { recommended, bestError, leastHeadroom };
+  return { recommended, bestError, lowerBoost: null, leastHeadroom };
 }

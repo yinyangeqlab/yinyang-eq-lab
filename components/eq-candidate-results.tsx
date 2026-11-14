@@ -133,12 +133,9 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
  const [comparisonBands, setComparisonBands] = useState<FitBands>();
  const smoothingHeading = useId();
  const smoothingBandLabel = useId();
- const quickPair=useMemo(() => awards && awards.recommended !== awards.bestError
-   ? [awards.recommended, awards.bestError]
-   : null, [awards]);
- const candidates=useMemo(() => awards?.recommended.reducedBoost
-   ? [awards.recommended, ...variants]
-   : variants, [awards, variants]);
+ const lowerBoost = awards?.lowerBoost;
+ const quickPair = useMemo(() => awards && lowerBoost ? [awards.bestError, lowerBoost] : null, [awards, lowerBoost]);
+ const candidates = useMemo(() => lowerBoost?.reducedBoost ? [lowerBoost, ...variants] : variants, [lowerBoost, variants]);
  const active=candidates.find(f=>candidateKey(f)===selected)??awards?.recommended;
  const plots=useMemo(()=>candidates.map(fit=>({fit,rows:eqResponse(raw,target,fit.filters,[],48000,"1khz")??[]})),[candidates,raw,target]);
  if(!awards||!active||!plots[0]?.rows.length)return null;
@@ -161,8 +158,26 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
    <p>Choose which results from this generation to compare by listening.</p>
  </div>;
  const choiceLabel = (fit: FinalizedVariant) =>
-   fit === awards.recommended ? "Recommended EQ" : fit === awards.bestError ? "Closer fit" : "EQ selected under Advanced";
- const candidateGrid = <div className="eq-candidate-grid" role="group" aria-label="Generated EQ comparisons">{candidates.map(fit=>{const recommended=fit===awards.recommended,headroom=Math.abs(fit.preamp-awards.leastHeadroom.preamp)<.05;return <button type="button" key={candidateKey(fit)} className={`eq-candidate${recommended?" is-recommended":""}${headroom?" is-headroom":""}`} aria-pressed={active===fit} onClick={()=>setSelected(candidateKey(fit))}><strong>{fitterLabel(fit)}{fit.reducedBoost ? " · reduced boost" : ""}</strong>{recommended&&<span className="eq-gold-badge">Recommended</span>}{headroom&&<span className="eq-headroom-badge">Least preamp reduction</span>}{fit===awards.bestError&&<small>Lowest numerical error</small>}<span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span><span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span><small>{fit.engine==="peqdb"?"PEQdB engine":isPeqdbMethod(fit.method)?"Precise fallback · PEQdB unavailable":"YinYang engine"} · max Q {Math.max(...fit.filters.map(f=>f.q)).toFixed(2)}</small></button>;})}</div>;
+   fit === awards.bestError ? "Target match" : fit === lowerBoost ? "Lower boost" : fitterLabel(fit);
+ const candidateGrid = <div className="eq-candidate-grid" role="group" aria-label="Generated EQ comparisons">
+   {candidates.map(fit => {
+     const recommended = fit === awards.recommended;
+     const headroom = Math.abs(fit.preamp - awards.leastHeadroom.preamp) < .05;
+     return <button type="button" key={candidateKey(fit)}
+       className={`eq-candidate${recommended ? " is-recommended" : ""}${headroom ? " is-headroom" : ""}`}
+       aria-pressed={active === fit} onClick={() => setSelected(candidateKey(fit))}
+     >
+       <strong>{fitterLabel(fit)}</strong>
+       {recommended && <span className="eq-gold-badge">{tuning ? "Target match" : "Recommended"}</span>}
+       {fit === lowerBoost && <small>Lower boost</small>}
+       {headroom && <span className="eq-headroom-badge">Least preamp reduction</span>}
+       {fit === awards.bestError && !tuning && <small>Lowest numerical error</small>}
+       <span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span>
+       <span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span>
+       <small>{fit.engine === "peqdb" ? "PEQdB engine" : isPeqdbMethod(fit.method) ? "Precise fallback · PEQdB unavailable" : "YinYang engine"} · max Q {Math.max(...fit.filters.map(f => f.q)).toFixed(2)}</small>
+     </button>;
+   })}
+ </div>;
  return <div className="eq-candidates">
    {comparison && <GeneratedEqComparison
      key={`${comparison}:${signature}`}
@@ -175,12 +190,6 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
      onChoose={fit => { setSelected(candidateKey(fit)); setComparison(null); }}
    />}
    {tuning ? <>
-     <div className="eq-recommendation-explanation">
-       <strong>Recommended EQ</strong>
-       <p>Balances matching your target with keeping boosts smaller, especially in deep bass.</p>
-       {awards.recommended.reducedBoost && <p>Uses a smaller adjustment to keep boost within 6 dB in deep bass and 8 dB overall.</p>}
-       {!quickPair && <p>This EQ also comes closest to your target among the generated results.</p>}
-     </div>
      <div className="eq-tuning-choices" role="group" aria-label="Select an EQ">
        {(quickPair ?? [awards.recommended]).map(fit => <button
          type="button" key={candidateKey(fit)}
@@ -189,12 +198,15 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
        >
          <strong>{choiceLabel(fit)}</strong>
          <span>Deep bass boost <b>{deepBassBoost(fit).toFixed(1)} dB</b></span>
-         <span>Fit error <b>{fit.rms.toFixed(2)} dB</b></span>
+         <span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span>
+         <span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span>
        </button>)}
      </div>
+     {lowerBoost && <p className="eq-results-caveat">{lowerBoost.reducedBoost
+       ? "Lower boost limits the combined boost to 6 dB from 20 to 80 Hz and 8 dB overall."
+       : "Lower boost can leave a larger gap to your target."}</p>}
      {quickPair && <div className="eq-results-audition">
        <button type="button" onClick={() => openComparison("pair")}>Listen to both EQs</button>
-       <p>Switch between the recommendation and the closer fit while the same music plays.</p>
      </div>}
    </> : <>
      {allResultsButton}

@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update164**, source `069253c28566b1a1b0c726ae4ca8913dcabd108d`.
+Recorded deployment: **update165**, source `658403035df3bcd207f5297517368419de898917`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update165
+
+Preference Tuning selects Target match, the generated EQ with the lowest fit error, by default for exports. Lower boost remains available. Both choices show their preamp adjustment.
+
+All 125 selected release checks passed. Browser checks verified both downloaded EQs at desktop and phone widths. The live Tuning assets match the tested package. The encrypted source-only recovery passed independent reconstruction and hosted validation.
+
+[Update165 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update165) · [Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json)
 
 ## Update164 Version page refresh
 

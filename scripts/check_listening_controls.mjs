@@ -45,13 +45,15 @@ check(Math.abs(deepBassBoost(smallBoost) - 1) < .01, 'Bass boost measures the co
 check(Math.abs(deepBassBoost(deepBoost) - 8) < .01, 'Bass boost counts overlapping positive filters together');
 const tuningCurves = { raw, target: flat };
 const tuning = recommendCandidates([smallBoost, deepBoost], tuningCurves);
-check(tuning.recommended === smallBoost && tuning.bestError === deepBoost, 'Tuning can favor smaller boosts while retaining the closest fit for comparison');
-check(recommendCandidates([deepBoost, samePeakAboveBass], tuningCurves).recommended === samePeakAboveBass, 'Deep bass receives extra weight at the same overall boost and error');
+check(tuning.recommended === deepBoost && tuning.bestError === deepBoost, 'Tuning defaults to the original lowest-error fit even when deep bass needs a large boost');
+check(tuning.lowerBoost === smallBoost, 'A suitable lower-boost fit remains selectable');
+check(recommendCandidates([deepBoost, samePeakAboveBass], tuningCurves).lowerBoost === samePeakAboveBass, 'The lower-boost alternative prioritizes deep bass at the same overall boost and error');
+check(recommendCandidates([smallBoost], tuningCurves).lowerBoost === null, 'A moderate target match has no duplicate lower-boost alternative');
 
 const constrained = recommendCandidates([deepBoost], tuningCurves);
-check(constrained.bestError === deepBoost && constrained.recommended.reducedBoost, 'A boost-heavy set offers a gentler version beside the untouched closer fit');
-check(deepBassBoost(constrained.recommended) <= 6 && constrained.recommended.peakBoost <= 8, 'The gentler version stays within the recommended boost limits after recomputing the combined curve');
-check(constrained.recommended.preamp > deepBoost.preamp && constrained.recommended.preamp === -Math.ceil((constrained.recommended.peakBoost + .5) * 10) / 10, 'The gentler version recalculates its preamp from the reduced boost');
+check(constrained.recommended === deepBoost && constrained.lowerBoost.reducedBoost, 'A boost-heavy set offers a scaled alternative while keeping the full correction selected');
+check(deepBassBoost(constrained.lowerBoost) <= 6 && constrained.lowerBoost.peakBoost <= 8, 'The scaled version stays within its boost limits after recomputing the combined curve');
+check(constrained.lowerBoost.preamp > deepBoost.preamp && constrained.lowerBoost.preamp === -Math.ceil((constrained.lowerBoost.peakBoost + .5) * 10) / 10, 'The scaled version recalculates its preamp from the reduced boost');
 assert.throws(()=>load('lib/preference-finalize.ts').exportQudelixGuide(narrow),/20 bands/);
 console.log('PASS recommendation balance, independent headroom/error awards, empty results and 30-band hardware-export refusal.');
 

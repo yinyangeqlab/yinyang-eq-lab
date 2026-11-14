@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 164,
+  "update": 165,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T22:22:59Z",
-  "sourceCommit": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
-  "sourceBranch": "fix/update164-version-link-20261114",
-  "baselineCommit": "c265820e285fd19d2baf155da15344469729e1b2",
-  "evidence": "docs/releases/update164-version-link-refresh-verification.json",
+  "verifiedAt": "2026-11-14T22:46:27Z",
+  "sourceCommit": "658403035df3bcd207f5297517368419de898917",
+  "sourceBranch": "release/update165-20261114",
+  "baselineCommit": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
+  "evidence": "docs/releases/update165-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,38 +31,32 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "deploymentRefresh": {
-    "slug": "version-link-refresh",
-    "previousEvidence": "docs/releases/update164-verification.json",
-    "publishedReleaseTag": "update164",
-    "publishedReleaseCommit": "ad71f9a649f581cc246507ceb1add6108fec7a85"
-  },
   "gitSource": {
-    "implementationCommit": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
-    "branch": "fix/update164-version-link-20261114",
+    "implementationCommit": "658403035df3bcd207f5297517368419de898917",
+    "branch": "release/update165-20261114",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
-    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update164-version-link-refresh"
+    "pushed": true,
+    "publicationAuthorized": true,
+    "publicationTag": "update165"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
-    "sourceBaselineUpdate": 164,
-    "sourceBaselineVerifiedAt": "2026-11-14T22:40:40Z",
+    "sourceBaselineUpdate": 165,
+    "sourceBaselineVerifiedAt": "2026-11-14T23:04:20Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "dailyWorkflowActive": true,
-    "update164SourceOnlyHandover": {
+    "update165SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update164-version-link-refresh-recovery-verification.json"
+      "evidence": "docs/releases/update165-recovery-verification.json"
     }
   },
   "documentationFiles": [],
