@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 157,
+  "update": 158,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T02:32:15Z",
-  "sourceCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
-  "sourceBranch": "release/update157-20261113",
-  "baselineCommit": "79193036fbcf0aba496efa12507bda04ac78da86",
-  "evidence": "docs/releases/update157-verification.json",
+  "verifiedAt": "2026-11-14T03:17:15Z",
+  "sourceCommit": "d637e8c28644618b78bc17bb99715af2a428ee80",
+  "sourceBranch": "release/update158-20261113",
+  "baselineCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
+  "evidence": "docs/releases/update158-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,17 +32,15 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
-    "branch": "release/update157-20261113",
+    "implementationCommit": "d637e8c28644618b78bc17bb99715af2a428ee80",
+    "branch": "release/update158-20261113",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
-    "baseMain": "6c0ea18dbf6357a246c8c86b033c74dff0745104",
-    "publishedSourceCommit": "890be93afa4e0b77459c4ad46b3efe13356636e8",
-    "publicationEvidence": "docs/releases/update157-publication.json"
+    "baseMain": "151f5a82868aa0d14efadb911e5a787919fee354"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
@@ -50,15 +48,15 @@
     "hostedValidationPassed": true,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update157SourceOnlyHandover": {
+    "update158SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update157-recovery-verification.json"
+      "evidence": "docs/releases/update158-recovery-verification.json"
     },
-    "sourceBaselineUpdate": 157,
-    "sourceBaselineVerifiedAt": "2026-11-14T03:14:14Z",
+    "sourceBaselineUpdate": 158,
+    "sourceBaselineVerifiedAt": "2026-11-14T03:35:02Z",
     "dailyWorkflowActiveAtVerification": true
   },
   "documentationFiles": [],

@@ -40,6 +40,7 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
  const cache=new Map();
  function load(file){if(cache.has(file))return cache.get(file);const mod={exports:{}};cache.set(file,mod.exports);const req=id=>{
   if(id==='react')return React;if(id==='react/jsx-runtime')return{jsx,jsxs:jsx,Fragment:'fragment'};if(id in imports)return imports[id];if(id.endsWith('.css'))return{};
+  if(id==='@base-ui/react/combobox'||id==='@base-ui/react/menu')return { [id.endsWith('/menu') ? 'Menu' : 'Combobox']:new Proxy({},{get:(_,part)=>`${id}/${part}`}) };
   // Worker execution has its own real-engine suite; these tests defer transports.
   if(id==='@/lib/autoeq-client'||id==='./autoeq-client')return{fitAutoEqAsync:async()=>[]};
   if(id==='@/components/embed-common')return load('components/embed-common.ts');
@@ -82,7 +83,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const h=open();
  await flush();h.render();
  const edit=points=>{h.find(n=>n.type==='@/components/headphone-picker').props.onEdit(measurement.id);h.render();h.find(n=>n.type==='@/components/measurement-manager').props.onUpdate({...measurement,points});h.render();};
- h.button('Make my EQ settings').props.onClick();await flush();
+ h.button('Make my EQ').props.onClick();await flush();
  jobs[0].resolve([variant(10),variant(15),variant(20),variant(30)]);await flush();h.render();
  check(h.find(n=>n.type==='@/components/eq-candidate-results').props.variants.length===4,'Generated comparisons reach the shared results graph and export controls');
  const returned=open();await flush();returned.render();
@@ -90,10 +91,42 @@ function tuning({blocked=false,queueFunctional=false}={}){
  returned.unmount();
  edit([[20,5],[20000,-3]]);
  check(all(h.tree,n=>n.type==='@/components/eq-candidate-results').length===0,'Editing measurement points under the same ID invalidates finished exports');
- h.button('Make my EQ settings').props.onClick();await flush();const pending=jobs[1];
+ h.button('Make my EQ').props.onClick();await flush();const pending=jobs[1];
  edit([[20,8],[20000,-4]]);check(pending.signal.aborted,'Same-ID measurement edits cancel pending finalization');
  pending.reject(new DOMException('Cancelled','AbortError'));await flush();h.render();
  check(all(h.tree,n=>n.type==='@/components/eq-candidate-results').length===0,'Cancelled finalization cannot restore stale downloads');h.unmount();
+}
+{
+ const rows = [
+  {id:'first', name:'YinYang Zeta', creator:'Fixture Lab', rank:1},
+  {id:'second', name:'YinYang Alpha', creator:'Fixture Lab', rank:2},
+  {id:'by-source', name:'Another target', creator:'YinYang Lab'},
+  {id:'unrelated', name:'Unrelated', creator:'Other'},
+ ];
+ const props = { targets:rows, selected:rows[3], onSelect(id){ props.selected = rows.find(row=>row.id===id); } };
+ const h = mount('app/preference-tuning/target-picker.tsx', {props});
+ const combo = () => h.find(n=>n.type==='@base-ui/react/combobox/Root').props;
+ const enter = query => { combo().onInputValueChange(query,{reason:'input-change'}); h.render(); };
+ check(all(h.tree,n=>n.type==='select').length===0 && all(h.tree,n=>n.type==='@base-ui/react/combobox/Input').length===1,'Target search and selection use one input without a separate select');
+ const anchor = h.find(n=>n.props?.className==='pt-target-input').props.ref;
+ const positioner = h.find(n=>n.type==='@base-ui/react/combobox/Positioner').props;
+ check(positioner.anchor===anchor && positioner.side==='bottom' && positioner.collisionAvoidance.side==='none','Target results stay attached directly below the same search field');
+ check(combo().inputValue==='Unrelated' && !combo().open,'A closed picker shows the committed target');
+ enter('yin');
+ assert.deepEqual(Array.from(combo().filteredItems,row=>row.id),['first','second','by-source']);
+ check(combo().open && combo().inputValue==='yin' && props.selected.id==='unrelated','Typing opens name and source matches without changing the target');
+ combo().onValueChange(combo().filteredItems[1]); combo().onOpenChange(false); h.render();
+ check(combo().inputValue==='#2 · YinYang Alpha' && !combo().open,'Choosing a match replaces the query in the same input');
+ enter('no such target');
+ check(combo().filteredItems.length===0,'No-match results omit the previously selected target');
+ combo().onOpenChange(false); h.render();
+ check(combo().inputValue==='#2 · YinYang Alpha','Dismissing search restores the selected target');
+ h.find(n=>n.type==='@base-ui/react/menu/RadioGroup').props.onValueChange('name'); h.render();
+ enter('yin');
+ assert.deepEqual(Array.from(combo().filteredItems,row=>row.id),['by-source','second','first']);
+ combo().onValueChange(null); enter('');
+ check(combo().filteredItems.length===4 && props.selected.id==='second','Clearing a search restores all options without clearing the applied target');
+ h.unmount();
 }
 {
  const measurement={id:'ear-fixture',name:'Synthetic headphones',type:'oe',points:[[20,0],[20000,0]]};

@@ -53,6 +53,53 @@ check(fallbackRank.earlier && JSON.stringify(fallbackRank.rows.map(row=>[row.id,
 const standardRank=rank({...view(['standard']),fitterCohorts:[historical]});
 check(!standardRank.earlier && standardRank.rows.length===1 && standardRank.rows[0].id==='standard','Standard ranks take precedence without pooling cohorts');
 check(rank({fitterCohorts:[{key:'other',view:view(['unrelated'])}]}).rows.length===0,'Other fitter cohorts are never used as a ranking fallback');
+
+const exportsWritten = [];
+const route = { exports: {} };
+const routeCode = ts.transpileModule(fs.readFileSync('app/api/preference-exports/route.ts','utf8'), {
+  compilerOptions: { target:ts.ScriptTarget.ES2022, module:ts.ModuleKind.CommonJS },
+}).outputText;
+const routeImports = {
+  '@/lib/submission-ownership': { submissionContext:async () => ({ record:id => ({ ownership:id }) }) },
+  '@/lib/autoeq-target-sources': { isSourceAutoEqTarget:id => id === 'source-fixture' },
+  '@/db': { getDb:() => ({ insert:() => ({ values:row => row }), batch:async rows => exportsWritten.push(rows) }) },
+  '@/db/schema': { preferenceExports:{} },
+  '@/lib/fitter-settings': load('lib/fitter-settings.ts'),
+  '@/lib/request-json': { readJsonObject:request => request.json(), requestInputResponse:() => null },
+};
+vm.runInNewContext(routeCode, { module:route, exports:route.exports, require:id => routeImports[id], Request, Response, crypto });
+const postExport = body => route.exports.POST(new Request('https://fixture.test/api/preference-exports', {
+  method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body),
+}));
+const download = ast.statements.flatMap(node => node.body?.statements ?? [])
+  .find(node => ts.isFunctionDeclaration(node) && node.name?.text === 'downloadTargetCurve');
+assert.ok(download);
+const downloadTarget = { id:'fixture' };
+const downloadCurve = vm.runInNewContext(ts.transpileModule(download.getText(ast)+';downloadTargetCurve;', {
+  compilerOptions:{target:ts.ScriptTarget.ES2022},
+}).outputText, {
+  normalized:reference, preferenceCurve:raw, target:downloadTarget,
+  downloadText:(filename,contents,mime) => ({ filename,contents,mime }),
+});
+const baseExport = { targetId:'fixture', targetName:'Synthetic target', targetCreator:'Synthetic lab', settings:{} };
+for (const [exportKind, curve] of [['original-target',reference], ['preference-target',raw]]) {
+  for (const format of ['csv','txt']) {
+    const { filename, contents, mime } = downloadCurve(exportKind, format);
+    const separator = format === 'csv' ? ',' : '\t';
+    assert.equal(filename, `${exportKind}.${format}`);
+    assert.equal(mime, format === 'csv' ? 'text/csv' : 'text/plain');
+    assert.equal(contents.split('\n')[1], curve[0].map((number,index) => number.toFixed(index === 0 ? 2 : 3)).join(separator));
+    const response = await postExport({ ...baseExport, exportKind, format, filename, contents, curve });
+    check(response.status===201 && exportsWritten.at(-1)[0].contents===contents, `${exportKind} downloads and records the requested ${format} content`);
+  }
+}
+downloadTarget.id = 'flat';
+const { parseCurve } = load('lib/curves.ts');
+check(parseCurve(downloadCurve('original-target','txt').contents).every(([,db]) => db===0), 'Flat reference TXT can be imported as a flat curve');
+for (const invalid of [{format:'txt',filename:'fixture.csv'},{format:'equalizerapo',filename:'fixture.txt'},{targetId:'source-fixture'}]) {
+  const response = await postExport({ ...baseExport, exportKind:'original-target', format:'txt', filename:'fixture.txt', contents:'test', curve:reference, ...invalid });
+  check(response.status===400 && exportsWritten.length===4, 'Invalid and source-only curve exports do not write research records');
+}
 const jobs=[],stages=[],statuses=[],messages=[],fits=[];
 const current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},toneInput:{},toneGain:1};
 const state={fitter:{method:"standard",bands:10},AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:raw},normalized:[[20,0],[20000,0]],filters:added,soundMode:'target',savedEq:undefined,eqOn:true,graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage(_context,_input,_output,filters){stages.push(filters);return{};},safeGain(){},setFit:value=>fits.push(value),setPreparingEq:value=>statuses.push(value),setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});jobs.push({promise,resolve,reject,signal});return promise;}};

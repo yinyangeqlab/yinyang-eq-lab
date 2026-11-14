@@ -9,14 +9,14 @@ import { TargetCurveDownloads } from "@/components/target-curve-downloads";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
 import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
 import { autoEqPickerTargets, autoEqTargetStorageKey, isLocalAutoEqTarget, isSourceAutoEqTarget, readLocalAutoEqTargets } from "@/lib/autoeq-target-sources";
-import { searchRows } from "@/lib/search";
 import { recordAdminTestIfNeeded } from "@/lib/admin-test-store";
 import {musicDisplayTitle} from "@/lib/music-display";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
+import { Menu } from "@base-ui/react/menu";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ArrowDown, ArrowUpRight, AudioLines, BookOpen, ChevronDown, FileAudio, FolderOpen, Repeat, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, AudioLines, BookOpen, ChevronDown, Download, FileAudio, FolderOpen, Repeat, RotateCcw, Redo2, Shuffle, SlidersHorizontal, Trash2, Undo2, Upload, Volume2, X } from "lucide-react";
 import { parseCurve, type Point } from "@/lib/curves";
 import { packRegionLabels, placeMarkerLabels } from "@/lib/curve-label-layout";
 import { peakingHalfGainEdges, presetFilterResponse, tuningFilterEffectRange, type PresetFilter } from "@/lib/peq-preset";
@@ -45,6 +45,7 @@ import TrackWaveform from "@/components/track-waveform";
 import { analyzeTrack, type TrackAnalysis } from "@/lib/loudness";
 import { EQ_COMPARISON_PLAY_EVENT } from "@/lib/blind-eq-audio";
 import { listeningPool as curatedMusic } from "@/lib/music-catalog";
+import TuningTargetPicker from "./target-picker";
 import TuningGuide, { type GuideTopic } from "./guide";
 import { FIRST_CUT_DB, LOOP_DEFAULT_SECONDS, LOOP_MIN_SECONDS, LOUDNESS_MIN_FRAMES, SILENCE_POWER, accumulateBandPowers, boundedLoop, curveFingerprint, flippedGain, loopAt, loudnessBands, matchTrims, optionLevel, poolBandPowers, slewTrim, trimDb, type LoopPassage, type LoudnessBands } from "./listening";
 import "./style.css";
@@ -91,7 +92,6 @@ function formatToneGain(value: number) {
   return `${gain > 0 ? "+" : ""}${gain}`;
 }
 const fallback: Target = { id: "flat", name: "Flat reference", creator: "Reference", points: [[20, 0], [20000, 0]] };
-const targetNames = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
 type EditSnapshot = { settings: Settings; selected: string; expanded: boolean };
 type PlacementKey = "bassHz" | "earHz" | "trebleHz";
 const GAIN_CONTROLS: { key: GainKey; limit: number; hint: string; placement?: PlacementKey; fixed?: number }[] = [
@@ -629,8 +629,6 @@ function RouteWatcher({ onRoute }: { onRoute: () => void }) {
  */
 export default function TuningEditor({ visible = true }: { visible?: boolean }) {
   const consent = useConsentPrompt("Tuning needs no agreement. Viewing or exporting your EQ keeps the file, curve and settings for private research, so we ask once, here.");
-  const [targetQuery, setTargetQuery] = useState("");
-  const [targetSort, setTargetSort] = useState<"rank" | "name">("rank");
   const [targets, setTargets] = useState<Target[]>([fallback]);
   const [targetRanking, setTargetRanking] = useState<ReturnType<typeof tuningTargetRanking>>({ rows: [], earlier: false });
   const curatedLeader = targetRanking.earlier ? null : targetRanking.rows[0] ?? null;
@@ -702,7 +700,6 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const sourceGeneration = useRef(0);
   const playbackIntent = useRef(0);
   const analysisRequest = useRef<AbortController | null>(null);
-  const [measurementAttention, setMeasurementAttention] = useState(0);
   const [instructionsOpen, setInstructionsOpen] = useState(false);
   /** The guide topic to open first, and the control that opened the guide so focus can return to it. */
   const [guideTopic, setGuideTopic] = useState<GuideTopic | null>(null);
@@ -932,7 +929,11 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     if (soundMode === "target" && !sourceCurves.ready) media.current?.pause();
   }, [soundMode, sourceCurves.ready]);
   const normalized = useMemo(() => [...target.points].sort((a, b) => a[0] - b[0]), [target]);
-  const curatedRanks = useMemo(() => new Map(targetRanking.rows.map(row => [row.id, row.rank])), [targetRanking]);
+  const targetOptions = useMemo(() => {
+    const ranks = new Map(targetRanking.rows.map(row => [row.id, row.rank]));
+    return targets.map(({ id, name, creator }) => ({ id, name, creator: creator ?? "", rank: ranks.get(id), privateCopy: isLocalAutoEqTarget(id) }));
+  }, [targets, targetRanking]);
+  const selectedTargetOption = targetOptions.find(row => row.id === selectedTarget.id) ?? selectedTarget;
   const filters = useMemo(() => filtersFor(settings), [settings]);
   const savedEq = presets.find(eq => eq.id === presetId);
   const measurement = measurements.find(row => row.id === (soundMode === "saved" ? savedEq?.measurementId : measurementId));
@@ -941,14 +942,6 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const tweaksChanged = filters.some(filter => Math.abs(filter.gain) > .0001);
   const eqAvailable = soundMode === "target" ? sourceCurves.ready : !!savedEq;
   const eqOn = !bypass && eqAvailable;
-  const shownTargetOptions = useMemo(() => {
-    const matches = searchRows(targets, targetQuery, row => [row.name, row.creator ?? ""]);
-    const rank = (id: string) => curatedRanks.get(id) ?? Number.MAX_SAFE_INTEGER;
-    return matches.sort((a, b) =>
-      (targetSort === "rank" ? rank(a.id) - rank(b.id) : 0) ||
-      targetNames.compare(a.name, b.name) || targetNames.compare(a.creator ?? "", b.creator ?? ""));
-  }, [targets, targetQuery, targetSort, curatedRanks]);
-  const selectedOutsideSearch = !shownTargetOptions.some(row => row.id === target.id);
   // Snapshots belong to one starting sound: the target (by id and curve content) with its headphone measurement, or one saved EQ.
   const targetPrint = useMemo(() => curveFingerprint(normalized), [normalized]);
   const snapshotScope = soundMode === "saved" ? savedEq ? `eq:${savedEq.id}` : null : `target:${target.id}:${targetPrint}:${measurement?.id ?? "none"}`;
@@ -1004,10 +997,23 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     } catch (error) { if (!request.signal.aborted) setMessage(error instanceof Error ? error.message : "Could not generate EQ filters."); }
     finally { if (finalizeAbort.current === request) setFinalizing(false); }
   }
+  function downloadTargetCurve(kind: "original-target" | "preference-target", format: "csv" | "txt") {
+    const points = kind === "preference-target" ? preferenceCurve : normalized;
+    // The flat reference has two endpoints. Export equivalent samples accepted by the importer.
+    const rows = kind === "original-target" && target.id === "flat"
+      ? [20, 40, 80, 160, 320, 640, 1000, 2000, 4000, 8000, 16000, 20000].map(hz => [hz, 0])
+      : points;
+    const separator = format === "csv" ? "," : "\t";
+    const contents = [
+      `frequency_hz${separator}level_db`,
+      ...rows.map(([hz, db]) => `${hz.toFixed(2)}${separator}${db.toFixed(3)}`),
+    ].join("\n") + "\n";
+    return downloadText(`${kind}.${format}`, contents, format === "csv" ? "text/csv" : "text/plain");
+  }
   async function downloadText(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) { if (!sourceCurves.ready) return; if (localAutoEq) await runDownload(filename, contents, type, variant); else await consent.ask(() => void runDownload(filename, contents, type, variant)); }
   async function runDownload(filename: string, contents: string, type = "text/plain", variant?: FinalizedVariant) {
-    const exportKind = variant ? "eq" : filename === "original-target.csv" ? "original-target" : "preference-target";
-    const format = filename.endsWith("-equalizerapo.txt") ? "equalizerapo" : filename.endsWith("-easyeffects.txt") ? "easyeffects" : filename.endsWith("-qudelix5k.txt") ? "qudelix5k" : variant ? "txt" : "csv";
+    const exportKind = variant ? "eq" : filename.startsWith("original-target.") ? "original-target" : "preference-target";
+    const format = filename.endsWith("-equalizerapo.txt") ? "equalizerapo" : filename.endsWith("-easyeffects.txt") ? "easyeffects" : filename.endsWith("-qudelix5k.txt") ? "qudelix5k" : filename.endsWith(".csv") ? "csv" : "txt";
     try {
       const adminTestOnly=!localAutoEq && await recordAdminTestIfNeeded("export",{targetName:target.name,exportKind,format,filename,contents,settings,curve:exportKind==="original-target"?normalized:preferenceCurve,variant});
       if(!adminTestOnly && !localAutoEq){
@@ -1713,29 +1719,12 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
           <div className="pt-sound-body" id="pt-sound-body" hidden={!setupOpen}><SoundSetup mode={soundMode} onMode={changeSoundMode} presets={presets} presetId={presetId} onPreset={chooseSavedEq}
             headphones={<div className="shootout-content pt-headphones"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); clearMeasurement(); }} onSelect={chooseMeasurement} onClear={clearMeasurement} onImport={importMeasurement} onUpload={() => { setEditId(null); setManagerOpen(true); }} onEdit={id => { setEditId(id); setManagerOpen(true); }} onDelete={deleteMeasurement} responsiveUploadLabel/></div>}
             target={<>
-              <div className="pt-target-tools">
-                <label htmlFor="tuning-target-search">Search targets<input id="tuning-target-search" type="search" value={targetQuery} onChange={event => setTargetQuery(event.currentTarget.value)} placeholder="Name or source" autoComplete="off"/></label>
-                <label htmlFor="tuning-target-sort">Sort targets<select id="tuning-target-sort" aria-describedby="tuning-target-rank-source" value={targetSort} onChange={event => setTargetSort(event.currentTarget.value === "name" ? "name" : "rank")}>
-                  <option value="rank">Global rank</option><option value="name">Alphabetical (A–Z)</option>
-                </select></label>
-              </div>
+              <TuningTargetPicker targets={targetOptions} selected={selectedTargetOption} onSelect={changeTarget}/>
               <p id="tuning-target-rank-source">{targetRanking.rows.length
                 ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use Standard 10-band matched-passage results."
                 : "Global ranks appear when matched-passage results are available."}</p>
-              <div className="pt-target-selection">
-                <label htmlFor="tuning-target">Target curve</label>
-                <div className="sound-source-actions">
-                  <select id="tuning-target" value={target.id} onChange={event => changeTarget(event.currentTarget.value)}>
-                    {selectedOutsideSearch && <option value={target.id}>{curatedRanks.has(target.id) ? `#${curatedRanks.get(target.id)} · ` : ""}{target.name} · current selection</option>}
-                    {shownTargetOptions.map(row => {
-                      const rank = curatedRanks.get(row.id);
-                      return <option key={row.id} value={row.id}>{rank ? `#${rank} · ` : ""}{row.name}{row.creator ? ` · ${row.creator}` : ""}{isLocalAutoEqTarget(row.id) ? " · private copy" : ""}</option>;
-                    })}
-                    {!shownTargetOptions.length && <option value="" disabled>No matching targets</option>}
-                  </select>
-                  <label className="pt-import" title="Import a target CSV or TXT"><Upload size={15} aria-hidden="true"/><span>Import</span><input type="file" aria-label="Import a target CSV or TXT" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.currentTarget.files?.[0])}/></label>
-                </div>
-                {targetQuery.trim() && <p role="status">{shownTargetOptions.length ? `${shownTargetOptions.length} matching target${shownTargetOptions.length === 1 ? "" : "s"}` : "No matching targets"}</p>}
+              <div className="pt-target-actions">
+                <label className="pt-import" title="Import a target CSV or TXT"><Upload size={15} aria-hidden="true"/><span>Import</span><input type="file" aria-label="Import a target CSV or TXT" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.currentTarget.files?.[0])}/></label>
                 <TargetCurveDownloads key={selectedTarget.id} target={selectedTarget}/>
                 <a href="/curve-credits#autoeq-library">AutoEq sources and credits</a>
               </div>
@@ -2029,10 +2018,47 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
           </details>
         </section>
         {soundMode === "target" && <section className="pt-finalize" id="tuning-export" aria-label="Make EQ settings">
-          <div className="pt-finalize-intro"><div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings to use in this site’s music library or a compatible EQ app. Start with the recommended EQ, which favors smaller boosts, especially in deep bass. Listen to the closer fit too when it differs.</p></div><div className="pt-finalize-action">{!measurement?.points?.length && <p key={measurementAttention} className={`pt-measurement-needed${measurementAttention ? " pt-attention" : ""}`} role="note"><strong>Choose a headphone measurement</strong><span>to generate EQ filters.</span></p>}<button ref={finalizeButton} type="button" className={`pt-finalize-button${measurementAttention ? " pt-attention" : ""}`} disabled={finalizing || !sourceCurves.ready} onClick={event => { if (!measurement?.points?.length) { setMessage("Choose a headphone measurement to generate EQ filters."); setMeasurementAttention(value => value + 1); openSetup(true); if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) event.currentTarget.animate([{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(-5px)" }, { transform: "translateX(5px)" }, { transform: "translateX(0)" }], { duration: 500, easing: "ease-in-out" }); return; } void finalizeCurve(); }}>{finalizing ? `Making EQ settings ${finalProgress} / ${FIT_CANDIDATE_COUNT}…` : !measurement?.points?.length ? "Choose headphones first" : finalized ? "Regenerate EQ settings" : "Make my EQ settings"}</button></div></div>
+          <div className="pt-finalize-intro">
+            <div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings to use in this site’s music library or a compatible EQ app. Start with the recommended EQ, which favors smaller boosts, especially in deep bass. Listen to the closer fit too when it differs.</p></div>
+            <div className="pt-finalize-action">
+              <button ref={finalizeButton} type="button" className="pt-finalize-button"
+                disabled={finalizing || !sourceCurves.ready} aria-describedby={!measurement?.points?.length ? "pt-finalize-requirement" : undefined}
+                onClick={() => {
+                  if (!measurement?.points?.length) {
+                    setMessage("Choose a headphone measurement to generate EQ filters.");
+                    openSetup(true);
+                    return;
+                  }
+                  void finalizeCurve();
+                }}>
+                <SlidersHorizontal size={19} aria-hidden="true"/>
+                <span>{finalizing ? `Making EQ ${finalProgress} / ${FIT_CANDIDATE_COUNT}…` : finalized ? "Regenerate EQ" : "Make my EQ"}</span>
+                <ArrowUpRight size={17} aria-hidden="true"/>
+              </button>
+              {!measurement?.points?.length && <p id="pt-finalize-requirement" className="pt-finalize-requirement">Requires a headphone measurement.</p>}
+            </div>
+          </div>
           {finalized && <a className="eq-results-jump" href="#tuning-eq-results">View generated EQ results</a>}
           <p id="pt-export-disclosure" className="pt-export-disclosure">{localAutoEq ? "Downloads from this local AutoEq curve stay on this device. Saved EQs store filters without the source curve." : "For participating listener accounts, downloading sends the selected target, adjusted curve, settings and exported file for administrator-only research. EQ exports also include the selected measurement name. Admin and hidden test accounts save local tests instead. Music files and raw headphone measurements are not collected here."}</p>
-          <div className="pt-curve-downloads"><p>Download curve data</p><div className="pt-export-downloads" role="group" aria-label="Target curve downloads" aria-describedby="pt-export-disclosure"><button type="button" disabled={!sourceCurves.ready} onClick={() => void downloadText("original-target.csv", `frequency_hz,level_db\n${normalized.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>Starting curve data (CSV)</button><button type="button" disabled={!sourceCurves.ready} onClick={() => void downloadText("preference-target.csv", `frequency_hz,level_db\n${preferenceCurve.map(([hz, db]) => `${hz.toFixed(2)},${db.toFixed(3)}`).join("\n")}\n`, "text/csv")}>My adjusted curve data (CSV)</button></div></div>
+          <div className="pt-curve-downloads">
+            <div className="pt-export-downloads" role="group" aria-label="Target curve downloads" aria-describedby="pt-export-disclosure">
+              {(["original-target", "preference-target"] as const).map(kind => <Menu.Root key={kind} modal={false}>
+                <Menu.Trigger disabled={!sourceCurves.ready} className={`pt-download-button ${kind}`}>
+                  <Download size={15} aria-hidden="true"/>
+                  {kind === "original-target" ? "Download original target" : "Download preference target"}
+                  <ChevronDown size={14} aria-hidden="true"/>
+                </Menu.Trigger>
+                <Menu.Portal>
+                  <Menu.Positioner className="pt-menu-positioner" align="end" sideOffset={5}>
+                    <Menu.Popup className="pt-option-menu">
+                      <Menu.Item onClick={() => void downloadTargetCurve(kind, "csv")}>CSV</Menu.Item>
+                      <Menu.Item onClick={() => void downloadTargetCurve(kind, "txt")}>TXT</Menu.Item>
+                    </Menu.Popup>
+                  </Menu.Positioner>
+                </Menu.Portal>
+              </Menu.Root>)}
+            </div>
+          </div>
 
           {previousResults && !finalized && <p className="pt-finalize-hint">Your sound or headphones changed. Make updated settings before downloading.</p>}
           {finalized && <section className="eq-results-section" aria-labelledby="tuning-eq-results">

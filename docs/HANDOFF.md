@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update157**, source `68d486c95a6c246b41ca373780917cbfcf247b70`.
+Recorded deployment: **update158**, source `d637e8c28644618b78bc17bb99715af2a428ee80`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update158
+
+The Preference Tuning target list opens directly below search. The Sort button offers global rank and alphabetical order. Both target download options offer CSV and TXT, and Make my EQ opens the measurement picker when no headphones are selected.
+
+Deployed source `d637e8c28644618b78bc17bb99715af2a428ee80` passed all 123 selected regression checks. The isolated account verified the live picker at desktop and phone widths. [Deployment verification](releases/update158-verification.json)
+
+Encrypted off-device source-only recovery and hosted validation passed. Daily scheduled backups were active at verification on November 13, 2026 at 7:35 p.m. Pacific. The existing data snapshot was retained and no database export was performed. [Recovery verification](releases/update158-recovery-verification.json)
 
 ## Update157
 

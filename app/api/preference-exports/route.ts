@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         !Array.isArray(curve) || curve.length < 2 || curve.length > 2000 || !curve.every(point => Array.isArray(point) && point.length === 2 && point.every(value => typeof value === "number" && Number.isFinite(value))) ||
         !settings || typeof settings !== "object" || Array.isArray(settings) || JSON.stringify(settings).length > 2000 ||
         (exportKind === "eq" && (!measurementName || !variant || typeof variant !== "object" || Array.isArray(variant))) ||
-        (exportKind !== "eq" && format !== "csv"))
+        (exportKind !== "eq" && ((format !== "csv" && format !== "txt") || !filename.endsWith(`.${format}`))))
       return Response.json({ error: "Invalid preference export." }, { status: 400 });
 
     const fit = variant as Record<string, unknown> | undefined;
