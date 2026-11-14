@@ -7,6 +7,8 @@ import "./globals.css";
 import "./site-light.css";
 import "@/components/action-hover.css";
 import SiteChrome from "@/components/site-chrome";
+import SiteHelp from "@/components/site-help";
+import { SiteHelpActionsProvider } from "@/components/site-help-actions";
 import { buildLabel } from "@/lib/release-info";
 import { shareMetadata } from "@/lib/share-metadata";
 
@@ -32,7 +34,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteChrome>{children}</SiteChrome></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteHelpActionsProvider><SiteChrome>{children}</SiteChrome><SiteHelp /></SiteHelpActionsProvider></InviteModeProvider></body>
     </html>
   );
 }

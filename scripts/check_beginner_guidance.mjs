@@ -31,6 +31,7 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
   // Worker execution has its own real-engine suite; these tests defer transports.
   if(id==='@/lib/autoeq-client'||id==='./autoeq-client')return{fitAutoEqAsync:async()=>[]};
   if(id==='@/components/embed-common')return load('components/embed-common.ts');
+  if(id==='@/components/site-help-actions')return{useSiteHelpActions:()=>null};
   if(id.startsWith('@/components/')||id==='next/link')return{default:id,useInvitesEnabled:()=>false,useConsentPrompt:()=>({ask:async fn=>fn(),prompt:null})};
   if(id==='lucide-react')return new Proxy({},{get:(_,k)=>String(k)});
   if(id.startsWith('@/lib/')){const name=id.slice(2);if(fs.existsSync(name+'.ts'))return load(name+'.ts');return require('../'+name);}

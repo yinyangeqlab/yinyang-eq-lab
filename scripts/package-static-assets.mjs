@@ -25,8 +25,30 @@ function visit(folder,relative=''){
   files++;
  }
 }
+const model = 'vendor/site-help/potion-2m-int4-v1.bin';
+const modelLicense = 'vendor/site-help/LICENSE.txt';
+if (existsSync(join(source, model))) {
+ if (digest(join(source, model)) !== '4520cbfdcbb08add6a94c02d03ab0c50d3c33e002a271c79ebb4e6d8b79a81f1' ||
+     !existsSync(join(source, modelLicense)) ||
+     digest(join(source, modelLicense)) !== digest(join(root, 'vendor/potion-2m-model2vec.LICENSE'))) {
+  throw Error('Site help model or license differs from the pinned asset. Run scripts/prepare-site-help-model.py.');
+ }
+} else if (existsSync(join(destination, model))) {
+ unlinkSync(join(destination, model));
+ if (existsSync(join(destination, modelLicense))) unlinkSync(join(destination, modelLicense));
+}
 visit(source);
 packagePeqdbAssets(destination);
+if (existsSync(join(source, model))) {
+ const headerFile = join(destination, '_headers');
+ const headers = existsSync(headerFile) ? readFileSync(headerFile, 'utf8') : '';
+ const rule = '/' + model + '\n  Cache-Control: public, max-age=31536000, immutable\n';
+ if (!headers.includes(rule)) {
+  // Packaging may link this output to public/_headers.
+  if (existsSync(headerFile)) unlinkSync(headerFile);
+  writeFileSync(headerFile, headers.trimEnd() + '\n\n' + rule);
+ }
+}
 if(!publicOnly){
  const peaks=join(root,'artifacts/waveform-peaks/public/__waveform-peaks');
  const audioManifest=JSON.parse(readFileSync(join(root,'data/listening-pool-audio-manifest.json'),'utf8'));

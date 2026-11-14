@@ -510,6 +510,17 @@
       "scope": "Release drift, preservation, actual runner failures/timeouts/mutations and source-only exit-code regression"
     },
     {
+      "id": "production-release-preflight",
+      "path": "scripts/check_production_release_preflight.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 15000,
+      "requires": [],
+      "owner": "release",
+      "scope": "Synthetic owner evidence, stale or pending recovery refusal, and lock ordering through a fake Pulumi apply"
+    },
+    {
       "id": "free-listening",
       "path": "scripts/check_free_listening.mjs",
       "runtime": "node",
@@ -1385,6 +1396,19 @@
       ],
       "owner": "application",
       "scope": "Existing target upload regression assertions; synthetic/source scope in the script"
+    },
+    {
+      "id": "site-help",
+      "path": "scripts/check_site_help.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/typescript/package.json"
+      ],
+      "owner": "application",
+      "scope": "Free-form questions mapped to reviewed public guide entries. Optional real model cases run when the prepared asset exists"
     },
     {
       "id": "test-account-controls",

@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import * as cloudflare from "@pulumi/cloudflare";
 import * as pulumi from "@pulumi/pulumi";
 import { existsSync, readFileSync, readdirSync, statSync, mkdirSync, writeFileSync } from "node:fs";
@@ -36,6 +37,14 @@ const hstsCanonical = config.getBoolean("hstsCanonical") ?? false;
 const canonicalOrigin = config.get("canonicalOrigin") ?? "https://yinyangeq.com";
 const canonicalUrl = new URL(canonicalOrigin);
 if(canonicalUrl.protocol !== "https:" || canonicalUrl.pathname !== "/" || canonicalUrl.username || canonicalUrl.password || canonicalUrl.search || canonicalUrl.hash) throw new Error("canonicalOrigin must be an HTTPS origin");
+
+if (!pulumi.runtime.isDryRun() && canonicalUrl.origin === "https://yinyangeq.com") {
+  const workspace = process.env.DEPLOY_OWNER_WORKSPACE;
+  if (!workspace) throw new Error("Run the production apply through scripts/deploy-reviewed.sh from the Pulumi stack directory.");
+  execFileSync(process.execPath, [
+    resolve(buildRoot, "scripts/production-release-preflight.mjs"), workspace, accountId, scriptName,
+  ], { stdio: "inherit" });
+}
 
 function allFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true })

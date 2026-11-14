@@ -83,3 +83,6 @@ work/
 
 # Generated homepage wallpaper downloads. Rebuild with scripts/generate-welcome-wallpapers.mjs.
 /public/wallpapers/
+
+# Prepared third-party semantic help model.
+/public/vendor/site-help/

@@ -46,6 +46,7 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
   if(id==='@/components/embed-common')return load('components/embed-common.ts');
   if(id==='@/components/playback-transport')return load('components/playback-transport.tsx');
   if(id==='@/components/admin-table')return load('components/admin-table.tsx');
+  if(id==='@/components/site-help-actions')return{useSiteHelpActions:()=>null};
   if(id.startsWith('@/components/')||id==='next/link')return{default:id,useInvitesEnabled:()=>false,useConsentPrompt:()=>({ask:async fn=>fn(),prompt:null})};
   if(id==='lucide-react')return new Proxy({},{get:(_,k)=>String(k)});
   if(id.startsWith('@/data/')&&id.endsWith('.json'))return {default:require('../'+id.slice(2))};

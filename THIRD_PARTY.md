@@ -22,3 +22,7 @@ The names-only [live target inventory](docs/TARGET_INVENTORY.md) credits the tar
 ## PEQdB autoeq-c engine
 
 The application uses PEQdB autoeq-c, Copyright (C) 2026 PEQdB Inc., LGPL-3.0-or-later, pinned to fdc0db772164387c2df8739742594197c6851fc3. This library is separate from PEQdB target curves and presets. Its exact engine source, modifications, LGPLv3/GPLv3 texts, original application code and rebuild/recombination instructions accompany each prepared engine package through /software-licenses. The generated WASM, library source inputs and source package stay outside Git. See docs/PEQDB_AUTOEQ.md and scripts/prepare-peqdb-autoeq.py.
+
+## Potion 2M site help model
+
+The optional semantic help matcher uses MinishLab's [Potion 2M model](https://huggingface.co/minishlab/potion-base-2M/tree/389b9f64be5aa4ae7a6bc6fe95ef20ce485ae5da), published under MIT. The application bundles a quantized derivative as a separate static asset. The [Model2Vec MIT notice](vendor/potion-2m-model2vec.LICENSE) accompanies the asset. It uses the model's token embeddings and does not include a remote inference client.

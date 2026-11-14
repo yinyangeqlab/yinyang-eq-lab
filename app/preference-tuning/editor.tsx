@@ -4,6 +4,7 @@ import { graphColor } from "@/lib/graph-theme";
 import { shortcutDecision } from "@/lib/playback-shortcuts";
 import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
 import { useConsentPrompt } from "@/components/use-consent-prompt";
+import { useSiteHelpActions, type BassCutApproval, type BassCutReceipt, type BassCutRequest } from "@/components/site-help-actions";
 import "@/components/alpha-audio-workbench.css";
 import { TargetCurveDownloads } from "@/components/target-curve-downloads";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
@@ -80,6 +81,7 @@ const defaults: Settings = {
 };
 const CURVE_VIEW = { min: 55, max: 90, anchor: 75 } as const;
 const EXPANDED_GAIN_LIMIT = 20;
+const BASS_GAIN_LIMIT = 12;
 const MAX_VIEW_HZ = 22000;
 const TUNING_LOOP_BOUNDS = { minimum: LOOP_MIN_SECONDS, endPadding: 0 };
 type AxisView = { freqMin: number; freqMax: number; dbMin: number; dbMax: number; autoDb: boolean; width: number; height: number };
@@ -96,7 +98,7 @@ type EditSnapshot = { settings: Settings; selected: string; expanded: boolean };
 type PlacementKey = "bassHz" | "earHz" | "trebleHz";
 const GAIN_CONTROLS: { key: GainKey; limit: number; hint: string; placement?: PlacementKey; fixed?: number }[] = [
   { key: "sub", limit: 12, hint: "Deep rumble and the lowest bass notes", fixed: 40 },
-  { key: "bass", limit: 12, hint: "Weight and drum impact", placement: "bassHz" },
+  { key: "bass", limit: BASS_GAIN_LIMIT, hint: "Weight and drum impact", placement: "bassHz" },
   { key: "body", limit: 6, hint: "Fullness in voices and instruments", fixed: 320 },
   { key: "ear", limit: 10, hint: "How forward voices and instruments feel", placement: "earHz" },
   { key: "air", limit: 6, hint: "Crisp sounds and sharp “s” sounds", fixed: 6500 },
@@ -657,6 +659,9 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [future, setFuture] = useState<EditSnapshot[]>([]);
   const hadSavedSelection = useRef(false);
   const editRef = useRef<EditSnapshot>({ settings: defaults, selected: "flat", expanded: false });
+  const siteHelpActions = useSiteHelpActions();
+  const pendingBassCut = useRef<{ approval: BassCutApproval; before: EditSnapshot; scope: string | null; route: string } | null>(null);
+  const appliedBassCut = useRef<{ receipt: BassCutReceipt; before: EditSnapshot; after: EditSnapshot; scope: string | null } | null>(null);
   const gestureRef = useRef<EditSnapshot | null>(null);
   const lastWheelEdit = useRef<{ key: GainKey; at: number } | null>(null);
   const [measurements, setMeasurements] = useState<HeadphoneMeasurement[]>([]);
@@ -1486,7 +1491,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     closeReset();
   }
   // Tuning's page-wide shortcuts are off while another page is showing.
-  useEffect(() => { if (!visible) return; const keydown = (event: KeyboardEvent) => { if (resetOpen || instructionsOpen) return; if (!(event.ctrlKey || event.metaKey) || event.altKey) return; const target = event.target; if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement && ["text", "search", "url"].includes(target.type)) return; if (event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) redo(); else undo(); } else if (event.key.toLowerCase() === "y") { event.preventDefault(); redo(); } }; window.addEventListener("keydown", keydown); return () => window.removeEventListener("keydown", keydown); }, [undo, redo, resetOpen, instructionsOpen, visible]);
+  useEffect(() => { if (!visible) return; const keydown = (event: KeyboardEvent) => { if (resetOpen || instructionsOpen || event.target instanceof Element && event.target.closest("dialog[open]")) return; if (!(event.ctrlKey || event.metaKey) || event.altKey) return; const target = event.target; if (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement && ["text", "search", "url"].includes(target.type)) return; if (event.key.toLowerCase() === "z") { event.preventDefault(); if (event.shiftKey) redo(); else undo(); } else if (event.key.toLowerCase() === "y") { event.preventDefault(); redo(); } }; window.addEventListener("keydown", keydown); return () => window.removeEventListener("keydown", keydown); }, [undo, redo, resetOpen, instructionsOpen, visible]);
   const shortcutContext = usePlaybackShortcutContext(".pt-listen");
   useEffect(() => {
     if (!visible || !audioUrl || resetOpen || instructionsOpen) return;
@@ -1640,6 +1645,51 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const activeToneVisible = allTones || PRIMARY_TONES.includes(GAIN_CONTROLS[activeBand].key);
   // While a snapshot plays, the editor is paused so it is never unclear which sound an edit would change.
   const controlsDisabled = (soundMode === "saved" && !savedEq) || editLocked;
+  useEffect(() => {
+    if (!visible || !siteHelpActions) return;
+    return siteHelpActions.register((request: BassCutRequest) => {
+      const route = window.location.pathname + window.location.search;
+      const available = window.location.pathname.replace(/\/$/, "") === TUNING_ROUTE &&
+        axisLoaded && !controlsDisabled && !comparing && !resetOpen && !instructionsOpen && !gestureRef.current;
+      const current = editRef.current;
+      const limit = current.expanded ? EXPANDED_GAIN_LIMIT : BASS_GAIN_LIMIT;
+
+      switch (request.phase) {
+        case "prepare": {
+          pendingBassCut.current = null;
+          if (!available) return { status: "unavailable" };
+          const before = current.settings.bass;
+          const after = before - 1;
+          if (!Number.isFinite(before) || before > limit || after < -limit) return { status: "limit" };
+          const approval = Object.freeze({ before, after });
+          pendingBassCut.current = { approval, before: current, scope: snapshotScope, route };
+          return { status: "ready", approval };
+        }
+        case "cancel":
+          if (pendingBassCut.current?.approval === request.approval) pendingBassCut.current = null;
+          return { status: "cancelled" };
+        case "confirm": {
+          const pending = pendingBassCut.current;
+          if (!pending || pending.approval !== request.approval) return { status: "changed" };
+          pendingBassCut.current = null;
+          if (!available || pending.before !== current || pending.scope !== snapshotScope || pending.route !== route) return { status: "changed" };
+          const after = { ...current, settings: { ...current.settings, bass: pending.approval.after } };
+          applyEdit(after);
+          const receipt = Object.freeze({ restoredGain: current.settings.bass });
+          appliedBassCut.current = { receipt, before: current, after, scope: snapshotScope };
+          return { status: "applied", receipt };
+        }
+        case "undo": {
+          const applied = appliedBassCut.current;
+          if (!available || !applied || request.receipt !== applied.receipt || current !== applied.after ||
+              past[past.length - 1] !== applied.before || snapshotScope !== applied.scope) return { status: "changed" };
+          appliedBassCut.current = null;
+          undo();
+          return { status: "undone" };
+        }
+      }
+    });
+  }, [siteHelpActions, visible, axisLoaded, controlsDisabled, comparing, resetOpen, instructionsOpen, snapshotScope, past, applyEdit, undo]);
   function downloadMatch(format: "txt" | "wav") {
     if (!activeMatch) return;
     try {
@@ -1884,7 +1934,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
                 {allTones && <div className="pt-tone-band-picker" role="group" aria-label="Choose a tone band">
                   {GAIN_CONTROLS.map((control, index) => {
                     const band = BANDS[index], gain = formatToneGain(settings[control.key]);
-                    return <button type="button" key={control.key} aria-pressed={activeBand === index}
+                    return <button type="button" key={control.key} data-tone-band={control.key} aria-pressed={activeBand === index}
                       style={{ color: graphColor(band.color, band.lightColor) }} onClick={() => selectBand(index)}>
                       <span>{band.name}</span>{gain !== "0" && <small>{gain} dB</small>}
                     </button>;

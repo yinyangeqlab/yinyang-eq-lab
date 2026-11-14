@@ -6,6 +6,7 @@ export const publicAssetPaths = [
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
   "/welcome-headphone-carpet.webp", "/welcome-iem-carpet.webp",
+  "/vendor/site-help/potion-2m-int4-v1.bin", "/vendor/site-help/LICENSE.txt",
 ];
 // Link-preview cards (scripts/generate-share-cards.mjs): static JPEGs and their animated companions.
 const shareCardPattern = /^\/share\/[a-z0-9-]+(?:\.jpg|-motion\.(?:webp|avif|gif))$/;

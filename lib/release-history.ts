@@ -7,6 +7,13 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Ask for help about Personal Tournament, Preference Tuning, My data, and related listening tools.",
+  "A small model trained on site questions helps select reviewed instructions. Use Show me to find the control.",
+  "Show me walks through reviewed steps and can lower Bass by 1 dB with confirmation and Undo.",
+  "Site help asks short follow-up questions about saved data, tournament setup and Preference Tuning.",
+] as const;
+
+const update163Changes = [
   "Cloudflare captures submission errors for Blind Shootout votes and listening runs independently of routine site logging.",
 ] as const;
 
@@ -227,7 +234,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: candidateChanges, github: { commit: "77a20497340c0cb90262d6e395470be37aca34c7", releaseTag: "update163" } },
+  { update: 164, date: "2026-11-14", title: "Site Help and guided walkthroughs", changes: candidateChanges },
+  { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: update163Changes, github: { commit: "77a20497340c0cb90262d6e395470be37aca34c7", releaseTag: "update163" } },
   { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: update162Changes, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },
   { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: update161Changes, github: { commit: "5e0abc5d4e8e442fed3fa30e754d6b077efa5065", releaseTag: "update161" } },
   { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes },

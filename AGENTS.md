@@ -22,6 +22,8 @@ GitHub contains application and reviewed credential-free deployment source, but 
 
 Build, commit, push and deploy are separate operations. Do not redeploy for documentation/rebuild audits. After a verified deployment update LIVE_RELEASE.json and its evidence, then run npm run release:refresh and npm run release:check to update LIVE_STATE.md, HANDOFF.md and HOSTING_HANDOFF.md together. Review the diff, explicitly approve any new untracked source paths, run npm run source:refresh and npm run verify; publish separately when authorized. Public-only packages are for clone previews and must not be deployed.
 
+Before a production apply, use the guarded command in [HOSTING_HANDOFF.md](HOSTING_HANDOFF.md). Finish the currently live update's handoff and verify its matching encrypted source-only registration and hosted validation before deploying the next update. Use the guarded command with the existing production stack even if its local infrastructure snapshot predates the check.
+
 # Private recovery storage
 
 Read docs/ENCRYPTED_BACKUP.md before backup work. Keep the storage service/account, destination, private receipt and recovery key outside Git and public handoffs. Public status may say only encrypted off-device backup. Never upload the recovery key alongside its archive or claim password-manager custody without owner confirmation.
