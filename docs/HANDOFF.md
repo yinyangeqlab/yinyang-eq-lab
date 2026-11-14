@@ -13,6 +13,8 @@ The deployed source passed all 123 release checks. The isolated browser review c
 
 Encrypted off-device source-only recovery and hosted validation passed. The existing data snapshot and its timestamp were retained. [Recovery verification](releases/update159-recovery-verification.json)
 
+[Update159 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update159) · [Publication verification](releases/update159-publication.json)
+
 ## Update158
 
 The Preference Tuning target list opens directly below search. The Sort button offers global rank and alphabetical order. Both target download options offer CSV and TXT, and Make my EQ opens the measurement picker when no headphones are selected.

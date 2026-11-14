@@ -38,8 +38,11 @@
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
-    "pushed": false,
-    "publicationAuthorized": true
+    "pushed": true,
+    "publicationAuthorized": true,
+    "baseMain": "348bdb17ca9306dbb39479c8062188d630462da5",
+    "publishedSourceCommit": "7fd72eeaca962c567c44c37477d173eae1ae2f87",
+    "publicationEvidence": "docs/releases/update159-publication.json"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
