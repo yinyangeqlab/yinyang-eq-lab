@@ -62,10 +62,11 @@ export function createPublishedBuildLookup(repositoryUrl: string, tag: string) {
   }
 
   return async function publishedBuildTag(verifiedTag?: string): Promise<string | undefined> {
+    // An exact tag verified at publication does not depend on a live API lookup.
+    if (verifiedTag === tag) return tag;
     const status = lastCheck && lastCheck.expiresAt > Date.now()
       ? lastCheck.status
       : await (pending ??= checkRelease().finally(() => { pending = undefined; }));
-    if (status === "published") return tag;
-    return status === "unavailable" && verifiedTag === tag ? verifiedTag : undefined;
+    return status === "published" ? tag : undefined;
   };
 }

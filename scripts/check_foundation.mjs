@@ -97,7 +97,9 @@ try {
   try {
     assert.deepEqual(await Promise.all([publishedBuildTag(), publishedBuildTag()]), [undefined, undefined]);
     assert.equal(requests, 1);
-    assert.equal(await publishedBuildTag(tag), undefined, 'a confirmed missing release stays hidden');
+    assert.equal(await publishedBuildTag(tag), tag, 'an exact verified tag survives a cached miss');
+    assert.equal(await publishedBuildTag('update0'), undefined);
+    assert.equal(requests, 1, 'verified metadata needs no request');
     response = () => releaseResponse();
     time += 299_000;
     assert.equal(await publishedBuildTag(), undefined);
@@ -120,7 +122,10 @@ try {
       assert.equal(await publishedBuildTag(), undefined);
       assert.equal(await publishedBuildTag('update0'), undefined);
     }
-    assert.equal(await publishedBuildTag(tag), tag, 'a transient failure can use matching recorded metadata');
+    time += 3_600_001;
+    const priorRequests = requests;
+    assert.equal(await publishedBuildTag(tag), tag, 'a verified tag bypasses an expired cache and unavailable API');
+    assert.equal(requests, priorRequests);
     checks++;
     console.log('PASS current-build lookup checks exact public publication and caches the post-publication transition');
   } finally {
