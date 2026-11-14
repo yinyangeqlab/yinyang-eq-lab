@@ -1,0 +1,110 @@
+{
+  "update": 157,
+  "sourceCommit": "68d486c95a6c246b41ca373780917cbfcf247b70",
+  "deploymentVerification": {
+    "at": "2026-11-14T02:32:15Z",
+    "update": 157,
+    "revision": "68d486c95a6c246b41ca373780917cbfcf247b70",
+    "deploymentVerified": true,
+    "migrations": [],
+    "schemaDefinitions": 227,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "operationalNoticePreserved": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "diagnosticLogSamplingRate": 0.1,
+    "diagnosticLogFields": [
+      "event",
+      "endpoint",
+      "stage",
+      "reason",
+      "status"
+    ],
+    "exactServerModulesVerified": 349,
+    "exactClientAssetsVerified": 8,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "cloudflareQueryBindingVerified": true,
+    "publicFitterGuideVerified": true,
+    "publicBenchmarkChartVerified": true,
+    "discordBenchmarkPreviewVerified": true,
+    "researchGuideLinkVerified": true,
+    "publicCurveCreditsVerified": true,
+    "publicVersionPageVerified": true,
+    "publicTermsVerified": true,
+    "existingD1DatabaseVerified": true,
+    "protectedAuthenticatedHttpVerificationPerformed": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "68d486c95a6c246b41ca373780917cbfcf247b70",
+    "regressionSuitesPassed": 123,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 1902,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "syntheticAdminBrowserWidths": [
+      1366,
+      360
+    ],
+    "verifiedPackagedSuites": 3
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "fixtureSessionRetired": true,
+    "globalCohortCountsUnchanged": true,
+    "adminPageAndApiDeniedToTestAccount": true,
+    "adminLinkVerifiedLocallyWithSyntheticRows": true,
+    "localBlindChoicesAfterBothSegments": [
+      "a",
+      "tie",
+      "b"
+    ],
+    "productionDenialsForEmptyRequests": [
+      "/api/trials",
+      "/api/listening-runs",
+      "/api/votes"
+    ]
+  },
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": [],
+  "recoveryRegistrationPending": true,
+  "diagnosticLogVerification": {
+    "savedQueryTitle": "Shootout submission failures",
+    "verifiedLiveEndpoints": [
+      "/api/listening-runs",
+      "/api/votes"
+    ],
+    "observedStage": "edge",
+    "observedReason": "test_account",
+    "observedStatus": 403,
+    "bothTestSessionsRetired": true
+  }
+}

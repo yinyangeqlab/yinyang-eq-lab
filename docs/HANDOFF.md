@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update156**, source `79193036fbcf0aba496efa12507bda04ac78da86`.
+Recorded deployment: **update157**, source `68d486c95a6c246b41ca373780917cbfcf247b70`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update157
+
+The server logs sampled failure reasons for listening runs and votes. Research Admin links to the saved Cloudflare query for the owner.
+
+The deployed source is `68d486c95a6c246b41ca373780917cbfcf247b70`. All 123 selected suites passed. The isolated test account verified Blind Shootout curve loading, playback, local choices and denied submissions. Global vote counts stayed unchanged. Cloudflare retained diagnostic events for both endpoints. [Deployment verification](releases/update157-verification.json)
+
+Encrypted source-only recovery registration and hosted validation are pending.
 
 ## Update156
 
