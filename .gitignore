@@ -60,6 +60,7 @@ work/
 # Audited deployment source only; stack configuration/state stays ignored.
 !/infra/pulumi/index.ts
 !/infra/pulumi/private-gate.mjs
+!/infra/pulumi/shootout-failure-logger.mjs
 !/infra/pulumi/abuse-controls.mjs
 !/infra/pulumi/abuse-controls.d.mts
 !/infra/pulumi/public-assets.mjs

@@ -5,6 +5,12 @@ Recorded deployment: **update162**, source `2aee7341bedd12d6fd07bb9b41b65f21ab93
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update163
+
+Failed POSTs to `/api/listening-runs` and `/api/votes` go to a private Cloudflare Worker configured for 100% log sampling. The main Worker keeps its 10% sample. The existing owner-only query still finds `shootout_submission_failed`; rows include the route, HTTP status, stage and reason code. Isolated test-account denials are labeled `test_account`.
+
+The collector receives no submission content and has no access to the rankings database. Coverage starts at the site Worker. Errors before a browser sends a request and blocks before Cloudflare invokes the site Worker are outside this diagnostic.
+
 ## Update162
 
 Personal Tournament plays leading curves more often. Progress bars show how close each curve is to leaving rotation after a vote, in tournament results, and in My Collection. Listeners can restore curves that leave rotation.

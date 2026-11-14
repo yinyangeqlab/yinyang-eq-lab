@@ -10,12 +10,10 @@ export type ShootoutSubmissionFailureReason = "request_input" | "write_blocked" 
   "listening_record_not_owned" | "listening_record_excluded" | "repeated_feedback" |
   "invalid_result_type" | "invalid_recording_fingerprint";
 
-export function logShootoutSubmissionFailure(endpoint: "/api/listening-runs" | "/api/votes",
+export function markShootoutSubmissionFailure(
   stage: ShootoutSubmissionStage, reason: ShootoutSubmissionFailureReason, response: Response): Response {
-  // Pass only fixed codes and the HTTP status. Error text, identifiers, and request data
-  // stay out of the diagnostic event, including when a database operation fails.
-  const event = { event: "shootout_submission_failed", endpoint, stage, reason, status: response.status };
-  if (response.status >= 500) console.error(event);
-  else console.warn(event);
+  // The private gate reads and strips this marker before sending the response.
+  // Only fixed codes cross this boundary. The gate already knows the route and status.
+  response.headers.set("X-Internal-Shootout-Failure", `${stage}:${reason}`);
   return response;
 }

@@ -14,8 +14,7 @@ const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPa
 async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [], linked = false } = {}) {
   let batches = 0; let savedVote;
   let targetRead = 0;
-  const events = [];
-  const logs = { exports: {}, console: { warn: event => events.push({ ...event }), error: event => events.push({ ...event }) } };
+  const logs = { exports: {} };
   vm.runInNewContext(logCode, logs);
   const db = {
     select(fields) {
@@ -60,11 +59,11 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ winnerId: "a", loserId: "b", voterId, trialId, testMode: "blind", headphoneType: "ie", result, heardA: heard, heardB: heard, intervals: [] }),
   }));
-  if (response.ok) assert.deepEqual(events, []);
+  if (response.ok) assert.equal(response.headers.get("X-Internal-Shootout-Failure"), null);
   else {
     const reason = gate ? "write_blocked" : used ? "vote_already_saved" : age < 10000 || heard < 5 ? "insufficient_playback" : "invalid_result_type";
     const stage = gate ? "write_gate" : used || age < 10000 ? "trial" : heard < 5 ? "request_body" : "listening_evidence";
-    assert.deepEqual(events, [{ event: "shootout_submission_failed", endpoint: "/api/votes", stage, reason, status: response.status }]);
+    assert.equal(response.headers.get("X-Internal-Shootout-Failure"), `${stage}:${reason}`);
   }
   return { status: response.status, batches, ...(checks.length ? { reliabilityWeight: savedVote?.reliabilityWeight } : {}) };
 }

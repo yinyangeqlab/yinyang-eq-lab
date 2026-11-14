@@ -1,10 +1,12 @@
+import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../infra/pulumi/shootout-failure-logger.mjs";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { ownerOnlyMaintenanceResponse, featureMaintenanceResponse, OWNER_ONLY_MAINTENANCE_MESSAGE } from '../lib/maintenance-options.ts';
 const source = readFileSync('infra/pulumi/private-gate.mjs', 'utf8');
 let appReads = 0, databaseCalls = 0;
-const context = vm.createContext({ exports: {}, crypto, Request, Response, Headers, URL, TextEncoder, Uint8Array, btoa, atob, console,
+const context = vm.createContext({
+ recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint, exports: {}, crypto, Request, Response, Headers, URL, TextEncoder, Uint8Array, btoa, atob, console,
  ownerOnlyMaintenanceResponse, featureMaintenanceResponse,
  readServiceStatus: async () => ({active:false}),
  preDatabaseGuard: async () => null, listenerGuard: async () => null, boundedBody: async r => r,

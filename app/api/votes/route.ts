@@ -12,17 +12,17 @@ import { intervalStats, parseIntervals } from "@/lib/listening";
 import { cleanFeedback } from "@/lib/feedback";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { publicWriteGate } from "@/lib/public-write-gate";
-import { logShootoutSubmissionFailure, type ShootoutSubmissionFailureReason, type ShootoutSubmissionStage } from "@/lib/shootout-submission-logs";
+import { markShootoutSubmissionFailure, type ShootoutSubmissionFailureReason, type ShootoutSubmissionStage } from "@/lib/shootout-submission-logs";
 
 export async function POST(request: Request) {
   let stage: ShootoutSubmissionStage = "identity";
   const reject = (reason: ShootoutSubmissionFailureReason, status: number, error: string) =>
-    logShootoutSubmissionFailure("/api/votes", stage, reason, Response.json({ error }, { status }));
+    markShootoutSubmissionFailure(stage, reason, Response.json({ error }, { status }));
   try {
     const ownership = await submissionContext("vote");
     stage = "write_gate";
     const limited = await publicWriteGate(request);
-    if (limited) return logShootoutSubmissionFailure("/api/votes", stage, "write_blocked", limited);
+    if (limited) return markShootoutSubmissionFailure(stage, "write_blocked", limited);
     stage = "request_body";
     const data = await readJsonObject(request, 32768);
     if (data.testMode !== "blind" && !ownership.shareMusic) for (const key of ["songTitle","songArtist","songAlbum","recordingId","sha256"]) delete data[key];
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return reject("comparison_changed", 409, "This comparison was erased or changed while saving. Start a new comparison.");
     const inputError = requestInputResponse(error);
-    if (inputError) return logShootoutSubmissionFailure("/api/votes", stage, "request_input", inputError);
+    if (inputError) return markShootoutSubmissionFailure(stage, "request_input", inputError);
     if (String(error).includes("UNIQUE constraint failed") || String((error as { cause?: unknown })?.cause).includes("UNIQUE constraint failed")) {
       return reject("vote_already_saved", 409, "This trial has already been submitted.");
     }

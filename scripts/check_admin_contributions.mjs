@@ -18,7 +18,7 @@ sql.prepare('INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALU
 const deps={'cloudflare:workers':{env:{DB:db}},'next/headers':{headers:async()=>new Headers({'x-yinyang-data-session':session})},'@/db':{getDb:fail},'@/db/schema':unexpected,'drizzle-orm':unexpected,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/activity-monitoring':{ACTIVITY_MONITORING_NOTICE_VERSION},'@/app/chatgpt-auth':{getChatGPTUser:async()=>({userId:identity,displayName:'Test admin',email:''})},'@/lib/music-catalog':{musicCandidates:[],listeningPool:[]}};
 function load(file){const exports={};const code=ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;vm.runInNewContext(code,{exports,require:name=>name==="@/lib/fitter-settings"?fitters:deps[name]||unexpected,Response,Request,Headers,URL,Date,crypto,TextEncoder,TextDecoder,Buffer,console});return exports;}
 deps['@/lib/request-json']=load('lib/request-json.ts');
-deps['@/lib/shootout-submission-logs']={logShootoutSubmissionFailure:(_endpoint,_stage,_reason,response)=>response};
+deps['@/lib/shootout-submission-logs']={markShootoutSubmissionFailure:(_stage,_reason,response)=>response};
 deps['@/lib/profile-api']=load('lib/profile-api.ts');
 deps['@/lib/admin-contributions']=load('lib/admin-contributions.ts');
 deps['@/lib/yinyangeq-account']=load('lib/yinyangeq-account.ts');

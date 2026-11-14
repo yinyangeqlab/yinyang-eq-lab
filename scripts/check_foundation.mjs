@@ -66,6 +66,17 @@ const sourceOnlyFixture = state => {
 try {
   const state = json(join(root, 'LIVE_RELEASE.json')), receipt = json(join(root, state.evidence));
   test('current release contract', () => validateRelease(state, receipt));
+  test('deployment refresh has its own receipt path', () => {
+    const refreshed = clone(state);
+    refreshed.deploymentRefresh = {
+      slug: 'version-link-refresh',
+      previousEvidence: `docs/releases/update${state.update}-verification.json`,
+    };
+    refreshed.evidence = `docs/releases/update${state.update}-version-link-refresh-verification.json`;
+    validateRelease(refreshed, receipt);
+    refreshed.evidence = refreshed.deploymentRefresh.previousEvidence;
+    assert.throws(() => validateRelease(refreshed, receipt), /identify this deployment refresh/);
+  });
   for (const [name, mutate] of [
     ['receipt revision mismatch', value => { value.sourceCommit = 'f'.repeat(40); }],
     ['unverified deployment', value => { value.deploymentVerification.deploymentVerified = false; }],

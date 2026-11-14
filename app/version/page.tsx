@@ -11,7 +11,9 @@ const repository = repositoryUrl;
 const releaseUrl = (tag: string) => `${repository}/releases/tag/${encodeURIComponent(tag)}`;
 
 export default function VersionPage() {
-  const latestReleaseTag = releaseHistory.find(entry => entry.github?.releaseTag)?.github?.releaseTag;
+  const currentReleaseTag = releaseInfo.build.preview
+    ? undefined
+    : releaseHistory.find(entry => entry.update === releaseInfo.build.update)?.github?.releaseTag;
   return <main className="alpha-help-page alpha-version-page">
     <span className="alpha-version-eyebrow">YinYang EQ</span>
     <h1>About this version</h1>
@@ -22,7 +24,7 @@ export default function VersionPage() {
     <section className="alpha-help-card version-build-notes" aria-labelledby="build-notes">
       <h2 id="build-notes">Changes in this build</h2>
       <ul>{candidateChanges.map(change => <li key={change}>{change}</li>)}</ul>
-      {latestReleaseTag && <div className="alpha-version-links"><a href={releaseUrl(latestReleaseTag)}>View {latestReleaseTag} on GitHub</a></div>}
+      {currentReleaseTag && <div className="alpha-version-links"><a href={releaseUrl(currentReleaseTag)}>View {currentReleaseTag} on GitHub</a></div>}
     </section>
     <section className="alpha-help-card version-history" aria-labelledby="version-changes">
       <h2 id="version-changes">Release history</h2>

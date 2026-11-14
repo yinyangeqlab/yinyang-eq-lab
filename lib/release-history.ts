@@ -7,6 +7,10 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Cloudflare captures submission errors for Blind Shootout votes and listening runs independently of routine site logging.",
+] as const;
+
+const update162Changes = [
   "Personal Tournament plays leading curves more often and lets you restore curves that leave rotation.",
   "See each curve’s progress toward leaving rotation after you save a choice and in Personal Tournament results.",
 ] as const;
@@ -223,7 +227,8 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: candidateChanges, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },
+  { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: candidateChanges },
+  { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: update162Changes, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },
   { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: update161Changes, github: { commit: "5e0abc5d4e8e442fed3fa30e754d6b077efa5065", releaseTag: "update161" } },
   { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes },
   { update: 159, date: "2026-11-13", title: "Layout, accessibility and site review fixes", changes: update159Changes, github: { commit: "7fd72eeaca962c567c44c37477d173eae1ae2f87", releaseTag: "update159" } },

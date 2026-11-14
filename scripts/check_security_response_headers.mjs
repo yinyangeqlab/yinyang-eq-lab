@@ -1,10 +1,11 @@
+import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../infra/pulumi/shootout-failure-logger.mjs";
 import assert from 'node:assert/strict';
 import{readFileSync}from'node:fs';
 import vm from'node:vm';
 const src=readFileSync('infra/pulumi/private-gate.mjs','utf8');
 const wrapper=src.slice(src.indexOf('const worker = {'),src.indexOf('\nfunction rankingResponse')).replace('const worker =','exports.handler =');
 let response;
-const context={exports:{},privateGate:{fetch:async()=>response},Headers,Response,URL,withMediaLength:(_,r)=>r};vm.runInNewContext(wrapper,context);
+const context={recordShootoutFailure,shootoutFailureHeader,shootoutSubmissionEndpoint,exports:{},privateGate:{fetch:async()=>response},Headers,Response,URL,withMediaLength:(_,r)=>r};vm.runInNewContext(wrapper,context);
 for(const type of ['text/html; charset=utf-8','application/json','audio/mpeg']){
  response=new Response('fixture',{headers:{'Content-Type':type,'Referrer-Policy':'no-referrer'}});
  const out=await context.exports.handler.fetch(new Request('https://fixture.test'),{},{});

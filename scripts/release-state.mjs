@@ -53,11 +53,24 @@ export function recoveryState(state) {
   return { kind: 'source-only', pending: recovery.sourceOnlyHandoverPending };
 }
 
+function checkEvidencePath(state) {
+  const update = `docs/releases/update${state.update}`;
+  const original = `${update}-verification.json`;
+  if (state.deploymentRefresh === undefined) {
+    check(state.evidence === original, 'evidence path must identify this update');
+    return;
+  }
+  check(state.deploymentRefresh.previousEvidence === original, 'refresh must preserve the original deployment receipt');
+  const slug = state.deploymentRefresh.slug;
+  check(typeof slug === 'string' && /^[a-z]+(?:-[a-z]+)*$/.test(slug), 'invalid deployment refresh name');
+  check(state.evidence === `${update}-${slug}-verification.json`, 'evidence path must identify this deployment refresh');
+}
+
 // Validate the selected current contract. Historical nested records remain intact.
 export function validateRelease(state, receipt) {
   check(Number.isSafeInteger(state.update) && state.update > 0, 'update must be a positive integer');
   check(hash(state.sourceCommit), 'sourceCommit must be a full Git SHA');
-  check(state.evidence === `docs/releases/update${state.update}-verification.json`, 'evidence path must identify this update');
+  checkEvidencePath(state);
   check(typeof state.verifiedAt === 'string' && Number.isFinite(Date.parse(state.verifiedAt)), 'verifiedAt must be a date');
   check(state.gitSource?.implementationCommit === state.sourceCommit, 'gitSource revision differs');
   check(state.gitSource?.branch === state.sourceBranch, 'gitSource branch differs');
@@ -133,7 +146,12 @@ export function replaceBlock(text, state, path) {
 
 export function verifyOrRefresh(directory, write = false) {
   const state = JSON.parse(readFileSync(resolve(directory, 'LIVE_RELEASE.json'), 'utf8'));
-  check(state.evidence === `docs/releases/update${state.update}-verification.json`, 'invalid evidence path');
+  checkEvidencePath(state);
+  if (state.deploymentRefresh) {
+    const original = JSON.parse(readFileSync(resolve(directory, state.deploymentRefresh.previousEvidence), 'utf8'));
+    check(original.update === state.update && original.deploymentVerification?.deploymentVerified === true, 'original deployment receipt is missing or unverified');
+    check(original.sourceCommit === state.baselineCommit, 'refresh baseline differs from the original deployment');
+  }
   const receipt = JSON.parse(readFileSync(resolve(directory, state.evidence), 'utf8'));
   validateRelease(state, receipt);
   // Prepare every result before writing, so malformed handoff markers cause no partial refresh.

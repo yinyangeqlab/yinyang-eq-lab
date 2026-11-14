@@ -1,3 +1,4 @@
+import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "./shootout-failure-logger.mjs";
 import { serveWorkerMedia } from "./media-route.mjs";
 import { withMediaLength } from "./media-response.mjs";
 import app from "./index.js";
@@ -171,19 +172,13 @@ async function admin(request, env, path) {
   }
   return json({ error: "Not found." }, 404);
 }
-function logBlockedShootoutSubmission(request, endpoint, reason, response) {
-  if (request.method === "POST" && (endpoint === "/api/listening-runs" || endpoint === "/api/votes")) {
-    const event = { event: "shootout_submission_failed", endpoint, stage: "edge", reason, status: response.status };
-    if (response.status >= 500) console.error(event);
-    else console.warn(event);
-  }
-  return response;
-}
-
 const privateGate = {
   async fetch(request, env, context) {
     const url = new URL(request.url), path = url.pathname;
-    const blockedSubmission = (reason, response) => logBlockedShootoutSubmission(request, path, reason, response);
+    const blockedSubmission = (reason, response) => {
+      if (shootoutSubmissionEndpoint(request, path)) response.headers.set(shootoutFailureHeader, `edge:${reason}`);
+      return response;
+    };
     // Evaluate before public pages, crawler previews, shared shootouts and media.
     // Only the existing signed, host-only admin cookie grants the exception.
     if (["true", "1"].includes(String(env.OWNER_ONLY_MAINTENANCE)) && !["/admin-login", "/owner-login"].includes(path)) {
@@ -396,8 +391,20 @@ const privateGate = {
 // Direct static delivery never executes this wrapper and has no such header.
 const worker = {
   async fetch(request, env, context) {
-    const response = await privateGate.fetch(request, env, context);
+    const requestUrl = new URL(request.url);
+    const endpoint = shootoutSubmissionEndpoint(request, requestUrl.pathname);
+    let response;
+    try {
+      response = await privateGate.fetch(request, env, context);
+    } catch (error) {
+      if (endpoint) recordShootoutFailure(env, context, endpoint, 500, "edge:edge_error");
+      throw error;
+    }
     const headers = new Headers(response.headers);
+    if (endpoint && response.status >= 400) {
+      recordShootoutFailure(env, context, endpoint, response.status, headers.get(shootoutFailureHeader));
+    }
+    headers.delete(shootoutFailureHeader);
     headers.set("X-YinYang-Worker", "1");
     headers.set("X-Content-Type-Options", "nosniff");
     // Only the chrome-less shootout page may be framed by other sites.
@@ -416,7 +423,6 @@ const worker = {
         ].join("; "));
       }
     }
-    const requestUrl = new URL(request.url);
     if (env.HSTS_CANONICAL === "true" && requestUrl.protocol === "https:" && requestUrl.origin === env.CANONICAL_ORIGIN) {
       headers.set("Strict-Transport-Security", "max-age=86400");
     }

@@ -60,6 +60,12 @@ function moduleSource(bytes: Buffer): string {
 }
 
 const modules: Record<string, cloudflare.types.input.WorkersScriptFiles> = {};
+const failureLoggerModule = join(here, "shootout-failure-logger.mjs");
+const failureLoggerEntry = 'export { default } from "./shootout-failure-logger.mjs";';
+modules["shootout-failure-logger.mjs"] = {
+  contentType: "application/javascript+module",
+  contentFile: moduleFile(failureLoggerModule),
+};
 modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/invite-settings.mjs"))};
 modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/share-pages.mjs"))};
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
@@ -127,6 +133,31 @@ function requiredSecret(name: string): pulumi.Output<string> {
   });
 }
 
+// Only failed submission responses invoke this Worker through a service binding.
+// No invocation logs or public route are needed for its structured events.
+const failureLogger = new cloudflare.WorkersScript("shootout-failure-logger", {
+  accountId,
+  scriptName: `${scriptName}-shootout-failures`,
+  limits: { cpuMs: 50 },
+  mainModule: "index.mjs",
+  content: failureLoggerEntry,
+  files: { "shootout-failure-logger.mjs": modules["shootout-failure-logger.mjs"] },
+  compatibilityDate: "2026-05-15",
+  observability: {
+    enabled: true,
+    headSamplingRate: 1,
+    logs: { enabled: true, headSamplingRate: 1, invocationLogs: false },
+    traces: { enabled: false },
+  },
+});
+
+const failureLoggerSubdomain = new cloudflare.WorkersScriptSubdomain("shootout-failure-logger-subdomain", {
+  accountId,
+  scriptName: failureLogger.scriptName,
+  enabled: false,
+  previewsEnabled: false,
+});
+
 const worker = new cloudflare.WorkersScript("target-shootout-worker", {
   accountId,
   scriptName,
@@ -143,6 +174,7 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
   },
   bindings: [
     ...abuseBindings,
+    { name: "SHOOTOUT_FAILURE_LOGGER", type: "service", service: failureLogger.scriptName },
     { name: "ASSETS", type: "assets" },
     { name: "DB", type: "d1", databaseId: database.uuid },
     { name: "CANONICAL_ORIGIN", type: "plain_text", text: canonicalUrl.origin },
@@ -164,7 +196,7 @@ const worker = new cloudflare.WorkersScript("target-shootout-worker", {
     logs: { enabled: true, headSamplingRate: 0.1, invocationLogs: true },
     traces: { enabled: false },
   },
-});
+}, { dependsOn: [failureLoggerSubdomain] });
 
 // The Site's owner-only policy is not inherited by a direct Cloudflare Worker.
 // Leave the default public workers.dev route and preview URLs disabled.

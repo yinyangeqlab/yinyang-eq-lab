@@ -54,7 +54,7 @@ if not paths:
 # Only these reviewed source files may cross the infrastructure exclusion.
 public_infra = {
     "infra/pulumi/" + name for name in (
-        "index.ts", "private-gate.mjs", "abuse-controls.mjs", "abuse-controls.d.mts",
+        "index.ts", "private-gate.mjs", "shootout-failure-logger.mjs", "abuse-controls.mjs", "abuse-controls.d.mts",
         "public-assets.mjs", "public-assets.d.mts", "package.json", "package-lock.json",
         "tsconfig.json", "Pulumi.yaml",
     )

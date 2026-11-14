@@ -12,19 +12,19 @@ import { intervalStats, parseIntervals } from "@/lib/listening";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 import { VOTE_DATA_NOTICE_VERSION } from "@/lib/vote-data-notice";
 import { publicWriteGate } from "@/lib/public-write-gate";
-import { logShootoutSubmissionFailure, type ShootoutSubmissionFailureReason, type ShootoutSubmissionStage } from "@/lib/shootout-submission-logs";
+import { markShootoutSubmissionFailure, type ShootoutSubmissionFailureReason, type ShootoutSubmissionStage } from "@/lib/shootout-submission-logs";
 
 const uuid = /^[a-f0-9-]{36}$/i;
 
 export async function POST(request: Request) {
   let stage: ShootoutSubmissionStage = "identity";
   const reject = (reason: ShootoutSubmissionFailureReason, status: number, error: string) =>
-    logShootoutSubmissionFailure("/api/listening-runs", stage, reason, Response.json({ error }, { status }));
+    markShootoutSubmissionFailure(stage, reason, Response.json({ error }, { status }));
   try {
     const ownership = await submissionContext("run");
     stage = "write_gate";
     const limited = await publicWriteGate(request);
-    if (limited) return logShootoutSubmissionFailure("/api/listening-runs", stage, "write_blocked", limited);
+    if (limited) return markShootoutSubmissionFailure(stage, "write_blocked", limited);
     stage = "request_body";
     const data = await readJsonObject(request, 32_768);
     if (data.voteDataNoticeVersion !== VOTE_DATA_NOTICE_VERSION) return reject("notice_outdated", 403, "Review the current data notice before participating.");
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if(/erased or changed/.test(String(error)+String((error as {cause?:unknown})?.cause))) return reject("comparison_changed", 409, "This comparison was erased or changed while saving. Start a new comparison.");
     const inputError = requestInputResponse(error);
-    if (inputError) return logShootoutSubmissionFailure("/api/listening-runs", stage, "request_input", inputError);
+    if (inputError) return markShootoutSubmissionFailure(stage, "request_input", inputError);
     return reject("internal_error", 500, "Listening run could not be saved.");
   }
 }
