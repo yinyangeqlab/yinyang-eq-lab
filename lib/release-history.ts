@@ -7,6 +7,16 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "The full and icon-only sidebars use a silver arrow that grows on hover and presses inward when held.",
+  "The hidden sidebar shows a faint silver arrow. Approaching the left edge slides out a green-tinted glass strip.",
+] as const;
+
+const update166Changes = [
+  "Peak & Dip Finder can start from a saved EQ or fit a target. A headphone measurement shows the raw, reference EQ and adjusted responses together.",
+  "Hear peak cuts and dip boosts as you edit. Switch between raw playback, reference EQ and EQ with adjustments while listening.",
+] as const;
+
+const update165Changes = [
   "Preference Tuning selects Target match by default for generated EQ exports. Lower boost remains available, and both options show the preamp adjustment.",
 ] as const;
 
@@ -238,7 +248,9 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 165, date: "2026-11-14", title: "Preference Tuning target match", changes: candidateChanges },
+  { update: 167, date: "2026-11-14", title: "Sidebar controls", changes: candidateChanges },
+  { update: 166, date: "2026-11-14", title: "Peak & Dip Finder saved EQ and live adjustments", changes: update166Changes },
+  { update: 165, date: "2026-11-14", title: "Preference Tuning target match", changes: update165Changes, github: { commit: "da4977a00ba46537521b18340dd32e433110b662", releaseTag: "update165" } },
   { update: 164, date: "2026-11-14", title: "Site Help and guided walkthroughs", changes: update164Changes, github: { commit: "ad71f9a649f581cc246507ceb1add6108fec7a85", releaseTag: "update164" } },
   { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: update163Changes, github: { commit: "77a20497340c0cb90262d6e395470be37aca34c7", releaseTag: "update163" } },
   { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: update162Changes, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },

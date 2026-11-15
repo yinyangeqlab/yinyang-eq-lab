@@ -1,9 +1,23 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update165**, source `658403035df3bcd207f5297517368419de898917`.
+Recorded deployment: **update167**, source `dc69875afb2bd197ead726458039d51108760099`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update167 sidebar controls
+
+The full and icon-only sidebars use a silver arrow that grows in place on hover and presses inward when held. The collapsed arrow reveals green-tinted glass near the left edge.
+
+All 125 selected release checks passed. Brave verified all three sidebar states, keyboard focus, reduced motion and the phone menu. The live sidebar assets matched the verified package. Encrypted source-only recovery and hosted validation passed.
+
+[Update167 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167) · [Deployment verification](releases/update167-verification.json) · [Recovery verification](releases/update167-recovery-verification.json)
+
+## Update166 Peak & Dip Finder
+
+Peak & Dip Finder accepts a saved EQ or target fit as its reference and plays boosts and cuts as they are edited. Update167 carries forward this deployed source.
+
+[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json)
 
 Use the exact `.node-version` / `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
 

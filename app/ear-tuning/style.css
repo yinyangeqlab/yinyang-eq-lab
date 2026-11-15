@@ -68,7 +68,7 @@
 .ear-volume { flex: 1 1 145px; margin-inline-start: 8px; }
 .ear-check, .ear-mode label { display: flex; align-items: center; gap: 7px; }
 .ear-setup { padding: 8px 10px; border: 1px solid light-dark(var(--workbench-line), #36545c); border-radius: 8px; }
-.ear-setup summary { cursor: pointer; }
+.ear-setup summary { cursor: pointer; overflow-wrap: anywhere; }
 .ear-music { display: grid; gap: 8px; min-width: 0; }
 .ear-music-search, .ear-file { display: grid; gap: 6px; min-width: 0; }
 .ear-music-search > span { font-size: 13px; }
@@ -78,6 +78,7 @@
 .ear-mode { display: flex; flex-wrap: wrap; gap: 8px 15px; border: 0; padding: 9px 0; margin: 0; }
 .ear-mode legend { padding: 8px 0 0; font-size: 13px; color: light-dark(var(--workbench-muted), #b7cdd1); }
 .ear-base { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 9px; margin: 7px 0; }
+.ear-base > label { min-width: 0; max-width: 100%; }
 .ear-base p { flex-basis: 100%; font-size: 13px; }
 .ear-adjustment {
   display: grid;

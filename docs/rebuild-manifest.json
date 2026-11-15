@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "6aa8d9ed01b6e816702329e028c4cbe80bab96c6",
-  "recordedLiveUpdate": 165,
+  "baseRevision": "3a0afe6fa75f547d833fbcaf097eec306e268e7a",
+  "recordedLiveUpdate": 167,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -47,12 +47,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "f742ce626c7de72807eb7060888b3db7e2e15f7843f8e0b32b3b5ce692fd17d9",
+      "sha256": "19c28721b4c7c7de9bd16b3855f3052135d9747a1f35f45c809217fc4a799a1c",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "95fae3cca7aa190d51b6802891c0741f319b0cbc574fcf705ba66ee191b500cd",
+      "sha256": "8a8a90e006ee279ce151c8611102e35e95cd056eb66888c11408cf7006bcb100",
       "executable": false
     },
     {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "626fbc1db8b75c61eca3a6f73ff48be0b32e23e7b00330cbefc6dd405a913ed4",
+      "sha256": "c34c0f31766497f54cb5b40bd650acf448a4b93b5a4a2a449d7762d112e49f9a",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "2775de04ebc2fed6e61110a7a2aefec49f6a71373e8bfad53a5199fa35f0721d",
+      "sha256": "0685e60d15b7e6e66b55521fc84cf13d0933e3ba99b32113b86bd4a9daa948d8",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "b9678f8d571f6f28ac0b00fcec313fa80a9dce6254ae2bf59184fd8a61cb7a4f",
+      "sha256": "53c3ac806b56849c864d57f740779666b09d9be76e2b6378dfe8fd961fc36870",
       "executable": false
     },
     {
@@ -122,7 +122,7 @@
     },
     {
       "path": "app/alpha.css",
-      "sha256": "a021bfd0c91f1553e84b76a561afef07ffdeb6eb6f5f86df3980958351aa2f37",
+      "sha256": "1b6886ddab0f4f9a8a9b17a7777500290480d057a8581791090466c69b2b2af7",
       "executable": false
     },
     {
@@ -462,12 +462,12 @@
     },
     {
       "path": "app/ear-tuning/frequency-navigator.css",
-      "sha256": "978c93fa70734beba463d902b80552c2871c72cd0c0be2fd8607cf6ee495239c",
+      "sha256": "a7fbc9c6d96235fdf2f33ca9fa6e92266f7390fdfb8c05eff4416eb6f351a881",
       "executable": false
     },
     {
       "path": "app/ear-tuning/frequency-navigator.tsx",
-      "sha256": "d2f1710d8293648e0ed308ffe83616e057bf0328f7ee2888c9252a76cf4dbaf5",
+      "sha256": "4771ff422efa44939aa3e740e9d29e0e5c16013991b1e1e909cb19482c512d04",
       "executable": false
     },
     {
@@ -487,7 +487,7 @@
     },
     {
       "path": "app/ear-tuning/page.tsx",
-      "sha256": "843b462141959972762651f0f1df280bb582472fc813b8bc4dcdb5fd747a422f",
+      "sha256": "e6f3f3916905e4bafa0a8a698a0fbf6c01a6a18bd8cbe69c8eea3e51d74c7217",
       "executable": false
     },
     {
@@ -527,7 +527,7 @@
     },
     {
       "path": "app/ear-tuning/style.css",
-      "sha256": "bf0ce1bd59b6cd7b6adcfb74d44f9034330d865013fc1ed4f23d0c4ee2a9c3a1",
+      "sha256": "092eb52f743253f9ca1c37f62d158244bbf67ac9926ff5f2b5bcf5604cce74fc",
       "executable": false
     },
     {
@@ -802,7 +802,7 @@
     },
     {
       "path": "app/site-light.css",
-      "sha256": "77fd02214cc721bac6e55169706ec8e3cd1f6db5aed0cc6513c71060a9c76771",
+      "sha256": "40b2095fa26a63fb1e2b86858aa925b88718c8834d911699d5ceb716b1130417",
       "executable": false
     },
     {
@@ -1037,7 +1037,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "29e9d1ad7de9aa9e4dcec6e0100cb87d8295389990de18a3676778f4fbdd3f1b",
+      "sha256": "26cf60cbbabf206572cd6e53752094d28cf57da030f38dcfab662d8be9c1c7c3",
       "executable": false
     },
     {
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "341570d3b3504575da3b5334534fca570361824f4fce421d73a321d86c3a643d",
+      "sha256": "ea59ac8ad65b47f137856bc170819e47a45ed3a3db04074f44bbe6ec4c08346d",
       "executable": false
     },
     {
@@ -2287,7 +2287,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "c7b7e81d5fb302254f37b320c7be246ab667e25e55d682478ecbad3617e18531",
+      "sha256": "0bcaf95071be2c3f67c9aa49e10131899c28d76841951585d97f348b1313a9e5",
       "executable": false
     },
     {
@@ -2297,7 +2297,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "5603cc6636e753fde6578821e2e774458a5f8b415be80eb67557c6fa37a8d65b",
+      "sha256": "44e76f7afe79f3a0a7220c447bd7cb4d31de14adec9c7a1b2ea98ddb137f328d",
       "executable": false
     },
     {
@@ -2868,6 +2868,26 @@
     {
       "path": "docs/releases/update165-verification.json",
       "sha256": "984a76799d0cdaaa5adce4eb4b74fadd137f55bac3d3049ebf0bb4223e8635b2",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update166-recovery-verification.json",
+      "sha256": "e39a1008721d7ab4d6fd3eed494188f13bd949226b3d3871cf67574db0e91e61",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update166-verification.json",
+      "sha256": "6c323909fffb52392822e8e67ab2c36ff3bfbbd89197172e6fbb2b4e3e4068d9",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update167-recovery-verification.json",
+      "sha256": "e1eba1f56e57e148da6b8537035ebe09257c225f2e13db1392241967d4523791",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update167-verification.json",
+      "sha256": "fd6f92bcdfff2d257fb96d2c1fd60e73a17e4cf53ed77716df1c4c127de6bcb5",
       "executable": false
     },
     {
@@ -3832,7 +3852,7 @@
     },
     {
       "path": "lib/ear-tuning-audio.ts",
-      "sha256": "f6005a6df347dddd6656e8daa4fb3d3469b0f279e6c86f2b3bfd3eea331d0055",
+      "sha256": "4ad50598a33623f1a1046153fc3c21ba0004511bc1b6e385c9f0d63ed0b1dec6",
       "executable": false
     },
     {
@@ -4002,7 +4022,7 @@
     },
     {
       "path": "lib/music-library-eq.ts",
-      "sha256": "c7206feb7b72f85da21c7ece14e41318512e264c47e5b96d68564b1506431b1a",
+      "sha256": "940de097cde8ed71d0d35993d0f56905a23749fc4496bbb4eca52c56da9bd927",
       "executable": false
     },
     {
@@ -4157,12 +4177,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "cce0cddb1e1815404259b8c853c0e6d4355ef79249fdbccf8c06f35f6c952fdc",
+      "sha256": "08a343c99415019ecc85a61e29cf8ad8e30e1e33a534e7e475ac3a6da106a3b7",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "a0752e330ba36ee8a3107bd155512bb62e927fa168776de043e041f815ab9793",
+      "sha256": "e96deea17d3f59eb8abda3b6e3e50f2af84320db4555107415dc21c2e2aa9420",
       "executable": false
     },
     {
@@ -5177,7 +5197,7 @@
     },
     {
       "path": "scripts/check_main_workflows.mjs",
-      "sha256": "765a1523b430ad16d96880cadc072f293c3fee7fb754fffd7786bc5d093c2b24",
+      "sha256": "99e5e8b94a84614a1fc3d46db56fa2fc4cef7aa69fcde71a00f367d74b37566b",
       "executable": false
     },
     {

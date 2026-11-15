@@ -73,16 +73,17 @@
 }
 
 [data-site-theme="light"] .alpha-sidebar-divider {
-  --sidebar-glass-inner: #edf7f2ed;
-  --sidebar-glass-outer: #d8ebe3d9;
-  --sidebar-glass-edge: #315f592d;
-  --sidebar-glass-halo: #48bb9330;
-  --sidebar-glass-rim: #38897749;
-  --sidebar-glass-ink: var(--site-light-ink);
-  --sidebar-glass-active-ink: #084f48;
-  --sidebar-glass-focus: var(--site-light-accent);
-  --sidebar-glass-shadow: #fff9;
-  --sidebar-glass-glow: #30b08043;
+  --sidebar-handle-fill: linear-gradient(90deg,#e8f3edb8,#d5e8dc8a 48%,#c7dbcf58);
+  --sidebar-handle-edge: #4c6d5a59;
+  --sidebar-handle-ink: #1f1f1f;
+  --sidebar-handle-idle: #555555;
+  --sidebar-handle-focus: #414141;
+  --sidebar-handle-depth: #39393938;
+  --sidebar-handle-press-shadow: #32323240;
+  --sidebar-handle-press-fill: #51515124;
+}
+[data-site-theme="light"] .alpha-sidebar-edge {
+  background-color:var(--site-light-surface);
 }
 [data-site-theme="light"] :is(.alpha-destination, .alpha-secondary-navigation a) {
   --alpha-marker: var(--site-light-accent);

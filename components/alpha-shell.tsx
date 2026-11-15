@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PanelLeftIcon, PanelTopIcon } from "lucide-react";
+import { PanelTopIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent, MouseEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
@@ -13,8 +13,8 @@ import { applyMotionPreference, readDisplayPreferences, subscribeDisplayPreferen
 
 type Destination = "home" | "listen" | "tune" | "ear" | "library" | "rankings" | "space" | "terms";
 type Layout = "full" | "icons" | "hidden";
-const SIDEBAR_EDGE_DISTANCE = 48;
 const PHONE_VIEWPORT = "(max-width: 600px)";
+const SIDEBAR_EDGE_DISTANCE = 48;
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 // Match the path commands across poses so the browser can morph one unbroken EQ line.
@@ -229,12 +229,15 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     const edge = peek.current;
-    if (layout !== "hidden" || modalOpen || !edge) return;
+    if (!edge || layout !== "hidden" || modalOpen) return;
 
-    const retract = () => edge.removeAttribute("data-pointer-near");
+    const retract = () => edge.removeAttribute("data-edge-near");
     const onPointerMove = (event: PointerEvent) => {
-      edge.toggleAttribute("data-pointer-near", event.pointerType === "mouse" &&
-        event.clientX >= 0 && event.clientX < SIDEBAR_EDGE_DISTANCE);
+      const nearEdge = event.pointerType === "mouse" &&
+        event.clientX >= 0 && event.clientX < SIDEBAR_EDGE_DISTANCE;
+      if (edge.hasAttribute("data-edge-near") !== nearEdge) {
+        edge.toggleAttribute("data-edge-near", nearEdge);
+      }
     };
     const onPointerOut = (event: PointerEvent) => {
       if (!event.relatedTarget) retract();
@@ -284,18 +287,30 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
   }
   function cycleLayout(event: MouseEvent<HTMLButtonElement>) {
     if (layout === "hidden" || nextLayout === "hidden") {
-      restoreToggleFocus.current = event.currentTarget.matches(":focus-visible");
+      restoreToggleFocus.current = event.detail === 0 || event.currentTarget.matches(":focus-visible");
     }
     setLayout(nextLayout);
   }
-  const sidebarChevron = (
-    <svg viewBox="0 0 16 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11.75 3.5 4 12l7.75 8.5"/>
-    </svg>
+  const sidebarArrow = (
+    <span className="alpha-divider-grip" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path className="alpha-sidebar-arrowhead" d="M6 12 18 3l-2.6 9 2.6 9Z" fill="currentColor" />
+      </svg>
+    </span>
   );
   const navigationToggle = (
-    <button ref={menu} className="alpha-sidebar-divider" type="button" onClick={cycleLayout} aria-label={nextAction} aria-controls="alpha-navigation" aria-expanded="true" aria-describedby="alpha-navigation-state" data-next-layout={nextLayout}>
-      <span className="alpha-divider-grip" aria-hidden="true">{sidebarChevron}</span>
+    <button
+      ref={menu}
+      className="alpha-sidebar-divider alpha-sidebar-edge"
+      type="button"
+      onClick={cycleLayout}
+      aria-label={nextAction}
+      aria-controls="alpha-navigation"
+      aria-expanded="true"
+      aria-describedby="alpha-navigation-state"
+      data-next-layout={nextLayout}
+    >
+      {sidebarArrow}
     </button>
   );
 
@@ -307,28 +322,29 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
         ref={peek}
         className="alpha-sidebar-divider alpha-sidebar-peek"
         type="button"
-        aria-label="Show sidebar from edge"
+        aria-label="Show sidebar"
         aria-controls="alpha-navigation"
         aria-expanded={false}
+        aria-describedby="alpha-navigation-state"
         inert={modalOpen}
         onClick={cycleLayout}
       >
-        <span className="alpha-divider-grip" aria-hidden="true">{sidebarChevron}</span>
+        <span className="alpha-sidebar-glass" aria-hidden="true">{sidebarArrow}</span>
       </button>
     )}
     <div className="alpha-workspace">
-      <SiteTopbar title={title} inert={modalOpen} navigationControl={(phone || layout === "hidden") && (
+      <SiteTopbar title={title} inert={modalOpen} navigationControl={phone && (
         <button
-          ref={phone ? phoneToggle : undefined}
+          ref={phoneToggle}
           className="alpha-sidebar-reopen"
           type="button"
-          onClick={phone ? () => setPhoneMenuOpen(open => !open) : cycleLayout}
-          onKeyDown={phone ? closeExpandedNavigation : undefined}
+          onClick={() => setPhoneMenuOpen(open => !open)}
+          onKeyDown={closeExpandedNavigation}
           aria-controls="alpha-navigation"
-          aria-expanded={phone && phoneMenuOpen}
+          aria-expanded={phoneMenuOpen}
         >
-          {phone ? <PanelTopIcon aria-hidden="true" /> : <PanelLeftIcon aria-hidden="true" />}
-          <span>{phone ? (phoneMenuOpen ? "Close menu" : "Open menu") : "Open sidebar"}</span>
+          <PanelTopIcon aria-hidden="true" />
+          <span>{phoneMenuOpen ? "Close menu" : "Open menu"}</span>
         </button>
       )} />
       <div className="alpha-navigation-frame" inert={modalOpen} onKeyDown={closeExpandedNavigation}>

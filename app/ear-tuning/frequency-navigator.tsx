@@ -1,7 +1,7 @@
 "use client";
 
 import { type KeyboardEvent, type PointerEvent, useEffect, useId, useMemo, useRef, useState } from "react";
-import { response as filterResponse } from "@/lib/autoeq";
+import { response as filterResponse, type PeqFilter } from "@/lib/autoeq";
 import type { Point } from "@/lib/curves";
 import { EAR_HIGH_HZ, EAR_LOW_HZ, sweepFrequency, type EarSweep } from "@/lib/ear-tuning-audio";
 import AdjustmentHandles, { AdjustmentSelection, gainLimit, type AdjustmentEditor } from "./adjustment-handles";
@@ -11,6 +11,7 @@ import "./frequency-navigator.css";
 type Props = {
   frequency: number;
   points?: readonly Point[];
+  referenceFilters?: readonly PeqFilter[];
   range?: EarSweep;
   legendLabel?: string;
   markers?: readonly number[];
@@ -60,7 +61,21 @@ function responseAt(points: readonly Point[], hz: number) {
   return fromDb * (1 - proportion) + toDb * proportion;
 }
 
-function measurementPlot(range: EarSweep, points?: readonly Point[], bands?: AdjustmentEditor["bands"]) {
+function plotFrequencies(range: EarSweep, points: readonly Point[], filters: readonly PeqFilter[]) {
+  const from = points[0]?.[0] ?? range.from;
+  const to = points.at(-1)?.[0] ?? range.to;
+  const frequencies = new Set([from, to, ...points.map(([hz]) => hz)]);
+  for (let index = 1; index < 400; index++) frequencies.add(sweepFrequency({ from, to }, index / 400));
+  for (const filter of filters) {
+    if (filter.hz >= from && filter.hz <= to) frequencies.add(filter.hz);
+  }
+  return [...frequencies].sort((a, b) => a - b);
+}
+
+const applyFilters = (hz: number, baseline: number, filters: readonly PeqFilter[]) =>
+  filters.reduce((db, filter) => db + filterResponse(hz, filter), baseline);
+
+function plotReference(range: EarSweep, points?: readonly Point[], referenceFilters?: readonly PeqFilter[]) {
   const { from, to } = range;
   const unique = new Map<number, number>();
   for (const point of points ?? []) {
@@ -77,31 +92,27 @@ function measurementPlot(range: EarSweep, points?: readonly Point[], bands?: Adj
   if (left !== undefined && visible[0]?.[0] !== from) visible.unshift([from, left]);
   if (right !== undefined && visible[visible.length - 1]?.[0] !== to) visible.push([to, right]);
 
-  let min = visible[0]?.[1] ?? -6;
-  let max = visible[0]?.[1] ?? 6;
-  for (const [, db] of visible) {
-    min = Math.min(min, db);
-    max = Math.max(max, db);
-  }
-  const hasAdjustments = !!bands?.length;
-  const responseWithEq = (hz: number, before: number) => bands?.reduce((db, band) => db + filterResponse(hz, band), before) ?? before;
-  const after: Point[] = [];
-  if (hasAdjustments && visible.length !== 1) {
-    const fromHz = visible[0]?.[0] ?? from;
-    const toHz = visible.at(-1)?.[0] ?? to;
-    const frequencies = new Set(Array.from({ length: 401 }, (_, i) => sweepFrequency({ from: fromHz, to: toHz }, i / 400)));
-    for (const [hz] of visible) frequencies.add(hz);
-    for (const band of bands) if (band.hz >= fromHz && band.hz <= toHz) frequencies.add(band.hz);
-    for (const hz of [...frequencies].sort((a, b) => a - b)) {
-      const db = responseWithEq(hz, responseAt(visible, hz) ?? 0);
-      after.push([hz, db]);
+  if (!referenceFilters) return { before: visible, raw: [] };
+  const frequencies = visible.length === 1 ? [visible[0][0]] : plotFrequencies(range, visible, referenceFilters);
+  const before = frequencies.map((hz): Point => [hz, applyFilters(hz, responseAt(visible, hz) ?? 0, referenceFilters)]);
+  return { before, raw: visible };
+}
+
+function measurementPlot(range: EarSweep, { before, raw }: ReturnType<typeof plotReference>, bands?: AdjustmentEditor["bands"]) {
+  const after = bands?.length && before.length !== 1 ? plotFrequencies(range, before, bands).map((hz): Point =>
+    [hz, applyFilters(hz, responseAt(before, hz) ?? 0, bands)]) : [];
+  let min = before[0]?.[1] ?? -6;
+  let max = before[0]?.[1] ?? 6;
+  for (const series of [raw, before, after]) {
+    for (const [, db] of series) {
       min = Math.min(min, db);
       max = Math.max(max, db);
     }
   }
-  const bandBaseline = (hz: number) => responseAt(visible, hz) ?? visible[hz < (visible[0]?.[0] ?? from) ? 0 : visible.length - 1]?.[1] ?? 0;
+  const bandResponse = (hz: number) => applyFilters(hz, responseAt(before, hz) ??
+    before[hz < (before[0]?.[0] ?? range.from) ? 0 : before.length - 1]?.[1] ?? 0, bands ?? []);
   for (const band of bands ?? []) {
-    const withoutBand = responseWithEq(band.hz, bandBaseline(band.hz)) - band.gain;
+    const withoutBand = bandResponse(band.hz) - band.gain;
     min = Math.min(min, withoutBand - (band.kind === "peak" ? gainLimit(band) : 0));
     max = Math.max(max, withoutBand + (band.kind === "dip" ? gainLimit(band) : 0));
   }
@@ -111,13 +122,14 @@ function measurementPlot(range: EarSweep, points?: readonly Point[], bands?: Adj
   const path = (rows: Point[]) => rows.map(([hz, db], index) =>
     `${index ? "L" : "M"}${(frequencyPosition(hz, range) * 1000).toFixed(2)} ${y(db).toFixed(2)}`).join(" ");
   return {
-    visible, y, path: path(visible), after: path(after), gainSpan, min, max,
-    centerY: (band: NonNullable<typeof bands>[number]) => y(responseWithEq(band.hz, bandBaseline(band.hz))) / 100,
+    before, y, path: path(before), after: path(after), raw: raw.length > 1 ? path(raw) : "",
+    gainSpan, min, max,
+    centerY: (band: NonNullable<typeof bands>[number]) => y(bandResponse(band.hz)) / 100,
     zero: min <= 0 && max >= 0 ? y(0) : undefined,
   };
 }
 
-export default function FrequencyNavigator({ frequency, points, range = defaultRange, legendLabel, markers, editor, onSeek }: Props) {
+export default function FrequencyNavigator({ frequency, points, referenceFilters, range = defaultRange, legendLabel, markers, editor, onSeek }: Props) {
   const drag = useRef<Drag | null>(null);
   const axis = useRef<HTMLDivElement>(null);
   const [axisWidth, setAxisWidth] = useState(320);
@@ -126,11 +138,12 @@ export default function FrequencyNavigator({ frequency, points, range = defaultR
   const legendId = useId();
   const hz = boundHz(frequency, range);
   const position = frequencyPosition(hz, range);
-  const plot = useMemo(() => measurementPlot(range, points, editor?.bands), [points, range, editor?.bands]);
+  const reference = useMemo(() => plotReference(range, points, referenceFilters), [points, range, referenceFilters]);
+  const plot = useMemo(() => measurementPlot(range, reference, editor?.bands), [range, reference, editor?.bands]);
   const ticks = axisLabels(range, axisWidth);
-  const measured = plot.visible.length > 0;
-  const response = measured ? responseAt(plot.visible, hz) : 0;
-  const singlePoint = plot.visible.length === 1 ? plot.visible[0] : undefined;
+  const measured = plot.before.length > 0;
+  const response = measured ? responseAt(plot.before, hz) : 0;
+  const singlePoint = plot.before.length === 1 ? plot.before[0] : undefined;
   const gainTicks = editor ? [Math.ceil(plot.min), ...(plot.zero !== undefined ? [0] : []), Math.floor(plot.max)]
     .filter((db, index, ticks) => ticks.indexOf(db) === index && db >= plot.min && db <= plot.max)
     .filter((db, _, ticks) => db === 0 || !ticks.includes(0) || Math.abs(plot.y(db) - plot.y(0)) >= 14) : [];
@@ -196,9 +209,10 @@ export default function FrequencyNavigator({ frequency, points, range = defaultR
       <div>
         <strong>{onSeek ? "Frequency navigator" : "EQ adjustment graph"}</strong>
         <div className="ear-frequency-legend" id={legendId}>
-          <i data-measured={measured} data-before={!!plot.after} aria-hidden="true"/>
-          <span>{legendLabel ?? (measured ? "Saved measurement" : "Flat guide")}</span>
-          {plot.after && <><i data-measured="true" aria-hidden="true"/><span>After adjustments</span></>}
+          {plot.raw && <span><i className="ear-frequency-raw" aria-hidden="true"/>Raw measurement</span>}
+          <span><i data-measured={measured} data-before={!!plot.after} data-reference={!!referenceFilters} aria-hidden="true"/>
+            {referenceFilters ? "Reference EQ" : legendLabel ?? (measured ? "Saved measurement" : "Flat guide")}</span>
+          {plot.after && <span><i data-measured="true" aria-hidden="true"/>{referenceFilters ? "EQ + adjustments" : "After adjustments"}</span>}
           {measured && response === undefined && <span className="ear-frequency-outside">Outside measured range</span>}
         </div>
       </div>
@@ -230,7 +244,8 @@ export default function FrequencyNavigator({ frequency, points, range = defaultR
             })}
             {plot.zero !== undefined && <line x1={0} x2={1000} y1={plot.zero} y2={plot.zero}
               className="ear-frequency-reference" vectorEffect="non-scaling-stroke"/>}
-            {plot.visible.length > 1 && <path d={plot.path} className="ear-frequency-curve" data-before={!!plot.after} vectorEffect="non-scaling-stroke"/>}
+            {plot.raw && <path d={plot.raw} className="ear-frequency-curve ear-frequency-raw" vectorEffect="non-scaling-stroke"/>}
+            {plot.before.length > 1 && <path d={plot.path} className="ear-frequency-curve" data-before={!!plot.after} data-reference={!!referenceFilters} vectorEffect="non-scaling-stroke"/>}
             {plot.after && <path d={plot.after} className="ear-frequency-curve" vectorEffect="non-scaling-stroke"/>}
           </svg>
           {singlePoint && <span className="ear-frequency-sample" aria-hidden="true"
@@ -239,7 +254,7 @@ export default function FrequencyNavigator({ frequency, points, range = defaultR
           {response !== undefined && <span className="ear-frequency-marker" aria-hidden="true"
             style={{ left: `${position * 100}%`, top: `${plot.y(response)}%` }}/>}
           {markers?.map((marker, index) => <span className="ear-frequency-reveal-marker" aria-hidden="true" key={marker}
-            style={{ left: `${frequencyPosition(marker, range) * 100}%`, top: `${plot.y(responseAt(plot.visible, marker) ?? 0)}%` }}>{index + 1}</span>)}
+            style={{ left: `${frequencyPosition(marker, range) * 100}%`, top: `${plot.y(responseAt(plot.before, marker) ?? 0)}%` }}>{index + 1}</span>)}
           {markers && [...new Set([plot.min, 0, plot.max])].map(gain => <span className="ear-frequency-gain-label" aria-hidden="true" key={gain}
             style={{ top: `${plot.y(gain)}%` }}>{gain > 0 ? "+" : ""}{gain.toFixed(1)} dB</span>)}
         </div>

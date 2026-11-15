@@ -21,10 +21,16 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px 7px;
+  gap: 4px 12px;
   margin-top: 4px;
   color: light-dark(var(--workbench-muted), #b7cdd1);
   font-size: 12px;
+}
+
+.ear-frequency-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .ear-frequency-legend i {
@@ -185,6 +191,10 @@
 .ear-frequency-plot[data-seek="false"] { cursor: default; touch-action: auto; }
 .ear-frequency-legend i[data-measured="true"][data-before="true"],
 .ear-frequency-curve[data-before="true"] { border-color: light-dark(var(--workbench-line), #9bb0b8); stroke: light-dark(var(--workbench-muted), #9bb0b8); }
+.ear-frequency-legend i.ear-frequency-raw,
+.ear-frequency-curve.ear-frequency-raw { border-color: light-dark(var(--workbench-muted), #9bb0b8); stroke: light-dark(var(--workbench-muted), #9bb0b8); stroke-dasharray: 4 4; }
+.ear-frequency-legend i[data-measured="true"][data-reference="true"],
+.ear-frequency-curve[data-reference="true"] { border-color: light-dark(#2b62a8, #8fb8ff); stroke: light-dark(#2b62a8, #8fb8ff); }
 .ear-frequency-stage { position: relative; }
 .ear-frequency-chart[data-gain-axis="true"] { padding-inline: 33px 25px; }
 .ear-frequency-stage[data-editing="true"] { margin-block: 4px 32px; }
