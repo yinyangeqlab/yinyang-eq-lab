@@ -1,0 +1,28 @@
+{
+  "update": 146,
+  "sourceCommit": "4819b71db1477d298ab60fdc8a746945c08d6060",
+  "verifiedAt": "2026-11-14T13:10:36Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 1108,
+  "rebuiltFilesVerified": 1590,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "packagedWasmVerified": true,
+    "releaseFeatureCheck": "Both wallpaper download cards loaded and both offline ZIPs matched the rebuilt files."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

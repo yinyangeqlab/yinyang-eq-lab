@@ -1,0 +1,28 @@
+{
+  "update": 145,
+  "sourceCommit": "af5ac54c21869fe986f9a67d269cd60822e19902",
+  "verifiedAt": "2026-11-14T13:09:02Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 1101,
+  "rebuiltFilesVerified": 1568,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "packagedWasmVerified": true,
+    "releaseFeatureCheck": "Fitter guide showed both PEQdB modes."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

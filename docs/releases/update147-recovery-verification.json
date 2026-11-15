@@ -1,0 +1,28 @@
+{
+  "update": 147,
+  "sourceCommit": "7dd0d45a8160fad3704f0203c1b60d0448ce324b",
+  "verifiedAt": "2026-11-14T13:12:12Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 1113,
+  "rebuiltFilesVerified": 1604,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "packagedWasmVerified": true,
+    "releaseFeatureCheck": "The 61-file AutoEq catalog loaded and browser search passed."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

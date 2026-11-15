@@ -117,6 +117,14 @@ The live source was verified against the deployed Worker modules and public clie
 
 Earlier records include [update154 deployment verification](releases/update154-verification.json), [update154 recovery verification](releases/update154-recovery-verification.json), [update153 publication verification](releases/update153-publication.json) and [update152 publication verification](releases/update152-publication.json).
 
+## Update145–147 recovery
+
+On November 14, 2026, each encrypted off-device source-only rebuild passed an isolated restore from a fresh download. The builds came from the original source revisions and ran locally with synthetic data. Byte-for-byte equivalence to the original deployed builds remains unverified. No database export was performed.
+
+- Update145 showed both PEQdB fitting modes in the fitter guide. [Recovery verification](releases/update145-recovery-verification.json)
+- Update146 loaded both wallpaper download cards and served the verified offline ZIPs. [Recovery verification](releases/update146-recovery-verification.json)
+- Update147 loaded the 61-file AutoEq catalog and passed the browser search check. [Recovery verification](releases/update147-recovery-verification.json)
+
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 
 Read [AGENTS.md](../AGENTS.md), [ENGINEERING.md](ENGINEERING.md), [REBUILD.md](REBUILD.md) and [RECOVERY.md](RECOVERY.md). `LIVE_RELEASE.json` and its receipt document the deployment captured by this source snapshot. See the [live version page](https://yinyangeq.com/version) for the build currently served.
