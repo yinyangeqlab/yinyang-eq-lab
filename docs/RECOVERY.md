@@ -5,6 +5,10 @@ Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update170 IEM PDF link title
+
+The encrypted off-device source-only recovery point for `cdf527117bb3d3d349eebb7b96e81d9b8d330c40` passed decryption and restoration from a fresh download. The restored app served the exact technical handbook PDF and all 14 original guide assets. [Isolated recovery verification](releases/update170-iem-guide-pdf-label-isolated-recovery-verification.json)
+
 ## Update170 IEM measurement guide
 
 Glossary & Guides includes a beginner guide to measuring IEMs with a 711 coupler. The live guide includes annotated REW screenshots, two AKG comparison plots, and a technical PDF.

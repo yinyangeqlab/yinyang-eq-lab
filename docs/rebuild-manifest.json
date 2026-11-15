@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "85ec89e7f88f51fd6dbfe637955ff8a98aa01ff1",
+  "baseRevision": "30e7d9d6bc5ad4df11f2772aac76489ec8ce3db0",
   "recordedLiveUpdate": 170,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2227,7 +2227,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "792a71a89b379ed8eaf8020b7129d552f6032871d9534fdc59e87815e07ec1cb",
+      "sha256": "13381334d638f8007755f712e0637401215883d47f5c58e12f4223e15ad26315",
       "executable": false
     },
     {
@@ -2312,7 +2312,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "ba12070c672a40be8c46134f0095d40d3d202dff3208d403c63bde28e8e79db1",
+      "sha256": "38b625fd46485a1bc2c07de8df22785a4cbd00485e60a2d8fb0fdf285fa168e1",
       "executable": false
     },
     {
@@ -2322,7 +2322,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "067e39fb58914ae41de752f7b92aedbc41e1f8cf264a10a526d9611fd3afdb29",
+      "sha256": "0428520748ee02b2e8c7571187eed5383e13ec43b65ff6b7e5ffa03c8d09fbeb",
       "executable": false
     },
     {
@@ -3003,6 +3003,11 @@
     {
       "path": "docs/releases/update170-iem-guide-isolated-recovery-verification.json",
       "sha256": "7a67ac1212f5644f40fff3553d7cd4b7fbdd1e01aaa5c4371b4d08bb25227522",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update170-iem-guide-pdf-label-isolated-recovery-verification.json",
+      "sha256": "eb1e993b5b07d6fec73a3832a6c9040992efe2389bc8095ae8b40046046800d1",
       "executable": false
     },
     {

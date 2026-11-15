@@ -1,0 +1,33 @@
+{
+  "update": 170,
+  "build": "iem-pdf-link-title",
+  "sourceCommit": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+  "verifiedAt": "2026-11-15T11:50:18Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1184,
+  "originalBuildFilesVerified": 4110,
+  "originalGuideAssetsVerified": 14,
+  "verifiedPdfLinkTitle": "YinYang EQ IEM Measurement Guide (711 Coupler, PDF)",
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "publicGuideAndGlossaryLinkVerified": true,
+    "exactGuideAssetsServed": true,
+    "technicalHandbookVerified": true,
+    "pdfLinkTitleVerified": true,
+    "pdfLinkKeyboardFocusVerified": true,
+    "desktopAndPhoneGuideBrowserChecksPassed": true,
+    "clientAssetCheckPassed": true,
+    "testAccountWritesBlocked": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

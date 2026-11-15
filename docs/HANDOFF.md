@@ -5,6 +5,10 @@ Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update170 IEM PDF link title
+
+A fresh download of the encrypted off-device source-only backup for `cdf527117bb3d3d349eebb7b96e81d9b8d330c40` passed an isolated restore. Desktop and phone browser checks verified the link title **YinYang EQ IEM Measurement Guide (711 Coupler, PDF)** and keyboard focus. [Isolated recovery verification](releases/update170-iem-guide-pdf-label-isolated-recovery-verification.json)
+
 ## Update170 IEM measurement guide
 
 Glossary & Guides includes a beginner guide to measuring IEMs with a 711 coupler. The live guide includes annotated REW screenshots, two AKG comparison plots, and a technical PDF.
