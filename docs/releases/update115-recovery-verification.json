@@ -1,0 +1,31 @@
+{
+  "update": 115,
+  "sourceCommit": "5561af4ff4c6b0c6b3287d2d88e85a6415e09fab",
+  "verifiedAt": "2026-11-15T04:45:29Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 730,
+  "rebuiltFilesVerified": 1092,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "betaVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "Public and neutral private link previews passed. The preview image matched the rebuilt file."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false,
+  "originalDeploymentDocumentationVariantPreserved": true
+}

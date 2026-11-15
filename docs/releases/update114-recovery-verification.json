@@ -1,0 +1,30 @@
+{
+  "update": 114,
+  "sourceCommit": "12c6b88802b9df597835f88b05ce48f92ed025eb",
+  "verifiedAt": "2026-11-15T04:44:39Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 702,
+  "rebuiltFilesVerified": 1063,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "betaVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "Target-removal schema and participation checks passed. The target-removal endpoint denied the isolated test account."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

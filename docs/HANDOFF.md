@@ -131,6 +131,14 @@ On November 14, 2026, each encrypted off-device source-only rebuild passed an is
 - Update146 loaded both wallpaper download cards and served the verified offline ZIPs. [Recovery verification](releases/update146-recovery-verification.json)
 - Update147 loaded the 61-file AutoEq catalog and passed the browser search check. [Recovery verification](releases/update147-recovery-verification.json)
 
+## Update113–115 recovery
+
+On November 14, 2026, all three encrypted off-device source-only rebuilds passed isolated restores from fresh downloads. Each app ran locally with synthetic data. Byte-for-byte equivalence to the original deployed builds remains unverified. No database export was performed.
+
+- Update113 passed the playback shortcut checks and loaded the Personal Tournament starter. [Recovery verification](releases/update113-recovery-verification.json)
+- Update114 passed the target-removal schema and participation checks. [Recovery verification](releases/update114-recovery-verification.json)
+- Update115 passed public and private link-preview checks. Its original deployment documentation was preserved alongside the saved Git revision. [Recovery verification](releases/update115-recovery-verification.json)
+
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 
 Read [AGENTS.md](../AGENTS.md), [ENGINEERING.md](ENGINEERING.md), [REBUILD.md](REBUILD.md) and [RECOVERY.md](RECOVERY.md). `LIVE_RELEASE.json` and its receipt document the deployment captured by this source snapshot. See the [live version page](https://yinyangeq.com/version) for the build currently served.

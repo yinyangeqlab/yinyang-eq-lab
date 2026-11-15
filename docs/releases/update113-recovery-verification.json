@@ -1,0 +1,30 @@
+{
+  "update": 113,
+  "sourceCommit": "5ff9a790962012eeb16b9bd9799134c98d783fd5",
+  "verifiedAt": "2026-11-15T04:43:33Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "sourceFilesVerified": 696,
+  "rebuiltFilesVerified": 1064,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "betaVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "Playback shortcut checks passed and the Personal Tournament starter loaded."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}
