@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "30e7d9d6bc5ad4df11f2772aac76489ec8ce3db0",
+  "baseRevision": "8a3ae1c88265641de43b9c18bd4524ed98be2729",
   "recordedLiveUpdate": 170,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -572,7 +572,7 @@
     },
     {
       "path": "app/glossary/iem-measurement/page.tsx",
-      "sha256": "4e330cd476d71687608b5927e919b1232e9f7c020e1d6fbcefed21be9cb466ac",
+      "sha256": "2396ab6646aef104ce8aa681f910e2a5538f0078e406ce37ccb2484ad881effe",
       "executable": false
     },
     {
