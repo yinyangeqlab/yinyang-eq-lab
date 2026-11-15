@@ -77,7 +77,9 @@ A fresh download of the recreated encrypted off-device source-only backup for `d
 
 Peak & Dip Finder accepts a saved EQ or target fit as its reference and plays boosts and cuts as they are edited. Update167 carries forward this deployed source.
 
-[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json)
+A fresh download of the recreated encrypted off-device source-only backup for `8c4a50bb2da689a3947d84240b47b9128dc67863` passed an isolated restore. Desktop and phone browser checks verified saved EQ selection and all three response curves. A muted desktop browser confirmed live boosts and cuts through its output meter using a synthetic tone.
+
+[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json) · [Isolated recovery verification](releases/update166-finder-isolated-recovery-verification.json)
 
 ## Update165
 

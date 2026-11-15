@@ -75,7 +75,9 @@ The isolated restore for `dc69875afb2bd197ead726458039d51108760099` matched all 
 
 Peak & Dip Finder accepts a saved EQ or target fit as its reference and plays boosts and cuts as they are edited. Update167 carries forward this deployed source.
 
-[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json)
+The isolated restore for `8c4a50bb2da689a3947d84240b47b9128dc67863` matched all 1,163 source files and 3,904 build files against the original release record.
+
+[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json) · [Isolated recovery verification](releases/update166-finder-isolated-recovery-verification.json)
 
 Use the exact `.node-version` / `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
 

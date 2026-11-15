@@ -1,0 +1,30 @@
+{
+  "update": 166,
+  "build": "peak-and-dip-finder",
+  "sourceCommit": "8c4a50bb2da689a3947d84240b47b9128dc67863",
+  "verifiedAt": "2026-11-15T12:19:24Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1163,
+  "originalBuildFilesVerified": 3904,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "finderRouteVerified": true,
+    "finderWorkflowSuitePassed": true,
+    "desktopAndPhoneFinderBrowserChecksPassed": true,
+    "liveAdjustmentOutputMeterVerifiedWithSyntheticTone": true,
+    "versionReleaseLookupVerifiedWithFixture": true,
+    "testAccountIsolationSuitePassed": true,
+    "clientAssetCheckPassed": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

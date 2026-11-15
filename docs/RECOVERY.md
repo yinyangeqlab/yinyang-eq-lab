@@ -75,7 +75,9 @@ The recreated encrypted off-device source-only recovery point for `dc69875afb2bd
 
 Peak & Dip Finder accepts a saved EQ or target fit as its reference and plays boosts and cuts as they are edited. Update167 carries forward this deployed source.
 
-[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json)
+The recreated encrypted off-device source-only recovery point for `8c4a50bb2da689a3947d84240b47b9128dc67863` passed decryption and restoration from a fresh download. The restored Finder passed its isolated browser and workflow checks with synthetic data.
+
+[Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json) · [Isolated recovery verification](releases/update166-finder-isolated-recovery-verification.json)
 
 Read [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md) before backup/recovery work. Current registration status comes from the generated state. A successful metadata handover is not a fresh data snapshot. Never infer current coverage from a prior update's successful receipt.
 
