@@ -7,9 +7,15 @@ Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_ST
 
 ## Update168 EQ preset imports
 
-EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision. The Version page includes the verified update166 history link.
+EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision.
 
-[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-version-link-refresh-verification.json)
+[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-verification.json)
+
+## Update168 Version page refresh
+
+Source `3a421c972c81f197719b879a0ae52784b598684c` adds direct links to the update166 Peak & Dip Finder release and its published source commit. A fresh download of its encrypted off-device source-only backup passed an isolated restore with synthetic data. All 3,974 build files matched the original release record.
+
+[Deployment verification](releases/update168-version-link-refresh-verification.json) · [Isolated recovery verification](releases/update168-version-link-refresh-isolated-recovery-verification.json)
 
 ## Update167 sidebar controls
 
