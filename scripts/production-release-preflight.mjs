@@ -21,16 +21,7 @@ async function readDeployments(accountId, scriptName, token) {
   return body.result.deployments;
 }
 
-export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments) {
-  const state = read(workspace, 'LIVE_RELEASE.json');
-  const label = `update${state.update}`;
-  verifyOrRefresh(workspace);
-  const recovery = recoveryState(state);
-  assert.ok(recovery.kind === 'source-only' && !recovery.pending,
-    `${label} needs a verified source-only handoff before another release can go live`);
-
-  const receiptLabel = state.deploymentRefresh ? `${label}-${state.deploymentRefresh.slug}` : label;
-  const recordPath = `docs/releases/${receiptLabel}-recovery-verification.json`;
+function verifySourceOnlyRecovery(state, label, recordPath, workspace, privateRoot, provider) {
   assert.equal(state.recoveryProcess[`${label}SourceOnlyHandover`].evidence, recordPath,
     'The owner release record must reference the matching recovery receipt');
   const record = read(workspace, recordPath);
@@ -44,15 +35,6 @@ export async function verifyProductionBaseline(workspace, target, getDeployments
     record.databaseExportPerformed === false && record.newDataSnapshots === 0,
   'Source-only registration, independent reconstruction, and hosted validation must have passed');
 
-  const privateRoot = resolve(workspace, '../private/backup-v2');
-  const { provider } = read(privateRoot, 'cloud-settings.json');
-  assert.ok(typeof provider.accountId === 'string' && provider.accountId &&
-    typeof provider.scriptName === 'string' && provider.scriptName,
-  'Owner recovery settings do not identify the production Worker');
-  if (target) {
-    assert.ok(target.accountId === provider.accountId && target.scriptName === provider.scriptName,
-      'Pulumi target does not match the configured recovery Worker');
-  }
   const pointer = provider.releaseBaseline;
   assert.ok(typeof pointer?.id === 'string' && /^metadata-\d{8}T\d{12}Z$/.test(pointer.id),
     'Owner recovery settings do not identify a registered source-only baseline');
@@ -67,10 +49,79 @@ export async function verifyProductionBaseline(workspace, target, getDeployments
     registration.databaseExportPerformed === false && registration.newSnapshotCount === 0,
   'Private recovery registration does not match the verified live release');
 
+  assert.ok(isDeepStrictEqual(metadata.expectedDeployment, provider.expectedDeployment), 'Recovery metadata refers to a different Worker version');
+}
+
+function verifyDataExportRecovery(state, recordPath, workspace, privateRoot, provider, artifacts) {
+  const recovery = state.recoveryProcess;
+  assert.equal(recovery.releaseMetadataHandover.evidence, recordPath,
+    'The owner release record must reference the matching data-export recovery receipt');
+  const record = read(workspace, recordPath);
+  assert.ok(record.update === state.update && record.sourceCommit === state.sourceCommit &&
+    record.verifiedAt === recovery.sourceBaselineVerifiedAt &&
+    recovery.sourceBaselineUpdate === state.update && recovery.matchingCurrentReleaseBaseline === true &&
+    recovery.hostedValidationPending === false && recovery.hostedValidationPassed === true,
+  'Data-export recovery receipt does not match the live release and its validation timestamp');
+  assert.ok(record.databaseExportPerformed === true &&
+    record.newDataSnapshots === recovery.releaseMetadataHandover.newDataSnapshots &&
+    record.independentDownloadDecryptionVerified === true && record.fullReconstructionVerified === true &&
+    record.hostedValidationPassed === true && record.hostedValidateOnlyConfirmed === true &&
+    record.preMigrationSnapshotPreserved === true,
+  'Data export, independent reconstruction, and hosted validation must have passed');
+
+  const registration = read(workspace, `${artifacts}/post-migration-recovery.private.json`);
+  const { snapshot } = registration;
+  const pointer = provider.baseline;
+  assert.ok(!provider.releaseBaseline && typeof snapshot?.id === 'string' &&
+    /^[A-Za-z0-9-]+$/.test(snapshot.id) &&
+    typeof snapshot.snapshotObject === 'string' && snapshot.snapshotObject &&
+    pointer?.snapshotId === snapshot.id && pointer.snapshotObject === snapshot.snapshotObject &&
+    pointer.implementationCommit === state.sourceCommit &&
+    registration.update === state.update && registration.sourceCommit === state.sourceCommit &&
+    registration.databaseExportPerformed === true && registration.newDataSnapshots === record.newDataSnapshots &&
+    registration.sourceBuildVerified === true && registration.fullReconstructionVerified === true &&
+    registration.preMigrationBackupPreserved === true &&
+    snapshot.verified === true && snapshot.liveUpdate === state.update &&
+    snapshot.createdAt === record.postMigrationSnapshotAt &&
+    timestamp(record.verifiedAt) >= timestamp(registration.registeredAt) &&
+    timestamp(registration.registeredAt) >= timestamp(snapshot.createdAt) &&
+    timestamp(snapshot.createdAt) >= timestamp(state.verifiedAt),
+  'Private data-export recovery registration does not match the verified live release');
+  const index = read(privateRoot, 'index.json');
+  assert.ok(!index.releaseBaseline && isDeepStrictEqual(index.cloudBaseline, snapshot) &&
+    Array.isArray(index.snapshots) && index.snapshots.some(entry => isDeepStrictEqual(entry, snapshot)),
+  'Registered data-export recovery snapshot differs from the recovery index');
+}
+
+export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments) {
+  const state = read(workspace, 'LIVE_RELEASE.json');
+  const label = `update${state.update}`;
+  verifyOrRefresh(workspace);
+  const recovery = recoveryState(state);
+  assert.ok(!recovery.pending, `${label} needs a verified ${recovery.kind} handoff before another release can go live`);
   assert.ok(typeof state.applicationSnapshot === 'string' && state.applicationSnapshot.length > 0,
     'Run the rollout check against the owner workspace with the immutable release snapshot');
   const artifact = state.deploymentRefresh?.slug ?? label;
-  const deployment = read(workspace, `${state.applicationSnapshot}/artifacts/${artifact}/handover-verification.private.json`);
+  const artifacts = `${state.applicationSnapshot}/artifacts/${artifact}`;
+  const receiptLabel = state.deploymentRefresh ? `${label}-${artifact}` : label;
+  const recordPath = `docs/releases/${receiptLabel}-recovery-verification.json`;
+
+  const privateRoot = resolve(workspace, '../private/backup-v2');
+  const { provider } = read(privateRoot, 'cloud-settings.json');
+  assert.ok(typeof provider.accountId === 'string' && provider.accountId &&
+    typeof provider.scriptName === 'string' && provider.scriptName,
+  'Owner recovery settings do not identify the production Worker');
+  if (target) {
+    assert.ok(target.accountId === provider.accountId && target.scriptName === provider.scriptName,
+      'Pulumi target does not match the configured recovery Worker');
+  }
+  if (recovery.kind === 'source-only') {
+    verifySourceOnlyRecovery(state, label, recordPath, workspace, privateRoot, provider);
+  } else {
+    verifyDataExportRecovery(state, recordPath, workspace, privateRoot, provider, artifacts);
+  }
+
+  const deployment = read(workspace, `${artifacts}/handover-verification.private.json`);
   assert.ok(deployment.deploymentVerified === true && deployment.revision === state.sourceCommit,
     'Private deployment receipt does not match the live release source');
   const expected = deployment.deployment;
@@ -78,7 +129,6 @@ export async function verifyProductionBaseline(workspace, target, getDeployments
     expected.versions?.length === 1 && expected.versions[0].percentage === 100,
   'Private deployment receipt must identify the fully active Worker version');
   assert.ok(isDeepStrictEqual(provider.expectedDeployment, expected), 'Configured recovery Worker version differs from the deployment receipt');
-  assert.ok(isDeepStrictEqual(metadata.expectedDeployment, expected), 'Recovery metadata refers to a different Worker version');
 
   const token = readFileSync(resolve(privateRoot, 'cloudflare-read-token.txt'), 'utf8').trim();
   assert.ok(token, 'Owner deployment read credential is unavailable');
@@ -95,7 +145,8 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       'Usage: node scripts/production-release-preflight.mjs OWNER_WORKSPACE [ACCOUNT_ID SCRIPT_NAME]');
     const { update } = await verifyProductionBaseline(resolve(workspace),
       accountId === undefined ? undefined : { accountId, scriptName });
-    console.log(`Production preflight passed: update${update} is active with a verified handoff and source-only recovery.`);
+    const recovery = recoveryState(read(resolve(workspace), 'LIVE_RELEASE.json'));
+    console.log(`Production preflight passed: update${update} is active with a verified handoff and ${recovery.kind} recovery.`);
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'Required owner release or recovery evidence is missing' :
       error instanceof assert.AssertionError ? error.message : 'Could not read or verify owner release evidence';

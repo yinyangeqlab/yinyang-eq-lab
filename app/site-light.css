@@ -72,9 +72,12 @@
   border-color: var(--site-light-line);
 }
 
+[data-site-theme="light"] .alpha-app[data-alpha-layout=hidden] > .alpha-sidebar-peek {
+  --sidebar-handle-fill: linear-gradient(90deg,#ddf5f4d9,#b7e6e4b8 48%,#90ccc987);
+  --sidebar-handle-edge: #35737370;
+}
+
 [data-site-theme="light"] .alpha-sidebar-divider {
-  --sidebar-handle-fill: linear-gradient(90deg,#e8f3edb8,#d5e8dc8a 48%,#c7dbcf58);
-  --sidebar-handle-edge: #4c6d5a59;
   --sidebar-handle-ink: #1f1f1f;
   --sidebar-handle-idle: #555555;
   --sidebar-handle-focus: #414141;

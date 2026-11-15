@@ -28,8 +28,6 @@
 .alpha-navigation-frame>.alpha-navigation{pointer-events:auto}
 /* The open rail uses a fixed arrow. Only the closed edge can reveal glass. */
 .alpha-sidebar-divider {
- --sidebar-handle-fill:linear-gradient(90deg,#09130eb3,#18332787 48%,#375c4857);
- --sidebar-handle-edge:#9cc6ad52;
  --sidebar-handle-extension:28px;
  --sidebar-handle-ink:#f3f3f3;
  --sidebar-handle-idle:#c6c6c6;
@@ -369,6 +367,8 @@
  inset:0 auto 0 0;
  z-index:41;
  width:44px;
+ --sidebar-handle-fill:linear-gradient(90deg,#071e22c7,#15505ab0 48%,#36848c80);
+ --sidebar-handle-edge:#7ad6d870;
  --sidebar-handle-extension:100%;
  --sidebar-grip-width:24px;
  pointer-events:none;

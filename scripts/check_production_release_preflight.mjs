@@ -109,6 +109,57 @@ try {
   await assert.rejects(verify({ ...deployment, id: 'new' }), /active Worker changed/);
   await assert.rejects(verify(deployment, { ...target, scriptName: 'different-worker' }), /Pulumi target does not match/);
 
+  const exported = structuredClone(state);
+  exported.recoveryProcess = {
+    matchingCurrentReleaseBaseline: true, sourceBaselineUpdate: state.update,
+    sourceBaselineVerifiedAt: verifiedAt, hostedValidationPassed: true, hostedValidationPending: false,
+    releaseMetadataHandover: {
+      update: state.update, dataExportPerformed: true, newDataSnapshots: 1,
+      matchingPreparedSourceCommit: state.sourceCommit, registered: true, hostedValidationPassed: true,
+      independentDownloadDecryptionVerified: true, fullReconstructionVerified: true, evidence: recoveryPath,
+    },
+  };
+  const snapshotReceipt = {
+    id: 'schema-release-fixture', snapshotObject: 'synthetic-snapshot',
+    liveUpdate: state.update, createdAt: state.verifiedAt, verified: true,
+  };
+  const exportRecord = {
+    update: state.update, sourceCommit: state.sourceCommit, verifiedAt, newDataSnapshots: 1,
+    databaseExportPerformed: true, hostedValidationPassed: true, hostedValidateOnlyConfirmed: true,
+    independentDownloadDecryptionVerified: true, fullReconstructionVerified: true,
+    preMigrationSnapshotPreserved: true, postMigrationSnapshotAt: snapshotReceipt.createdAt,
+  };
+  const exportSettings = { provider: {
+    ...target, expectedDeployment: deployment,
+    baseline: { snapshotId: snapshotReceipt.id, snapshotObject: snapshotReceipt.snapshotObject,
+      implementationCommit: state.sourceCommit },
+  } };
+  write(workspace, 'LIVE_RELEASE.json', exported);
+  verifyOrRefresh(workspace, true);
+  write(workspace, recoveryPath, exportRecord);
+  write(workspace, `${snapshot}/artifacts/${artifact}/post-migration-recovery.private.json`, {
+    update: state.update, sourceCommit: state.sourceCommit, registeredAt: verifiedAt,
+    snapshot: snapshotReceipt, newDataSnapshots: 1, databaseExportPerformed: true,
+    preMigrationBackupPreserved: true, sourceBuildVerified: true, fullReconstructionVerified: true,
+  });
+  write(privateRoot, settingsPath, exportSettings);
+  const index = { cloudBaseline: snapshotReceipt, snapshots: [snapshotReceipt] };
+  write(privateRoot, 'index.json', index);
+  assert.deepEqual(await verify(), { update: state.update });
+  write(privateRoot, 'index.json', { ...index, snapshots: [] });
+  await assert.rejects(verify(), /differs from the recovery index/);
+  write(privateRoot, 'index.json', index);
+  write(workspace, recoveryPath, { ...exportRecord, hostedValidateOnlyConfirmed: false });
+  await assert.rejects(verify(), /hosted validation must have passed/);
+  write(workspace, recoveryPath, exportRecord);
+  write(privateRoot, settingsPath, { provider: { ...exportSettings.provider, baseline: { ...exportSettings.provider.baseline, snapshotId: 'stale' } } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+  exported.recoveryProcess.releaseMetadataHandover.registered = false;
+  write(workspace, 'LIVE_RELEASE.json', exported);
+  verifyOrRefresh(workspace, true);
+  await assert.rejects(verify(), /needs a verified data-export handoff/);
+  write(privateRoot, settingsPath, settings);
+
   const refreshed = structuredClone(state);
   const slug = artifact === 'version-link-refresh' ? 'subsequent-refresh' : 'version-link-refresh';
   const refreshedRecovery = `docs/releases/${label}-${slug}-recovery-verification.json`;

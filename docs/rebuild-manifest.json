@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "f170a4926c52700135d0c02f1f4ffe98fedafc0c",
+  "baseRevision": "f6ecdacc99996d2ec46caa81869abd18f7fa28ce",
   "recordedLiveUpdate": 169,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -47,12 +47,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "9fc45cc8f7d4837b683fbdec8600634b5f4ff31d01b79308de42f9624b738805",
+      "sha256": "936a03e21e397b0666fdfb5ed36f2dff35ee7b25a07370e6b802cac3398cf272",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "3d5b70810a8dda6c9b8b438fd90db9fe2b52346b44a0b35ac5d5a3afacd0e109",
+      "sha256": "44bda6298cf6b3e97ba8825ccfee1677c5f5c3533f9ba95c35fc9174537f6631",
       "executable": false
     },
     {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "00ae7c76bb9512f1d243bdf49762ffe946f9f2e55d0ca254051dcdf5734a5845",
+      "sha256": "b93c36252d423c8ec05a3207aae107a43cc2ee341a238dde55d7f00a768f35b6",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "f69821ebd43ee50c587d6d10f5df53a2647e558ac23493ce9199a624f637188f",
+      "sha256": "ff8f17e29b626d29f1d17e592cac2ff69b9fb2925c22bd5129de0a4b52d6c82a",
       "executable": false
     },
     {
@@ -122,7 +122,7 @@
     },
     {
       "path": "app/alpha.css",
-      "sha256": "1b6886ddab0f4f9a8a9b17a7777500290480d057a8581791090466c69b2b2af7",
+      "sha256": "588bb1b6ff77c99e569bf454ab22971b008d994945f36e1f5e461aaee958ca46",
       "executable": false
     },
     {
@@ -807,7 +807,7 @@
     },
     {
       "path": "app/site-light.css",
-      "sha256": "40b2095fa26a63fb1e2b86858aa925b88718c8834d911699d5ceb716b1130417",
+      "sha256": "5f2a1876d48b94b74835d3f3633d02743200f3d5791192ca52f2a6775032a56a",
       "executable": false
     },
     {
@@ -1042,7 +1042,7 @@
     },
     {
       "path": "components/alpha-shell.tsx",
-      "sha256": "26cf60cbbabf206572cd6e53752094d28cf57da030f38dcfab662d8be9c1c7c3",
+      "sha256": "826af60a190a9b99d9e603d345c710f7cf4432a7e2b9a7110765ca7ca9499b2c",
       "executable": false
     },
     {
@@ -2217,7 +2217,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "54f303013ef15cd03f277fd4984accc8990a5a29ea49b332e164a7d76be7de0d",
+      "sha256": "f1326d70824c9de5b9b076174ef8e1eb0033b0ed1e4ccfe9ee963428eb58ba3a",
       "executable": false
     },
     {
@@ -2302,7 +2302,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "83804e5526a5c5fac70f4e403068c5842f1825ac68c0e7164ac9ee017e4b98f1",
+      "sha256": "f516fbea962cbcfa9b3af94fd8ae9a94434f1852204d1b62e77cab3446631a55",
       "executable": false
     },
     {
@@ -2312,7 +2312,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "14fc80b136500489cca0a84056f37d31359960371f85c980029ff846afbe29a0",
+      "sha256": "a48295dfa185e23683f6ce192dec5af97eb31d9b71140744bc49698b652b81b3",
       "executable": false
     },
     {
@@ -2958,6 +2958,16 @@
     {
       "path": "docs/releases/update169-recovery-verification.json",
       "sha256": "57161b5611bdae38bd5a6808a00aad8c951fdc585220ff0598afe86ac304bed8",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update169-sidebar-rollout-recovery-verification.json",
+      "sha256": "0216b02693c76c83f0c0f00b0b1d7b9e04590af872d46548872375c30af15f16",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update169-sidebar-rollout-verification.json",
+      "sha256": "8108104026878428e75c0435b1c154f83ab12726c488eaf9b27a91c89de44b60",
       "executable": false
     },
     {
@@ -5497,7 +5507,7 @@
     },
     {
       "path": "scripts/check_production_release_preflight.mjs",
-      "sha256": "1730bd7f263f45e85b0e1f522e41f2c25c5d9f5259e9e10c4c00d9d144b44c8d",
+      "sha256": "988cba85b0ee3f0f551a3cc6116b879587bfaaf30770133beda997ace360c92f",
       "executable": false
     },
     {
@@ -5817,7 +5827,7 @@
     },
     {
       "path": "scripts/production-release-preflight.mjs",
-      "sha256": "06653ec7fea31092a32a060549ccbd62fc3dc6945b5d6edca532ec1ef60dcb37",
+      "sha256": "5e4233340e111d00bf438b0f54eaf7641b3142e95473b68d9060c6ac507b29ac",
       "executable": false
     },
     {

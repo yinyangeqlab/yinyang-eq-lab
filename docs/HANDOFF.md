@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update169**, source `b382bec78f9ecccfb821a8119a7be697ea9cbf44`.
+Recorded deployment: **update169**, source `258bd1867844ed927e722896e0cb43cbb7776b48`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update169 sidebar refresh
+
+The Home icon is larger. The strip that extends from the fully closed sidebar is teal in both themes. The production refresh was deployed on top of the Rankings release.
+
+All 126 selected deployment checks passed. Brave verified the packaged sidebar at desktop, tablet and phone widths. The matching encrypted off-device source-only recovery passed hosted validation.
+
+[Deployment verification](../docs/releases/update169-sidebar-rollout-verification.json) · [Recovery verification](../docs/releases/update169-sidebar-rollout-recovery-verification.json)
 
 ## Update169 Rankings and preset reactions
 

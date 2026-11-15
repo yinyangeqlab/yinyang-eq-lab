@@ -64,7 +64,7 @@ function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnima
   const paperClip = useId();
   return <svg className="alpha-destination-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
     {kind === "home" ? <>
-      <path d="m9 15 7-6 7 6m-12-1.7V23h3.5v-5h3v5H21v-9.7"/>
+      <path d="m5 15 11-9 11 9m-19-2.5V25h5.5v-7h5v7H24V12.5"/>
       <g className="alpha-home-orbit">
         <circle cx="16" cy="16" r="12.3" opacity=".36" strokeWidth=".9" strokeDasharray=".5 2.4"/>
         <g className="alpha-home-rocket">
