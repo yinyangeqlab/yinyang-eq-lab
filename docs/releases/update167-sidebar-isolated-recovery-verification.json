@@ -1,0 +1,29 @@
+{
+  "update": 167,
+  "build": "sidebar-controls",
+  "sourceCommit": "dc69875afb2bd197ead726458039d51108760099",
+  "verifiedAt": "2026-11-15T10:48:41Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1168,
+  "originalBuildFilesVerified": 3924,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "sidebarControlsVerified": true,
+    "isolatedSidebarBrowserSuitePassed": true,
+    "versionReleaseLookupVerifiedWithFixture": true,
+    "clientAssetCheckPassed": true,
+    "testAccountWritesBlocked": true,
+    "testAccountIsolationSuitePassed": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

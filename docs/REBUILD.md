@@ -43,7 +43,9 @@ The full and icon-only sidebars use a silver arrow that grows in place on hover 
 
 All 125 selected release checks passed. Brave verified all three sidebar states, keyboard focus, reduced motion and the phone menu. The live sidebar assets matched the verified package. Encrypted source-only recovery and hosted validation passed.
 
-[Update167 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167) · [Deployment verification](releases/update167-verification.json) · [Recovery verification](releases/update167-recovery-verification.json)
+The isolated restore for `dc69875afb2bd197ead726458039d51108760099` matched all 1,168 source files and 3,924 build files against the original release record.
+
+[Update167 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167) · [Deployment verification](releases/update167-verification.json) · [Recovery verification](releases/update167-recovery-verification.json) · [Isolated recovery verification](releases/update167-sidebar-isolated-recovery-verification.json)
 
 ## Update166 Peak & Dip Finder
 
