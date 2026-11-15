@@ -41,6 +41,12 @@ Encrypted off-device source-only recovery and hosted validation passed. The dail
 
 [Update163 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update163) · [Publication verification](releases/update163-publication.json)
 
+### Earlier update163 automatic Version link build
+
+Build `f41a8036` was superseded before its recovery handover finished. On November 14, 2026, a fresh download of its encrypted off-device source-only backup passed an isolated restore. All 3,758 build files matched the original release record, and the app ran locally with synthetic data.
+
+The restored Worker reproduced the automatic GitHub lookup failure. The Version page displayed its recorded fallback link. [Isolated recovery verification](releases/update163-automatic-version-link-recovery-verification.json)
+
 ## Update162
 
 Personal Tournament plays leading curves more often. Progress bars show how close each curve is to leaving rotation after a vote, in tournament results, and in My Collection. Listeners can restore curves that leave rotation.

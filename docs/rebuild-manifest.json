@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "da4977a00ba46537521b18340dd32e433110b662",
+  "baseRevision": "c782f4f6bfc5dec01cea7ad83c771bc51ea56fdc",
   "recordedLiveUpdate": 165,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "2498b6e582c2c118812b40cfa00b4ee6f4877d8d1cbff60131078c7d23ac026c",
+      "sha256": "69bea88c9a9b182e7a569fad2d5c04831a6ca2b33a0872dee7cdc692a20a3e78",
       "executable": false
     },
     {
@@ -2798,6 +2798,11 @@
     {
       "path": "docs/releases/update162-verification.json",
       "sha256": "2285960510aeb1a629300c39963e6e359ef383047255b97593f7ea9296866e86",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update163-automatic-version-link-recovery-verification.json",
+      "sha256": "42bde1c6fc345325caff152239ecb0bb6ea82af6054d8ed1b6640bea683447e2",
       "executable": false
     },
     {
