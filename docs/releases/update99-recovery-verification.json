@@ -1,0 +1,32 @@
+{
+  "update": 99,
+  "scrubbedPublishedCounterpart": "0933762ac4e6eac3bc2056acee5af5160960469c",
+  "verifiedAt": "2026-11-15T06:58:51Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "savedSourceMatchedOriginalReleaseLedger": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "gitHistoryIncluded": false,
+  "sourceFilesVerified": 600,
+  "rebuiltFilesVerified": 955,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "originalPackageVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "The participation page loaded and synthetic consent checks passed."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

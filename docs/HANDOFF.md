@@ -153,6 +153,15 @@ On November 14, 2026, all three encrypted off-device source-only rebuilds passed
 - Update114 passed the target-removal schema and participation checks. [Recovery verification](releases/update114-recovery-verification.json)
 - Update115 passed public and private link-preview checks. Its original deployment documentation was preserved alongside the saved Git revision. [Recovery verification](releases/update115-recovery-verification.json)
 
+## Update97–100 recovery
+
+On November 14, 2026, all four encrypted off-device source-only rebuilds passed isolated restores from fresh downloads. Each app ran locally with synthetic data. The source files matched the original release records. Byte-for-byte equivalence to the original deployed builds remains unverified. No database export was performed.
+
+- Update97 passed Owner Sync and retention checks. [Recovery verification](releases/update97-recovery-verification.json)
+- Update98 passed private history and account-linking checks. [Recovery verification](releases/update98-recovery-verification.json)
+- Update99 passed participation and consent checks. [Recovery verification](releases/update99-recovery-verification.json)
+- Update100 passed checks for participant Sync and device controls. [Recovery verification](releases/update100-recovery-verification.json)
+
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) when preparing the next preview, commit, deployment or handoff. Verify GitHub source links separately from the live deployment record.
 
 Read [AGENTS.md](../AGENTS.md), [ENGINEERING.md](ENGINEERING.md), [REBUILD.md](REBUILD.md) and [RECOVERY.md](RECOVERY.md). `LIVE_RELEASE.json` and its receipt document the deployment captured by this source snapshot. See the [live version page](https://yinyangeq.com/version) for the build currently served.

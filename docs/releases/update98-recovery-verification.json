@@ -1,0 +1,32 @@
+{
+  "update": 98,
+  "scrubbedPublishedCounterpart": "77949a167ceed2d9d9e06442d5799facc4e59523",
+  "verifiedAt": "2026-11-15T06:58:34Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "savedSourceMatchedOriginalReleaseLedger": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "gitHistoryIncluded": false,
+  "sourceFilesVerified": 586,
+  "rebuiltFilesVerified": 954,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "originalPackageVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "Private history and account-linking checks passed. The isolated test account could not write history links."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

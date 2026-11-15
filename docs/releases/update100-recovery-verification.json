@@ -1,0 +1,32 @@
+{
+  "update": 100,
+  "scrubbedPublishedCounterpart": "37cd251306c8d3504686dacb460a661478e6fe19",
+  "verifiedAt": "2026-11-15T06:59:25Z",
+  "recoveryPoint": "historical-source-only-rebuild",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "savedSourceMatchedOriginalReleaseLedger": true,
+  "originalDeployedBuildByteMatchVerified": false,
+  "gitHistoryIncluded": false,
+  "sourceFilesVerified": 619,
+  "rebuiltFilesVerified": 983,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "usedSyntheticData": true,
+    "originalPackageVersionMatched": true,
+    "syntheticRankingsReadPassed": true,
+    "testAccountWritesBlocked": true,
+    "anonymousAccessDenied": true,
+    "protectedAudioBytesVerified": true,
+    "clientAssetCheckPassed": true,
+    "recoverySafetySuitePassed": true,
+    "releaseSpecificSuitePassed": true,
+    "releaseFeatureCheck": "Participant Sync schema and device controls passed. The isolated test account could not write Sync data."
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}
