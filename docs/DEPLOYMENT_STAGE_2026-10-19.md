@@ -1,6 +1,6 @@
 # Executed with explicit owner authorization — update94
 
-The owner authorized deployment after this plan was written. Release3762ff7 is live and verified;0033/0034 applied, old assets retained, informational notice ended with tests open. Matching encrypted backup and hosted validation passed; daily scheduling resumed. Earlier pending/approval statements below are historical planning context. No account activation, historical transfer, publication or GitHub push. See LIVE_STATE.md and artifacts/tournament-release-20261019/.
+The owner authorized deployment after this plan was written. Release3762ff7 is live and verified;0033/0034 applied, old assets retained, informational notice ended with tests open. Matching encrypted backup and hosted validation passed; daily scheduling resumed. Earlier pending/approval statements below are historical planning context. No account activation, historical transfer, publication or GitHub push. See docs/deployment/LIVE_STATE.md and artifacts/tournament-release-20261019/.
 
 # Staged deployment plan — owner review pending, not executed
 
@@ -25,7 +25,7 @@ This is a preparation document for the local Tournament checkpoint. It does not 
 
 - Publish the informational update notice at deployment start, leaving current tests/submissions open as the owner requested. Do not start it while merely preparing or reviewing. If a migration genuinely requires a pause, stop and explain the concrete conflict before changing availability.
 - Execute only the reviewed additive migration/release sequence with retained earlier client assets. Observe private access, representative ongoing-test compatibility, research separation, account restrictions and matching data/schema behavior. Do not cast official live test votes to check layout.
-- Verify the deployed release, then end the informational notice. Update LIVE_RELEASE.json, LIVE_STATE.md, docs/HANDOFF.md and HOSTING_HANDOFF.md together only after a verified deployment. Keep private state/credentials outside those records.
+- Verify the deployed release, then end the informational notice. Update LIVE_RELEASE.json, docs/deployment/LIVE_STATE.md, docs/HANDOFF.md and docs/deployment/HOSTING_HANDOFF.md together only after a verified deployment. Keep private state/credentials outside those records.
 - GitHub push/publication remains a separate action; no push is authorized by this staging document.
 
 ## Reviewed rollout sequence and compatibility

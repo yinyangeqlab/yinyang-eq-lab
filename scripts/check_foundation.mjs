@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateRegistry, parseOptions, runSuite, runVerification } from './verify.mjs';
-import { validateRelease, verifyOrRefresh, handoffs, recoveryState, renderState } from './release-state.mjs';
+import { validateRelease, verifyOrRefresh, handoffs, stateViewPath, recoveryState, renderState } from './release-state.mjs';
 import { candidateChanges, releaseHistory } from '../lib/release-history.ts';
 import { buildLabel, bugReportUrl, releaseInfo, repositoryUrl } from '../lib/release-info.ts';
 import { createPublishedBuildLookup } from '../lib/github-release.ts';
@@ -263,21 +263,39 @@ try {
     const previous = state.deploymentRefresh.previousEvidence;
     writeJson(join(docs, previous), json(join(root, previous)));
   }
-  write(join(docs, 'LIVE_STATE.md'), 'stale\n');
+  write(join(docs, stateViewPath), 'stale\n');
   for (const path of handoffs) write(join(docs, path), '# Fixture\n<!-- release-state:start -->\nstale\n<!-- release-state:end -->\nKeep this text.\n');
   const receiptBefore = readFileSync(join(docs, state.evidence), 'utf8');
   test('drift fails without mutation and refresh reconciles all views', () => {
     assert.throws(() => verifyOrRefresh(docs), /generated views differ/);
-    assert.equal(readFileSync(join(docs, 'LIVE_STATE.md'), 'utf8'), 'stale\n');
+    assert.equal(readFileSync(join(docs, stateViewPath), 'utf8'), 'stale\n');
     assert.equal(verifyOrRefresh(docs, true).changed.length, handoffs.length + 1);
     verifyOrRefresh(docs); assert.equal(verifyOrRefresh(docs, true).changed.length, 0);
     for (const path of handoffs) assert.match(readFileSync(join(docs, path), 'utf8'), /Keep this text/);
     assert.equal(readFileSync(join(docs, state.evidence), 'utf8'), receiptBefore);
   });
   test('malformed handoff prevents partial refresh', () => {
-    write(join(docs, 'LIVE_STATE.md'), 'stale\n'); write(join(docs, handoffs[1]), 'missing markers');
+    write(join(docs, stateViewPath), 'stale\n'); write(join(docs, handoffs[1]), 'missing markers');
     assert.throws(() => verifyOrRefresh(docs, true), /exactly one/);
-    assert.equal(readFileSync(join(docs, 'LIVE_STATE.md'), 'utf8'), 'stale\n');
+    assert.equal(readFileSync(join(docs, stateViewPath), 'utf8'), 'stale\n');
+  });
+  test('older owner checkouts retain the original release-view paths', () => {
+    const older = join(temp, 'legacy-release-views');
+    writeJson(join(older, 'LIVE_RELEASE.json'), state);
+    writeJson(join(older, state.evidence), receipt);
+    if (state.deploymentRefresh) {
+      const previous = state.deploymentRefresh.previousEvidence;
+      writeJson(join(older, previous), json(join(root, previous)));
+    }
+    write(join(older, 'LIVE_STATE.md'), 'stale\n');
+    const legacyPaths = ['HANDOFF.md', 'HOSTING_HANDOFF.md', ...handoffs.slice(1)];
+    for (const path of legacyPaths) write(join(older, path), '<!-- release-state:start -->\nstale\n<!-- release-state:end -->\n');
+    assert.equal(verifyOrRefresh(older, true).changed.length, legacyPaths.length + 1);
+    assert.match(readFileSync(join(older, 'HOSTING_HANDOFF.md'), 'utf8'), /\(LIVE_STATE\.md\)/);
+    assert.match(readFileSync(join(older, 'docs/HANDOFF.md'), 'utf8'), /\(\.\.\/LIVE_STATE\.md\)/);
+    verifyOrRefresh(older);
+    write(join(older, stateViewPath), 'stale\n');
+    assert.throws(() => verifyOrRefresh(older, true), /both release-view layouts/);
   });
   test('historical documents match preservation index', () => {
     const archive = join(root, 'docs/history/foundation-20261031');

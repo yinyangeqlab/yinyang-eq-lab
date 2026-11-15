@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { resolve } from 'node:path';
+import { posix, resolve } from 'node:path';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-export const handoffs = ['HANDOFF.md', 'HOSTING_HANDOFF.md', 'docs/HANDOFF.md', 'docs/REBUILD.md', 'docs/RECOVERY.md'];
+const sharedHandoffs = ['docs/HANDOFF.md', 'docs/REBUILD.md', 'docs/RECOVERY.md'];
+export const stateViewPath = 'docs/deployment/LIVE_STATE.md';
+export const handoffs = ['docs/deployment/HOSTING_HANDOFF.md', ...sharedHandoffs];
+const legacyStateViewPath = 'LIVE_STATE.md';
+const legacyHandoffs = ['HANDOFF.md', 'HOSTING_HANDOFF.md', ...sharedHandoffs];
 const start = '<!-- release-state:start -->', end = '<!-- release-state:end -->';
 const check = (condition, message) => assert.ok(condition, `Release state: ${message}`);
 const boolean = (value, name) => check(typeof value === 'boolean', `${name} must be boolean`);
 const hash = value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value);
+const relativeLink = (from, to) => posix.relative(posix.dirname(from), to);
 
 // Interpret explicit public recovery records without rewriting historical shapes
 // or inferring completion from an older release's successful flags.
@@ -105,7 +110,7 @@ export function validateRelease(state, receipt) {
   return state;
 }
 
-export function renderState(state, receipt) {
+export function renderState(state, receipt, outputPath = stateViewPath) {
   const recovery = recoveryState(state), pending = recovery.pending;
   const recoveryText = recovery.kind === 'data-export'
     ? (pending ? 'Data export recorded; matching recovery registration pending' : 'Matching recovery registration recorded as verified, including a separately recorded data export')
@@ -124,27 +129,26 @@ This view describes the recorded production release. It does not assert that thi
 | Release | update${state.update} |
 | Source | \`${state.sourceCommit}\` |
 | Verified at | ${state.verifiedAt} |
-| Deployment | Verified by the [deployment receipt](${state.evidence}) |
+| Deployment | Verified by the [deployment receipt](${relativeLink(outputPath, state.evidence)}) |
 | Maintenance | Feature freeze ${state.maintenanceFreeze.active ? 'active' : 'off'}; owner-only maintenance ${state.ownerOnlyMaintenance.enabled ? 'on' : 'off'} |
 | Publication | ${publication}; publication ${state.gitSource.publicationAuthorized ? 'authorized in this record' : 'not authorized in this record'} |
 | Recovery | ${recoveryText} |
 
 Source/build metadata registration is separate from a fresh data export. ${recovery.kind === 'data-export' ? 'The recorded export has its own capture time and coverage; registration does not make it a new live-data capture.' : 'Existing encrypted off-device backup data retains its original coverage and timestamp.'} Generating this view performs no recovery operation.
 
-The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](docs/rebuild-manifest.json).
+The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](${relativeLink(outputPath, 'LIVE_RELEASE.json')}). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](${relativeLink(outputPath, 'docs/rebuild-manifest.json')}).
 
 The deployment receipt records ${receipt.candidateVerification.regressionSuitesPassed} regression suites passed and ${receipt.candidateVerification.regressionSuitesFailed} failed for its source; these are historical deployment results, not results for this working tree. Physical audio is ${browser?.physicalAudioQualityVerified === true ? 'recorded as verified' : 'not certified'}; native expanded-menu pixels are ${browser?.expandedNativeMenuPixelsCertified === true ? 'recorded as certified' : 'not certified'}. Read the receipt and review record for browser/device limits.
 
-Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.
+Start new work at [docs/HANDOFF.md](${relativeLink(outputPath, 'docs/HANDOFF.md')}) and [docs/ENGINEERING.md](${relativeLink(outputPath, 'docs/ENGINEERING.md')}). The [historical source inventory](${relativeLink(outputPath, 'docs/history/foundation-20261031/README.md')}) records earlier source inputs.
 `;
 }
 
-export function replaceBlock(text, state, path) {
+export function replaceBlock(text, state, path, outputPath = stateViewPath) {
   check(text.split(start).length === 2 && text.split(end).length === 2, `${path}: exactly one generated block required`);
   const first = text.indexOf(start), last = text.indexOf(end);
   check(first < last, `${path}: reversed block markers`);
-  const prefix = path.startsWith('docs/') ? '../' : '';
-  const block = `${start}\nRecorded deployment: **update${state.update}**, source \`${state.sourceCommit}\`.\nCurrent maintenance, publication and recovery status: [LIVE_STATE.md](${prefix}LIVE_STATE.md).\n${end}`;
+  const block = `${start}\nRecorded deployment: **update${state.update}**, source \`${state.sourceCommit}\`.\nCurrent maintenance, publication and recovery status: [LIVE_STATE.md](${relativeLink(path, outputPath)}).\n${end}`;
   return text.slice(0, first) + block + text.slice(last + end.length);
 }
 
@@ -158,19 +162,29 @@ export function verifyOrRefresh(directory, write = false) {
   }
   const receipt = JSON.parse(readFileSync(resolve(directory, state.evidence), 'utf8'));
   validateRelease(state, receipt);
+  // A release candidate can check an owner checkout that still has the previous layout.
+  const relocated = existsSync(resolve(directory, stateViewPath)) || existsSync(resolve(directory, handoffs[0]));
+  const legacy = existsSync(resolve(directory, legacyStateViewPath)) || legacyHandoffs.slice(0, 2).some(path => existsSync(resolve(directory, path)));
+  check(!(relocated && legacy), 'both release-view layouts are present');
+  const outputPath = legacy ? legacyStateViewPath : stateViewPath;
+  const selectedHandoffs = legacy ? legacyHandoffs : handoffs;
   // Prepare every result before writing, so malformed handoff markers cause no partial refresh.
-  const outputs = new Map([['LIVE_STATE.md', renderState(state, receipt)], ...handoffs.map(path => [path, replaceBlock(readFileSync(resolve(directory, path), 'utf8'), state, path)])]);
+  const outputs = new Map([[outputPath, renderState(state, receipt, outputPath)]]);
+  for (const path of selectedHandoffs) {
+    const text = readFileSync(resolve(directory, path), 'utf8');
+    outputs.set(path, replaceBlock(text, state, path, outputPath));
+  }
   const stale = [...outputs].filter(([path, text]) => readFileSync(resolve(directory, path), 'utf8') !== text);
   if (write) for (const [path, text] of stale) writeFileSync(resolve(directory, path), text);
   else check(stale.length === 0, `generated views differ: ${stale.map(([path]) => path).join(', ')}; review records, then run npm run release:refresh`);
-  return { update: state.update, changed: stale.map(([path]) => path) };
+  return { update: state.update, changed: stale.map(([path]) => path), viewCount: outputs.size };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     check(process.argv.slice(2).every(arg => arg === '--write') && process.argv.length <= 3, 'usage: node scripts/release-state.mjs [--write]');
     const result = verifyOrRefresh(root, process.argv.includes('--write'));
-    console.log(`Release state update${result.update}: ${process.argv.includes('--write') ? `refreshed ${result.changed.length} views` : `receipt and all ${handoffs.length + 1} views agree`}. No deployment/recovery operation.`);
+    console.log(`Release state update${result.update}: ${process.argv.includes('--write') ? `refreshed ${result.changed.length} views` : `receipt and all ${result.viewCount} views agree`}. No deployment/recovery operation.`);
     if (process.argv.includes('--write')) console.log('Next: review the generated diff, run npm run source:refresh (explicitly approve any new source paths), then npm run verify.');
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

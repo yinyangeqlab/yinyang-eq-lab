@@ -4,7 +4,7 @@ The isolated design-corrections checkout validates both presets against the reta
 
 # Private blind EQ — deployed under owner-only maintenance, update121
 
-Deployed and verified October 24, 2026. The site remains closed except existing admin sign-in and valid signed admin sessions. Read LIVE_STATE.md for current access and verification limits. The historical draft notes below retain their original context.
+Deployed and verified October 24, 2026. The site remains closed except existing admin sign-in and valid signed admin sessions. Read docs/deployment/LIVE_STATE.md for current access and verification limits. The historical draft notes below retain their original context.
 
 # Private blind EQ comparison — local feature, October 23, 2026
 

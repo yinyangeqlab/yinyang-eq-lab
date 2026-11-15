@@ -56,8 +56,7 @@ Before declaring the site closed, independently verify:
 - Live gate/helper source matches the reviewed source; bindings/routing and the
   retained security controls match the approved plan. Record actual Worker
   version and final no-drift preview.
-- Update LIVE_RELEASE.json, LIVE_STATE.md, HANDOFF.md, HOSTING_HANDOFF.md and the
-  current docs/HANDOFF.md together only after verification. Record any dashboard
+- Update LIVE_RELEASE.json, docs/deployment/LIVE_STATE.md, docs/HANDOFF.md and docs/deployment/HOSTING_HANDOFF.md together only after verification. Record any dashboard
   changes as configuration drift until reconciled with the existing stack.
 
 The public source defaults the new lock off. Merging source alone does not close

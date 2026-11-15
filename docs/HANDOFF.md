@@ -2,7 +2,7 @@
 
 <!-- release-state:start -->
 Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005`.
-Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
+Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update170 IEM PDF link title
@@ -52,6 +52,7 @@ Source `020a77ee343860bfdb74b70dbb58daf5cbb53079` displays the update168 GitHub 
 ## Update168 EQ preset imports
 
 EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision.
+The Version page includes the verified update166 history link.
 
 A fresh download of the recreated encrypted off-device source-only backup for `210500eb9f6de865b286111f9ec5639955483df4` passed an isolated restore. The restored build passed Blind EQ Comparison and saved EQ checks, including preservation of imported filter Q precision.
 

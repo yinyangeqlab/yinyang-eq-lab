@@ -2,7 +2,7 @@
 
 <!-- release-state:start -->
 Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005`.
-Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
+Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update170 IEM PDF link title

@@ -75,8 +75,8 @@ Before deployment, recheck source/build fingerprints and live state. Apply only
 the reviewed existing Worker change, then verify maintenance denials and exact
 deployed code/assets. Keep maintenance enabled without expiry.
 
-After a successful deployment, update LIVE_RELEASE.json, LIVE_STATE.md,
-docs/HANDOFF.md and HOSTING_HANDOFF.md together with exact source/build and
+After a successful deployment, update LIVE_RELEASE.json, docs/deployment/LIVE_STATE.md,
+docs/HANDOFF.md and docs/deployment/HOSTING_HANDOFF.md together with exact source/build and
 verification receipts. Register the matching encrypted off-device source/build
 metadata through the existing guarded workflow, with no fresh participant-data
 export or duplicate immutable media. Measure the additional release archive

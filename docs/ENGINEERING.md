@@ -1,6 +1,6 @@
 # Engineering guidelines
 
-Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE.md](../LIVE_STATE.md) for the recorded deployment. Verify review findings against the source and existing authorization.
+Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE.md](deployment/LIVE_STATE.md) for the recorded deployment. Verify review findings against the source and existing authorization.
 
 ## Work from an identified source
 
@@ -60,7 +60,7 @@ Run app types with `node node_modules/typescript/bin/tsc --noEmit` and lint with
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) for every review build and handoff. Keep the build ID visible in the app, group changes by update on the version page, and verify GitHub links against the published source. Record the exact build ID and deployment baseline separately.
 
-`LIVE_RELEASE.json` and its exact `evidence` receipt record the deployment captured by the source snapshot. `npm run release:check` validates the current fields and the generated `LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence. The public README links to the live version page independently of these records.
+`LIVE_RELEASE.json` and its exact `evidence` receipt record the deployment captured by the source snapshot. `npm run release:check` validates the current fields and the generated `docs/deployment/LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence. The public README links to the live version page independently of these records.
 
 `docs/rebuild-manifest.json` describes **candidate source inputs**, independently of production. After reviewing an intentional source change, run `npm run source:refresh`, then `node scripts/check-live-source.mjs --source-only`. Refreshing hashes is bookkeeping, not regression or deployment verification. The checker also rejects unlisted/deleted nonignored source files. Recovery bundles bind the exact manifest hash; existing bundles must be verified in their matching source checkout, never relabeled to match this candidate. Old manifests and handoffs remain under `docs/history/foundation-20261031`; their commands are historical. Full owner snapshot verification must run in the owner root with its original private paths.
 

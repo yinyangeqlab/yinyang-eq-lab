@@ -8,15 +8,15 @@ This view describes the recorded production release. It does not assert that thi
 | Release | update170 |
 | Source | `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005` |
 | Verified at | 2026-11-15T10:55:08Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update170-verification.json) |
+| Deployment | Verified by the [deployment receipt](../releases/update170-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
 | Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 
-The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](docs/rebuild-manifest.json).
+The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](../../LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](../rebuild-manifest.json).
 
 The deployment receipt records 126 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
 
-Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.
+Start new work at [docs/HANDOFF.md](../HANDOFF.md) and [docs/ENGINEERING.md](../ENGINEERING.md). The [historical source inventory](../history/foundation-20261031/README.md) records earlier source inputs.

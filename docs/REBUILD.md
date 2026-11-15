@@ -2,7 +2,7 @@
 
 <!-- release-state:start -->
 Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005`.
-Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
+Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update170 IEM PDF link title
@@ -104,4 +104,4 @@ For a fresh disposable local database only, follow [LOCAL_SETUP.md](LOCAL_SETUP.
 
 Owner snapshot verification: run `node scripts/check-live-source.mjs --snapshot` in the owner root with its current release record and private immutable paths (`--assets` adds asset coverage). Exit 2 reports working-documentation drift alone and is not a full pass; exit 1 includes runtime/infra/build/configuration errors. Expected foundation documentation differences and immutable owner evidence are explained in [ENGINEERING.md](ENGINEERING.md#manifest-approval-and-snapshot-drift). Do not copy private inputs into Git or edit sealed snapshots/deployment hashes to make this check pass. Exact rollback uses recorded immutable output; a fresh build is not assumed byte-identical.
 
-For a separately authorized release, use the existing infra backend/stack, its own lock and `npm run check`, explicit `DEPLOY_BUILD_ROOT`, and the reviewed resource plan. Apply through the [guarded rollout command](../HOSTING_HANDOFF.md) after the current live release's handoff and source-only recovery pass verification. Preserve all access/media/abuse/CPU/edge/cost controls. Never initialize a replacement production stack, replay migrations blindly or deploy a public-only package. See [RECOVERY.md](RECOVERY.md). The [historical source inventory](history/foundation-20261031/README.md) records earlier source inputs.
+For a separately authorized release, use the existing infra backend/stack, its own lock and `npm run check`, explicit `DEPLOY_BUILD_ROOT`, and the reviewed resource plan. Apply through the [guarded rollout command](deployment/HOSTING_HANDOFF.md) after the current live release's handoff and source-only recovery pass verification. Preserve all access/media/abuse/CPU/edge/cost controls. Never initialize a replacement production stack, replay migrations blindly or deploy a public-only package. See [RECOVERY.md](RECOVERY.md). The [historical source inventory](history/foundation-20261031/README.md) records earlier source inputs.

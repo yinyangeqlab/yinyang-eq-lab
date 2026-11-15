@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { handoffs, verifyOrRefresh } from './release-state.mjs';
+import { handoffs, stateViewPath, verifyOrRefresh } from './release-state.mjs';
 import { verifyProductionBaseline } from './production-release-preflight.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -69,7 +69,7 @@ try {
     write(workspace, previous, readFileSync(join(root, previous), 'utf8'));
   }
   write(workspace, recoveryPath, recoveryRecord);
-  write(workspace, 'LIVE_STATE.md', 'stale\n');
+  write(workspace, stateViewPath, 'stale\n');
   for (const path of handoffs) write(workspace, path, '<!-- release-state:start -->\nstale\n<!-- release-state:end -->\n');
   verifyOrRefresh(workspace, true);
   write(workspace, `${snapshot}/artifacts/${artifact}/handover-verification.private.json`, {

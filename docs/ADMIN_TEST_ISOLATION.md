@@ -4,4 +4,4 @@ Browser reviews use a dedicated, non-contributing test identity with no admin pe
 
 The contribution policy blocks administrator and layout-test identities from writing participant contributions. Official ranking and music vote calculations exclude administrative test activity. A dedicated test account can exercise consent UI without sending data to research, public rankings, community voting or participant Sync.
 
-Production checks should verify the gate and contribution rejection with synthetic fixtures. Local reviews can use the [disposable setup](LOCAL_SETUP.md). Review the recorded [deployment state](../LIVE_STATE.md) before any production testing.
+Production checks should verify the gate and contribution rejection with synthetic fixtures. Local reviews can use the [disposable setup](LOCAL_SETUP.md). Review the recorded [deployment state](deployment/LIVE_STATE.md) before any production testing.
