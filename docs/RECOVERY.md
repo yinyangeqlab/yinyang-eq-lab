@@ -17,7 +17,9 @@ The encrypted off-device source-only recovery point for `020a77ee343860bfdb74b70
 
 EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision.
 
-[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-verification.json)
+The recreated encrypted off-device source-only recovery point for `210500eb9f6de865b286111f9ec5639955483df4` passed decryption and restoration from a fresh download. The isolated app checks used synthetic data.
+
+[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-verification.json) · [Isolated recovery verification](releases/update168-eq-import-isolated-recovery-verification.json)
 
 ## Update168 Version page refresh
 

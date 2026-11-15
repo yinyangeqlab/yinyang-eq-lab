@@ -1,0 +1,30 @@
+{
+  "update": 168,
+  "build": "eq-preset-import-compatibility",
+  "sourceCommit": "210500eb9f6de865b286111f9ec5639955483df4",
+  "verifiedAt": "2026-11-15T09:34:56Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1170,
+  "originalBuildFilesVerified": 3958,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "blindEqComparisonPageVerified": true,
+    "eqPresetImportSuitePassed": true,
+    "blindEqComparisonWorkflowSuitePassed": true,
+    "savedEqRoundTripSuitePassed": true,
+    "versionReleaseLookupVerifiedWithFixture": true,
+    "clientAssetCheckPassed": true,
+    "testAccountWritesBlocked": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

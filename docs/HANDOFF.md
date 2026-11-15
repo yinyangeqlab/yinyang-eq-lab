@@ -17,7 +17,9 @@ Source `020a77ee343860bfdb74b70dbb58daf5cbb53079` displays the update168 GitHub 
 
 EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision.
 
-[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-verification.json)
+A fresh download of the recreated encrypted off-device source-only backup for `210500eb9f6de865b286111f9ec5639955483df4` passed an isolated restore. The restored build passed Blind EQ Comparison and saved EQ checks, including preservation of imported filter Q precision.
+
+[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-verification.json) · [Isolated recovery verification](releases/update168-eq-import-isolated-recovery-verification.json)
 
 ## Update168 Version page refresh
 
