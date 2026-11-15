@@ -5,9 +5,11 @@ import vm from 'node:vm';
 import { createRequire } from 'node:module';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { captureAccountValues } from '../lib/account-sync.mjs';
+import * as presetLimits from '../lib/peq-preset.ts';
 
 const source = readFileSync(new URL('../lib/blind-eq.ts', import.meta.url), 'utf8');
-const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
+const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText
+  .replace('"./peq-preset"', JSON.stringify(new URL('../lib/peq-preset.ts', import.meta.url).href));
 const { parseEqPresetText: parse, validateEqPreset, eqCoefficients, comparisonGains, createBlindSession, recordBlindRound, revealBlindSession } = await import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
 let assertions = 0;
 const check = (condition, message) => { assert.ok(condition, message); assertions++; };
@@ -17,6 +19,9 @@ const txt = '# Synthetic preset\nPreamp: -6 dB\nFilter 1: ON PK Fc 1000 Hz Gain 
 const mono = parse(txt, 'Synthetic one');
 check(mono.channels.every(c => c.filters.length === 3 && c.preampDb === -6), 'APO and Peace TXT copied to both channels');
 check(mono.channels[0].filters[0].q === 2, 'Q is read from the correct capture');
+const broad = parse('Preamp: -8.5 dB\nFilter 1: ON PK Fc 18000 Hz Gain -1 dB Q 0.074123', 'Broad synthetic filter');
+check(broad.channels.every(channel => channel.preampDb === -8.5 && channel.filters[0].q === 0.074123), 'Wide peak imports preserve Q and preamp in both channels');
+check(parse('Filter 1: ON PK Fc 8000 Hz Gain 2 dB Q 0.01', 'Minimum Q').channels[0].filters[0].q === 0.01, 'Minimum supported Q can be imported');
 mono.channels[0].filters[0].gain = 3;
 check(mono.channels[1].filters[0].gain === 4, 'Left and Right do not share mutable filters');
 const stereo = parse('CH: 0\nTYPE: PEQ\nPreamp: -2 dB\nFilter 1: ON PK Fc 70 Hz Gain 1 dB Q 1\nCH: 1\nTYPE: PEQ\nPreamp: -3 dB\nFilter 1: ON HSC Fc 4000 Hz Gain -2 dB Q 0.9', 'Synthetic two');
@@ -26,7 +31,7 @@ const scoped = parse('\ufeffPreamp: -1 dB\r\nChannel: L\r\nPreamp: -2 dB\nFilter
 check(scoped.channels[0].preampDb === -3 && scoped.channels[1].preampDb === -1, 'APO preamp directives sum only on selected channels');
 check(scoped.channels[0].filters[0].gain === .5 && scoped.channels[1].filters[0].q === Math.SQRT1_2, 'BOM, CRLF, decimals, aliases, default shelf Q, disabled filters');
 for (const text of ['GraphicEQ: 20 0; 100 2', 'Include: private.txt', 'Convolution: impulse.wav', 'Device: Speakers', 'Filter: ON PK Fc 100 Hz Gain 2 dB', 'Filter: ON LSC 12 dB Fc 100 Hz Gain 3 dB', 'Filter: ON LS 6dB Fc 100 Hz Gain 3 dB', 'Filter: ON PK Fc 100 Hz Gain 2 dB BW Oct 1', '[Frequencies]\nFrequency1=100', 'garbage', 'CH: 0\nPreamp: 0 dB', 'CH: 0\nChannel: R\nPreamp: 0 dB\nCH: 1\nPreamp: 0 dB']) rejects(() => parse(text, 'Bad'), /Unsupported|Q value|both CH|mix/);
-for (const field of [{ hz: NaN }, { hz: 0 }, { hz: 24001 }, { gain: 31 }, { gain: Infinity }, { q: .01 }, { q: 21 }, { type: 'NO' }]) {
+for (const field of [{ hz: NaN }, { hz: 0 }, { hz: 24001 }, { gain: 31 }, { gain: Infinity }, { q: 0 }, { q: .009 }, { q: 21 }, { type: 'NO' }]) {
   const preset = structuredClone(mono); Object.assign(preset.channels[0].filters[0], field);
   rejects(() => validateEqPreset(preset), /Each filter/);
 }
@@ -88,12 +93,14 @@ for (const file of ['app/eq-compare/page.tsx', 'components/blind-eq-editor.tsx',
 const editorSource = readFileSync(new URL('../components/blind-eq-editor.tsx', import.meta.url), 'utf8');
 const require = createRequire(import.meta.url), compiledModule = { exports: {} };
 const editorCode = ts.transpileModule(editorSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-vm.runInNewContext(editorCode, { module: compiledModule, exports: compiledModule.exports, require: id => id === '@/lib/blind-eq' ? { parseEqPresetText: parse, validateEqPreset } : require(id) });
+vm.runInNewContext(editorCode, { module: compiledModule, exports: compiledModule.exports, require: id => id === '@/lib/blind-eq' ? { parseEqPresetText: parse, validateEqPreset } : id === '@/lib/peq-preset' ? presetLimits : require(id) });
 const markup = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Test preset', initialName: 'Synthetic', onChange() {} }));
 check(markup.includes('Preamp (dB)') && !markup.includes('Left<!-- --> preamp'), 'One shared preamp field is the initial form');
 const restored = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Restored preset', initialName: 'Unused default', initialPreset: stereo, onChange() {} }));
 check(restored.includes(stereo.name) && restored.includes('previous preset restored') && /Left(?:<!-- -->)? preamp/.test(restored), 'New-session editor restores the saved stereo preset rather than displaying defaults');
 check(restored.includes('value="' + stereo.channels[0].preampDb + '"') && restored.includes('value="' + stereo.channels[1].preampDb + '"'), 'Restored channel preamps match the preset used for playback');
+const broadMarkup = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Restored preset', initialName: 'Unused default', initialPreset: broad, onChange() {} }));
+check(broadMarkup.includes('min="0.01" max="20" step="any" value="0.074123"'), 'Restored editor preserves wide filter precision');
 const ast = ts.createSourceFile('editor.tsx', editorSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX), handlers = new Map();
 function visit(node) { if (ts.isFunctionDeclaration(node) && node.name) handlers.set(node.name.text, node.getText(ast)); ts.forEachChild(node, visit); }
 visit(ast);

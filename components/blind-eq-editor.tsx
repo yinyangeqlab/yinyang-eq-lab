@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { parseEqPresetText, validateEqPreset, type EqFilter, type EqPreset } from "@/lib/blind-eq";
+import { MAX_PRESET_Q, MIN_PRESET_Q } from "@/lib/peq-preset";
 
 type Row = { scope: "both" | "left" | "right"; enabled: boolean; type: EqFilter["type"]; hz: string; gain: string; q: string };
 const emptyRow = (): Row => ({ scope: "both", enabled: true, type: "PK", hz: "1000", gain: "0", q: "1" });
@@ -69,7 +70,7 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
         <label>Type<select value={row.type} onChange={event => update(index, { type: event.target.value as Row["type"] })}><option value="PK">Peak · PK</option><option value="LSC">Low shelf · LSC</option><option value="HSC">High shelf · HSC</option></select></label>
         <label>Frequency (Hz)<input type="number" min={10} max={24000} step="any" value={row.hz} disabled={!row.enabled} onChange={event => update(index, { hz: event.target.value })} /></label>
         <label>Gain (dB)<input type="number" min={-30} max={30} step="any" value={row.gain} disabled={!row.enabled} onChange={event => update(index, { gain: event.target.value })} /></label>
-        <label>Q<input type="number" min={.1} max={20} step="any" value={row.q} disabled={!row.enabled} onChange={event => update(index, { q: event.target.value })} /></label>
+        <label>Q<input type="number" min={MIN_PRESET_Q} max={MAX_PRESET_Q} step="any" value={row.q} disabled={!row.enabled} onChange={event => update(index, { q: event.target.value })} /></label>
         <button type="button" className="eq-remove" aria-label={`Remove filter ${index + 1}`} onClick={() => { dirty(); setRows(current => current.filter((_, i) => i !== index)); }}>Remove</button>
       </fieldset>)}</div>
       <div className="eq-actions"><button type="button" disabled={busy || rows.length >= 64} onClick={() => { dirty(); setRows(current => [...current, emptyRow()]); }}>Add filter</button></div>

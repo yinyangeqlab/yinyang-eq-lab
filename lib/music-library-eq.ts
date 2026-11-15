@@ -5,6 +5,7 @@ import type { PeqFilter } from "@/lib/autoeq";
 import { peakBoost } from "@/lib/preference-finalize";
 import type { ChannelMatch } from "./channel-balance";
 import { safeChannelMatch } from "./channel-match-export";
+import { isPresetQ, MAX_PRESET_Q, MIN_PRESET_Q } from "./peq-preset";
 
 export type LibraryEq = { fitter?: FitterSettings; engine?: "peqdb" | "legacy"; engineVersion?: string; id: string; name: string; filters: PeqFilter[]; preamp: number; source: string; measurementId?: string; headphone?: string; channelMatch?: ChannelMatch; createdAt?: number; updatedAt?: number; target?: { id?: string; name: string; points: Point[] } };
 export const LIBRARY_EQ_KEY = "target-lab-library-eqs-v1";
@@ -30,9 +31,11 @@ export function libraryEqPreamp(filters: PeqFilter[], requestedPreamp: number) {
 }
 
 export function safeLibraryEq(value: LibraryEq): LibraryEq {
-  if (!Array.isArray(value.filters) || value.filters.length < 1 || value.filters.length > LIBRARY_EQ_FILTER_LIMIT ||
-    value.filters.some(f => !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || !Number.isFinite(f.hz) || f.hz < 20 || f.hz > 20000 || !Number.isFinite(f.gain) || Math.abs(f.gain) > 24 || !Number.isFinite(f.q) || f.q < .1 || f.q > 20)) {
-    throw new Error("This EQ needs 1–40 valid peak or shelf filters.");
+  if (!Array.isArray(value.filters) || value.filters.length < 1 || value.filters.length > LIBRARY_EQ_FILTER_LIMIT) {
+    throw new Error(`This EQ needs 1–${LIBRARY_EQ_FILTER_LIMIT} peak or shelf filters.`);
+  }
+  if (value.filters.some(f => !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || !Number.isFinite(f.hz) || f.hz < 20 || f.hz > 20000 || !Number.isFinite(f.gain) || Math.abs(f.gain) > 24 || !isPresetQ(f.q))) {
+    throw new Error(`Each saved EQ filter needs a supported peak or shelf type, 20–20,000 Hz, −24 to +24 dB gain and Q ${MIN_PRESET_Q}–${MAX_PRESET_Q}.`);
   }
   const preamp = libraryEqPreamp(value.filters, value.preamp);
   return { ...(validFitter(value.fitter) ? {fitter:{...value.fitter}} : {}), ...(["peqdb", "legacy"].includes(value.engine ?? "") ? { engine: value.engine, engineVersion: String(value.engineVersion ?? "").slice(0, 160) } : {}), id: String(value.id).slice(0, 100), name: String(value.name).slice(0, 100), source: String(value.source).slice(0, 100),

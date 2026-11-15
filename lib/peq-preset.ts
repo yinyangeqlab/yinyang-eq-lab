@@ -1,6 +1,13 @@
 export type PresetFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q: number };
 export type ChannelMatchPreset = { channels: [{ preampDb: number; filters: PresetFilter[] }, { preampDb: number; filters: PresetFilter[] }] };
 
+export const MIN_PRESET_Q = 0.01;
+export const MAX_PRESET_Q = 20;
+
+export function isPresetQ(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= MIN_PRESET_Q && value <= MAX_PRESET_Q;
+}
+
 export function peakingHalfGainEdges(hz: number, q: number, sampleRate = 48000): [number, number] {
   const center = Math.tan(Math.PI * hz / sampleRate);
   const ratio = (Math.hypot(2, 1 / q) + 1 / q) / 2;
@@ -30,7 +37,7 @@ export function parseChannelMatchPreset(text: string): ChannelMatchPreset {
     if (filter[1].toUpperCase() === "OFF") continue;
     const [, , type, hzText, gainText, qText] = filter;
     const hz = Number(hzText), gain = Number(gainText), q = Number(qText);
-    if (hz < 20 || hz > 20000 || Math.abs(gain) > 40 || q < .1 || q > 20) throw new Error("A preset filter has a frequency, gain, or Q outside the supported range.");
+    if (hz < 20 || hz > 20000 || Math.abs(gain) > 40 || !isPresetQ(q)) throw new Error(`Each channel-match filter needs 20–20,000 Hz, −40 to +40 dB gain and Q ${MIN_PRESET_Q}–${MAX_PRESET_Q}.`);
     if (channels[channel].filters.length >= 32) throw new Error("Use at most 32 filters per channel.");
     channels[channel].filters.push({ type: type.toUpperCase() as PresetFilter["type"], hz, gain, q });
   }

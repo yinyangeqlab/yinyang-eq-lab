@@ -21,6 +21,7 @@ finalizer.peakBoost = filters => { sweeps++; return originalPeakBoost(filters); 
 const { safeLibraryEq, saveLibraryEq, readLibraryEqs, removeLibraryEq, removeLibraryEqs, measurementChannelMatch, parseLibraryEq, LIBRARY_EQ_KEY } = load('lib/music-library-eq.ts');
 const { channelMatchWav, channelMatchIirText, safeChannelMatch } = load('lib/channel-match-export.ts');
 const { parseChannelMatchPreset, presetFilterResponse, presetResponse } = load('lib/peq-preset.ts');
+const { parseMeasurement } = load('lib/measurement.ts');
 const { replaceEqStage } = load('lib/eq-playback.ts');
 const points = Array.from({length:21},(_,i)=>[20*1000**(i/20),0]);
 const model = {leftPoints:points,rightPoints:points.map(([hz])=>[hz,6]),channelMatchMode:'auto'};
@@ -33,6 +34,19 @@ saveLibraryEq({...eq,id:'legacy',channelMatch:undefined}); assert.equal(readLibr
 removeLibraryEq('a'); assert.equal(changes,3); assert.deepEqual([...readLibraryEqs().map(row=>row.id)],['legacy']);
 localStorage.setItem(LIBRARY_EQ_KEY,'broken'); assert.equal(readLibraryEqs().length,0); saveLibraryEq(eq);
 assert.throws(()=>parseLibraryEq('CH: 0\nPreamp: -2 dB\nFilter 1: ON PK Fc 1000 Hz Gain 1 dB Q 1\nCH: 1\nPreamp: -2 dB','two-channel'),/channel-match/);
+const broadLine = 'Filter 1: ON PK Fc 18000 Hz Gain -1 dB Q 0.074123';
+const broadEq = parseLibraryEq('Preamp: -8.5 dB\n' + broadLine, 'Wide-Q synthetic EQ');
+try {
+  saveLibraryEq(broadEq);
+  const restored = readLibraryEqs().find(row => row.id === broadEq.id);
+  assert.equal(restored.filters[0].q, 0.074123, 'Collection round trip preserves imported Q');
+  assert.equal(restored.preamp, -8.5, 'Collection keeps the supplied safe preamp');
+} finally {
+  removeLibraryEq(broadEq.id);
+}
+const broadChannels = parseChannelMatchPreset('CH: 0\nPreamp: -2 dB\n' + broadLine + '\nCH: 1\nPreamp: -2 dB');
+const restoredMeasurement = parseMeasurement({ id: 'wide-q-fixture', name: 'Fixture', device: 'Fixture', type: 'oe', rig: 'Fixture', points, channelMatchPreset: broadChannels, channelMatchMode: 'custom' });
+assert.equal(restoredMeasurement.channelMatchPreset.channels[0].filters[0].q, 0.074123, 'Measurement validation preserves imported channel-match Q');
 const wav=channelMatchWav(eq.channelMatch), view=new DataView(wav);
 assert.equal(view.getUint16(20,true),3);assert.equal(view.getUint16(22,true),2);assert.equal(view.getUint32(24,true),48000);assert.equal(view.getUint32(40,true),8192*8);
 function magnitude(ch,hz){let re=0,im=0;for(let i=0;i<8192;i++){const value=view.getFloat32(44+i*8+ch*4,true),angle=2*Math.PI*hz*i/48000;re+=value*Math.cos(angle);im-=value*Math.sin(angle);}return 20*Math.log10(Math.hypot(re,im));}

@@ -1,9 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update167**, source `dc69875afb2bd197ead726458039d51108760099`.
+Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update168 EQ preset imports
+
+EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision. The Version page includes the verified update166 history link.
+
+[Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) · [Deployment verification](releases/update168-version-link-refresh-verification.json)
 
 ## Update167 sidebar controls
 

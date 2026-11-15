@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
+import * as presetLimits from '../lib/peq-preset.ts';
 let checks = 0;
 const check = (value, message) => { assert.ok(value, message); checks++; };
 const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
@@ -11,7 +12,10 @@ const compile = path => ts.transpileModule(readFileSync(new URL('../' + path, im
 const baseGlobals = { Error, URL, Blob, AbortController, structuredClone, crypto, console };
 function load(path, require, globals = {}) { const mod = { exports: {} }; vm.runInNewContext(compile(path), { ...baseGlobals, ...globals, require, module: mod, exports: mod.exports }); return mod.exports; }
 const search = load('lib/search.ts', id => { throw Error(id); });
-const model = load('lib/blind-eq.ts', id => { throw Error(id); });
+const model = load('lib/blind-eq.ts', id => {
+  if (id === './peq-preset') return presetLimits;
+  throw Error(id);
+});
 const text = node => node == null || typeof node === 'boolean' ? '' : typeof node === 'string' || typeof node === 'number' ? String(node) : Array.isArray(node) ? node.map(text).join('') : text(node.props?.children);
 const voteLabel = load('components/shootout-vote-label.tsx', id => {
   if (id === './shootout-vote-label.css') return {};

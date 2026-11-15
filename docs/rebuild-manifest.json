@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "677fd44ef9893134a5fa5e1553c28d6c49b54924",
-  "recordedLiveUpdate": 167,
+  "baseRevision": "76500f9cfb3ec4e2bd5c3ab816885d22b551281a",
+  "recordedLiveUpdate": 168,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -47,12 +47,12 @@
     },
     {
       "path": "HANDOFF.md",
-      "sha256": "19c28721b4c7c7de9bd16b3855f3052135d9747a1f35f45c809217fc4a799a1c",
+      "sha256": "398e9b46433cba9f1936bd9e4e6339d96dce431bff1a770f25a1e49861adf9e2",
       "executable": false
     },
     {
       "path": "HOSTING_HANDOFF.md",
-      "sha256": "8a8a90e006ee279ce151c8611102e35e95cd056eb66888c11408cf7006bcb100",
+      "sha256": "a5ef9c20b7219d5b30da663b460df59308f8626886ce8e397ad4e79180e2baa5",
       "executable": false
     },
     {
@@ -67,12 +67,12 @@
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "c34c0f31766497f54cb5b40bd650acf448a4b93b5a4a2a449d7762d112e49f9a",
+      "sha256": "2ace7609c97c3fe6bf59024001b34df59eebf24db8c96b05a7007b0ca1ded8a0",
       "executable": false
     },
     {
       "path": "LIVE_STATE.md",
-      "sha256": "0685e60d15b7e6e66b55521fc84cf13d0933e3ba99b32113b86bd4a9daa948d8",
+      "sha256": "3a7b7f36681aca0fd5e2ed92c2f3a7f128e5dec5f12469c58af05cd228138f39",
       "executable": false
     },
     {
@@ -87,7 +87,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "53c3ac806b56849c864d57f740779666b09d9be76e2b6378dfe8fd961fc36870",
+      "sha256": "a121773dc63e559ebf71e650bf65b48da9c4354aecdfba6ab3dfb320c9d4b752",
       "executable": false
     },
     {
@@ -1067,7 +1067,7 @@
     },
     {
       "path": "components/blind-eq-editor.tsx",
-      "sha256": "4e8eb2c3584cb0440012b6c44d4d3b677dd6d8808cc6ed11616c0810afbdba03",
+      "sha256": "d2839f60a6f12e7ce246a89fd1420fe856358dc0b7827236de1fd05a36db620f",
       "executable": false
     },
     {
@@ -2142,7 +2142,7 @@
     },
     {
       "path": "docs/BLIND_EQ_COMPARISON.md",
-      "sha256": "c2cd30e019ee4773193485db40a36beb41927107b28813e9a4364ff20a0720d4",
+      "sha256": "f69867a5db2099cd5bf70c2053fcf8b0eefa56f49db4fba9fa428bf3702d9960",
       "executable": false
     },
     {
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ee61c2a84d1e67140f3a88148c694e380d1aa94582b37e895b332b55a7206d65",
+      "sha256": "eba13b48796c705c728850196bbf08e8d02c168577368d5c208e26332f8ed609",
       "executable": false
     },
     {
@@ -2287,7 +2287,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "0bcaf95071be2c3f67c9aa49e10131899c28d76841951585d97f348b1313a9e5",
+      "sha256": "6ae9ae328efb0a4750179a4d979072397881821e90a8ec003cc0e58590dc6c10",
       "executable": false
     },
     {
@@ -2297,7 +2297,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "44e76f7afe79f3a0a7220c447bd7cb4d31de14adec9c7a1b2ea98ddb137f328d",
+      "sha256": "98f72748a20fcafa33f0c3f038dfb173a0ce0f51b1957a7a803992988b2c3794",
       "executable": false
     },
     {
@@ -2893,6 +2893,21 @@
     {
       "path": "docs/releases/update167-verification.json",
       "sha256": "fd6f92bcdfff2d257fb96d2c1fd60e73a17e4cf53ed77716df1c4c127de6bcb5",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update168-recovery-verification.json",
+      "sha256": "e6d9568a16f74c57ecfb605d006cb11b939cef4b6be9106e005aabcc858cccc2",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update168-verification.json",
+      "sha256": "270b7597a5aaa43849828b95368876edebbc97bd05b0c9d0d620091cc0bff939",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update168-version-link-refresh-verification.json",
+      "sha256": "26d39e3fb3a43cb2ff6c0e07e949eac4073c4829b523839ef987794a4858ba25",
       "executable": false
     },
     {
@@ -3717,7 +3732,7 @@
     },
     {
       "path": "lib/blind-eq.ts",
-      "sha256": "f94df7422af3f7d97b92234422192d3baefb90250d5148ed9c4496fae4a2006d",
+      "sha256": "3917d29aa9f1d9c652bb5f95a9fa2d2513504045837f90bb6f560648e39317e6",
       "executable": false
     },
     {
@@ -4017,7 +4032,7 @@
     },
     {
       "path": "lib/measurement.ts",
-      "sha256": "63f824f89094b5e0fbc142ade10f3a1a01f92ec65d9c0670cab1dd06e1c36d77",
+      "sha256": "09f46fa1d7c3bc46242aa81e1d38880d622cef6dfa6f66f6f62c260434f3221c",
       "executable": false
     },
     {
@@ -4042,7 +4057,7 @@
     },
     {
       "path": "lib/music-library-eq.ts",
-      "sha256": "940de097cde8ed71d0d35993d0f56905a23749fc4496bbb4eca52c56da9bd927",
+      "sha256": "c0e9939c1f352ad8ccbcc39ce464bf653f8331fb7b229426151a434988af978f",
       "executable": false
     },
     {
@@ -4072,7 +4087,7 @@
     },
     {
       "path": "lib/peq-preset.ts",
-      "sha256": "9fcc9dd1726f1e641b8cf7a4548a9c742064e7c82829103c8869a4bc526930a7",
+      "sha256": "80a8108913e587a38a399e71cc216cc1c71e8dc222bf5bd1f8f6fbc1ccbf0f6a",
       "executable": false
     },
     {
@@ -4197,12 +4212,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "08a343c99415019ecc85a61e29cf8ad8e30e1e33a534e7e475ac3a6da106a3b7",
+      "sha256": "118a53a149a030e6d2a88f84e512d4f31b2c679d8a74b2ae465bbbea8ddc9fa9",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "e96deea17d3f59eb8abda3b6e3e50f2af84320db4555107415dc21c2e2aa9420",
+      "sha256": "03cfbde829890ed0651d48fc66db3a5d942aa55b916fe5c00d5d18d27b6083c7",
       "executable": false
     },
     {
@@ -5062,12 +5077,12 @@
     },
     {
       "path": "scripts/check_blind_eq.mjs",
-      "sha256": "a0c6178a2c2ea362bcecd706bb930ef1041e447e95b770fe24862ffb8fcb131b",
+      "sha256": "0ce926c71c9f5e9565a301f047575fbadf57e994bfdd8cfd5182ec42b3efadff",
       "executable": false
     },
     {
       "path": "scripts/check_blind_eq_workflow.mjs",
-      "sha256": "173adb8bc5d27dd1a71382d4584272307498013a6ae622b85c1ecc33db614187",
+      "sha256": "917027fa51a31942518c4f46ee5f39d73546a18b7222451f40a02b5f9deda0b3",
       "executable": false
     },
     {
@@ -5462,7 +5477,7 @@
     },
     {
       "path": "scripts/check_saved_eq.mjs",
-      "sha256": "9b7d1b45c3c7bd937a411e58bbbfd3b4652df7d7fbf7cf752979221da8bcfaf1",
+      "sha256": "d313ef6ed237e2b687e6f909dd63d2fd02f134b8d39e673cae9ae1e5e61b47c7",
       "executable": false
     },
     {

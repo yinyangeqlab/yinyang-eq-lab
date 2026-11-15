@@ -57,7 +57,7 @@ status checks remain subject to the site's normal controls.
   enabled/disabled rows and a flat reference with zero enabled filters.
 
 Limits: 200 KB TXT, 32 enabled filters/channel, 10–24,000 Hz, ±30 dB filter gain,
-Q 0.1–20, ±40 dB accumulated channel preamp. Local songs are limited to 100 MB
+Q 0.01–20, ±40 dB accumulated channel preamp. Local songs are limited to 100 MB
 each; decoded audio is capped at 20 minutes / 200 MB of sample data. Decoding itself can temporarily require more memory; shorter excerpts are recommended on mobile. Presets are checked before blinding against the playback AudioContext sample rate. Filters at or above that context’s Nyquist frequency are refused
 rather than silently moved. Unsupported processing commands fail with a line
 number. Native `.peace`, GraphicEQ, convolution, includes, slope/corner shelf

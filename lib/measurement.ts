@@ -1,5 +1,5 @@
 import { parseCurve, type Point } from "@/lib/curves";
-import type { ChannelMatchPreset } from "@/lib/peq-preset";
+import { isPresetQ, type ChannelMatchPreset } from "@/lib/peq-preset";
 
 export type HeadphoneMeasurement = {
   adminTestOnly?:boolean;
@@ -57,7 +57,7 @@ export function parseMeasurement(value: unknown): HeadphoneMeasurement {
       const filters = entry.filters.map(filter => {
         if (!filter || typeof filter !== "object") throw new Error("Invalid channel-match preset.");
         const item = filter as Record<string, unknown>;
-        if (!["PK", "LSC", "HSC"].includes(String(item.type)) || typeof item.hz !== "number" || !Number.isFinite(item.hz) || item.hz < 20 || item.hz > 20000 || typeof item.gain !== "number" || !Number.isFinite(item.gain) || Math.abs(item.gain) > 40 || typeof item.q !== "number" || !Number.isFinite(item.q) || item.q < .1 || item.q > 20)
+        if (!["PK", "LSC", "HSC"].includes(String(item.type)) || typeof item.hz !== "number" || !Number.isFinite(item.hz) || item.hz < 20 || item.hz > 20000 || typeof item.gain !== "number" || !Number.isFinite(item.gain) || Math.abs(item.gain) > 40 || !isPresetQ(item.q))
           throw new Error("Invalid channel-match preset.");
         return { type: item.type as "PK" | "LSC" | "HSC", hz: item.hz, gain: item.gain, q: item.q };
       });

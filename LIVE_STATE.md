@@ -5,13 +5,13 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update167 |
-| Source | `dc69875afb2bd197ead726458039d51108760099` |
-| Verified at | 2026-11-15T04:56:10Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update167-verification.json) |
+| Release | update168 |
+| Source | `3a421c972c81f197719b879a0ae52784b598684c` |
+| Verified at | 2026-11-15T07:51:46Z |
+| Deployment | Verified by the [deployment receipt](docs/releases/update168-version-link-refresh-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
 | Publication | Source recorded as pushed; publication authorized in this record |
-| Recovery | Matching source-only metadata handover recorded as verified |
+| Recovery | Matching source-only handover pending; do not claim this release has a registered recovery baseline |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 

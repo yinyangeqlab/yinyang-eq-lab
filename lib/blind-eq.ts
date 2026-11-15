@@ -1,3 +1,5 @@
+import { isPresetQ, MAX_PRESET_Q, MIN_PRESET_Q } from "./peq-preset";
+
 /** Private preset comparisons have no server or browser-storage representation. */
 export type EqFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q: number };
 export type EqChannel = { preampDb: number; filters: EqFilter[] };
@@ -14,8 +16,8 @@ export function validateEqPreset(preset: EqPreset): EqPreset {
     if (channel.filters.length > 32) throw Error("Use at most 32 enabled filters per channel.");
     for (const filter of channel.filters) {
       if (!["PK", "LSC", "HSC"].includes(filter.type) || !Number.isFinite(filter.hz) || filter.hz < 10 || filter.hz > 24000 ||
-        !Number.isFinite(filter.gain) || Math.abs(filter.gain) > 30 || !Number.isFinite(filter.q) || filter.q < .1 || filter.q > 20) {
-        throw Error("Each filter needs 10–24,000 Hz, −30 to +30 dB gain and Q 0.1–20.");
+        !Number.isFinite(filter.gain) || Math.abs(filter.gain) > 30 || !isPresetQ(filter.q)) {
+        throw Error(`Each filter needs 10–24,000 Hz, −30 to +30 dB gain and Q ${MIN_PRESET_Q}–${MAX_PRESET_Q}.`);
       }
     }
   }
