@@ -5,6 +5,10 @@ Recorded deployment: **update171**, source `d28f1735ada00e926b27610d06a44579061d
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update169 release links on the Version page
+
+The Version history entry links to the published [Rankings release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) and [Sidebar refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169-sidebar-rollout). Both links were verified on the live update171 Version refresh from source `fb04020c6c1a0122fd3482398833993e9fa89e86`. Desktop and phone checks covered keyboard navigation, and both live destinations returned HTTP 200. The matching encrypted off-device recovery passed hosted validation. [Live Version page](https://yinyangeq.com/version#update169)
+
 ## Update171 Wallpapers and Version history
 
 The wallpaper gallery adds portrait phone, portrait and landscape tablet, and ultrawide downloads. The live gallery provides the wallpaper files and their personal-use terms. Version history links to the update169 Rankings release, and update171 uses automatic release discovery.

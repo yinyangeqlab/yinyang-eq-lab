@@ -3,7 +3,7 @@ export type ReleaseNotes = {
   date: string;
   title: string;
   changes: readonly string[];
-  github?: { commit: string; pull?: number; releaseTag?: string; refreshReleaseTag?: string };
+  github?: { commit: string; pull?: number; releaseTag?: string; refreshRelease?: { tag: string; label: string } };
 };
 
 export const candidateChanges = [
@@ -269,8 +269,15 @@ const update132Changes = [
 export const releaseHistory: readonly ReleaseNotes[] = [
   { update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: candidateChanges },
   { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes },
-  { update: 169, date: "2026-11-15", title: "Target and EQ preset rankings", changes: update169Changes, github: { commit: "f6ecdacc99996d2ec46caa81869abd18f7fa28ce", releaseTag: "update169" } },
-  { update: 168, date: "2026-11-14", title: "EQ preset import compatibility", changes: update168Changes, github: { commit: "9fbf6acf1b0134dfe4af61d2d4803e44dfdf27ad", releaseTag: "update168", refreshReleaseTag: "update168-direct-release-link" } },
+  {
+    update: 169, date: "2026-11-15", title: "Target and EQ preset rankings", changes: update169Changes,
+    github: {
+      commit: "f6ecdacc99996d2ec46caa81869abd18f7fa28ce",
+      releaseTag: "update169",
+      refreshRelease: { tag: "update169-sidebar-rollout", label: "Sidebar refresh on GitHub" },
+    },
+  },
+  { update: 168, date: "2026-11-14", title: "EQ preset import compatibility", changes: update168Changes, github: { commit: "9fbf6acf1b0134dfe4af61d2d4803e44dfdf27ad", releaseTag: "update168", refreshRelease: { tag: "update168-direct-release-link", label: "GitHub refresh release" } } },
   { update: 167, date: "2026-11-14", title: "Sidebar controls", changes: update167Changes, github: { commit: "677fd44ef9893134a5fa5e1553c28d6c49b54924", releaseTag: "update167" } },
   { update: 166, date: "2026-11-14", title: "Peak & Dip Finder saved EQ and live adjustments", changes: update166Changes, github: { commit: "42a3ddadbb2dcd9b7930f91bbade5439c09bc8ef", releaseTag: "update166" } },
   { update: 165, date: "2026-11-14", title: "Preference Tuning target match", changes: update165Changes, github: { commit: "da4977a00ba46537521b18340dd32e433110b662", releaseTag: "update165" } },
