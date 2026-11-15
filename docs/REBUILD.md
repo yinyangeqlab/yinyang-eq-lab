@@ -89,6 +89,12 @@ The isolated restore for `8c4a50bb2da689a3947d84240b47b9128dc67863` matched all 
 
 [Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json) · [Isolated recovery verification](releases/update166-finder-isolated-recovery-verification.json)
 
+## Update165 Preference Tuning target match
+
+The isolated restore for `658403035df3bcd207f5297517368419de898917` matched all 1,159 source files and 3,869 compiled files against the original release ledger.
+
+[Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json) · [Isolated recovery verification](releases/update165-tuning-target-match-isolated-recovery-verification.json)
+
 Use the exact `.node-version` / `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
 
 ```sh

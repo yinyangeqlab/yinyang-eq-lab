@@ -102,7 +102,9 @@ Preference Tuning selects Target match, the generated EQ with the lowest fit err
 
 All 125 selected release checks passed. Browser checks verified both downloaded EQs at desktop and phone widths. The live Tuning assets match the tested package. The encrypted source-only recovery passed independent reconstruction and hosted validation.
 
-[Update165 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update165) · [Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json)
+A fresh download of the encrypted off-device source-only backup for `658403035df3bcd207f5297517368419de898917` passed an isolated restore. Desktop and phone checks verified that Target match is selected first, Lower boost is selectable by keyboard, and both EQ downloads contain their displayed preamp values.
+
+[Update165 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update165) · [Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json) · [Isolated recovery verification](releases/update165-tuning-target-match-isolated-recovery-verification.json)
 
 ## Update164 Version page refresh
 
