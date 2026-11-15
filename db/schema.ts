@@ -371,6 +371,20 @@ export const listenerNicknames = sqliteTable("listener_nicknames", {
   nickname: text("nickname").notNull(),
 });
 
+export const eqPresetReactions = sqliteTable("eq_preset_reactions", {
+  id: text("id").primaryKey().notNull(),
+  subjectId: text("subject_id").notNull().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
+  modelId: text("model_id").notNull(),
+  presetId: text("preset_id").notNull(),
+  presetVersion: text("preset_version").notNull(),
+  choice: text("choice").notNull(),
+  createdAt: integer("created_at").notNull(),
+}, table => [
+  uniqueIndex("eq_preset_reactions_version_subject_idx").on(table.modelId, table.presetId, table.presetVersion, table.subjectId),
+  index("eq_preset_reactions_subject_idx").on(table.subjectId),
+  check("eq_preset_reaction_choice", sql`${table.choice} IN ('up', 'down')`),
+]);
+
 export const earPracticeProfiles = sqliteTable("ear_practice_profiles", {
   subjectId: text("subject_id").primaryKey().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
   username: text("username"),

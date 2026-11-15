@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 168,
+  "update": 169,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T07:51:46Z",
-  "sourceCommit": "3a421c972c81f197719b879a0ae52784b598684c",
-  "sourceBranch": "",
-  "baselineCommit": "210500eb9f6de865b286111f9ec5639955483df4",
-  "evidence": "docs/releases/update168-version-link-refresh-verification.json",
+  "verifiedAt": "2026-11-15T09:01:19Z",
+  "sourceCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+  "sourceBranch": "release/update169-eq-rankings-20261115",
+  "baselineCommit": "020a77ee343860bfdb74b70dbb58daf5cbb53079",
+  "evidence": "docs/releases/update169-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,35 +31,36 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "deploymentRefresh": {
-    "slug": "version-link-refresh",
-    "previousEvidence": "docs/releases/update168-verification.json"
-  },
   "gitSource": {
-    "implementationCommit": "3a421c972c81f197719b879a0ae52784b598684c",
-    "branch": "",
+    "implementationCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+    "branch": "release/update169-eq-rankings-20261115",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "pushed": true,
     "publicationAuthorized": true,
-    "publicationTag": "update168"
+    "publicationSeparateFromDeployment": true,
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "publicationTag": "update169"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "sourceBaselineUpdate": 168,
-    "sourceBaselineVerifiedAt": "2026-11-15T07:46:17Z",
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "dailyWorkflowActive": null,
-    "update168SourceOnlyHandover": {
-      "registrationPending": true,
-      "metadataOnly": true,
-      "databaseExport": false,
-      "newDataSnapshots": 0
+    "matchingCurrentReleaseBaseline": true,
+    "sourceBaselineUpdate": 169,
+    "sourceBaselineVerifiedAt": "2026-11-15T09:45:01Z",
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "releaseMetadataHandover": {
+      "update": 169,
+      "matchingPreparedSourceCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+      "dataExportPerformed": true,
+      "newDataSnapshots": 1,
+      "registered": true,
+      "hostedValidationPassed": true,
+      "independentDownloadDecryptionVerified": true,
+      "fullReconstructionVerified": true,
+      "matchingPostMigrationSnapshotPending": false,
+      "evidence": "docs/releases/update169-recovery-verification.json"
     }
   },
   "documentationFiles": [],

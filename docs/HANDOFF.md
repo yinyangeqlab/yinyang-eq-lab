@@ -1,13 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
+Recorded deployment: **update169**, source `b382bec78f9ecccfb821a8119a7be697ea9cbf44`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update169 Rankings and preset reactions
 
 A fresh download of the encrypted off-device source-only backup for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` passed an isolated restore. Using synthetic data, the restored app passed the Target and EQ preset rankings, preset reactions, and Version page release-feed fallback checks. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
+Research Rankings shows target and EQ preset rankings together. The Version page can discover the current GitHub release using the public release feed when the API is unavailable.
+
+[Update169 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) · [Deployment verification](releases/update169-verification.json) · [Recovery verification](releases/update169-recovery-verification.json)
 
 ## Update168 Direct GitHub release links
 

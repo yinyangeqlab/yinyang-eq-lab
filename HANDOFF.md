@@ -1,9 +1,15 @@
 # Project handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
+Recorded deployment: **update169**, source `b382bec78f9ecccfb821a8119a7be697ea9cbf44`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update169 Target and EQ preset rankings
+
+Research Rankings shows target and EQ preset rankings together. The Version page can discover the current GitHub release using the public release feed when the API is unavailable.
+
+[Update169 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) · [Deployment verification](docs/releases/update169-verification.json) · [Recovery verification](docs/releases/update169-recovery-verification.json)
 
 ## Update168 EQ preset imports
 

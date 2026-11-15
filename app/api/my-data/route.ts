@@ -30,13 +30,19 @@ export async function GET() {
       return (result.results || []).map(row => ({ kind, id: String(row.id), createdAt: Number(row.created_at), title: ["vote","open","run","export","target"].includes(kind) ? targetLabelText(String(row.display_title || kind)) : String(row.display_title || kind), localId: kind === "run" ? String(row.id) : undefined, trialId: row.trial_id || (kind === "vote" ? row.id : undefined) }));
     }));
     const music = await env.DB!.prepare("SELECT track_url,choice,updated_at FROM music_votes WHERE user_id=?").bind(identity.subjectId).all<{track_url:string;choice:string;updated_at:number}>();
+    const reactions = await env.DB!.prepare("SELECT id, model_id, preset_id, choice, created_at FROM eq_preset_reactions WHERE subject_id=?").bind(identity.subjectId)
+      .all<{ id: string; model_id: string; preset_id: string; choice: "up" | "down"; created_at: number }>();
+    const reactionRecords = (reactions.results || []).map(row => ({
+      kind: "eq-reaction", id: row.id, createdAt: row.created_at,
+      title: `EQ preset · ${row.model_id} / ${row.preset_id} · ${row.choice === "up" ? "Thumbs up" : "Thumbs down"}`,
+    }));
     const protectedAccount=!!await env.DB!.prepare("SELECT 1 FROM owner_public_profiles WHERE subject_id=?").bind(identity.subjectId).first();
     const activity = identity.activityMonitoringEnabled||protectedAccount ? await env.DB!.prepare("SELECT id,event_type,route,shootout_tab,test_mode,test_active,created_at FROM activity_events WHERE subject_id=? AND (created_at>=? OR subject_id IN(SELECT subject_id FROM owner_public_profiles)) ORDER BY created_at DESC LIMIT 500").bind(identity.subjectId,Date.now()-30*86400000).all() : { results: [] };
     const syncPermission=await accountSyncPermission(env.DB!,identity.subjectId);
     const historicalStudies = await consentStudies(env.DB!,identity.subjectId);
     const community = await communityPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
     const personal = await personalPermission(env.DB!,identity.subjectId,identity.submissionsEnabled);
-    return Response.json({ syncEnabled:syncPermission.enabled,historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId),consentTestOnly:identity.subjectId===LAYOUT_TEST_SUBJECT, records: [...rows.flat(), ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
+    return Response.json({ syncEnabled:syncPermission.enabled,historicalStudies, communityEnabled:community.enabled, protectedAccount, personalResearchEnabled:personal.enabled, nickname: profile?.nickname ?? "", submissionsEnabled: identity.submissionsEnabled, shareMusic: identity.shareMusic, agreementVersion:identity.agreementVersion, agreedAt:identity.agreedAt, activityMonitoringEnabled:identity.activityMonitoringEnabled, activityMonitoringVersion:identity.activityMonitoringVersion, activityLogs:activity.results || [], activityLogLimit:500, sharedAdmin: identity.subjectId === "owner", testOnly:isTestSubject(identity.subjectId),consentTestOnly:identity.subjectId===LAYOUT_TEST_SUBJECT, records: [...rows.flat(), ...reactionRecords, ...(music.results || []).map(row => ({ kind:"music", id:row.track_url, createdAt:row.updated_at, title:`${row.choice === "keep" ? "Upvote" : "Downvote"}: ${row.track_url}` }))] }, { headers });
   } catch (error) { return failed(error); }
 }
 export async function PATCH(request: Request) {

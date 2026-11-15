@@ -44,34 +44,10 @@ function solve(lower: number[][], rhs: number[]) {
   }
   return x;
 }
-export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) {
-  const validTargets=new Set(targets.map(t=>t.id));
-  const involved=new Set(votes.filter(v=>v.winnerId!==v.loserId&&validTargets.has(v.winnerId)&&validTargets.has(v.loserId)).flatMap(v=>[v.winnerId,v.loserId]));
-  const rows = targets.filter(t=>involved.has(t.id)).map(({ id, name, creator }) => ({ id, name, creator, wins: 0, losses: 0, ties: 0, comparisons: 0, listeners: 0, effectiveComparisons: 0 }));
-  const index = new Map(rows.map((target, i) => [target.id, i]));
-  const listeners = rows.map(() => new Set<string>());
-  const clusters = new Map<string, { a: number; b: number; n: number; sum: number; participant: string }>();
-  const unique = new Set<string>();
-  let count = 0;
-  for (const vote of votes) {
-    if (unique.has(vote.id)) continue; unique.add(vote.id);
-    const ids = [vote.winnerId, vote.loserId].sort(), a = index.get(ids[0]), b = index.get(ids[1]);
-    if (a === undefined || b === undefined || a === b) continue;
-    const tie = vote.result === "tie", score = tie ? .5 : vote.winnerId === ids[0] ? 1 : 0;
-    for (const i of [a, b]) { rows[i].comparisons++; listeners[i].add(vote.voterId); }
-    if (tie) { rows[a].ties++; rows[b].ties++; }
-    else { rows[index.get(vote.winnerId)!].wins++; rows[index.get(vote.loserId)!].losses++; }
-    const key = JSON.stringify([vote.voterId, ...ids]);
-    const group = clusters.get(key) ?? { a, b, n: 0, sum: 0, participant:vote.voterId };
-    group.n++; group.sum += score; clusters.set(key, group); count++;
-  }
-  // Bound a participant's total contribution across pairs, not just repeats of
-  // one pair. More browser sessions on the same verified account add no people.
-  const pairCounts=new Map<string,number>();
-  for(const group of clusters.values()) pairCounts.set(group.participant,(pairCounts.get(group.participant)||0)+1);
-  const observations=[...clusters.values()].map(group=>({...group,score:group.sum/group.n,weight:1/pairCounts.get(group.participant)!}));
-  for (const group of observations) for (const i of [group.a, group.b]) rows[i].effectiveComparisons += group.weight;
-  const n = rows.length, x = Array(n).fill(0) as number[];
+export type PairPreference = { a: number; b: number; score: number; weight: number };
+
+export function fitPreferenceScores(n: number, observations: readonly PairPreference[]) {
+  const x = Array(n).fill(0) as number[];
   function derivatives() {
     const gradient = x.map(value => value * PRECISION);
     const hessian = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => i === j ? PRECISION : 0));
@@ -101,10 +77,43 @@ export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) 
     for (let i = 0; i < n; i++) x[i] -= fraction * step[i];
   }
   const lower = cholesky(derivatives().hessian);
-  return { voteCount: count, participantGroups:pairCounts.size, uncertainty:"Conditional scoring-model range; not a population confidence interval", rows: rows.map((row, i) => {
+  return x.map((value, i) => {
     const unit = Array(n).fill(0); unit[i] = 1;
     const sd = Math.sqrt(Math.max(0, solve(lower, unit)[i])) * SCALE;
-    const rating = 1500 + x[i] * SCALE;
-    return { ...row, listeners: listeners[i].size, rating, sd, lower: rating - 1.96 * sd, upper: rating + 1.96 * sd };
+    const rating = 1500 + value * SCALE;
+    return { rating, sd, lower: rating - 1.96 * sd, upper: rating + 1.96 * sd };
+  });
+}
+
+export function rankPreferences(targets: RankingTarget[], votes: RankingVote[]) {
+  const validTargets=new Set(targets.map(t=>t.id));
+  const involved=new Set(votes.filter(v=>v.winnerId!==v.loserId&&validTargets.has(v.winnerId)&&validTargets.has(v.loserId)).flatMap(v=>[v.winnerId,v.loserId]));
+  const rows = targets.filter(t=>involved.has(t.id)).map(({ id, name, creator }) => ({ id, name, creator, wins: 0, losses: 0, ties: 0, comparisons: 0, listeners: 0, effectiveComparisons: 0 }));
+  const index = new Map(rows.map((target, i) => [target.id, i]));
+  const listeners = rows.map(() => new Set<string>());
+  const clusters = new Map<string, { a: number; b: number; n: number; sum: number; participant: string }>();
+  const unique = new Set<string>();
+  let count = 0;
+  for (const vote of votes) {
+    if (unique.has(vote.id)) continue; unique.add(vote.id);
+    const ids = [vote.winnerId, vote.loserId].sort(), a = index.get(ids[0]), b = index.get(ids[1]);
+    if (a === undefined || b === undefined || a === b) continue;
+    const tie = vote.result === "tie", score = tie ? .5 : vote.winnerId === ids[0] ? 1 : 0;
+    for (const i of [a, b]) { rows[i].comparisons++; listeners[i].add(vote.voterId); }
+    if (tie) { rows[a].ties++; rows[b].ties++; }
+    else { rows[index.get(vote.winnerId)!].wins++; rows[index.get(vote.loserId)!].losses++; }
+    const key = JSON.stringify([vote.voterId, ...ids]);
+    const group = clusters.get(key) ?? { a, b, n: 0, sum: 0, participant:vote.voterId };
+    group.n++; group.sum += score; clusters.set(key, group); count++;
+  }
+  // Bound a participant's total contribution across pairs, not just repeats of
+  // one pair. More browser sessions on the same verified account add no people.
+  const pairCounts=new Map<string,number>();
+  for(const group of clusters.values()) pairCounts.set(group.participant,(pairCounts.get(group.participant)||0)+1);
+  const observations=[...clusters.values()].map(group=>({...group,score:group.sum/group.n,weight:1/pairCounts.get(group.participant)!}));
+  for (const group of observations) for (const i of [group.a, group.b]) rows[i].effectiveComparisons += group.weight;
+  const scores = fitPreferenceScores(rows.length, observations);
+  return { voteCount: count, participantGroups:pairCounts.size, uncertainty:"Conditional scoring-model range; not a population confidence interval", rows: rows.map((row, i) => {
+    return { ...row, listeners: listeners[i].size, ...scores[i] };
   }).filter(row => row.comparisons > 0).sort((a, b) => b.rating - a.rating || a.id.localeCompare(b.id)) };
 }

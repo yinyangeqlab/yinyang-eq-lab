@@ -69,6 +69,8 @@ try {
   const originalNow = Date.now;
   let time = originalNow(), requests = 0;
   let response = () => new Response(null, { status: 404 });
+  let feedRequests = 0;
+  let feedResponse = () => new Response(null, { status: 503 });
   let expiry = 0;
   let cached;
   const tag = `update${build.update}`;
@@ -87,11 +89,16 @@ try {
     },
   } } });
   globalThis.fetch = async (url, options) => {
-    requests += 1;
-    assert.equal(url, `https://api.github.com/repos/yinyangeqlab/yinyang-eq-lab/releases/tags/${tag}`);
     assert.equal(options.redirect, 'manual');
     assert.equal(options.cache, 'no-store');
     assert.ok(!new Headers(options.headers).has('authorization'));
+    if (url === `${repositoryUrl}/releases.atom`) {
+      feedRequests++;
+      assert.equal(new Headers(options.headers).get('accept'), 'application/atom+xml');
+      return feedResponse();
+    }
+    requests++;
+    assert.equal(url, `https://api.github.com/repos/yinyangeqlab/yinyang-eq-lab/releases/tags/${tag}`);
     return response();
   };
   try {
@@ -107,6 +114,7 @@ try {
     assert.equal(await publishedBuildTag(), tag, 'a new publication appears after the cached miss expires');
     assert.equal(await publishedBuildTag(), tag);
     assert.equal(requests, 2);
+    assert.equal(feedRequests, 0, 'a successful API lookup or confirmed miss needs no feed request');
     for (const invalid of [
       () => releaseResponse({ draft: true }),
       () => releaseResponse({ tag_name: 'update159' }),
@@ -126,6 +134,29 @@ try {
     const priorRequests = requests;
     assert.equal(await publishedBuildTag(tag), tag, 'a verified tag bypasses an expired cache and unavailable API');
     assert.equal(requests, priorRequests);
+
+    const publishedFeed = (url, contentType = 'application/atom+xml; charset=utf-8') => new Response(
+      `<feed xmlns="http://www.w3.org/2005/Atom"><link rel="alternate" type="text/html" href="${releaseUrl}"/><entry>
+        <link rel="alternate" type="text/html" href="${url}"/>
+      </entry></feed>`,
+      { headers: { 'Content-Type': contentType } },
+    );
+    response = () => Response.json({ message: 'API rate limit exceeded' }, { status: 403, headers: { 'X-RateLimit-Remaining': '0' } });
+    for (const invalid of [
+      () => publishedFeed(`${releaseUrl}-preview`),
+      () => publishedFeed(`https://example.com/releases/tag/${tag}`),
+      () => publishedFeed(releaseUrl, 'text/html'),
+    ]) {
+      time += 3_600_001;
+      feedResponse = invalid;
+      assert.equal(await publishedBuildTag(), undefined, 'only an exact release entry in the Atom feed is accepted');
+    }
+    time += 3_600_001;
+    feedResponse = () => publishedFeed(releaseUrl);
+    const previousFeedRequests = feedRequests;
+    assert.equal(await publishedBuildTag(), tag, 'a matching published feed entry survives REST API rate limiting');
+    assert.equal(await publishedBuildTag(), tag);
+    assert.equal(feedRequests, previousFeedRequests + 1);
     checks++;
     console.log('PASS current-build lookup checks exact public publication and caches the post-publication transition');
   } finally {

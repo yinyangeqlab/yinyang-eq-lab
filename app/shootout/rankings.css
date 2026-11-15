@@ -66,3 +66,121 @@
 .ranking-awaiting small {
   display: block;
 }
+
+.ranking-device-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-block: 0 20px;
+}
+
+.ranking-device-filter > span {
+  color: light-dark(var(--workbench-muted), #a7bdca);
+  font-size: .875rem;
+  font-weight: 650;
+}
+
+.ranking-device-filter .rank-tabs { margin: 0; flex-wrap: wrap; }
+.ranking-device-filter button { min-height: 44px; }
+.ranking-device-filter button:focus-visible,
+.ranking-target-options > summary:focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal), #9ce8d5);
+  outline-offset: 3px;
+}
+
+.rankings-deck { container-type: inline-size; }
+.rankings-columns { display: grid; gap: 16px; align-items: start; }
+.target-rankings-panel,
+.eq-preset-rankings {
+  min-width: 0;
+  padding: clamp(12px, 2vw, 22px);
+  border: 1px solid light-dark(var(--workbench-line), #34454f);
+  border-radius: 12px;
+  background: light-dark(var(--workbench-surface), #0a161d);
+}
+
+@container (min-width: 55rem) {
+  .rankings-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.rankings-columns .ranking-heading { margin-top: 0; }
+.rankings-columns .ranking-intro { flex-wrap: wrap; }
+.rankings-columns .ranking-head,
+.rankings-columns .ranking-row {
+  grid-template-columns: minmax(0, 1fr) minmax(84px, .55fr) 76px;
+  gap: 8px;
+  padding-inline: 10px;
+}
+
+.rankings-columns .rank-name { gap: 8px; overflow-wrap: anywhere; }
+.rankings-columns .rank-name > div { min-width: 0; }
+.rankings-columns .rank-name small { white-space: normal; }
+.rankings-columns .rating { text-align: right; }
+.rankings-columns .empty { min-height: 0; padding: 16px; }
+.rankings-columns .empty p { margin: 6px 0 0; }
+.eq-model-ranking { margin-top: 18px; }
+.eq-model-ranking h3 { font-size: 1rem; margin: 0 0 8px; }
+.eq-preset-awaiting ul { padding-inline-start: 20px; }
+.eq-preset-awaiting small { display: block; }
+
+.ranking-row > .eq-preset-reactions { grid-column: 1 / -1; }
+.eq-preset-reactions { margin-top: 8px; min-width: 0; }
+.eq-preset-reactions > summary {
+  cursor: pointer;
+  color: light-dark(var(--workbench-teal), #a5f4e2);
+}
+.eq-reaction-preview { padding-block: 8px 2px; font-size: .875rem; }
+.eq-reaction-preview p { margin: 8px 0; }
+.eq-reaction-preview audio { display: none; }
+.eq-reaction-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.eq-reaction-preview button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  padding: 7px 10px;
+  color: light-dark(var(--workbench-ink), #e9f5f9);
+  background: light-dark(var(--workbench-surface), #10222a);
+  border: 1px solid light-dark(var(--workbench-line), #526a76);
+  border-radius: 7px;
+}
+.eq-reaction-preview button[aria-pressed="true"] {
+  border-color: light-dark(var(--workbench-teal), #65beaf);
+  color: light-dark(var(--workbench-teal), #a5f4e2);
+  background: light-dark(var(--workbench-soft), #153333);
+}
+.eq-preset-reactions :is(summary, button):focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal), #9ce8d5);
+  outline-offset: 3px;
+}
+.eq-reaction-preview button:disabled { opacity: .62; cursor: default; }
+
+.ranking-target-options {
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid light-dark(var(--workbench-line), #34454f);
+  border-radius: 8px;
+}
+
+.ranking-target-options > summary { cursor: pointer; }
+.ranking-target-options > .ranking-filters { margin-top: 12px; gap: 12px; }
+.ranking-target-options .ranking-filter-group:has(> select) { flex: 1 1 175px; }
+
+@container (max-width: 37rem) {
+  .rankings-columns .ranking-head,
+  .rankings-columns .ranking-row { grid-template-columns: minmax(0, 1fr) 70px; }
+  .rankings-columns .ranking-head > span:nth-child(2) { display: none; }
+  .rankings-columns .ranking-row .record {
+    display: block;
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .rankings-columns .ranking-row .rating { grid-column: 2; grid-row: 1 / span 2; }
+}
+
+@media (max-width: 780px) {
+  .rankings-columns .ranking-head,
+  .rankings-columns .ranking-row { grid-template-columns: minmax(0, 1fr) 70px; }
+  .rankings-columns .ranking-head > span:nth-child(2) { display: none; }
+}

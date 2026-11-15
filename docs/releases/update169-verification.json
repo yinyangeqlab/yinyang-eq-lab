@@ -1,0 +1,95 @@
+{
+  "update": 169,
+  "sourceCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+  "deploymentVerification": {
+    "at": "2026-11-15T09:01:19Z",
+    "update": 169,
+    "revision": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+    "deploymentVerified": true,
+    "migrations": [
+      {
+        "file": "0045_eq_preset_reactions.sql",
+        "sha256": "c80ac98549609535c84cca8170c8c377025ca095633df15915e291f3c5eb5259"
+      }
+    ],
+    "schemaDefinitions": 230,
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "privateCollectorUnchanged": true,
+    "independentCostGuardUnchanged": true,
+    "edgeRateLimitUnchanged": true,
+    "infrastructureDrift": false,
+    "exactServerModulesVerified": 361,
+    "exactClientAssetsVerified": 12,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/eq-compare": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/ear-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/api/eq-preset-reactions": 403,
+      "/api/my-data": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicVersionPageVerified": true,
+    "cloudflareQueryBindingVerified": true,
+    "previousPublicReleaseLinkVerified": true,
+    "existingD1BindingVerified": true,
+    "guardedRollout": true,
+    "verifiedPreviousSourceCommit": "020a77ee343860bfdb74b70dbb58daf5cbb53079",
+    "previousRecoveryEvidence": "docs/releases/update168-direct-release-link-recovery-verification.json",
+    "productionAdminSessionUsed": false,
+    "newDataExport": true,
+    "newDataSnapshot": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2340,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndScopedLintPassed": true,
+    "verifiedPackagedSuites": 2
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "publicPageAndReleaseDestinationsVerifiedOverHttps": true,
+    "localRankingsAndReactionsDesktopAndPhoneVerified": true,
+    "fixtureWritesBlocked": true,
+    "localExpandedSelectKeyboardAndStylesVerified": true
+  },
+  "newDataExport": true,
+  "newDataSnapshot": true,
+  "migrations": [
+    {
+      "file": "0045_eq_preset_reactions.sql",
+      "sha256": "c80ac98549609535c84cca8170c8c377025ca095633df15915e291f3c5eb5259"
+    }
+  ],
+  "preMigrationBackup": {
+    "liveUpdate": 168,
+    "createdAt": "2026-11-15T08:49:05.151209+00:00",
+    "verifiedAt": "2026-11-15T08:51:27.047525+00:00",
+    "independentDatabaseDecryptionVerified": true
+  },
+  "recoveryRegistrationPending": true
+}

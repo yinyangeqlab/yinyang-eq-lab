@@ -2,14 +2,14 @@ import { env } from "cloudflare:workers";
 import { RequestInputError } from "@/lib/request-json";
 
 export const dataTables = { vote: "votes", open: "comparison_choices", run: "listening_runs", feedback: "feedback_submissions", measurement: "research_measurements", export: "preference_exports", target: "targets", suggestion: "suggestions", trial: "ranked_trials", personal: "personal_research_choices", community:"community_personal_choices", "community-reference":"community_reference_blocks" } as const;
-export type DataKind = keyof typeof dataTables | "music";
+export type DataKind = keyof typeof dataTables | "music" | "eq-reaction";
 const uuid = /^[a-f0-9-]{36}$/i;
 // These statements execute in one D1 transaction, including the temporary audit-erasure authorization.
 export async function eraseData(subjectId: string | null, selection?: { kind: string; id: string },includeOwnerAccount=false) {
   const db = env.DB;
   if (!db) throw new Error("Database unavailable");
-  if (selection && (!(Object.hasOwn(dataTables, selection.kind)) && selection.kind !== "music" || selection.kind !== "music" && !uuid.test(selection.id))) throw new RequestInputError("Invalid submission.", 400);
-  if (!subjectId && (!selection || selection.kind === "music")) throw new RequestInputError("Choose a submission.", 400);
+  if (selection && (!(Object.hasOwn(dataTables, selection.kind)) && selection.kind !== "music" && selection.kind !== "eq-reaction" || selection.kind !== "music" && !uuid.test(selection.id))) throw new RequestInputError("Invalid submission.", 400);
+  if (!subjectId && (!selection || selection.kind === "music" || selection.kind === "eq-reaction")) throw new RequestInputError("Choose a submission.", 400);
   const statements: D1PreparedStatement[] = [];
   const browserIds: string[] = [];
   const scopeOwner = subjectId || (selection ? (await db.prepare("SELECT subject_id FROM submission_owners WHERE record_kind=? AND record_id=?").bind(selection.kind, selection.id).first<{subject_id:string}>())?.subject_id : null);
@@ -19,6 +19,14 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
   const tally = (kind: string) => add(`INSERT INTO deletion_daily_totals(day,record_kind,deleted_count)
     SELECT ?,?,changes() WHERE changes()>0
     ON CONFLICT(day,record_kind) DO UPDATE SET deleted_count=deleted_count+excluded.deleted_count`, day, kind);
+  if (selection?.kind === "eq-reaction") {
+    if (!await db.prepare("SELECT id FROM eq_preset_reactions WHERE id=? AND subject_id=?").bind(selection.id, subjectId).first()) {
+      throw new RequestInputError("Preset reaction not found in your account.", 404);
+    }
+    add("DELETE FROM eq_preset_reactions WHERE id=? AND subject_id=?", selection.id, subjectId!);
+    await db.batch(statements);
+    return;
+  }
   // No submission IDs, subjects, content, actors, request IDs or exact times survive here.
   // Recovery snapshots and captured browser evidence cannot preserve erased source data.
   if(scopeOwner){
@@ -110,6 +118,7 @@ export async function eraseData(subjectId: string | null, selection?: { kind: st
     add("DELETE FROM activity_events WHERE subject_id=?", subjectId!);
     add("DELETE FROM music_votes WHERE user_id=?", subjectId!);
     tally("music");
+    add("DELETE FROM eq_preset_reactions WHERE subject_id=?", subjectId!);
     add("DELETE FROM legacy_record_verifications WHERE subject_id=?", subjectId!);
     add("DELETE FROM legacy_review_requests WHERE subject_id=?", subjectId!);
     add("DELETE FROM target_removal_requests WHERE subject_id=?", subjectId!);

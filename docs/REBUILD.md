@@ -1,13 +1,17 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
+Recorded deployment: **update169**, source `b382bec78f9ecccfb821a8119a7be697ea9cbf44`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update169 Rankings and preset reactions
 
 The isolated restore for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` matched all 1,179 source files and 4,015 build files against the original release record. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
+All 126 selected suites passed for the deployed application source. A matching encrypted off-device backup passed full reconstruction and hosted validation.
+
+[Update169 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) · [Deployment verification](releases/update169-verification.json) · [Recovery verification](releases/update169-recovery-verification.json)
 
 ## Update168 Direct GitHub release links
 

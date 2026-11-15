@@ -1,13 +1,17 @@
 # Recovery boundaries and entry points
 
 <!-- release-state:start -->
-Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
+Recorded deployment: **update169**, source `b382bec78f9ecccfb821a8119a7be697ea9cbf44`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
 ## Update169 Rankings and preset reactions
 
 The encrypted off-device source-only recovery point for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` passed decryption and restoration from a fresh download. Migration 0045 created the preset reaction table and its indexes in a fresh synthetic database. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
+The matching encrypted off-device post-migration backup passed an independent download, decryption, full reconstruction and hosted validation. The pre-migration recovery point was retained.
+
+[Update169 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) · [Deployment verification](releases/update169-verification.json) · [Recovery verification](releases/update169-recovery-verification.json)
 
 ## Update168 Direct GitHub release links
 

@@ -4,14 +4,18 @@ function edgeCache(): Cache | undefined {
   return typeof caches === "undefined" ? undefined : (caches as CacheStorage & { default?: Cache }).default;
 }
 
+function fetchGitHub(url: string, accept: string) {
+  return fetch(url, {
+    headers: { Accept: accept, "User-Agent": "YinYang-EQ-Version" },
+    redirect: "manual",
+    cache: "no-store",
+    signal: AbortSignal.timeout(2_000),
+  });
+}
+
 async function checkGitHub(endpoint: string, tag: string, publicReleaseUrl: string): Promise<ReleaseStatus> {
   try {
-    const response = await fetch(endpoint, {
-      headers: { Accept: "application/vnd.github+json", "User-Agent": "YinYang-EQ-Version" },
-      redirect: "manual",
-      cache: "no-store",
-      signal: AbortSignal.timeout(2_000),
-    });
+    const response = await fetchGitHub(endpoint, "application/vnd.github+json");
     if (response.status === 404) return "missing";
     if (!response.ok) return "unavailable";
 
@@ -27,12 +31,29 @@ async function checkGitHub(endpoint: string, tag: string, publicReleaseUrl: stri
   }
 }
 
+async function isInReleaseFeed(feedUrl: string, publicReleaseUrl: string) {
+  try {
+    const response = await fetchGitHub(feedUrl, "application/atom+xml");
+    if (!response.ok || !response.headers.get("content-type")?.includes("application/atom+xml")) return false;
+
+    const feed = await response.text();
+    for (const [entry] of feed.matchAll(/<entry(?:\s[^>]*)?>[\s\S]*?<\/entry>/g)) {
+      const link = entry.match(/<link\s+rel="alternate"\s+type="text\/html"\s+href="([^"]+)"\s*\/>/);
+      if (link?.[1] === publicReleaseUrl) return true;
+    }
+  } catch {
+    // A failed feed request supplies no publication evidence.
+  }
+  return false;
+}
+
 export function createPublishedBuildLookup(repositoryUrl: string, tag: string) {
   const apiPath = new URL(repositoryUrl).pathname;
   const safeTag = encodeURIComponent(tag);
   const endpoint = `https://api.github.com/repos${apiPath}/releases/tags/${safeTag}`;
   const publicReleaseUrl = `${repositoryUrl}/releases/tag/${safeTag}`;
-  const cacheKey = `https://yinyangeq.com/__internal/github-release/v1${apiPath}/${safeTag}`;
+  const feedUrl = `${repositoryUrl}/releases.atom`;
+  const cacheKey = `https://yinyangeq.com/__internal/github-release/v2${apiPath}/${safeTag}`;
   let pending: Promise<ReleaseStatus> | undefined;
   let lastCheck: { status: ReleaseStatus; expiresAt: number } | undefined;
 
@@ -50,7 +71,8 @@ export function createPublishedBuildLookup(repositoryUrl: string, tag: string) {
       // The release can still be checked if the edge cache is unavailable.
     }
 
-    const status = await checkGitHub(endpoint, tag, publicReleaseUrl);
+    let status = await checkGitHub(endpoint, tag, publicReleaseUrl);
+    if (status === "unavailable" && await isInReleaseFeed(feedUrl, publicReleaseUrl)) status = "published";
     const seconds = status === "published" ? 3600 : 300;
     remember(status, seconds);
     try {

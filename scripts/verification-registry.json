@@ -1165,6 +1165,17 @@
       "scope": "Existing ranked runs regression assertions; synthetic/source scope in the script"
     },
     {
+      "id": "eq-preset-reactions",
+      "path": "scripts/check_eq_preset_reactions.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": ["node_modules/typescript/package.json"],
+      "owner": "research",
+      "scope": "Synthetic approved preset, disposable SQLite, route validation, account erasure and ranking independence"
+    },
+    {
       "id": "ranking-api",
       "path": "scripts/check_ranking_api.mjs",
       "runtime": "node",

@@ -1,0 +1,17 @@
+{
+  "update": 169,
+  "sourceCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+  "verifiedAt": "2026-11-15T09:45:01Z",
+  "databaseExportPerformed": true,
+  "newDataSnapshots": 1,
+  "preMigrationSnapshotPreserved": true,
+  "preMigrationSnapshotAt": "2026-11-15T08:49:05.151209+00:00",
+  "preMigrationVerifiedAt": "2026-11-15T08:51:27.047525+00:00",
+  "postMigrationSnapshotAt": "2026-11-15T09:10:41.167289+00:00",
+  "independentDownloadDecryptionVerified": true,
+  "fullReconstructionVerified": true,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "originalRecordingUploads": 0,
+  "dailyWorkflowActive": true
+}
