@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update169**, source `258bd1867844ed927e722896e0cb43cbb7776b48`.
+Recorded deployment: **update169**, source `d128f6a60698089a98e64b023a6b1488807e1e54`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update169 Version history refresh
+
+The update168 history entry on the Version page links to the original EQ preset import release and its direct-link refresh.
+
+Desktop and phone browser checks and live link verification passed. The matching encrypted source-only recovery passed independent reconstruction and hosted validation.
+
+[Deployment verification](../docs/releases/update169-version-history-refresh-verification.json) · [Recovery verification](../docs/releases/update169-version-history-refresh-recovery-verification.json)
 
 ## Update169 sidebar refresh
 

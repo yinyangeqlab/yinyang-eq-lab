@@ -6,9 +6,9 @@ This view describes the recorded production release. It does not assert that thi
 | Field | Recorded value |
 | --- | --- |
 | Release | update169 |
-| Source | `258bd1867844ed927e722896e0cb43cbb7776b48` |
-| Verified at | 2026-11-15T09:53:39Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update169-sidebar-rollout-verification.json) |
+| Source | `d128f6a60698089a98e64b023a6b1488807e1e54` |
+| Verified at | 2026-11-15T10:28:05Z |
+| Deployment | Verified by the [deployment receipt](docs/releases/update169-version-history-refresh-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
 | Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |

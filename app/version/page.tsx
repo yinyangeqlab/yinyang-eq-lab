@@ -44,6 +44,7 @@ export default async function VersionPage() {
           <ul>{entry.changes.map(change => <li key={change}>{change}</li>)}</ul>
           <div className="alpha-version-links">
             {releaseTag && <a href={releaseUrl(releaseTag)}>GitHub release</a>}
+            {entry.github?.refreshReleaseTag && <a href={releaseUrl(entry.github.refreshReleaseTag)}>GitHub refresh release</a>}
             {entry.github && <a href={`${repository}/commit/${entry.github.commit}`}>GitHub commit</a>}
             {entry.github && previous && <a href={`${repository}/compare/${previous.commit}..${entry.github.commit}`}>Compare published updates</a>}
             {entry.github?.pull && <a href={`${repository}/pull/${entry.github.pull}`}>Pull request #{entry.github.pull}</a>}

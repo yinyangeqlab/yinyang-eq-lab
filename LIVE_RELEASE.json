@@ -2,14 +2,14 @@
   "site": "https://yinyangeq.com",
   "update": 169,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T09:53:39Z",
-  "sourceCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
+  "verifiedAt": "2026-11-15T10:28:05Z",
+  "sourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
   "sourceBranch": "",
-  "baselineCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
-  "evidence": "docs/releases/update169-sidebar-rollout-verification.json",
+  "baselineCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
+  "evidence": "docs/releases/update169-version-history-refresh-verification.json",
   "deploymentRefresh": {
-    "slug": "sidebar-rollout",
-    "previousEvidence": "docs/releases/update169-verification.json"
+    "slug": "version-history-refresh",
+    "previousEvidence": "docs/releases/update169-sidebar-rollout-verification.json"
   },
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
@@ -36,19 +36,19 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
+    "implementationCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
-    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab"
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "pushed": true,
+    "publicationAuthorized": true
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
     "sourceBaselineUpdate": 169,
-    "sourceBaselineVerifiedAt": "2026-11-15T10:11:49Z",
+    "sourceBaselineVerifiedAt": "2026-11-15T10:51:12Z",
     "sourceOnlyHandoverPending": false,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
@@ -60,8 +60,8 @@
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
-      "evidence": "docs/releases/update169-sidebar-rollout-recovery-verification.json"
+      "sourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+      "evidence": "docs/releases/update169-version-history-refresh-recovery-verification.json"
     }
   },
   "documentationFiles": [],
