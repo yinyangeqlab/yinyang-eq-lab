@@ -15,6 +15,7 @@ export default function GlossaryPage() {
     <nav className="guide-jump-links" aria-label="Glossary and guides">
       <a href="#glossary-terms">Find a term</a>
       <a href={FITTER_GUIDE_PATH}>EQ fitter benchmark</a>
+      <a href="/glossary/iem-measurement">IEM measurement guide</a>
     </nav>
     <div id="glossary-terms"><TermsReference /></div>
     <EqFittingGuide />

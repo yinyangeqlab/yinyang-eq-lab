@@ -1,0 +1,86 @@
+{
+  "update": 170,
+  "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+  "deploymentVerification": {
+    "at": "2026-11-15T10:55:08Z",
+    "update": 170,
+    "revision": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+    "previousRecoveryEvidence": "docs/releases/update169-version-history-refresh-recovery-verification.json",
+    "publicVersionPageVerified": true,
+    "publicGuideVerified": true,
+    "glossaryLinkVerified": true,
+    "technicalPdfVerified": true,
+    "visibleCalloutLists": 9,
+    "exactGuideAssetsVerified": 14,
+    "exactServerModulesVerified": 362,
+    "anonymousGateChecks": {
+      "/eq-compare": 303,
+      "/shootout/personal": 303,
+      "/owner-research": 303,
+      "/api/targets": 401,
+      "/api/my-data": 401,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 303,
+      "/api/listening-audio/missing-release-check": 401,
+      "/glossary/iem-measurement/unpublished": 303,
+      "/guides/iem-measurement/unlisted.pdf": 303
+    },
+    "cloudflareQueryBindingVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2401,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "images": 13,
+        "visibleCalloutLists": 9,
+        "technicalPdfMatched": true,
+        "keyboardGuideLink": true,
+        "noHorizontalOverflow": true,
+        "isolatedFixture": true
+      },
+      {
+        "width": 390,
+        "images": 13,
+        "visibleCalloutLists": 9,
+        "technicalPdfMatched": true,
+        "keyboardGuideLink": true,
+        "noHorizontalOverflow": true,
+        "isolatedFixture": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

@@ -1,16 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 169,
+  "update": 170,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T10:28:05Z",
-  "sourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+  "verifiedAt": "2026-11-15T10:55:08Z",
+  "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
   "sourceBranch": "",
-  "baselineCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
-  "evidence": "docs/releases/update169-version-history-refresh-verification.json",
-  "deploymentRefresh": {
-    "slug": "version-history-refresh",
-    "previousEvidence": "docs/releases/update169-sidebar-rollout-verification.json"
-  },
+  "baselineCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+  "evidence": "docs/releases/update170-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -36,7 +32,7 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+    "implementationCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
@@ -47,21 +43,21 @@
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 169,
-    "sourceBaselineVerifiedAt": "2026-11-15T10:51:12Z",
+    "sourceBaselineUpdate": 170,
+    "sourceBaselineVerifiedAt": "2026-11-15T11:29:40Z",
     "sourceOnlyHandoverPending": false,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
-    "update169SourceOnlyHandover": {
+    "update170SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
-      "evidence": "docs/releases/update169-version-history-refresh-recovery-verification.json"
+      "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+      "evidence": "docs/releases/update170-recovery-verification.json"
     }
   },
   "documentationFiles": [],

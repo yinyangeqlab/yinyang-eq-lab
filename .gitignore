@@ -45,6 +45,7 @@ __pycache__/
 *.ogg
 *.m4a
 public/music/
+/public/guides/iem-measurement/
 artifacts/
 outputs/
 work/

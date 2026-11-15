@@ -14,7 +14,7 @@ for(const path of ['/listeners/yinyangeq','/api/public-profiles/yinyangeq','/api
 }
 // Public release/help pages must not require or save participation choices.
 // Exercise the actual early gate with a DB that fails on any access.
-for (const path of ['/version','/about','/shortcuts','/glossary']) {
+for (const path of ['/version','/about','/shortcuts','/glossary','/glossary/iem-measurement']) {
  for (const method of ['GET','HEAD']) {
   const deniedDb={prepare(){throw Error('Public information must not access participant DB')}};
   const request=new Request('https://fixture.invalid'+path+'?_rsc=fixture', {method,headers:{Cookie:'__Host-yinyang-tester=opted-out-fixture','oai-authenticated-user-id':'owner','x-yinyang-data-session':'forged'}});
@@ -26,6 +26,17 @@ for (const path of ['/version','/about','/shortcuts','/glossary']) {
 }
 for (const path of ['/version/private','/about/private','/shortcuts/private','/glossary/private','/api/glossary','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
  assert.equal(await publicRead(new Request('https://fixture.invalid'+path),env,{},()=>false,app,async()=>null),null,'Public information must not bypass private or listening routes');
+}
+const guideEnv={...env,ASSETS:{fetch:async () => new Response('guide file')}};
+for(const path of ['/guides/iem-measurement/technical-guide.pdf','/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
+ for(const method of ['GET','HEAD']){
+  const response=await publicRead(new Request('https://fixture.invalid'+path,{method}),guideEnv,{},()=>false,app,async()=>null);
+  assert.equal(await response.text(),'guide file');
+ }
+ assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),guideEnv,{},()=>false,app,async()=>null),null);
+}
+for(const path of ['/guides/iem-measurement/unlisted.pdf','/glossary/iem-measurement/private']){
+ assert.equal(await publicRead(new Request('https://fixture.invalid'+path),guideEnv,{},()=>false,app,async()=>null),null);
 }
 assert.equal(await publicRead(new Request('https://fixture.invalid/api/public-profiles/yinyangeq/private'),env,{},()=>false,app,async()=>null),null);
 assert.equal(await publicRead(new Request('https://fixture.invalid/music/private.mp3'),env,{},()=>false,app,async()=>null),null,'profile access cannot expose private media');

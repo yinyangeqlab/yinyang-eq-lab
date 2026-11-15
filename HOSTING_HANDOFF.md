@@ -1,9 +1,17 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update169**, source `d128f6a60698089a98e64b023a6b1488807e1e54`.
+Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update170 IEM measurement guide
+
+Glossary & Guides includes a beginner guide to measuring IEMs with a 711 coupler. The live guide includes annotated REW screenshots, two AKG comparison plots, and a technical PDF.
+
+Desktop and phone browser checks passed, and production served all 14 verified guide assets. The matching encrypted source-only recovery passed independent reconstruction and hosted validation.
+
+[Live guide](https://yinyangeq.com/glossary/iem-measurement) · [Deployment verification](docs/releases/update170-verification.json) · [Recovery verification](docs/releases/update170-recovery-verification.json)
 
 ## Update169 Version history refresh
 

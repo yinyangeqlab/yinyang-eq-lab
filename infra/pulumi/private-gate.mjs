@@ -213,9 +213,10 @@ const privateGate = {
       }
       return app.fetch(new Request(bounded, { headers: clean }), env, context);
     }
-    const publicLandingAsset = isPublicAsset(path);
+    // Limit public guide downloads to the approved files.
+    const publicLandingAsset = isPublicAsset(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg|technical-guide\.pdf)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
       if (publicLandingAsset) return env.ASSETS.fetch(request);
       if(publicProfile){const limited=await preDatabaseGuard(request,env,false);if(limited)return limited;}
       const headers = new Headers(request.headers);

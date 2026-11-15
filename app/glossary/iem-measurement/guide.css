@@ -1,0 +1,51 @@
+.terms-page.iem-measurement-guide {
+  --guide-muted: #c2d2dc;
+  --guide-line: #35515e;
+  --guide-panel: #11252e;
+  --guide-accent: #a8e1db;
+  box-sizing: border-box;
+  max-width: 59rem;
+  padding: clamp(1.25rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  margin-inline: auto;
+}
+.iem-measurement-guide article { min-width: 0; }
+.iem-measurement-guide h1 {
+  max-width: 22ch;
+  margin: 1rem 0 .8rem;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
+.iem-measurement-guide h2 { margin: 2.1rem 0 .7rem; font-size: clamp(1.25rem, 2.8vw, 1.6rem); scroll-margin-top: 5rem; }
+.iem-measurement-guide p, .iem-measurement-guide li { line-height: 1.7; font-size: 1rem; }
+.iem-measurement-guide :is(p, ul, ol):not(nav :is(ul, ol)) { max-width: 73ch; }
+.iem-measurement-guide a { color: var(--guide-accent); text-underline-offset: .2em; }
+.iem-measurement-guide a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.iem-measurement-guide :is(ol, ul) { padding-inline-start: 1.4rem; }
+.iem-measurement-guide :is(ol, ul) li + li { margin-top: .35rem; }
+.iem-measurement-guide .iem-guide-back { font-size: .875rem; }
+.iem-measurement-guide .iem-guide-byline { margin: .75rem 0 1.6rem; font-size: .85rem; color: var(--guide-muted); }
+.iem-measurement-guide .iem-guide-deck { max-width: 63ch; font-size: 1.06rem; }
+.iem-measurement-guide .iem-guide-contents { padding: .75rem 1rem; border: 1px solid var(--guide-line); border-radius: .6rem; background: var(--guide-panel); }
+.iem-measurement-guide .iem-guide-contents h2 { margin: 0 0 .35rem; font-size: 1rem; line-height: 1.4; }
+.iem-measurement-guide .iem-guide-contents ol { columns: 2; column-gap: 2rem; margin: .15rem 0 .35rem; padding-inline-start: 1.6rem; list-style: decimal outside; }
+.iem-measurement-guide .iem-guide-contents li { font-size: .9rem; break-inside: avoid; }
+.iem-measurement-guide .iem-guide-figure { margin: 1.25rem 0 1.8rem; }
+.iem-measurement-guide .iem-guide-figure img { display: block; width: 100%; max-width: 100%; height: auto; box-sizing: border-box; border: 1px solid var(--guide-line); border-radius: .55rem; }
+.iem-measurement-guide .iem-guide-figure a { display: block; border-radius: .55rem; }
+.iem-measurement-guide .iem-guide-figure figcaption { color: var(--guide-muted); line-height: 1.55; font-size: .9rem; margin-top: .55rem; }
+.iem-measurement-guide .iem-guide-figure figcaption > * { display: block; }
+.iem-measurement-guide pre { padding: .9rem 1rem; overflow-x: auto; border: 1px solid var(--guide-line); border-radius: .55rem; background: var(--guide-panel); }
+[data-site-theme="light"] .iem-measurement-guide {
+  --guide-muted: var(--site-light-muted);
+  --guide-line: var(--site-light-line);
+  --guide-panel: var(--site-light-surface);
+  --guide-accent: var(--site-light-accent);
+}
+@media (max-width: 36rem) { .iem-measurement-guide .iem-guide-contents ol { columns: 1; } }
+
+.iem-measurement-guide .iem-guide-callouts { margin: .5rem 0 0; padding-inline-start: 1.35rem; color: var(--guide-muted); font-size: .86rem; list-style: decimal outside; }
+.iem-measurement-guide .iem-guide-callouts li { font-size: inherit; line-height: 1.5; break-inside: avoid; }
+.iem-measurement-guide .iem-guide-callouts li + li { margin-top: .15rem; }
+.iem-measurement-guide .iem-guide-callouts li::marker { color: var(--guide-accent); font-weight: 700; }
+@media (min-width: 42rem) { .iem-measurement-guide .iem-guide-callouts { columns: 2; column-gap: 2rem; } }
