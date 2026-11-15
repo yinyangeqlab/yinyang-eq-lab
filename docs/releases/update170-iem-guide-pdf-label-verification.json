@@ -1,0 +1,83 @@
+{
+  "update": 170,
+  "sourceCommit": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+  "deploymentVerification": {
+    "at": "2026-11-15T11:32:47Z",
+    "update": 170,
+    "revision": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+    "previousRecoveryEvidence": "docs/releases/update170-recovery-verification.json",
+    "publicGuideVerified": true,
+    "technicalPdfVerified": true,
+    "pdfLinkLabel": "YinYang EQ IEM Measurement Guide (711 Coupler, PDF)",
+    "pdfLinkPath": "/guides/iem-measurement/technical-guide.pdf",
+    "exactServerModulesVerified": 362,
+    "anonymousGateChecks": {
+      "/eq-compare": 303,
+      "/shootout/personal": 303,
+      "/owner-research": 303,
+      "/api/targets": 401,
+      "/api/my-data": 401,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 303,
+      "/api/listening-audio/missing-release-check": 401,
+      "/glossary/iem-measurement/unpublished": 303,
+      "/guides/iem-measurement/unlisted.pdf": 303
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2417,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "title": "YinYang EQ IEM Measurement Guide (711 Coupler, PDF)",
+        "href": "/guides/iem-measurement/technical-guide.pdf",
+        "keyboardFocus": true,
+        "pdfMatched": true,
+        "noHorizontalOverflow": true,
+        "isolatedFixture": true
+      },
+      {
+        "width": 390,
+        "title": "YinYang EQ IEM Measurement Guide (711 Coupler, PDF)",
+        "href": "/guides/iem-measurement/technical-guide.pdf",
+        "keyboardFocus": true,
+        "pdfMatched": true,
+        "noHorizontalOverflow": true,
+        "isolatedFixture": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

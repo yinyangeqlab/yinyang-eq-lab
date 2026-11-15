@@ -1,5 +1,7 @@
 // Render the homepage scene offline. Requires Chromium/Playwright and FFmpeg with libx264 and libvpx-vp9.
-import { execFileSync } from "node:child_process";
+// Use --add-layouts[=layout,layout] with existing wallpapers to export layouts without recapturing the scene.
+// Phone and tablet compositions use artifacts/wallpaper-artwork/<scene>-<layout>.png as source artwork.
+import { execFile, execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
 import { existsSync } from "node:fs";
@@ -7,22 +9,28 @@ import { link, mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "nod
 import { createServer } from "node:http";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { promisify } from "node:util";
+import { crc32 } from "node:zlib";
 import { build } from "esbuild";
 import { LANDSCAPE_CYCLE_SECONDS } from "../lib/welcome-landscape.ts";
-import { wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperManifest, wallpaperScenes, wallpaperSizes } from "../lib/welcome-wallpapers.ts";
+import { wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperScenes, wallpaperSizes, wallpaperUsagePath } from "../lib/welcome-wallpapers.ts";
 import { packageOfflineWallpapers } from "./wallpapers/package-offline.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const publicDir = join(root, "public");
 const destination = join(publicDir, wallpaperDirectory.slice(1));
+const artworkDir = join(root, "artifacts", "wallpaper-artwork");
 const browserModule = process.argv.find(arg => arg.startsWith("--browser-module="))?.slice(17);
 const resume = process.argv.find(arg => arg.startsWith("--resume="))?.slice(9);
 const addFormats = process.argv.includes("--add-formats");
+const addLayouts = process.argv.find(arg => arg === "--add-layouts" || arg.startsWith("--add-layouts="));
 const offlineOnly = process.argv.includes("--offline-only");
 const fps = 24;
 const landscapeFrames = LANDSCAPE_CYCLE_SECONDS * fps;
 const stillFrame = Math.round(1.5 * fps);
 const [full, hd] = wallpaperSizes;
+const extraLayouts = wallpaperLayouts.slice(1);
+const extraSizes = extraLayouts.flatMap(layout => layout.sizes.map(size => ({ ...size, layout: layout.id })));
 const viewport = { width: full.width, height: full.height };
 const overlayClip = { x: 0, y: 0, width: full.width, height: Math.ceil(.51 * full.height) };
 const artworkFiles = ["brand-landscape.webp", "welcome-headphone-carpet.webp", "welcome-iem-carpet.webp"];
@@ -130,8 +138,12 @@ async function captureFrames(folder) {
   }
 }
 
+const ffmpegOptions = ["-hide_banner", "-loglevel", "error", "-y", "-filter_threads", "2", "-filter_complex_threads", "2"];
+const runCommand = promisify(execFile);
+const ffmpegAsync = args => runCommand("ffmpeg", [...ffmpegOptions, ...args]);
+
 function ffmpeg(args) {
-  execFileSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-filter_complex_threads", "2", ...args], { stdio: "inherit" });
+  execFileSync("ffmpeg", [...ffmpegOptions, ...args], { stdio: "inherit" });
 }
 
 function encodeMp4(folder, scene) {
@@ -165,20 +177,73 @@ function encodeStill(folder, scene, extension) {
     ])]);
 }
 
-function encodeWebm(folder, scene, size) {
-  const rate = size.id === "4k" ? "3800k" : "1600k";
-  ffmpeg(["-threads", "2", "-i", join(folder, wallpaperFilename(scene, size.id, "mp4")),
-    "-an", "-c:v", "libvpx-vp9", "-deadline", "good", "-cpu-used", "5", "-row-mt", "1",
+async function encodeWebm(folder, scene, size, deadline = "good") {
+  const rate = size.label === "4K" ? "3800k" : size.label === "1080p" ? "1600k" : "1000k";
+  await ffmpegAsync(["-threads", "2", "-i", join(folder, wallpaperFilename(scene, size.id, "mp4")),
+    "-an", "-c:v", "libvpx-vp9", "-deadline", deadline, "-cpu-used", deadline === "good" ? "5" : "6", "-row-mt", "1",
     "-tile-columns", "2", "-threads", "4", "-crf", "26", "-b:v", rate, "-g", "120",
     join(folder, wallpaperFilename(scene, size.id, "webm"))]);
-  console.log(`Encoded ${scene} ${size.label} WebM`);
+  console.log(`Encoded ${scene} ${size.id} WebM`);
 }
 
-async function verifyDownloads(folder) {
+function displayArtwork(scene, size) {
+  const { layout, width, height } = size;
+  if (layout === "ultrawide") return;
+  const path = join(artworkDir, `${scene}-${layout}.png`);
+  if (!existsSync(path)) throw Error(`Missing wallpaper artwork: ${path}`);
+  const { streams } = JSON.parse(execFileSync("ffprobe", [
+    "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=codec_name,width,height", "-of", "json", path,
+  ]));
+  const [image] = streams;
+  if (image?.codec_name !== "png" || Math.abs(image.width / image.height / (width / height) - 1) > 0.005) {
+    throw Error(`Wallpaper artwork must match the ${layout} aspect ratio: ${path}`);
+  }
+  return path;
+}
+
+async function encodeDisplaySize(source, folder, scene, size, artwork) {
+  const original = extension => join(source, wallpaperFilename(scene, full.id, extension));
+  const output = extension => join(folder, wallpaperFilename(scene, size.id, extension));
+  const { width, height } = size;
+  const scale = `scale=${width}:${height}:flags=lanczos`;
+  // Native artwork is scaled uniformly. A small crop accounts for whole-pixel rounding in its source.
+  const frame = artwork
+    ? `${scale}:force_original_aspect_ratio=increase:force_divisible_by=2,crop=${width}:${height},setsar=1`
+    : `crop=iw:'iw*${height}/${width}':0:(ih-oh)*0.2,${scale},setsar=1`;
+  const seconds = LANDSCAPE_CYCLE_SECONDS * (scene === "flying-gear" ? 2 : 1);
+  // Cycle the light gently across a fixed composition so every frame keeps the same geometry.
+  const light = `eq=gamma='1+0.075*sin(2*PI*t/${seconds})':saturation='1+0.06*sin(4*PI*t/${seconds})':eval=frame`;
+  const videoFrame = artwork ? `${frame},format=yuv420p,loop=loop=-1:size=1:start=0,setpts=N/(${fps}*TB),${light}` : frame;
+  const videoInput = artwork ? ["-framerate", String(fps), "-i", artwork] : ["-i", original("mp4")];
+  const rate = size.label === "4K" ? "6500k" : size.label === "1080p" ? "3000k" : "1800k";
+  await ffmpegAsync(["-threads", "4", ...videoInput, "-vf", videoFrame, "-frames:v", String(seconds * fps),
+    "-an", "-c:v", "libx264", "-threads", "4", "-preset", "veryfast", "-crf", "18",
+    "-maxrate", rate, "-bufsize", rate, "-pix_fmt", "yuv420p", "-color_primaries", "bt709",
+    "-color_trc", "bt709", "-colorspace", "bt709", "-movflags", "+faststart", output("mp4")]);
+  for (const [extension, quality] of [["jpg", ["-q:v", "2"]], ["png", ["-pix_fmt", "rgb24"]]]) {
+    await ffmpegAsync(["-i", artwork ?? original("png"), "-vf", frame, "-frames:v", "1", "-threads", "2",
+      ...quality, "-update", "1", output(extension)]);
+  }
+  await encodeWebm(folder, scene, size, "realtime");
+}
+
+async function encodeDisplaySizes(source, folder, variants = extraSizes) {
+  const jobs = variants.flatMap(size => wallpaperScenes.map(({ id }) => ({
+    scene: id, size, artwork: displayArtwork(id, size),
+  }))).values();
+  // Bound the number of concurrent encoders so two 4K jobs can share the machine.
+  const results = await Promise.allSettled(Array.from({ length: 2 }, async () => {
+    for (const { scene, size, artwork } of jobs) await encodeDisplaySize(source, folder, scene, size, artwork);
+  }));
+  const failure = results.find(result => result.status === "rejected");
+  if (failure) throw failure.reason;
+}
+
+async function verifyDownloads(folder, variants = wallpaperSizes) {
   const sizes = {};
   const codecs = { mp4: "h264", webm: "vp9", jpg: "mjpeg", png: "png" };
   for (const scene of wallpaperScenes) {
-    for (const size of wallpaperSizes) {
+    for (const size of variants) {
       for (const { extension } of wallpaperFormats) {
         const name = wallpaperFilename(scene.id, size.id, extension);
         const path = join(folder, name);
@@ -200,7 +265,58 @@ async function verifyDownloads(folder) {
   return sizes;
 }
 
+const pngKeyword = Buffer.from("Usage Terms\0\0\0\0\0");
+const jpegHeading = Buffer.from("YinYang EQ Wallpaper Usage Terms\n");
+
+function addStillUsageNotice(bytes, extension, notice) {
+  if (extension === "png") {
+    // Put the uncompressed UTF-8 text immediately after IHDR.
+    const offset = 33;
+    const type = Buffer.from("iTXt");
+    const payload = Buffer.concat([pngKeyword, Buffer.from(notice)]);
+    const chunk = Buffer.alloc(payload.length + 12);
+    chunk.writeUInt32BE(payload.length);
+    type.copy(chunk, 4);
+    payload.copy(chunk, 8);
+    chunk.writeUInt32BE(crc32(chunk.subarray(4, -4)), chunk.length - 4);
+    const hasNotice = bytes.subarray(offset + 4, offset + 8).equals(type)
+      && bytes.subarray(offset + 8, offset + 8 + pngKeyword.length).equals(pngKeyword);
+    const end = hasNotice ? offset + 12 + bytes.readUInt32BE(offset) : offset;
+    if (bytes.subarray(offset, end).equals(chunk)) return bytes;
+    return Buffer.concat([bytes.subarray(0, offset), chunk, bytes.subarray(end)]);
+  }
+
+  // Keep the standard JFIF APP0 segment immediately after SOI when present.
+  const offset = bytes.readUInt16BE(2) === 0xffe0 ? 4 + bytes.readUInt16BE(4) : 2;
+  const payload = Buffer.from(notice);
+  const comment = Buffer.alloc(payload.length + 4);
+  comment.writeUInt16BE(0xfffe);
+  comment.writeUInt16BE(payload.length + 2, 2);
+  payload.copy(comment, 4);
+  const hasNotice = bytes.readUInt16BE(offset) === 0xfffe
+    && bytes.subarray(offset + 4, offset + 4 + jpegHeading.length).equals(jpegHeading);
+  const end = hasNotice ? offset + 2 + bytes.readUInt16BE(offset + 2) : offset;
+  if (bytes.subarray(offset, end).equals(comment)) return bytes;
+  return Buffer.concat([bytes.subarray(0, offset), comment, bytes.subarray(end)]);
+}
+
 async function installDownloads(folder, sizes, existing = {}) {
+  const notice = await readFile(join(publicDir, wallpaperUsagePath.slice(1)), "utf8");
+  const stills = wallpaperScenes.flatMap(({ id }) => [...wallpaperSizes, ...extraSizes].flatMap(size =>
+    wallpaperFormats.filter(format => format.kind === "still").map(({ extension }) =>
+      ({ name: wallpaperFilename(id, size.id, extension), extension }))));
+  for (const { name, extension } of stills) {
+    const staged = Object.hasOwn(sizes, name);
+    if (!staged && !Object.hasOwn(existing, name)) continue;
+    const input = staged ? folder : destination;
+    const original = await readFile(join(input, name));
+    const tagged = addStillUsageNotice(original, extension, notice);
+    if (tagged === original) continue;
+    if (tagged.length >= 25 * 1024 * 1024) throw Error(`Invalid static asset size: ${name}`);
+    // Stage a replacement so existing hard-linked release files are never edited in place.
+    await saveFrame(join(folder, name), tagged);
+    sizes[name] = tagged.length;
+  }
   await mkdir(destination, { recursive: true });
   for (const name of Object.keys(sizes)) await rename(join(folder, name), join(destination, name));
   await writeFile(join(folder, wallpaperManifest), JSON.stringify({ ...existing, ...sizes }, null, 2) + "\n");
@@ -212,13 +328,42 @@ const scratch = join(root, "artifacts");
 await mkdir(scratch, { recursive: true });
 if (resume && !/^wallpaper-render-[a-z0-9]+$/i.test(resume)) throw Error("Supply an existing wallpaper-render directory name");
 if (resume && addFormats) throw Error("Use --resume for a full render or --add-formats for existing wallpapers");
-if (offlineOnly && (resume || addFormats)) throw Error("Use --offline-only with an existing set of still and video wallpapers");
+if ((offlineOnly || addLayouts) && (resume || addFormats || offlineOnly && addLayouts)) {
+  throw Error("Use --offline-only or --add-layouts on its own with existing wallpapers");
+}
 
 async function buildOfflineOnly() {
-  const existing = await verifyDownloads(destination);
+  const installedSizes = extraLayouts.filter(layout => layout.sizes.some(size =>
+    wallpaperScenes.some(({ id }) => wallpaperFormats.some(({ extension }) =>
+      existsSync(join(destination, wallpaperFilename(id, size.id, extension)))))))
+    .flatMap(layout => [...layout.sizes]);
+  const existing = await verifyDownloads(destination, [...wallpaperSizes, ...installedSizes]);
   const folder = await mkdtemp(join(scratch, "wallpaper-offline-"));
   try {
     await installDownloads(folder, await packageOfflineWallpapers(root, folder), existing);
+  } finally {
+    await rm(folder, { recursive: true });
+  }
+}
+
+async function buildDisplaySizes() {
+  const requested = addLayouts === "--add-layouts"
+    ? extraLayouts.map(layout => layout.id)
+    : addLayouts.slice("--add-layouts=".length).split(",");
+  if (requested.some(id => !extraLayouts.some(layout => layout.id === id))) {
+    throw Error(`Available additional layouts: ${extraLayouts.map(layout => layout.id).join(", ")}`);
+  }
+  const variants = extraSizes.filter(size => requested.includes(size.layout));
+  const manifest = join(destination, wallpaperManifest);
+  const existing = {
+    ...(existsSync(manifest) ? JSON.parse(await readFile(manifest, "utf8")) : {}),
+    ...await verifyDownloads(destination),
+  };
+  const folder = await mkdtemp(join(scratch, "wallpaper-layouts-"));
+  try {
+    await encodeDisplaySizes(destination, folder, variants);
+    const additions = await verifyDownloads(folder, variants);
+    await installDownloads(folder, { ...additions, ...await packageOfflineWallpapers(root, folder) }, existing);
   } finally {
     await rm(folder, { recursive: true });
   }
@@ -251,11 +396,13 @@ async function renderWallpapers() {
       }
     } else encodeStill(folder, id, "jpg");
     encodeStill(folder, id, "png");
-    for (const size of wallpaperSizes) encodeWebm(folder, id, size);
+    for (const size of wallpaperSizes) await encodeWebm(folder, id, size);
   }
-  await installDownloads(folder, { ...await verifyDownloads(folder), ...await packageOfflineWallpapers(root, folder) });
+  await encodeDisplaySizes(folder, folder);
+  await installDownloads(folder, { ...await verifyDownloads(folder, [...wallpaperSizes, ...extraSizes]), ...await packageOfflineWallpapers(root, folder) });
   await rm(folder, { recursive: true });
 }
 
 if (offlineOnly) await buildOfflineOnly();
+else if (addLayouts) await buildDisplaySizes();
 else await renderWallpapers();

@@ -1,0 +1,120 @@
+{
+  "update": 171,
+  "sourceCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
+  "deploymentVerification": {
+    "at": "2026-11-15T12:03:06Z",
+    "update": 171,
+    "revision": "d28f1735ada00e926b27610d06a44579061d8c6a",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+    "previousRecoveryEvidence": "docs/releases/update170-iem-guide-pdf-label-recovery-verification.json",
+    "guidePageVerified": true,
+    "exactGuideFilesVerified": 14,
+    "publicVersionPageVerified": true,
+    "historyReleaseLinks": {
+      "update169": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169",
+      "update168": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168",
+      "update168-direct-release-link": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link",
+      "update167": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167",
+      "update166": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update166",
+      "update164": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164",
+      "update159": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update159"
+    },
+    "exactWallpaperFilesVerified": [
+      "wallpapers/usage.txt",
+      "wallpapers/files.json",
+      "wallpapers/yinyang-eq-flying-gear-tablet-landscape-1080p.jpg",
+      "wallpapers/yinyang-eq-landscape-phone-720p.mp4",
+      "wallpapers/yinyang-eq-flying-gear-ultrawide-720p.webm",
+      "wallpapers/yinyang-eq-landscape-phone-1080p.png",
+      "wallpapers/yinyang-eq-flying-gear-tablet-portrait-1080p.png",
+      "wallpapers/yinyang-eq-landscape-ultrawide-1080p.png"
+    ],
+    "exactServerModulesVerified": 362,
+    "exactClientAssetsVerified": 63,
+    "cloudflareQueryBindingVerified": true,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/eq-compare": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/ear-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/api/eq-preset-reactions": 403,
+      "/api/my-data": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "d28f1735ada00e926b27610d06a44579061d8c6a",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "wallpaperDownloadsVerified": 114,
+    "retainedPreviousClientFiles": 2438,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "layout": "ultrawide",
+        "personalUseVerified": true,
+        "downloadVerified": true,
+        "animationVerified": true
+      },
+      {
+        "width": 820,
+        "layout": "tablet-landscape",
+        "personalUseVerified": true,
+        "downloadVerified": true,
+        "animationVerified": true
+      },
+      {
+        "width": 720,
+        "layout": "tablet-portrait",
+        "personalUseVerified": true,
+        "downloadVerified": true,
+        "animationVerified": true
+      },
+      {
+        "width": 390,
+        "layout": "phone",
+        "personalUseVerified": true,
+        "downloadVerified": true,
+        "animationVerified": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

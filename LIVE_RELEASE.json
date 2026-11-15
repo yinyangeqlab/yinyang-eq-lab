@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 170,
+  "update": 171,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T10:55:08Z",
-  "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
-  "sourceBranch": "",
-  "baselineCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
-  "evidence": "docs/releases/update170-verification.json",
+  "verifiedAt": "2026-11-15T12:03:06Z",
+  "sourceCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
+  "sourceBranch": "release/update171-wallpapers-20261115",
+  "baselineCommit": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
+  "evidence": "docs/releases/update171-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,8 +32,8 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
-    "branch": "",
+    "implementationCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
+    "branch": "release/update171-wallpapers-20261115",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
@@ -43,21 +43,21 @@
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 170,
-    "sourceBaselineVerifiedAt": "2026-11-15T11:29:40Z",
+    "sourceBaselineUpdate": 171,
+    "sourceBaselineVerifiedAt": "2026-11-15T12:30:18Z",
     "sourceOnlyHandoverPending": false,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
-    "update170SourceOnlyHandover": {
+    "update171SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
-      "evidence": "docs/releases/update170-recovery-verification.json"
+      "sourceCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
+      "evidence": "docs/releases/update171-recovery-verification.json"
     }
   },
   "documentationFiles": [],

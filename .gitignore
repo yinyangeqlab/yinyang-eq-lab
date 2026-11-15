@@ -83,7 +83,8 @@ work/
 /public/fonts/public-sans/
 
 # Generated homepage wallpaper downloads. Rebuild with scripts/generate-welcome-wallpapers.mjs.
-/public/wallpapers/
+/public/wallpapers/*
+!/public/wallpapers/usage.txt
 
 # Prepared third-party semantic help model.
 /public/vendor/site-help/

@@ -1,9 +1,17 @@
 # Recovery boundaries and entry points
 
 <!-- release-state:start -->
-Recorded deployment: **update170**, source `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005`.
+Recorded deployment: **update171**, source `d28f1735ada00e926b27610d06a44579061d8c6a`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update171 Wallpapers and Version history
+
+The wallpaper gallery adds portrait phone, portrait and landscape tablet, and ultrawide downloads. The live gallery provides the wallpaper files and their personal-use terms. Version history links to the update169 Rankings release, and update171 uses automatic release discovery.
+
+The deployment checks covered desktop, tablet, and phone layouts, wallpaper downloads and animation playback, and the linked releases. The encrypted source-only recovery passed hosted validation.
+
+[Deployment verification](releases/update171-verification.json) · [Recovery verification](releases/update171-recovery-verification.json)
 
 ## Update170 IEM PDF link title
 

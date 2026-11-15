@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ec8ef528c1a8d3a0295417fae67bd630133cbc5d",
-  "recordedLiveUpdate": 170,
+  "baseRevision": "c3c38ad4881ee5d5ec9d7923bcb7d4909dde925e",
+  "recordedLiveUpdate": 171,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "a39d0160863bde747b6a08a7dda5ceb277ed1db45e01700aed9e0b678b1ad0dd",
+      "sha256": "b47bacbaae6dcbdc9826707dd38efcc9232a09e14cb8642f930a52200dd40e5d",
       "executable": false
     },
     {
@@ -47,12 +47,12 @@
     },
     {
       "path": "LICENSE_SCOPE.md",
-      "sha256": "d9dac3c3b2bf3572f7b428ebd178aa241c967a460703ba9eca583bb850262c53",
+      "sha256": "6797a78f77c184653e20dbf5c55153736252a6e48f096956149b4a2302fc4eed",
       "executable": false
     },
     {
       "path": "LIVE_RELEASE.json",
-      "sha256": "abb77a89ff5a50144173c1f34feb42f90030ce158eb1f4b65d16bb3b455297d4",
+      "sha256": "d8f2ee28b40604d1759e0fb9b569c21197db0563a50a609f4f33c21c9fecb72e",
       "executable": false
     },
     {
@@ -822,7 +822,7 @@
     },
     {
       "path": "app/welcome.css",
-      "sha256": "312b4231649fb7d75252fc8ccb9dddc51eef4785409cf79b7016c251d4d0da2a",
+      "sha256": "65ada18420773e043455b1a403b7aa78383975115b3ae401256db5a3477a8d50",
       "executable": false
     },
     {
@@ -1947,7 +1947,7 @@
     },
     {
       "path": "components/welcome-wallpapers.tsx",
-      "sha256": "d23ce110ac8e8b3e4a269db7271826457de9e6296bcbb19da6734cdcb66137b1",
+      "sha256": "1c2d0ed5e6387e0d7567718c57ed97ce934f3f8083dbde9db980d036cc0515de",
       "executable": false
     },
     {
@@ -2142,7 +2142,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "81241e65d14943eaec464ed6c0a9fed67af99483ff65ad3ca81a999c8e94139b",
+      "sha256": "ee605960ce68feb9d85b8b5e52822a8240da23cd4fd1fba2dc9e8d7013d2ab60",
       "executable": false
     },
     {
@@ -2227,7 +2227,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "9a7b1b846ad3c2737d278eeff1aaefbfafaf7980d20ff64da204d40b9345303e",
+      "sha256": "b6ffa4b3fec6da32db09632d3647eae94c2d9650f919c52ae1681d4e9b7060dc",
       "executable": false
     },
     {
@@ -2237,7 +2237,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "817d44734abe4df986e12b5579ad727a69c92026edef79aa80f36de9f242f821",
+      "sha256": "0dc5c1804588e578ff1b1ccace1248ba4be01090e33f6d718ed7754db096f0dc",
       "executable": false
     },
     {
@@ -2282,12 +2282,12 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "5c9e39ab9dd930ac135eb78d3d4a73de315f62832c2e95dfa24bd9a9d919bbef",
+      "sha256": "4f7260522428b853e5c4d8bc716e7b2e8e2398e5d19d559f0c0dcc837f903dd2",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "faf2a1995f96459058168bacd35a61510453620ff2659c8396b8d2ab066d6de3",
+      "sha256": "91e8e1311993a38fbe13c1c6ec298601cd06ee682d275c3659d7100f4b384b05",
       "executable": false
     },
     {
@@ -2951,6 +2951,16 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update170-iem-guide-pdf-label-recovery-verification.json",
+      "sha256": "5e438ea33ad1b133d53d34a9949d22e483b6ea48c8bf0906db6b7f07dce3002b",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update170-iem-guide-pdf-label-verification.json",
+      "sha256": "535a1d4d3030e8eb51bd85bb8550e3934f16563bc353ba30db2ea04318c3e4a3",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update170-recovery-verification.json",
       "sha256": "c624ddaf942afba20174db323b4bfc249bdf7fce568f895f0b0e561e55c58e30",
       "executable": false
@@ -2958,6 +2968,16 @@
     {
       "path": "docs/releases/update170-verification.json",
       "sha256": "dbf9085e198dbd9aee803d020cb4b0243775246702249418100e75b8a2e5528f",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update171-recovery-verification.json",
+      "sha256": "efe4d8f9828423c0854d6e31000ed27e4bfb376aa5c0360f53a3719cb1e983ff",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update171-verification.json",
+      "sha256": "468159ad52eac97badac5c8d1194c4256b7fcef0d06c7d7464f937f4ee0177e7",
       "executable": false
     },
     {
@@ -4332,12 +4352,12 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "3e09565819d1e3a8dca1aeda5d8494a98e731f78a835b901b1f224918e3481eb",
+      "sha256": "cdf532078888a42dd13f618180baef78d03cd4b4918a1eb5888605fa11f215bc",
       "executable": false
     },
     {
       "path": "lib/release-info.ts",
-      "sha256": "e21fc54eae575408a4f7690543174b5ae96a65f5a114badec6fc6a7f8626bf30",
+      "sha256": "5d9500e21c971b0d241c3a52e00e13ea720602175ba815db3a02b1de6b14b708",
       "executable": false
     },
     {
@@ -4537,7 +4557,7 @@
     },
     {
       "path": "lib/welcome-wallpapers.ts",
-      "sha256": "06e1dee2f3c73e6faa22341dd841ea84e71ea4905adefc235105c72f70b4df53",
+      "sha256": "f6d7572328b6199499911dd0382ffe0f7214c1a529d378da0d15029fd38a06c7",
       "executable": false
     },
     {
@@ -5083,6 +5103,11 @@
     {
       "path": "public/social-preview-aligned-v2.png",
       "sha256": "f6f4690dec36cbc074a9104663d52d9d5e84256b95f66ab8cb8a3e5ce94e6460",
+      "executable": false
+    },
+    {
+      "path": "public/wallpapers/usage.txt",
+      "sha256": "9e2f0d96374494458d73c2959c84cb2a378defd6cc390bc2e159c2349de09682",
       "executable": false
     },
     {
@@ -5792,7 +5817,7 @@
     },
     {
       "path": "scripts/generate-welcome-wallpapers.mjs",
-      "sha256": "d2873ef22959742397911b59dcccc4d32b43b8fc1a422acae5706714ca41307d",
+      "sha256": "b0fa5581727849960fa2d129008233b7ff934b1d5154cf1d7f05dad2c8ed5004",
       "executable": false
     },
     {
@@ -5992,7 +6017,7 @@
     },
     {
       "path": "scripts/wallpapers/package-offline.mjs",
-      "sha256": "3b94609e70b6a5e89857133de48e62cb931ea7ec078e452f3f8e318e556b23b7",
+      "sha256": "8fd8ae9d794d5ba6a0832d422344c3f97ace55cc01345eaaad0c129317c34e40",
       "executable": false
     },
     {

@@ -207,6 +207,8 @@
 .welcome-art-controls button:not(:disabled):hover { box-shadow:none;filter:none; }
 .welcome-art-controls button:focus-visible,
 .welcome-wallpaper-toggle:focus-visible,
+.welcome-wallpaper-usage a:focus-visible,
+.welcome-wallpaper-layout select:focus-visible,
 .welcome-wallpaper-download :is(select,a):focus-visible,
 .welcome-wallpaper-help summary:focus-visible,
 .welcome-wallpaper-preview:focus-visible,
@@ -240,10 +242,22 @@
   padding:clamp(16px,3vw,36px) clamp(16px,5vw,64px) clamp(30px,5vw,66px);
   text-align:start;
 }
+.welcome-wallpaper-usage a { color:#b8e3db;text-decoration:underline;text-underline-offset:3px; }
+.welcome-wallpaper-usage a:hover { color:#eafffb; }
 .welcome-wallpaper-grid {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:16px;
+}
+.welcome-wallpaper-layout {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 12px;
+  margin-bottom:12px;
+  color:#e2f4f2;
+  font-size:13px;
+  font-weight:600;
 }
 .welcome-wallpaper-card {
   min-width:0;
@@ -256,8 +270,10 @@
 .welcome-wallpaper-card video,
 .welcome-wallpaper-preview {
   display:block;
-  width:100%;
-  aspect-ratio:16/9;
+  width:min(100%, calc(24rem * var(--wallpaper-preview-ratio)));
+  height:auto;
+  aspect-ratio:var(--wallpaper-preview-ratio);
+  margin-inline:auto;
   border-radius:7px;
   background:#020608;
 }
@@ -285,23 +301,24 @@
   gap:6px 8px;
   margin:12px 0 0;
 }
-.welcome-wallpaper-download > :is(select,a) {
+.welcome-wallpaper-download > :is(select,a),
+.welcome-wallpaper-layout select {
   min-height:44px;
   padding:7px 9px;
   border:1px solid #38565e;
   border-radius:7px;
   font:600 13px/1.4 Arial,Helvetica,sans-serif;
 }
-.welcome-wallpaper-download select {
-  width:100%;
+.welcome-wallpapers select {
   min-width:0;
   color-scheme:dark;
   background-color:#091b22;
   color:#e2f4f2;
 }
-.welcome-wallpaper-download select :is(option,optgroup) { background-color:#10272d;color:#e2f4f2; }
-.welcome-wallpaper-download select option:checked { background-color:#1a4a4c;color:#fff; }
-.welcome-wallpaper-download select option:disabled { color:#a1b6bc; }
+.welcome-wallpaper-download select { width:100%; }
+.welcome-wallpapers select :is(option,optgroup) { background-color:#10272d;color:#e2f4f2; }
+.welcome-wallpapers select option:checked { background-color:#1a4a4c;color:#fff; }
+.welcome-wallpapers select option:disabled { color:#a1b6bc; }
 .welcome-wallpaper-download > a {
   display:inline-flex;
   align-items:center;
@@ -309,7 +326,8 @@
   background:#0e2329;
   color:#d6faf3;
 }
-.welcome-wallpaper-download > :is(select,a):hover { border-color:#8be8d6; }
+.welcome-wallpaper-download > :is(select,a):hover,
+.welcome-wallpaper-layout select:hover { border-color:#8be8d6; }
 .welcome-wallpaper-download > a:hover { background:#15343a; }
 .welcome-wallpaper-download a svg { flex:none; }
 .welcome-wallpaper-download-detail {

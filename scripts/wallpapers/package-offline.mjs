@@ -2,12 +2,14 @@ import { execFileSync } from "node:child_process";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { build } from "esbuild";
-import { offlineWallpaperFilename, wallpaperScenes } from "../../lib/welcome-wallpapers.ts";
+import { offlineWallpaperFilename, wallpaperScenes, wallpaperUsagePath } from "../../lib/welcome-wallpapers.ts";
 
 const readme = `YinYang EQ — Offline desktop wallpaper
 
 Extract the ZIP to its own folder. Open index.html in a modern browser to
 preview the animation. It works directly from disk without internet access.
+
+Personal use only. See WALLPAPER-USAGE.txt for the wallpaper artwork terms.
 
 Wallpaper Engine (Windows): Open the wallpaper editor, choose Create Wallpaper,
 and import index.html as a web wallpaper from the extracted folder.
@@ -22,6 +24,7 @@ loop if your wallpaper app does not support web wallpapers or WebGL.
 
 export async function packageOfflineWallpapers(root, folder) {
   const css = await readFile(join(root, "app/welcome.css"), "utf8");
+  const terms = await readFile(join(root, "public", wallpaperUsagePath.slice(1)), "utf8");
   const image = async name => "data:image/webp;base64," + (await readFile(join(root, "public", name))).toString("base64");
   const [texture, still, headphones, iems] = await Promise.all([
     "brand-landscape.webp", "brand-landscape-crimson.webp", "welcome-headphone-carpet.webp", "welcome-iem-carpet.webp",
@@ -55,10 +58,11 @@ html,body{margin:0;overflow:hidden;background:#020608}
 with zipfile.ZipFile(sys.argv[1], "w") as archive:
     archive.writestr(zipfile.ZipInfo("index.html"), sys.stdin.buffer.read(), compress_type=zipfile.ZIP_DEFLATED)
     archive.writestr(zipfile.ZipInfo("README.txt"), sys.argv[2], compress_type=zipfile.ZIP_DEFLATED)
+    archive.writestr(zipfile.ZipInfo("WALLPAPER-USAGE.txt"), sys.argv[3], compress_type=zipfile.ZIP_DEFLATED)
 with zipfile.ZipFile(sys.argv[1]) as archive:
     if archive.testzip() is not None:
         raise RuntimeError("Offline wallpaper failed its ZIP integrity check")
-`, path, readme], { input: html });
+`, path, readme, terms], { input: html });
     const { size } = await stat(path);
     if (!size || size >= 25 * 1024 * 1024) throw Error(`Invalid static asset size: ${name}`);
     sizes[name] = size;
