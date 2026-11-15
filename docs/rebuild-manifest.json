@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "acce3a54c47f4a8e1dd6a403af80471fd7038def",
+  "baseRevision": "3969d963b93315f0562b1fd6490782a73ae6b95c",
   "recordedLiveUpdate": 171,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2112,7 +2112,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "03c5d98652e266e9628d6ddb6f91d79c243e3b12cb78feca291c81ff1b2fc7d9",
+      "sha256": "6194512846d99e08742e632da0e3181ad3d74fc9eb2f9e8aedb37195029f3aa6",
       "executable": false
     },
     {
@@ -2197,7 +2197,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "b6ffa4b3fec6da32db09632d3647eae94c2d9650f919c52ae1681d4e9b7060dc",
+      "sha256": "c675afc16949ad57ac367ba85263c3279dfd587bb744366e00a8a9b5904c8065",
       "executable": false
     },
     {
@@ -2207,7 +2207,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "0dc5c1804588e578ff1b1ccace1248ba4be01090e33f6d718ed7754db096f0dc",
+      "sha256": "b25a2e289f6016c05940bdad58ae02100ee3ecf3ca083c4fa60aa022676ab39c",
       "executable": false
     },
     {
@@ -2948,6 +2948,11 @@
     {
       "path": "docs/releases/update171-verification.json",
       "sha256": "468159ad52eac97badac5c8d1194c4256b7fcef0d06c7d7464f937f4ee0177e7",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update171-wallpapers-isolated-recovery-verification.json",
+      "sha256": "aa7a21e5777d147f5ee4793224843414f6f571afdb416073c5cdacec725b8660",
       "executable": false
     },
     {

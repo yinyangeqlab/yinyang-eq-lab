@@ -11,7 +11,9 @@ The wallpaper gallery adds portrait phone, portrait and landscape tablet, and ul
 
 The deployment checks covered desktop, tablet, and phone layouts, wallpaper downloads and animation playback, and the linked releases. The encrypted source-only recovery passed hosted validation.
 
-[Deployment verification](releases/update171-verification.json) · [Recovery verification](releases/update171-recovery-verification.json)
+The encrypted off-device source-only recovery point for `d28f1735ada00e926b27610d06a44579061d8c6a` passed decryption and restoration from a fresh download. The restored app ran on loopback with synthetic data and served all 14 original IEM guide assets, including the technical handbook PDF.
+
+[Deployment verification](releases/update171-verification.json) · [Recovery verification](releases/update171-recovery-verification.json) · [Isolated recovery verification](releases/update171-wallpapers-isolated-recovery-verification.json)
 
 ## Update170 IEM PDF link title
 
