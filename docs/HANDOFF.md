@@ -5,6 +5,10 @@ Recorded deployment: **update169**, source `d128f6a60698089a98e64b023a6b1488807e
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update170 IEM measurement guide
+
+A fresh download of the encrypted off-device source-only backup for `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005` passed an isolated restore. Desktop and phone browser checks verified the glossary link, all 13 images, and nine visible callout lists. [Isolated recovery verification](releases/update170-iem-guide-isolated-recovery-verification.json)
+
 ## Update169 Version history refresh
 
 The update168 history entry on the Version page links to the original EQ preset import release and its direct-link refresh.

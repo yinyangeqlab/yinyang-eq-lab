@@ -5,6 +5,10 @@ Recorded deployment: **update169**, source `d128f6a60698089a98e64b023a6b1488807e
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update170 IEM measurement guide
+
+The encrypted off-device source-only recovery point for `3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005` passed decryption and restoration from a fresh download. The restored app served all 14 original guide assets, including the technical handbook PDF. [Isolated recovery verification](releases/update170-iem-guide-isolated-recovery-verification.json)
+
 ## Update169 Version history refresh
 
 The update168 history entry on the Version page links to the original EQ preset import release and its direct-link refresh.

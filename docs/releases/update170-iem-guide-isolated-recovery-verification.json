@@ -1,0 +1,30 @@
+{
+  "update": 170,
+  "build": "iem-measurement-guide",
+  "sourceCommit": "3ee4b03e8e07e45af6e9ed362a15f8edc8a8a005",
+  "verifiedAt": "2026-11-15T11:17:19Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1184,
+  "originalBuildFilesVerified": 4094,
+  "originalGuideAssetsVerified": 14,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "publicGuideAndGlossaryLinkVerified": true,
+    "exactGuideAssetsServed": true,
+    "technicalHandbookVerified": true,
+    "desktopAndPhoneGuideBrowserChecksPassed": true,
+    "clientAssetCheckPassed": true,
+    "testAccountWritesBlocked": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}
