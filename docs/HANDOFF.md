@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update169**, source `258bd1867844ed927e722896e0cb43cbb7776b48`.
+Recorded deployment: **update169**, source `d128f6a60698089a98e64b023a6b1488807e1e54`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update169 Version history refresh
+
+The update168 entry links to both the [original update168 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168) and the [direct-link refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link). Both links render when GitHub lookups are unavailable.
+
+All 126 release checks passed. Brave verified the links and keyboard navigation at desktop and phone widths. The encrypted off-device source-only recovery passed hosted validation.
+
+[Source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169-version-history-refresh) · [Deployment verification](releases/update169-version-history-refresh-verification.json) · [Recovery verification](releases/update169-version-history-refresh-recovery-verification.json)
 
 ## Update169 sidebar refresh
 

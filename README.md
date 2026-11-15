@@ -19,6 +19,8 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
 
+The [update169 Version history refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169-version-history-refresh) links to both published releases from the update168 entry.
+
 Update168 accepts wide Q values in compatible EQ presets and preserves them in Blind EQ Comparison and saved EQs. [Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168)
 
 Update167 keeps the open sidebar black and uses a green-tinted glass reveal when the collapsed arrow is hovered. [Update167 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167)

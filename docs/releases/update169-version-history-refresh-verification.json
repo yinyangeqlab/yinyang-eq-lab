@@ -1,0 +1,91 @@
+{
+  "update": 169,
+  "sourceCommit": "d128f6a60698089a98e64b023a6b1488807e1e54",
+  "deploymentVerification": {
+    "at": "2026-11-15T10:28:05Z",
+    "update": 169,
+    "revision": "d128f6a60698089a98e64b023a6b1488807e1e54",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "258bd1867844ed927e722896e0cb43cbb7776b48",
+    "previousRecoveryEvidence": "docs/releases/update169-sidebar-rollout-recovery-verification.json",
+    "update168HistoryLinksVerifiedWithoutGitHubLookup": true,
+    "exactServerModulesVerified": 361,
+    "exactClientAssetsVerified": 60,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/eq-compare": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/ear-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/api/eq-preset-reactions": 403,
+      "/api/my-data": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicVersionPageVerified": true,
+    "cloudflareQueryBindingVerified": true,
+    "previousPublicReleaseLinkVerified": true,
+    "largerHomeIconAndBothTealRailThemesVerified": true,
+    "update168OriginalReleaseLinkVerified": true,
+    "update168RefreshReleaseLinkVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "d128f6a60698089a98e64b023a6b1488807e1e54",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2373,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "build": "update169",
+        "releaseHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168",
+        "refreshHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link",
+        "commitHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/9fbf6acf1b0134dfe4af61d2d4803e44dfdf27ad",
+        "keyboardOpened": true
+      },
+      {
+        "width": 390,
+        "build": "update169",
+        "releaseHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168",
+        "refreshHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link",
+        "commitHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/9fbf6acf1b0134dfe4af61d2d4803e44dfdf27ad",
+        "keyboardOpened": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}
