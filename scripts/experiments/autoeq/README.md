@@ -1,6 +1,6 @@
 # Local PEQdB AutoEQ experiment
 
-The subsequent app integration is documented in [PEQDB_AUTOEQ.md](../../docs/PEQDB_AUTOEQ.md). This original lab retains its free-gain benchmark configuration; the app uses its explicit existing level reference.
+The subsequent app integration is documented in [PEQDB_AUTOEQ.md](../../../docs/PEQDB_AUTOEQ.md). This original lab retains its free-gain benchmark configuration; the app uses its explicit existing level reference.
 
 Local prototype prepared October 27, 2026. No deployment, publication, participant-data access, migration or change to the production fitter. The experiment has a separate Vite entry point; ordinary application pages do not import it.
 
@@ -11,11 +11,11 @@ Baseline: current scrubbed `origin/main`, `a0dad354fc62a5ac2f702b8a6fc8ee71348cc
 Use the project’s pinned Node 26.12.0 / npm 12.2.1 toolchain and existing locked dependencies. Install Emscripten **4.0.14** in a directory outside Git. Keep downloaded engine source and curves outside Git as well.
 
 ```sh
-python3 experiments/autoeq/prepare.py \
+python3 scripts/experiments/autoeq/prepare.py \
   --inputs /tmp/peqdb-wasm-inputs/data \
   --emsdk /tmp/peqdb-wasm-inputs/emsdk \
   --gpl /path/to/complete/GPLv3-license.txt
-node node_modules/vite/bin/vite.js --config experiments/autoeq/vite.config.ts
+node node_modules/vite/bin/vite.js --config scripts/experiments/autoeq/vite.config.ts
 ```
 
 Open http://127.0.0.1:5199/. This loopback-only lab needs no account and does not use the application's gate or database. Downloaded fixtures and compiled artifacts are ignored under `artifacts/autoeq-lab/`; do not copy them into the production asset directory. No dependency or production bundle change was needed.
@@ -55,11 +55,11 @@ A six-times CPU-throttled **page** test recorded one 83 ms main-thread task and 
 ## Verification
 
 ```sh
-node experiments/autoeq/check-engine.mjs
-AUTOEQ_PLAYWRIGHT=/absolute/path/to/playwright/index.mjs node experiments/autoeq/check-browser.mjs
+node scripts/experiments/autoeq/check-engine.mjs
+AUTOEQ_PLAYWRIGHT=/absolute/path/to/playwright/index.mjs node scripts/experiments/autoeq/check-browser.mjs
 node node_modules/typescript/bin/tsc --noEmit --incremental false
-node node_modules/eslint/bin/eslint.js experiments/autoeq --max-warnings 0
-node node_modules/vite/bin/vite.js build --config experiments/autoeq/vite.config.ts
+node node_modules/eslint/bin/eslint.js --config scripts/eslint.config.mjs scripts/experiments/autoeq --max-warnings 0
+node node_modules/vite/bin/vite.js build --config scripts/experiments/autoeq/vite.config.ts
 node scripts/check_blind_eq.mjs
 node scripts/check_blind_eq_workflow.mjs
 ```

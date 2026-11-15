@@ -3,11 +3,11 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { createReadStream } from 'node:fs';
 import { peqdbLocalAssets } from '../../build/peqdb-local-assets.mjs';
-const publicRoot = fileURLToPath(new URL('../../artifacts/autoeq-lab/public', import.meta.url));
+const publicRoot = fileURLToPath(new URL('../../../artifacts/autoeq-lab/public', import.meta.url));
 export default defineConfig({
   root: fileURLToPath(new URL('.', import.meta.url)),
   worker: { plugins: () => [peqdbLocalAssets()] },
-  publicDir: fileURLToPath(new URL('../../artifacts/autoeq-lab/public', import.meta.url)),
+  publicDir: fileURLToPath(new URL('../../../artifacts/autoeq-lab/public', import.meta.url)),
   plugins: [react(), peqdbLocalAssets(), { name: 'local-autoeq-engine', configureServer(server) {
     // Serve the replaceable generated module verbatim rather than bundling it.
     server.middlewares.use('/engine', (request, response, next) => {
@@ -19,7 +19,7 @@ export default defineConfig({
       stream.pipe(response);
     });
   } }],
-  resolve: { alias: { '@': fileURLToPath(new URL('../..', import.meta.url)) } },
-  server: { host: '127.0.0.1', port: 5199, strictPort: true, fs: { allow: [fileURLToPath(new URL('../..', import.meta.url))] } },
-  build: { outDir: '../../artifacts/autoeq-lab/dist', emptyOutDir: true },
+  resolve: { alias: { '@': fileURLToPath(new URL('../../..', import.meta.url)) } },
+  server: { host: '127.0.0.1', port: 5199, strictPort: true, fs: { allow: [fileURLToPath(new URL('../../..', import.meta.url))] } },
+  build: { outDir: '../../../artifacts/autoeq-lab/dist', emptyOutDir: true },
 });

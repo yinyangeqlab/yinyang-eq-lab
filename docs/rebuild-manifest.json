@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "c3c38ad4881ee5d5ec9d7923bcb7d4909dde925e",
+  "baseRevision": "96377f2570a0746895640cf3571a85f7e9a9a2bb",
   "recordedLiveUpdate": 171,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -67,7 +67,7 @@
     },
     {
       "path": "THIRD_PARTY.md",
-      "sha256": "c6a8defab9cb7cd9c7b5bce3fb30c699e89adbb7acecbb32f592166a77a0ee57",
+      "sha256": "b8f34100901f1eded8f68809ec4c92b35ba65f3cbc30e2d42a6451e4842b5d35",
       "executable": false
     },
     {
@@ -823,36 +823,6 @@
     {
       "path": "app/welcome.css",
       "sha256": "65ada18420773e043455b1a403b7aa78383975115b3ae401256db5a3477a8d50",
-      "executable": false
-    },
-    {
-      "path": "build/connector-preview-plugin.mjs",
-      "sha256": "a6a9fe2086e302f94a3f91e3c1a68a45bb3aa07d4a79faf01b14732191eb4e80",
-      "executable": false
-    },
-    {
-      "path": "build/connector-preview-worker.mjs",
-      "sha256": "c1b6b2c420cb67d9e28f8f4ae440f578c0dfd4cb840a12cfe4b58076629a17ba",
-      "executable": false
-    },
-    {
-      "path": "build/peqdb-local-assets.mjs",
-      "sha256": "3e5a84e7d8a2df9761a6046a0f06df7d40de69f630adab4b024637e0a71db1c5",
-      "executable": false
-    },
-    {
-      "path": "build/sites-vite-plugin.LICENSE",
-      "sha256": "7de1e115d165f176e68f962acdb809b5ab8d8ae78d3981e0701392b2ac50c713",
-      "executable": false
-    },
-    {
-      "path": "build/sites-vite-plugin.ts",
-      "sha256": "8c5f95d04556d711318e1c27e3eb85f46276fd298e613de34e4d91dda7229ee9",
-      "executable": false
-    },
-    {
-      "path": "build/sites-worker.ts",
-      "sha256": "d99095dfa45685601a621909e90a933b59aa554ff35b3c211daf4d70b335bb64",
       "executable": false
     },
     {
@@ -3581,76 +3551,6 @@
       "executable": false
     },
     {
-      "path": "eslint.config.mjs",
-      "sha256": "93689d70b5314a1770b497740bdc17f279c46ff4bf514db53aac49aaf05b31d9",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/README.md",
-      "sha256": "cca2c5df98a50f5abedadf932d7bb69c9ea5b2cecb7932dd32b741d8abdf08ae",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/check-browser.mjs",
-      "sha256": "7bd6374a1c198a95e6f818e674f29e63d6b669ec5004dc82d0d094cb6117d076",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/check-engine.mjs",
-      "sha256": "bdf638b8ae57622b7ad1ecdcad174d95d1ae50d8026c5f379a24ca6376a271d5",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/compare.ts",
-      "sha256": "f98c606357d353b621397dcec4b344dd6fbd06b2d8889a63e4124c971b39106f",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/engine.ts",
-      "sha256": "e7f56ba0dc668a74d02faa4926eec386117148f6e2411c7d34f3aaaecffce5c8",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/index.html",
-      "sha256": "092a08b73ad802f3eed7f89a1234ea4fecd004bb7d9465ddad6f3ae9f1fa5c98",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/integration.html",
-      "sha256": "f2e98aeacb22baf1e494b15fa989e3f5836962023f622e52988d6d03a57eee18",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/integration.tsx",
-      "sha256": "e403f63b462c415702c6d5d2c005162be04855a81061c3e3fcdf586a3c46f0bc",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/main.tsx",
-      "sha256": "da4e0b56f2bf31dd51324e7693edd4800ca62f9b50a8d894d07ae28d86749c9a",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/prepare.py",
-      "sha256": "018509cdfd8d96653a8d130be78cc95f882ec509ec5fee170b093d4ce20b5875",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/style.css",
-      "sha256": "7a872d1c8dad23dfcfd6fb759c7da114ec3baea38b2908688f0b59a0e030a6b3",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/vite.config.ts",
-      "sha256": "8f0ee028eb5bb4b81017ddd6eec4d6c687ff0a5576728f8cf3f1b100b2fb8b9b",
-      "executable": false
-    },
-    {
-      "path": "experiments/autoeq/worker.ts",
-      "sha256": "be2482100c8e446b85f745572be0d88c71c4b52e26ba17239228206a8a45fc88",
-      "executable": false
-    },
-    {
       "path": "infra/cost-guard/policy.mjs",
       "sha256": "dc41799c43e7c2a31051997f2acf843b0ff86053d1535067fbb0062f3c9ae329",
       "executable": false
@@ -4591,18 +4491,13 @@
       "executable": false
     },
     {
-      "path": "next.config.ts",
-      "sha256": "614bce25b089c3f19b1e17a6346c74b858034040154c6621e7d35303004767cc",
-      "executable": false
-    },
-    {
       "path": "package-lock.json",
       "sha256": "95ed00ef0b3939a10f39837201fe90906093417daebb2d238d2997fd37c355b0",
       "executable": false
     },
     {
       "path": "package.json",
-      "sha256": "77cb8341b961e9293e93ed8e546ef39cc705b9c2f5880827fc9ea2f2719270a0",
+      "sha256": "ae1148f98c0e2241485a7629e23976b4d980c10075e67e07671caa0721ece6f5",
       "executable": false
     },
     {
@@ -5134,6 +5029,36 @@
       "path": "scripts/build-verified.sh",
       "sha256": "2ae5329ac860076070c9217a43106a15cb5ecf907a0f7baeb9ef903f76b53c68",
       "executable": true
+    },
+    {
+      "path": "scripts/build/connector-preview-plugin.mjs",
+      "sha256": "a6a9fe2086e302f94a3f91e3c1a68a45bb3aa07d4a79faf01b14732191eb4e80",
+      "executable": false
+    },
+    {
+      "path": "scripts/build/connector-preview-worker.mjs",
+      "sha256": "c1b6b2c420cb67d9e28f8f4ae440f578c0dfd4cb840a12cfe4b58076629a17ba",
+      "executable": false
+    },
+    {
+      "path": "scripts/build/peqdb-local-assets.mjs",
+      "sha256": "506979abd11b69a2bc35459214bb151037e7e70500efc7cae8e26e148d4ef554",
+      "executable": false
+    },
+    {
+      "path": "scripts/build/sites-vite-plugin.LICENSE",
+      "sha256": "7de1e115d165f176e68f962acdb809b5ab8d8ae78d3981e0701392b2ac50c713",
+      "executable": false
+    },
+    {
+      "path": "scripts/build/sites-vite-plugin.ts",
+      "sha256": "8c5f95d04556d711318e1c27e3eb85f46276fd298e613de34e4d91dda7229ee9",
+      "executable": false
+    },
+    {
+      "path": "scripts/build/sites-worker.ts",
+      "sha256": "7beead650df34f7d118149c83f00b2c4d52c810096b046257ad08909643d808c",
+      "executable": false
     },
     {
       "path": "scripts/check-client-assets.mjs",
@@ -5796,8 +5721,78 @@
       "executable": false
     },
     {
+      "path": "scripts/eslint.config.mjs",
+      "sha256": "a8546617d7ccf3076c4a3010d013e423cec5e4529af0bbb06d6f197cdfe7c9c8",
+      "executable": false
+    },
+    {
       "path": "scripts/execution-profile.mjs",
       "sha256": "2e71116f4d2b70cff8bb70436f8dd5c709ec7ff62893424530f404e0193d3630",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/README.md",
+      "sha256": "3df42cf02c842ec2d539225d043fc893cd8aaa40763dc7bc668ac5bce5cf3a9d",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/check-browser.mjs",
+      "sha256": "88f251d24fa128e38fb0e747f5f85e07a0b98c1ebc868bdec98aed8d274c5cd8",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/check-engine.mjs",
+      "sha256": "97c8fb8960a88de9533e4d8ac1e9a1ca16b8d2af895a656654e7468d399f6212",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/compare.ts",
+      "sha256": "b7bb5965b3ba982493d73f8aeff7d3accfb906d7cd1ff4a80f8bc83215e1293e",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/engine.ts",
+      "sha256": "f08e615f6d42cac106f482d15d696ed9e5672da9bf9e35c57643851399d9bbd7",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/index.html",
+      "sha256": "092a08b73ad802f3eed7f89a1234ea4fecd004bb7d9465ddad6f3ae9f1fa5c98",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/integration.html",
+      "sha256": "f2e98aeacb22baf1e494b15fa989e3f5836962023f622e52988d6d03a57eee18",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/integration.tsx",
+      "sha256": "5a45bc7331e3d1a72331cc16af5556176ac51b99e58b80f6bf3dc3912100e030",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/main.tsx",
+      "sha256": "e7e86f059ecb3c158e5fe987040d4bdddcc06af2cf4ad94e70d18c1bd95c3353",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/prepare.py",
+      "sha256": "07fe261345496482d7e662a9dbb7067d743c0b70818c5e2cdb470e87f3e588d2",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/style.css",
+      "sha256": "7a872d1c8dad23dfcfd6fb759c7da114ec3baea38b2908688f0b59a0e030a6b3",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/vite.config.ts",
+      "sha256": "ce8e9e95f6106a098da7bde431d60230e31ac30a588668b839e5f474a5ea25f6",
+      "executable": false
+    },
+    {
+      "path": "scripts/experiments/autoeq/worker.ts",
+      "sha256": "be2482100c8e446b85f745572be0d88c71c4b52e26ba17239228206a8a45fc88",
       "executable": false
     },
     {
@@ -5857,12 +5852,12 @@
     },
     {
       "path": "scripts/peqdb-assets.mjs",
-      "sha256": "4e1b76b94106193c0b508b6d466369688961d1f120e7ddf68d2348cce0d88a96",
+      "sha256": "8ec99677e46e8e15c844dd22713419bb59666d576cbc93d4197d41d789a77a5d",
       "executable": false
     },
     {
       "path": "scripts/peqdb-source-allowlist.json",
-      "sha256": "2cd0908ab53486e3917b4df7821b0936fc1502360c21174c5370f9eb471dc23a",
+      "sha256": "292ae23576939ac5eb00397d65f89f7f0124afb34c333f95cb411c5b33eea945",
       "executable": false
     },
     {
@@ -5872,7 +5867,7 @@
     },
     {
       "path": "scripts/prepare-peqdb-autoeq.py",
-      "sha256": "b7675166c2ed9cfaaacb4d051ae92911b0639f33886b671a71b198bef2295f0e",
+      "sha256": "df87ccc0ec96006625bacf4c5f7b2014da5c6b2787f068423aa14efa10aab9d9",
       "executable": false
     },
     {
@@ -6057,7 +6052,7 @@
     },
     {
       "path": "vite.config.ts",
-      "sha256": "ba683343bc49282626c02679e788ac37dea8d9a1fb12900dad7fb72d86fa55f8",
+      "sha256": "e2ca5b80c8763bbb13e6ce37f967ea26782e5a9c9b216fdf6677655a7ba0228c",
       "executable": false
     }
   ]

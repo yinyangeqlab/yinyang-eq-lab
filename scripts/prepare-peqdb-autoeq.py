@@ -31,10 +31,12 @@ def blob(repo, sha, dest):
 def source_files():
     tracked = subprocess.check_output(['git', 'ls-files', '--cached', '-z'], cwd=ROOT).decode().split('\0')
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=ROOT).decode().split('\0')
-    directories = ('app/', 'components/', 'lib/', 'hooks/', 'build/', 'scripts/', 'drizzle/', 'data/', 'vendor/')
-    root_files = {'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json', 'eslint.config.mjs', '.npmrc', '.node-version', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'README.md'}
+    directories = ('app/', 'components/', 'lib/', 'hooks/', 'scripts/', 'drizzle/', 'data/', 'vendor/')
+    root_files = {'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json', '.npmrc', '.node-version', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'README.md'}
     extras = {'docs/PEQDB_AUTOEQ.md', 'docs/LOCAL_SETUP.md', 'public/dynamic-range-worklet.js'}
-    eligible = lambda name: name and (name in root_files or name in extras or name.startswith(directories))
+    eligible = lambda name: not name.startswith('scripts/experiments/autoeq/') and (
+        name in root_files or name in extras or name.startswith(directories)
+    )
     allowlist = set(json.loads((ROOT / 'scripts/peqdb-source-allowlist.json').read_text()))
     unexpected = sorted(name for name in untracked if eligible(name) and name not in allowlist)
     if unexpected:

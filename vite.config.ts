@@ -1,10 +1,10 @@
-import { peqdbLocalAssets } from "./build/peqdb-local-assets.mjs";
+import { peqdbLocalAssets } from "./scripts/build/peqdb-local-assets.mjs";
 import vinext from "vinext";
 import { defineConfig } from "vite";
 import hostingConfig from "./.openai/hosting.json";
 import { readExecutionProfile } from "./scripts/execution-profile.mjs";
-import { sites } from "./build/sites-vite-plugin";
-import { connectorPreview } from "./build/connector-preview-plugin.mjs";
+import { sites } from "./scripts/build/sites-vite-plugin";
+import { connectorPreview } from "./scripts/build/connector-preview-plugin.mjs";
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
@@ -16,7 +16,7 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
 const localBindingConfig = {
-  main: "./build/sites-worker.ts",
+  main: "./scripts/build/sites-worker.ts",
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [
@@ -91,7 +91,7 @@ export default defineConfig(async ({ command }) => {
                 {
                   config: {
                     name: "sites-connector-preview",
-                    main: "./build/connector-preview-worker.mjs",
+                    main: "./scripts/build/connector-preview-worker.mjs",
                     compatibility_date: "2026-05-15",
                   },
                 },

@@ -1,6 +1,6 @@
 import { createReadStream, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { peqdbAssets, peqdbSourceSnapshot } from '../scripts/peqdb-assets.mjs';
+import { peqdbAssets, peqdbSourceSnapshot } from '../peqdb-assets.mjs';
 let buildSnapshot;
 export function peqdbLocalAssets() {
   let building = false;

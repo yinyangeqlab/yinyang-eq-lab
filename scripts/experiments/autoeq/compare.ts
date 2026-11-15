@@ -1,7 +1,7 @@
-import { fitAutoEq } from '../../lib/autoeq';
-import { finalizeVariant } from '../../lib/preference-finalize';
-import { eqCoefficients, type EqFilter, type EqPreset } from '../../lib/blind-eq';
-import type { Point } from '../../lib/curves';
+import { fitAutoEq } from '../../../lib/autoeq';
+import { finalizeVariant } from '../../../lib/preference-finalize';
+import { eqCoefficients, type EqFilter, type EqPreset } from '../../../lib/blind-eq';
+import type { Point } from '../../../lib/curves';
 import { at, fitGrid, type WasmFit } from './engine';
 
 export type Fixture = { name: string; source: string; rig: string; type: 'ie' | 'oe'; sha: string; sourceUrl: string; targetName: string; targetSha: string; points: Point[]; target: Point[] };

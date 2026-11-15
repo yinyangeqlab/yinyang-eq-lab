@@ -2,7 +2,8 @@
 """Prepare pinned, external-only inputs and ignored local WASM assets. No deployment."""
 import argparse, base64, hashlib, json, pathlib, shutil, subprocess, tarfile, urllib.request
 
-ROOT = pathlib.Path(__file__).resolve().parents[2]
+LAB = pathlib.Path(__file__).resolve().parent
+ROOT = LAB.parents[2]
 PIN = 'fdc0db772164387c2df8739742594197c6851fc3'
 SOURCES = {
     'src/autoeq.c': '7001edc709ff063a1e4e7e8d1fb9f0567e961267',
@@ -110,8 +111,8 @@ def main():
         for path in ['LICENSE', 'package.json', 'package-lock.json', 'data/autoeq-catalog.json',
                      'lib/autoeq.ts', 'lib/preference-finalize.ts', 'lib/curves.ts', 'lib/blind-eq.ts', 'lib/blind-eq-audio.ts']:
             archive.add(ROOT / path, arcname='application/' + path)
-        for path in (ROOT / 'experiments/autoeq').iterdir():
-            if path.is_file(): archive.add(path, arcname='application/experiments/autoeq/' + path.name)
+        for path in LAB.iterdir():
+            if path.is_file(): archive.add(path, arcname='application/' + path.relative_to(ROOT).as_posix())
     print(json.dumps(receipt['assets'], indent=2))
 
 if __name__ == '__main__':

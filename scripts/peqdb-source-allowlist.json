@@ -10,7 +10,7 @@
   "app/software-licenses/page.tsx",
   "app/terms/page.tsx",
   "app/version/style.css",
-  "build/peqdb-local-assets.mjs",
+  "scripts/build/peqdb-local-assets.mjs",
   "components/admin-table.tsx",
   "components/browser-ownership-proof.css",
   "components/browser-ownership-proof.tsx",

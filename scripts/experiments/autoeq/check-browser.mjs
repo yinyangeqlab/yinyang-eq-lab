@@ -3,7 +3,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 const { chromium } = await import(process.env.AUTOEQ_PLAYWRIGHT || 'playwright');
 const url = process.env.AUTOEQ_LAB_URL || 'http://127.0.0.1:5199';
-const out = fileURLToPath(new URL(process.env.AUTOEQ_CPU_THROTTLE ? `../../artifacts/autoeq-lab/review-cpu${process.env.AUTOEQ_CPU_THROTTLE}` : '../../artifacts/autoeq-lab/review', import.meta.url));
+const out = fileURLToPath(new URL(process.env.AUTOEQ_CPU_THROTTLE ? `../../../artifacts/autoeq-lab/review-cpu${process.env.AUTOEQ_CPU_THROTTLE}` : '../../../artifacts/autoeq-lab/review', import.meta.url));
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ executablePath: process.env.AUTOEQ_CHROME || '/opt/google/chrome/chrome', headless: true, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
 const context = await browser.newContext({ viewport: { width: 1360, height: 1000 }, acceptDownloads: true });
