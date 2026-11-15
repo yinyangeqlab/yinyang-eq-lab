@@ -5,6 +5,10 @@ Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update168 Direct GitHub release links
+
+Source `020a77ee343860bfdb74b70dbb58daf5cbb53079` displays the update168 GitHub release link in Changes in this build and in Release history. Both links rendered with outbound requests blocked in an isolated restore from a fresh download of the encrypted off-device source-only backup. [Isolated recovery verification](releases/update168-direct-release-link-isolated-recovery-verification.json)
+
 ## Update168 EQ preset imports
 
 EQ preset imports accept Q from 0.01 to 20. Blind EQ Comparison and saved EQs preserve wide filter settings and their precision.
