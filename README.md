@@ -21,6 +21,8 @@ The historical demo videos have been retired. The remaining screenshots show the
 
 Update168 accepts wide Q values in compatible EQ presets and preserves them in Blind EQ Comparison and saved EQs. [Update168 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168)
 
+The [update168 direct-link refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link) adds direct GitHub links to the current build notes and the update168 history entry.
+
 Update167 keeps the open sidebar black and uses a green-tinted glass reveal when the collapsed arrow is hovered. [Update167 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167)
 
 Update165 makes Target match the default for generated EQ exports in Preference Tuning. Lower boost remains available. [Update165 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update165)

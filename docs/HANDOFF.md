@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598684c`.
+Recorded deployment: **update168**, source `020a77ee343860bfdb74b70dbb58daf5cbb53079`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update168 direct GitHub release links
+
+Changes in this build and the update168 history entry link directly to the [original update168 GitHub release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168). Both links rendered in the packaged Worker with outbound requests blocked. The update166 history link also passed live verification.
+
+All 125 release checks passed. Encrypted off-device source-only recovery and hosted validation passed.
+
+[Refresh source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168-direct-release-link) · [Deployment verification](releases/update168-direct-release-link-verification.json) · [Recovery verification](releases/update168-direct-release-link-recovery-verification.json)
 
 ## Update168 EQ preset imports
 

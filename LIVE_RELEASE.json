@@ -2,11 +2,11 @@
   "site": "https://yinyangeq.com",
   "update": 168,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T07:51:46Z",
-  "sourceCommit": "3a421c972c81f197719b879a0ae52784b598684c",
+  "verifiedAt": "2026-11-15T08:25:04Z",
+  "sourceCommit": "020a77ee343860bfdb74b70dbb58daf5cbb53079",
   "sourceBranch": "",
-  "baselineCommit": "210500eb9f6de865b286111f9ec5639955483df4",
-  "evidence": "docs/releases/update168-version-link-refresh-verification.json",
+  "baselineCommit": "3a421c972c81f197719b879a0ae52784b598684c",
+  "evidence": "docs/releases/update168-direct-release-link-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,34 +32,35 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "deploymentRefresh": {
-    "slug": "version-link-refresh",
-    "previousEvidence": "docs/releases/update168-verification.json"
+    "slug": "direct-release-link",
+    "previousEvidence": "docs/releases/update168-version-link-refresh-verification.json"
   },
   "gitSource": {
-    "implementationCommit": "3a421c972c81f197719b879a0ae52784b598684c",
+    "implementationCommit": "020a77ee343860bfdb74b70dbb58daf5cbb53079",
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "pushed": true,
     "publicationAuthorized": true,
-    "publicationTag": "update168"
+    "publicationSeparateFromDeployment": true,
+    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+    "publicationTag": "update168-direct-release-link"
   },
   "recoveryProcess": {
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
     "sourceBaselineUpdate": 168,
-    "sourceBaselineVerifiedAt": "2026-11-15T07:46:17Z",
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "dailyWorkflowActive": null,
+    "sourceBaselineVerifiedAt": "2026-11-15T08:42:59Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "dailyWorkflowActive": true,
     "update168SourceOnlyHandover": {
-      "registrationPending": true,
+      "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
-      "newDataSnapshots": 0
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update168-direct-release-link-recovery-verification.json"
     }
   },
   "documentationFiles": [],
