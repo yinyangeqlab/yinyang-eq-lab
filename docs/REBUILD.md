@@ -5,6 +5,10 @@ Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update169 Rankings and preset reactions
+
+The isolated restore for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` matched all 1,179 source files and 4,015 build files against the original release record. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
 ## Update168 Direct GitHub release links
 
 The isolated restore for `020a77ee343860bfdb74b70dbb58daf5cbb53079` matched all 3,990 build files and 1,170 source files against the original release record. [Isolated recovery verification](releases/update168-direct-release-link-isolated-recovery-verification.json)

@@ -1,0 +1,29 @@
+{
+  "update": 169,
+  "sourceCommit": "b382bec78f9ecccfb821a8119a7be697ea9cbf44",
+  "verifiedAt": "2026-11-15T09:14:58Z",
+  "recoveryPoint": "source-only",
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "originalReleaseLedgerMatched": true,
+  "sourceFilesVerified": 1179,
+  "originalBuildFilesVerified": 4015,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "releaseLabelMatched": true,
+    "usedSyntheticData": true,
+    "presetReactionMigration0045Verified": true,
+    "targetAndEqPresetRankingsVerified": true,
+    "presetReactionEndpointVerified": true,
+    "presetReactionSuitePassed": true,
+    "versionReleaseFeedFallbackVerifiedWithFixture": true,
+    "clientAssetCheckPassed": true,
+    "testAccountWritesBlocked": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "2fc8020fb889ae380f33973d26f82f3bcef1f267",
+  "baseRevision": "298896f232059218b999de8eb8a0c99420723191",
   "recordedLiveUpdate": 168,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "41b3d943c6f1d0492961394ad9def2e53a3d5474e68ba9a6b7d20935fcfb1c26",
+      "sha256": "fe3b6ada97da28e3ea333733483e7d1d9c44da54001a61f6ea5a4ab3cef917ec",
       "executable": false
     },
     {
@@ -2287,7 +2287,7 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "daeefd301f8f0cb4f478e2d3653ee8bb5335ce7e00fa9cae5f6df62f410dfe05",
+      "sha256": "0f4647783b260f884381970a5f596001974e9605254836bb71b576b4e0532090",
       "executable": false
     },
     {
@@ -2297,7 +2297,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "34ea8c07585eb9a195d2c8e7e41556f59c928e537ddd2637b39e2e3fcb80df99",
+      "sha256": "af2022908ba038bc07f58c75a0c18685a6090005e4fa01c5113fb64644b0a2bc",
       "executable": false
     },
     {
@@ -2918,6 +2918,11 @@
     {
       "path": "docs/releases/update168-version-link-refresh-verification.json",
       "sha256": "26d39e3fb3a43cb2ff6c0e07e949eac4073c4829b523839ef987794a4858ba25",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update169-isolated-recovery-verification.json",
+      "sha256": "820508fb6d0e7d7f0d3ee2be3156785e9f5e677a4f171d347a415bbd8f8b9504",
       "executable": false
     },
     {

@@ -5,6 +5,10 @@ Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update169 Rankings and preset reactions
+
+The encrypted off-device source-only recovery point for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` passed decryption and restoration from a fresh download. Migration 0045 created the preset reaction table and its indexes in a fresh synthetic database. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
 ## Update168 Direct GitHub release links
 
 The encrypted off-device source-only recovery point for `020a77ee343860bfdb74b70dbb58daf5cbb53079` passed an isolated restore from a fresh download. The restored app ran on loopback with synthetic data and verified both update168 release links with outbound requests blocked. [Isolated recovery verification](releases/update168-direct-release-link-isolated-recovery-verification.json)

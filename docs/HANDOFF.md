@@ -5,6 +5,10 @@ Recorded deployment: **update168**, source `3a421c972c81f197719b879a0ae52784b598
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update169 Rankings and preset reactions
+
+A fresh download of the encrypted off-device source-only backup for `b382bec78f9ecccfb821a8119a7be697ea9cbf44` passed an isolated restore. Using synthetic data, the restored app passed the Target and EQ preset rankings, preset reactions, and Version page release-feed fallback checks. [Isolated recovery verification](releases/update169-isolated-recovery-verification.json)
+
 ## Update168 Direct GitHub release links
 
 Source `020a77ee343860bfdb74b70dbb58daf5cbb53079` displays the update168 GitHub release link in Changes in this build and in Release history. Both links rendered with outbound requests blocked in an isolated restore from a fresh download of the encrypted off-device source-only backup. [Isolated recovery verification](releases/update168-direct-release-link-isolated-recovery-verification.json)
