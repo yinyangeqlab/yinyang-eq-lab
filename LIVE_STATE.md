@@ -5,10 +5,10 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update165 |
-| Source | `658403035df3bcd207f5297517368419de898917` |
-| Verified at | 2026-11-14T22:46:27Z |
-| Deployment | Verified by the [deployment receipt](docs/releases/update165-verification.json) |
+| Release | update166 |
+| Source | `8c4a50bb2da689a3947d84240b47b9128dc67863` |
+| Verified at | 2026-11-15T04:34:45Z |
+| Deployment | Verified by the [deployment receipt](docs/releases/update166-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
 | Publication | Source recorded as pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
@@ -17,6 +17,6 @@ Source/build metadata registration is separate from a fresh data export. Existin
 
 The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](docs/rebuild-manifest.json).
 
-The deployment receipt records 125 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
+The deployment receipt records 125 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are recorded as certified. Read the receipt and review record for browser/device limits.
 
 Start new work at [docs/HANDOFF.md](docs/HANDOFF.md) and [docs/ENGINEERING.md](docs/ENGINEERING.md). The [historical source inventory](docs/history/foundation-20261031/README.md) records earlier source inputs.

@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 165,
+  "update": 166,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-14T22:46:27Z",
-  "sourceCommit": "658403035df3bcd207f5297517368419de898917",
-  "sourceBranch": "release/update165-20261114",
-  "baselineCommit": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
-  "evidence": "docs/releases/update165-verification.json",
+  "verifiedAt": "2026-11-15T04:34:45Z",
+  "sourceCommit": "8c4a50bb2da689a3947d84240b47b9128dc67863",
+  "sourceBranch": "release/update166-finder-20261114",
+  "baselineCommit": "658403035df3bcd207f5297517368419de898917",
+  "evidence": "docs/releases/update166-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,31 +32,31 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "658403035df3bcd207f5297517368419de898917",
-    "branch": "release/update165-20261114",
+    "implementationCommit": "8c4a50bb2da689a3947d84240b47b9128dc67863",
+    "branch": "release/update166-finder-20261114",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationSeparateFromDeployment": true,
     "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "pushed": true,
     "publicationAuthorized": true,
-    "publicationTag": "update165"
+    "publicationTag": "update166"
   },
   "recoveryProcess": {
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
-    "sourceBaselineUpdate": 165,
-    "sourceBaselineVerifiedAt": "2026-11-14T23:04:20Z",
+    "sourceBaselineUpdate": 166,
+    "sourceBaselineVerifiedAt": "2026-11-15T04:54:18Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "dailyWorkflowActive": true,
-    "update165SourceOnlyHandover": {
+    "update166SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update165-recovery-verification.json"
+      "evidence": "docs/releases/update166-recovery-verification.json"
     }
   },
   "documentationFiles": [],

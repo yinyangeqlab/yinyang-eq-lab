@@ -16,6 +16,7 @@ type GeneratedVoice = {
 };
 type ProbeBand = { filter: PeqFilter; halfWidthOctaves: number };
 const SOURCE_FADE_SECONDS = .035;
+const MAX_LISTENING_GAIN = .65;
 
 export function gainAtProbe({ filter, halfWidthOctaves }: ProbeBand, frequency: number) {
   const distance = Math.abs(Math.log2(frequency / filter.hz)) / halfWidthOctaves;
@@ -76,9 +77,16 @@ export class EarTuningAudio {
   private request = 0;
   private frequency = EAR_LOW_HZ;
   private headroomLevel = 1;
+  private listeningLevel = 0;
+  private listeningLimit = 1;
+  private gateLevel = 0;
   private probeBand: ProbeBand | undefined;
 
-  constructor(private readonly media: HTMLAudioElement, private readonly stopped: () => void) {
+  constructor(
+    private readonly media: HTMLAudioElement,
+    private readonly stopped: () => void,
+    private readonly options: { useListeningHeadroom?: boolean } = {},
+  ) {
     const context = this.context;
     this.gate.gain.value = 0;
     this.mediaLevel.gain.value = 0;
@@ -125,13 +133,18 @@ export class EarTuningAudio {
       this.stage = replaceEqStage(this.context, this.headroom, this.adjustmentInput, base.map(filter => ({ ...filter, hz: Math.min(filter.hz, this.context.sampleRate * .49) })), this.stage);
       this.appliedBase = base;
     }
-    // Each peaking band's boost is bounded by its gain at the center. Reserve
-    // their sum on both sides before moving any filter or switching A/B.
+    // Reserve the same worst-case boost on both sides of A/B. Finder edits
+    // use the spare headroom at the listener's current level before attenuating.
     const boostBudget = adjustments.reduce((sum, filter) => sum + Math.max(0, filter.gain), 0);
-    const headroomLevel = 10 ** ((Math.min(0, preamp) - boostBudget) / 20);
+    const reserveDb = this.options.useListeningHeadroom ? 0 : boostBudget;
+    const headroomLevel = 10 ** ((Math.min(0, preamp) - reserveDb) / 20);
     if (headroomLevel !== this.headroomLevel) {
       safeGain(this.headroom, headroomLevel, now);
       this.headroomLevel = headroomLevel;
+    }
+    if (this.options.useListeningHeadroom) {
+      this.listeningLimit = 10 ** (-boostBudget / 20);
+      this.applyListeningLevel(now);
     }
     // A single-band practice probe fades to neutral as the listener seeks away.
     this.probeBand = !bypass && probeHalfWidthOctaves && adjustments.length === 1
@@ -164,7 +177,15 @@ export class EarTuningAudio {
   }
 
   volume(value: number) {
-    safeGain(this.gate, .65 * value, this.context.currentTime, false);
+    this.listeningLevel = value;
+    this.applyListeningLevel(this.context.currentTime, false);
+  }
+
+  private applyListeningLevel(now: number, immediateDecrease = true) {
+    const gain = MAX_LISTENING_GAIN * Math.min(this.listeningLevel, this.listeningLimit);
+    if (gain === this.gateLevel) return;
+    safeGain(this.gate, gain, now, immediateDecrease);
+    this.gateLevel = gain;
   }
 
   get outputPeak() {
@@ -286,6 +307,8 @@ export class EarTuningAudio {
   stop() {
     this.request++;
     const now = this.context.currentTime;
+    this.listeningLevel = 0;
+    this.gateLevel = 0;
     safeGain(this.gate, 0, now);
     this.mediaLevel.gain.setValueAtTime(0, now);
     this.mediaActive = false;

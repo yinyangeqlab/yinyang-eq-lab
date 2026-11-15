@@ -131,7 +131,8 @@ function tuning({blocked=false,queueFunctional=false}={}){
 }
 {
  const measurement={id:'ear-fixture',name:'Synthetic headphones',type:'oe',points:[[20,0],[20000,0]]};
- const values=new Map([['target-lab-measurements',JSON.stringify([measurement])],['target-lab-active-measurement',measurement.id]]);
+ const preset={id:'ear-saved-eq',name:'Synthetic saved EQ',source:'fixture',preamp:-12,measurementId:measurement.id,filters:[{type:'HSC',hz:4000,gain:3,q:.8}]};
+ const values=new Map([['target-lab-measurements',JSON.stringify([measurement])],['target-lab-active-measurement',measurement.id],['target-lab-library-eqs-v1',JSON.stringify([preset])]]);
  const storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
  const requests=[];
  const fit={filters:[{type:'PK',hz:200,gain:2,q:1}],preamp:-2.5,engine:'legacy',engineVersion:'fixture'};
@@ -162,6 +163,76 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const combined=saved()[0];
  check(requests.length===1 && requests[0].raw.length===2 && combined.target.id==='flat' && combined.measurementId===measurement.id,'Target mode fits the selected measurement and retains its provenance');
  check(combined.filters.length===3 && combined.filters[1].gain===-3 && combined.filters[2].gain===2 && combined.preamp<=-2,'Target EQ and manual cut save together with headroom');
+ check(navigator().props.referenceFilters===fit.filters,'The Finder plots the target fit with the measurement');
+ h.find(n=>n.type==='label'&&text(n).trim()==='Use a saved EQ').props.children[0].props.onChange();h.render();
+ check(h.button('Play sound').props.disabled,'Saved mode waits for a preset selection');
+ h.find(n=>n.type==='select'&&all(n,m=>m.type==='option'&&m.props.value===preset.id).length).props.onChange({target:{value:preset.id}});h.render();
+ check(!h.button('Play sound').props.disabled && navigator().props.referenceFilters[0].q===.8 && navigator().props.points.length===2,'Saved mode pairs the original filter settings with the headphone measurement');
+ h.button('Raw headphones').props.onClick();h.render();
+ check(h.button('Raw headphones').props['aria-pressed'] && navigator().props.referenceFilters.length===1,'Raw audition switches sound while retaining the EQ overlay');
+ h.button('Reference EQ').props.onClick();h.render();
+ check(h.button('Reference EQ').props['aria-pressed'],'Reference audition bypasses the ear adjustments');
+ h.find(n=>n.type==='input'&&n.props.type==='range'&&n.props.max===12).props.onChange({target:{value:4}});h.render();
+ check(h.button('EQ + adjustments').props['aria-pressed'],'Editing a band resumes the adjusted comparison');
+ h.button('Save EQ to My Collection').props.onClick();h.render();
+ const adjusted=saved()[0];
+ check(requests.length===1 && adjusted.id!==preset.id && adjusted.preamp===preset.preamp &&
+   adjusted.filters[0].type==='HSC' && adjusted.filters[1].gain===-4 && adjusted.filters[2].gain===2 &&
+   saved().find(row=>row.id===preset.id).filters.length===1,'Saved preset audio and export use its original bands and preamp plus the adjustments without a target fit');
+ h.find(n=>n.type==='select'&&all(n,m=>m.type==='option'&&text(m)==='EQ response only').length).props.onChange({target:{value:''}});h.render();
+ check(!h.button('Play sound').props.disabled && navigator().props.points===undefined,'A saved EQ can also be auditioned without a measurement');
+ h.unmount();
+}
+{
+ const band={id:'peak',kind:'peak',hz:1000,type:'PK',gain:-3,q:4};
+ const h=mount('app/ear-tuning/frequency-navigator.tsx',{props:{
+  frequency:1000,points:[[100,10],[1000,10],[10000,10]],range:{from:100,to:10000},
+  referenceFilters:[{type:'PK',hz:1000,gain:6,q:2}],
+  editor:{bands:[band],selectedId:band.id,onSelect(){},onChange(){}},
+ }});
+ const paths=all(h.tree,n=>n.type==='path'&&n.props.className.startsWith('ear-frequency-curve'));
+ const atCenter=path=>Number(/[ML]500\.00 ([\d.]+)/.exec(path.props.d)[1]);
+ check(paths.length===3,'The Finder plots the measurement, reference and adjusted response');
+ const [raw,reference,after]=paths.map(atCenter);
+ check(reference < after && after < raw && Math.abs((raw+reference)/2-after)<.02,'A 6 dB reference boost offsets the raw curve and one 3 dB cut halves that offset');
+ h.unmount();
+}
+{
+ const param=()=>({value:1,cancelScheduledValues(){},setValueAtTime(value){this.value=value;},setTargetAtTime(value){this.value=value;},linearRampToValueAtTime(value){this.value=value;}});
+ const node=()=>({connect(){return this;},disconnect(){},gain:param(),frequency:param(),Q:param()});
+ class AudioContext extends EventTarget {
+  sampleRate=48000; currentTime=0; state='running'; destination={}; gains=[]; filters=[];
+  createGain(){const gain=node();this.gains.push(gain);return gain;}
+  createBiquadFilter(){const filter=node();this.filters.push(filter);return filter;}
+  createMediaElementSource(){return node();}
+  createAnalyser(){return node();}
+  close(){this.state='closed';}
+ }
+ const h=mount('app/ear-tuning/frequency-navigator.tsx',{props:{frequency:8000},globals:{AudioContext}});
+ const {EarTuningAudio}=h.load('lib/ear-tuning-audio.ts');
+ const media=Object.assign(new EventTarget(),{pause(){}});
+ const setup={base:[],preamp:-4,focus:false,bypass:false,adjustments:[{hz:8000,gain:6,q:4}]};
+ const finder=new EarTuningAudio(media,()=>{},{useListeningHeadroom:true});
+ const [gate,,headroom]=finder.context.gains;
+ const [band]=finder.context.filters.slice(1);
+ finder.volume(.1);
+ const startingGain=gate.gain.value;
+ finder.configure(setup);
+ check(gate.gain.value===startingGain && headroom.gain.value===10**(-4/20) && band.gain.value===6,'Finder boosts remain audible at the starting listening level and preserve the reference preamp');
+ finder.volume(1);
+ const capped=gate.gain.value;
+ check(capped*10**(6/20)<=.65+1e-12,'The maximum Finder listening level reserves enough room for the whole boost');
+ finder.configure({...setup,bypass:true});
+ check(gate.gain.value===capped && band.gain.value===0,'Finder A/B uses the same headroom in both positions');
+ finder.stop();
+ finder.configure({...setup,adjustments:[]});
+ check(gate.gain.value===0,'An edit after stopping cannot reopen the listening gate');
+ finder.close();
+ const practice=new EarTuningAudio(media,()=>{});
+ practice.volume(.1);
+ practice.configure(setup);
+ check(practice.context.gains[0].gain.value===startingGain && practice.context.gains[2].gain.value===10**(-10/20),'Practice retains the previous gain staging');
+ practice.close();
  h.unmount();
 }
 {

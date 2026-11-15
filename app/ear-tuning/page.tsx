@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioLines, Headphones, Pause, Play, Save, SlidersHorizontal, Trash2 } from "lucide-react";
 import BeforeYouListen from "@/components/before-you-listen";
 import MusicTrackPicker from "@/components/music-track-picker";
-import { type PeqFilter, response } from "@/lib/autoeq";
+import type { PeqFilter } from "@/lib/autoeq";
 import { fitAutoEqAsync } from "@/lib/autoeq-client";
 import type { AutoEqFit } from "@/lib/autoeq-fit";
 import AutoEqCurveStatus from "@/components/autoeq-curve-status";
@@ -15,11 +15,11 @@ import { useAutoEqSourceCurves } from "@/lib/use-autoeq-source-curves";
 import { autoEqPickerTargets, autoEqTargetStorageKey, isSourceAutoEqTarget, readLocalAutoEqTargets } from "@/lib/autoeq-target-sources";
 import { downloadLocalFile } from "@/lib/channel-match-export";
 import type { Point } from "@/lib/curves";
-import { EarTuningAudio, EAR_ADJUSTMENT_LIMIT, EAR_LOW_HZ, EAR_HIGH_HZ, EAR_SWEEP_SECONDS, sweepFrequency, type EarSignal } from "@/lib/ear-tuning-audio";
+import { EarTuningAudio, EAR_ADJUSTMENT_LIMIT, EAR_LOW_HZ, EAR_HIGH_HZ, EAR_SWEEP_SECONDS, type EarSignal } from "@/lib/ear-tuning-audio";
 import { DEFAULT_FITTER } from "@/lib/fitter-settings";
 import type { HeadphoneMeasurement } from "@/lib/measurement";
 import { listeningPool } from "@/lib/music-catalog";
-import { safeLibraryEq, saveLibraryEq } from "@/lib/music-library-eq";
+import { LIBRARY_EQ_FILTER_LIMIT, libraryEqPreamp, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
 import FrequencyNavigator from "./frequency-navigator";
 import EarTuningGuide from "./guide";
 import PeakDipIcon from "./peak-dip-icon";
@@ -30,6 +30,8 @@ import AdjustmentWidth from "./adjustment-width";
 import "./style.css";
 
 type MarkKind = "peak" | "dip";
+type ReferenceMode = "manual" | "target" | "saved";
+type Comparison = "raw" | "reference" | "adjusted";
 type Target = { id: string; name: string; points: Point[] };
 type Base = { key: string; fit: AutoEqFit };
 const flat: Target = { id: "flat", name: "Flat reference", points: [[20, 0], [20000, 0]] };
@@ -74,7 +76,7 @@ export default function EarTuningPage() {
   const volumeRef = useRef(INITIAL_LISTENING_LEVEL);
   const [pinkFocus, setPinkFocus] = useState(true);
   const [musicFocus, setMusicFocus] = useState(true);
-  const [bypass, setBypass] = useState(false);
+  const [comparison, setComparison] = useState<Comparison>("adjusted");
   const [playing, setPlaying] = useState(false);
   const [outputPeak, setOutputPeak] = useState(0);
   const [starting, setStarting] = useState(false);
@@ -83,7 +85,9 @@ export default function EarTuningPage() {
   const [selectedAdjustment, setSelectedAdjustment] = useState<string>();
   const [songIndex, setSongIndex] = useState(-1);
   const [localSong, setLocalSong] = useState<{ url: string; title: string } | null>(null);
-  const [mode, setMode] = useState<"manual" | "target">("manual");
+  const [mode, setMode] = useState<ReferenceMode>("manual");
+  const [presets, setPresets] = useState<LibraryEq[]>([]);
+  const [selectedPreset, setSelectedPreset] = useState<LibraryEq>();
   const [measurements, setMeasurements] = useState<HeadphoneMeasurement[]>([]);
   const [measurementId, setMeasurementId] = useState("");
   const [targets, setTargets] = useState<Target[]>([flat]);
@@ -102,15 +106,19 @@ export default function EarTuningPage() {
   const target = useMemo(() => sourceCurves.resolve(selectedTarget), [selectedTarget, sourceCurves]);
   const setupKey = useMemo(() => JSON.stringify([measurementId, measurement?.points, target.id, target.points]), [measurementId, measurement?.points, target]);
   const currentBase = mode === "target" && base?.key === setupKey ? base.fit : null;
-  const baseFilters = currentBase?.filters ?? emptyFilters;
-  const basePlot = useMemo(() => baseFilters.length ? Array.from({ length: 401 }, (_, index): Point => {
-    const frequency = sweepFrequency({ from: EAR_LOW_HZ, to: EAR_HIGH_HZ }, index / 400);
-    return [frequency, baseFilters.reduce((db, filter) => db + response(frequency, filter), 0)];
-  }) : undefined, [baseFilters]);
+  const savedReference = mode === "saved" ? selectedPreset : undefined;
+  const referenceName = savedReference?.name ?? (currentBase ? target.name : undefined);
+  const baseFilters = (savedReference ?? currentBase)?.filters ?? emptyFilters;
+  const basePreamp = (savedReference ?? currentBase)?.preamp ?? 0;
+  const auditionFilters = comparison === "raw" ? emptyFilters : baseFilters;
+  const bypass = comparison !== "adjusted";
+  const referenceFilters = savedReference || currentBase ? baseFilters : undefined;
   const editor: AdjustmentEditor = { bands: adjustments, selectedId: selectedAdjustment, onSelect: setSelectedAdjustment, onChange: changeAdjustment };
-  const canAudition = mode === "manual" || !!currentBase;
+  const canAudition = mode === "manual" || !!currentBase || !!savedReference;
   const canPlay = canAudition && (signal !== "music" || !!chosenSong?.url);
-  const canSave = canAudition && adjustments.some(row => row.gain !== 0);
+  const activeAdjustments = adjustments.filter(row => row.gain !== 0);
+  const canExport = canAudition && activeAdjustments.length > 0;
+  const fitsCollection = baseFilters.length + activeAdjustments.length <= LIBRARY_EQ_FILTER_LIMIT;
   const sweepAvailable = signal === "sine" || signal === "harmonics";
   const bandFocus = signal === "pink" ? pinkFocus : signal === "music" && musicFocus;
   const pitchReference = pitchAnchor ?? hz;
@@ -136,6 +144,19 @@ export default function EarTuningPage() {
       engine.current?.close();
       engine.current = null;
       if (fileUrl.current) URL.revokeObjectURL(fileUrl.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    const refresh = () => setPresets(readLibraryEqs());
+    refresh();
+    window.addEventListener("library-eqs-changed", refresh);
+    window.addEventListener("storage", refresh);
+    window.addEventListener("yinyang-data-changed", refresh);
+    return () => {
+      window.removeEventListener("library-eqs-changed", refresh);
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener("yinyang-data-changed", refresh);
     };
   }, []);
 
@@ -169,9 +190,9 @@ export default function EarTuningPage() {
 
   useEffect(() => () => fitRequest.current?.abort(), [setupKey, mode]);
   useEffect(() => {
-    engine.current?.configure({ base: baseFilters, preamp: currentBase?.preamp ?? 0, adjustments, bypass,
+    engine.current?.configure({ base: auditionFilters, preamp: basePreamp, adjustments, bypass,
       focus: bandFocus });
-  }, [baseFilters, currentBase?.preamp, adjustments, bypass, bandFocus]);
+  }, [auditionFilters, basePreamp, adjustments, bypass, bandFocus]);
   useEffect(() => {
     if (!sweeping) return;
     let frame: number;
@@ -251,9 +272,9 @@ export default function EarTuningPage() {
       engine.current ??= new EarTuningAudio(audio.current, () => {
         playIntent.current++;
         setPlaying(false); setStarting(false); setSweeping(false);
-      });
+      }, { useListeningHeadroom: true });
       const player = engine.current;
-      player.configure({ base: baseFilters, preamp: currentBase?.preamp ?? 0, adjustments, bypass,
+      player.configure({ base: auditionFilters, preamp: basePreamp, adjustments, bypass,
         focus: bandFocus });
       player.setFrequency(hz);
       const started = await player.play(signal, () => volumeRef.current, scan ? sweepRanges[rangeIndex] : undefined);
@@ -301,11 +322,16 @@ export default function EarTuningPage() {
     const adjustment: Adjustment = { id: crypto.randomUUID(), kind, hz: frequency, gain: kind === "peak" ? -3 : 2, q: 4, type: "PK" };
     setAdjustments(rows => rows.length < EAR_ADJUSTMENT_LIMIT ? [...rows, adjustment] : rows);
     setSelectedAdjustment(adjustment.id);
-    setBypass(false);
+    setComparison("adjusted");
     setMessage(`${kind === "peak" ? "Peak marked" : "Dip marked"} at ${prettyHz(frequency)}.`);
   }
 
   function changeAdjustment(id: string, update: Partial<Pick<Adjustment, "hz" | "gain" | "q">>) {
+    const current = adjustments.find(row => row.id === id);
+    if (current && ((update.hz !== undefined && update.hz !== current.hz) ||
+      (update.gain !== undefined && update.gain !== current.gain) || (update.q !== undefined && update.q !== current.q))) {
+      setComparison("adjusted");
+    }
     setAdjustments(rows => rows.map(row => row.id === id ? { ...row, ...update } : row));
   }
 
@@ -324,7 +350,17 @@ export default function EarTuningPage() {
     fitRequest.current?.abort();
     fitRequest.current = null;
     setFitting(false);
+    setComparison("adjusted");
     setMessage("");
+  }
+
+  function choosePreset(id: string) {
+    changeSetup();
+    const preset = presets.find(row => row.id === id);
+    setSelectedPreset(preset);
+    if (preset?.measurementId && measurements.some(row => row.id === preset.measurementId)) {
+      setMeasurementId(preset.measurementId);
+    }
   }
 
   async function fitTarget() {
@@ -349,23 +385,25 @@ export default function EarTuningPage() {
   }
 
   function output(download = false) {
-    if (!canSave) return;
+    if (!canExport || (!download && !fitsCollection)) return;
     try {
-      const presetName = name.trim() || (currentBase ? `${target.name} · peak and dip adjustments` : "Peak & Dip Finder · manual adjustments");
-      const eq = safeLibraryEq({
-        id: crypto.randomUUID(), name: presetName, source: currentBase ? "Peak & Dip Finder · target and manual adjustments" : "Peak & Dip Finder · manual adjustments",
-        filters: [...baseFilters, ...adjustments.filter(row => row.gain !== 0).map(({ hz, q, gain }) => ({ type: "PK" as const, hz, q, gain }))],
-        preamp: 0,
-        ...(currentBase && measurement ? { measurementId: measurement.id, headphone: measurement.device || measurement.name,
-          target: isSourceAutoEqTarget(target.id) ? undefined : target, fitter: DEFAULT_FITTER, engine: currentBase.engine, engineVersion: `${currentBase.engineVersion};ear-adjustments-v1` } : {}),
-      });
+      const filters = [...baseFilters, ...activeAdjustments.map(({ hz, q, gain }) => ({ type: "PK" as const, hz, q, gain }))];
+      const preamp = savedReference?.preamp ?? 0;
       if (download) {
-        const filters = eq.filters.map((row, i) => `Filter ${i + 1}: ON ${row.type ?? "PK"} Fc ${row.hz} Hz Gain ${row.gain.toFixed(4)} dB Q ${row.q.toFixed(4)}`).join("\n");
-        downloadLocalFile("tune-by-ear.txt", `Preamp: ${eq.preamp.toFixed(1)} dB\n${filters}\n`, "text/plain");
+        const lines = filters.map((row, i) => `Filter ${i + 1}: ON ${row.type ?? "PK"} Fc ${row.hz} Hz Gain ${row.gain.toFixed(4)} dB Q ${row.q.toFixed(4)}`).join("\n");
+        downloadLocalFile("tune-by-ear.txt", `Preamp: ${libraryEqPreamp(filters, preamp).toFixed(1)} dB\n${lines}\n`, "text/plain");
         setSaveMessage("EQ settings downloaded.");
       } else {
-        saveLibraryEq(eq);
-        setSaveMessage(`Saved “${eq.name}” to ${PERSONAL_AREA_TITLE}. Account Sync includes saved EQs on approved browsers when enabled.`);
+        const presetName = (name.trim() || (referenceName ? `${referenceName} · peak and dip adjustments` : "Peak & Dip Finder · manual adjustments")).slice(0, 100);
+        saveLibraryEq({
+          id: crypto.randomUUID(), name: presetName, filters, preamp,
+          source: savedReference ? "Peak & Dip Finder · saved EQ and manual adjustments" : currentBase ? "Peak & Dip Finder · target and manual adjustments" : "Peak & Dip Finder · manual adjustments",
+          measurementId: referenceName ? measurement?.id : undefined,
+          headphone: referenceName && measurement ? measurement.device || measurement.name : undefined,
+          ...(currentBase ? { target: isSourceAutoEqTarget(target.id) ? undefined : target, fitter: DEFAULT_FITTER,
+            engine: currentBase.engine, engineVersion: `${currentBase.engineVersion};ear-adjustments-v1` } : {}),
+        });
+        setSaveMessage(`Saved “${presetName}” to ${PERSONAL_AREA_TITLE}. Account Sync includes saved EQs on approved browsers when enabled.`);
       }
     } catch (error) { setSaveMessage(errorMessage(error, "Could not save this EQ.")); }
   }
@@ -395,12 +433,26 @@ export default function EarTuningPage() {
     <section className="ear-card" aria-labelledby="ear-listen" data-ear-player="finder" onKeyDown={playbackKeys} tabIndex={0}>
       <div className="ear-step"><AudioLines size={19} aria-hidden="true"/><h2 id="ear-listen">1. Find a peak or dip</h2></div>
       <details className="ear-setup">
-        <summary>Reference sound · {mode === "manual" ? "Manual adjustments only" : currentBase ? target.name : "Target setup"}</summary>
+        <summary>Reference sound · {referenceName ?? { manual: "Manual adjustments only", target: "Target setup", saved: "Saved EQ setup" }[mode]}</summary>
       <fieldset className="ear-mode">
         <legend>Reference sound</legend>
         <label><input type="radio" name="ear-base" checked={mode === "manual"} onChange={() => { changeSetup(); setMode("manual"); }}/> Manual adjustments only</label>
         <label><input type="radio" name="ear-base" checked={mode === "target"} onChange={() => { changeSetup(); setMode("target"); }}/> Fit a target, then add my changes</label>
+        <label><input type="radio" name="ear-base" checked={mode === "saved"} onChange={() => { changeSetup(); setMode("saved"); }}/> Use a saved EQ</label>
       </fieldset>
+      {mode === "saved" && <div className="ear-base">
+        <label>Saved EQ<select value={selectedPreset?.id ?? ""} disabled={!presets.length && !selectedPreset} onChange={event => choosePreset(event.target.value)}>
+          <option value="">Choose an EQ</option>
+          {selectedPreset && !presets.some(row => row.id === selectedPreset.id) && <option value={selectedPreset.id}>{selectedPreset.name}</option>}
+          {presets.map(row => <option key={row.id} value={row.id}>{row.id === selectedPreset?.id ? selectedPreset.name : row.name}</option>)}
+        </select></label>
+        <label>Headphone measurement (optional)<select value={measurement?.id ?? ""} onChange={event => setMeasurementId(event.target.value)}>
+          <option value="">EQ response only</option>
+          {measurements.map(row => <option key={row.id} value={row.id}>{row.name}</option>)}
+        </select></label>
+        {!presets.length && !selectedPreset && <p>Save an EQ in <Link href="/preference-tuning">Preference Tuning</Link> or import a preset in the <Link href="/music-library">Music library</Link>.</p>}
+        {selectedPreset && <p>A headphone measurement lets you see how the EQ and your edits change its response.</p>}
+      </div>}
       {mode === "target" && <div className="ear-base">
         <label>Saved measurement<select value={measurementId} onChange={event => { changeSetup(); setMeasurementId(event.target.value); }}>
           <option value="">Choose headphones or IEMs</option>
@@ -461,7 +513,7 @@ export default function EarTuningPage() {
           }}/>
         </label>
       </div>
-      {!canAudition && <p>Prepare a reference EQ under Reference sound to start listening.</p>}
+      {!canAudition && <p>{mode === "saved" ? "Choose a saved EQ under Reference sound to start listening." : "Prepare a reference EQ under Reference sound to start listening."}</p>}
       <p className="ear-help">Volume starts at 10% each visit. With this player focused, Space plays or stops the sound and the arrow keys change frequency.</p>
       {playing && <div className="ear-signal">
         <meter min={0} max={100} value={Math.max(0, 100 + 20 * Math.log10(Math.max(outputPeak, .00001)))} aria-label="Browser audio output level"/>
@@ -474,7 +526,7 @@ export default function EarTuningPage() {
         </select>
       </label>}
       {mode === "manual" && measurements.length === 0 && <p className="ear-help"><Link href="/preference-tuning">Add a headphone measurement in Tuning</Link> to show its response here.</p>}
-      <FrequencyNavigator frequency={hz} points={measurement?.points} editor={editor} onSeek={seekFrequency}/>
+      <FrequencyNavigator frequency={hz} points={measurement?.points} referenceFilters={referenceFilters} editor={editor} onSeek={seekFrequency}/>
       {sweepAvailable && <div className="ear-sources" role="group" aria-label="Check nearby pitches">
         {pitchOffsets.map(({ label, octaves }) => {
           const frequency = boundHz(pitchReference * 2 ** octaves);
@@ -499,10 +551,12 @@ export default function EarTuningPage() {
     <section className="ear-card" aria-labelledby="ear-adjust">
       <div className="ear-step"><SlidersHorizontal size={19} aria-hidden="true"/><h2 id="ear-adjust">2. Adjust and compare</h2></div>
       <p>Peaks start with a small cut and dips start with a small boost. Check the result with full music and the headphones seated as you normally wear them.</p>
-      <FrequencyNavigator frequency={hz} points={basePlot} legendLabel={basePlot ? "Reference EQ" : "Flat EQ reference"} editor={editor}/>
-      <div className="ear-sources ear-compare" role="group" aria-label="Compare before and after adjustments">
-        <button type="button" disabled={!adjustments.length} aria-pressed={bypass} onClick={() => setBypass(true)}>Before adjustments</button>
-        <button type="button" disabled={!adjustments.length} aria-pressed={!bypass} onClick={() => setBypass(false)}>After adjustments</button>
+      <FrequencyNavigator frequency={hz} points={referenceFilters ? measurement?.points : undefined}
+        referenceFilters={referenceFilters} legendLabel="Flat EQ reference" editor={editor}/>
+      <div className="ear-sources ear-compare" role="group" aria-label="Compare playback">
+        {referenceName && <button type="button" aria-pressed={comparison === "raw"} onClick={() => setComparison("raw")}>Raw headphones</button>}
+        <button type="button" disabled={!canAudition || (!referenceName && !adjustments.length)} aria-pressed={comparison === "reference"} onClick={() => setComparison("reference")}>{referenceName ? "Reference EQ" : "Before adjustments"}</button>
+        <button type="button" disabled={!canAudition || (!referenceName && !adjustments.length)} aria-pressed={comparison === "adjusted"} onClick={() => setComparison("adjusted")}>{referenceName ? "EQ + adjustments" : "After adjustments"}</button>
       </div>
       {adjustments.length === 0 && <p>Mark a peak or dip to edit its frequency, strength, and width here.</p>}
       {adjustments.map((row, index) => {
@@ -528,10 +582,11 @@ export default function EarTuningPage() {
       <div className="ear-step"><Save size={19} aria-hidden="true"/><h2 id="ear-save">3. Save your EQ</h2></div>
       <label className="ear-name">Preset name<input type="text" value={name} maxLength={100} placeholder="My headphone EQ" onChange={event => setName(event.target.value)}/></label>
       <div className="ear-save-actions">
-        <button type="button" className="ear-primary" disabled={!canSave} onClick={() => output()}>Save EQ to {PERSONAL_AREA_TITLE}</button>
-        <button type="button" disabled={!canSave} onClick={() => output(true)}>Download EQ TXT</button>
+        <button type="button" className="ear-primary" disabled={!canExport || !fitsCollection} onClick={() => output()}>Save EQ to {PERSONAL_AREA_TITLE}</button>
+        <button type="button" disabled={!canExport} onClick={() => output(true)}>Download EQ TXT</button>
         <Link href="/shootout?tab=eqs">View saved EQs</Link>
       </div>
+      {canExport && !fitsCollection && <p>{PERSONAL_AREA_TITLE} supports up to {LIBRARY_EQ_FILTER_LIMIT} filters per preset. Download the EQ TXT to keep all filters.</p>}
       <p>Saved EQs are available in Tuning and the Music library. They sync when Account Sync is enabled on an approved browser.</p>
       {saveMessage && <p className="ear-status" role="status">{saveMessage}</p>}
     </section>

@@ -8,27 +8,33 @@ import { safeChannelMatch } from "./channel-match-export";
 
 export type LibraryEq = { fitter?: FitterSettings; engine?: "peqdb" | "legacy"; engineVersion?: string; id: string; name: string; filters: PeqFilter[]; preamp: number; source: string; measurementId?: string; headphone?: string; channelMatch?: ChannelMatch; createdAt?: number; updatedAt?: number; target?: { id?: string; name: string; points: Point[] } };
 export const LIBRARY_EQ_KEY = "target-lab-library-eqs-v1";
+export const LIBRARY_EQ_FILTER_LIMIT = 40;
 // Headroom depends only on the filters. Keep validation on every read, while
 // avoiding the three-rate frequency sweep for unchanged presets and UI edits.
 const headroomCache = new Map<string, number>();
 const savedTime = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value > 0 && value <= 8.64e15 ? value : undefined;
 
-export function safeLibraryEq(value: LibraryEq): LibraryEq {
-  if (!Array.isArray(value.filters) || value.filters.length < 1 || value.filters.length > 40 ||
-    value.filters.some(f => !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || !Number.isFinite(f.hz) || f.hz < 20 || f.hz > 20000 || !Number.isFinite(f.gain) || Math.abs(f.gain) > 24 || !Number.isFinite(f.q) || f.q < .1 || f.q > 20)) {
-    throw new Error("This EQ needs 1–40 valid peak or shelf filters.");
-  }
-  if (!Number.isFinite(value.preamp) || value.preamp > 0 || value.preamp < -60) throw new Error("The EQ preamp is invalid.");
+export function libraryEqPreamp(filters: PeqFilter[], requestedPreamp: number) {
+  if (!Number.isFinite(requestedPreamp) || requestedPreamp > 0 || requestedPreamp < -60) throw new Error("The EQ preamp is invalid.");
   // Recalculate headroom even for downloaded presets. An extra 1 dB protects against intersample peaks.
-  const key = JSON.stringify(value.filters.map(f => [f.type ?? "PK", f.hz, f.gain, f.q]));
+  const key = JSON.stringify(filters.map(f => [f.type ?? "PK", f.hz, f.gain, f.q]));
   let headroom = headroomCache.get(key);
   if (headroom === undefined) {
-    headroom = -Math.ceil((Math.max(0, peakBoost(value.filters)) + 1.5) * 10) / 10;
+    headroom = -Math.ceil((Math.max(0, peakBoost(filters)) + 1.5) * 10) / 10;
     if (headroomCache.size >= 128) headroomCache.delete(headroomCache.keys().next().value!);
     headroomCache.set(key, headroom);
   }
-  const preamp = Math.min(value.preamp, headroom);
+  const preamp = Math.min(requestedPreamp, headroom);
   if (preamp < -60) throw new Error("These filters need more than 60 dB of headroom. Reduce their boosts before saving.");
+  return preamp;
+}
+
+export function safeLibraryEq(value: LibraryEq): LibraryEq {
+  if (!Array.isArray(value.filters) || value.filters.length < 1 || value.filters.length > LIBRARY_EQ_FILTER_LIMIT ||
+    value.filters.some(f => !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || !Number.isFinite(f.hz) || f.hz < 20 || f.hz > 20000 || !Number.isFinite(f.gain) || Math.abs(f.gain) > 24 || !Number.isFinite(f.q) || f.q < .1 || f.q > 20)) {
+    throw new Error("This EQ needs 1–40 valid peak or shelf filters.");
+  }
+  const preamp = libraryEqPreamp(value.filters, value.preamp);
   return { ...(validFitter(value.fitter) ? {fitter:{...value.fitter}} : {}), ...(["peqdb", "legacy"].includes(value.engine ?? "") ? { engine: value.engine, engineVersion: String(value.engineVersion ?? "").slice(0, 160) } : {}), id: String(value.id).slice(0, 100), name: String(value.name).slice(0, 100), source: String(value.source).slice(0, 100),
     filters: value.filters.map(f => ({ ...(f.type ? { type: f.type } : {}), hz: f.hz, gain: f.gain, q: f.q })), preamp,
     measurementId: value.measurementId ? String(value.measurementId).slice(0, 100) : undefined,

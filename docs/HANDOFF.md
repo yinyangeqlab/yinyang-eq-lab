@@ -1,9 +1,17 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update165**, source `658403035df3bcd207f5297517368419de898917`.
+Recorded deployment: **update166**, source `8c4a50bb2da689a3947d84240b47b9128dc67863`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](../LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update166
+
+Peak & Dip Finder can start from a saved EQ or a target fit. Select a headphone measurement to see the raw, reference EQ and adjusted responses together. Hear boosts and cuts as you edit, and switch between raw playback, reference EQ and the adjusted response.
+
+All 125 selected release checks passed. Brave verified saved EQ playback, the expected live gain changes, and A/B switching on the packaged build. The deployed Finder assets matched that build. Encrypted source-only recovery passed independent reconstruction and hosted validation.
+
+[Update166 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update166) · [Deployment verification](releases/update166-verification.json) · [Recovery verification](releases/update166-recovery-verification.json)
 
 ## Update165
 

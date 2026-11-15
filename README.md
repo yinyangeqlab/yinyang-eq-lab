@@ -8,7 +8,7 @@
 
 A free listening experiment in headphone EQ. Compare target curves blind on your own headphones, find the ones you actually prefer, and help test how much listeners agree, repeat themselves, and differ.
 
-**Published source · update165** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
+**Published source · update166** — [Version notes](https://yinyangeq.com/version) · [Keyboard shortcuts and help](https://yinyangeq.com/shortcuts)
 
 **[Try it at yinyangeq.com](https://yinyangeq.com) · [Report a bug](https://github.com/yinyangeqlab/yinyang-eq-lab/issues/new)**
 
@@ -18,6 +18,8 @@ A free listening experiment in headphone EQ. Compare target curves blind on your
 
 
 The historical demo videos have been retired. The remaining screenshots show the October 17, 2026 interface.
+
+Update166 adds saved EQ references, three response curves, and live boost and cut adjustments to Peak & Dip Finder. [Update166 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update166)
 
 Update165 makes Target match the default for generated EQ exports in Preference Tuning. Lower boost remains available. [Update165 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update165)
 
