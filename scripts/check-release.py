@@ -60,8 +60,9 @@ public_infra = {
     )
 } | {"infra/cost-guard/worker.mjs", "infra/cost-guard/policy.mjs"}
 # This release evidence contains disposable, erased fixture IDs, never credentials.
+public_evidence_root = Path("docs/verification/continue-button-release")
 public_evidence = {
-    "artifacts/continue-button-release/" + name for name in (
+    (public_evidence_root / name).as_posix() for name in (
         "REPORT.md", "assets.log", "build.log", "deployment.log", "erasure-verification.json",
         "live-desktop.png", "live-flow-events.json", "live-mobile.png", "live-verification.json",
         "no-drift.log", "source-scope.json", "types.log",
@@ -88,7 +89,8 @@ for (metadata, _), rel in zip(entries, paths):
     name = rel.name.lower()
     parts = {part.lower() for part in rel.parts}
     if (
-        (parts & blocked_parts and rel.as_posix() not in public_infra | public_evidence)
+        (parts & blocked_parts and rel.as_posix() not in public_infra)
+        or (rel.is_relative_to(public_evidence_root) and rel.as_posix() not in public_evidence)
         or rel.parts[0] in {"private", "archive", "recovery-inputs", ".recovery-local"}
         or name in blocked_names
         or name.startswith(".env")

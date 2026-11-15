@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "8a3ae1c88265641de43b9c18bd4524ed98be2729",
+  "baseRevision": "44b7c1590336eea1df2b7117d72531d4884a09e7",
   "recordedLiveUpdate": 170,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -81,18 +81,8 @@
       "executable": false
     },
     {
-      "path": "PULUMI_DEPLOYMENT.md",
-      "sha256": "afb416bc96354a7803984355e23f29f744fcd0eab66087820b0623d2b3b1dcaf",
-      "executable": false
-    },
-    {
       "path": "README.md",
-      "sha256": "5b7d3aed58f73ab06401909415291a5699919928cebce01f9198d8301cb41847",
-      "executable": false
-    },
-    {
-      "path": "RESEARCH_PROTOCOL.md",
-      "sha256": "e1fd8dea96ff35d93449778007b3bdfc7b793b05f0285c8729f9e1c65ba44e85",
+      "sha256": "6c78ad31825938518d24d6a60107c46c14a52963b5d56c9df87053d4093e08d4",
       "executable": false
     },
     {
@@ -853,66 +843,6 @@
     {
       "path": "app/welcome.css",
       "sha256": "312b4231649fb7d75252fc8ccb9dddc51eef4785409cf79b7016c251d4d0da2a",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/REPORT.md",
-      "sha256": "1d35275e999e74f33b11d21ed67fa7af2d4a14147056bf518f861a68a8a5da5e",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/assets.log",
-      "sha256": "4e36ee6a0f6cf10dd9329c8b9a433f1828daa20fb7e558f52da6b5d54766bb9d",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/build.log",
-      "sha256": "053a6aa8018b83b0c430d02880f017d6da2351aeef8ec61c15e070ef2d50d3b2",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/deployment.log",
-      "sha256": "04fc38ec2d8af78e6725e09d378cc45781c9e369d0ce636cb13a72b93ba49fbe",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/erasure-verification.json",
-      "sha256": "3725008f52d5522637ecb1f33b1b5d94cc5f6fae9e6525984b22c7f52b1a9f87",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/live-desktop.png",
-      "sha256": "c82bb31844bc5e3e36e3971c167923cc87e17020a743041ed2436d9269dfaa71",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/live-flow-events.json",
-      "sha256": "124239b9d2eb2b19fdb74118cf18cfbad94e6ea730caff38aa066a19797ac5c3",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/live-mobile.png",
-      "sha256": "09b8dc340281d7bcdf405d2cb7ab4e615fd7e6a80d549fc0e59139b17d9a5884",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/live-verification.json",
-      "sha256": "355929ee4fef54d1313f85b9111cef52c9df9978359d015faf69bd7f4482ec69",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/no-drift.log",
-      "sha256": "48d16ac3bd4503601b5dc0a5a54331fb0b119f1ceabbfe1e8a73ad1517e50405",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/source-scope.json",
-      "sha256": "1896bf367c80fbf35850b75d27f4758385bd8c1bbb41c5d8dc98b2c1637bd9d9",
-      "executable": false
-    },
-    {
-      "path": "artifacts/continue-button-release/types.log",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "executable": false
     },
     {
@@ -2366,6 +2296,11 @@
       "executable": false
     },
     {
+      "path": "docs/deployment/PULUMI_DEPLOYMENT.md",
+      "sha256": "e3bb223cbde4d36fd5d0a070178652ec8c9071a2efb90f5664c812c571d1d698",
+      "executable": false
+    },
+    {
       "path": "docs/history/foundation-20261031/README.md",
       "sha256": "cf4238684d6191fa6097d6cd42171e0399740c98d26c4eaaa8a04f3678b227c2",
       "executable": false
@@ -3037,7 +2972,12 @@
     },
     {
       "path": "docs/research/README.md",
-      "sha256": "a0f5d0a08fcb7ec44547dc88a7b62cbc69888258a8cbcd8a2f772431f3ba8459",
+      "sha256": "de22762fb9016a815517fd1338b6fbff48b53855150aafcc0dca7c0f228fdf99",
+      "executable": false
+    },
+    {
+      "path": "docs/research/RESEARCH_PROTOCOL.md",
+      "sha256": "e1fd8dea96ff35d93449778007b3bdfc7b793b05f0285c8729f9e1c65ba44e85",
       "executable": false
     },
     {
@@ -3203,6 +3143,66 @@
     {
       "path": "docs/skills/yinyangeq-release-versioning/SKILL.md",
       "sha256": "9b1b779af26c05fd5f7a52475eba7cf41af5e65c36e1992231859cf3aed4a409",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/REPORT.md",
+      "sha256": "1d35275e999e74f33b11d21ed67fa7af2d4a14147056bf518f861a68a8a5da5e",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/assets.log",
+      "sha256": "4e36ee6a0f6cf10dd9329c8b9a433f1828daa20fb7e558f52da6b5d54766bb9d",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/build.log",
+      "sha256": "053a6aa8018b83b0c430d02880f017d6da2351aeef8ec61c15e070ef2d50d3b2",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/deployment.log",
+      "sha256": "04fc38ec2d8af78e6725e09d378cc45781c9e369d0ce636cb13a72b93ba49fbe",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/erasure-verification.json",
+      "sha256": "3725008f52d5522637ecb1f33b1b5d94cc5f6fae9e6525984b22c7f52b1a9f87",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/live-desktop.png",
+      "sha256": "c82bb31844bc5e3e36e3971c167923cc87e17020a743041ed2436d9269dfaa71",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/live-flow-events.json",
+      "sha256": "124239b9d2eb2b19fdb74118cf18cfbad94e6ea730caff38aa066a19797ac5c3",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/live-mobile.png",
+      "sha256": "09b8dc340281d7bcdf405d2cb7ab4e615fd7e6a80d549fc0e59139b17d9a5884",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/live-verification.json",
+      "sha256": "355929ee4fef54d1313f85b9111cef52c9df9978359d015faf69bd7f4482ec69",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/no-drift.log",
+      "sha256": "48d16ac3bd4503601b5dc0a5a54331fb0b119f1ceabbfe1e8a73ad1517e50405",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/source-scope.json",
+      "sha256": "1896bf367c80fbf35850b75d27f4758385bd8c1bbb41c5d8dc98b2c1637bd9d9",
+      "executable": false
+    },
+    {
+      "path": "docs/verification/continue-button-release/types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "executable": false
     },
     {
@@ -5127,7 +5127,7 @@
     },
     {
       "path": "scripts/check-release.py",
-      "sha256": "5acb8ae7d3abab057ccaf6cad2e26f24be8e3717ea0ea635a0028be2000f3947",
+      "sha256": "8a524072cdc77cf5aa912ae91471728430168f9dddf878f938c1ada48df2b184",
       "executable": false
     },
     {

@@ -1,6 +1,6 @@
 # Rebuilding and deploying the existing live application
 
-Current live release: update81. Read LIVE_STATE.md, LIVE_RELEASE.json, docs/HANDOFF.md and docs/REBUILD.md first. The rebuild audit does not deploy anything.
+This guide was written for update81. Before using it, read the [recorded live state](../../LIVE_STATE.md), [release manifest](../../LIVE_RELEASE.json), [current handoff](../HANDOFF.md) and [rebuild guide](../REBUILD.md). The rebuild audit does not deploy anything.
 
 For a public clone, install with `npm ci`, verify `node scripts/check-live-source.mjs --source-only`, build with `npm run build`, then package preview assets with `node scripts/package-static-assets.mjs --public-only`. This preview package must not be deployed.
 
