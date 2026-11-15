@@ -26,7 +26,7 @@ try{
  test('pack and verify exact external input set',()=>{pack({publicRoot:pub,database:clean,out:bundle,release,attestation:review});assert.equal(verify(bundle,{release}).files.length,2);writeFileSync(review,JSON.stringify({databaseSha256:sha(clean),reviewedAt:new Date().toISOString(),source:'current-live-export',deletedRecordsExcluded:true}))});
  test('bundle overwrite rejected',()=>assert.throws(()=>pack({publicRoot:pub,database:clean,out:bundle,release,attestation:review}),/overwrite/));
  test('unreviewed database rejected',()=>assert.throws(()=>pack({publicRoot:pub,database:input,out:resolve(dir,'bad-auth'),release,attestation:review}),/authentication|credentials/));
- const checkout=resolve(dir,'checkout');mkdirSync(checkout);writeFileSync(resolve(checkout,'package.json'),'{}');writeFileSync(resolve(checkout,'wrangler.local.json'),'{}');
+ const checkout=resolve(dir,'checkout');mkdirSync(checkout);writeFileSync(resolve(checkout,'package.json'),'{}');mkdirSync(resolve(checkout,'scripts/recovery'),{recursive:true});copyFileSync(resolve(root,'scripts/recovery/wrangler.local.json'),resolve(checkout,'scripts/recovery/wrangler.local.json'));
  test('restore preserves data with fresh generated secrets',()=>{const report=restore({bundle,checkout,attestation:review,release});assert(report.freshCredentials);assert.match(readFileSync(resolve(checkout,'.dev.vars'),'utf8'),/ABUSE_RATE_SECRET=[a-f0-9]{64}/);const restored=new DatabaseSync(resolve(checkout,'.recovery-local/database.sqlite'));assert.equal(restored.prepare('SELECT count(*) n FROM privacy_sessions').get().n,0);restored.close()});
  test('existing local state is protected',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/fresh checkout/));
  const reviewData=JSON.parse(readFileSync(review));writeFileSync(review,JSON.stringify({...reviewData,reviewedAt:'2000-01-01T00:00:00Z'}));test('stale deletion review rejected',()=>assert.throws(()=>restore({bundle,checkout,attestation:review,release}),/Fresh owner/));writeFileSync(review,JSON.stringify(reviewData));
@@ -40,6 +40,19 @@ writeFileSync(manifestPath,JSON.stringify({...m,files:[...m.files,{path:'../esca
  rmSync(resolve(bundle,'public/asset.txt'));symlinkSync(resolve(pub,'asset.txt'),resolve(bundle,'public/asset.txt'));test('symlink substitution rejected',()=>assert.throws(()=>verify(bundle,{release}),/Symlink/));rmSync(resolve(bundle,'public/asset.txt'));copyFileSync(resolve(pub,'asset.txt'),resolve(bundle,'public/asset.txt'));
  const gitParent=resolve(dir,'git');mkdirSync(resolve(gitParent,'.git'),{recursive:true});writeFileSync(resolve(gitParent,'.git/HEAD'),'ref: refs/heads/main');test('private bundle inside Git refused',()=>assert.throws(()=>pack({publicRoot:pub,database:clean,out:resolve(gitParent,'bundle'),release,attestation:review}),/outside every Git/));
  const sql=resolve(dir,'portable.sql');dumpDatabase(clean,sql);const round=new DatabaseSync(resolve(dir,'round.sqlite'));test('portable database SQL roundtrip',()=>{round.exec(readFileSync(sql,'utf8'));assert.equal(round.prepare('PRAGMA integrity_check').get().integrity_check,'ok');assert.equal(round.prepare('SELECT count(*) n FROM private_tester_invites').get().n,1)});round.close();
+ test('D1 batch restores related rows with foreign keys enforced',()=>{
+  const sql=resolve(dir,'d1.sql');
+  dumpDatabase(clean,sql,{deferForeignKeys:true});
+  const local=new DatabaseSync(':memory:');
+  try{
+   local.exec('PRAGMA foreign_keys=ON; BEGIN;');
+   local.exec(readFileSync(sql,'utf8'));
+   local.exec('COMMIT;');
+   assert.equal(local.prepare('PRAGMA foreign_keys').get().foreign_keys,1);
+   assert.deepEqual(local.prepare('PRAGMA foreign_key_check').all(),[]);
+   assert.equal(local.prepare("SELECT count(*) n FROM account_sync_parts WHERE version_id='committed-transfer'").get().n,1);
+  }finally{local.close()}
+ });
  test('guard keeps rule identity checks for new bindings',()=>{const expression='(http.host eq "recovery.invalid")';assertRule({action:'block',expression,description:DESCRIPTION},expression);assert.throws(()=>assertRule({action:'block',expression,description:DESCRIPTION}),/identity/);assertRule({action:'block',expression:EXPRESSION,description:DESCRIPTION})});
  console.log(`${passed} recovery checks passed; synthetic data only.`);
 }finally{rmSync(dir,{recursive:true,force:true})}

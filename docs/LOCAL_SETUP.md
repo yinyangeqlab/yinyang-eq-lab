@@ -31,7 +31,7 @@ Back up existing state first and determine which migrations have already been ap
 For a local database already current through `0015`, apply only the new additive attachment migration:
 
 ```sh
-npx wrangler d1 execute DB --local --config wrangler.local.json --persist-to .wrangler/state --file drizzle/0016_measurement_file_chunks.sql
+npx wrangler d1 execute DB --local --config scripts/recovery/wrangler.local.json --persist-to .wrangler/state --file drizzle/0016_measurement_file_chunks.sql
 ```
 
 For an older database, apply its missing SQL files individually in filename order. The journal no longer references the nonexistent `0011_research_records.sql`; it lists the actual files. Historical filenames and SQL are retained. Do not treat repaired metadata as permission to replay previously applied migrations or automatically convert an existing database's migration bookkeeping.

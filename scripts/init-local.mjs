@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const wrangler = fileURLToPath(new URL("../node_modules/wrangler/bin/wrangler.js", import.meta.url));
 const run = args => {
-  const result = spawnSync(process.execPath, [wrangler, "d1", "execute", "DB", "--local", "--config", "wrangler.local.json", "--persist-to", ".wrangler/state", ...args],
+  const result = spawnSync(process.execPath, [wrangler, "d1", "execute", "DB", "--local", "--config", "scripts/recovery/wrangler.local.json", "--persist-to", ".wrangler/state", ...args],
     { cwd: root, encoding: "utf8", env: { ...process.env, WRANGLER_SEND_METRICS: "false", WRANGLER_LOG_PATH: ".wrangler/logs" } });
   if (result.status !== 0) throw new Error(result.stderr || result.stdout || result.error?.message || `Local D1 initialization failed (${result.signal || result.status}).`);
   return result.stdout;

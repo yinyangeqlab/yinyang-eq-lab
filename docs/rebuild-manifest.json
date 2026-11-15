@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "0e2a8938ee7cde1040a912ffbe53e8bb4be7cc77",
+  "baseRevision": "60e100bff63df5a36e653ebd27a482b8577d460d",
   "recordedLiveUpdate": 170,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -38,11 +38,6 @@
     {
       "path": "AGENTS.md",
       "sha256": "cc099269217927b0b88e5deea1722571d26f0efa20d795b6388d9a4cb132b468",
-      "executable": false
-    },
-    {
-      "path": "COPYRIGHT.md",
-      "sha256": "97872efad52418b5628b2b2a51f09188cce4e1599f1c80e5e274370c158bd0e7",
       "executable": false
     },
     {
@@ -876,13 +871,8 @@
       "executable": false
     },
     {
-      "path": "cloudflare-env.d.ts",
-      "sha256": "8faa7435ac2d15320fad8b41edfbad939a4099f2f5d268785c2a196204e3dade",
-      "executable": false
-    },
-    {
       "path": "components.json",
-      "sha256": "31f4ca67a4a62572571003d3d5aac85ee6fbfca67a192924bac6b168d95e98fd",
+      "sha256": "9257d8c15437060d511ca24dadd026b85cef44361ff6e8baad3c7f72b3b0d20e",
       "executable": false
     },
     {
@@ -1183,6 +1173,11 @@
     {
       "path": "components/headphone-picker.tsx",
       "sha256": "336a1befccc00bb733276aab4b1a084fedcb30601100973146ebe6b0f6e58414",
+      "executable": false
+    },
+    {
+      "path": "components/hooks/use-mobile.ts",
+      "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
       "executable": false
     },
     {
@@ -1872,7 +1867,7 @@
     },
     {
       "path": "components/ui/sidebar.tsx",
-      "sha256": "4a8d73e7730a2b1fcecfca31299ed26db65c2307b84197a59c6ec7c01c7ad28e",
+      "sha256": "ded7ae806646f504a82306aaf491c9ad342e562c2702e48f12b31e810504ebbf",
       "executable": false
     },
     {
@@ -2076,6 +2071,11 @@
       "executable": false
     },
     {
+      "path": "db/drizzle.config.ts",
+      "sha256": "af081f7384aaeb0082cf422e29f139d137ca2f6a57c69b2c37b9fb1f8479867b",
+      "executable": false
+    },
+    {
       "path": "db/index.ts",
       "sha256": "dc7610b00b918e0ffff1360a63626f16655ced3064b2eaf96095a4101fb14bcd",
       "executable": false
@@ -2202,7 +2202,7 @@
     },
     {
       "path": "docs/LOCAL_SETUP.md",
-      "sha256": "b192bf74e9f0cbcc0354c2b5d711d9bafdc96efb5c494289421fca68ab7e9350",
+      "sha256": "5b970f94b3b3e666d8d503a12a4c2c078501f157ec5d8d7b0ca87dd2a1b81b55",
       "executable": false
     },
     {
@@ -2338,6 +2338,11 @@
     {
       "path": "docs/jason-music-analysis.json",
       "sha256": "04cc3a7f722041abc0d70a45d1452f370cec51ee4396972a41b1be79c188cf91",
+      "executable": false
+    },
+    {
+      "path": "docs/legal/COPYRIGHT.md",
+      "sha256": "bd266a0c8c53349cd8e0ab6d7d470c5cc8fa56e0eb9b9782f895f134ff9f4f28",
       "executable": false
     },
     {
@@ -3211,11 +3216,6 @@
       "executable": false
     },
     {
-      "path": "drizzle.config.ts",
-      "sha256": "af081f7384aaeb0082cf422e29f139d137ca2f6a57c69b2c37b9fb1f8479867b",
-      "executable": false
-    },
-    {
       "path": "drizzle/0000_targets_and_votes.sql",
       "sha256": "c52a6c3aa4783c1a075ac9c692dd3cdf0e16e879c1946b62325bc6390319e578",
       "executable": false
@@ -3567,7 +3567,7 @@
     },
     {
       "path": "eslint.config.mjs",
-      "sha256": "2587550154d8691cc7f4dfc0bf8adfe4c1dd74772c484c84249032f36bd89e61",
+      "sha256": "93689d70b5314a1770b497740bdc17f279c46ff4bf514db53aac49aaf05b31d9",
       "executable": false
     },
     {
@@ -3633,11 +3633,6 @@
     {
       "path": "experiments/autoeq/worker.ts",
       "sha256": "be2482100c8e446b85f745572be0d88c71c4b52e26ba17239228206a8a45fc88",
-      "executable": false
-    },
-    {
-      "path": "hooks/use-mobile.ts",
-      "sha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
       "executable": false
     },
     {
@@ -3888,6 +3883,11 @@
     {
       "path": "lib/channel-match-export.ts",
       "sha256": "1c75fc9d0c40861b1b8edd9873797d31ba3ab08da9bcafdbd18656aa0ce7ebd7",
+      "executable": false
+    },
+    {
+      "path": "lib/cloudflare-env.d.ts",
+      "sha256": "8faa7435ac2d15320fad8b41edfbad939a4099f2f5d268785c2a196204e3dade",
       "executable": false
     },
     {
@@ -4587,7 +4587,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "507c1856412b46d4d7daf0bda19e49da6e5bf0ad523bb3e516d1c8570e730be2",
+      "sha256": "77cb8341b961e9293e93ed8e546ef39cc705b9c2f5880827fc9ea2f2719270a0",
       "executable": false
     },
     {
@@ -5802,7 +5802,7 @@
     },
     {
       "path": "scripts/init-local.mjs",
-      "sha256": "1f1a47a7afece12bf9542bc8f8c5a997570fd6a0edbdedfd90768a6d99ecc0cd",
+      "sha256": "74ef2d6e09e635941f50d9b2cb69ee0ca08585c406f51c89557c71bd2778f061",
       "executable": false
     },
     {
@@ -5902,12 +5902,12 @@
     },
     {
       "path": "scripts/recovery/prepare-local-worker.mjs",
-      "sha256": "3a2dfe374cd59140899c675e04500eee84ab2c34a8b1deb47995ad1252a87372",
+      "sha256": "e283245729cd6168550e2b54ecfbf334f96847ad1821abd20491df00a842ebae",
       "executable": false
     },
     {
       "path": "scripts/recovery/recovery.mjs",
-      "sha256": "171f88c22aab9353697e89384b11be857a05a1c3ecf9ef34232b1aa1aad5b398",
+      "sha256": "8f3918f4b9c8ef46999510e4e61048eb0d270558fb3923d8b7a85a54318e2a67",
       "executable": false
     },
     {
@@ -5917,7 +5917,12 @@
     },
     {
       "path": "scripts/recovery/test-recovery.mjs",
-      "sha256": "1edc71caae2dcaf69093bbf8ea2ca11f139ab4015a8415bbf0b06529f87c5d1b",
+      "sha256": "712f492b280bbba87612d6760a5fd3710d4545bb3c07d8c85910c1aaef9f3a8d",
+      "executable": false
+    },
+    {
+      "path": "scripts/recovery/wrangler.local.json",
+      "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d",
       "executable": false
     },
     {
@@ -6033,11 +6038,6 @@
     {
       "path": "vite.config.ts",
       "sha256": "ba683343bc49282626c02679e788ac37dea8d9a1fb12900dad7fb72d86fa55f8",
-      "executable": false
-    },
-    {
-      "path": "wrangler.local.json",
-      "sha256": "a8a15f598be206cd784361ca4a14cecda2fa4d1fb41c8b33d046179e2a73f87d",
       "executable": false
     }
   ]
