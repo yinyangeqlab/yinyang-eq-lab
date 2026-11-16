@@ -275,7 +275,14 @@ export const releaseHistory: readonly ReleaseNotes[] = [
     update: 173, date: "2026-11-15", title: "Preference Tuning playback", changes: update173Changes,
     github: { commit: "d4757320e52b49ea4333eda337686c20c3ead032", releaseTag: "update173" },
   },
-  { update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: candidateChanges },
+  {
+    update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: candidateChanges,
+    github: {
+      commit: "96377f2570a0746895640cf3571a85f7e9a9a2bb",
+      releaseTag: "update171",
+      refreshRelease: { tag: "update171-sidebar-version-link", label: "Version page refresh on GitHub" },
+    },
+  },
   { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes },
   {
     update: 169, date: "2026-11-15", title: "Target and EQ preset rankings", changes: update169Changes,
