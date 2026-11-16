@@ -25,9 +25,11 @@ if (build.preview) {
   assert.equal(buildLabel, `update${build.update}`);
 }
 assert.ok(candidateChanges.length && new URL(bugReportUrl).searchParams.get('body').includes(buildLabel));
-assert.equal(releaseHistory[0].update, build.preview ? live.update : build.update);
+const recordedBuildUpdate = build.preview ? live.update : build.update;
+assert.ok(releaseHistory.some(entry => entry.update === recordedBuildUpdate));
 assert.ok(releaseHistory.every((entry, i) =>
-  entry.changes.length && (i === 0 || entry.update < releaseHistory[i - 1].update) &&
+  entry.changes.length && (entry.update <= recordedBuildUpdate || entry.github?.releaseTag) &&
+  (i === 0 || entry.update < releaseHistory[i - 1].update) &&
   (!entry.github || (/^[a-f0-9]{40}$/.test(entry.github.commit) &&
     (!entry.github.releaseTag || entry.github.releaseTag === `update${entry.update}`)))));
 if (live.gitSource.publishedSourceCommit) {

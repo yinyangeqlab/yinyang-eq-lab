@@ -11,6 +11,10 @@ export const candidateChanges = [
   "Choose PNG, JPEG, MP4, or WebM in the Landscape only and Flying gear scenes. Wallpaper downloads are for personal use.",
 ] as const;
 
+const update173Changes = [
+  "Preference Tuning keeps music playing after the browser starts the prepared audio.",
+] as const;
+
 const update170Changes = [
   "Glossary & Guides includes a beginner IEM measurement guide with annotated REW screenshots, two AKG comparison plots, and a technical PDF.",
 ] as const;
@@ -267,6 +271,10 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
+  {
+    update: 173, date: "2026-11-15", title: "Preference Tuning playback", changes: update173Changes,
+    github: { commit: "d4757320e52b49ea4333eda337686c20c3ead032", releaseTag: "update173" },
+  },
   { update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: candidateChanges },
   { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes },
   {

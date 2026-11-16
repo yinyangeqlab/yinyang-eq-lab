@@ -1,0 +1,76 @@
+{
+  "update": 174,
+  "sourceCommit": "77b6546a4e4ca339f6d7ece853d81f570d987a4b",
+  "deploymentVerification": {
+    "at": "2026-11-16T08:08:48Z",
+    "update": 174,
+    "revision": "77b6546a4e4ca339f6d7ece853d81f570d987a4b",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "022688175152e3a49d9f70ad8e8d35515b4e15a6",
+    "previousRecoveryEvidence": "docs/releases/update174-version-release-links-recovery-verification.json",
+    "update173HistoryLinkVerifiedWithoutGitHubLookup": true,
+    "exactServerModulesVerified": 381,
+    "publicVersionPageVerified": true,
+    "update173PlaybackReleaseLinkVerified": true,
+    "update173PlaybackCommitLinkVerified": true,
+    "previousPublicReleaseLinksVerified": true,
+    "githubReleaseHttpStatus": 200,
+    "anonymousGateChecks": {
+      "ownerResearchApi": 403,
+      "rawProtectedMedia": 401
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "77b6546a4e4ca339f6d7ece853d81f570d987a4b",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2691,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "build": "update174",
+        "releaseHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update173",
+        "commitHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/d4757320e52b49ea4333eda337686c20c3ead032",
+        "keyboardOpened": true,
+        "keyboardNavigated": true
+      },
+      {
+        "width": 390,
+        "build": "update174",
+        "releaseHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update173",
+        "commitHref": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/d4757320e52b49ea4333eda337686c20c3ead032",
+        "keyboardOpened": true,
+        "keyboardNavigated": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

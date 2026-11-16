@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "c02329d18deea5dfb4b372e2e610686c52fd0431",
+  "baseRevision": "d4757320e52b49ea4333eda337686c20c3ead032",
   "recordedLiveUpdate": 171,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2112,7 +2112,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ea78709bf52992209a41632cb4794b175ffd31e1d330ca09154eb7af5c6891c5",
+      "sha256": "d787738abcca122813ebbc474211db33f68b52cf18bd160de1e25ce44e4550e9",
       "executable": false
     },
     {
@@ -2968,6 +2968,16 @@
     {
       "path": "docs/releases/update173-verification.json",
       "sha256": "9f89fdcb16adf792cd76bb44811ac283d5abc6b2b2a00675d176b89e013a330a",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update174-tuning-playback-release-link-recovery-verification.json",
+      "sha256": "01f860f817b48b869bba52ff8b8d45892df9104059247f9b5d9d2eaaf8e2c373",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update174-tuning-playback-release-link-verification.json",
+      "sha256": "f3b3204dc523fddb17aa48b7afe659dcf9d0143ad188e497e461115c7698968a",
       "executable": false
     },
     {
@@ -4272,7 +4282,7 @@
     },
     {
       "path": "lib/release-history.ts",
-      "sha256": "c3ddd8c00c8e368458fc041f7f9dde875fbe72f206070c8248fc173d8347a127",
+      "sha256": "842bda08f8a6f819bcfddc24d6eccb867deb51a55d9f708784867c71b7c93924",
       "executable": false
     },
     {
@@ -5262,7 +5272,7 @@
     },
     {
       "path": "scripts/check_foundation.mjs",
-      "sha256": "3ae25f48bd39a6e422fe16b161ae46d87f19ddc24b9af79f5fe9db3be378e0e1",
+      "sha256": "fef5e2b6404febaba4dafcaf6df10123e7450b7734424c5cc461e4c62da9c3e7",
       "executable": false
     },
     {
