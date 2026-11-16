@@ -27,7 +27,7 @@ import { useGeneratedEqResults } from "@/lib/use-generated-eq-results";
 import { generateEqCandidates } from "@/lib/eq-candidates";
 import FitterControls from "@/components/fitter-controls";
 import { useFitterSettings } from "@/lib/use-fitter-settings";
-import { FIT_CANDIDATE_COUNT, fitterLabel } from "@/lib/fitter-settings";
+import { FIT_CANDIDATE_COUNT, fitterLabel, type FitterSettings } from "@/lib/fitter-settings";
 import type { AutoEqFit } from "@/lib/autoeq-fit";
 import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from "@/lib/eq-playback";
 import { exportPeq, exportEqualizerApo, exportEasyEffects, exportQudelixGuide, type FinalizedVariant } from "@/lib/preference-finalize";
@@ -65,6 +65,17 @@ function tuningTargetRanking(ranking: TuningRankingResponse) {
     earlier: fallback,
   };
 }
+function previewFitKey(
+  mode: SoundMode,
+  preset: LibraryEq | undefined,
+  measurement: HeadphoneMeasurement | undefined,
+  target: Point[],
+  fitter: FitterSettings,
+  sampleRate: number,
+) {
+  return JSON.stringify([mode, preset?.id, preset?.filters, preset?.preamp, measurement?.points, target, fitter, measurement?.type, sampleRate]);
+}
+
 type GainKey = "sub" | "bass" | "body" | "ear" | "air" | "treble";
 type FilterType = PresetFilter["type"];
 type FocusedFilter = Pick<PresetFilter, "hz" | "gain" | "q">;
@@ -1166,7 +1177,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   }, [matchEnabled, activeMatch]);
   const preparePreviewFit = useCallback(async (current: AudioGraph) => {
     const raw = measurement?.points;
-    const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, raw, normalized, fitter, measurement?.type, current.context.sampleRate]);
+    const key = previewFitKey(soundMode, savedEq, measurement, normalized, fitter, current.context.sampleRate);
     const apply = (baseFilters: AutoEqFit["filters"], preamp: number) => {
       const appliedKey = JSON.stringify([key, eqOn]);
       if (current.appliedFitKey !== appliedKey) {
@@ -1246,7 +1257,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
       const current = ensureGraph();
       if (!current.media) { current.media = current.context.createMediaElementSource(audio); current.media.connect(current.input); }
       setupDynamics(current);
-      const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, measurement?.points, normalized, fitter, current.context.sampleRate]);
+      const key = previewFitKey(soundMode, savedEq, measurement, normalized, fitter, current.context.sampleRate);
       if (!current.fitReady || current.fitKey !== key) {
         void preparePreviewFit(current);
         if (!current.fitReady) { setMessage("Preparing headphone EQ. Press Play when it is ready."); return; }
@@ -1267,7 +1278,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     if (!current?.media || !current.playbackInitialized) {
       audio.pause(); setPlaying(false); setMessage("Press Play music to initialize audio processing."); return;
     }
-    const key = JSON.stringify([soundMode, savedEq?.id, savedEq?.filters, savedEq?.preamp, measurement?.points, normalized, fitter, current.context.sampleRate]);
+    const key = previewFitKey(soundMode, savedEq, measurement, normalized, fitter, current.context.sampleRate);
     if (!current.fitReady || current.fitKey !== key) {
       audio.pause(); setPlaying(false); void preparePreviewFit(current); setMessage("Preparing headphone EQ. Press Play music when it is ready."); return;
     }

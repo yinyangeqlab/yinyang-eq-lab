@@ -16,7 +16,9 @@ const check=(value,message)=>{assert.ok(value,message);checks++;};
  const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='preparePreviewFit')initializer=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(initializer);
  const jobs=[],messages=[],current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},filters:[{}]};
  const state={fitter:{method:"standard",bands:10},AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:[[20,0],[20000,0]]},normalized:[[20,0],[20000,0]],filters:[],soundMode:"target",savedEq:undefined,eqOn:true,setPreparingEq(){},graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage:()=>({}),safeGain(){},setFit(){},setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){const job=deferred();jobs.push(job);signal.addEventListener('abort',()=>job.reject(new DOMException('EQ request cancelled.','AbortError')),{once:true});return job.promise;}};
- const prepare=vm.runInNewContext(ts.transpileModule('('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
+ const key=ast.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text==='previewFitKey');
+ assert.ok(key);
+ const prepare=vm.runInNewContext(ts.transpileModule(key.getText(ast)+';('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
  const old=prepare(current);state.measurement={points:[[20,5],[20000,-2]]};const next=prepare(current);await flush();
  check(messages.length===0,'Superseded Tuning fits never display cancellation errors');jobs[1].resolve([{filters:[],preamp:-1}]);check(await next,'Replacement Tuning fit can succeed');check(await old===false,'Obsolete Tuning fit cannot apply');
 }

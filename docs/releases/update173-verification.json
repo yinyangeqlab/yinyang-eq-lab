@@ -1,0 +1,61 @@
+{
+  "update": 173,
+  "sourceCommit": "6645a56537b19b5568630b4e0f710603b2b727ca",
+  "deploymentVerification": {
+    "at": "2026-11-15T21:47:35.125Z",
+    "update": 173,
+    "revision": "6645a56537b19b5568630b4e0f710603b2b727ca",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "b51a73b072f120f148bca44557d9a6ef55d3f042",
+    "previousRecoveryEvidence": "docs/releases/update172-recovery-verification.json",
+    "exactWorkerModules": 373,
+    "exactTuningClientAssets": 1,
+    "publicVersionAndAnonymousAccessVerified": true,
+    "infrastructureDrift": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "6645a56537b19b5568630b4e0f710603b2b727ca",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2514,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedPlaybackVerified": true,
+    "viewportWidths": [
+      1440,
+      390
+    ],
+    "verifiedWorkflows": [
+      "Curated track playback",
+      "Pause",
+      "Keyboard resume",
+      "Local WAV playback"
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

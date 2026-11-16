@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "72b243acd6b468bac44aa257ac1b8b86e0300f31",
+  "baseRevision": "c02329d18deea5dfb4b372e2e610686c52fd0431",
   "recordedLiveUpdate": 171,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -667,7 +667,7 @@
     },
     {
       "path": "app/preference-tuning/editor.tsx",
-      "sha256": "f983f4386203cc3af81877efcb41ee69304a1931cab1f476a7a0b378d330713b",
+      "sha256": "4ddc696bf2bb77e2f0e18a9fbdd693d63a43d18fe0f9fee2721300c92df33986",
       "executable": false
     },
     {
@@ -2112,7 +2112,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "1a325fe55e60371ee60b8c67994208c308ad65f22dc458ee56fe16d462025015",
+      "sha256": "ea78709bf52992209a41632cb4794b175ffd31e1d330ca09154eb7af5c6891c5",
       "executable": false
     },
     {
@@ -2958,6 +2958,16 @@
     {
       "path": "docs/releases/update171-wallpapers-isolated-recovery-verification.json",
       "sha256": "aa7a21e5777d147f5ee4793224843414f6f571afdb416073c5cdacec725b8660",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update173-recovery-verification.json",
+      "sha256": "8aa0cdd166b4d3abcd094e766e88df978e6c8065094c7f09afafbf2864872efe",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update173-verification.json",
+      "sha256": "9f89fdcb16adf792cd76bb44811ac283d5abc6b2b2a00675d176b89e013a330a",
       "executable": false
     },
     {
@@ -5317,7 +5327,7 @@
     },
     {
       "path": "scripts/check_main_workflows.mjs",
-      "sha256": "99e5e8b94a84614a1fc3d46db56fa2fc4cef7aa69fcde71a00f367d74b37566b",
+      "sha256": "6165d73f39391aceb2c42a56e5ede6ccb8fb7127a9e3d552af1b187e121be5b5",
       "executable": false
     },
     {
@@ -5632,7 +5642,7 @@
     },
     {
       "path": "scripts/check_tuning_unified.mjs",
-      "sha256": "a0060144e7fcf0b68c770f53b0f951f89c8f5939cf7787dea147128f18bb4e3e",
+      "sha256": "93acde8370ebecbe85f86faae2eb20a26320871c349994f3410048f6739cf0f9",
       "executable": false
     },
     {

@@ -103,7 +103,9 @@ for (const invalid of [{format:'txt',filename:'fixture.csv'},{format:'equalizera
 const jobs=[],stages=[],statuses=[],messages=[],fits=[];
 const current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},toneInput:{},toneGain:1};
 const state={fitter:{method:"standard",bands:10},AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:raw},normalized:[[20,0],[20000,0]],filters:added,soundMode:'target',savedEq:undefined,eqOn:true,graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage(_context,_input,_output,filters){stages.push(filters);return{};},safeGain(){},setFit:value=>fits.push(value),setPreparingEq:value=>statuses.push(value),setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});jobs.push({promise,resolve,reject,signal});return promise;}};
-const prepare=vm.runInNewContext(ts.transpileModule('('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
+const key=ast.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text==='previewFitKey');
+assert.ok(key);
+const prepare=vm.runInNewContext(ts.transpileModule(key.getText(ast)+';('+initializer+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
 const pending=prepare(current);check(statuses.at(-1) && !current.fitReady,'Pending fit hides stale predictions and is not ready for playback');
 state.soundMode='saved';state.savedEq=preset;
 check(await prepare(current) && jobs.length===1,'Saved EQ uses stored filters immediately without fitting');
@@ -116,6 +118,11 @@ const retry=prepare(current);check(jobs.length===3,'A failed fit can be retried'
 // The same handler must replace a live fit without pausing its media element.
 let pauses=0,muted=0;state.media.current.pause=()=>pauses++;current.output.gain.setValueAtTime=value=>{if(value===0)muted++;};current.playbackInitialized=true;
 state.fitter={method:'precise',bands:20};const replacement=prepare(current);check(pauses===0&&muted===0,'Refitting live Tuning leaves the verified old audio path playing');jobs.at(-1).resolve([{filters:base,preamp:-8}]);check(await replacement&&current.fitReady,'Replacement becomes ready without another Play action');
+state.measurement={...state.measurement,type:'ie'};
+const differentHeadphoneType=prepare(current);
+check(jobs.length===5 && !current.fitReady,'Changing only the headphone type invalidates the previous fit');
+jobs.at(-1).resolve([{filters:base,preamp:-8}]);
+check(await differentHeadphoneType && current.fitReady,'The fit for the new headphone type becomes playable');
 // Reuse the actual-page harness; shared component slots remain inspectable.
 const harness=fs.readFileSync('scripts/check_main_workflows.mjs','utf8');
 const helper=harness.slice(harness.indexOf('const text='),harness.indexOf('class PlaybackTarget')).replaceAll('import.meta.url',JSON.stringify(new URL('./check_main_workflows.mjs',import.meta.url).href)).replace('focus(){},getBoundingClientRect', 'focus(){},select(){},scrollIntoView(){},getBoundingClientRect');
@@ -335,7 +342,12 @@ class ControlsAudioContext extends EventTarget {
   resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}
 }
 class ControlsWorklet {port={postMessage:value=>audioMessages.push(value)};connect(){}disconnect(){}}
-const controlsAudio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},play(){this.paused=false;return Promise.resolve();}};
+const controlsAudio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){},pause(){this.paused=true;},async play(){
+  this.paused=false;
+  await Promise.resolve();
+  player.find(node=>node.type==='audio').props.onPlay();
+  if(this.paused) throw new DOMException('Playback was interrupted','AbortError');
+}};
 const controlsTracks=[{fileUrl:'/first-fixture.wav',title:'First fixture',artist:'Synthetic artist'},{fileUrl:'/second-fixture.wav',title:'Second fixture',artist:'Synthetic artist'}];
 const player=mount('app/preference-tuning/editor.tsx',{audio:controlsAudio,imports:{'@/lib/music-catalog':{listeningPool:controlsTracks},'@/lib/loudness':{analyzeTrack:async()=>({})},'@/components/playback-transport':{default:'fixture-transport',NowPlaying:'fixture-now-playing',PlaybackTime:'fixture-playback-time'}},globals:{AudioContext:ControlsAudioContext,AudioWorkletNode:ControlsWorklet,fetch:async()=>({ok:true,json:async()=>[],blob:async()=>new Blob()})}});
 const flushPlayer=async()=>{for(let i=0;i<30;i++)await Promise.resolve();player.render();};
@@ -351,6 +363,7 @@ player.find(n=>n.props?.['aria-controls']==='pt-playback-full').props.onClick();
 player.find(n=>n.props?.['aria-controls']==='pt-music-choices').props.onClick();player.render();
 check(trackLabel().startsWith('First fixture · Synthetic artist · Music library') && controlsAudio.src==='/first-fixture.wav' && bothPickersSelect(0),'Selecting a recording updates the current-song display, dropdown and single audio source together');
 player.find(n=>n.type==='audio').props.onLoadedMetadata();player.render();playControl().props.onClick();await flushPlayer();
+check(!controlsAudio.paused && playControl().props['aria-label']==='Pause music','The media play event accepts the prepared Tuning audio and keeps playing');
 check(!playerWave().dynamicRangeDisabled && !resetDynamics(),'Ready playback has no dynamics reset when the original dynamics are unchanged');
 dynamicsButtons().find(n=>n.props['aria-label']==='Dynamics: show or hide the adjustment slider').props.onClick();player.render();
 check(playerWave().dynamicSliderEnabled,'The labeled Dynamics control reveals the existing waveform adjustment');

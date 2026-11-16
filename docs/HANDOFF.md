@@ -5,6 +5,12 @@ Recorded deployment: **update171**, source `d28f1735ada00e926b27610d06a44579061d
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update173 Preference Tuning playback
+
+Preference Tuning now uses the same EQ readiness check when preparing playback and when the browser starts the track. The fix prevents library tracks and local files from pausing immediately.
+
+The production fix was deployed from `6645a56537b19b5568630b4e0f710603b2b727ca`. The public source replays the playback fix and its regressions on scrubbed main. The deployment was verified in Brave at desktop and phone widths. [Deployment verification](releases/update173-verification.json) · [Recovery verification](releases/update173-recovery-verification.json)
+
 ## Update169 release links on the Version page
 
 The Version history entry links to the published [Rankings release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169) and [Sidebar refresh](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169-sidebar-rollout). Both links were verified on the live update171 Version refresh from source `fb04020c6c1a0122fd3482398833993e9fa89e86`. Desktop and phone checks covered keyboard navigation, and both live destinations returned HTTP 200. The matching encrypted off-device recovery passed hosted validation. [Live Version page](https://yinyangeq.com/version#update169)
