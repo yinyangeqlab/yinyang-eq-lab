@@ -95,6 +95,12 @@ The encrypted off-device source-only recovery point for `658403035df3bcd207f5297
 
 [Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json) · [Isolated recovery verification](releases/update165-tuning-target-match-isolated-recovery-verification.json)
 
+## Update164 Version page refresh
+
+The encrypted off-device source-only recovery point for `069253c28566b1a1b0c726ae4ca8913dcabd108d` contains a rebuild from the original source. A fresh download passed decryption and isolated restoration. The restored app verified the Version links on loopback using synthetic data.
+
+[Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json) · [Isolated recovery verification](releases/update164-version-link-refresh-isolated-recovery-verification.json)
+
 Read [ENCRYPTED_BACKUP.md](ENCRYPTED_BACKUP.md) before backup/recovery work. Current registration status comes from the generated state. A successful metadata handover is not a fresh data snapshot. Never infer current coverage from a prior update's successful receipt.
 
 Local edits, commits, previews and this foundation verification do not trigger production exports. Routine data coverage is daily; manual hosted runs default to validation. For an authorized ordinary code-only deployment, the owner workspace’s reviewed `scripts/recovery/release_handover.py` procedure (private owner tooling, intentionally absent from a public clone) registers exact source/build metadata using the deployment receipt without exporting data. Preserve migration/schema, recovery-code, media, deployment/provenance verification, shared-media reuse, retention and failure notifications. Changed schema/media/recovery or risky imports require an explicit backup decision. Explain actual additional quota before requesting that decision.

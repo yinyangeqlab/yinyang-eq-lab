@@ -95,6 +95,12 @@ The isolated restore for `658403035df3bcd207f5297517368419de898917` matched all 
 
 [Deployment verification](releases/update165-verification.json) · [Recovery verification](releases/update165-recovery-verification.json) · [Isolated recovery verification](releases/update165-tuning-target-match-isolated-recovery-verification.json)
 
+## Update164 Version page refresh
+
+The original compiled package was unavailable. The rebuild from `069253c28566b1a1b0c726ae4ca8913dcabd108d` used 1,159 source files whose checksums matched the original release. The isolated restore verified all 1,670 compiled files in the rebuilt package.
+
+[Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json) · [Isolated recovery verification](releases/update164-version-link-refresh-isolated-recovery-verification.json)
+
 Use the exact `.node-version` / `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
 
 ```sh

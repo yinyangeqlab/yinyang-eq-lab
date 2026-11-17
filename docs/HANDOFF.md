@@ -124,7 +124,9 @@ The Version page displays the verified update164 GitHub link without waiting for
 
 The shared rollout guard passed, and all 125 selected release checks passed. The refreshed build’s encrypted source-only backup passed independent reconstruction and hosted validation. The job created zero new data snapshots.
 
-[Refresh source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164-version-link-refresh) · [Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json)
+A fresh download of the encrypted off-device source-only rebuild from `069253c28566b1a1b0c726ae4ca8913dcabd108d` passed an isolated restore. Desktop and phone checks verified the direct update164 and update159 history links and keyboard navigation with outbound requests blocked.
+
+[Refresh source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164-version-link-refresh) · [Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json) · [Isolated recovery verification](releases/update164-version-link-refresh-isolated-recovery-verification.json)
 
 ## Update164
 

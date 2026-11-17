@@ -1,0 +1,31 @@
+{
+  "update": 164,
+  "build": "version-page-refresh",
+  "sourceCommit": "069253c28566b1a1b0c726ae4ca8913dcabd108d",
+  "verifiedAt": "2026-11-17T10:46:33Z",
+  "recoveryPoint": "source-only",
+  "rebuildFromOriginalSourcePassed": true,
+  "originalCompiledBuildClaimed": false,
+  "encryptedOffDeviceBackupVerified": true,
+  "independentDownloadAndVerificationPassed": true,
+  "isolatedRestorePassed": true,
+  "sourceFilesVerified": 1159,
+  "rebuiltFilesVerified": 1670,
+  "isolatedVerification": {
+    "appStartedOnLoopback": true,
+    "sourceRevisionMatched": true,
+    "usedSyntheticData": true,
+    "directVersionLinkVerified": true,
+    "versionHistoryLinksVerified": true,
+    "desktopAndPhoneBrowserChecksPassed": true,
+    "testAccountWritesBlocked": true,
+    "pinnedEngineVerified": true,
+    "testAccountIsolationSuitePassed": true,
+    "clientAssetCheckPassed": true
+  },
+  "databaseIncluded": false,
+  "databaseExportPerformed": false,
+  "hostedValidationPerformed": false,
+  "liveSiteContacted": false,
+  "scheduledBackupsChanged": false
+}
