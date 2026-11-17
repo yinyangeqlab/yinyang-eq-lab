@@ -2,44 +2,56 @@ import vm from "node:vm";
 import collector, { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../infra/pulumi/shootout-failure-logger.mjs";
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {isPublicAudioFactRoute} from '../lib/share-pages.mjs';
 import {preDatabaseGuard,abuseBindings} from '../infra/pulumi/abuse-controls.mjs';
 const source=readFileSync('infra/pulumi/private-gate.mjs','utf8'),AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const start=source.indexOf('const publicLandingAsset ='),end=source.indexOf('const password =',start);assert.ok(start>0&&end>start);
-const publicRead=new AsyncFunction('request','env','context','isPublicAsset','app','preDatabaseGuard',`const url=new URL(request.url),path=url.pathname;${source.slice(start,end)}return null;`);
+const start=source.indexOf('const guidePdfPath ='),end=source.indexOf('const password =',start);assert.ok(start>0&&end>start);
+const publicRead=new AsyncFunction('request','env','context','isPublicAsset','app','preDatabaseGuard','isPublicAudioFactRoute',`const url=new URL(request.url),path=url.pathname;${source.slice(start,end)}return null;`);
+const readThroughGate=(...args)=>publicRead(...args,isPublicAudioFactRoute);
 let forwarded;
 const app={fetch:async request=>{forwarded=request;return new Response('fixture');}},env={ASSETS:{fetch:()=>{throw Error('unexpected asset bypass')}}};
 for(const path of ['/listeners/yinyangeq','/api/public-profiles/yinyangeq','/api/public-profiles/yinyangeq/files/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/single']){
- const response=await publicRead(new Request('https://fixture.invalid'+path,{headers:{'x-yinyang-data-session':'forged','oai-authenticated-user-id':'owner'}}),env,{},()=>false,app,async()=>null);assert.equal(response.status,200);assert.equal(forwarded.headers.get('x-yinyang-data-session'),null);assert.equal(forwarded.headers.get('oai-authenticated-user-id'),null);
- assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null,'public bypass is read-only');
+ const response=await readThroughGate(new Request('https://fixture.invalid'+path,{headers:{'x-yinyang-data-session':'forged','oai-authenticated-user-id':'owner'}}),env,{},()=>false,app,async()=>null);assert.equal(response.status,200);assert.equal(forwarded.headers.get('x-yinyang-data-session'),null);assert.equal(forwarded.headers.get('oai-authenticated-user-id'),null);
+ assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null,'public bypass is read-only');
 }
 // Public release/help pages must not require or save participation choices.
 // Exercise the actual early gate with a DB that fails on any access.
-for (const path of ['/version','/about','/shortcuts','/glossary','/glossary/iem-measurement']) {
+for (const path of ['/version','/about','/shortcuts','/glossary','/glossary/iem-measurement','/glossary/audio-facts','/glossary/audio-facts/harman-target','/glossary/audio-facts/sitemap.xml']) {
  for (const method of ['GET','HEAD']) {
   const deniedDb={prepare(){throw Error('Public information must not access participant DB')}};
   const request=new Request('https://fixture.invalid'+path+'?_rsc=fixture', {method,headers:{Cookie:'__Host-yinyang-tester=opted-out-fixture','oai-authenticated-user-id':'owner','x-yinyang-data-session':'forged'}});
-  const response=await publicRead(request,{...env,DB:deniedDb},{},()=>false,app,async()=>null);
+  const response=await readThroughGate(request,{...env,DB:deniedDb},{},()=>false,app,async()=>null);
   assert.equal(response.status,200);assert.equal(response.headers.get('set-cookie'),null);
   assert.equal(forwarded.headers.get('oai-authenticated-user-id'),null);assert.equal(forwarded.headers.get('x-yinyang-data-session'),null);
  }
- assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null);
+ assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null);
 }
-for (const path of ['/version/private','/about/private','/shortcuts/private','/glossary/private','/api/glossary','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
- assert.equal(await publicRead(new Request('https://fixture.invalid'+path),env,{},()=>false,app,async()=>null),null,'Public information must not bypass private or listening routes');
+for (const path of ['/version/private','/about/private','/shortcuts/private','/glossary/private','/glossary/audio-facts/not-a-published-article','/glossary/audio-facts/harman-target/private','/api/glossary','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
+ assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path),env,{},()=>false,app,async()=>null),null,'Public information must not bypass private or listening routes');
 }
 const guideEnv={...env,ASSETS:{fetch:async () => new Response('guide file')}};
-for(const path of ['/guides/iem-measurement/technical-guide.pdf','/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
+const guidePdfPath = '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf';
+for(const path of [guidePdfPath,'/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
  for(const method of ['GET','HEAD']){
-  const response=await publicRead(new Request('https://fixture.invalid'+path,{method}),guideEnv,{},()=>false,app,async()=>null);
+  const response=await readThroughGate(new Request('https://fixture.invalid'+path,{method}),guideEnv,{},()=>false,app,async()=>null);
   assert.equal(await response.text(),'guide file');
  }
- assert.equal(await publicRead(new Request('https://fixture.invalid'+path,{method:'POST'}),guideEnv,{},()=>false,app,async()=>null),null);
+ assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path,{method:'POST'}),guideEnv,{},()=>false,app,async()=>null),null);
 }
-for(const path of ['/guides/iem-measurement/unlisted.pdf','/glossary/iem-measurement/private']){
- assert.equal(await publicRead(new Request('https://fixture.invalid'+path),guideEnv,{},()=>false,app,async()=>null),null);
+const legacyPdfPath = '/guides/iem-measurement/technical-guide.pdf';
+const pdfQuery = '?download=1&note=A%2BB';
+for (const method of ['GET', 'HEAD']) {
+ const request = new Request('https://fixture.invalid' + legacyPdfPath + pdfQuery, { method });
+ const response = await readThroughGate(request, env, {}, () => false, app, async () => null);
+ assert.equal(response.status, 308);
+ assert.equal(response.headers.get('location'), 'https://fixture.invalid' + guidePdfPath + pdfQuery);
 }
-assert.equal(await publicRead(new Request('https://fixture.invalid/api/public-profiles/yinyangeq/private'),env,{},()=>false,app,async()=>null),null);
-assert.equal(await publicRead(new Request('https://fixture.invalid/music/private.mp3'),env,{},()=>false,app,async()=>null),null,'profile access cannot expose private media');
+assert.equal(await readThroughGate(new Request('https://fixture.invalid' + legacyPdfPath, { method: 'POST' }), env, {}, () => false, app, async () => null), null);
+for(const path of ['/guides/iem-measurement/unlisted.pdf',guidePdfPath + '.bak','/glossary/iem-measurement/private']){
+ assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path),guideEnv,{},()=>false,app,async()=>null),null);
+}
+assert.equal(await readThroughGate(new Request('https://fixture.invalid/api/public-profiles/yinyangeq/private'),env,{},()=>false,app,async()=>null),null);
+assert.equal(await readThroughGate(new Request('https://fixture.invalid/music/private.mp3'),env,{},()=>false,app,async()=>null),null,'profile access cannot expose private media');
 const routeStart=source.indexOf('if(path==="/profile-access"'),routeEnd=source.indexOf('let tester =',routeStart);assert.ok(routeStart>0&&routeEnd>routeStart);
 const signIn=new AsyncFunction('request','env','context','boundedBody','json','app',`const path=new URL(request.url).pathname;${source.slice(routeStart,routeEnd)}return null;`);
 for(const method of ['GET','POST']){const response=await signIn(new Request('https://fixture.invalid/api/profile-access',{method,headers:{Authorization:'Bearer forged','x-yinyang-data-session':'forged','oai-authenticated-user-id':'owner'}}),env,{},request=>request,(body,status)=>Response.json(body,{status}),app);assert.equal(response.status,200);for(const header of ['authorization','x-yinyang-data-session','oai-authenticated-user-id'])assert.equal(forwarded.headers.get(header),null);}

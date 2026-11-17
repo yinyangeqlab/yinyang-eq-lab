@@ -1,9 +1,15 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update171**, source `d28f1735ada00e926b27610d06a44579061d8c6a`.
+Recorded deployment: **update175**, source `1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update175 Arya Stealth preset and Version history
+
+Research Rankings adds an approved Arya Stealth preset entry. The Version page keeps both update174 refresh links and discovers the current GitHub release after publication. The deployed source matches the verified encrypted source-only recovery baseline.
+
+[Update175 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update175) · [Deployment verification](releases/update175-wallpaper-and-tuning-links-verification.json) · [Recovery verification](releases/update175-wallpaper-and-tuning-links-recovery-verification.json)
 
 ## Update171 Wallpapers and Version history
 

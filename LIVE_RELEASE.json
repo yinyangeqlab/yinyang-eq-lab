@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 171,
+  "update": 175,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-15T12:03:06Z",
-  "sourceCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
-  "sourceBranch": "release/update171-wallpapers-20261115",
-  "baselineCommit": "cdf527117bb3d3d349eebb7b96e81d9b8d330c40",
-  "evidence": "docs/releases/update171-verification.json",
+  "verifiedAt": "2026-11-17T09:55:15Z",
+  "sourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+  "sourceBranch": "",
+  "baselineCommit": "889dea82abf9c2a53ec14a976dd223e532437478",
+  "evidence": "docs/releases/update175-wallpaper-and-tuning-links-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,33 +31,38 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
+  "deploymentRefresh": {
+    "slug": "wallpaper-and-tuning-links",
+    "previousEvidence": "docs/releases/update175-verification.json"
+  },
   "gitSource": {
-    "implementationCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
-    "branch": "release/update171-wallpapers-20261115",
+    "implementationCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+    "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "publicationSeparateFromDeployment": true,
-    "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
     "pushed": true,
-    "publicationAuthorized": true
+    "publicationAuthorized": true,
+    "publicationSeparateFromDeployment": true,
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publicationTag": "update175"
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 171,
-    "sourceBaselineVerifiedAt": "2026-11-15T12:30:18Z",
+    "sourceBaselineUpdate": 175,
+    "sourceBaselineVerifiedAt": "2026-11-17T10:25:41Z",
     "sourceOnlyHandoverPending": false,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
-    "update171SourceOnlyHandover": {
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "update175SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "d28f1735ada00e926b27610d06a44579061d8c6a",
-      "evidence": "docs/releases/update171-recovery-verification.json"
+      "sourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+      "evidence": "docs/releases/update175-wallpaper-and-tuning-links-recovery-verification.json"
     }
   },
   "documentationFiles": [],

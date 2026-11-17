@@ -3,21 +3,34 @@ export type ReleaseNotes = {
   date: string;
   title: string;
   changes: readonly string[];
+  refreshReleases?: readonly { tag: string; label: string }[];
   github?: {
     commit: string;
     pull?: number;
     releaseTag?: string;
-    refreshReleases?: readonly { tag: string; label: string }[];
   };
 };
 
 export const candidateChanges = [
-  "Homepage Wallpapers offers phone portrait, tablet portrait and landscape, and ultrawide downloads in 4K, 1080p, and 720p.",
-  "Choose PNG, JPEG, MP4, or WebM in the Landscape only and Flying gear scenes. Wallpaper downloads are for personal use.",
+  "Try and download trudenpa’s original 19-band HiFiMAN Arya Stealth preset in Research Rankings, tagged Diamond and YYT1.",
+] as const;
+
+const update174Changes = [
+  "Audio Fact Checks adds 19 searchable answers with direct citations. Share a permanent article link or copy the full answer and its sources for Discord.",
+  "All six Tuning gain sliders stay grabbed at their limits, so you can reverse direction before releasing the mouse.",
 ] as const;
 
 const update173Changes = [
   "Preference Tuning keeps music playing after the browser starts the prepared audio.",
+] as const;
+
+const update172Changes = [
+  "The IEM measurement guide has its own Discord and static link preview with the Capra Audio coupler and AKG response plot.",
+] as const;
+
+const update171Changes = [
+  "Homepage Wallpapers offers phone portrait, tablet portrait and landscape, and ultrawide downloads in 4K, 1080p, and 720p.",
+  "Choose PNG, JPEG, MP4, or WebM in the Landscape only and Flying gear scenes. Wallpaper downloads are for personal use.",
 ] as const;
 
 const update170Changes = [
@@ -276,37 +289,46 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
+  { update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: candidateChanges },
+  {
+    update: 174, date: "2026-11-15", title: "Audio Fact Checks", changes: update174Changes,
+    refreshReleases: [
+      { tag: "update174-tuning-playback-release-link", label: "Tuning playback link refresh on GitHub" },
+      { tag: "update174-wallpapers-version-link", label: "Version page refresh on GitHub" },
+    ],
+  },
   {
     update: 173, date: "2026-11-15", title: "Preference Tuning playback", changes: update173Changes,
     github: { commit: "d4757320e52b49ea4333eda337686c20c3ead032", releaseTag: "update173" },
   },
+  { update: 172, date: "2026-11-15", title: "IEM guide link preview", changes: update172Changes },
   {
-    update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: candidateChanges,
+    update: 171, date: "2026-11-15", title: "Phone, tablet, and ultrawide wallpapers", changes: update171Changes,
     github: {
       commit: "96377f2570a0746895640cf3571a85f7e9a9a2bb",
       releaseTag: "update171",
-      refreshReleases: [{ tag: "update171-sidebar-version-link", label: "Version page refresh on GitHub" }],
     },
+    refreshReleases: [{ tag: "update171-sidebar-version-link", label: "Version page refresh on GitHub" }],
   },
-  { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes },
+  { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes, github: { commit: "30e7d9d6bc5ad4df11f2772aac76489ec8ce3db0", releaseTag: "update170" } },
   {
     update: 169, date: "2026-11-15", title: "Target and EQ preset rankings", changes: update169Changes,
     github: {
       commit: "f6ecdacc99996d2ec46caa81869abd18f7fa28ce",
       releaseTag: "update169",
-      refreshReleases: [
-        { tag: "update169-sidebar-rollout", label: "Sidebar refresh on GitHub" },
-        { tag: "update169-version-history-refresh", label: "Version history refresh on GitHub" },
-      ],
     },
+    refreshReleases: [
+      { tag: "update169-sidebar-rollout", label: "Sidebar refresh on GitHub" },
+      { tag: "update169-version-history-refresh", label: "Version history refresh on GitHub" },
+    ],
   },
   {
     update: 168, date: "2026-11-14", title: "EQ preset import compatibility", changes: update168Changes,
     github: {
       commit: "9fbf6acf1b0134dfe4af61d2d4803e44dfdf27ad",
       releaseTag: "update168",
-      refreshReleases: [{ tag: "update168-direct-release-link", label: "GitHub refresh release" }],
     },
+    refreshReleases: [{ tag: "update168-direct-release-link", label: "GitHub refresh release" }],
   },
   { update: 167, date: "2026-11-14", title: "Sidebar controls", changes: update167Changes, github: { commit: "677fd44ef9893134a5fa5e1553c28d6c49b54924", releaseTag: "update167" } },
   { update: 166, date: "2026-11-14", title: "Peak & Dip Finder saved EQ and live adjustments", changes: update166Changes, github: { commit: "42a3ddadbb2dcd9b7930f91bbade5439c09bc8ef", releaseTag: "update166" } },

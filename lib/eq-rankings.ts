@@ -1,3 +1,4 @@
+import { approvedEqModels } from "../data/approved-eq-models";
 import { fitPreferenceScores, type PairPreference } from "./preference-ranking";
 
 export const rankingDeviceFilters = [
@@ -25,7 +26,7 @@ export type PublishedEqModel = {
 
 // Add only publication-approved metadata and released, level-matched results.
 // Each pair counts one outcome per listener group. Store no identities or filters here.
-export const publishedEqModels: readonly PublishedEqModel[] = [];
+export const publishedEqModels: readonly PublishedEqModel[] = approvedEqModels;
 
 export function getPublishedEqPreview(modelId: string, presetId: string, version: string, models = publishedEqModels) {
   const model = models.find(item => item.id === modelId);

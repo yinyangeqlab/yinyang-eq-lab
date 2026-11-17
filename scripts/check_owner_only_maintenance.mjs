@@ -2,12 +2,13 @@ import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoin
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { isPublicAudioFactRoute } from '../lib/share-pages.mjs';
 import { ownerOnlyMaintenanceResponse, featureMaintenanceResponse, OWNER_ONLY_MAINTENANCE_MESSAGE } from '../lib/maintenance-options.ts';
 const source = readFileSync('infra/pulumi/private-gate.mjs', 'utf8');
 let appReads = 0, databaseCalls = 0;
 const context = vm.createContext({
  recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint, exports: {}, crypto, Request, Response, Headers, URL, TextEncoder, Uint8Array, btoa, atob, console,
- ownerOnlyMaintenanceResponse, featureMaintenanceResponse,
+ ownerOnlyMaintenanceResponse, featureMaintenanceResponse, isPublicAudioFactRoute,
  readServiceStatus: async () => ({active:false}),
  preDatabaseGuard: async () => null, listenerGuard: async () => null, boundedBody: async r => r,
  isPublicAsset: path => path.startsWith('/share/') || path.startsWith('/_next/') || path.endsWith('.svg'),
@@ -29,10 +30,10 @@ const signAt = async issued => {
  return payload+'.'+btoa(String.fromCharCode(...sig)).replaceAll('+','-').replaceAll('/','_').replaceAll('=','');
 };
 const actors=[{}, {'Cookie':'__Host-yinyangeq_tester='+'a'.repeat(43)}, {'Cookie':'__Host-yinyangeq_owner=forged'}, {'oai-authenticated-user-id':'owner','Authorization':'Bearer synthetic'}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)-13*3600)}, {'Cookie':'__Host-yinyangeq_owner='+await signAt(Math.floor(Date.now()/1000)+3600)}];
-const paths=['/','/home','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/terms','/glossary/eq-fitting','/glossary/iem-measurement','/guides/iem-measurement/technical-guide.pdf','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
+const paths=['/','/home','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/terms','/glossary/eq-fitting','/glossary/iem-measurement','/glossary/audio-facts','/glossary/audio-facts/harman-target','/glossary/audio-facts/sitemap.xml','/guides/iem-measurement/technical-guide.pdf','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
 const enginePaths = ['autoeq-wasm.mjs','autoeq-wasm.wasm','LICENSE','COPYING','RUNTIME-NOTICES.txt','source.tar.gz'].map(name => '/vendor/peqdb-autoeq/' + name);
 const wallpaperPaths = ['/wallpapers/files.json', '/wallpapers/yinyang-eq-landscape-4k.mp4', '/wallpapers/yinyang-eq-flying-gear-1080p.jpg'];
-paths.push(...enginePaths, ...wallpaperPaths);
+paths.push(...enginePaths, ...wallpaperPaths, '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf');
 let cases=0;
 for(const actor of actors)for(const path of paths)for(const method of ['GET','HEAD','POST','OPTIONS']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{method,headers:{...actor,'User-Agent':'Discordbot'}}),env,{});

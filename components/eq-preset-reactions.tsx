@@ -23,8 +23,8 @@ async function readSnapshot(response: Response): Promise<Snapshot> {
   return { up: result.up, down: result.down, mine: result.mine, canReact: result.canReact };
 }
 
-async function loadPreset(params: URLSearchParams, sha256: string, name: string, signal: AbortSignal) {
-  const response = await fetch(`${endpoint}?${params}&preview=1`, { redirect: "error", signal });
+async function loadPreset(url: string, sha256: string, name: string, signal: AbortSignal) {
+  const response = await fetch(url, { redirect: "error", signal });
   if (!response.ok) throw Error("This preset file could not be loaded.");
   const bytes = await response.arrayBuffer();
   if (bytes.byteLength > 100_000) throw Error("This preset file is too large.");
@@ -48,13 +48,16 @@ function ReactionPreview({ modelId, presetId, name, preview }: { modelId: string
   const audio = useRef<HTMLAudioElement>(null);
   const graph = useRef<{ context: AudioContext; dispose: () => void } | null>(null);
 
+  const params = new URLSearchParams({ model: modelId, preset: presetId, version: preview.sha256 });
+  const reactionUrl = `${endpoint}?${params}`;
+  const previewUrl = `${reactionUrl}&preview=1`;
+
   useEffect(() => {
     const request = new AbortController();
-    const params = new URLSearchParams({ model: modelId, preset: presetId, version: preview.sha256 });
-    void loadPreset(params, preview.sha256, name, request.signal)
+    void loadPreset(previewUrl, preview.sha256, name, request.signal)
       .then(preset => { if (!request.signal.aborted) setEq(preset); })
       .catch(() => { if (!request.signal.aborted) setAudioError("This preview could not be loaded. Close it and try again."); });
-    void fetch(`${endpoint}?${params}`, { cache: "no-store", signal: request.signal }).then(readSnapshot)
+    void fetch(reactionUrl, { cache: "no-store", signal: request.signal }).then(readSnapshot)
       .then(state => { if (!request.signal.aborted) setSnapshot(state); })
       .catch(() => { if (!request.signal.aborted) setReactionMessage("Could not load reactions. Close this preview and try again."); });
 
@@ -73,7 +76,7 @@ function ReactionPreview({ modelId, presetId, name, preview }: { modelId: string
       graph.current?.dispose();
       graph.current = null;
     };
-  }, [modelId, name, presetId, preview]);
+  }, [name, preview.sha256, previewUrl, reactionUrl]);
 
   async function togglePlayback() {
     const element = audio.current;
@@ -139,6 +142,7 @@ function ReactionPreview({ modelId, presetId, name, preview }: { modelId: string
       onError={() => { setPlaying(false); setAudioError("The preview recording is unavailable."); }} />
     {previewTrack && <p>{previewTrack.title} · {previewTrack.artist}</p>}
     <button type="button" disabled={!eq || !previewTrack || starting} onClick={() => void togglePlayback()}>{starting ? "Starting preview…" : playing ? "Pause preview" : "Play preview"}</button>
+    {eq && <p><a href={previewUrl} download={`${presetId}.txt`}>Download EQ preset</a></p>}
     {audioError && <p role="alert">{audioError}</p>}
     <p>Reactions contribute to public preset totals. Model rankings use level-matched A/B results.</p>
     {!heard ? <p>Play the preview to react.</p> : snapshot && !snapshot.canReact && <p>Participating accounts can save reactions. <a href="/my-data">Review your data choices</a>.</p>}

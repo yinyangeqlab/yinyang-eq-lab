@@ -252,7 +252,7 @@ check(libraryChanges.at(-1).measurementId===measurementA.id && JSON.stringify(li
 
 // Exercise the actual unified gain/frequency editor rather than a copied state reducer.
 let editTime=1000;
-const tones=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{performance:{now:()=>editTime},fetch:async()=>({ok:true,json:async()=>[]})}});
+const tones=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{performance:{now:()=>editTime},getComputedStyle:()=>({direction:'ltr',getPropertyValue:()=> '16px'}),fetch:async()=>({ok:true,json:async()=>[]})}});
 const toneCurve=()=>tones.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart').props;
 const toneGain=name=>tones.find(n=>n.type==='input'&&n.props.type==='range'&&n.props['aria-label']===name+' gain');
 const filterField=label=>tones.find(n=>n.type==='input'&&n.props['aria-label']===label);
@@ -279,7 +279,30 @@ toggleTones();
 check(toneGain('Sub').props.value===2,'Reopening restores the selected band and its current gain');
 toggleTones();
 check(toneGain('Bass').props['aria-valuetext'].includes('below 105 hertz') && toneGain('Treble').props['aria-valuetext'].includes('above 6500 hertz'),'Tone controls describe the actual shelf transitions');
-toneGain('Bass').props.onKeyDown({key:'ArrowUp'});toneGain('Bass').props.onChange({target:{value:'3'}});toneGain('Bass').props.onKeyUp();tones.render();
+const bassSlider = () => toneGain('Bass').props;
+let capturedPointer;
+const dragInput = {
+  min: '-12', max: '12', valueAsNumber: 0, focus() {},
+  getBoundingClientRect: () => ({ left: 40, width: 216 }),
+  setPointerCapture(id) { capturedPointer = id; },
+};
+const mouse = { pointerId: 7, isPrimary: true, pointerType: 'mouse', button: 0, currentTarget: dragInput, preventDefault() {} };
+bassSlider().onPointerDown({ ...mouse, clientX: 148 });
+check(capturedPointer === 7, 'A Tone drag captures its mouse pointer');
+for (const [clientX, gain] of [[300, 12], [198, 6], [0, -12], [98, -6]]) {
+  bassSlider().onPointerMove({ ...mouse, clientX });
+  tones.render();
+  check(bassSlider().value === gain, `A held Tone drag clamps and reverses through both limits (${gain} dB)`);
+}
+bassSlider().onPointerUp(mouse);
+bassSlider().onLostPointerCapture(mouse);
+bassSlider().onPointerMove({ ...mouse, clientX: 148 });
+tones.render();
+check(bassSlider().value === -6, 'Tone stops changing after mouse release');
+clickHistory(0);
+check(bassSlider().value === 0, 'One Undo restores the gain from before the entire drag');
+
+toneGain('Bass').props.onKeyDown({key:'ArrowUp'});toneGain('Bass').props.onChange({target:{value:'3'}});toneGain('Bass').props.onKeyUp({key:'ArrowUp'});tones.render();
 check(toneCurve().settings.bass===3 && toneGain('Bass').props.value===3,'Gain changes update the same settings used by the curve');
 setEditorView(1);
 const bassFrequency='Bass transition frequency';

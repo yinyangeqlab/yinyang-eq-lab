@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import vm from 'node:vm';
 import ts from 'typescript';
 import * as scoring from '../lib/preference-ranking.ts';
+import { approvedEqModels } from '../data/approved-eq-models.ts';
 import { VOTE_DATA_NOTICE_VERSION } from '../lib/vote-data-notice.ts';
 
 const sqlite = new DatabaseSync(':memory:');
@@ -43,8 +44,18 @@ function load(path, imports = {}) {
 }
 const inputs = load('lib/request-json.ts');
 const admin = load('lib/admin-contributions.ts', { '@/lib/request-json': inputs });
-const rankings = load('lib/eq-rankings.ts', { './preference-ranking': scoring });
-assert.equal(rankings.publishedEqModels.length, 0, 'The shared registry holds no personal or test presets');
+const rankings = load('lib/eq-rankings.ts', {
+  '../data/approved-eq-models': { approvedEqModels }, './preference-ranking': scoring,
+});
+const modelId = 'hifiman-arya-stealth';
+const v3 = rankings.getPublishedEqPreview(modelId, 'arya-stealth-v3', '4cc7eb3f648b7199ba3e187c18a9f00e178a05dc947e33e8de80eecfb1c53377');
+assert.equal(v3?.preset.credit, 'trudenpa');
+assert.deepEqual(v3?.preset.tags, ['Diamond', 'YYT1']);
+assert.equal(v3?.preview.path, '/eq-presets/arya-stealth-v3.txt');
+const arya = rankings.eqRankingsForDevice(rankings.publishedEqModels, 'oe').find(row => row.model.id === modelId);
+assert.equal(arya?.ranked.length, 0, 'Publishing a preset does not create comparison results');
+assert.equal(arya?.awaiting[0]?.id, 'arya-stealth-v3');
+assert.ok(!rankings.eqRankingsForDevice(rankings.publishedEqModels, 'ie').some(row => row.model.id === modelId));
 const firstVersion = 'a'.repeat(64), secondVersion = 'b'.repeat(64);
 let version = firstVersion;
 const models = () => [{

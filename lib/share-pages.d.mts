@@ -17,6 +17,7 @@ export const sharePreviewCards: SharePage[];
 export const privateShareCard: SharePage;
 export const sharedShootoutCard: SharePage;
 export function sharePageFor(pathname: string, search?: string): SharePage | null;
+export function isPublicAudioFactRoute(pathname: string): boolean;
 export function previewTitle(page: SharePage): string;
 export function shareImageUrl(page: SharePage): { url: string; width: number; height: number; alt: string };
 export function shareAnimationUrl(page: SharePage): (ReturnType<typeof shareImageUrl> & { type: string }) | null;

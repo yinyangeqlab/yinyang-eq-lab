@@ -544,7 +544,7 @@
         "node_modules/typescript/package.json"
       ],
       "owner": "application",
-      "scope": "Existing glossary search regression assertions; synthetic/source scope in the script"
+      "scope": "Glossary and Audio Fact Checks search, citation integrity, canonical previews and complete Discord text"
     },
     {
       "id": "isolated-consent-access",

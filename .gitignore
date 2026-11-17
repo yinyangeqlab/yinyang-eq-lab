@@ -46,6 +46,7 @@ __pycache__/
 *.m4a
 public/music/
 /public/guides/iem-measurement/
+/public/eq-presets/arya-stealth-v3.txt
 artifacts/
 outputs/
 work/

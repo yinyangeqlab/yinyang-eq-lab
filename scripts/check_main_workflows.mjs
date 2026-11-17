@@ -86,7 +86,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const h=open();
  await flush();h.render();
  const edit=points=>{h.find(n=>n.type==='@/components/headphone-picker').props.onEdit(measurement.id);h.render();h.find(n=>n.type==='@/components/measurement-manager').props.onUpdate({...measurement,points});h.render();};
- h.button('Make my EQ').props.onClick();await flush();
+ h.button('Generate My EQ').props.onClick();await flush();
  jobs[0].resolve([variant(10),variant(15),variant(20),variant(30)]);await flush();h.render();
  check(h.find(n=>n.type==='@/components/eq-candidate-results').props.variants.length===4,'Generated comparisons reach the shared results graph and export controls');
  const returned=open();await flush();returned.render();
@@ -94,7 +94,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  returned.unmount();
  edit([[20,5],[20000,-3]]);
  check(all(h.tree,n=>n.type==='@/components/eq-candidate-results').length===0,'Editing measurement points under the same ID invalidates finished exports');
- h.button('Make my EQ').props.onClick();await flush();const pending=jobs[1];
+ h.button('Generate My EQ').props.onClick();await flush();const pending=jobs[1];
  edit([[20,8],[20000,-4]]);check(pending.signal.aborted,'Same-ID measurement edits cancel pending finalization');
  pending.reject(new DOMException('Cancelled','AbortError'));await flush();h.render();
  check(all(h.tree,n=>n.type==='@/components/eq-candidate-results').length===0,'Cancelled finalization cannot restore stale downloads');h.unmount();

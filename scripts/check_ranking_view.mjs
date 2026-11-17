@@ -1,6 +1,7 @@
 import {searchRows} from '../lib/search.ts';
 import {MAIN_FITTER_COHORT} from "../lib/fitter-settings.ts";
 import * as scoring from '../lib/preference-ranking.ts';
+import {approvedEqModels} from '../data/approved-eq-models.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -15,7 +16,7 @@ function load(path, dependencies={}) {
  vm.runInNewContext(code,{exports,require:id=>dependencies[id]??require(id)});
  return exports;
 }
-const eqRankings=load('lib/eq-rankings.ts',{'./preference-ranking':scoring});
+const eqRankings=load('lib/eq-rankings.ts',{'./preference-ranking':scoring,'../data/approved-eq-models':{approvedEqModels}});
 const EqPresetRankings=load('components/eq-preset-rankings.tsx',{
  '@/lib/eq-rankings':eqRankings,
  '@/components/eq-preset-reactions':{default:()=>null},
@@ -104,7 +105,9 @@ const [headphone,iem]=eqRankings.eqRankingsForDevice(models,'all');
 assert.deepEqual(Array.from(headphone.ranked,row=>[row.name,row.rank]),[['Desk A',1],['Desk B',2]]);
 assert.deepEqual(Array.from(iem.ranked,row=>row.rank),[1,1],'Model ranks start independently and exact ties share rank');
 assert.deepEqual(Array.from(headphone.awaiting,row=>row.name),['Desk C']);
-assert.ok(renderToStaticMarkup(EqPresetRankings({device:'all'})).includes('Awaiting comparisons'),'The shipped catalog has no synthetic or private entries');
+const published = renderToStaticMarkup(EqPresetRankings({device:'all'}));
+assert.ok(published.includes('Awaiting comparisons') && published.includes('Arya Stealth Personal EQ v3') && published.includes('by trudenpa'));
+assert.ok(!published.includes('Synthetic Headphone') && !published.includes('Synthetic IEM'),'Synthetic comparisons stay out of the shipped catalog');
 const disconnected={...models[0],presets:[...models[0].presets,preset('Desk D')],pairs:[...models[0].pairs,pair('Desk C','Desk D',3,0)]};
 assert.equal(eqRankings.eqRankingsForDevice([disconnected],'all')[0].needsConnection,true);
 assert.throws(()=>eqRankings.eqRankingsForDevice([{...models[0],pairs:[pair('Desk A','IEM B',5,0)]}],'all'),/Invalid published comparison/);

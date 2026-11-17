@@ -76,6 +76,7 @@ modules["shootout-failure-logger.mjs"] = {
   contentFile: moduleFile(failureLoggerModule),
 };
 modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/invite-settings.mjs"))};
+modules["audio-facts.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/audio-facts.mjs"))};
 modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/share-pages.mjs"))};
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
 modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-sync-notice.mjs"))};

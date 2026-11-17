@@ -1,0 +1,112 @@
+{
+  "update": 175,
+  "sourceCommit": "889dea82abf9c2a53ec14a976dd223e532437478",
+  "deploymentVerification": {
+    "at": "2026-11-17T08:05:04Z",
+    "update": 175,
+    "revision": "889dea82abf9c2a53ec14a976dd223e532437478",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "verifiedPreviousSourceCommit": "2496fe01454e73dc6b76addcedf5597c52053da7",
+    "previousRecoveryEvidence": "docs/releases/update174-release-history-refresh-recovery-verification.json",
+    "infrastructureDrift": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "targetRankingsInputsUnchanged": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "exactServerModulesVerified": 369,
+    "exactClientAssetsVerified": 78,
+    "anonymousGateChecks": {
+      "/version": 403,
+      "/eq-compare": 403,
+      "/shootout": 403,
+      "/shootout/personal": 403,
+      "/owner-research": 403,
+      "/api/owner-research": 403,
+      "/preference-tuning": 403,
+      "/ear-tuning": 403,
+      "/music-library": 403,
+      "/api/targets": 403,
+      "/api/research": 403,
+      "/api/eq-preset-reactions": 403,
+      "/api/my-data": 403,
+      "/vendor/peqdb-autoeq/autoeq-wasm.wasm": 403,
+      "/api/listening-audio/missing-release-check": 403
+    },
+    "publicVersionPageVerified": true,
+    "cloudflareQueryBindingVerified": true,
+    "previousPublicReleaseLinksVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "889dea82abf9c2a53ec14a976dd223e532437478",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2742,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": true,
+    "liveBrowserChecks": [
+      {
+        "width": 1366,
+        "exactDownload": true,
+        "credit": true,
+        "tags": true,
+        "awaitingComparisons": true,
+        "deviceFilter": true,
+        "keyboardOpened": true
+      },
+      {
+        "width": 390,
+        "exactDownload": true,
+        "credit": true,
+        "tags": true,
+        "awaitingComparisons": true,
+        "deviceFilter": true,
+        "keyboardOpened": true
+      }
+    ],
+    "packagedBrowserChecks": [
+      {
+        "width": 1366,
+        "exactDownload": true,
+        "credit": true,
+        "tags": true,
+        "awaitingComparisons": true,
+        "deviceFilter": true,
+        "keyboardOpened": true
+      },
+      {
+        "width": 390,
+        "exactDownload": true,
+        "credit": true,
+        "tags": true,
+        "awaitingComparisons": true,
+        "deviceFilter": true,
+        "keyboardOpened": true
+      }
+    ],
+    "syntheticWebAudioFilters": 19,
+    "preampDb": -11.6
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

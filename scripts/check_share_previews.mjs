@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { isPublicAsset, publicAssetBypassPatterns } from '../infra/pulumi/public-assets.mjs';
-import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, previewTitle } from '../lib/share-pages.mjs';
+import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../lib/share-pages.mjs';
 
 // Every page route in app/ has its own preview entry (or is a documented alias / dynamic route).
 const routes = [];
@@ -175,11 +175,11 @@ const source = readFileSync(new URL('../infra/pulumi/private-gate.mjs', import.m
 const start = source.indexOf('    // Link-preview crawlers'), end = source.indexOf('    const password = env.PRIVATE_ACCESS_PASSWORD;', start);
 assert.ok(start > 0 && end > start);
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
-const gate = new AsyncFunction('request', 'env', 'context', 'app', 'preDatabaseGuard', 'boundedBody', 'sharePageFor', 'shareHtml', 'isUnfurlCrawler', 'isPublicAsset',
+const gate = new AsyncFunction('request', 'env', 'context', 'app', 'preDatabaseGuard', 'boundedBody', 'sharePageFor', 'shareHtml', 'isUnfurlCrawler', 'isPublicAsset', 'isPublicAudioFactRoute',
   `const url=new URL(request.url),path=url.pathname;${source.slice(start, end)}return null;`);
 let forwarded = null;
 const app = { fetch: async request => { forwarded = request; return new Response('app'); } };
-const run = (path, init = {}, guard = async () => null) => { forwarded = null; return gate(new Request('https://fixture.invalid' + path, init), {}, {}, app, guard, async r => r, sharePageFor, shareHtml, isUnfurlCrawler, isPublicAsset); };
+const run = (path, init = {}, guard = async () => null) => { forwarded = null; return gate(new Request('https://fixture.invalid' + path, init), {}, {}, app, guard, async r => r, sharePageFor, shareHtml, isUnfurlCrawler, isPublicAsset, isPublicAudioFactRoute); };
 
 const discord = { 'User-Agent': 'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)' };
 for (const path of [...sharePages.map(page => page.path), '/personal-tuning', '/shootout?mode=blind', '/shootout?mode=open', '/shootout?tab=rankings']) {
@@ -207,6 +207,27 @@ for (const method of ['GET', 'HEAD']) assert.equal((await run(FITTER_GUIDE_PATH,
 assert.equal(await run(FITTER_GUIDE_PATH, { method: 'POST' }), null, 'Only read requests bypass admission for the guide');
 assert.equal(await run(`${FITTER_GUIDE_PATH}/private`), null, 'Only the standalone guide path is public');
 assert.equal(previewTitle(sharePageFor('/glossary')), 'Glossary & Guides');
+
+const measurementPath = '/glossary/iem-measurement';
+const measurementPage = sharePageFor(measurementPath);
+const measurementStill = shareImageUrl(measurementPage);
+const measurementAsset = new URL(measurementStill.url);
+assert.equal(previewTitle(measurementPage), 'Your First IEM Measurement With a 711 Coupler');
+assert.equal(measurementAsset.pathname, '/share/iem-measurement-guide.jpg');
+assert.equal(shareAnimationUrl(measurementPage), null);
+assert.deepEqual(shareMetadataFields(measurementPath).openGraph.images, [measurementStill]);
+const measurementJpeg = await sharp(fileURLToPath(new URL('../public' + measurementAsset.pathname, import.meta.url))).metadata();
+assert.deepEqual([measurementJpeg.format, measurementJpeg.width, measurementJpeg.height], ['jpeg', measurementStill.width, measurementStill.height]);
+for (const headers of [discord, { 'User-Agent': 'Slackbot-LinkExpanding 1.0' }, { 'User-Agent': 'Twitterbot/1.0' }]) {
+  const response = await run(measurementPath, { headers });
+  assert.equal(response.status, 200);
+  assert.equal(forwarded, null, 'The guide share preview does not reach the app');
+  const html = await response.text();
+  assert.deepEqual(openGraphImages(html), [measurementStill.url]);
+  assert.ok(html.includes('property="og:image:type" content="image/jpeg"'));
+  assert.ok(html.includes(`property="og:url" content="https://yinyangeq.com${measurementPath}"`));
+}
+
 assert.match(await (await run('/shootout?tab=rankings', { headers: discord })).text(), /rankings-motion\.webp/);
 assert.match(await (await run('/', { headers: discord })).text(), /welcome-motion\.avif/);
 assert.equal((await run('/preference-tuning', { method: 'HEAD', headers: discord })).status, 200);

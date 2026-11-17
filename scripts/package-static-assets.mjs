@@ -1,13 +1,24 @@
+import { approvedEqModels } from "../data/approved-eq-models.ts";
 import { packagePeqdbAssets } from "./peqdb-assets.mjs";
 import { verifyVoteFontAssets } from "./vote-font-assets.mjs";
 import {readdirSync,mkdirSync,lstatSync,statSync,linkSync,copyFileSync,unlinkSync,readFileSync,existsSync,writeFileSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-verifyVoteFontAssets();
 const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/client');
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
+for (const { presets } of approvedEqModels) {
+  for (const { preview } of presets) {
+    if (!preview) continue;
+    const input = join(source, preview.path.slice(1));
+    if (publicOnly && !existsSync(input)) continue;
+    if (!existsSync(input) || digest(input) !== preview.sha256) {
+      throw new Error(`Restore the exact approved EQ preset at public${preview.path} before packaging.`);
+    }
+  }
+}
+verifyVoteFontAssets();
 if(publicOnly){mkdirSync(join(root,'dist'),{recursive:true});writeFileSync(marker,'Public clone package; restore all protected media and run full packaging before deployment.\n');}
 let files=0;
 function visit(folder,relative=''){

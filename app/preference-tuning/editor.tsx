@@ -118,6 +118,9 @@ const GAIN_CONTROLS: { key: GainKey; limit: number; hint: string; placement?: Pl
 /** Tone is the everyday view: broad gains. Filters is the exact view: shape, frequency, Q and narrow corrections. */
 type EditorView = "tone" | "filters";
 const PRIMARY_TONES: readonly GainKey[] = ["bass", "ear", "treble"];
+const TONE_GAIN_STEP = .5;
+const TONE_SLIDER_KEYS = new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"]);
+
 function finishNumberEdit(event: ReactKeyboardEvent<HTMLInputElement>) {
   if (event.key === "Escape") {
     event.preventDefault();
@@ -674,6 +677,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const pendingBassCut = useRef<{ approval: BassCutApproval; before: EditSnapshot; scope: string | null; route: string } | null>(null);
   const appliedBassCut = useRef<{ receipt: BassCutReceipt; before: EditSnapshot; after: EditSnapshot; scope: string | null } | null>(null);
   const gestureRef = useRef<EditSnapshot | null>(null);
+  const toneSliderDrag = useRef<{ pointerId: number; key: GainKey; thumbInset: number; offset: number; rtl: boolean } | null>(null);
   const lastWheelEdit = useRef<{ key: GainKey; at: number } | null>(null);
   const [measurements, setMeasurements] = useState<HeadphoneMeasurement[]>([]);
   const [measurementId, setMeasurementId] = useState("");
@@ -1402,7 +1406,53 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   }
   function beginGesture() { lastWheelEdit.current = null; if (!gestureRef.current) gestureRef.current = editRef.current; }
   function endGesture() { const start = gestureRef.current; gestureRef.current = null; if (start && !sameEdit(start, editRef.current)) { setPast(rows => [...rows, start]); setFuture([]); } }
-  function finishSliderPointer() { requestAnimationFrame(endGesture); }
+  function startToneSliderDrag(event: ReactPointerEvent<HTMLInputElement>, index: number) {
+    if (!event.isPrimary || event.button !== 0 || toneSliderDrag.current) return;
+    const input = event.currentTarget;
+    const mouse = event.pointerType === "mouse";
+    if (mouse) {
+      // Own the mouse drag so crossing an endpoint or leaving the track keeps the same gesture.
+      event.preventDefault();
+      input.focus({ preventScroll: true });
+    }
+    beginGesture();
+    selectBand(index);
+    if (!mouse) return;
+
+    const style = getComputedStyle(input);
+    const thumbInset = parseFloat(style.getPropertyValue("--pt-tone-thumb-width")) / 2;
+    const rtl = style.direction === "rtl";
+    const { left, width } = input.getBoundingClientRect();
+    const min = Number(input.min), max = Number(input.max);
+    const fraction = (input.valueAsNumber - min) / (max - min);
+    const thumbX = left + thumbInset + (width - 2 * thumbInset) * (rtl ? 1 - fraction : fraction);
+    const offset = event.clientX - thumbX;
+    const onThumb = Math.abs(offset) <= thumbInset;
+    toneSliderDrag.current = { pointerId: event.pointerId, key: GAIN_CONTROLS[index].key, thumbInset, offset: onThumb ? offset : 0, rtl };
+    input.setPointerCapture(event.pointerId);
+    if (!onThumb) moveToneSliderDrag(event);
+  }
+  function moveToneSliderDrag(event: ReactPointerEvent<HTMLInputElement>) {
+    const drag = toneSliderDrag.current;
+    if (drag?.pointerId !== event.pointerId) return;
+    const input = event.currentTarget;
+    const { left, width } = input.getBoundingClientRect();
+    const trackWidth = width - 2 * drag.thumbInset;
+    if (trackWidth <= 0) return;
+    const fraction = (event.clientX - drag.offset - left - drag.thumbInset) / trackWidth;
+    const position = Math.max(0, Math.min(1, drag.rtl ? 1 - fraction : fraction));
+    const min = Number(input.min), max = Number(input.max);
+    const steps = Math.round(position * (max - min) / TONE_GAIN_STEP);
+    set(drag.key, min + steps * TONE_GAIN_STEP);
+  }
+  function finishToneSliderDrag(event: ReactPointerEvent<HTMLInputElement>) {
+    if (toneSliderDrag.current?.pointerId === event.pointerId) {
+      toneSliderDrag.current = null;
+      endGesture();
+    } else if (!toneSliderDrag.current && event.pointerType !== "mouse" && event.type !== "lostpointercapture" && event.isPrimary) {
+      requestAnimationFrame(endGesture);
+    }
+  }
   function set<K extends keyof Settings>(key: K, value: Settings[K]) { applyEdit({ ...editRef.current, settings: { ...editRef.current.settings, [key]: value } }); }
   function changeFilterType(key: GainKey, type: FilterType) {
     const settings = editRef.current.settings;
@@ -1963,7 +2013,15 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
                     </div>
                     <div className="pt-tone-track">
                       <span aria-hidden="true">−{limit}</span>
-                      <input className="pt-tone-slider" type="range" disabled={controlsDisabled} min={-limit} max={limit} step={.5} value={value} aria-label={`${name} gain`} aria-valuetext={`${value} decibels; ${FILTER_RELATION[filter.type].toLowerCase()} ${filter.hz} hertz`} onPointerDown={() => { beginGesture(); selectBand(index); }} onFocus={() => selectBand(index)} onPointerUp={finishSliderPointer} onPointerCancel={finishSliderPointer} onKeyDown={event => { if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End", "PageUp", "PageDown"].includes(event.key)) beginGesture(); }} onKeyUp={endGesture} onBlur={endGesture} onChange={event => set(control.key, Number(event.target.value))}/>
+                      <input className="pt-tone-slider" type="range" disabled={controlsDisabled} min={-limit} max={limit}
+                        step={TONE_GAIN_STEP} value={value} aria-label={`${name} gain`}
+                        aria-valuetext={`${value} decibels; ${FILTER_RELATION[filter.type].toLowerCase()} ${filter.hz} hertz`}
+                        onPointerDown={event => startToneSliderDrag(event, index)} onPointerMove={moveToneSliderDrag}
+                        onPointerUp={finishToneSliderDrag} onPointerCancel={finishToneSliderDrag} onLostPointerCapture={finishToneSliderDrag}
+                        onFocus={() => selectBand(index)} onBlur={() => { if (!toneSliderDrag.current) endGesture(); }}
+                        onKeyDown={event => { if (!toneSliderDrag.current && TONE_SLIDER_KEYS.has(event.key)) beginGesture(); }}
+                        onKeyUp={event => { if (!toneSliderDrag.current && TONE_SLIDER_KEYS.has(event.key)) endGesture(); }}
+                        onChange={event => set(control.key, Number(event.target.value))}/>
                       <span aria-hidden="true">+{limit}</span>
                     </div>
                   </div>;
@@ -2098,9 +2156,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
                   }
                   void finalizeCurve();
                 }}>
-                <SlidersHorizontal size={19} aria-hidden="true"/>
-                <span>{finalizing ? `Making EQ ${finalProgress} / ${FIT_CANDIDATE_COUNT}…` : finalized ? "Regenerate EQ" : "Make my EQ"}</span>
-                <ArrowUpRight size={17} aria-hidden="true"/>
+                {finalizing ? `Generating EQ ${finalProgress} / ${FIT_CANDIDATE_COUNT}…` : finalized ? "Regenerate EQ" : "Generate My EQ"}
               </button>
               {!measurement?.points?.length && <p id="pt-finalize-requirement" className="pt-finalize-requirement">Requires a headphone measurement.</p>}
             </div>
