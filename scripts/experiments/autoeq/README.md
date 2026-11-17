@@ -57,7 +57,7 @@ A six-times CPU-throttled **page** test recorded one 83 ms main-thread task and 
 ```sh
 node scripts/experiments/autoeq/check-engine.mjs
 AUTOEQ_PLAYWRIGHT=/absolute/path/to/playwright/index.mjs node scripts/experiments/autoeq/check-browser.mjs
-node node_modules/typescript/bin/tsc --noEmit --incremental false
+node node_modules/typescript/bin/tsc --project site/tsconfig.json --noEmit --incremental false
 node node_modules/eslint/bin/eslint.js --config scripts/eslint.config.mjs scripts/experiments/autoeq --max-warnings 0
 node node_modules/vite/bin/vite.js build --config scripts/experiments/autoeq/vite.config.ts
 node scripts/check_blind_eq.mjs

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const text=fs.readFileSync('components/use-listening-reminder.ts','utf8');
+const text=fs.readFileSync('site/components/use-listening-reminder.ts','utf8');
 const code=ts.transpileModule(text,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({skip=false,ack=false}={}){
   const local=new Map(skip?[['target-lab-sound-check-skip','true']]:[]),session=new Map(ack?[['target-lab-personal-sound-check-acknowledged','true']]:[]),states=[];
@@ -20,7 +20,7 @@ function fixture({skip=false,ack=false}={}){
 {
  const {hook,local}=fixture({skip:true});hook.show();hook.ready();assert.equal(local.has('target-lab-sound-check-skip'),false);
 }
-const panel=fs.readFileSync('components/music-panel.tsx','utf8');
+const panel=fs.readFileSync('site/components/music-panel.tsx','utf8');
 for(const entry of ['async function playPassage() {','async function replayPassage() {','listen: async next => {','function startPlayback(fadeIn = false) {']){
  const body=panel.slice(panel.indexOf(entry)+entry.length).trimStart();assert.ok(body.startsWith('if(beforePlayback&&!beforePlayback())return'),entry+' must check reminder before playback');
 }

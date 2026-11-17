@@ -40,7 +40,7 @@ def prepare(folder):
     destination = ROOT / "public/vendor/site-help/potion-2m-int4-v1.bin"
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(blob)
-    shutil.copyfile(ROOT / "vendor/potion-2m-model2vec.LICENSE", destination.with_name("LICENSE.txt"))
+    shutil.copyfile(ROOT / "site/vendor/potion-2m-model2vec.LICENSE", destination.with_name("LICENSE.txt"))
     print(f"{destination.relative_to(ROOT)}: {len(blob):,} bytes; SHA-256 {hashlib.sha256(blob).hexdigest()}")
 
 

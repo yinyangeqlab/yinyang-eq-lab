@@ -1,9 +1,9 @@
-import * as maintenanceOptions from "../lib/maintenance-options.ts";
+import * as maintenanceOptions from "../site/lib/maintenance-options.ts";
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {noticeDurationMinutes,validNoticeMinutes,emptyNoticeDuration,MAX_NOTICE_MINUTES} from '../lib/notice-duration.ts';
+import {noticeDurationMinutes,validNoticeMinutes,emptyNoticeDuration,MAX_NOTICE_MINUTES} from '../site/lib/notice-duration.ts';
 const parts=overrides=>({...emptyNoticeDuration,...overrides});
 assert.equal(noticeDurationMinutes(parts({minutes:1})),1);
 assert.equal(noticeDurationMinutes(parts({hours:2,minutes:30})),150);
@@ -11,7 +11,7 @@ assert.equal(noticeDurationMinutes(parts({months:1,weeks:1,days:1,hours:2,minute
 assert.equal(noticeDurationMinutes(parts({days:365})),MAX_NOTICE_MINUTES);
 for(const change of [{},{minutes:-1},{minutes:1.5},{minutes:NaN},{hours:Infinity},{days:366},{months:12,days:6}])assert.equal(noticeDurationMinutes(parts(change)),null);
 for(const value of [0,-1,1.5,Infinity,NaN,'60',null,MAX_NOTICE_MINUTES+1])assert.equal(validNoticeMinutes(value),false);
-const source=readFileSync(new URL('../app/api/owner-research/service-status/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
+const source=readFileSync(new URL('../site/app/api/owner-research/service-status/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
 let published=[];
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export async function/g,'async function');
 const route=vm.runInNewContext(js+';({GET,POST})',{
@@ -35,7 +35,7 @@ assert.equal((await route.POST(request({...body,durationMinutes:150},'https://ot
 assert.equal(published.length,count,'Invalid durations and cross-origin calls never publish');
 assert.equal((await route.POST(request({...body,active:false,durationMinutes:120}))).status,200);
 console.log('Notice duration checks passed: combined units, explicit 30-day months, 1-minute/365-day boundaries, invalid input, server validation, existing-hours compatibility, clearing, and origin protection. Synthetic calls only.');
-const serviceSource=readFileSync(new URL('../lib/service-status.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
+const serviceSource=readFileSync(new URL('../site/lib/service-status.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
 const serviceJs=ts.transpileModule(serviceSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export /g,'');
 const fixed=1800000000000;let stored=null;
 const service=vm.runInNewContext(serviceJs+';({publishServiceStatus})',{

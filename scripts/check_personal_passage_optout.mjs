@@ -1,5 +1,5 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import ts from 'typescript';
-const source=fs.readFileSync('app/shootout/personal/page.tsx','utf8'),ast=ts.createSourceFile('personal.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
+const source=fs.readFileSync('site/app/shootout/personal/page.tsx','utf8'),ast=ts.createSourceFile('personal.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text==='advance')handler=n.getText(ast);ts.forEachChild(n,visit)}visit(ast);assert.ok(handler);const code=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 for(const required of [false,true])for(const seconds of [0,.4,6])for(const blocked of [null,"permission","token","test","admin","practice","skip","local"]){
  const state={reviewing:null,PERSONAL_TOURNAMENT_SCHEDULER:"personal-v3",nextComparisonFocusPending:{current:false},passageRequired:required,localOnly:false,run:{choices:[],pending:['a','b'],phase:'explore',checkpoint:20},pair:['a','b'],saving:{current:false},practice:false,music:{mode:'pool'},sharing:{enabled:true,token:'fixture-token'},measurement:{type:'oe'},emptyPair:[0,0],writes:[],network:[]};
@@ -17,7 +17,7 @@ for(const required of [false,true])for(const seconds of [0,.4,6])for(const block
 }
 console.log('PASS Personal: unchecked choices share actual evidence with opt-in, separately from controlled rankings; required choices reject inadequate listening and share only qualified new choices.');
 
-const engineSource=fs.readFileSync('lib/personal-shootout.ts','utf8');const engineContext={exports:{}};vm.runInNewContext(ts.transpileModule(engineSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,engineContext);const engine=engineContext.exports;
+const engineSource=fs.readFileSync('site/lib/personal-shootout.ts','utf8');const engineContext={exports:{}};vm.runInNewContext(ts.transpileModule(engineSource,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,engineContext);const engine=engineContext.exports;
 let run=engine.createPersonalRun('fixture','Fixture',[{id:'a',name:'A',family:'a'},{id:'b',name:'B',family:'b'}]);run.phase='confirm';run.finalists=['a','b'];run.requireMatchedPassage=false;
 for(const recording of ['track1','track2']){run.pending=['a','b'];run=engine.recordPersonalChoice(run,{pair:['a','b'],result:'a',recording,start:0,end:1,at:1,phase:'confirm',matchedPassageRequired:false,matchedPassage:false});}
 assert.equal(engine.confirmationEvidence(run,['a','b']).size,0);assert.equal(engine.confirmationComplete(run),false);assert.equal(engine.parsePersonalRuns(JSON.stringify([run]))[0].requireMatchedPassage,false);

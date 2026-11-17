@@ -20,9 +20,9 @@ const text = n => n == null || typeof n === 'boolean' ? '' : typeof n !== 'objec
 const all = (n, predicate) => !n || typeof n !== 'object' ? [] : Array.isArray(n) ? n.flatMap(x => all(x, predicate)) : [...(predicate(n) ? [n] : []), ...all(n.props?.children, predicate)];
 const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
 const searchModule = { exports: {} };
-vm.runInNewContext(compile(fs.readFileSync('lib/search.ts', 'utf8')), { module: searchModule, exports: searchModule.exports });
+vm.runInNewContext(compile(fs.readFileSync('site/lib/search.ts', 'utf8')), { module: searchModule, exports: searchModule.exports });
 const measurement = {};
-vm.createContext(measurement); vm.runInContext(declarations('lib/measurement.ts', ['isImportedMeasurement']), measurement);
+vm.createContext(measurement); vm.runInContext(declarations('site/lib/measurement.ts', ['isImportedMeasurement']), measurement);
 
 function picker(onImport = async () => {}) {
   const hooks = [], frames = [], effects = [], body = {}, document = { body, activeElement: body, addEventListener() {}, removeEventListener() {} };
@@ -39,7 +39,7 @@ function picker(onImport = async () => {}) {
   const jsx = (type, p) => { if (type === 'input') { inputProps = p; if (p.ref) p.ref.current = input; } if (p?.className === 'headphone-search') p.ref.current = host; return { type, props: p }; };
   const mod = { exports: {} };
   const catalog = [{ name: 'Synthetic headphones', path: 'synthetic.txt', type: 'oe', source: 'Synthetic source', rig: 'Synthetic rig' }];
-  vm.runInNewContext(compile(fs.readFileSync('components/headphone-picker.tsx', 'utf8')), {
+  vm.runInNewContext(compile(fs.readFileSync('site/components/headphone-picker.tsx', 'utf8')), {
     module: mod, exports: mod.exports, document, Error, requestAnimationFrame: fn => frames.push(fn), window: { confirm: () => true },
     fetch: async () => ({ ok: true, json: async () => ({ entries: catalog }) }),
     require(id) { if (id === 'react') return react; if (id === 'react/jsx-runtime') return { jsx, jsxs: jsx }; if (id.endsWith('.css')) return {}; if (id === '@/lib/search') return searchModule.exports; if (id === '@/lib/measurement') return measurement; throw Error(id); },
@@ -90,7 +90,7 @@ for (const moved of [false, true]) {
   const h = picker(async () => { throw Error('Synthetic import failed'); }); h.open(); await flush(); h.render(); h.document.activeElement = h.option;
   h.publicButton().props.onClick(); await flush(); h.render(); assert.equal(h.openRegion(), true); assert.match(text(h.tree), /Synthetic import failed/); checks++;
 }
-const viewEffect = effect('app/shootout/personal/page.tsx', 'const destination=viewFocusPending.current');
+const viewEffect = effect('site/app/shootout/personal/page.tsx', 'const destination=viewFocusPending.current');
 for (const scenario of ['comparison', 'results', 'safety', 'other-focus', 'wrong-view', 'missing-target', 'idle']) {
   const events = [], scrolls = [], body = {}, target = { focus: () => events.push('results'), scrollIntoView: options => scrolls.push(options) };
   const state = { viewFocusPending: { current: scenario === 'idle' ? null : scenario === 'results' ? 'results' : 'comparison' }, listeningReminder: { open: scenario === 'safety' }, results: ['results', 'wrong-view'].includes(scenario), document: { body, activeElement: scenario === 'other-focus' ? {} : body, querySelector: () => scenario === 'missing-target' ? null : target }, focusComparisonPlayback: (_root, options) => events.push(options.preventScroll) };
@@ -102,7 +102,7 @@ for (const scenario of ['comparison', 'results', 'safety', 'other-focus', 'wrong
 for (const failed of [false, true]) {
   const events = [], state = { run: null, next: { mode: 'playlist', ids: [] }, musicRemountPending: { current: false }, player: { current: null }, emptyPair: {}, setDraftMusic: () => events.push('draft'), setUploadedSong() {}, setHeard() {}, setNotice: s => events.push(s), safely: fn => fn() };
   state.run = failed ? {} : null; state.update = () => { throw Error('Synthetic quota'); };
-  vm.createContext(state); vm.runInContext(declarations('app/shootout/personal/page.tsx', ['chooseMusic']), state);
+  vm.createContext(state); vm.runInContext(declarations('site/app/shootout/personal/page.tsx', ['chooseMusic']), state);
   if (failed) { assert.throws(() => state.chooseMusic(state.next), /quota/); assert.deepEqual(events, []); }
   else { state.chooseMusic(state.next); assert.deepEqual(events, ['draft', '']); }
   checks++;

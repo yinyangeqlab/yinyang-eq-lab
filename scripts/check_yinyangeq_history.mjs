@@ -3,16 +3,16 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {validateSyncPayload} from '../lib/browser-sync.mjs';
+import {validateSyncPayload} from '../site/lib/browser-sync.mjs';
 
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 const db={prepare(query){if((query.match(/\bUNION\b/gi)||[]).length>=9)throw Error('D1 fixture rejects the observed wide compound SELECT');const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},crypto,Date,TextEncoder,TextDecoder,btoa,atob,Response,Request,URL,Headers});return exports;}
-const input=load('lib/request-json.ts'),account=load('lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
+const input=load('site/lib/request-json.ts'),account=load('site/lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
 
-const records=load('lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':{parseCurve:()=>[]},'@/lib/research-measurement-files':{measurementFileHash:async()=>''}});
-const history=load('lib/yinyangeq-history.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload},'@/lib/legacy-notice':{LEGACY_CUTOFF:Date.parse('2026-10-18T07:47:46.750Z')},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'2026-10-18-v7'},'@/lib/yinyangeq-account':account,'@/lib/yinyangeq-records':records});
+const records=load('site/lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('site/lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':{parseCurve:()=>[]},'@/lib/research-measurement-files':{measurementFileHash:async()=>''}});
+const history=load('site/lib/yinyangeq-history.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload},'@/lib/legacy-notice':{LEGACY_CUTOFF:Date.parse('2026-10-18T07:47:46.750Z')},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'2026-10-18-v7'},'@/lib/yinyangeq-account':account,'@/lib/yinyangeq-records':records});
 const profile=await account.createProfileAccount(db),browser=crypto.randomUUID(),_otherBrowser=crypto.randomUUID(),a=crypto.randomUUID(),b=crypto.randomUUID(),vote=crypto.randomUUID(),run=crypto.randomUUID(),session='a'.repeat(64),dest='b'.repeat(64),at=1000;
 for(const subject of ['owner',profile.subject_id,'other']){sqlite.prepare("INSERT OR IGNORE INTO privacy_accounts(subject_id) VALUES(?)").run(subject);sqlite.prepare("UPDATE privacy_accounts SET submissions_enabled=1,agreement_version='2026-10-18-v7' WHERE subject_id=?").run(subject);}
 sqlite.prepare("INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,'owner',?)").run(session,Date.now()+1000000);sqlite.prepare('INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES(?,?,?)').run(dest,profile.subject_id,Date.now()+1000000);
@@ -60,7 +60,7 @@ const review3=await records.ownedProfilePreview(db,profile.subject_id,'vote',vot
 
 for(let i=0;i<26;i++)addVote(crypto.randomUUID());
 const largeCapture=await history.createHistoryCapture(db);await history.captureBraveHistory(db,'owner',session,largeCapture.code,snapshot);const largePreview=await history.historyPreview(db,largeCapture.id);assert.ok(largePreview.rows.filter(row=>row.kind==='vote'&&row.legacyUnowned).length>=26,'Historical review must not silently truncate after25 legacy rows');
-const erasure=load('lib/privacy-erasure.ts',{'cloudflare:workers':{env:{DB:db}},'@/lib/request-json':input});
+const erasure=load('site/lib/privacy-erasure.ts',{'cloudflare:workers':{env:{DB:db}},'@/lib/request-json':input});
 await account.saveProfileSnapshot(db,profile.subject_id,'Before deletion',snapshot);assert.ok(sqlite.prepare('SELECT COUNT(*) n FROM owner_profile_snapshots').get().n>0);
 await erasure.eraseData(profile.subject_id,{kind:'vote',id:vote},true);assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM owner_profile_snapshots').get().n,0);assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_entries WHERE record_kind='vote' AND record_id=?").get(vote).n,0);assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_events WHERE record_kind='vote' AND record_id=?").get(vote).n,0);
 await erasure.eraseData(profile.subject_id,{kind:'music',id:song},true);assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM owner_profile_events WHERE record_kind='music' AND record_id=?").get(song).n,0,'permanent erase removes historic song choices, unlike ordinary undo');

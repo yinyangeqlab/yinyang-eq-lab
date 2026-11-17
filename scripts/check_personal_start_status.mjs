@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { personalStartBlock, retainedSongFor } from '../lib/personal-start-status.ts';
+import { personalStartBlock, retainedSongFor } from '../site/lib/personal-start-status.ts';
 
 const ready = { playbackReady: true, musicChosen: true, setupReady: true, sharingState: 'ready' };
 

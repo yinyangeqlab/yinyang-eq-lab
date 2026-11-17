@@ -4,11 +4,11 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import {createRequire} from 'node:module';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {intervalStats, selectedPassageIntervals, selectedPassageProgress} from '../lib/listening.ts';
+import {intervalStats, selectedPassageIntervals, selectedPassageProgress} from '../site/lib/listening.ts';
 
 // Execute the player's real timing handlers with controlled media time. No wall
 // clock or checkbox state is needed to measure selected source coverage.
-const source=readFileSync('components/music-panel.tsx','utf8');
+const source=readFileSync('site/components/music-panel.tsx','utf8');
 const ast=ts.createSourceFile('panel.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),handlers=new Map();
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name)handlers.set(node.name.text,node.getText(ast));ts.forEachChild(node,visit);}visit(ast);
 const names=['closeInterval','startInterval','snapshotIntervals','heardNow','resetHeard'];
@@ -86,7 +86,7 @@ assert.deepEqual(selectedPassageIntervals(long,{start:NaN,end:20}),[]);
 console.log('PASS real player handlers: selected-only timing, five-second cap, both requirement states, stalls, repeats, seeks, selection changes, resets, and matched overlap');
 
 const require=createRequire(import.meta.url),fixtureModule={exports:{}};
-const meterSource=ts.transpileModule(readFileSync('components/matched-passage-control.tsx','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+const meterSource=ts.transpileModule(readFileSync('site/components/matched-passage-control.tsx','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 vm.runInNewContext(meterSource,{module:fixtureModule,exports:fixtureModule.exports,require:name=>name.endsWith('.css')?{}:require(name)});
 for(const required of [false,true])for(const [seconds,shown] of [[-1,'0.0'],[0,'0.0'],[2.35,'2.3'],[4.999,'4.9'],[5,'5.0'],[12,'5.0'],[NaN,'0.0']]){
  const markup=renderToStaticMarkup(fixtureModule.exports.MatchedPassageMeter({side:'A',seconds,required,qualified:false}));

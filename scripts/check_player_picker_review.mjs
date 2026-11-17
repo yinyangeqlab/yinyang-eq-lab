@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import ts from 'typescript';
 
 const parse = path => ts.createSourceFile(path, fs.readFileSync(path, 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-const personal = parse('app/shootout/personal/page.tsx'), panel = parse('components/music-panel.tsx'), shootout = parse('app/shootout/page.tsx');
+const personal = parse('site/app/shootout/personal/page.tsx'), panel = parse('site/components/music-panel.tsx'), shootout = parse('site/app/shootout/page.tsx');
 function find(ast, predicate) { let found; function visit(n) { if (!found && predicate(n)) found = n; ts.forEachChild(n, visit); } visit(ast); assert.ok(found); return found; }
 const named = (ast, name) => find(ast, n => ts.isFunctionDeclaration(n) && n.name?.text === name).getText(ast);
 const effect = (ast, text) => find(ast, n => ts.isCallExpression(n) && n.expression.getText(ast) === 'useEffect' && n.arguments[0].getText(ast).includes(text)).arguments[0].getText(ast);

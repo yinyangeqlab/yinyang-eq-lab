@@ -74,6 +74,6 @@ def prepare(item):
     return target.stat().st_size
 
 if __name__=='__main__':
-    manifest=json.loads((ROOT/'data/listening-pool-audio-manifest.json').read_text())
+    manifest=json.loads((ROOT/'site/data/listening-pool-audio-manifest.json').read_text())
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:sizes=list(pool.map(prepare,manifest.items()))
     print(json.dumps({'recordings':len(sizes),'bytes':sum(sizes),'samplesPerFinestBin':BLOCK,'audioUnchanged':True}))

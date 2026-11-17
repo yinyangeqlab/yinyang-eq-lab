@@ -3,9 +3,9 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
 import ts from 'typescript';
-import * as input from '../lib/request-json.ts';
-import * as files from '../lib/research-measurement-files.ts';
-import { parseCurve } from '../lib/curves.ts';
+import * as input from '../site/lib/request-json.ts';
+import * as files from '../site/lib/research-measurement-files.ts';
+import { parseCurve } from '../site/lib/curves.ts';
 
 const secret = 'local-test-owner-value-'.repeat(3);
 const env = { OWNER_ANALYTICS_TOKEN: secret };
@@ -47,12 +47,12 @@ function load(path) {
   vm.runInContext(code,context);
   return context.exports;
 }
-deps['@/lib/owner-access']=load('../lib/owner-access.ts');
-deps['./peq-preset']=load('../lib/peq-preset.ts');
-deps['@/lib/channel-balance']=load('../lib/channel-balance.ts');
-const {measurementResponses}=load('../lib/measurement-upload.ts');
-const upload=load('../app/api/research-measurements/route.ts');
-const download=load('../app/api/owner-research-measurement/route.ts');
+deps['@/lib/owner-access']=load('../site/lib/owner-access.ts');
+deps['./peq-preset']=load('../site/lib/peq-preset.ts');
+deps['@/lib/channel-balance']=load('../site/lib/channel-balance.ts');
+const {measurementResponses}=load('../site/lib/measurement-upload.ts');
+const upload=load('../site/app/api/research-measurements/route.ts');
+const download=load('../site/app/api/owner-research-measurement/route.ts');
 const responseText=Array.from({length:20},(_,i)=>`${20+i*1000},${i/10}`).join('\r\n')+'\r\n';
 function request({text=responseText,rights='yes',version='test',origin='https://example.test',name='original.txt',extra,declaredLength}={}) {
  const form=new FormData();
@@ -94,7 +94,7 @@ assert.equal((await download.GET(owner)).status,503,'Never return a corrupt or i
 env.OWNER_ANALYTICS_TOKEN=undefined;
 assert.equal((await download.GET(owner)).status,503);
 // The client must retain its local save if the optional archive request fails.
-const source=readFileSync(new URL('../components/measurement-manager.tsx',import.meta.url),'utf8');
+const source=readFileSync(new URL('../site/components/measurement-manager.tsx',import.meta.url),'utf8');
 const ast=ts.createSourceFile('measurement.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 let save;
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='saveFromForm')save=node.getText(ast);ts.forEachChild(node,visit);}visit(ast);

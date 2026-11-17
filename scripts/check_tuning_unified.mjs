@@ -11,14 +11,14 @@ const check = (condition, message) => { assert.ok(condition, message); checks++;
 function load(file) {
   if (cache.has(file)) return cache.get(file);
   const mod = {exports:{}}; cache.set(file,mod.exports);
-  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,AbortController,require(id){const path=id.startsWith('@/')?id.slice(2):file.slice(0,file.lastIndexOf('/')+1)+id.replace(/^\.\//,'');return load(path+'.ts');}});
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,AbortController,require(id){const path=id.startsWith('@/')?'site/'+id.slice(2):file.slice(0,file.lastIndexOf('/')+1)+id.replace(/^\.\//,'');return load(path+'.ts');}});
   return mod.exports;
 }
-const {eqResponse,tuningResponsePlot} = load('lib/eq-response.ts');
+const {eqResponse,tuningResponsePlot} = load('site/lib/eq-response.ts');
 const raw=[[20,8],[1000,0],[20000,-4]], target=[[20,4],[1000,0],[20000,1]], base=[{hz:1000,gain:6,q:1,type:'PK'}], added=[{hz:200,gain:3,q:1,type:'LSC'}];
 const before=eqResponse(raw,target,base,[],48000), after=eqResponse(raw,target,base,added,48000), off=eqResponse(raw,target,base,added,48000,'shootout',false);
 check(after.length>=2049 && after[0].hz===20 && after.at(-1).hz===20000,'Response retains detailed samples across 20 Hz–20 kHz');
-const interpolate=load('lib/channel-balance.ts').at;
+const interpolate=load('site/lib/channel-balance.ts').at;
 check(after.every(row=>Math.abs(row.target-interpolate(before.map(item=>[item.hz,item.target]),row.hz))<1e-9),'Tuning changes the predicted result while the reference target stays fixed');
 check(off.every(row=>Math.abs(row.after-row.raw)<1e-12),'Full EQ bypass returns exactly the raw response');
 check(after[0].after>before[0].after+2.9,'Added shelf is included in the plotted EQ change');
@@ -26,7 +26,7 @@ const near1k=before.reduce((a,b)=>Math.abs(a.hz-1000)<Math.abs(b.hz-1000)?a:b);
 check(Math.abs(near1k.after-near1k.raw-6)<.01,'Predicted response adds the real filter magnitude to the raw measurement');
 check(eqResponse([],target,base,[])===null,'No fabricated response is shown without a measurement');
 check(eqResponse(raw,undefined,base,[]).every(row=>row.target===undefined),'Legacy saved EQs do not invent a target');
-const {safeLibraryEq}=load('lib/music-library-eq.ts'), preset={id:'saved',name:'Stored EQ',source:'Fixture',filters:base,preamp:-8,target:{name:'Reference',points:target}};
+const {safeLibraryEq}=load('site/lib/music-library-eq.ts'), preset={id:'saved',name:'Stored EQ',source:'Fixture',filters:base,preamp:-8,target:{name:'Reference',points:target}};
 const stored=safeLibraryEq(preset);target[0][1]=99;
 check(stored.target.points[0][1]===4,'Saved target is an immutable snapshot');
 check(!safeLibraryEq({...preset,target:{name:'Invalid',points:[[20,0],[20,1]]}}).target,'Invalid target metadata is omitted without losing valid EQ filters');
@@ -34,14 +34,14 @@ check(safeLibraryEq({...preset,filters:Array.from({length:36},()=>({...base[0],g
 assert.throws(()=>safeLibraryEq({...preset,filters:Array.from({length:41},()=>base[0])}));checks++;
 assert.throws(()=>safeLibraryEq({...preset,filters:Array.from({length:25},()=>base[0])}),/headroom/);checks++;
 const reference=[[20,4],[1000,0],[20000,1]], plot=tuningResponsePlot(raw,reference,base,added);
-check(Math.abs(load('lib/channel-balance.ts').at(plot.target,1000)-75)<1e-9,'Comparison overlays use the original graph target reference');
-const magnitude=load('lib/autoeq.ts').response;
+check(Math.abs(load('site/lib/channel-balance.ts').at(plot.target,1000)-75)<1e-9,'Comparison overlays use the original graph target reference');
+const magnitude=load('site/lib/autoeq.ts').response;
 check(plot.after.every((point,i)=>Math.abs((point[1]-plot.raw[i][1])-[...base,...added].reduce((sum,filter)=>sum+magnitude(point[0],filter,48000),0))<1e-9),'Display alignment preserves the exact EQ change at every frequency');
 const bypassPlot=tuningResponsePlot(raw,reference,base,added,48000,'shootout',false);
 check(bypassPlot.after.every((point,i)=>point[1]===bypassPlot.raw[i][1]),'Bypassed overlays coincide with raw on the original graph');
 const absent=tuningResponsePlot(undefined,reference,base,added);
 check(!absent.raw && !absent.after && absent.base.length>=2049,'Without a measurement only settings are plotted, not invented headphone responses');
-const source=fs.readFileSync('app/preference-tuning/editor.tsx','utf8'), ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
+const source=fs.readFileSync('site/app/preference-tuning/editor.tsx','utf8'), ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
 const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='preparePreviewFit')initializer=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);
 const rankDeclaration=ast.statements.find(node=>ts.isFunctionDeclaration(node)&&node.name?.text==='tuningTargetRanking');
 assert.ok(rankDeclaration);
@@ -56,7 +56,7 @@ check(rank({fitterCohorts:[{key:'other',view:view(['unrelated'])}]}).rows.length
 
 const exportsWritten = [];
 const route = { exports: {} };
-const routeCode = ts.transpileModule(fs.readFileSync('app/api/preference-exports/route.ts','utf8'), {
+const routeCode = ts.transpileModule(fs.readFileSync('site/app/api/preference-exports/route.ts','utf8'), {
   compilerOptions: { target:ts.ScriptTarget.ES2022, module:ts.ModuleKind.CommonJS },
 }).outputText;
 const routeImports = {
@@ -64,7 +64,7 @@ const routeImports = {
   '@/lib/autoeq-target-sources': { isSourceAutoEqTarget:id => id === 'source-fixture' },
   '@/db': { getDb:() => ({ insert:() => ({ values:row => row }), batch:async rows => exportsWritten.push(rows) }) },
   '@/db/schema': { preferenceExports:{} },
-  '@/lib/fitter-settings': load('lib/fitter-settings.ts'),
+  '@/lib/fitter-settings': load('site/lib/fitter-settings.ts'),
   '@/lib/request-json': { readJsonObject:request => request.json(), requestInputResponse:() => null },
 };
 vm.runInNewContext(routeCode, { module:route, exports:route.exports, require:id => routeImports[id], Request, Response, crypto });
@@ -94,7 +94,7 @@ for (const [exportKind, curve] of [['original-target',reference], ['preference-t
   }
 }
 downloadTarget.id = 'flat';
-const { parseCurve } = load('lib/curves.ts');
+const { parseCurve } = load('site/lib/curves.ts');
 check(parseCurve(downloadCurve('original-target','txt').contents).every(([,db]) => db===0), 'Flat reference TXT can be imported as a flat curve');
 for (const invalid of [{format:'txt',filename:'fixture.csv'},{format:'equalizerapo',filename:'fixture.txt'},{targetId:'source-fixture'}]) {
   const response = await postExport({ ...baseExport, exportKind:'original-target', format:'txt', filename:'fixture.txt', contents:'test', curve:reference, ...invalid });
@@ -132,7 +132,7 @@ const measurementB={id:'headphone-b',name:'Headphone B',device:'Headphone B',typ
 const linkedStored={...stored,measurementId:measurementA.id,headphone:measurementA.name};
 const unlinkedStored={...stored,id:'unlinked',name:'Imported without headphones'};
 const store=new Map([['target-lab-library-eqs-v1',JSON.stringify([linkedStored,unlinkedStored])],['target-lab-measurements',JSON.stringify([measurementA,measurementB])],['target-lab-active-measurement',measurementB.id]]);
-const h=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
+const h=mount('site/app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
 const setup=()=>h.find(n=>n.type==='@/components/sound-setup'), bass=()=>h.find(n=>n.props?.['aria-label']==='Bass gain');
 const responseCurve=()=>h.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart').props;
 const rawOverlay=()=>responseCurve().overlays.find(row=>row.key==='raw').points;
@@ -170,16 +170,16 @@ check(JSON.parse(store.get('personal-tuning-v1')).settings.subType==='HSC','The 
 h.unmount();
 // Verify the actual shared picker only renders its selected mode's input.
 const props={mode:'target',onMode(){},headphones:{type:'fixture-headphone-picker',props:{}},target:{type:'select',props:{id:'target-fixture'}},presets:[linkedStored],presetId:'saved',onPreset(){}};
-const targetSetup=mount('components/sound-setup.tsx',{props});
+const targetSetup=mount('site/components/sound-setup.tsx',{props});
 check(targetSetup.find(n=>n.type==='select').props.id==='target-fixture','Target mode renders only the target selection');targetSetup.unmount();
-const savedSetup=mount('components/sound-setup.tsx',{props:{...props,mode:'saved'}});
+const savedSetup=mount('site/components/sound-setup.tsx',{props:{...props,mode:'saved'}});
 check(savedSetup.find(n=>n.type==='select').props.value==='saved','Saved mode replaces the target with its saved EQ selection');
 check(savedSetup.find(n=>n.props?.className==='sound-linked-headphone').props.children[0].props.children==='Headphone A','Saved mode clearly identifies the saved headphone');
 check(savedSetup.find(n=>n.type==='optgroup').props.label==='Headphone A','Saved EQ dropdown groups options by their associated headphones');
 const collect=(n,predicate)=>!n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(item=>collect(item,predicate)):[...(predicate(n)?[n]:[]),...collect(n.props?.children,predicate)];
 check(collect(savedSetup.tree,n=>n.type==='fixture-headphone-picker').length===0,'Saved mode hides the unrelated editable headphone picker');savedSetup.unmount();
 // Render the actual original chart function held by the page, then exercise its controls.
-const chartHost=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{ResizeObserver:class{observe(){}disconnect(){}},fetch:async()=>({ok:true,json:async()=>[]})}});
+const chartHost=mount('site/app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{ResizeObserver:class{observe(){}disconnect(){}},fetch:async()=>({ok:true,json:async()=>[]})}});
 chartHost.render();const chartNode=chartHost.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart');
 const drags=[],focusedChanges=[];let starts=0,ends=0;
 const chartProps={...chartNode.props,mode:'filters',overlays:[{key:'raw',label:'Raw headphones',points:plot.raw,color:'#d6e0e7'},{key:'after',label:'Predicted after EQ',points:plot.after,color:'#8ee8ca'}],onDrag:(...args)=>drags.push(args),onFocusedChange:filter=>focusedChanges.push(filter),onDragStart:()=>starts++,onDragEnd:()=>ends++};
@@ -211,7 +211,7 @@ const focusEvent={...event,clientX:48+(800-17-48)*Math.log(1500/20)/Math.log(200
 const broadChanges=drags.length;
 drag.props.onPointerDown(focusEvent);drag.props.onPointerMove({...focusEvent,clientY:90});drag.props.onPointerUp(focusEvent);
 check(focusedChanges.length===1 && focusedChanges[0].hz===1500 && focusedChanges[0].gain>0 && focusedChanges[0].q===4 && drags.length===broadChanges,'A plain drag creates a focused peak at the pointer while keeping whole-region gains separate');
-const focusMath=load('lib/peq-preset.ts');
+const focusMath=load('site/lib/peq-preset.ts');
 for (const rate of [44100,48000,96000]) {
   const filter={type:'PK',hz:1500,gain:-6,q:4};
   for (const hz of focusMath.peakingHalfGainEdges(filter.hz,filter.q,rate)) {
@@ -234,16 +234,16 @@ const rateChart=renderRate(44100),ratePath=collect(rateChart,n=>n.type==='path'&
 const vertices=[...ratePath.matchAll(/[ML]([-\d.]+) ([-\d.]+)/g)].map(match=>[Number(match[1]),Number(match[2])]);
 const expectedX=48+(800-17-48)*Math.log(10000/20)/Math.log(20000/20);
 const plotted=vertices.find(([x])=>Math.abs(x-expectedX)<.006);
-const actualGain=load('lib/peq-preset.ts').presetFilterResponse(10000,{type:'HSC',hz:rateSettings.trebleHz,gain:6,q:Math.SQRT1_2},44100);
+const actualGain=load('site/lib/peq-preset.ts').presetFilterResponse(10000,{type:'HSC',hz:rateSettings.trebleHz,gain:6,q:Math.SQRT1_2},44100);
 const expectedY=25+(90-(75+actualGain))*(230-38-25)/35;
 check(plotted && Math.abs(plotted[1]-expectedY)<.006,'Saved-curve editor renders the actual 44.1 kHz digital response');
 check(collect(renderRate(48000),n=>n.type==='path'&&n.props.strokeWidth==='3')[0].props.d!==ratePath,'Changing playback sample rate updates the displayed filter response');chartHost.unmount();
 const measurement={id:'in-ear',name:'Synthetic in-ear',type:'ie',points:raw};
-const library=mount('components/library-eq-panel.tsx',{props:{onChange(){}},globals:{localStorage:{getItem:k=>k==='target-lab-measurements'?JSON.stringify([measurement]):'[]'},fetch:async()=>({ok:true,json:async()=>[]})}});
+const library=mount('site/components/library-eq-panel.tsx',{props:{onChange(){}},globals:{localStorage:{getItem:k=>k==='target-lab-measurements'?JSON.stringify([measurement]):'[]'},fetch:async()=>({ok:true,json:async()=>[]})}});
 library.render();library.find(n=>n.type==='@/components/headphone-picker').props.onSelect('in-ear');library.render();
 check(library.find(n=>n.type==='@/components/headphone-picker').props.headphoneType==='ie','Library headphone selection keeps the headphone-family control consistent');library.unmount();
 const libraryChanges=[],libraryStore=new Map([['target-lab-measurements',JSON.stringify([measurementA,measurementB])],['target-lab-library-eqs-v1',JSON.stringify([linkedStored])]]);
-const linkedLibrary=mount('components/library-eq-panel.tsx',{props:{onChange:eq=>libraryChanges.push(eq)},globals:{localStorage:{getItem:key=>libraryStore.get(key)??null,setItem:(key,value)=>libraryStore.set(key,value)},fetch:async()=>({ok:true,json:async()=>[]})}});
+const linkedLibrary=mount('site/components/library-eq-panel.tsx',{props:{onChange:eq=>libraryChanges.push(eq)},globals:{localStorage:{getItem:key=>libraryStore.get(key)??null,setItem:(key,value)=>libraryStore.set(key,value)},fetch:async()=>({ok:true,json:async()=>[]})}});
 const librarySetup=()=>linkedLibrary.find(n=>n.type==='@/components/sound-setup');
 linkedLibrary.render();linkedLibrary.find(n=>n.type==='@/components/headphone-picker').props.onSelect(measurementB.id);linkedLibrary.render();librarySetup().props.onMode('saved');linkedLibrary.render();librarySetup().props.onPreset('saved');linkedLibrary.render();linkedLibrary.find(n=>n.props?.['aria-label']==='Enable EQ').props.onChange({target:{checked:true}});linkedLibrary.render();
 check(libraryChanges.at(-1).measurementId===measurementA.id && JSON.stringify(libraryChanges.at(-1).filters)===JSON.stringify(linkedStored.filters),'Music Library uses the selected EQ’s saved headphone and exact stored filters');
@@ -252,7 +252,7 @@ check(libraryChanges.at(-1).measurementId===measurementA.id && JSON.stringify(li
 
 // Exercise the actual unified gain/frequency editor rather than a copied state reducer.
 let editTime=1000;
-const tones=mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{performance:{now:()=>editTime},getComputedStyle:()=>({direction:'ltr',getPropertyValue:()=> '16px'}),fetch:async()=>({ok:true,json:async()=>[]})}});
+const tones=mount('site/app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]}},globals:{performance:{now:()=>editTime},getComputedStyle:()=>({direction:'ltr',getPropertyValue:()=> '16px'}),fetch:async()=>({ok:true,json:async()=>[]})}});
 const toneCurve=()=>tones.find(n=>typeof n.type==='function'&&n.type.name==='CurveChart').props;
 const toneGain=name=>tones.find(n=>n.type==='input'&&n.props.type==='range'&&n.props['aria-label']===name+' gain');
 const filterField=label=>tones.find(n=>n.type==='input'&&n.props['aria-label']===label);
@@ -372,7 +372,7 @@ const controlsAudio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,
   if(this.paused) throw new DOMException('Playback was interrupted','AbortError');
 }};
 const controlsTracks=[{fileUrl:'/first-fixture.wav',title:'First fixture',artist:'Synthetic artist'},{fileUrl:'/second-fixture.wav',title:'Second fixture',artist:'Synthetic artist'}];
-const player=mount('app/preference-tuning/editor.tsx',{audio:controlsAudio,imports:{'@/lib/music-catalog':{listeningPool:controlsTracks},'@/lib/loudness':{analyzeTrack:async()=>({})},'@/components/playback-transport':{default:'fixture-transport',NowPlaying:'fixture-now-playing',PlaybackTime:'fixture-playback-time'}},globals:{AudioContext:ControlsAudioContext,AudioWorkletNode:ControlsWorklet,fetch:async()=>({ok:true,json:async()=>[],blob:async()=>new Blob()})}});
+const player=mount('site/app/preference-tuning/editor.tsx',{audio:controlsAudio,imports:{'@/lib/music-catalog':{listeningPool:controlsTracks},'@/lib/loudness':{analyzeTrack:async()=>({})},'@/components/playback-transport':{default:'fixture-transport',NowPlaying:'fixture-now-playing',PlaybackTime:'fixture-playback-time'}},globals:{AudioContext:ControlsAudioContext,AudioWorkletNode:ControlsWorklet,fetch:async()=>({ok:true,json:async()=>[],blob:async()=>new Blob()})}});
 const flushPlayer=async()=>{for(let i=0;i<30;i++)await Promise.resolve();player.render();};
 const playControl=()=>player.find(n=>['Play music','Pause music'].includes(n.props?.['aria-label']));
 const trackLabel=()=>player.find(n=>n.props?.className==='pt-full-track').props.children.map(node=>node.props.children).join(' · ');
@@ -406,7 +406,7 @@ player.unmount();
 
 // Exercise search and selection using the component's real keyboard/pointer handlers.
 const picked=[];
-const songSearch=mount('components/music-track-picker.tsx',{props:{tracks:[{title:'First song',artist:'Synthetic'},{title:'Café Storm',artist:'Other artist',versionLabel:'Live'}],selectedIndex:0,onSelect:index=>picked.push(index)}});
+const songSearch=mount('site/components/music-track-picker.tsx',{props:{tracks:[{title:'First song',artist:'Synthetic'},{title:'Café Storm',artist:'Other artist',versionLabel:'Live'}],selectedIndex:0,onSelect:index=>picked.push(index)}});
 const searchInput=()=>songSearch.find(n=>n.props?.role==='combobox');
 const searchOptions=()=>collect(songSearch.tree,n=>n.props?.role==='option');
 searchInput().props.onFocus();songSearch.render();searchInput().props.onChange({target:{value:'cafe live'}});songSearch.render();

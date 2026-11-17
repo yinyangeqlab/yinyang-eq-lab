@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { build } from "esbuild";
-import { offlineWallpaperFilename, wallpaperScenes, wallpaperUsagePath } from "../../lib/welcome-wallpapers.ts";
+import { offlineWallpaperFilename, wallpaperScenes, wallpaperUsagePath } from "../../site/lib/welcome-wallpapers.ts";
 
 const readme = `YinYang EQ — Offline desktop wallpaper
 
@@ -23,7 +23,7 @@ loop if your wallpaper app does not support web wallpapers or WebGL.
 `;
 
 export async function packageOfflineWallpapers(root, folder) {
-  const css = await readFile(join(root, "app/welcome.css"), "utf8");
+  const css = await readFile(join(root, "site/app/welcome.css"), "utf8");
   const terms = await readFile(join(root, "public", wallpaperUsagePath.slice(1)), "utf8");
   const image = async name => "data:image/webp;base64," + (await readFile(join(root, "public", name))).toString("base64");
   const [texture, still, headphones, iems] = await Promise.all([
@@ -34,7 +34,7 @@ export async function packageOfflineWallpapers(root, folder) {
     const flights = scene.id === "flying-gear";
     const bundle = await build({
       entryPoints: [join(root, "scripts/wallpapers/offline.tsx")],
-      tsconfig: join(root, "tsconfig.json"), bundle: true, write: false, minify: true, format: "iife", jsx: "automatic",
+      tsconfig: join(root, "site/tsconfig.json"), bundle: true, write: false, minify: true, format: "iife", jsx: "automatic",
       define: {
         "process.env.NODE_ENV": '"production"',
         OFFLINE_FLIGHTS: JSON.stringify(flights),

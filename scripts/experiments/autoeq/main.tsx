@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BlindEqPlayer, prepareComparison } from '../../../lib/blind-eq-audio';
+import { BlindEqPlayer, prepareComparison } from '../../../site/lib/blind-eq-audio';
 import { exportFit, preset, type Comparison, type Fixture } from './compare';
 import { at, fitGrid } from './engine';
 import './style.css';

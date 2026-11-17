@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {rankPreferences} from '../lib/preference-ranking.ts';
+import {rankPreferences} from '../site/lib/preference-ranking.ts';
 const targets=['a','b','c'].map(id=>({id,name:id,creator:'Test'}));
 const vote=(id,voterId='one',winnerId='a',loserId='b',extra={})=>({id:String(id),voterId,winnerId,loserId,...extra});
 const get=(r,id='a')=>r.rows.find(t=>t.id===id);

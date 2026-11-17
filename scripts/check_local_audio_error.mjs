@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const source = readFileSync(new URL('../components/library-wave-player.tsx', import.meta.url), 'utf8');
+const source = readFileSync(new URL('../site/components/library-wave-player.tsx', import.meta.url), 'utf8');
 const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 let checks = 0;
 const check = (condition, message) => { assert.ok(condition, message); checks++; };

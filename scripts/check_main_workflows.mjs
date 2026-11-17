@@ -5,14 +5,14 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
-import {captureAccountValues} from '../lib/account-sync.mjs';
+import {captureAccountValues} from '../site/lib/account-sync.mjs';
 const require = createRequire(import.meta.url);
 const deferred = () => { let resolve,reject; const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject}; };
 const flush=async()=>{for(let i=0;i<40;i++)await Promise.resolve();};
 let checks=0;
 const check=(value,message)=>{assert.ok(value,message);checks++;};
 {
- const source=fs.readFileSync('app/preference-tuning/editor.tsx','utf8'),ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
+ const source=fs.readFileSync('site/app/preference-tuning/editor.tsx','utf8'),ast=ts.createSourceFile('tuning.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let initializer;
  const visit=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='preparePreviewFit')initializer=node.initializer.getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(initializer);
  const jobs=[],messages=[],current={context:{sampleRate:48000,currentTime:0},output:{gain:{cancelScheduledValues(){},setValueAtTime(){}}},filters:[{}]};
  const state={fitter:{method:"standard",bands:10},AbortController,Error,JSON,useCallback:fn=>fn,measurement:{points:[[20,0],[20000,0]]},normalized:[[20,0],[20000,0]],filters:[],soundMode:"target",savedEq:undefined,eqOn:true,setPreparingEq(){},graph:{current},media:{current:{pause(){}}},previewGain:()=>1,replaceEqStage:()=>({}),safeGain(){},setFit(){},setMessage:value=>messages.push(value),fitAutoEqAsync(_request,signal){const job=deferred();jobs.push(job);signal.addEventListener('abort',()=>job.reject(new DOMException('EQ request cancelled.','AbortError')),{once:true});return job.promise;}};
@@ -45,14 +45,14 @@ function mount(path,{globals={},imports={},audio,props={},queueFunctional=false}
   if(id==='@base-ui/react/combobox'||id==='@base-ui/react/menu')return { [id.endsWith('/menu') ? 'Menu' : 'Combobox']:new Proxy({},{get:(_,part)=>`${id}/${part}`}) };
   // Worker execution has its own real-engine suite; these tests defer transports.
   if(id==='@/lib/autoeq-client'||id==='./autoeq-client')return{fitAutoEqAsync:async()=>[]};
-  if(id==='@/components/embed-common')return load('components/embed-common.ts');
-  if(id==='@/components/playback-transport')return load('components/playback-transport.tsx');
-  if(id==='@/components/admin-table')return load('components/admin-table.tsx');
+  if(id==='@/components/embed-common')return load('site/components/embed-common.ts');
+  if(id==='@/components/playback-transport')return load('site/components/playback-transport.tsx');
+  if(id==='@/components/admin-table')return load('site/components/admin-table.tsx');
   if(id==='@/components/site-help-actions')return{useSiteHelpActions:()=>null};
   if(id.startsWith('@/components/')||id==='next/link')return{default:id,useInvitesEnabled:()=>false,useConsentPrompt:()=>({ask:async fn=>fn(),prompt:null})};
   if(id==='lucide-react')return new Proxy({},{get:(_,k)=>String(k)});
-  if(id.startsWith('@/data/')&&id.endsWith('.json'))return {default:require('../'+id.slice(2))};
-  if(id.startsWith('@/lib/')){const name=id.slice(2);if(fs.existsSync(name+'.ts'))return load(name+'.ts');return require('../'+name);}
+  if(id.startsWith('@/data/')&&id.endsWith('.json'))return {default:require('../site/'+id.slice(2))};
+  if(id.startsWith('@/lib/')){const name='site/'+id.slice(2);if(fs.existsSync(name+'.ts'))return load(name+'.ts');return require('../'+name);}
   if(id.startsWith('.')){const base=fileURLToPath(new URL(id,new URL('../'+file,import.meta.url)));const extension=['.ts','.tsx'].find(ext=>fs.existsSync(base+ext));if(extension)return load((base+extension).replace(fileURLToPath(new URL('../',import.meta.url)),''));return require(base);}
   return require(id);
  };vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{...env,require:req,module:mod,exports:mod.exports});cache.set(file,mod.exports);return mod.exports;}
@@ -64,7 +64,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const jobs=[],requests=[],play=deferred(),actions=[];const node=()=>({connect(){},disconnect(){},frequency:{value:0},gain:{value:0,cancelScheduledValues(){},setValueAtTime(){},linearRampToValueAtTime(){},setTargetAtTime(){}},Q:{value:0}});
  const audio={src:'',currentSrc:'',paused:true,duration:45,currentTime:0,load(){actions.push('load');},pause(){this.paused=true;},play(){this.paused=false;return play.promise;}};
  class AudioContext extends EventTarget {state='running';destination={};createGain=node;createBiquadFilter=node;createMediaElementSource(){actions.push('media-source');return node();}createAnalyser(){return{...node(),fftSize:0};}resume(){return Promise.resolve();}close(){this.state='closed';return Promise.resolve();}}
- const h=mount('app/preference-tuning/editor.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{Element:PlaybackTarget,HTMLElement:PlaybackTarget,AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
+ const h=mount('site/app/preference-tuning/editor.tsx',{audio,queueFunctional,imports:{'@/lib/loudness':{analyzeTrack(file){const job=deferred();jobs.push({file,...job});return job.promise;}},'@/lib/music-catalog':{listeningPool:[{fileUrl:'/synthetic.wav',title:'Synthetic',artist:'Fixture'}]}},globals:{Element:PlaybackTarget,HTMLElement:PlaybackTarget,AudioContext,URL:{createObjectURL:f=>'blob:'+f.name,revokeObjectURL(){}},fetch:async url=>{if(url.startsWith('/api/'))return{ok:true,json:async()=>url==='/api/targets'?[]:{}};const job=deferred();requests.push(job);return job.promise;},...(blocked?{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}}}:{} )}});
  h.render();h.find(n=>n.props?.['aria-controls']==='pt-playback-full').props.onClick();h.render();
  h.find(n=>n.props?.['aria-controls']==='pt-music-choices').props.onClick();h.render();
  return Object.assign(h,{audio,jobs,requests,play,actions,choose(name){h.find(n=>n.type==='input'&&n.props.type==='file'&&!n.props.multiple&&n.props.accept.startsWith('audio/')).props.onChange({target:{files:[{name}]}});h.render();},wave(){return h.find(n=>n.type==='@/components/track-waveform').props;}});
@@ -82,7 +82,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const measurement={id:'same-id',name:'Synthetic',type:'oe',points:[[20,0],[20000,0]]};
  const store=new Map([['target-lab-measurements',JSON.stringify([measurement])],['target-lab-active-measurement',measurement.id]]);
  const jobs=[],variant=(bands,method='standard')=>({bands,method,priority:'close',engine:'legacy',filters:[{hz:1000,gain:0,q:1}],preamp:-1,rms:0,peakBoost:0});
- const open=()=>mount('app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]},'@/lib/eq-candidates':{generateEqCandidates(_raw,_curve,signal){const job=deferred();jobs.push({...job,signal});return job.promise;}}},globals:{localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
+ const open=()=>mount('site/app/preference-tuning/editor.tsx',{imports:{'@/lib/music-catalog':{listeningPool:[]},'@/lib/eq-candidates':{generateEqCandidates(_raw,_curve,signal){const job=deferred();jobs.push({...job,signal});return job.promise;}}},globals:{localStorage:{getItem:k=>store.get(k)??null,setItem:(k,v)=>store.set(k,v)},fetch:async()=>({ok:true,json:async()=>[]})}});
  const h=open();
  await flush();h.render();
  const edit=points=>{h.find(n=>n.type==='@/components/headphone-picker').props.onEdit(measurement.id);h.render();h.find(n=>n.type==='@/components/measurement-manager').props.onUpdate({...measurement,points});h.render();};
@@ -107,7 +107,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
   {id:'unrelated', name:'Unrelated', creator:'Other'},
  ];
  const props = { targets:rows, selected:rows[3], onSelect(id){ props.selected = rows.find(row=>row.id===id); } };
- const h = mount('app/preference-tuning/target-picker.tsx', {props});
+ const h = mount('site/app/preference-tuning/target-picker.tsx', {props});
  const combo = () => h.find(n=>n.type==='@base-ui/react/combobox/Root').props;
  const enter = query => { combo().onInputValueChange(query,{reason:'input-change'}); h.render(); };
  check(all(h.tree,n=>n.type==='select').length===0 && all(h.tree,n=>n.type==='@base-ui/react/combobox/Input').length===1,'Target search and selection use one input without a separate select');
@@ -138,7 +138,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  const storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
  const requests=[];
  const fit={filters:[{type:'PK',hz:200,gain:2,q:1}],preamp:-2.5,engine:'legacy',engineVersion:'fixture'};
- const h=mount('app/ear-tuning/page.tsx',{imports:{'./guide':{default:'ear-guide'},'./ranked-practice':{default:'ranked-practice'},'./adjustment-handles':{gainLimit:band=>band.kind==='peak'?12:6},'./frequency-navigator':{default:'frequency-navigator'},'./peak-dip-icon':{default:'peak-dip-icon'},'./adjustment-width':{default:'adjustment-width'},'./playback-keys':{useEarPlaybackKeys:()=>()=>{}},'@/lib/music-catalog':{listeningPool:[]},'@/lib/autoeq-client':{fitAutoEqAsync(request){requests.push(request);return Promise.resolve([fit]);}}},globals:{crypto,Event,localStorage:storage,fetch:async()=>({ok:true,json:async()=>[]})}});
+ const h=mount('site/app/ear-tuning/page.tsx',{imports:{'./guide':{default:'ear-guide'},'./ranked-practice':{default:'ranked-practice'},'./adjustment-handles':{gainLimit:band=>band.kind==='peak'?12:6},'./frequency-navigator':{default:'frequency-navigator'},'./peak-dip-icon':{default:'peak-dip-icon'},'./adjustment-width':{default:'adjustment-width'},'./playback-keys':{useEarPlaybackKeys:()=>()=>{}},'@/lib/music-catalog':{listeningPool:[]},'@/lib/autoeq-client':{fitAutoEqAsync(request){requests.push(request);return Promise.resolve([fit]);}}},globals:{crypto,Event,localStorage:storage,fetch:async()=>({ok:true,json:async()=>[]})}});
  h.render();
  check(h.button('Save EQ to My Collection').props.disabled,'Peak & Dip Finder requires a change before saving');
  h.button('Play sound').props.onClick();h.render();
@@ -187,7 +187,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
 }
 {
  const band={id:'peak',kind:'peak',hz:1000,type:'PK',gain:-3,q:4};
- const h=mount('app/ear-tuning/frequency-navigator.tsx',{props:{
+ const h=mount('site/app/ear-tuning/frequency-navigator.tsx',{props:{
   frequency:1000,points:[[100,10],[1000,10],[10000,10]],range:{from:100,to:10000},
   referenceFilters:[{type:'PK',hz:1000,gain:6,q:2}],
   editor:{bands:[band],selectedId:band.id,onSelect(){},onChange(){}},
@@ -210,8 +210,8 @@ function tuning({blocked=false,queueFunctional=false}={}){
   createAnalyser(){return node();}
   close(){this.state='closed';}
  }
- const h=mount('app/ear-tuning/frequency-navigator.tsx',{props:{frequency:8000},globals:{AudioContext}});
- const {EarTuningAudio}=h.load('lib/ear-tuning-audio.ts');
+ const h=mount('site/app/ear-tuning/frequency-navigator.tsx',{props:{frequency:8000},globals:{AudioContext}});
+ const {EarTuningAudio}=h.load('site/lib/ear-tuning-audio.ts');
  const media=Object.assign(new EventTarget(),{pause(){}});
  const setup={base:[],preamp:-4,focus:false,bypass:false,adjustments:[{hz:8000,gain:6,q:4}]};
  const finder=new EarTuningAudio(media,()=>{},{useListeningHeadroom:true});
@@ -239,7 +239,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
 }
 {
  const measurement={id:'same-id',name:'Synthetic',points:[[20,0],[20000,0]]},store=new Map([['target-lab-measurements',JSON.stringify([measurement])]]),job=deferred(),saved=[];let signal;
- const h=mount('components/library-eq-panel.tsx',{props:{onChange(){}},imports:{'@/lib/autoeq-client':{fitAutoEqAsync(_request,currentSignal){signal=currentSignal;return job.promise;}},'@/lib/music-library-eq':{readLibraryEqs:()=>[],saveLibraryEq:eq=>saved.push(eq)}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null},fetch:async()=>({ok:true,json:async()=>[]})}});
+ const h=mount('site/components/library-eq-panel.tsx',{props:{onChange(){}},imports:{'@/lib/autoeq-client':{fitAutoEqAsync(_request,currentSignal){signal=currentSignal;return job.promise;}},'@/lib/music-library-eq':{readLibraryEqs:()=>[],saveLibraryEq:eq=>saved.push(eq)}},globals:{crypto,localStorage:{getItem:k=>store.get(k)??null},fetch:async()=>({ok:true,json:async()=>[]})}});
  await flush();h.render();h.find(n=>n.type==='@/components/headphone-picker').props.onSelect(measurement.id);h.render();h.find(n=>n.props?.id==='library-target').props.onChange({target:{value:'flat'}});h.render();h.button('Create EQ').props.onClick();
  store.set('target-lab-measurements',JSON.stringify([{...measurement,points:[[20,5],[20000,-3]]}]));h.events.get('storage').forEach(fn=>fn());h.render();
  check(signal.aborted,'Storage refresh with same-ID measurement edits cancels library generation');
@@ -260,12 +260,12 @@ function tuning({blocked=false,queueFunctional=false}={}){
 {
  let blocked=true,hash='#key=synthetic',replaced=0;
  const store=new Map();const localStorage={getItem:k=>store.get(k)??null,setItem(k,v){if(blocked)throw Error('quota');store.set(k,v);}};
- const h=mount('components/embed-results.tsx',{props:{id:'synthetic'},globals:{localStorage,location:{get hash(){return hash;},pathname:'/s/synthetic/results',search:'',origin:'https://fixture.invalid'},history:{replaceState(){replaced++;hash='';}},fetch:async()=>({ok:true,json:async()=>({id:'synthetic',title:'Fixture',createdAt:1,targets:[],runs:[],summary:{sideBias:{decided:0},targets:[],pairs:[],byKind:{},bySignal:{},timeline:[]},ownerShare:{}})})}});
+ const h=mount('site/components/embed-results.tsx',{props:{id:'synthetic'},globals:{localStorage,location:{get hash(){return hash;},pathname:'/s/synthetic/results',search:'',origin:'https://fixture.invalid'},history:{replaceState(){replaced++;hash='';}},fetch:async()=>({ok:true,json:async()=>({id:'synthetic',title:'Fixture',createdAt:1,targets:[],runs:[],summary:{sideBias:{decided:0},targets:[],pairs:[],byKind:{},bySignal:{},timeline:[]},ownerShare:{}})})}});
  await flush();h.render();check(replaced===0&&hash,'Unsaved private results key stays in the address bar');check(text(h.tree).includes('Browser storage could not save'),'Storage failure is disclosed before leaving');
- const common=h.load('components/embed-common.ts');check(common.saveShootout({id:'other',key:'key'})===false,'Persistence reports failure');blocked=false;check(common.saveShootout({id:'other',key:'key'})===true,'Persistence confirms saved keys');check(common.readSaved()[0].key==='key','Successful save preserves key');h.unmount();
+ const common=h.load('site/components/embed-common.ts');check(common.saveShootout({id:'other',key:'key'})===false,'Persistence reports failure');blocked=false;check(common.saveShootout({id:'other',key:'key'})===true,'Persistence confirms saved keys');check(common.readSaved()[0].key==='key','Successful save preserves key');h.unmount();
 }
 {
- const reads=[],deletion=deferred();let clearFails=false;const h=mount('app/my-data/page.tsx',{imports:{'@/lib/account-sync-cache.mjs':{clearSyncBase:async()=>{}},'@/lib/browser-data':{clearSiteBrowserData(){if(clearFails)throw Error('blocked');},notifySharingChoicesChanged(){},comparisonLookup(){},deleteBrowserTrial(){}}},globals:{fetch(url,options){if(options?.method==='DELETE')return deletion.promise;const job=deferred();reads.push(job);return job.promise;}}});
+ const reads=[],deletion=deferred();let clearFails=false;const h=mount('site/app/my-data/page.tsx',{imports:{'@/lib/account-sync-cache.mjs':{clearSyncBase:async()=>{}},'@/lib/browser-data':{clearSiteBrowserData(){if(clearFails)throw Error('blocked');},notifySharingChoicesChanged(){},comparisonLookup(){},deleteBrowserTrial(){}}},globals:{fetch(url,options){if(options?.method==='DELETE')return deletion.promise;const job=deferred();reads.push(job);return job.promise;}}});
  const data={records:[],activityLogs:[],activityLogLimit:0,submissionsEnabled:true};
  h.events.get('focus').forEach(fn=>fn());reads[1].resolve({ok:true,json:async()=>({...data,nickname:'Newest'})});await flush();h.render();reads[0].resolve({ok:true,json:async()=>({...data,nickname:'Stale'})});await flush();h.render();check(h.find(n=>n.type==='@/components/listener-nickname-panel').props.initialNickname==='Newest','Latest data refresh wins over out-of-order older responses');
  h.events.get('focus').forEach(fn=>fn());h.button('Delete linked data and sign out…').props.onClick({ currentTarget: { focus() {} } });h.render();h.find(n=>n.type==='input'&&n.props.autoFocus).props.onChange({target:{value:'DELETE ALL MY DATA'}});h.render();h.button('Permanently delete').props.onClick();h.render();const count=reads.length;h.events.get('focus').forEach(fn=>fn());check(reads.length===count,'Focus refresh cannot race an in-flight deletion');clearFails=true;deletion.resolve({ok:true,json:async()=>({})});await flush();h.render();reads[2].resolve({ok:true,json:async()=>({...data,nickname:'Deleted'})});await flush();h.render();check(!text(h.tree).includes('Delete linked data and sign out…'),'A pre-deletion response cannot restore erased records');check(text(h.tree).includes('Browser storage still needs manual clearing'),'Successful server erasure never falsely claims browser clearing');h.unmount();
@@ -274,12 +274,12 @@ function tuning({blocked=false,queueFunctional=false}={}){
  let calls=0;
  const mine={};
  const snapshot=()=>({signedIn:true,mine:{...mine},totals:{keep:Object.keys(mine).length,pass:0},byTrack:{}});
- const h=mount('app/music-library/page.tsx',{imports:{'next/navigation':{useSearchParams:()=>new URLSearchParams()},'@/lib/music-catalog':{musicCandidates:[{url:'synthetic',title:'Synthetic',artist:'Fixture',genre:'Test',focus:'Test',fileUrl:'/synthetic.wav',duration:10,license:'https://creativecommons.org/licenses/by/4.0/'}]}},globals:{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}},fetch:async(url,options)=>{if(options?.method==='POST'){calls++;mine.synthetic=JSON.parse(options.body).choice;}return{ok:true,json:async()=>snapshot()};}}});
+ const h=mount('site/app/music-library/page.tsx',{imports:{'next/navigation':{useSearchParams:()=>new URLSearchParams()},'@/lib/music-catalog':{musicCandidates:[{url:'synthetic',title:'Synthetic',artist:'Fixture',genre:'Test',focus:'Test',fileUrl:'/synthetic.wav',duration:10,license:'https://creativecommons.org/licenses/by/4.0/'}]}},globals:{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}},fetch:async(url,options)=>{if(options?.method==='POST'){calls++;mine.synthetic=JSON.parse(options.body).choice;}return{ok:true,json:async()=>snapshot()};}}});
  await flush();h.render();check(!text(h.tree).includes('blocked'),'Account votes load even when the optional browser cache cannot be read');h.button('Upvote').props.onClick();await flush();h.render();check(calls===1&&mine.synthetic==='keep','Vote reaches the synthetic server once');check(!text(h.tree).includes('blocked')&&!text(h.tree).includes('Could not save'),'Cache denial cannot report a successful server vote as failed');h.unmount();
 }
 {
  const reads=[];
- const h=mount('app/my-profile/page.tsx',{globals:{fetch(url){const job=deferred();reads.push({url,...job});return job.promise;}}});
+ const h=mount('site/app/my-profile/page.tsx',{globals:{fetch(url){const job=deferred();reads.push({url,...job});return job.promise;}}});
  reads[0].resolve({ok:true,json:async()=>({entries:[],hasMore:true})});await flush();h.render();
  const sharing=h.find(n=>n.type==='@/components/profile-category-sharing');sharing.props.onChanged();sharing.props.onChanged();h.render();check(h.button('Next').props.disabled,'Profile paging waits for the current refresh');
  reads[2].resolve({ok:true,json:async()=>({entries:[],hasMore:true})});await flush();h.render();h.button('Next').props.onClick();h.render();h.render();check(reads[3].url.endsWith('page=2'),'Next requests the next page');check(h.button('Previous').props.disabled,'Profile paging cannot skip ahead during a pending request');
@@ -287,7 +287,7 @@ function tuning({blocked=false,queueFunctional=false}={}){
  sharing.props.onChanged();h.unmount();const before=h.late;reads[4].resolve({ok:true,json:async()=>({entries:[],hasMore:true})});await flush();check(h.late===before,'Unmount invalidates pending profile reads');
 }
 {
- const h=mount('components/embed-create.tsx',{globals:{location:{origin:'https://fixture.invalid'},localStorage:{getItem(){return null;},setItem(){throw Error('quota');}},fetch:async(url,options)=>({ok:true,json:async()=>options?.method==='POST'?{id:'synthetic',manageKey:'synthetic-key'}:{targets:[{id:'a',name:'A'},{id:'b',name:'B'}]}})}});
+ const h=mount('site/components/embed-create.tsx',{globals:{location:{origin:'https://fixture.invalid'},localStorage:{getItem(){return null;},setItem(){throw Error('quota');}},fetch:async(url,options)=>({ok:true,json:async()=>options?.method==='POST'?{id:'synthetic',manageKey:'synthetic-key'}:{targets:[{id:'a',name:'A'},{id:'b',name:'B'}]}})}});
  await flush();h.render();for(const input of all(h.tree,n=>n.type==='input'&&n.props.type==='checkbox'))input.props.onChange();h.render();h.button('Create shootout').props.onClick();await flush();h.render();check(text(h.tree).includes('Copy or bookmark the private results link before leaving'),'Creation warns when its private key is not saved');check(h.find(n=>n.type==='input'&&n.props['aria-label']==='Private results link').props.value.endsWith('#key=synthetic-key'),'Creation still exposes a recoverable private link when storage fails');h.unmount();
 }
 {
@@ -295,18 +295,18 @@ function tuning({blocked=false,queueFunctional=false}={}){
 }
 {
  let now=100000;class ClockDate extends Date{static now(){return now;}}
- const h=mount('components/activity-monitoring-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({events:[{id:'fixture',subject_id:'synthetic',session_id:'fixture',test_active:1,created_at:100000,route:'/synthetic',event_type:'heartbeat',listener_label:'Fixture'}],next:null,hasMore:false,retentionDays:30,activeWindowSeconds:90})})}});await flush();h.render();check(text(h.tree).includes('1 session currently reporting'),'Fresh activity is initially marked active');now=191000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(text(h.tree).includes('0 sessions currently reporting'),'Activity ages out on a clock tick without a fetch or another user action');h.unmount();
+ const h=mount('site/components/activity-monitoring-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({events:[{id:'fixture',subject_id:'synthetic',session_id:'fixture',test_active:1,created_at:100000,route:'/synthetic',event_type:'heartbeat',listener_label:'Fixture'}],next:null,hasMore:false,retentionDays:30,activeWindowSeconds:90})})}});await flush();h.render();check(text(h.tree).includes('1 session currently reporting'),'Fresh activity is initially marked active');now=191000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(text(h.tree).includes('0 sessions currently reporting'),'Activity ages out on a clock tick without a fetch or another user action');h.unmount();
 }
 {
  let now=100000;class ClockDate extends Date{static now(){return now;}}
- const h=mount('components/yinyangeq-account-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({created:true,devices:[],snapshots:[],captures:[],grants:[{id:'fixture',label:'Synthetic expiry grant',expires_at:101000}]})})}});await flush();h.render();check(text(h.tree).includes('Synthetic expiry grant'),'A current sign-in grant is displayed');now=102000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(!text(h.tree).includes('Synthetic expiry grant'),'Expired sign-in grant disappears without interaction');h.unmount();
+ const h=mount('site/components/yinyangeq-account-panel.tsx',{globals:{Date:ClockDate,fetch:async()=>({ok:true,json:async()=>({created:true,devices:[],snapshots:[],captures:[],grants:[{id:'fixture',label:'Synthetic expiry grant',expires_at:101000}]})})}});await flush();h.render();check(text(h.tree).includes('Synthetic expiry grant'),'A current sign-in grant is displayed');now=102000;h.timers.filter(t=>t.delay===1000).forEach(t=>t.fn());h.render();check(!text(h.tree).includes('Synthetic expiry grant'),'Expired sign-in grant disappears without interaction');h.unmount();
 }
 console.log(`PASS ${checks} main workflow regressions: actual Tuning, music votes, private links, profile pagination and data erasure handlers; synthetic fixtures only.`);
 
 {
  let picked='',edited='',cleared=false;
  const rows=[{id:'own',name:'Sennheiser HD 600',device:'HD 600',source:'Synthetic',rig:'Fixture',type:'oe',origin:'upload'}];
- const h=mount('components/headphone-picker.tsx',{props:{rows,selectedId:'own',headphoneType:'oe',onType(){},onSelect:id=>{picked=id},onClear(){cleared=true;},onImport:async()=>{},onUpload(){},onEdit:id=>{edited=id;},onDelete(){}},globals:{fetch:async()=>({ok:true,json:async()=>({entries:[]})})}});
+ const h=mount('site/components/headphone-picker.tsx',{props:{rows,selectedId:'own',headphoneType:'oe',onType(){},onSelect:id=>{picked=id},onClear(){cleared=true;},onImport:async()=>{},onUpload(){},onEdit:id=>{edited=id;},onDelete(){}},globals:{fetch:async()=>({ok:true,json:async()=>({entries:[]})})}});
  const input=()=>h.find(n=>n.type==='input'&&n.props.type==='search');
  input().props.onFocus({currentTarget:{select(){}}});await flush();h.render();input().props.onChange({target:{value:'hd600'}});h.render();
  const result=h.find(n=>n.type==='button'&&n.props['data-measurement-option']!==undefined);result.props.onClick();h.render();check(picked==='own','Actual picker matches compact model text and selects the original measurement identity');
@@ -329,7 +329,7 @@ console.log('PASS Tuning Off and player-region scope through actual keyboard han
 
 for (const viewerHasAccess of [true, false]) {
  let reloads=0;
- const h=mount('components/service-warning.tsx',{globals:{onReload:()=>reloads++,AbortSignal,fetch:async()=>({ok:true,json:async()=>({id:'synthetic-owner-closure',active:true,ownerOnly:true,viewerHasAccess,message:'Synthetic closure'})})}});
+ const h=mount('site/components/service-warning.tsx',{globals:{onReload:()=>reloads++,AbortSignal,fetch:async()=>({ok:true,json:async()=>({id:'synthetic-owner-closure',active:true,ownerOnly:true,viewerHasAccess,message:'Synthetic closure'})})}});
  await flush();h.render();
  if(viewerHasAccess)check(reloads===0&&h.tree?.props?.warning?.title==='Closed for private testing','An admitted viewer sees owner-only closure without a reload loop');
  else check(reloads===1,'A visitor denied by owner-only maintenance still reloads into the gate');

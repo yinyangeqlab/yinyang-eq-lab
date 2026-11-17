@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';import ts from 'typescript';
-import {personalContributionStatus as status} from '../lib/personal-contribution-status.ts';
+import {personalContributionStatus as status} from '../site/lib/personal-contribution-status.ts';
 const on={enabled:true,token:'confirmed',state:'ready'},off={enabled:false,token:null,state:'ready'};
 assert.equal(status(on).kind,'on');assert.doesNotMatch(status(on).text,/never|off|local.only|public ranking/i);
 assert.equal(status(off).kind,'off');assert.equal(status({...on,token:null}).kind,'unavailable');assert.equal(status({enabled:false,token:null}).kind,'checking');assert.equal(status({...on,state:'checking'}).kind,'checking');assert.equal(status({...on,state:'unavailable'}).kind,'unavailable');
 assert.equal(status(on,{testOnly:true}).kind,'test');assert.equal(status(on,{practice:true}).kind,'practice');assert.equal(status(on,{sample:true}).kind,'sample');assert.match(status({...off,ownerProfile:true}).text,/private account journal/);
-const source=fs.readFileSync('components/sharing-permission-status.tsx','utf8'),ast=ts.createSourceFile('sharing.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let loadCode;
+const source=fs.readFileSync('site/components/sharing-permission-status.tsx','utf8'),ast=ts.createSourceFile('sharing.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let loadCode;
 function visit(n){if(ts.isVariableDeclaration(n)&&n.name.getText(ast)==='load')loadCode=n.initializer.arguments[0].getText(ast);ts.forEachChild(n,visit)}visit(ast);assert.ok(loadCode);
 const s={version:{current:0},endpoint:'/synthetic-permission',requests:[],states:[],Error};s.fetch=(url,options)=>new Promise(resolve=>s.requests.push({url,options,resolve}));s.onChange=x=>s.states.push(x);for(const key of ['Choice','Loaded','Error'])s['set'+key]=x=>s['state'+key]=x;
 vm.createContext(s);vm.runInContext(ts.transpileModule('var load='+loadCode,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,s);
@@ -12,6 +12,6 @@ const response=(enabled,ok=true)=>({ok,json:async()=>({enabled,token:enabled?'co
 const first=s.load(),second=s.load();s.requests[1].resolve(response(true));await second;s.requests[0].resolve(response(false));await first;assert.equal(s.states.at(-1).enabled,true,'Stale Off cannot replace confirmed On');
 const failing=s.load();s.requests[2].resolve(response(false,false));await failing;assert.equal(s.states.at(-1).state,'unavailable');assert.equal(s.states.at(-1).token,null);
 const reload=s.load();s.requests[3].resolve(response(false));await reload;assert.equal(s.states.at(-1).state,'ready');assert.equal(status(s.states.at(-1)).kind,'off');assert.ok(s.requests.every(r=>!r.options.method),'Status reads never submit consent');
-for(const file of ['components/community-sharing.tsx','components/personal-research-sharing.tsx'])assert.ok(!fs.readFileSync(file,'utf8').includes('checkbox'),'Tool pages must use central data choices, not another opt-in checkbox');
-const page=fs.readFileSync('app/shootout/personal/page.tsx','utf8');assert.ok(!page.includes('They never enter public rankings.'));assert.ok(page.includes('personalContributionStatus(sharing,{testOnly:adminTesting,practice})'));
+for(const file of ['site/components/community-sharing.tsx','site/components/personal-research-sharing.tsx'])assert.ok(!fs.readFileSync(file,'utf8').includes('checkbox'),'Tool pages must use central data choices, not another opt-in checkbox');
+const page=fs.readFileSync('site/app/shootout/personal/page.tsx','utf8');assert.ok(!page.includes('They never enter public rankings.'));assert.ok(page.includes('personalContributionStatus(sharing,{testOnly:adminTesting,practice})'));
 console.log('PASS actual sharing handlers: latest response wins, status-only GETs, no duplicate permission checkboxes, errors fail closed; On/Off/checking/test/practice/sample and private-journal messages match state.');

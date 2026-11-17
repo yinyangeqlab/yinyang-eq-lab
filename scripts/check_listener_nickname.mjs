@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {normalizeListenerNickname,listenerNicknameError,isReservedListenerNickname,NICKNAME_BRAND_FLAG} from '../lib/listener-nickname.ts';
+import {normalizeListenerNickname,listenerNicknameError,isReservedListenerNickname,NICKNAME_BRAND_FLAG} from '../site/lib/listener-nickname.ts';
 assert.equal(normalizeListenerNickname('  Sound   Owl  '),'Sound Owl');
 assert.equal(normalizeListenerNickname(''), '');
 assert.equal(normalizeListenerNickname('Écoute 🎵'), 'Écoute 🎵');
@@ -16,10 +16,10 @@ const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON;CREATE TAB
 db.exec(readFileSync(new URL('../drizzle/0032_listener_nicknames.sql',import.meta.url),'utf8'));
 let subjectId='browser:first',authenticated=true;
 class RequestInputError extends Error{constructor(message,status){super(message);this.status=status;}}
-const source=readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
+const source=readFileSync(new URL('../site/app/api/my-data/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText.replace(/export async function/g,'async function');
 const policy={exports:{}};
-vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../lib/admin-contributions.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports:policy.exports,require:()=>({RequestInputError})});
+vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../site/lib/admin-contributions.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports:policy.exports,require:()=>({RequestInputError})});
 const route=vm.runInNewContext(js+';({PATCH})',{
  Response,URL,RequestInputError,normalizeListenerNickname,listenerNicknameError,...policy.exports,
  dataIdentity:async()=>{if(!authenticated)throw new RequestInputError('Expired',401);return {subjectId};},readJsonObject:r=>r.json(),

@@ -10,7 +10,14 @@ from pathlib import Path
 import subprocess
 
 REPO = Path(__file__).resolve().parents[1]
-SOURCE_DIRS = {"app", "components", "hooks", "lib", "db", "drizzle"}
+SOURCE_DIRS = {
+    "app": "site/app",
+    "components": "site/components",
+    "hooks": "site/components/hooks",
+    "lib": "site/lib",
+    "db": "db",
+    "drizzle": "drizzle",
+}
 SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".css", ".sql", ".json"}
 CHECKS = {
     "check_blind_completion.mjs", "check_preference_ranking.mjs",
@@ -30,19 +37,26 @@ def main():
     parser.add_argument("--apply", action="store_true", help="copy listed changes")
     args = parser.parse_args()
     source = args.source.resolve()
-    if source == REPO or not (source / "app/shootout/page.tsx").is_file():
+    nested = (source / "site/app/shootout/page.tsx").is_file()
+    if source == REPO or not (nested or (source / "app/shootout/page.tsx").is_file()):
         parser.error("source must be a separate Target Shootout working project")
-    candidates = []
-    for directory in sorted(SOURCE_DIRS):
-        base = source / directory
+    candidates = {}
+    tracked_sources = {}
+    for directory, destination in SOURCE_DIRS.items():
+        if nested and directory == "hooks":
+            continue
+        base = source / (destination if (source / destination).is_dir() else directory)
+        tracked_sources[destination] = base
         if base.is_dir() and not base.is_symlink():
-            candidates.extend(base.rglob("*"))
-    candidates.extend(source / "scripts" / name for name in sorted(CHECKS))
+            for path in base.rglob("*"):
+                candidates[Path(destination) / path.relative_to(base)] = path
+    for name in CHECKS:
+        relative = Path("scripts") / name
+        candidates[relative] = source / relative
     changed = []
-    for path in sorted(candidates):
+    for rel, path in sorted(candidates.items()):
         if not path.is_file() or path.suffix not in SUFFIXES | {".py"}:
             continue
-        rel = path.relative_to(source)
         if rel.as_posix() in PRESERVED:
             continue
         if any(p.startswith(".") or p == "node_modules" or p == "__pycache__" for p in rel.parts):
@@ -66,8 +80,13 @@ def main():
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=REPO).decode().split("\0")
     for name in filter(None, tracked):
         rel = Path(name)
-        if rel.parts[0] in SOURCE_DIRS and name not in PRESERVED and not (source / rel).exists():
-            print(f"REVIEW missing source: {name} (kept in release)")
+        if name in PRESERVED:
+            continue
+        for destination, base in tracked_sources.items():
+            if rel.is_relative_to(destination):
+                if not (base / rel.relative_to(destination)).exists() and rel not in candidates:
+                    print(f"REVIEW missing source: {name} (kept in release)")
+                break
     print(f"{len(changed)} changes {'copied' if args.apply else 'available; use --apply to copy'}.")
     print("Preserved: release docs/config/package metadata, target seed exclusion, media/data, infrastructure and local state.")
     print("Review package/lockfile, public assets and data changes separately when those change.")

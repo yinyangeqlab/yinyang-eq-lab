@@ -1,7 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),ts=require(process.cwd()+'/node_modules/typescript'),assert=require('node:assert/strict');
-const source=fs.readFileSync('components/service-status-panel.tsx','utf8');
+const source=fs.readFileSync('site/components/service-status-panel.tsx','utf8');
 const js=ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-const opts=ts.transpileModule(fs.readFileSync('lib/maintenance-options.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+const opts=ts.transpileModule(fs.readFileSync('site/lib/maintenance-options.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 const o={};vm.runInNewContext(opts,{exports:o});
 let state=[],cursor=0,requests=[];
 const jsx=(type,props)=>({type,props}); const exportsObj={};

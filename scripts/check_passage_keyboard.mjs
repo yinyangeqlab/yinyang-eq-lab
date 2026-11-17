@@ -3,12 +3,12 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 // toggleWithSpace only plays/pauses; whether Space may reach it is decided by shortcutDecision (lib/playback-shortcuts.ts).
-const ast=ts.createSourceFile('panel.tsx',readFileSync('components/music-panel.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
+const ast=ts.createSourceFile('panel.tsx',readFileSync('site/components/music-panel.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
 function visit(n){if(ts.isVariableDeclaration(n)&&n.name?.getText(ast)==='toggleWithSpace')handler='const '+n.getText(ast)+';';ts.forEachChild(n,visit);}visit(ast);assert.ok(handler);
 let clicks=0,prevented=0;
 const state={audioRef:{current:{closest:()=>({querySelector:()=>({click(){clicks++;}})})}}};vm.createContext(state);vm.runInContext(ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,state);
 state.event={code:'Space',preventDefault(){prevented++},stopPropagation(){}};vm.runInContext('toggleWithSpace(event)',state);assert.equal(clicks,1);assert.equal(prevented,1);
-const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
+const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/playback-shortcuts.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports});
 const {shortcutDecision}=fixtureModule.exports;
 const el=kinds=>({closest:s=>kinds.some(k=>s.split(',').some(p=>p.trim().startsWith(k)||p.includes(`[role='${k}']`)))?{}:null});
 const space={code:'Space',key:' ',shiftKey:false},context={scope:'everywhere',singleKey:true,modalOpen:false,regionActive:true,mouseFocused:false};

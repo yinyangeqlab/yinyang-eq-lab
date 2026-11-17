@@ -1,10 +1,10 @@
-import{ACCOUNT_SYNC_NOTICE_VERSION}from'../lib/account-sync-notice.mjs';
+import{ACCOUNT_SYNC_NOTICE_VERSION}from'../site/lib/account-sync-notice.mjs';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
-import {browserPairing,pairingHash,linkedTester} from '../lib/browser-pairing.mjs';
+import {browserPairing,pairingHash,linkedTester} from '../site/lib/browser-pairing.mjs';
 import vm from 'node:vm';
-import {browserSyncScript,captureSyncPayload,replaceSyncStorage,validateSyncPayload} from '../lib/browser-sync.mjs';
+import {browserSyncScript,captureSyncPayload,replaceSyncStorage,validateSyncPayload} from '../site/lib/browser-sync.mjs';
 const sql=new DatabaseSync(':memory:');
 for(const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
 class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async first(){return sql.prepare(this.query).get(...this.args)||null;}async all(){return{results:sql.prepare(this.query).all(...this.args)};}async run(){return{meta:{changes:Number(sql.prepare(this.query).run(...this.args).changes)}};}}

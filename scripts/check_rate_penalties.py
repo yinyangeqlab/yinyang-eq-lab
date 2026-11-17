@@ -2,7 +2,7 @@
 from pathlib import Path
 import re, sqlite3
 root=Path(__file__).resolve().parent.parent
-source=(root/'lib/rate-penalty.ts').read_text()
+source=(root/'site/lib/rate-penalty.ts').read_text()
 def sql(name):
     return re.search(r'export const '+name+r' = [`"](.*?)[`"];', source, re.S).group(1)
 db=sqlite3.connect(':memory:'); db.row_factory=sqlite3.Row

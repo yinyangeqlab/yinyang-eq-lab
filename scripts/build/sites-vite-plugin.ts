@@ -29,14 +29,22 @@ async function exists(path: string): Promise<boolean> {
   }
 }
 
-export function sites({ mockAuth = true } = {}): Plugin {
-  let root = process.cwd();
+export function sites({
+  mockAuth = true,
+  repositoryRoot,
+  buildRoot,
+  migrationsRoot,
+}: {
+  mockAuth?: boolean;
+  repositoryRoot: string;
+  buildRoot: string;
+  migrationsRoot: string;
+}): Plugin {
   let command: "build" | "serve" = "build";
 
   return {
     name: "sites",
     configResolved(config) {
-      root = config.root;
       command = config.command;
     },
     configureServer(server) {
@@ -173,16 +181,15 @@ export function sites({ mockAuth = true } = {}): Plugin {
     async closeBundle() {
       if (command !== "build") return;
 
-      const outputDirectory = resolve(root, "dist", ".openai");
-      const hostingConfig = resolve(root, ".openai", "hosting.json");
-      const drizzleSource = resolve(root, "drizzle");
+      const outputDirectory = resolve(buildRoot, ".openai");
+      const hostingConfig = resolve(repositoryRoot, ".openai", "hosting.json");
 
       await rm(outputDirectory, { recursive: true, force: true });
       await mkdir(outputDirectory, { recursive: true });
 
       await cp(hostingConfig, resolve(outputDirectory, "hosting.json"));
-      if (await exists(drizzleSource)) {
-        await cp(drizzleSource, resolve(outputDirectory, "drizzle"), {
+      if (await exists(migrationsRoot)) {
+        await cp(migrationsRoot, resolve(outputDirectory, "drizzle"), {
           recursive: true,
         });
       }

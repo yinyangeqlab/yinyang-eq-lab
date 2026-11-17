@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { warningFor } from '../lib/service-warning.ts';
+import { warningFor } from '../site/lib/service-warning.ts';
 for (const [header, expected] of [['10',/10 seconds/],['900',/15 minutes/],['3600',/1 hour/],['86400',/24 hours/]]) {
  const warning=warningFor(new Response(null,{status:429,headers:{'Retry-After':header}}));
  assert.equal(warning.title,'Please wait before trying again'); assert.match(warning.retry,expected);

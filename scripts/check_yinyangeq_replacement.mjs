@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import vm from 'node:vm';import ts from 'typescript';
-import {replaceSyncStorage} from '../lib/browser-sync.mjs';
-const source=ts.createSourceFile('profile.tsx',readFileSync('components/profile-device-signin.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='complete')handler=node.getText(source);ts.forEachChild(node,visit)}visit(source);assert.ok(handler);const code=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+import {replaceSyncStorage} from '../site/lib/browser-sync.mjs';
+const source=ts.createSourceFile('profile.tsx',readFileSync('site/components/profile-device-signin.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;function visit(node){if(ts.isFunctionDeclaration(node)&&node.name?.text==='complete')handler=node.getText(source);ts.forEachChild(node,visit)}visit(source);assert.ok(handler);const code=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function storage(values={}){const store={...values};Object.defineProperties(store,{getItem:{value:key=>Object.hasOwn(store,key)?store[key]:null},setItem:{value:(key,value)=>{store[key]=String(value)}},removeItem:{value:key=>{delete store[key]}},key:{value:index=>Object.keys(store)[index]||null},length:{get:()=>Object.keys(store).length}});return store;}
 for(const outcome of ['reject','uncertain','success']){
  const original={'target-lab-voter':crypto.randomUUID(),'target-lab-trials':'[]','yinyang-extra-setting':'must-return','yinyang-admin-tests-v1':'must-stay'},incoming=crypto.randomUUID();let mode=outcome;

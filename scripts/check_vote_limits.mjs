@@ -4,9 +4,9 @@ import vm from "node:vm";
 import ts from "typescript";
 
 // Run the real vote route against a controlled database, never production votes.
-const source = readFileSync(new URL("../app/api/votes/route.ts", import.meta.url), "utf8");
+const source = readFileSync(new URL("../site/app/api/votes/route.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
-const logSource = readFileSync(new URL("../lib/shootout-submission-logs.ts", import.meta.url), "utf8");
+const logSource = readFileSync(new URL("../site/lib/shootout-submission-logs.ts", import.meta.url), "utf8");
 const logCode = ts.transpileModule(logSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 const voterId = "11111111-1111-4111-8111-111111111111";
 const trialId = "22222222-2222-4222-8222-222222222222";

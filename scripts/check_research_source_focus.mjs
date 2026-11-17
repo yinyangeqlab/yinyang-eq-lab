@@ -4,7 +4,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 
 // Exercise the real component's callbacks without a backend or listening session.
-const code = ts.transpileModule(fs.readFileSync('components/research-music-source.tsx', 'utf8'), {
+const code = ts.transpileModule(fs.readFileSync('site/components/research-music-source.tsx', 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
 }).outputText;
 const ref = { current: null }, mod = { exports: {} }, events = [];

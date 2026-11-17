@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { isPublicAsset, publicAssetBypassPatterns } from '../infra/pulumi/public-assets.mjs';
-import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../lib/share-pages.mjs';
+import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../site/lib/share-pages.mjs';
 
 // Every page route in app/ has its own preview entry (or is a documented alias / dynamic route).
 const routes = [];
@@ -11,7 +11,7 @@ const walk = (dir, base = '') => { for (const e of readdirSync(dir, { withFileTy
   if (e.name === 'api') continue;
   if (e.isDirectory()) walk(`${dir}/${e.name}`, `${base}/${e.name}`);
   else if (e.name === 'page.tsx') routes.push(base || '/'); } };
-walk(fileURLToPath(new URL('../app', import.meta.url)));
+walk(fileURLToPath(new URL('../site/app', import.meta.url)));
 const exempt = new Set(['/personal-tuning', '/home']);
 for (const route of routes) {
   if (exempt.has(route) || route.includes('[')) continue;

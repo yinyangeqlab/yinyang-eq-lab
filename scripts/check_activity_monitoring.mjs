@@ -5,11 +5,11 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as requestJson from '../lib/request-json.ts';
-import * as labels from '../lib/target-labels.ts';
-import * as nicknames from '../lib/listener-nickname.ts';
-import {VOTE_DATA_NOTICE_VERSION} from '../lib/vote-data-notice.ts';
-import {ACTIVITY_MONITORING_NOTICE_VERSION,ACTIVITY_LOG_RETENTION_MS} from '../lib/activity-monitoring.ts';
+import * as requestJson from '../site/lib/request-json.ts';
+import * as labels from '../site/lib/target-labels.ts';
+import * as nicknames from '../site/lib/listener-nickname.ts';
+import {VOTE_DATA_NOTICE_VERSION} from '../site/lib/vote-data-notice.ts';
+import {ACTIVITY_MONITORING_NOTICE_VERSION,ACTIVITY_LOG_RETENTION_MS} from '../site/lib/activity-monitoring.ts';
 const sql=new DatabaseSync(':memory:');
 for(const f of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+f,import.meta.url),'utf8'));
 class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async first(){return sql.prepare(this.query).get(...this.args)||null;}async all(){return{results:sql.prepare(this.query).all(...this.args)};}async run(){return{meta:{changes:Number(sql.prepare(this.query).run(...this.args).changes)}};}}
@@ -22,12 +22,12 @@ const profile=()=>sql.prepare('SELECT * FROM privacy_accounts WHERE subject_id=?
 const count=()=>sql.prepare('SELECT count(*) n FROM activity_events').get().n;
 const deps={'@/lib/legacy-notice':{RETROSPECTIVE_NOTICE_VERSION:'retrospective-2026-10-18-v1'},'@/lib/admin-contributions':contributionPolicy,'@/lib/listener-nickname':nicknames,'cloudflare:workers':{env},'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION},'@/lib/activity-monitoring':{ACTIVITY_MONITORING_NOTICE_VERSION,ACTIVITY_LOG_RETENTION_MS},'@/lib/request-json':requestJson,'@/lib/target-labels':labels,'@/lib/privacy-erasure':{dataTables:{},eraseData:()=>{throw Error('No real erasure needed in this consent test');}},'@/lib/submission-ownership':{dataIdentity:async()=>{const a=profile();const identity={subjectId:subject,submissionsEnabled:a.submissions_enabled===1&&a.agreement_version===VOTE_DATA_NOTICE_VERSION,shareMusic:a.share_music===1,agreementVersion:a.agreement_version,agreedAt:a.agreed_at,activityMonitoringEnabled:a.activity_monitoring_enabled===1&&a.activity_monitoring_version===ACTIVITY_MONITORING_NOTICE_VERSION,activityMonitoringVersion:a.activity_monitoring_version};if(afterIdentity){const hook=afterIdentity;afterIdentity=null;hook();}return identity;}}};
 function load(path){const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Date,Request,Response,Headers,URL,crypto,TextEncoder,Uint8Array});vm.runInContext(ts.transpileModule(readFileSync(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);return context.exports;}
-const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
-const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
-deps['@/lib/owner-access']=load('lib/owner-access.ts');
-deps['@/lib/consent-studies']=load('lib/consent-studies.ts');
+const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
+const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
+deps['@/lib/owner-access']=load('site/lib/owner-access.ts');
+deps['@/lib/consent-studies']=load('site/lib/consent-studies.ts');
 Object.assign(deps,accountSyncFixtureDeps(deps));
-const mine=load('app/api/my-data/route.ts'),events=load('app/api/activity/route.ts'),admin=load('app/api/owner-research/activity/route.ts');
+const mine=load('site/app/api/my-data/route.ts'),events=load('site/app/api/activity/route.ts'),admin=load('site/app/api/owner-research/activity/route.ts');
 const req=(path,body,extra={})=>new Request(origin+path,{method:body?'POST':'GET',headers:{Origin:origin,'Content-Type':'application/json',...extra},...(body?{body:JSON.stringify(body)}:{})});
 const event=(extra={})=>events.POST(req('/api/activity',{sessionId:session,eventType:'heartbeat',route:'/shootout',shootoutTab:'shootout',testMode:'blind',testActive:true,...extra}));
 const opt=(enabled,extra={})=>mine.PATCH(req('/api/my-data',{submissionsEnabled:true,shareMusic:false,activityMonitoringEnabled:enabled,...extra}));

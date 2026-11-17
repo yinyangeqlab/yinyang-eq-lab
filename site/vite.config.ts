@@ -1,10 +1,12 @@
-import { peqdbLocalAssets } from "./scripts/build/peqdb-local-assets.mjs";
+import { join } from "node:path";
+import { peqdbLocalAssets } from "../scripts/build/peqdb-local-assets.mjs";
 import vinext from "vinext";
 import { defineConfig } from "vite";
-import hostingConfig from "./.openai/hosting.json";
-import { readExecutionProfile } from "./scripts/execution-profile.mjs";
-import { sites } from "./scripts/build/sites-vite-plugin";
-import { connectorPreview } from "./scripts/build/connector-preview-plugin.mjs";
+import hostingConfig from "../.openai/hosting.json";
+import { readExecutionProfile } from "../scripts/execution-profile.mjs";
+import { sites } from "../scripts/build/sites-vite-plugin";
+import { connectorPreview } from "../scripts/build/connector-preview-plugin.mjs";
+import { migrationsRoot, publicRoot, repositoryRoot, siteBuildRoot } from "../scripts/project-paths.mjs";
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   "00000000-0000-4000-8000-000000000000";
@@ -16,7 +18,7 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
 const localBindingConfig = {
-  main: "./scripts/build/sites-worker.ts",
+  main: join(repositoryRoot, "scripts/build/sites-worker.ts"),
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [
@@ -45,15 +47,17 @@ export default defineConfig(async ({ command }) => {
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";
-  process.env.WRANGLER_LOG_PATH ??= ".wrangler/logs";
-  process.env.WRANGLER_REGISTRY_PATH ??= ".wrangler/dev-registry";
-  process.env.MINIFLARE_REGISTRY_PATH ??= ".wrangler/registry";
+  process.env.WRANGLER_LOG_PATH ??= join(repositoryRoot, ".wrangler/logs");
+  process.env.WRANGLER_REGISTRY_PATH ??= join(repositoryRoot, ".wrangler/dev-registry");
+  process.env.MINIFLARE_REGISTRY_PATH ??= join(repositoryRoot, ".wrangler/registry");
 
   // Wrangler snapshots its log path while the Cloudflare plugin is imported.
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    worker: { plugins: () => [peqdbLocalAssets()] },
+    worker: { plugins: () => [peqdbLocalAssets({ buildDir: siteBuildRoot })] },
+    envDir: repositoryRoot,
+    publicDir: publicRoot,
     build: { copyPublicDir: false },
     server: {
       ...(managedLinux
@@ -64,13 +68,14 @@ export default defineConfig(async ({ command }) => {
         : {}),
     },
     plugins: [
-      peqdbLocalAssets(),
+      peqdbLocalAssets({ buildDir: siteBuildRoot }),
       vinext(),
-      sites({ mockAuth: !managedLinux }),
+      sites({ mockAuth: !managedLinux, repositoryRoot, buildRoot: siteBuildRoot, migrationsRoot }),
       connectorPreview(),
       cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
         inspectorPort: false,
+        persistState: { path: join(repositoryRoot, ".wrangler/state") },
         config: {
           ...localBindingConfig,
           ...(command === "serve"
@@ -91,7 +96,7 @@ export default defineConfig(async ({ command }) => {
                 {
                   config: {
                     name: "sites-connector-preview",
-                    main: "./scripts/build/connector-preview-worker.mjs",
+                    main: join(repositoryRoot, "scripts/build/connector-preview-worker.mjs"),
                     compatibility_date: "2026-05-15",
                   },
                 },

@@ -5,7 +5,7 @@ import ts from 'typescript';
 
 // Execute the real handlers with deferred media promises, including failures
 // that a local, instantly buffered audio fixture cannot reliably reproduce.
-const source = fs.readFileSync('components/music-panel.tsx', 'utf8');
+const source = fs.readFileSync('site/components/music-panel.tsx', 'utf8');
 const ast = ts.createSourceFile('music-panel.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const names = ['playContinuous', 'cancelPassage', 'markPlaybackStopped', 'startPlayback', 'listenToSide', 'toggleMusicPlayback', 'clearMusicSource', 'processFileData', 'fitMetadata', 'playPassageSide', 'playPassage'];
 const bodies = new Map();

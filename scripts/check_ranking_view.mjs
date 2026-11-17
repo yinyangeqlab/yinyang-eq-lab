@@ -1,7 +1,7 @@
-import {searchRows} from '../lib/search.ts';
-import {MAIN_FITTER_COHORT} from "../lib/fitter-settings.ts";
-import * as scoring from '../lib/preference-ranking.ts';
-import {approvedEqModels} from '../data/approved-eq-models.ts';
+import {searchRows} from '../site/lib/search.ts';
+import {MAIN_FITTER_COHORT} from "../site/lib/fitter-settings.ts";
+import * as scoring from '../site/lib/preference-ranking.ts';
+import {approvedEqModels} from '../site/data/approved-eq-models.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -16,8 +16,8 @@ function load(path, dependencies={}) {
  vm.runInNewContext(code,{exports,require:id=>dependencies[id]??require(id)});
  return exports;
 }
-const eqRankings=load('lib/eq-rankings.ts',{'./preference-ranking':scoring,'../data/approved-eq-models':{approvedEqModels}});
-const EqPresetRankings=load('components/eq-preset-rankings.tsx',{
+const eqRankings=load('site/lib/eq-rankings.ts',{'./preference-ranking':scoring,'../data/approved-eq-models':{approvedEqModels}});
+const EqPresetRankings=load('site/components/eq-preset-rankings.tsx',{
  '@/lib/eq-rankings':eqRankings,
  '@/components/eq-preset-reactions':{default:()=>null},
 }).default;
@@ -30,7 +30,7 @@ const models=[
 
 // Render the actual page fragment against deliberately different protocol and
 // headphone cohorts. No database or participant records are used.
-const page=readFileSync(new URL('../app/shootout/page.tsx',import.meta.url),'utf8');
+const page=readFileSync(new URL('../site/app/shootout/page.tsx',import.meta.url),'utf8');
 const pageAst=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 const rankingBranches=[];
 function findRanking(node) {
@@ -46,7 +46,7 @@ findRanking(pageAst);assert.equal(rankingBranches.length,1,'Find the actual rank
 const expression=rankingBranches[0];
 const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError="",rankQuery=""}) { const setRankQuery=()=>{}; const refresh=()=>{},setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}; return (${expression}); }`;
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
-const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
+const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("site/components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
 const context=vm.createContext({MAIN_FITTER_COHORT,searchRows,targets:[],isCatalogAutoEqTarget:()=>true,exports:{},require,RankingChangeExplanation:componentContext.exports.default,rankingDeviceFilters:eqRankings.rankingDeviceFilters,EqPresetRankings:props=>EqPresetRankings({...props,models}),ArrowRight:require("lucide-react").ArrowRight});
 vm.runInContext(compiled,context);
 const modes=['all','random','bring','verified'];

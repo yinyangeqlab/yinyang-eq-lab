@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import {scanMp3Source,sourceBitrateAt} from '../lib/source-encoding.ts';
+import {scanMp3Source,sourceBitrateAt} from '../site/lib/source-encoding.ts';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const panel=readFileSync('components/music-panel.tsx','utf8');
+const panel=readFileSync('site/components/music-panel.tsx','utf8');
 const source=panel.slice(panel.indexOf('type SourceRate'),panel.indexOf('\nconst MusicPanel'));
 const {sourceDetails:parse,sourceBitrateLabel:label}=vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+';({sourceDetails,sourceBitrateLabel})',{Uint8Array,DataView,sourceBitrateAt});
 function fixture(tag='Xing',method=3){const b=new Uint8Array(417),v=new DataView(b.buffer);b.set([255,251,144,0]);b.set(new TextEncoder().encode(tag),36);v.setUint32(40,3);v.setUint32(44,1000);v.setUint32(48,500000);b.set(new TextEncoder().encode('LAME3.100'),52);b[61]=method;return b;}
@@ -25,5 +25,5 @@ async function scan(bytes,cancelled){return scanMp3Source({size:bytes.length,rea
 const fixed=await scan(recording([9,9,9]));assert.equal(fixed.mode,'CBR');assert.equal(fixed.verified,true);assert.equal(fixed.frameCount,3);assert.equal(sourceBitrateAt(fixed,0),null);
 const variable=await scan(recording([9,14,11]));assert.equal(variable.mode,'VBR');assert.equal(sourceBitrateAt(variable,0),128000);assert.equal(sourceBitrateAt(variable,1152/44100*1.1),320000);assert.equal(sourceBitrateAt(variable,999),192000);assert.equal(sourceBitrateAt(variable,NaN),null);assert.match(label(variable,null,null,1,true,1152/44100*1.1),/320 kb\/s now.*VBR/);
 assert.equal(await scan(recording([9,14,11]).slice(0,-3)),null);assert.equal(await scan(recording([9,14,11]),()=>true),null);
-const catalog=JSON.parse(readFileSync('data/listening-source-details.json','utf8')).recordings,manifest=JSON.parse(readFileSync('data/listening-pool-audio-manifest.json','utf8'));assert.equal(Object.keys(catalog).length,224);let full=0;for(const [id,source]of Object.entries(catalog)){assert.equal(source.sourceSha256,manifest[id].sha256);assert.ok(source.sampleRate>0);if(source.format==='MP3'){assert.equal(source.verified,true);assert.ok(source.frameCount>1);assert.ok(['CBR','VBR','ABR'].includes(source.mode));full++;}}assert.equal(full,160);
+const catalog=JSON.parse(readFileSync('site/data/listening-source-details.json','utf8')).recordings,manifest=JSON.parse(readFileSync('site/data/listening-pool-audio-manifest.json','utf8'));assert.equal(Object.keys(catalog).length,224);let full=0;for(const [id,source]of Object.entries(catalog)){assert.equal(source.sourceSha256,manifest[id].sha256);assert.ok(source.sampleRate>0);if(source.format==='MP3'){assert.equal(source.verified,true);assert.ok(source.frameCount>1);assert.ok(['CBR','VBR','ABR'].includes(source.mode));full++;}}assert.equal(full,160);
 console.log('PASS complete CBR/VBR frame scans, live frame bitrate, cancellation, truncation and all224 hash-bound library entries (160 complete MP3 scans).');

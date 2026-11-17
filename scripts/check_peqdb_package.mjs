@@ -4,10 +4,10 @@ import { execFileSync } from 'node:child_process';
 import { verifyPeqdbAssets, verifyPeqdbBuildSource } from './peqdb-assets.mjs';
 const manifest = verifyPeqdbAssets();
 assert.ok(manifest.assets['RUNTIME-NOTICES.txt']);
-assert.ok(manifest.sourceFiles['lib/autoeq.worker.ts']);
+assert.ok(manifest.sourceFiles['site/lib/autoeq.worker.ts']);
 assert.ok(manifest.sourceFiles['public/dynamic-range-worklet.js'], 'Standalone playback worklet must be included in application source');
 assert.ok(manifest.sourceFiles['docs/PEQDB_AUTOEQ.md']);
-for (const file of [`lib/peqdb-source-check-${crypto.randomUUID()}.ts`, `data/peqdb-private-probe-${crypto.randomUUID()}.json`]) {
+for (const file of [`site/lib/peqdb-source-check-${crypto.randomUUID()}.ts`, `site/data/peqdb-private-probe-${crypto.randomUUID()}.json`]) {
   try {
     writeFileSync(file, 'Synthetic unreviewed source input\n', { flag: 'wx' });
     assert.throws(verifyPeqdbAssets, /Unreviewed untracked/, 'Unreviewed files must never enter the source archive');

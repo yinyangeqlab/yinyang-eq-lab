@@ -4,7 +4,7 @@ import vm from "node:vm";
 import ts from "typescript";
 
 const mod = { exports: {} };
-const source = readFileSync("lib/glossary.ts", "utf8");
+const source = readFileSync("site/lib/glossary.ts", "utf8");
 vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { module: mod, exports: mod.exports });
 const { glossaryTerms, searchGlossary } = mod.exports;
 const ids = query => Array.from(searchGlossary(query), term => term.id);
@@ -22,10 +22,10 @@ assert.deepEqual(ids("no-such-term-xyz"), [], "unmatched query returns no false 
 assert.equal(searchGlossary(" ").length, 12);
 console.log("PASS: alphabetical, complete glossary results; titles, definitions, aliases, multiple words and empty/no-result queries.");
 
-const { audioFacts, audioFactPath, audioFactTopics, audioFactSources, audioFactSourceIds, findAudioFact } = await import("../lib/audio-facts.mjs");
-const { audioFactCards, formatAudioFactForDiscord } = await import("../lib/audio-fact-tools.mjs");
-const { searchAudioFacts } = await import("../lib/audio-fact-search.mjs");
-const { SITE_ORIGIN, sharePageFor, shareMetadataFields, previewTitle } = await import("../lib/share-pages.mjs");
+const { audioFacts, audioFactPath, audioFactTopics, audioFactSources, audioFactSourceIds, findAudioFact } = await import("../site/lib/audio-facts.mjs");
+const { audioFactCards, formatAudioFactForDiscord } = await import("../site/lib/audio-fact-tools.mjs");
+const { searchAudioFacts } = await import("../site/lib/audio-fact-search.mjs");
+const { SITE_ORIGIN, sharePageFor, shareMetadataFields, previewTitle } = await import("../site/lib/share-pages.mjs");
 const first = query => searchAudioFacts(audioFactCards, query)[0]?.slug;
 for (const [query, slug] of [
   ["Why does a poor seal reduce bass?", "iem-seal-and-bass"],

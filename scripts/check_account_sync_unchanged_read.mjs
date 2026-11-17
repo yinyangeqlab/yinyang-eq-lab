@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { readAccountState } from '../lib/account-sync-transfer.mjs';
-import { accountDataDigest } from '../lib/device-sync.mjs';
+import { readAccountState } from '../site/lib/account-sync-transfer.mjs';
+import { accountDataDigest } from '../site/lib/device-sync.mjs';
 
 // The server pages saved account data two parts at a time and every check used to download every page. A check that
 // finds the account exactly where this browser last acknowledged it must stop after the first response.

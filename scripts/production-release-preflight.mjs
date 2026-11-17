@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import { recoveryState, verifyOrRefresh } from './release-state.mjs';
-import { releaseHistory } from '../lib/release-history.ts';
-import { releaseInfo } from '../lib/release-info.ts';
+import { releaseHistory } from '../site/lib/release-history.ts';
+import { releaseInfo } from '../site/lib/release-info.ts';
 
 const read = (directory, path) => JSON.parse(readFileSync(resolve(directory, path), 'utf8'));
 const timestamp = value => typeof value === 'string' ? Date.parse(value) : NaN;

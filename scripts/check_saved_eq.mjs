@@ -12,17 +12,17 @@ const window = new EventTarget(); let changes = 0; window.addEventListener('libr
 function load(file) {
   file = path.resolve(file); if (cache.has(file)) return cache.get(file);
   const mod = { exports: {} }; cache.set(file, mod.exports);
-  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,ArrayBuffer,DataView,Math,Number,crypto,localStorage,window,Event,setTimeout,require(name){const resolved=name.startsWith('@/')?path.resolve(name.slice(2)):path.resolve(path.dirname(file),name);return load(resolved.endsWith('.ts')?resolved:resolved+'.ts');}});
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,ArrayBuffer,DataView,Math,Number,crypto,localStorage,window,Event,setTimeout,require(name){const resolved=name.startsWith('@/')?path.resolve('site',name.slice(2)):path.resolve(path.dirname(file),name);return load(resolved.endsWith('.ts')?resolved:resolved+'.ts');}});
   return mod.exports;
 }
 let sweeps = 0;
-const finalizer = load('lib/preference-finalize.ts'), originalPeakBoost = finalizer.peakBoost;
+const finalizer = load('site/lib/preference-finalize.ts'), originalPeakBoost = finalizer.peakBoost;
 finalizer.peakBoost = filters => { sweeps++; return originalPeakBoost(filters); };
-const { safeLibraryEq, saveLibraryEq, readLibraryEqs, removeLibraryEq, removeLibraryEqs, measurementChannelMatch, parseLibraryEq, LIBRARY_EQ_KEY } = load('lib/music-library-eq.ts');
-const { channelMatchWav, channelMatchIirText, safeChannelMatch } = load('lib/channel-match-export.ts');
-const { parseChannelMatchPreset, presetFilterResponse, presetResponse } = load('lib/peq-preset.ts');
-const { parseMeasurement } = load('lib/measurement.ts');
-const { replaceEqStage } = load('lib/eq-playback.ts');
+const { safeLibraryEq, saveLibraryEq, readLibraryEqs, removeLibraryEq, removeLibraryEqs, measurementChannelMatch, parseLibraryEq, LIBRARY_EQ_KEY } = load('site/lib/music-library-eq.ts');
+const { channelMatchWav, channelMatchIirText, safeChannelMatch } = load('site/lib/channel-match-export.ts');
+const { parseChannelMatchPreset, presetFilterResponse, presetResponse } = load('site/lib/peq-preset.ts');
+const { parseMeasurement } = load('site/lib/measurement.ts');
+const { replaceEqStage } = load('site/lib/eq-playback.ts');
 const points = Array.from({length:21},(_,i)=>[20*1000**(i/20),0]);
 const model = {leftPoints:points,rightPoints:points.map(([hz])=>[hz,6]),channelMatchMode:'auto'};
 const eq={id:'a',name:'Fixture EQ',source:'Tuning',filters:[{hz:1000,gain:2,q:1}],preamp:-4,channelMatch:measurementChannelMatch(model)};
@@ -81,7 +81,7 @@ const helperStart=harness.indexOf('const text='), helperEnd=harness.indexOf('cla
 const helper=harness.slice(helperStart,helperEnd).replaceAll('import.meta.url',JSON.stringify(new URL('./check_main_workflows.mjs',import.meta.url).href));
 const mount=vm.runInNewContext(helper+'\nmount',{fs,vm,ts,require,fileURLToPath,assert,console,URL,Blob,AbortController,Date,JSON,URLSearchParams,queueMicrotask,Error});
 let playingEq;
-const h=mount('components/library-eq-panel.tsx',{props:{onChange:eq=>playingEq=eq},globals:{crypto,localStorage,fetch:async()=>({ok:true,json:async()=>[]})},imports:{'@/lib/music-library-eq':{readLibraryEqs,removeLibraryEq,saveLibraryEq,measurementChannelMatch}}});
+const h=mount('site/components/library-eq-panel.tsx',{props:{onChange:eq=>playingEq=eq},globals:{crypto,localStorage,fetch:async()=>({ok:true,json:async()=>[]})},imports:{'@/lib/music-library-eq':{readLibraryEqs,removeLibraryEq,saveLibraryEq,measurementChannelMatch}}});
 h.render();h.find(n=>n.type==='@/components/sound-setup').props.onMode('saved');h.render();h.find(n=>n.type==='@/components/sound-setup').props.onPreset('a');h.render();
 h.find(n=>n.type==='input'&&n.props['aria-label']==='Enable EQ').props.onChange({target:{checked:true}});h.render();assert.ok(playingEq.channelMatch,'Channel matching starts on for paired saved responses');
 const inputs=(()=>{const collect=(n)=>!n||typeof n!=='object'?[]:Array.isArray(n)?n.flatMap(collect):[n,...collect(n.props?.children)];return collect(h.tree).filter(n=>n.type==='input'&&n.props.type==='checkbox');})();inputs[1].props.onChange({target:{checked:false}});h.render();assert.equal(playingEq.channelMatch,undefined,'Channel matching can be independently bypassed');inputs[1].props.onChange({target:{checked:true}});h.render();assert.ok(playingEq.channelMatch);assert.equal(playingEq.filters[0].gain,2,'Match toggle preserves saved target EQ');
@@ -128,7 +128,7 @@ localStorage.setItem(LIBRARY_EQ_KEY,'broken');assert.throws(()=>removeLibraryEqs
 // Execute actual collection handlers: individual selection, select all, cancel,
 // one confirmed bulk write, and safe failure with the selection retained.
 localStorage.setItem(LIBRARY_EQ_KEY,JSON.stringify(rows.slice(0,3)));
-const collection=mount('components/saved-eq-collection.tsx',{props:{measurements:[],onUpdate(){}},globals:{localStorage,crypto},imports:{'@/lib/music-library-eq':{readLibraryEqs,removeLibraryEq,removeLibraryEqs,saveLibraryEq,measurementChannelMatch}}});
+const collection=mount('site/components/saved-eq-collection.tsx',{props:{measurements:[],onUpdate(){}},globals:{localStorage,crypto},imports:{'@/lib/music-library-eq':{readLibraryEqs,removeLibraryEq,removeLibraryEqs,saveLibraryEq,measurementChannelMatch}}});
 const fireRefresh=()=>{collection.events.get('library-eqs-changed').forEach(fn=>fn());collection.render();};
 collection.render();collection.button('Select all').props.onClick();collection.render();collection.button('Delete selected (3)').props.onClick();collection.render();
 assert.equal(readLibraryEqs().length,3,'Opening confirmation does not delete anything');collection.button('Cancel').props.onClick();collection.render();assert.equal(readLibraryEqs().length,3);

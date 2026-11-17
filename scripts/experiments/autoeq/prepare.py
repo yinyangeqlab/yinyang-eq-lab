@@ -84,7 +84,7 @@ def main():
     subprocess.run(cmd, check=True)
     shutil.copy2(inputs / 'upstream/LICENSE', engine / 'LICENSE')
     shutil.copy2(args.gpl, engine / 'COPYING')
-    catalog = json.loads((ROOT / 'data/autoeq-catalog.json').read_text())
+    catalog = json.loads((ROOT / 'site/data/autoeq-catalog.json').read_text())
     fixtures = []
     for name in NAMES:
         entry = next(e for e in catalog['entries'] if e['name'] == name and e['source'] == 'oratory1990')
@@ -108,8 +108,8 @@ def main():
         archive.add(patched, arcname='modified-engine')
         archive.add(args.gpl, arcname='COPYING')
         archive.add(out.parent / 'build-receipt.json', arcname='build-receipt.json')
-        for path in ['LICENSE', 'package.json', 'package-lock.json', 'data/autoeq-catalog.json',
-                     'lib/autoeq.ts', 'lib/preference-finalize.ts', 'lib/curves.ts', 'lib/blind-eq.ts', 'lib/blind-eq-audio.ts']:
+        for path in ['LICENSE', 'package.json', 'package-lock.json', 'site/data/autoeq-catalog.json',
+                     'site/lib/autoeq.ts', 'site/lib/preference-finalize.ts', 'site/lib/curves.ts', 'site/lib/blind-eq.ts', 'site/lib/blind-eq-audio.ts']:
             archive.add(ROOT / path, arcname='application/' + path)
         for path in LAB.iterdir():
             if path.is_file(): archive.add(path, arcname='application/' + path.relative_to(ROOT).as_posix())

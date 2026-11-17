@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {
   BAND_HZ, EmbedInputError, cleanTitle, curveBands, hashManageKey, newManageKey, newShootoutId, parseRun, planRounds, playbackTrims,
   summarize, wilson, SHOOTOUT_ID_PATTERN, MANAGE_KEY_PATTERN,
-} from '../lib/embed-shootout.ts';
-import { renderShootoutCard, encodePng } from '../lib/embed-card.ts';
+} from '../site/lib/embed-shootout.ts';
+import { renderShootoutCard, encodePng } from '../site/lib/embed-card.ts';
 
 // Round plans: every pair once; two targets repeat on all three sounds.
 assert.deepEqual(planRounds(2).map(r => [r.a, r.b, r.signal]), [[0, 1, 'noise'], [0, 1, 'pad'], [0, 1, 'beat']]);

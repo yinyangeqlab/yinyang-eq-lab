@@ -114,7 +114,7 @@ npm run recovery:environment
 npm ci
 node scripts/check-live-source.mjs --source-only
 npm run verify
-node node_modules/typescript/bin/tsc --noEmit
+node node_modules/typescript/bin/tsc --project site/tsconfig.json --noEmit
 npm run lint
 ```
 

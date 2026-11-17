@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readJsonObject, RequestInputError } from "../lib/request-json.ts";
+import { readJsonObject, RequestInputError } from "../site/lib/request-json.ts";
 
 const json = (body, headers = {}) => new Request("https://example.test/api/targets", {
   method: "POST", headers: { "Content-Type": "application/json", ...headers }, body,

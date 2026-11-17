@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { readExecutionProfile } from "./execution-profile.mjs";
 import { verifyVoteFontAssets } from "./vote-font-assets.mjs";
+import { siteRoot } from "./project-paths.mjs";
 
 const [command, ...args] = process.argv.slice(2);
 if (!["dev", "build"].includes(command)) throw new Error("Expected dev or build.");
@@ -20,6 +21,13 @@ if (managedLinux && command === "build") {
 const cli = new URL(managedLinux
   ? "../node_modules/vite/bin/vite.js"
   : "../node_modules/vinext/dist/cli.js", import.meta.url);
-process.argv = [process.execPath, fileURLToPath(cli), command,
+process.argv = [process.execPath, fileURLToPath(cli), command, siteRoot,
   ...(!managedLinux && command === "dev" ? ["--port", "5173"] : []), ...args];
-await import(cli.href);
+if (command === "build") {
+  const result = spawnSync(process.execPath, process.argv.slice(1), { stdio: "inherit" });
+  if (result.error) throw result.error;
+  if (result.status !== 0) process.exit(result.status ?? 1);
+  await import("./finish-app-build.mjs");
+} else {
+  await import(cli.href);
+}

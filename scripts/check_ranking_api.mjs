@@ -1,12 +1,12 @@
-import * as fitters from "../lib/fitter-settings.ts";
-import * as fingerprints from "../lib/file-fingerprint.ts";
+import * as fitters from "../site/lib/fitter-settings.ts";
+import * as fingerprints from "../site/lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import { rankPreferences } from '../lib/preference-ranking.ts';
-import {intervalStats,parseIntervals} from '../lib/listening.ts';
-const code=ts.transpileModule(readFileSync(new URL('../app/api/research/route.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+import { rankPreferences } from '../site/lib/preference-ranking.ts';
+import {intervalStats,parseIntervals} from '../site/lib/listening.ts';
+const code=ts.transpileModule(readFileSync(new URL('../site/app/api/research/route.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const targets=[{id:'a',name:'Alpha',creator:'Test',status:'approved',measurement:'must-not-leak'},{id:'b',name:'Beta',creator:'Test',status:'approved'},{id:'pending',name:'Pending',creator:'Test',status:'pending'}];
 const base={protocolVersion:'legacy-v1',testMode:'blind',eligible:1,heardA:6,heardB:6,headphoneType:'ie',songTitle:'private-title',songArtist:'private-artist',songAlbum:'private-album',recordingId:'private-recording',sha256:'a'.repeat(64),otherReason:'private-comment',reasonTags:'[]',createdAt:1000,reliabilityWeight:.5};
 const votes=[{...base,id:'one',winnerId:'a',loserId:'b',voterId:'private-browser-one'},{...base,id:'two',winnerId:'b',loserId:'a',voterId:'private-browser-one'},{...base,id:'three',winnerId:'a',loserId:'b',voterId:'private-browser-two'},{...base,id:'short',winnerId:'a',loserId:'b',voterId:'private-browser-one',heardA:4}];
@@ -17,7 +17,7 @@ deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2',MIN_SI
 deps['@/lib/listening']={intervalStats,parseIntervals};
 deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
 deps['@/lib/target-labels']={oratoryInEarId:'oratory-fixture',oratoryInEarLabel:'oratory1990 in-ear (aka USOUND1v1 approximation)'};
-const evidenceCode=ts.transpileModule(readFileSync(new URL('../lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+const evidenceCode=ts.transpileModule(readFileSync(new URL('../site/lib/ranking-evidence.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const evidenceContext=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name]});vm.runInContext(evidenceCode,evidenceContext);deps['@/lib/ranking-evidence']=evidenceContext.exports;
 const context=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name],Response});vm.runInContext(code,context);
 const rawGET=context.exports.GET;

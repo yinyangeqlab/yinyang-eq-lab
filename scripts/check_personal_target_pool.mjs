@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const load=path=>{const fixtureModule={exports:{}};const alias={'@/lib/target-type':'lib/target-type.ts'};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:id=>load(alias[id]||id)});return fixtureModule.exports;};
-const {parsePoolChoice,parseLocalTargets,personalPool,poolHasLocalTargets,MAX_SHARED_POOL}=load('lib/personal-target-pool.ts');
+const load=path=>{const fixtureModule={exports:{}};const alias={'@/lib/target-type':'site/lib/target-type.ts'};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:id=>load(alias[id]||id)});return fixtureModule.exports;};
+const {parsePoolChoice,parseLocalTargets,personalPool,poolHasLocalTargets,MAX_SHARED_POOL}=load('site/lib/personal-target-pool.ts');
 const pts=[[20,0],[1000,1],[20000,0]];
 const pub=[{id:'p1',name:'Public one',points:pts},{id:'p2',name:'Public two',points:pts},{id:'p3',name:'Public IE',points:pts,headphoneType:'ie'}];
 const eq=(a,b)=>assert.equal(JSON.stringify(a),JSON.stringify(b));let n=0;const t=(name,fn)=>{fn();console.log('PASS '+name);n++;};
@@ -18,6 +18,6 @@ t('custom mode mixes public and private targets, ignores unknown ids',()=>{const
 t('runs containing any non-public candidate are flagged local-only',()=>{assert.equal(poolHasLocalTargets(['p1','p2'],publicIds),false);assert.equal(poolHasLocalTargets(['p1','l1'],publicIds),true);assert.equal(poolHasLocalTargets(Array.from({length:MAX_SHARED_POOL+1},(_,i)=>'p'+i),new Set(Array.from({length:MAX_SHARED_POOL+1},(_,i)=>'p'+i))),true,'pools beyond the server limit stay local');assert.equal(poolHasLocalTargets(Array.from({length:MAX_SHARED_POOL},(_,i)=>'p'+i),new Set(Array.from({length:MAX_SHARED_POOL},(_,i)=>'p'+i))),false);});
 console.log(`${n} passed`);
 
-const {shortStarterPool}=load('lib/personal-target-pool.ts');
+const {shortStarterPool}=load('site/lib/personal-target-pool.ts');
 const starterTargets=Array.from({length:30},(_,i)=>({id:`starter-${i}`,name:`Starter ${i}`,parentTargetId:`family-${Math.floor(i/3)}`,points:[[20,0],[20000,0]]}));let seed=9;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
 const starter=shortStarterPool(starterTargets,12,random);assert.equal(starter.length,12);assert.equal(new Set(starter).size,12);assert.equal(new Set(starter.slice(0,10).map(id=>starterTargets.find(t=>t.id===id).parentTargetId)).size,10);console.log('PASS optional 12-target starter is a unique family-balanced random subset, not a silent full-pool claim.');

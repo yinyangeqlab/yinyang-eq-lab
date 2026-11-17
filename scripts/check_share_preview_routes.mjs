@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import ts from "typescript";
-import * as share from "../lib/share-pages.mjs";
+import * as share from "../site/lib/share-pages.mjs";
 
 const { SITE_ORIGIN, sharePageFor, sharePages, shareHtml, shareImageUrl, shareAnimationUrl, previewTitle } = share;
 const aliasDestinations = new Map([
@@ -69,7 +69,7 @@ function* sourceFiles(directory) {
 }
 
 const linkedPages = new Set();
-for (const directory of ["app", "components", "lib"]) {
+for (const directory of ["site/app", "site/components", "site/lib"]) {
   for (const file of sourceFiles(new URL(`../${directory}/`, import.meta.url))) {
     const ast = ts.createSourceFile(file.pathname, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true);
     function visit(node) {
@@ -106,7 +106,7 @@ function loadSource(file, dependencies) {
   return exports;
 }
 
-for (const [file, path] of [["app/discover/page.tsx", "/discover"], ["app/personal-tuning/page.tsx", "/personal-tuning"]]) {
+for (const [file, path] of [["site/app/discover/page.tsx", "/discover"], ["site/app/personal-tuning/page.tsx", "/personal-tuning"]]) {
   const { default: route } = loadSource(file, { "next/navigation": { redirect(url) { throw new Error(url); } } });
   assert.throws(route, { message: aliasDestinations.get(path) }, `Preview must match the redirect for ${path}`);
 }
@@ -114,7 +114,7 @@ for (const [file, path] of [["app/discover/page.tsx", "/discover"], ["app/person
 const id = "k7m2q9xwab";
 const sharedTitle = "Synthetic blind shootout";
 let userAgent = "";
-const shareMetadata = loadSource("lib/share-metadata.ts", {
+const shareMetadata = loadSource("site/lib/share-metadata.ts", {
   "next/headers": { headers: async () => new Headers({ "user-agent": userAgent }) },
   "./share-pages.mjs": share,
 });
@@ -127,9 +127,9 @@ const dependencies = {
   "react/jsx-runtime": {},
 };
 const dynamicRoutes = [
-  ["app/s/[id]/page.tsx", `/s/${id}`, sharedTitle, share.sharedShootoutCard],
-  ["app/embed/[id]/page.tsx", `/embed/${id}`, "Blind shootout", share.sharedShootoutCard],
-  ["app/s/[id]/results/page.tsx", `/s/${id}/results`, "Private page", share.privateShareCard],
+  ["site/app/s/[id]/page.tsx", `/s/${id}`, sharedTitle, share.sharedShootoutCard],
+  ["site/app/embed/[id]/page.tsx", `/embed/${id}`, "Blind shootout", share.sharedShootoutCard],
+  ["site/app/s/[id]/results/page.tsx", `/s/${id}/results`, "Private page", share.privateShareCard],
 ];
 for (const [file, path, title, card] of dynamicRoutes) {
   const { generateMetadata } = loadSource(file, dependencies);
@@ -151,7 +151,7 @@ for (const [file, path, title, card] of dynamicRoutes) {
   }
 }
 
-const { generateMetadata: sharedMetadata } = loadSource("app/s/[id]/page.tsx", dependencies);
+const { generateMetadata: sharedMetadata } = loadSource("site/app/s/[id]/page.tsx", dependencies);
 const missing = await sharedMetadata({ params: Promise.resolve({ id: "doesntexst" }) });
 assert.equal(missing.openGraph.title, "Shootout not found");
 assert.deepEqual(missing.openGraph.images, []);

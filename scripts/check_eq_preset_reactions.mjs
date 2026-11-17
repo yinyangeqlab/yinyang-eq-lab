@@ -3,9 +3,9 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as scoring from '../lib/preference-ranking.ts';
-import { approvedEqModels } from '../data/approved-eq-models.ts';
-import { VOTE_DATA_NOTICE_VERSION } from '../lib/vote-data-notice.ts';
+import * as scoring from '../site/lib/preference-ranking.ts';
+import { approvedEqModels } from '../site/data/approved-eq-models.ts';
+import { VOTE_DATA_NOTICE_VERSION } from '../site/lib/vote-data-notice.ts';
 
 const sqlite = new DatabaseSync(':memory:');
 sqlite.exec('PRAGMA foreign_keys=ON');
@@ -42,9 +42,9 @@ function load(path, imports = {}) {
   vm.runInNewContext(code, { exports, require(id) { assert.ok(id in imports, id); return imports[id]; }, Request, Response, URL, crypto, TextDecoder });
   return exports;
 }
-const inputs = load('lib/request-json.ts');
-const admin = load('lib/admin-contributions.ts', { '@/lib/request-json': inputs });
-const rankings = load('lib/eq-rankings.ts', {
+const inputs = load('site/lib/request-json.ts');
+const admin = load('site/lib/admin-contributions.ts', { '@/lib/request-json': inputs });
+const rankings = load('site/lib/eq-rankings.ts', {
   '../data/approved-eq-models': { approvedEqModels }, './preference-ranking': scoring,
 });
 const modelId = 'hifiman-arya-stealth';
@@ -83,13 +83,13 @@ const sql = { env: { DB: db, ASSETS: {
     return new Response('Preamp: -6 dB\nFilter 1: ON PK Fc 1000 Hz Gain -2 dB Q 1');
   },
 } } };
-const route = load('app/api/eq-preset-reactions/route.ts', {
+const route = load('site/app/api/eq-preset-reactions/route.ts', {
   'cloudflare:workers': sql, '@/lib/admin-contributions': admin, '@/lib/request-json': inputs,
   '@/lib/eq-rankings': { getPublishedEqPreview: (model, preset, hash) => rankings.getPublishedEqPreview(model, preset, hash, models()) },
   '@/lib/submission-ownership': { dataIdentity }, '@/lib/vote-data-notice': { VOTE_DATA_NOTICE_VERSION },
   '@/lib/public-write-gate': { publicWriteGate: async () => null },
 });
-const erasure = load('lib/privacy-erasure.ts', { 'cloudflare:workers': sql, '@/lib/request-json': inputs });
+const erasure = load('site/lib/privacy-erasure.ts', { 'cloudflare:workers': sql, '@/lib/request-json': inputs });
 const url = 'https://fixture.invalid/api/eq-preset-reactions';
 const key = { model: 'fixture-headphone', preset: 'fixture-a', version: firstVersion };
 const get = (patch = {}) => route.GET(new Request(url + '?' + new URLSearchParams({ ...key, ...patch })));

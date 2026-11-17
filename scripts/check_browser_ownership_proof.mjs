@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
-import { VOTE_DATA_NOTICE_VERSION } from '../lib/vote-data-notice.ts';
+import { VOTE_DATA_NOTICE_VERSION } from '../site/lib/vote-data-notice.ts';
 import { inspectDatabase, sanitizeDatabase } from './recovery/recovery.mjs';
 
 const sql = new DatabaseSync(':memory:');
@@ -75,10 +75,10 @@ function load(path) {
   return exports;
 }
 for (const name of ['request-json','admin-contributions','submission-ownership','owner-access','browser-ownership-proof']) {
-  dependencies['@/lib/'+name] = load('lib/'+name+'.ts');
+  dependencies['@/lib/'+name] = load('site/lib/'+name+'.ts');
 }
-const participant = load('app/api/my-data/browser-proof/route.ts');
-const owner = load('app/api/owner-research/browser-proof/route.ts');
+const participant = load('site/app/api/my-data/browser-proof/route.ts');
+const owner = load('site/app/api/owner-research/browser-proof/route.ts');
 const issue = (id = browserId, site = origin) => participant.POST(request({ browserId: id }, site));
 const redeem = (code, id = browserId, authorization = 'Bearer '+ownerToken, site = origin) =>
   owner.POST(request({ browserId: id, code }, site, authorization));

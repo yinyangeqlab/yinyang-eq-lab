@@ -3,16 +3,16 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {validateSyncPayload} from '../lib/browser-sync.mjs';
+import {validateSyncPayload} from '../site/lib/browser-sync.mjs';
 
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
 const db={prepare(query){const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},crypto,Date,TextEncoder,TextDecoder,btoa,atob,Response,Request,URL,Headers});return exports;}
-const input=load('lib/request-json.ts'),account=load('lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
+const input=load('site/lib/request-json.ts'),account=load('site/lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});
 
-const curveTools=load('lib/curves.ts'),fileTools=load('lib/research-measurement-files.ts');
-const records=load('lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':curveTools,'@/lib/research-measurement-files':fileTools});
+const curveTools=load('site/lib/curves.ts'),fileTools=load('site/lib/research-measurement-files.ts');
+const records=load('site/lib/yinyangeq-records.ts',{'@/lib/profile-sharing':load('site/lib/profile-sharing.ts'),'@/lib/request-json':input,'@/lib/yinyangeq-account':account,'@/lib/music-catalog':{musicCandidates:[]},'@/lib/music-display':{musicDisplayTitle:x=>x},'@/lib/curves':curveTools,'@/lib/research-measurement-files':fileTools});
 
 
 const profile=await account.createProfileAccount(db),session='d'.repeat(64),id=crypto.randomUUID(),target=crypto.randomUUID();sqlite.prepare("UPDATE privacy_accounts SET submissions_enabled=1,agreement_version='2026-10-18-v7' WHERE subject_id=?").run(profile.subject_id);sqlite.prepare('INSERT INTO privacy_sessions VALUES(?,?,?)').run(session,profile.subject_id,Date.now()+1000000);

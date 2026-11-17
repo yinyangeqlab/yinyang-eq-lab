@@ -16,7 +16,7 @@ globalThis.window = {
 };
 globalThis.document = { documentElement: { dataset: {} } };
 
-const prefs = await import('../lib/display-preferences.ts');
+const prefs = await import('../site/lib/display-preferences.ts');
 const KEY = 'yinyang-display-preferences';
 const defaults = { motion: 'auto', welcomeFlights: true, singleKeyShortcuts: true, shortcutScope: 'everywhere' };
 
@@ -58,11 +58,11 @@ assert.deepEqual(legacy, { ...defaults, motion: 'reduced', shortcutScope: 'playe
 assert.equal('siteTheme' in document.documentElement.dataset, false);
 
 // Display preferences are per-browser: they must not enter account Sync.
-const { ACCOUNT_SYNC_KEYS } = await import('../lib/account-sync.mjs');
+const { ACCOUNT_SYNC_KEYS } = await import('../site/lib/account-sync.mjs');
 assert.equal(ACCOUNT_SYNC_KEYS.includes(KEY), false, 'display preferences are excluded from account Sync');
 
 // The playback handler only suppresses letter/number shortcuts; Space and arrows are handled before the check.
-const panel = readFileSync(new URL('../components/music-panel.tsx', import.meta.url), 'utf8');
+const panel = readFileSync(new URL('../site/components/music-panel.tsx', import.meta.url), 'utf8');
 const handler = panel.slice(panel.indexOf('const handlePlaybackShortcut'), panel.indexOf('event.preventDefault(); event.stopPropagation();', panel.indexOf('const handlePlaybackShortcut')));
 assert.match(handler, /singleKey: preferences\.singleKeyShortcuts/, 'letter/number shortcuts honor the preference');assert.match(handler, /scope: preferences\.shortcutScope/, 'the scope preference reaches the decision');
 assert.ok(handler.includes('toggleWithSpace(event); return;'), 'Space playback is handled before letter shortcuts');

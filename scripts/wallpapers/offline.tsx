@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import WelcomeLandscape from "../../components/welcome-landscape";
+import WelcomeLandscape from "../../site/components/welcome-landscape";
 
 declare const OFFLINE_ARTWORK: {
   texture: string;

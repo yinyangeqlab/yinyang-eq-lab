@@ -1,13 +1,13 @@
-import * as fitters from "../lib/fitter-settings.ts";
+import * as fitters from "../site/lib/fitter-settings.ts";
 import contributionPolicy from './contribution-policy-fixture.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as fingerprints from '../lib/file-fingerprint.ts';
-import {rankPreferences} from '../lib/preference-ranking.ts';
-import {intervalStats,parseIntervals} from '../lib/listening.ts';
-import * as protocol from '../lib/listening-protocol.ts';
+import * as fingerprints from '../site/lib/file-fingerprint.ts';
+import {rankPreferences} from '../site/lib/preference-ranking.ts';
+import {intervalStats,parseIntervals} from '../site/lib/listening.ts';
+import * as protocol from '../site/lib/listening-protocol.ts';
 
 const hash='a'.repeat(64),otherHash='b'.repeat(64);
 for(const value of [null,undefined,17,{},[],true,'','a'.repeat(63),'g'.repeat(64),'a'.repeat(65)])assert.equal(fingerprints.fileFingerprint(value),null);
@@ -21,8 +21,8 @@ const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/file-fingerpri
 function load(relative){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+relative,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;assert.ok(name in deps,name);return deps[name];},Response});return exports;}
 deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
 deps['@/lib/target-labels']={oratoryInEarId:'oratory-fixture',oratoryInEarLabel:'oratory1990 in-ear (aka USOUND1v1 approximation)'};
-deps['@/lib/ranking-evidence']=load('lib/ranking-evidence.ts');
-const api=load('app/api/research/route.ts');const rawGET=api.GET;api.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
+deps['@/lib/ranking-evidence']=load('site/lib/ranking-evidence.ts');
+const api=load('site/app/api/research/route.ts');const rawGET=api.GET;api.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
 const intervals=JSON.stringify([{side:0,start:0,end:6,rate:1},{side:1,start:0,end:6,rate:1}]);
 const base={winnerId:'a',loserId:'b',eligible:1,testMode:'blind',headphoneType:'oe',protocolVersion:protocol.LISTENING_PROTOCOL,heardA:6,heardB:6,intervals,songTitle:null,songArtist:null,songAlbum:null,recordingId:null,sha256:hash,reasonTags:'[]'};
 const one={...base,id:'vote-one',voterId:'private-browser-one'},two={...base,id:'vote-two',voterId:'private-browser-two'};

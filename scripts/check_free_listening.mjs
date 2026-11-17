@@ -1,4 +1,4 @@
-import * as fitters from "../lib/fitter-settings.ts";
+import * as fitters from "../site/lib/fitter-settings.ts";
 // Execute the shipped routes with synthetic ownership and an in-memory DB.
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
@@ -6,11 +6,11 @@ import {DatabaseSync} from 'node:sqlite';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {webcrypto} from 'node:crypto';
-import * as input from '../lib/request-json.ts';
-import * as listening from '../lib/listening.ts';
-import * as protocol from '../lib/listening-protocol.ts';
-import {targetHeadphoneType} from '../lib/target-type.ts';
-import {cleanFeedback} from '../lib/feedback.ts';
+import * as input from '../site/lib/request-json.ts';
+import * as listening from '../site/lib/listening.ts';
+import * as protocol from '../site/lib/listening-protocol.ts';
+import {targetHeadphoneType} from '../site/lib/target-type.ts';
+import {cleanFeedback} from '../site/lib/feedback.ts';
 const schema=Object.fromEntries(['listeningRuns','rankedTrials','targets','comparisonRecords','submissionOwners','feedbackSubmissions'].map(name=>[name,new Proxy({table:name},{get:(obj,key)=>obj[key]??key})]));
 const id=n=>`${String(n).padStart(8,'0')}-0000-4000-8000-000000000000`;
 let subject='participant',consent=true,shareMusic=false,stored=[],owner=[],writes=[],targetRows=[];
@@ -18,14 +18,14 @@ const match=(row,c)=>!c||c.every(({key,value})=>row[key]===value);
 const db={insert:table=>({values:value=>({table,value})}),batch:async commands=>{writes.push(...commands);for(const c of commands){if(c.table===schema.listeningRuns)stored.push(c.value);if(c.table===schema.submissionOwners)owner.push(c.value);}},select:()=>({from:table=>({where:condition=>{const rows=table===schema.targets?targetRows:table===schema.listeningRuns?stored:table===schema.submissionOwners?owner:[];const result=rows.filter(row=>match(row,condition));const query={then:(yes,no)=>Promise.resolve(result).then(yes,no),limit:async n=>result.slice(0,n),get:async()=>result[0],orderBy:()=>({limit:async n=>result.slice(0,n)})};return query;}})})};
 const linked={id:id(75),status:'approved',points:'[]',version:'pinned-source-version'};
 const deps={'@/lib/autoeq-target-sources':{autoEqRankingTargets:[linked],sharedAutoEqTarget:key=>key===linked.id?linked:undefined},'@/lib/target-type':{targetHeadphoneType},'@/db':{getDb:()=>db},'@/db/schema':schema,'@/lib/public-targets':{publicTargetPredicate:null},'drizzle-orm':{eq:(key,value)=>[{key,value}],and:(...c)=>c.flat().filter(Boolean),gte:()=>[],desc:x=>x},'@/lib/submission-ownership':{submissionContext:async kind=>{if(!consent||['owner','invite:layout-test-only'].includes(subject))throw new input.RequestInputError('Not permitted',403);return {subjectId:subject,shareMusic,record:recordId=>({table:schema.submissionOwners,value:{recordKind:kind,recordId,subjectId:subject}}),requireTrial:async()=>{throw new input.RequestInputError('Not owned',403);}};}},'@/lib/curve-version':{curveVersion:async()=> 'version'},'@/lib/listening-protocol':protocol,'@/lib/listening':listening,'@/lib/request-json':input,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'fixture'},'@/lib/public-write-gate':{publicWriteGate:async()=>null},'@/lib/feedback':{cleanFeedback}};
-const loggingCode=ts.transpileModule(readFileSync('lib/shootout-submission-logs.ts','utf8'),{
+const loggingCode=ts.transpileModule(readFileSync('site/lib/shootout-submission-logs.ts','utf8'),{
   compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS},
 }).outputText;
 const loggingContext={exports:{}};
 vm.runInNewContext(loggingCode,loggingContext);
 deps['@/lib/shootout-submission-logs']=loggingContext.exports;
 function load(path){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:key=>{if(key==="@/lib/fitter-settings")return fitters;assert.ok(key in deps,key);return deps[key];},Response,crypto:webcrypto,Date});return exports;}
-const runs=load('app/api/listening-runs/route.ts'),feedback=load('app/api/feedback/route.ts');
+const runs=load('site/app/api/listening-runs/route.ts'),feedback=load('site/app/api/feedback/route.ts');
 const body={id:id(1),voterId:id(2),targetAId:id(3),targetBId:id(4),headphoneType:'ie',result:'a',testMode:'bring',matchedPassageRequired:false,intervals:[],voteDataNoticeVersion:'fixture',shareSong:true,songTitle:'Private song',researchContext:{targetVersions:['version','version'],recordingId:'private',sha256:'a'.repeat(64),rig:'Synthetic',duration:200}};
 function reset(){subject='participant';consent=true;shareMusic=false;stored=[];owner=[];writes=[];targetRows=[{id:id(3),status:'approved',measurement:JSON.stringify({type:'ie'}),points:'[]'},{id:id(4),status:'approved',measurement:null,points:'[]'}];}
 async function post(route,data){return route.POST(new Request('http://local.test/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)}));}

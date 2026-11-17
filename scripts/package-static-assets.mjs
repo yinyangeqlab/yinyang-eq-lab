@@ -1,4 +1,4 @@
-import { approvedEqModels } from "../data/approved-eq-models.ts";
+import { approvedEqModels } from "../site/data/approved-eq-models.ts";
 import { packagePeqdbAssets } from "./peqdb-assets.mjs";
 import { verifyVoteFontAssets } from "./vote-font-assets.mjs";
 import {readdirSync,mkdirSync,lstatSync,statSync,linkSync,copyFileSync,unlinkSync,readFileSync,existsSync,writeFileSync} from 'node:fs';
@@ -41,7 +41,7 @@ const modelLicense = 'vendor/site-help/LICENSE.txt';
 if (existsSync(join(source, model))) {
  if (digest(join(source, model)) !== '4520cbfdcbb08add6a94c02d03ab0c50d3c33e002a271c79ebb4e6d8b79a81f1' ||
      !existsSync(join(source, modelLicense)) ||
-     digest(join(source, modelLicense)) !== digest(join(root, 'vendor/potion-2m-model2vec.LICENSE'))) {
+     digest(join(source, modelLicense)) !== digest(join(root, 'site/vendor/potion-2m-model2vec.LICENSE'))) {
   throw Error('Site help model or license differs from the pinned asset. Run scripts/prepare-site-help-model.py.');
  }
 } else if (existsSync(join(destination, model))) {
@@ -62,7 +62,7 @@ if (existsSync(join(source, model))) {
 }
 if(!publicOnly){
  const peaks=join(root,'artifacts/waveform-peaks/public/__waveform-peaks');
- const audioManifest=JSON.parse(readFileSync(join(root,'data/listening-pool-audio-manifest.json'),'utf8'));
+ const audioManifest=JSON.parse(readFileSync(join(root,'site/data/listening-pool-audio-manifest.json'),'utf8'));
  mkdirSync(join(destination,'__waveform-peaks'),{recursive:true});
  for(const asset of Object.values(audioManifest)){
   const name=asset.sha256+'.bin',input=join(peaks,name),output=join(destination,'__waveform-peaks',name);
@@ -70,7 +70,7 @@ if(!publicOnly){
   if(existsSync(output))unlinkSync(output);copyFileSync(input,output);
  }
 }
-const manifest=JSON.parse(readFileSync(join(root,'data/listening-pool-audio-manifest.json'),'utf8'));
+const manifest=JSON.parse(readFileSync(join(root,'site/data/listening-pool-audio-manifest.json'),'utf8'));
 if(!publicOnly)for(const asset of Object.values(manifest))for(const part of asset.parts){const file=resolve(destination,'.'+part.path);if(!file.startsWith(destination+'/')||!existsSync(file)||statSync(file).size!==part.bytes)throw new Error('Incomplete protected media package. Restore the authorized media for a live rebuild; use --public-only solely for a public clone preview.');}
 if(publicOnly)console.log(`Packaged ${files} public-clone assets. Protected recordings not verified; NOT a deployable live package.`);
 else {if(existsSync(marker))unlinkSync(marker);console.log(`Packaged ${files} static assets; ${Object.keys(manifest).length} protected recordings complete. Do not edit public assets while this release is being deployed.`);}

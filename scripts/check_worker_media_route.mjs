@@ -2,9 +2,9 @@ import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import ts from 'typescript';
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
-const stream=ts.transpileModule(readFileSync('lib/listening-audio.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
-const route=readFileSync('lib/worker-media-route.mjs','utf8').replace("import { serveListeningAudio } from './media-stream.mjs';",'').replace("import manifest from './media-manifest.mjs';",'');
-const helper=readFileSync('lib/worker-media-response.mjs','utf8');
+const stream=ts.transpileModule(readFileSync('site/lib/listening-audio.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const route=readFileSync('site/lib/worker-media-route.mjs','utf8').replace("import { serveListeningAudio } from './media-stream.mjs';",'').replace("import manifest from './media-manifest.mjs';",'');
+const helper=readFileSync('site/lib/worker-media-response.mjs','utf8');
 const script=stream+route+helper+`
 const manifest={song:{bytes:100,sha256:'hash',mime:'audio/flac',parts:[{path:'/0',bytes:40},{path:'/1',bytes:30},{path:'/2',bytes:30}]}};
 const bytes=new Uint8Array(100).map((_,i)=>i);

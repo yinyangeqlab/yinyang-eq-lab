@@ -11,6 +11,10 @@ Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE
 5. Verify with the pinned environment. Review the actual diff and reconcile each independent finding as accepted, rejected with evidence, narrowed or deferred. Rerun affected checks after a fix.
 6. Finish with changed behavior, exact-source results, gaps and next actions. Commit, publication, merge and deployment each require their own existing authorization. A successful test or source-manifest refresh grants none of them.
 
+## Repository layout
+
+Keep running npm commands from the repository root. The application source and framework config are in `site/`. Public URLs still come from root `public/`, and the packaged Worker and client still go to root `dist/`. Local D1 uses the repository's ignored `.wrangler/state`.
+
 ## Boundaries to preserve
 
 - Consent: distinguish dismissing an unsaved draft from saving an opt-out. Cancellation must not overwrite previously saved choices. Saving opt-out persists that choice without contributing research/activity data. Use synthetic fixtures to verify persisted state, reload behavior and the actual gate/route contract.
@@ -54,7 +58,7 @@ Each run creates a unique ignored `artifacts/verification/` directory with a JSO
 | Release candidate | App + infra typechecks/lint, own pinned build/full package, exact-source and asset alignment, authorized browser review, resource plan and recovery decision |
 | Publication | Reviewed staged scanner, exact lab author/committer, actual lab connection, scrubbed ancestry, separate approval |
 
-Run app types with `node node_modules/typescript/bin/tsc --noEmit` and lint with `npm run lint`. The separate infra project uses its own lock and `npm run check`. These are not silently claimed by the regression runner. Optional browser fixture branches within individual tests remain optional; read their output and record the gap.
+Run app types with `node node_modules/typescript/bin/tsc --project site/tsconfig.json --noEmit` and lint with `npm run lint`. The separate infra project uses its own lock and `npm run check`. These are not silently claimed by the regression runner. Optional browser fixture branches within individual tests remain optional; read their output and record the gap.
 
 ## Release state and manifests
 

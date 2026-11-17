@@ -4,7 +4,7 @@ import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 import ts from 'typescript';
 
-const source=readFileSync('app/shootout/page.tsx','utf8');
+const source=readFileSync('site/app/shootout/page.tsx','utf8');
 const ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 const functions=new Map(),expressions=new Map();
 function visit(node){if(ts.isFunctionDeclaration(node)&&node.name)functions.set(node.name.text,node.getText(ast));if(ts.isVariableDeclaration(node)&&node.initializer)expressions.set(node.name.getText(ast),node.initializer.getText(ast));if(ts.isVariableDeclaration(node)&&node.initializer&&ts.isCallExpression(node.initializer)&&node.initializer.expression.getText(ast)==='useCallback'){const callback=node.initializer.arguments[0];functions.set(node.name.getText(ast),'const '+node.name.getText(ast)+'='+callback.getText(ast)+';');}ts.forEachChild(node,visit);}visit(ast);

@@ -2,8 +2,8 @@ import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoin
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-import { isPublicAudioFactRoute } from '../lib/share-pages.mjs';
-import { ownerOnlyMaintenanceResponse, featureMaintenanceResponse, OWNER_ONLY_MAINTENANCE_MESSAGE } from '../lib/maintenance-options.ts';
+import { isPublicAudioFactRoute } from '../site/lib/share-pages.mjs';
+import { ownerOnlyMaintenanceResponse, featureMaintenanceResponse, OWNER_ONLY_MAINTENANCE_MESSAGE } from '../site/lib/maintenance-options.ts';
 const source = readFileSync('infra/pulumi/private-gate.mjs', 'utf8');
 let appReads = 0, databaseCalls = 0;
 const context = vm.createContext({
@@ -75,6 +75,6 @@ for (const [method, path] of [['POST', '/terms'], ['GET', '/terms/private']]) {
 const escaped=await ownerOnlyMaintenanceResponse(new Request('https://fixture.test/'),'<script>alert(1)</script> & test').text();assert.doesNotMatch(escaped,/<script>/);assert.match(escaped,/&lt;script&gt;/);assert.match(escaped,/min-height:100svh/);assert.match(escaped,/name="viewport"/);assert.doesNotMatch(escaped,/<a |<form|<input/);
 const infra=readFileSync('infra/pulumi/index.ts','utf8');assert.match(infra,/ownerOnlyMaintenance \? \["\/\*"\] : \["\/\*", \.\.\.publicAssetBypassPatterns\]/);assert.match(infra,/config.getBoolean\("ownerOnlyMaintenance"\) \?\? false/);
 // Admitted/denied client reload behavior is exercised by check_main_workflows.mjs.
-assert.match(readFileSync('components/service-warning.tsx','utf8'),/status.viewerHasAccess!==true\)\{window.location.reload\(\)/);
+assert.match(readFileSync('site/components/service-warning.tsx','utf8'),/status.viewerHasAccess!==true\)\{window.location.reload\(\)/);
 assert.match(OWNER_ONLY_MAINTENANCE_MESSAGE,/Thank you for your patience/);
 console.log(`PASS owner-only maintenance: ${cases} route/method/identity denials; real HMAC admin access, expired/future/forged rejection, login availability, no DB/app reads before denial, static-first override, escaped full-screen HTML, operational status, and normal-mode restoration. Synthetic fixtures only.`);

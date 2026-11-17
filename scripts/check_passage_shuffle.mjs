@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/comparison-passage.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports});
+const exports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/comparison-passage.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports});
 const {shuffleComparisonPassage:shuffle,rememberComparisonPassage:remember}=exports;
 const overlap=(p,rows)=>rows.reduce((n,r)=>n+Math.max(0,Math.min(p.end,r.end)-Math.max(p.start,r.start)),0);
 const amount=rows=>rows.reduce((n,r)=>n+r.end-r.start,0);
@@ -30,7 +30,7 @@ let favored=0,quiet=0;for(let i=0;i<2000;i++){const p=shuffle(100,wave,[],5,()=>
 // Once the active half is covered, quiet regions must still be explored before a repeat.
 assert.ok(shuffle(100,wave,[{start:45,end:99.9}],5,()=>.9).passage.end<=45+1e-6);
 // Exercise the shipped button handler with real per-track history and duration.
-const source=readFileSync('components/music-panel.tsx','utf8'),ast=ts.createSourceFile('panel.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
+const source=readFileSync('site/components/music-panel.tsx','utf8'),ast=ts.createSourceFile('panel.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let handler;
 function visit(n){if(ts.isFunctionDeclaration(n)&&n.name?.text==='shufflePassage')handler=n.getText(ast);ts.forEachChild(n,visit);}visit(ast);assert.ok(handler);
 const book=new Map(),fixture={passage:{start:20,end:32},passageTrackKey:'song-one',passageBook:book,duration:100,curatedPreview:null,analysis:null,personalOnly:true,rememberComparisonPassage:remember,shuffleComparisonPassage:shuffle,setPassageDone(){},setPassageOverride:p=>fixture.passage=p,setShuffleStatus:s=>fixture.status=s,setWaveformFocus:seconds=>fixture.focus=seconds};
 const ctx=vm.createContext(fixture);vm.runInContext(ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,ctx);vm.runInContext('shufflePassage()',ctx);assert.equal(fixture.passage.end-fixture.passage.start,12);assert.equal(overlap(fixture.passage,[{start:20,end:32}]),0);assert.equal(fixture.focus,(fixture.passage.start+fixture.passage.end)/2);assert.ok(book.has('song-one'));assert.equal(book.has('song-two'),false);

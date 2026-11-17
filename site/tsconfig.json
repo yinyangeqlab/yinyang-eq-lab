@@ -23,6 +23,8 @@
       }
     ],
     "paths": {
+      "@/db": ["../db/index.ts"],
+      "@/db/*": ["../db/*"],
       "@/*": [
         "./*"
       ]
@@ -38,7 +40,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "../db/**/*.ts",
+    "../scripts/build/**/*.ts",
+    "../scripts/experiments/autoeq/**/*.ts"
   ],
   "exclude": [
     "node_modules",

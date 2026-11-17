@@ -3,14 +3,14 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {validateSyncPayload} from '../lib/browser-sync.mjs';
+import {validateSyncPayload} from '../site/lib/browser-sync.mjs';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync('drizzle/'+f,'utf8'));
 let writes=0,admin=false;
 class Statement{constructor(q,args=[]){this.q=q;this.args=args;}bind(...args){return new Statement(this.q,args);}async first(){return sql.prepare(this.q).get(...this.args)||null;}async all(){return{results:sql.prepare(this.q).all(...this.args)};}async run(){writes++;return{meta:{changes:sql.prepare(this.q).run(...this.args).changes}};}}
 const DB={prepare:q=>new Statement(q),batch:async rows=>{sql.exec('BEGIN');try{const out=[];for(const r of rows)out.push(await r.run());sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
 function load(path,deps){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:id=>{assert.ok(id in deps,id);return deps[id];},Request,Response,Headers,URL,Date,crypto,TextDecoder,TextEncoder,btoa,atob});return exports;}
-const input=load('lib/request-json.ts',{}),env={DB},account=load('lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}}),erasure=load('lib/privacy-erasure.ts',{'cloudflare:workers':{env},'@/lib/request-json':input}),api=load('lib/profile-api.ts',{'@/lib/request-json':input});
-const route=load('app/api/owner-research/test-account/route.ts',{'cloudflare:workers':{env},'@/lib/owner-access':{ownerAccessResponse:async()=>admin?null:new Response(null,{status:403})},'@/lib/yinyangeq-account':account,'@/lib/request-json':input,'@/lib/profile-api':api,'@/lib/privacy-erasure':erasure});
+const input=load('site/lib/request-json.ts',{}),env={DB},account=load('site/lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}}),erasure=load('site/lib/privacy-erasure.ts',{'cloudflare:workers':{env},'@/lib/request-json':input}),api=load('site/lib/profile-api.ts',{'@/lib/request-json':input});
+const route=load('site/app/api/owner-research/test-account/route.ts',{'cloudflare:workers':{env},'@/lib/owner-access':{ownerAccessResponse:async()=>admin?null:new Response(null,{status:403})},'@/lib/yinyangeq-account':account,'@/lib/request-json':input,'@/lib/profile-api':api,'@/lib/privacy-erasure':erasure});
 const origin='https://fixture.invalid',request=(body,from=origin)=>new Request(origin+'/api/owner-research/test-account',{method:body?'POST':'GET',headers:{Origin:from,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
 assert.equal((await route.GET(request())).status,403);assert.equal((await route.POST(request({action:'disable'}))).status,403);assert.equal(writes,0,'Ordinary sessions cannot inspect or mutate test access');
 admin=true;

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {parseIntervals,intervalStats,commonSegments} from '../lib/listening.ts';
+import {parseIntervals,intervalStats,commonSegments} from '../site/lib/listening.ts';
 const interval=(side,start,end,rate=1)=>({side,start,end,rate});
 assert.equal(parseIntervals([interval(0,NaN,6),interval(2,0,6),interval(0,-1,6),interval(1,5,3),interval(0,0,6,0)]).length,0);
 assert.deepEqual(intervalStats([interval(0,0,6),interval(1,10,16)]),{heardA:6,heardB:6,overlapSeconds:0});

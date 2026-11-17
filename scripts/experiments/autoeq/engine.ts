@@ -1,5 +1,5 @@
-import type { Point } from '../../../lib/curves';
-import type { EqFilter } from '../../../lib/blind-eq';
+import type { Point } from '../../../site/lib/curves';
+import type { EqFilter } from '../../../site/lib/blind-eq';
 
 export const fitGrid = Array.from({ length: 384 }, (_, i) => 20 * 1000 ** (i / 383));
 export type SmoothMode = 'none' | 'ie' | 'oe';

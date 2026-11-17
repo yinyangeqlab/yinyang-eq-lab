@@ -2,7 +2,7 @@ import { createReadStream, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { peqdbAssets, peqdbSourceSnapshot } from '../peqdb-assets.mjs';
 let buildSnapshot;
-export function peqdbLocalAssets() {
+export function peqdbLocalAssets({ buildDir } = {}) {
   let building = false;
   return { name: 'peqdb-local-assets', configResolved(config) { building = config.command === 'build'; }, buildStart() {
     if (!building) return;
@@ -10,9 +10,9 @@ export function peqdbLocalAssets() {
     buildSnapshot ??= current;
     if (JSON.stringify(current) !== JSON.stringify(buildSnapshot)) throw Error('Application source changed during the build; rebuild before packaging.');
   }, writeBundle() {
-    if (!building) return;
-    mkdirSync('dist', { recursive: true });
-    writeFileSync('dist/peqdb-build-source.json', JSON.stringify(buildSnapshot));
+    if (!building || !buildDir) return;
+    mkdirSync(buildDir, { recursive: true });
+    writeFileSync(resolve(buildDir, 'peqdb-build-source.json'), JSON.stringify(buildSnapshot));
   }, resolveId(source) {
     if (source === '/vendor/peqdb-autoeq/autoeq-wasm.mjs') return { id: source, external: true };
   }, configureServer(server) {

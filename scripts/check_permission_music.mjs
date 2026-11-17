@@ -2,9 +2,9 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
-const tracks=JSON.parse(readFileSync('data/permission-music.json','utf8'));
-const manifest=JSON.parse(readFileSync('data/listening-pool-audio-manifest.json','utf8'));
-const waveforms=JSON.parse(readFileSync('data/music-waveforms.json','utf8'));
+const tracks=JSON.parse(readFileSync('site/data/permission-music.json','utf8'));
+const manifest=JSON.parse(readFileSync('site/data/listening-pool-audio-manifest.json','utf8'));
+const waveforms=JSON.parse(readFileSync('site/data/music-waveforms.json','utf8'));
 assert.equal(tracks.length,24);
 assert.ok(tracks.every(t=>t.filename.endsWith('.m4a')));
 const sourceArg=process.argv.indexOf('--source-dir');
@@ -29,7 +29,7 @@ for(const track of tracks){
  }
 }
 assert.equal(tracks.reduce((sum,t)=>sum+manifest[t.fileUrl.split('/').pop()].bytes,0),98252313);
-const page=readFileSync('app/music-library/page.tsx','utf8');
+const page=readFileSync('site/app/music-library/page.tsx','utf8');
 assert.ok(page.includes('track.permissionOnly ? <span>Used with permission'));
 assert.ok(page.includes('This permission does not grant visitors a license to reuse or redistribute the music'));
 assert.ok(!page.includes('OPENLY LICENSED MUSIC'));

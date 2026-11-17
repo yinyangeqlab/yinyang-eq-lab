@@ -75,16 +75,16 @@ modules["shootout-failure-logger.mjs"] = {
   contentType: "application/javascript+module",
   contentFile: moduleFile(failureLoggerModule),
 };
-modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/invite-settings.mjs"))};
-modules["audio-facts.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/audio-facts.mjs"))};
-modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/share-pages.mjs"))};
-modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-pairing.mjs")) };
-modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-sync-notice.mjs"))};
-modules["account-preferences.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"lib/account-preferences.mjs"))};
-modules["browser-sync.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/browser-sync.mjs")) };
+modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/invite-settings.mjs"))};
+modules["audio-facts.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/audio-facts.mjs"))};
+modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/share-pages.mjs"))};
+modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"site/lib/browser-pairing.mjs")) };
+modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/account-sync-notice.mjs"))};
+modules["account-preferences.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/account-preferences.mjs"))};
+modules["browser-sync.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"site/lib/browser-sync.mjs")) };
 
-modules["service-status.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/service-status.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replaceAll("@/lib/maintenance-options","./maintenance-options.mjs")))};
-modules["maintenance-options.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/maintenance-options.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText))};
+modules["service-status.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"site/lib/service-status.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replaceAll("@/lib/maintenance-options","./maintenance-options.mjs")))};
+modules["maintenance-options.mjs"] = {contentType:"application/javascript+module",contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"site/lib/maintenance-options.ts"),"utf8"),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText))};
 modules["abuse-controls.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(here,"abuse-controls.mjs")) };
 modules["public-assets.mjs"] = {
   contentType: "application/javascript+module",
@@ -92,19 +92,19 @@ modules["public-assets.mjs"] = {
 };
 modules["media-response.mjs"] = {
   contentType: "application/javascript+module",
-  contentFile: moduleFile(join(buildRoot, "lib/worker-media-response.mjs")),
+  contentFile: moduleFile(join(buildRoot, "site/lib/worker-media-response.mjs")),
 };
 // These small modules keep media requests out of the application renderer.
-modules["media-route.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"lib/worker-media-route.mjs")) };
+modules["media-route.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"site/lib/worker-media-route.mjs")) };
 modules["media-stream.mjs"] = {
   contentType:"application/javascript+module",
-  contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"lib/listening-audio.ts"),"utf8"), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText)),
+  contentFile:moduleSource(Buffer.from(ts.transpileModule(readFileSync(join(buildRoot,"site/lib/listening-audio.ts"),"utf8"), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText)),
 };
-modules["media-manifest.mjs"] = { contentType:"application/javascript+module", contentFile:moduleSource(Buffer.from("export default " + JSON.stringify(JSON.parse(readFileSync(join(buildRoot,"data/listening-pool-audio-manifest.json"),"utf8"))) + ";\n")) };
+modules["media-manifest.mjs"] = { contentType:"application/javascript+module", contentFile:moduleSource(Buffer.from("export default " + JSON.stringify(JSON.parse(readFileSync(join(buildRoot,"site/data/listening-pool-audio-manifest.json"),"utf8"))) + ";\n")) };
 const assetFiles = allFiles(clientDir);
 // Some production builds disable publicDir copying to avoid duplicating large
 // audio during compilation. Never publish a bundle missing its protected media.
-const mediaManifest = JSON.parse(readFileSync(join(buildRoot,"data/listening-pool-audio-manifest.json"),"utf8"));
+const mediaManifest = JSON.parse(readFileSync(join(buildRoot,"site/data/listening-pool-audio-manifest.json"),"utf8"));
 for (const asset of Object.values(mediaManifest) as {parts:{path:string;bytes:number}[]}[]) {
   for (const part of asset.parts) {
     const file = resolve(clientDir, "." + part.path);

@@ -4,12 +4,12 @@ import ts from 'typescript';
 import vm from 'node:vm';
 import { createRequire } from 'node:module';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { captureAccountValues } from '../lib/account-sync.mjs';
-import * as presetLimits from '../lib/peq-preset.ts';
+import { captureAccountValues } from '../site/lib/account-sync.mjs';
+import * as presetLimits from '../site/lib/peq-preset.ts';
 
-const source = readFileSync(new URL('../lib/blind-eq.ts', import.meta.url), 'utf8');
+const source = readFileSync(new URL('../site/lib/blind-eq.ts', import.meta.url), 'utf8');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText
-  .replace('"./peq-preset"', JSON.stringify(new URL('../lib/peq-preset.ts', import.meta.url).href));
+  .replace('"./peq-preset"', JSON.stringify(new URL('../site/lib/peq-preset.ts', import.meta.url).href));
 const { parseEqPresetText: parse, validateEqPreset, eqCoefficients, comparisonGains, createBlindSession, recordBlindRound, revealBlindSession } = await import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
 let assertions = 0;
 const check = (condition, message) => { assert.ok(condition, message); assertions++; };
@@ -84,13 +84,13 @@ for (const random of [() => 0, () => .99]) {
 }
 const storage = new Map([['private-blind-eq-fixture', JSON.stringify({ presets: [mono, stereo], choices: [round] })]]);
 check(!Object.keys(captureAccountValues({ getItem: key => storage.get(key) ?? null })).length, 'Private data is outside Account Sync allowlist');
-for (const file of ['app/eq-compare/page.tsx', 'components/blind-eq-editor.tsx', 'lib/blind-eq.ts']) {
+for (const file of ['site/app/eq-compare/page.tsx', 'site/components/blind-eq-editor.tsx', 'site/lib/blind-eq.ts']) {
   const content = readFileSync(new URL('../' + file, import.meta.url), 'utf8');
   check(!/localStorage|sessionStorage|fetch\(/.test(content), `${file} never persists or sends presets/results`);
 }
 // Exercise the real import handler and initial form, including automatic opt-in
 // to separate preamps only when an imported preset actually needs them.
-const editorSource = readFileSync(new URL('../components/blind-eq-editor.tsx', import.meta.url), 'utf8');
+const editorSource = readFileSync(new URL('../site/components/blind-eq-editor.tsx', import.meta.url), 'utf8');
 const require = createRequire(import.meta.url), compiledModule = { exports: {} };
 const editorCode = ts.transpileModule(editorSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 vm.runInNewContext(editorCode, { module: compiledModule, exports: compiledModule.exports, require: id => id === '@/lib/blind-eq' ? { parseEqPresetText: parse, validateEqPreset } : id === '@/lib/peq-preset' ? presetLimits : require(id) });
@@ -119,7 +119,7 @@ state.initialPreset = null; state.preset = null; vm.runInContext('rename("Unappl
 check(state.preset === null, 'Renaming a dirty draft cannot accidentally apply stale settings');
 // Run the actual site shell selector: the private tool must not mount internal
 // sidebar navigation or account/privacy effects that can discard its session.
-const shellSource = readFileSync(new URL('../components/site-chrome.tsx', import.meta.url), 'utf8');
+const shellSource = readFileSync(new URL('../site/components/site-chrome.tsx', import.meta.url), 'utf8');
 const shellModule = { exports: {} }; let shellPath = '/eq-compare';
 const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id.startsWith('@/components/') ? { default: ({children}) => require('react').createElement('aside', {'data-site-effect': id}, children) } : require(id) });

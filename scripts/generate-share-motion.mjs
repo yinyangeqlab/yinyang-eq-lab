@@ -9,7 +9,7 @@ import { pipeline } from "node:stream/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import sharp from "sharp";
 import ts from "typescript";
-import { SHARE_IMAGE_SIZE, SHARE_MOTION_FPS, shareAnimationUrl, sharePreviewCards } from "../lib/share-pages.mjs";
+import { SHARE_IMAGE_SIZE, SHARE_MOTION_FPS, shareAnimationUrl, sharePreviewCards } from "../site/lib/share-pages.mjs";
 import { encodeShareStill, prepareShareCard } from "./generate-share-cards.mjs";
 
 const publicDir = new URL("../public/", import.meta.url);
@@ -31,7 +31,7 @@ async function captureWelcome(size, callback) {
   try {
     const artwork = await readFile(new URL("brand-landscape.webp", publicDir));
     const page = await browser.newPage({ viewport: size, deviceScaleFactor: 1 });
-    const source = await readFile(new URL("../lib/welcome-landscape.ts", import.meta.url), "utf8");
+    const source = await readFile(new URL("../site/lib/welcome-landscape.ts", import.meta.url), "utf8");
     const renderer = ts.transpileModule(source, {
       compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
     }).outputText;

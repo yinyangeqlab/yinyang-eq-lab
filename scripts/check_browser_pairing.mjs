@@ -1,10 +1,10 @@
-import{ACCOUNT_SYNC_NOTICE_VERSION}from'../lib/account-sync-notice.mjs';
+import{ACCOUNT_SYNC_NOTICE_VERSION}from'../site/lib/account-sync-notice.mjs';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
-import { browserPairing, linkedTester, pairingHash } from '../lib/browser-pairing.mjs';
-import { VOTE_DATA_NOTICE_VERSION } from '../lib/vote-data-notice.ts';
-import { RequestInputError } from '../lib/request-json.ts';
+import { browserPairing, linkedTester, pairingHash } from '../site/lib/browser-pairing.mjs';
+import { VOTE_DATA_NOTICE_VERSION } from '../site/lib/vote-data-notice.ts';
+import { RequestInputError } from '../site/lib/request-json.ts';
 import {abuseBindings} from '../infra/pulumi/abuse-controls.mjs';
 import ts from 'typescript';
 import vm from 'node:vm';
@@ -61,16 +61,16 @@ const device=sql.prepare('SELECT * FROM private_tester_devices').get();assert.eq
 assert.equal(sql.prepare('SELECT subject_id FROM privacy_sessions WHERE token_hash=?').get(device.data_token_hash).subject_id,'invite:'+tester.id);
 // Exercise actual private-gate routing and authentication. Only the application
 // renderer/media implementation is stubbed; no gate auth logic is replaced.
-const maintenanceSource=ts.transpileModule(readFileSync('lib/maintenance-options.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
+const maintenanceSource=ts.transpileModule(readFileSync('site/lib/maintenance-options.ts','utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.ESNext}}).outputText;
 const maintenanceUrl='data:text/javascript;base64,'+Buffer.from(maintenanceSource).toString('base64');
 const gateSource=readFileSync(new URL('../infra/pulumi/private-gate.mjs',import.meta.url),'utf8')
   .replace(/import\s*\{readServiceStatus\}\s*from ["']\.\/service-status\.mjs["'];/,'const readServiceStatus=async()=>({active:false});')
   .replace(/from ["']\.\/maintenance-options\.mjs["']/g,'from '+JSON.stringify(maintenanceUrl))
-  .replace('import { invitesEnabled, testerSubject } from "./invite-settings.mjs";',`import {invitesEnabled,testerSubject} from ${JSON.stringify(new URL('../lib/invite-settings.mjs',import.meta.url).href)};`)
-  .replace('import { browserPairing, linkedTester } from "./browser-pairing.mjs";',`import {browserPairing,linkedTester} from ${JSON.stringify(new URL('../lib/browser-pairing.mjs',import.meta.url).href)};`)
-  .replace('import { sharePageFor, shareHtml, isUnfurlCrawler, isPublicAudioFactRoute } from "./share-pages.mjs";',`import {sharePageFor,shareHtml,isUnfurlCrawler,isPublicAudioFactRoute} from ${JSON.stringify(new URL('../lib/share-pages.mjs',import.meta.url).href)};`)
+  .replace('import { invitesEnabled, testerSubject } from "./invite-settings.mjs";',`import {invitesEnabled,testerSubject} from ${JSON.stringify(new URL('../site/lib/invite-settings.mjs',import.meta.url).href)};`)
+  .replace('import { browserPairing, linkedTester } from "./browser-pairing.mjs";',`import {browserPairing,linkedTester} from ${JSON.stringify(new URL('../site/lib/browser-pairing.mjs',import.meta.url).href)};`)
+  .replace('import { sharePageFor, shareHtml, isUnfurlCrawler, isPublicAudioFactRoute } from "./share-pages.mjs";',`import {sharePageFor,shareHtml,isUnfurlCrawler,isPublicAudioFactRoute} from ${JSON.stringify(new URL('../site/lib/share-pages.mjs',import.meta.url).href)};`)
   .replace('import { isPublicAsset } from "./public-assets.mjs";',`import {isPublicAsset} from ${JSON.stringify(new URL('../infra/pulumi/public-assets.mjs',import.meta.url).href)};`)
-  .replace('import { withMediaLength } from "./media-response.mjs";',`import {withMediaLength} from ${JSON.stringify(new URL('../lib/worker-media-response.mjs',import.meta.url).href)};`)
+  .replace('import { withMediaLength } from "./media-response.mjs";',`import {withMediaLength} from ${JSON.stringify(new URL('../site/lib/worker-media-response.mjs',import.meta.url).href)};`)
   .replace('import { serveWorkerMedia } from "./media-route.mjs";','const serveWorkerMedia=()=>null;')
   .replace('import app from "./index.js";',`const app={fetch:request=>Response.json({subject:request.headers.get('oai-authenticated-user-id'),session:request.headers.get('x-yinyang-data-session')})};`)
   .replace(/from ["'](\.\/[^"']+)["']/g,(_,relative)=>'from '+JSON.stringify(new URL('../infra/pulumi/'+relative.slice(2),import.meta.url).href));
@@ -142,7 +142,7 @@ assert.equal((await browserPairing(new Request(origin+'/pair',{method:'POST',hea
 sql.prepare('INSERT INTO browser_pairings(code_hash,invite_id,source_hash,created_at,expires_at) VALUES(?,?,?,?,?)').run('erasure-fixture',tester.id,'source',now,now+600);
 const deps={'cloudflare:workers':{env},'@/lib/request-json':{RequestInputError}};
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Date,Response,Request,Headers});
-vm.runInContext(ts.transpileModule(readFileSync(new URL('../lib/privacy-erasure.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
+vm.runInContext(ts.transpileModule(readFileSync(new URL('../site/lib/privacy-erasure.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
 sql.prepare('INSERT OR IGNORE INTO privacy_accounts(subject_id) VALUES(?)').run('invite:'+tester.id);
 sql.prepare('INSERT INTO listener_nicknames(subject_id,nickname) VALUES(?,?)').run('invite:'+tester.id,'Erase Owl');
 await context.exports.eraseData('invite:'+tester.id);

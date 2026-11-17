@@ -74,11 +74,11 @@ public_evidence = {
 # not private numerical target seeds. Only these exact blobs waive that one rule;
 # every credential/path guard still applies, and any edited/new fixture fails closed.
 reviewed_synthetic_target_fixtures = {
-    "scripts/check_audit_privacy.mjs": "30760a6787080fe0b9bd57e5b946882bb443b8bba2aea1a1c59f1f35af31e0c5",
-    "scripts/check_personal_research.mjs": "35423af6c7764275eb827d1fa29f232b7334a14b2ebae05b642596d42aa803c8",
-    "scripts/check_community_reference.mjs": "e8bf592e13aa7eca125e058df92284a0c0f5f46ec10c619e23f2b80dab5ce51b",
-    "scripts/check_target_context_and_changes.mjs": "282e850e0d933ed2a22dba74ab39e5ebda60a937b7ada58665d76e38ee68f73c",
-    "scripts/check_yinyangeq_history.mjs": "fc811f283acee3bef28755d54b30a067ee9433e9f7e9a6c21948a4694cab1466",
+    "scripts/check_audit_privacy.mjs": "87fe874892d89944f11e2a4bb10effebecdbf2113af16218569337755d9030a3",
+    "scripts/check_personal_research.mjs": "ed8f16a0ddf305d92128da3fecd551bcefbc935f1ed8fd6da7fd867eea7baebd",
+    "scripts/check_community_reference.mjs": "264ad44349ecc2b9faf75fe30609834308a44b41bd861387794d8673703adfee",
+    "scripts/check_target_context_and_changes.mjs": "02abc702c983ad9ef9c4c098a1847fa686abdd589f9389b214952cae9c5ff9d5",
+    "scripts/check_yinyangeq_history.mjs": "5c46fcf782aae3c7b1e0d065a0b0941394d29b76a8352537aab995f065b06602",
 }
 
 issues = []

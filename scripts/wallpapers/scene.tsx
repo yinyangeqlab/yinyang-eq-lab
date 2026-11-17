@@ -1,9 +1,9 @@
 /** Browser entry point for the offline renderer. It is never routed by the app. */
 import { createRoot } from "react-dom/client";
-import { WelcomeFlights } from "../../components/welcome-landscape";
-import { createWallpaperFlightPainter } from "../../components/welcome-flight-model";
-import { createWelcomeFlight } from "../../lib/welcome-flight-path";
-import { createLandscapeRenderer, LANDSCAPE_CYCLE_SECONDS } from "../../lib/welcome-landscape";
+import { WelcomeFlights } from "../../site/components/welcome-landscape";
+import { createWallpaperFlightPainter } from "../../site/components/welcome-flight-model";
+import { createWelcomeFlight } from "../../site/lib/welcome-flight-path";
+import { createLandscapeRenderer, LANDSCAPE_CYCLE_SECONDS } from "../../site/lib/welcome-landscape";
 
 declare global {
   interface Window {

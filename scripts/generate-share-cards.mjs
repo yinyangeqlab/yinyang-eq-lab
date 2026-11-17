@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
-import { SHARE_IMAGE_SIZE, previewTitle, sharePreviewCards, sharePageFor } from "../lib/share-pages.mjs";
+import { SHARE_IMAGE_SIZE, previewTitle, sharePreviewCards, sharePageFor } from "../site/lib/share-pages.mjs";
 
 const root = new URL("../", import.meta.url);
 const out = new URL("public/share/", root);

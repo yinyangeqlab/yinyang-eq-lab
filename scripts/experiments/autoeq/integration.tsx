@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import MusicPanel, { type MusicPanelHandle } from '../../../components/music-panel';
+import MusicPanel, { type MusicPanelHandle } from '../../../site/components/music-panel';
 import type { Fixture } from './compare';
-import type { HeadphoneMeasurement } from '../../../lib/measurement';
-import '../../../app/globals.css';
-import '../../../app/alpha.css';
+import type { HeadphoneMeasurement } from '../../../site/lib/measurement';
+import '../../../site/app/globals.css';
+import '../../../site/app/alpha.css';
 import './style.css';
 function Review() {
   const [fixture, setFixture] = useState<Fixture | null>(null), [generation, setGeneration] = useState(0), [snapshot, setSnapshot] = useState('');

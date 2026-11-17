@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 import ts from 'typescript';
 
 function functions(path,names){const ast=ts.createSourceFile(path,fs.readFileSync(path,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),bodies=[];function visit(n){if(ts.isFunctionDeclaration(n)&&names.includes(n.name?.text))bodies.push(n.getText(ast));ts.forEachChild(n,visit);}visit(ast);assert.equal(bodies.length,names.length);return ts.transpileModule(bodies.join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
-const parent=functions('app/shootout/page.tsx',['listenToSide','listenToPassage']);
-const picker=functions('components/music-panel.tsx',['chooseFolder','chooseFile']);
+const parent=functions('site/app/shootout/page.tsx',['listenToSide','listenToPassage']);
+const picker=functions('site/components/music-panel.tsx',['chooseFolder','chooseFile']);
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r});return{promise,resolve}};
 let checks=0;
 for(const method of ['listenToSide','listenToPassage'])for(const outcome of [true,false,undefined]){
@@ -25,7 +25,7 @@ for(const method of ['listenToSide','listenToPassage'])for(const reason of ['mea
  scan.resolve(true);await pending;assert.match(state.SampleStatus,/current song stays loaded/);assert.equal(state.samplesRef.current.length,1);assert.equal(state.File.name,'single.wav');checks++;
 }
 function effect(path, marker){const ast=ts.createSourceFile(path,fs.readFileSync(path,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);let body;function visit(n){if(ts.isCallExpression(n)&&n.expression.getText(ast)==='useEffect'&&n.arguments[0].getText(ast).includes(marker))body=n.arguments[0].getText(ast);ts.forEachChild(n,visit);}visit(ast);assert.ok(body);return ts.transpileModule('const runEffect='+body+';runEffect();',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
-const openFocus=effect('app/shootout/page.tsx','!nextComparisonFocusPending.current||revealed||!pair');
+const openFocus=effect('site/app/shootout/page.tsx','!nextComparisonFocusPending.current||revealed||!pair');
 for(const scenario of ['ready','other-focus','other-tab','waiting-pair','not-pending','revealed']){
  let focuses=0;const body={},state={pair:scenario==='waiting-pair'?null:['a','b'],revealed:scenario==='revealed',tab:scenario==='other-tab'?'profile':'shootout',nextComparisonFocusPending:{current:scenario!=='not-pending'},document:{body,activeElement:scenario==='other-focus'?{}:body},focusComparisonPlayback:()=>focuses++};vm.createContext(state);vm.runInContext(openFocus,state);
  assert.equal(focuses,scenario==='ready'?1:0);
@@ -33,7 +33,7 @@ for(const scenario of ['ready','other-focus','other-tab','waiting-pair','not-pen
  if(scenario==='ready'){vm.runInContext('runEffect()',state);assert.equal(focuses,1,'focus once only');}
  checks++;
 }
-const personalFocus=effect('app/shootout/personal/page.tsx','const duel=document.querySelector');
+const personalFocus=effect('site/app/shootout/personal/page.tsx','const duel=document.querySelector');
 for(const scenario of ['ready','card-fallback','other-focus','results','no-duel']){
  let focuses=0,cardFocuses=0;
  const duel={querySelector:selector=>{
@@ -47,11 +47,11 @@ for(const scenario of ['ready','card-fallback','other-focus','results','no-duel'
  assert.equal(state.nextComparisonFocusPending.current,false);checks++;
 }
 {
- const state={};vm.createContext(state);vm.runInContext(functions('lib/comparison-focus.ts',['focusComparisonPlayback']).replace(/^export /m,''),state);
+ const state={};vm.createContext(state);vm.runInContext(functions('site/lib/comparison-focus.ts',['focusComparisonPlayback']).replace(/^export /m,''),state);
  let options;assert.equal(state.focusComparisonPlayback({querySelector:()=>({focus:value=>{options=value}})}),true);assert.equal(options.preventScroll,true);checks++;
  assert.equal(state.focusComparisonPlayback({querySelector:()=>null}),false);checks++;
 }
 {
- let notice='Earlier success',error='';const state={setNotice:v=>{notice=v},setError:v=>{error=v}};vm.createContext(state);vm.runInContext(functions('app/shootout/personal/page.tsx',['safely']),state);vm.runInContext('safely(()=>{throw new Error("quota")})',state);assert.equal(notice,'');assert.equal(error,'quota');checks++;
+ let notice='Earlier success',error='';const state={setNotice:v=>{notice=v},setError:v=>{error=v}};vm.createContext(state);vm.runInContext(functions('site/app/shootout/personal/page.tsx',['safely']),state);vm.runInContext('safely(()=>{throw new Error("quota")})',state);assert.equal(notice,'');assert.equal(error,'quota');checks++;
 }
 console.log(`PASS ${checks} actual re-review checks: interrupted listening, guarded prerequisites, independent folder scans, one-shot next-comparison focus, no scroll/focus stealing, and failed-save notice cleanup.`);

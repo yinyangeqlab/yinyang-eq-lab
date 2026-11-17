@@ -56,27 +56,27 @@ const load = (path, dependencies = {}) => {
   new Function("module", "exports", "require", "crypto", outputText)(loadedModule, loadedModule.exports, require, randomSource);
   return loadedModule.exports;
 };
-const input = load("lib/request-json.ts");
-const protocol = load("lib/ear-practice-ranking.ts");
+const input = load("site/lib/request-json.ts");
+const protocol = load("site/lib/ear-practice-ranking.ts");
 let identity = subjects.a;
 let limited = false;
 const env = { DB: storage, OWNER_ANALYTICS_TOKEN: crypto.randomUUID() };
 const dependencies = {
   "cloudflare:workers": { env },
   "@/lib/request-json": input,
-  "@/lib/admin-contributions": load("lib/admin-contributions.ts", { "@/lib/request-json": input }),
+  "@/lib/admin-contributions": load("site/lib/admin-contributions.ts", { "@/lib/request-json": input }),
   "@/lib/ear-practice-ranking": protocol,
-  "@/lib/listener-nickname": load("lib/listener-nickname.ts"),
+  "@/lib/listener-nickname": load("site/lib/listener-nickname.ts"),
   "@/lib/public-write-gate": { publicWriteGate: async () => limited ? new Response(null, { status: 429 }) : null },
   "@/lib/submission-ownership": { dataIdentity: async () => {
     if (!identity) throw new input.RequestInputError("Sign in.", 401);
     return identity;
   } },
-  "@/lib/target-name-policy": load("lib/target-name-policy.ts"),
-  "@/lib/owner-access": load("lib/owner-access.ts", { "cloudflare:workers": { env } }),
+  "@/lib/target-name-policy": load("site/lib/target-name-policy.ts"),
+  "@/lib/owner-access": load("site/lib/owner-access.ts", { "cloudflare:workers": { env } }),
 };
-const api = load("app/api/ear-practice/route.ts", dependencies);
-const admin = load("app/api/owner-research/ear-practice/route.ts", dependencies);
+const api = load("site/app/api/ear-practice/route.ts", dependencies);
+const admin = load("site/app/api/owner-research/ear-practice/route.ts", dependencies);
 const url = "https://fixture.invalid";
 const request = (method, query = "", body, origin = url) => new Request(url + "/api/ear-practice" + query, {
   method, headers: { Origin: origin, ...(body ? { "Content-Type": "application/json" } : {}) },

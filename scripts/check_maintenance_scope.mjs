@@ -1,10 +1,10 @@
-import * as fitters from "../lib/fitter-settings.ts";
+import * as fitters from "../site/lib/fitter-settings.ts";
 import assert from 'node:assert/strict';
 import{readFileSync}from'node:fs';
 import vm from'node:vm';
 import ts from'typescript';
-import * as options from'../lib/maintenance-options.ts';
-import{validNoticeMinutes}from'../lib/notice-duration.ts';
+import * as options from'../site/lib/maintenance-options.ts';
+import{validNoticeMinutes}from'../site/lib/notice-duration.ts';
 const ids=options.MAINTENANCE_FEATURES.map(f=>f.id),routes=[
  ['/shootout','GET','shootouts'],['/shootout/','HEAD','shootouts'],['/shootout/personal','GET','shootouts'],['/api/trials','POST','shootouts'],['/api/votes','POST','shootouts'],['/api/listening-runs','POST','shootouts'],['/api/comparison-choices','POST','shootouts'],['/api/feedback','POST','shootouts'],
  ['/music-library','GET','listeningPool'],['/api/music-votes','POST','listeningPool'],['/preference-tuning','GET','preferenceTuning'],['/personal-tuning','GET','preferenceTuning'],['/ear-tuning','GET','preferenceTuning'],['/api/preference-exports','POST','preferenceTuning'],['/api/targets','POST','contributions'],['/api/research-measurements','POST','contributions'],['/api/suggestions','POST','contributions'],
@@ -25,9 +25,9 @@ for(const invalid of ['shootouts',{},['unknown'],['shootouts','shootouts']])asse
 let clock=1800000000000,stored={revision:'legacy',message:'Current one-hour notice',pause_submissions:1,expires_at:clock+3600000},writes=0,owner=true;
 const env={DB:{prepare(_sql){return{bind(...args){return{async run(){writes++;stored={revision:args[0],message:args[1],pause_submissions:args[2],expires_at:args[3]};}}},async run(){writes++;stored=null;},async first(){return stored}}}}};
 function load(path,deps){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(new URL('../'+path,import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;assert.ok(name in deps,name);return deps[name];},Response,Request,URL,crypto,Date:class extends Date{static now(){return clock;}}});return exports;}
-const service=load('lib/service-status.ts',{'cloudflare:workers':{env},'@/lib/maintenance-options':options});
+const service=load('site/lib/service-status.ts',{'cloudflare:workers':{env},'@/lib/maintenance-options':options});
 const read=await service.readServiceStatus(true);assert.equal(read.expiresAt,clock+3600000);assert.deepEqual([...read.lockedFeatures],['shootouts']);assert.equal(writes,0,'Reading a legacy active pause must not restart its timer or rewrite it');
-const route=load('app/api/owner-research/service-status/route.ts',{'@/lib/owner-access':{ownerAccessResponse:async()=>owner?null:new Response(null,{status:403})},'@/lib/request-json':{readJsonObject:r=>r.json(),requestInputResponse:()=>null},'@/lib/service-status':service,'@/lib/notice-duration':{validNoticeMinutes},'@/lib/maintenance-options':options});
+const route=load('site/app/api/owner-research/service-status/route.ts',{'@/lib/owner-access':{ownerAccessResponse:async()=>owner?null:new Response(null,{status:403})},'@/lib/request-json':{readJsonObject:r=>r.json(),requestInputResponse:()=>null},'@/lib/service-status':service,'@/lib/notice-duration':{validNoticeMinutes},'@/lib/maintenance-options':options});
 const request=(body,origin='https://example.test')=>new Request('https://example.test/api/owner-research/service-status',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)});
 for(let bits=0;bits<16;bits++){const locks=ids.filter((_,i)=>bits&(1<<i));const response=await route.POST(request({active:true,message:'Selective scope',pauseSubmissions:!!locks.length,lockedFeatures:locks,durationMinutes:60}));assert.equal(response.status,200);const body=await response.json();assert.deepEqual(body.lockedFeatures,locks);assert.equal(body.expiresAt,clock+3600000);assert.ok(stored.message.startsWith('yinyang-maintenance-v2:'));assert.equal(body.message,'Selective scope');}
 const count=writes;

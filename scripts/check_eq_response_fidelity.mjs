@@ -12,10 +12,10 @@ function load(file) {
 }
 let checks=0;
 const check=(condition,message)=>{assert.ok(condition,message);checks++;};
-const {eqResponse,tuningResponsePlot,measurementResponsePoints}=load('lib/eq-response.ts');
-const {at,channelBalance}=load('lib/channel-balance.ts');
-const {response,autoEqReferenceOffset}=load('lib/autoeq.ts');
-const {replaceEqStage}=load('lib/eq-playback.ts');
+const {eqResponse,tuningResponsePlot,measurementResponsePoints}=load('site/lib/eq-response.ts');
+const {at,channelBalance}=load('site/lib/channel-balance.ts');
+const {response,autoEqReferenceOffset}=load('site/lib/autoeq.ts');
+const {replaceEqStage}=load('site/lib/eq-playback.ts');
 const raw=[[20,0],[1000,0],[7333,-1],[7334,-18],[7335,-1],[20000,-3]];
 const target=[[20,0],[1000,0],[3100,1],[3101,7],[3102,1],[20000,0]];
 const base=[{type:'PK',hz:17777,gain:9,q:20},{type:'LSC',hz:160,gain:3,q:Math.SQRT1_2},{type:'HSC',hz:7000,gain:-4,q:1.8}];

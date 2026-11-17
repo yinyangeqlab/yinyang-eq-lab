@@ -10,11 +10,11 @@ function load(file, imports = {}, nodeEnv = "development") {
   vm.runInNewContext(code, { module: fixtureModule, exports: fixtureModule.exports, require: id => { if (id in imports) return imports[id]; throw Error(`Unexpected import: ${id}`); }, Response, Set, Date, process: {env:{NODE_ENV:nodeEnv}} });
   return fixtureModule.exports;
 }
-const { rankMusic, musicCommunityRank, musicRotation, musicReview, playbackGain, playbackTarget } = load('lib/music-preferences.ts');
+const { rankMusic, musicCommunityRank, musicRotation, musicReview, playbackGain, playbackTarget } = load('site/lib/music-preferences.ts');
 const json = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
-const catalogImports = Object.fromEntries(['permission-music','listening-pool-original-audio','music-candidates','shantae-cc-tracks','shantae-audio','listening-pool-local','listening-pool-measurements'].map(name=>['@/data/'+name+'.json',json('data/'+name+'.json')]));
-const catalog = load('lib/music-catalog.ts',catalogImports);
-const productionCatalog = load('lib/music-catalog.ts',catalogImports,'production');
+const catalogImports = Object.fromEntries(['permission-music','listening-pool-original-audio','music-candidates','shantae-cc-tracks','shantae-audio','listening-pool-local','listening-pool-measurements'].map(name=>['@/data/'+name+'.json',json('site/data/'+name+'.json')]));
+const catalog = load('site/lib/music-catalog.ts',catalogImports);
+const productionCatalog = load('site/lib/music-catalog.ts',catalogImports,'production');
 assert.equal(productionCatalog.listeningPool.length,224);
 assert(productionCatalog.listeningPool.every(t=>!t.fileUrl.includes('__local-listening-pool')));
 assert.equal(productionCatalog.listeningPool.filter(t=>t.fileUrl.startsWith('/api/listening-audio/')).length,224);
@@ -88,9 +88,9 @@ const db = {
   delete: table => ({ where: async test => { if(table === musicTable) rows = rows.filter(r => !test(r)); } }),
 };
 const musicTable={userId:'userId',trackUrl:'trackUrl',choice:'choice'};
-const requestInput=load('lib/request-json.ts');
-const adminPolicy=load('lib/admin-contributions.ts',{'@/lib/request-json':requestInput});
-const endpoint = load('app/api/music-votes/route.ts', {
+const requestInput=load('site/lib/request-json.ts');
+const adminPolicy=load('site/lib/admin-contributions.ts',{'@/lib/request-json':requestInput});
+const endpoint = load('site/app/api/music-votes/route.ts', {
   '@/lib/admin-contributions':adminPolicy,
   'drizzle-orm': { and: (...args) => row => args.every(test=>test(row)), eq: (key,value) => row => row[key] === value },
   '@/app/chatgpt-auth': { getChatGPTUser: async () => user },

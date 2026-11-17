@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
-const source=fs.readFileSync('components/music-panel.tsx','utf8');
+const source=fs.readFileSync('site/components/music-panel.tsx','utf8');
 const ast=ts.createSourceFile('music-panel.tsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX),functions=[];
 function visit(node){if(ts.isFunctionDeclaration(node)&&['refreshMusicVotes','voteForMusic'].includes(node.name?.text))functions.push(node.getText(ast));ts.forEachChild(node,visit)}visit(ast);
 assert.equal(functions.length,2);

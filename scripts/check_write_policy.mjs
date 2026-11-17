@@ -3,8 +3,8 @@ import {readFileSync} from 'node:fs';
 import {webcrypto} from 'node:crypto';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as penalties from '../lib/rate-penalty.ts';
-const code=ts.transpileModule(readFileSync(new URL('../lib/public-write-gate.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+import * as penalties from '../site/lib/rate-penalty.ts';
+const code=ts.transpileModule(readFileSync(new URL('../site/lib/public-write-gate.ts',import.meta.url),'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 let now=120000, calls=[], stored=new Map();
 const db={prepare(sql){return {bind(...args){return {
  async first(){

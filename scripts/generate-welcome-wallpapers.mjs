@@ -12,8 +12,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { crc32 } from "node:zlib";
 import { build } from "esbuild";
-import { LANDSCAPE_CYCLE_SECONDS } from "../lib/welcome-landscape.ts";
-import { wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperScenes, wallpaperSizes, wallpaperUsagePath } from "../lib/welcome-wallpapers.ts";
+import { LANDSCAPE_CYCLE_SECONDS } from "../site/lib/welcome-landscape.ts";
+import { wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperScenes, wallpaperSizes, wallpaperUsagePath } from "../site/lib/welcome-wallpapers.ts";
 import { packageOfflineWallpapers } from "./wallpapers/package-offline.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -35,22 +35,22 @@ const viewport = { width: full.width, height: full.height };
 const overlayClip = { x: 0, y: 0, width: full.width, height: Math.ceil(.51 * full.height) };
 const artworkFiles = ["brand-landscape.webp", "welcome-headphone-carpet.webp", "welcome-iem-carpet.webp"];
 const captureInputs = [
-  "app/welcome.css", "components/welcome-landscape.tsx", "components/welcome-flight-model.tsx",
-  "lib/welcome-flight-path.ts", "lib/welcome-landscape.ts", "scripts/wallpapers/scene.tsx",
+  "site/app/welcome.css", "site/components/welcome-landscape.tsx", "site/components/welcome-flight-model.tsx",
+  "site/lib/welcome-flight-path.ts", "site/lib/welcome-landscape.ts", "scripts/wallpapers/scene.tsx",
   ...artworkFiles.map(name => "public/" + name),
 ];
 
 async function startCaptureServer() {
   const entry = await build({
     entryPoints: [join(root, "scripts/wallpapers/scene.tsx")],
-    tsconfig: join(root, "tsconfig.json"), bundle: true, write: false, format: "esm", jsx: "automatic",
+    tsconfig: join(root, "site/tsconfig.json"), bundle: true, write: false, format: "esm", jsx: "automatic",
     define: { "process.env.NODE_ENV": '"production"' },
   });
   const html = '<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/welcome.css"><style>html,body{margin:0;overflow:hidden}main{position:relative;width:100vw;height:100vh;container-type:inline-size}main>canvas{width:100%;height:100%;display:block}main>.welcome-art{background:transparent;z-index:0}</style><main></main><script type="module" src="/capture.js"></script>';
   const routes = new Map([
     ["/", ["text/html", html]],
     ["/capture.js", ["text/javascript", entry.outputFiles[0].contents]],
-    ["/welcome.css", ["text/css", await readFile(join(root, "app/welcome.css"))]],
+    ["/welcome.css", ["text/css", await readFile(join(root, "site/app/welcome.css"))]],
   ]);
   for (const name of artworkFiles) {
     routes.set("/" + name, ["image/webp", await readFile(join(publicDir, name))]);

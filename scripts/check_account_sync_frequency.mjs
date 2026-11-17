@@ -5,7 +5,7 @@ import ts from 'typescript';
 
 // Runs the real automatic-sync effect with stubbed transport to count network use. Page changes, refreshes, tab
 // switches and data events must not multiply account reads or status reports, and a rate-limit response must back off.
-const source = readFileSync('components/account-auto-sync.tsx', 'utf8');
+const source = readFileSync('site/components/account-auto-sync.tsx', 'utf8');
 const ast = ts.createSourceFile('client.tsx', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 let effect;
 (function visit(node) { if (ts.isCallExpression(node) && node.expression.getText(ast) === 'useEffect') effect = node.arguments[0].getText(ast); ts.forEachChild(node, visit); })(ast);
@@ -101,7 +101,7 @@ const explicitBefore = stats.reads; await page.fire('yinyang-sync-permission-cha
 assert.equal(stats.reads, explicitBefore + 1, 'explicit permission changes check immediately');
 
 // Timing hints are device-local browser data: never copied into the account or merged between devices.
-const { ACCOUNT_SYNC_KEYS } = await import('../lib/account-sync.mjs');
+const { ACCOUNT_SYNC_KEYS } = await import('../site/lib/account-sync.mjs');
 for (const key of ['yinyang-account-sync-last-poll', 'yinyang-account-sync-last-report', 'yinyang-account-sync-retry-at']) assert.equal(ACCOUNT_SYNC_KEYS.includes(key), false, key + ' is not account-synced');
 
 console.log('Account sync frequency checks passed: shared check interval, passive focus/visibility/navigation, heartbeat dedupe, calm rate-limit backoff and local-only timing hints.');

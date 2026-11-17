@@ -11,21 +11,21 @@ function load(path) {
   let code = ts.transpileModule(readFileSync(path, 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText;
   code = code.replace(/from ["']([^"']+)["']/g, (_all, name) => {
     if (!name.startsWith('.') && !name.startsWith('@/')) return `from ${JSON.stringify(name)}`;
-    const file = name.startsWith('@/') ? resolve('lib/..', name.slice(2)) : resolve(path, '..', name);
+    const file = name.startsWith('@/') ? resolve('site/lib/..', name.slice(2)) : resolve(path, '..', name);
     return `from ${JSON.stringify(load(file.endsWith('.ts') ? file : file + '.ts'))}`;
   });
   const url = 'data:text/javascript;base64,' + Buffer.from(code).toString('base64'); urls.set(path, url); return url;
 }
-const core = await import(load('lib/autoeq-fit.ts'));
-const fitters = await import(load('lib/fitter-settings.ts'));
-const { createEngine } = await import(load('lib/peqdb-engine.ts'));
-const { createAutoEqService } = await import(load('lib/autoeq-client.ts'));
-const { response, peqCoefficients } = await import(load('lib/autoeq.ts'));
-const { eqCoefficients } = await import(load('lib/blind-eq.ts'));
-const { parseLibraryEq } = await import(load('lib/music-library-eq.ts'));
-const { exportEqualizerApo, finalizeVariant, exportFitRms } = await import(load('lib/preference-finalize.ts'));
-const { finalizePeqdb } = await import(load('lib/autoeq-export.ts'));
-const { safeGain, watchAudioInterruptions } = await import(load('lib/eq-playback.ts'));
+const core = await import(load('site/lib/autoeq-fit.ts'));
+const fitters = await import(load('site/lib/fitter-settings.ts'));
+const { createEngine } = await import(load('site/lib/peqdb-engine.ts'));
+const { createAutoEqService } = await import(load('site/lib/autoeq-client.ts'));
+const { response, peqCoefficients } = await import(load('site/lib/autoeq.ts'));
+const { eqCoefficients } = await import(load('site/lib/blind-eq.ts'));
+const { parseLibraryEq } = await import(load('site/lib/music-library-eq.ts'));
+const { exportEqualizerApo, finalizeVariant, exportFitRms } = await import(load('site/lib/preference-finalize.ts'));
+const { finalizePeqdb } = await import(load('site/lib/autoeq-export.ts'));
+const { safeGain, watchAudioInterruptions } = await import(load('site/lib/eq-playback.ts'));
 {
   const context = new EventTarget(); context.state = 'running';
   let interruptions = 0;
@@ -75,7 +75,7 @@ for (const fixture of fixtures) {
 }
 // Execute the actual export endpoint with disposable ownership/database adapters.
 const routeModule = { exports: {} }, inserts = [];
-const routeJs = ts.transpileModule(readFileSync('app/api/preference-exports/route.ts', 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+const routeJs = ts.transpileModule(readFileSync('site/app/api/preference-exports/route.ts', 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
 vm.runInNewContext(routeJs, { module: routeModule, exports: routeModule.exports, Response, Request, crypto, require(name) {
   if (name.endsWith('submission-ownership')) return { submissionContext: async () => ({ record: id => ({ ownership: id }) }) };
   if (name === '@/lib/autoeq-target-sources') return { isSourceAutoEqTarget: id => id === 'linked-fixture' };

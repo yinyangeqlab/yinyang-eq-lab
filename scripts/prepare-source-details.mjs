@@ -1,8 +1,8 @@
 // Reproducible technical metadata from the already-authorized original recordings.
 import fs from 'node:fs';import fsp from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import crypto from 'node:crypto';import {execFileSync} from 'node:child_process';
-import {scanMp3Source} from '../lib/source-encoding.ts';
+import {scanMp3Source} from '../site/lib/source-encoding.ts';
 const index=process.argv.indexOf('--public');if(index<0)throw Error('Pass --public with the authorized original asset directory');
-const publicRoot=path.resolve(process.argv[index+1]),manifest=JSON.parse(fs.readFileSync('data/listening-pool-audio-manifest.json','utf8')),directory=await fsp.mkdtemp(path.join(os.tmpdir(),'source-details-'));
+const publicRoot=path.resolve(process.argv[index+1]),manifest=JSON.parse(fs.readFileSync('site/data/listening-pool-audio-manifest.json','utf8')),directory=await fsp.mkdtemp(path.join(os.tmpdir(),'source-details-'));
 const recordings={};let mp3=0,verified=0;const incomplete=[];
 try{
  for(const [id,asset] of Object.entries(manifest)){
@@ -18,6 +18,6 @@ try{
   }
   recordings[id]=details;await fsp.unlink(file);
  }
- await fsp.writeFile('data/listening-source-details.json',JSON.stringify({version:1,recordings},null,2)+'\n');
- console.log(JSON.stringify({originalRecordingsVerified:Object.keys(recordings).length,mp3Recordings:mp3,completeMp3FrameScans:verified,incompleteMp3Scans:incomplete,outputBytes:fs.statSync('data/listening-source-details.json').size}));
+ await fsp.writeFile('site/data/listening-source-details.json',JSON.stringify({version:1,recordings},null,2)+'\n');
+ console.log(JSON.stringify({originalRecordingsVerified:Object.keys(recordings).length,mp3Recordings:mp3,completeMp3FrameScans:verified,incompleteMp3Scans:incomplete,outputBytes:fs.statSync('site/data/listening-source-details.json').size}));
 }finally{await fsp.rm(directory,{recursive:true,force:true});}

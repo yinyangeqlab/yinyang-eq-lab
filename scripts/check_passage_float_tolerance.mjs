@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { selectedPassageIntervals, selectedPassageProgress } from '../lib/listening.ts';
-import { shuffleComparisonPassage } from '../lib/comparison-passage.ts';
+import { selectedPassageIntervals, selectedPassageProgress } from '../site/lib/listening.ts';
+import { shuffleComparisonPassage } from '../site/lib/comparison-passage.ts';
 
 // A passage heard completely on both sides must always meet the 5.0 second requirement, whatever its rounded bounds.
 const waveform = (phase) => { const make = factor => Array.from({ length: 400 }, (_, i) => factor * (0.3 + 0.5 * Math.abs(Math.sin(i / 9 + phase)))); return { minL: make(-1), maxL: make(1), minR: make(-1), maxR: make(1) }; };

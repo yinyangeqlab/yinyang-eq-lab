@@ -1,12 +1,12 @@
 // Execute the actual automatic-sync effect with blocked browser storage.
 // No network, cookies, participant data or real browser state.
 import assert from 'node:assert/strict';
-import {setAccountSyncActivity,getAccountSyncActivity} from '../lib/account-sync-activity.ts';
+import {setAccountSyncActivity,getAccountSyncActivity} from '../site/lib/account-sync-activity.ts';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from '../node_modules/typescript/lib/typescript.js';
 
-const file = new URL('../components/account-auto-sync.tsx', import.meta.url);
+const file = new URL('../site/components/account-auto-sync.tsx', import.meta.url);
 const text = fs.readFileSync(file, 'utf8');
 const ast = ts.createSourceFile('account.tsx', text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 let effect;

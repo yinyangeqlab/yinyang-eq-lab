@@ -5,7 +5,7 @@ import ts from 'typescript';
 
 // Exercise the actual animation effect against a clock that advances between
 // media timeupdate events. No audio, participant data or browser is required.
-const path='components/track-waveform.tsx';
+const path='site/components/track-waveform.tsx';
 const source=readFileSync(path,'utf8');
 const ast=ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 let effect;

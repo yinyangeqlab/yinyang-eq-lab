@@ -23,4 +23,5 @@ timeout \
   --signal=TERM \
   --kill-after="${SITES_BUILD_KILL_AFTER:-10s}" \
   "${SITES_BUILD_TIMEOUT:-3m}" \
-  "${vinext}" build
+  "${vinext}" build "${SITES_PROJECT_ROOT}/site" "$@"
+node "${script_dir}/finish-app-build.mjs"

@@ -6,9 +6,9 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateRegistry, parseOptions, runSuite, runVerification } from './verify.mjs';
 import { validateRelease, verifyOrRefresh, handoffs, stateViewPath, recoveryState, renderState } from './release-state.mjs';
-import { candidateChanges, releaseHistory } from '../lib/release-history.ts';
-import { buildLabel, bugReportUrl, releaseInfo, repositoryUrl } from '../lib/release-info.ts';
-import { createPublishedBuildLookup } from '../lib/github-release.ts';
+import { candidateChanges, releaseHistory } from '../site/lib/release-history.ts';
+import { buildLabel, bugReportUrl, releaseInfo, repositoryUrl } from '../site/lib/release-info.ts';
+import { createPublishedBuildLookup } from '../site/lib/github-release.ts';
 import { refreshSource } from './refresh-rebuild-manifest.mjs';
 import { fileRecord, sha256, sourceFiles, sourceIdentity } from './verification/source.mjs';
 

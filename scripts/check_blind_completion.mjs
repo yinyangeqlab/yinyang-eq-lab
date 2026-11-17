@@ -6,7 +6,7 @@ import ts from "typescript";
 
 // Execute the shipped handlers with controlled API responses, without writing votes
 // to production or depending on a browser's audio hardware.
-const source = readFileSync(new URL("../app/shootout/page.tsx", import.meta.url), "utf8");
+const source = readFileSync(new URL("../site/app/shootout/page.tsx", import.meta.url), "utf8");
 const ast = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 const handlers = new Map();
 let finishVisibility;

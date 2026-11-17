@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const source=ts.transpileModule(readFileSync('lib/welcome-landscape.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+const source=ts.transpileModule(readFileSync('site/lib/welcome-landscape.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({available=true,compile=true,buffer=true,getArtworkAnchor}={}){
  const jobs=new Map(),calls=[],ready=[],uniforms={};let id=0;
  const gl={VERTEX_SHADER:1,FRAGMENT_SHADER:2,COMPILE_STATUS:3,LINK_STATUS:4,ARRAY_BUFFER:5,STATIC_DRAW:6,FLOAT:7,TEXTURE_2D:8,TEXTURE_WRAP_S:9,TEXTURE_WRAP_T:10,CLAMP_TO_EDGE:11,TEXTURE_MIN_FILTER:12,TEXTURE_MAG_FILTER:13,LINEAR:14,RGB:15,UNSIGNED_BYTE:16,TRIANGLES:17,

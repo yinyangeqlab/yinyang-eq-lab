@@ -8,11 +8,11 @@ const nativeRequire=createRequire(import.meta.url), cache=new Map();
 function load(path, globals={}) {
  if(cache.has(path))return cache.get(path);
  const mod={exports:{}};cache.set(path,mod.exports);
- const require=id=>{if(globals.__imports?.[id])return globals.__imports[id];if(id.startsWith('@/'))return load(id.slice(2)+'.ts',globals);if(id.startsWith('./'))return load('lib/'+id.slice(2)+'.ts',globals);return nativeRequire(id);};
+ const require=id=>{if(globals.__imports?.[id])return globals.__imports[id];if(id.startsWith('@/'))return load('site/'+id.slice(2)+'.ts',globals);if(id.startsWith('./'))return load('site/lib/'+id.slice(2)+'.ts',globals);return nativeRequire(id);};
  vm.runInNewContext(ts.transpileModule(fs.readFileSync(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:mod.exports,module:mod,require,structuredClone,crypto,console,Request,Response,URL,...globals});return mod.exports;
 }
 let checks=0;const check=(name,fn)=>{const result=fn();const done=()=>{checks++;console.log('PASS '+name);};if(result?.then)return result.then(done);done();};
-const search=load('lib/search.ts'),personal=load('lib/personal-shootout.ts'),start=load('lib/personal-start-status.ts'),upload=load('lib/measurement-upload.ts');
+const search=load('site/lib/search.ts'),personal=load('site/lib/personal-shootout.ts'),start=load('site/lib/personal-start-status.ts'),upload=load('site/lib/measurement-upload.ts');
 check('Compact models, accented names and Unicode scripts match without erasing provenance',()=>{
  const rows=[{name:'HD 600',source:'Sennheiser'},{name:'Björk',source:'Iceland'},{name:'耳机 2',source:'测试'}];
  for(const [query,name] of [['hd600','HD 600'],['sennheiser hd600','HD 600'],['bjork','Björk'],['耳机2','耳机 2']])assert.equal(search.searchRows(rows,query,r=>[r.name,r.source])[0]?.name,name);
@@ -43,7 +43,7 @@ check('Legacy single-ear/mixed records survive metadata edits; attachment edits 
  const mixed=upload.measurementResponses('keep',left,left,right);assert.equal(mixed.singlePoints,left);assert.equal(mixed.leftPoints,left);
  assert.throws(()=>upload.measurementResponses('keep',left,left,right,true),/saved measurement is unchanged/);
 });
-const eq=load('lib/blind-eq.ts');
+const eq=load('site/lib/blind-eq.ts');
 check('Sample-rate validation covers both presets/channels and the exact Nyquist boundary',()=>{
  const preset=hz=>({name:'Synthetic',channels:[{preampDb:0,filters:[]},{preampDb:0,filters:[{type:'PK',hz,gain:1,q:1}]}]});
  assert.throws(()=>eq.validateEqSampleRate([preset(1000),preset(23000)],44100),/Preset 2, Right filter 1/);
@@ -53,19 +53,19 @@ check('Sample-rate validation covers both presets/channels and the exact Nyquist
 });
 await check('Per-round cleanup disconnects nodes but never closes the shared validated context',async()=>{
  let closed=0,disconnected=0;const context={state:'suspended',destination:{},createGain:()=>({gain:{value:0},connect(){},disconnect(){disconnected++;}}),async close(){closed++;this.state='closed';}};
- const dsp=load('lib/blind-eq-audio.ts');const player=new dsp.BlindEqPlayer(context);await player.close();assert.equal(closed,0);assert.equal(disconnected,1);
+ const dsp=load('site/lib/blind-eq-audio.ts');const player=new dsp.BlindEqPlayer(context);await player.close();assert.equal(closed,0);assert.equal(disconnected,1);
 });
 
 
 await check('Availability reports owner-only closure even to the owner, without touching the database',async()=>{
  let reads=0;const env={OWNER_ONLY_MAINTENANCE:'true'};
- const api=load('app/api/maintenance/route.ts',{__imports:{'cloudflare:workers':{env},'@/lib/service-status':{async readServiceStatus(){reads++;return {active:false};}}}});
+ const api=load('site/app/api/maintenance/route.ts',{__imports:{'cloudflare:workers':{env},'@/lib/service-status':{async readServiceStatus(){reads++;return {active:false};}}}});
  const closed=await api.GET();const value=await closed.json();assert.equal(value.ownerOnly,true);assert.equal(value.viewerHasAccess,true);assert.equal(reads,0);assert.match(closed.headers.get('Cache-Control'),/no-store/);
  env.OWNER_ONLY_MAINTENANCE='false';const open=await api.GET();assert.equal((await open.json()).active,false);assert.equal(reads,1);
 });
 
 check('Shortcut Off applies in memory when browser storage cannot persist preferences',()=>{
- const preferences=load('lib/display-preferences.ts',{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}},document:{documentElement:{dataset:{}}},window:{dispatchEvent(){}},Event:class {}});
+ const preferences=load('site/lib/display-preferences.ts',{localStorage:{getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}},document:{documentElement:{dataset:{}}},window:{dispatchEvent(){}},Event:class {}});
  preferences.writeDisplayPreferences({shortcutScope:'off'});assert.equal(preferences.readDisplayPreferences().shortcutScope,'off');
 });
 console.log(`${checks} design correction groups passed.`);

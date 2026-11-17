@@ -5,7 +5,7 @@ import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
 function load(name, dependencies = {}) {
-  const input = readFileSync(new URL(`../lib/${name}.ts`, import.meta.url), "utf8");
+  const input = readFileSync(new URL(`../site/lib/${name}.ts`, import.meta.url), "utf8");
   const { outputText } = ts.transpileModule(input, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
   });

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as presetLimits from '../lib/peq-preset.ts';
+import * as presetLimits from '../site/lib/peq-preset.ts';
 let checks = 0;
 const check = (value, message) => { assert.ok(value, message); checks++; };
 const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
@@ -11,13 +11,13 @@ const flat = name => ({ name, channels: [{ preampDb: 0, filters: [] }, { preampD
 const compile = path => ts.transpileModule(readFileSync(new URL('../' + path, import.meta.url), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 const baseGlobals = { Error, URL, Blob, AbortController, structuredClone, crypto, console };
 function load(path, require, globals = {}) { const mod = { exports: {} }; vm.runInNewContext(compile(path), { ...baseGlobals, ...globals, require, module: mod, exports: mod.exports }); return mod.exports; }
-const search = load('lib/search.ts', id => { throw Error(id); });
-const model = load('lib/blind-eq.ts', id => {
+const search = load('site/lib/search.ts', id => { throw Error(id); });
+const model = load('site/lib/blind-eq.ts', id => {
   if (id === './peq-preset') return presetLimits;
   throw Error(id);
 });
 const text = node => node == null || typeof node === 'boolean' ? '' : typeof node === 'string' || typeof node === 'number' ? String(node) : Array.isArray(node) ? node.map(text).join('') : text(node.props?.children);
-const voteLabel = load('components/shootout-vote-label.tsx', id => {
+const voteLabel = load('site/components/shootout-vote-label.tsx', id => {
   if (id === './shootout-vote-label.css') return {};
   if (id === 'react/jsx-runtime') return { jsx: (type, props) => ({ type, props }) };
   throw Error(id);
@@ -44,7 +44,7 @@ function pageFixture(sampleRate = 48000) {
   const document = { body: { appendChild() {} }, createElement() { return { click() { clicks++; }, remove() {} }; } };
   const URL = { createObjectURL(value) { if (failDownload) throw Error('Downloads unavailable'); blob = value; return 'blob:fixture'; }, revokeObjectURL() {} };
   const pool = Array.from({ length: 35 }, (_, i) => ({ title: 'Synthetic ' + i, artist: 'Fixture', fileUrl: '/tone.wav' }));
-  const h = mount('app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
+  const h = mount('site/app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
   return Object.assign(h, { listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
     apply() { all(h.tree, n => n.type === Editor).forEach(n => n.props.onChange(flat('Same preset name'))); h.render(); },
     songs() { return all(h.tree, n => n.type === 'label' && n.props.className === 'eq-song').map(n => all(n, child => child.type === 'input')[0]); },
@@ -110,7 +110,7 @@ function listenerFixture(options = {}) {
   }
   async function prepare(buffer, presets, at, seconds, match, signal) { renders.push({ at, signal }); if (options.silent && at === 9) throw Error('This passage is silent or too quiet to compare. Choose another passage.'); return { buffers: [], seconds }; }
   const fetch = async (url, config) => { requests.push(config); if (options.fetch) return await options.fetch.promise; return { ok: !options.maintenance, status: options.maintenance ? 503 : 200, headers: { get: n => options.maintenance && n === 'X-YinYang-Service' ? 'owner-only-maintenance' : null }, arrayBuffer: async () => new ArrayBuffer(10) }; };
-  const h = mount('components/blind-eq-listener.tsx', { '@/lib/blind-eq-audio': { BlindEqPlayer: Player, prepareComparison: prepare } }, { document, window, fetch }, { song: options.song || { id: 'synthetic', title: 'Synthetic', artist: 'Fixture', url: '/tone.wav' }, presets: [flat('one'), flat('two')], match: true, sourceCache:options.sourceCache, initialVolume: .07, onVolumeChange: v => volumes.push(v), onEvidence: value => evidence.push(value) });
+  const h = mount('site/components/blind-eq-listener.tsx', { '@/lib/blind-eq-audio': { BlindEqPlayer: Player, prepareComparison: prepare } }, { document, window, fetch }, { song: options.song || { id: 'synthetic', title: 'Synthetic', artist: 'Fixture', url: '/tone.wav' }, presets: [flat('one'), flat('two')], match: true, sourceCache:options.sourceCache, initialVolume: .07, onVolumeChange: v => volumes.push(v), onEvidence: value => evidence.push(value) });
   return Object.assign(h, { players, requests, evidence, volumes, renders, async prepare() { h.button('Get this song ready').props.onClick(); await flush(); h.render(); }, hide() { document.visibilityState = 'hidden'; events.get('visibilitychange')?.(); }, show() { document.visibilityState = 'visible'; }, tick(seconds = .2) { players[0].elapsed += seconds; for (const fn of intervals) fn(); h.render(); } });
 }
 {
@@ -152,7 +152,7 @@ for (const action of ['hide', 'unmount', 'change-passage']) {
   class Buffer { constructor({ numberOfChannels, length, sampleRate }) { this.numberOfChannels = numberOfChannels; this.length = length; this.sampleRate = sampleRate; this.duration = length / sampleRate; this.data = Array.from({ length: numberOfChannels }, () => new Float32Array(length).fill(.1)); } getChannelData(c) { return this.data[c]; } copyToChannel(values, c) { this.data[c].set(values); } }
   const node = () => ({ gain: {}, connect() {}, start() {} });
   class Offline { constructor(channels, length, rate) { instances++; this.destination = {}; this.output = new Buffer({ numberOfChannels: channels, length, sampleRate: rate }); } createBufferSource() { return node(); } createChannelSplitter() { return node(); } createChannelMerger() { return node(); } createGain() { return node(); } async startRendering() { await firstRender.promise; return this.output; } }
-  const dsp = load('lib/blind-eq-audio.ts', id => id === './blind-eq' ? model : id === './channel-balance' ? {channelBalance:()=>null} : (() => { throw Error(id); })(), { AudioBuffer: Buffer, OfflineAudioContext: Offline });
+  const dsp = load('site/lib/blind-eq-audio.ts', id => id === './blind-eq' ? model : id === './channel-balance' ? {channelBalance:()=>null} : (() => { throw Error(id); })(), { AudioBuffer: Buffer, OfflineAudioContext: Offline });
   const buffer = new Buffer({ numberOfChannels: 2, length: 48_000 * 6, sampleRate: 48_000 }), controller = new AbortController();
   const render = dsp.prepareComparison(buffer, [flat('one'), flat('two')], 0, 5, true, controller.signal); controller.abort(); firstRender.resolve();
   await assert.rejects(render, /cancelled/); check(instances === 1, 'Cancellation after the first offline render prevents rendering the second preset');

@@ -5,11 +5,11 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-import * as requestJson from '../lib/request-json.ts';
-import * as labels from '../lib/target-labels.ts';
-import * as nicknames from '../lib/listener-nickname.ts';
-import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../lib/activity-monitoring.ts';
-import {VOTE_DATA_NOTICE_VERSION} from '../lib/vote-data-notice.ts';
+import * as requestJson from '../site/lib/request-json.ts';
+import * as labels from '../site/lib/target-labels.ts';
+import * as nicknames from '../site/lib/listener-nickname.ts';
+import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../site/lib/activity-monitoring.ts';
+import {VOTE_DATA_NOTICE_VERSION} from '../site/lib/vote-data-notice.ts';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
 for(const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
 let subject='synthetic-agreement-account';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(subject);
@@ -28,12 +28,12 @@ const deps={'@/lib/admin-contributions':contributionPolicy,'@/lib/listener-nickn
  '@/lib/submission-ownership':{dataIdentity:async()=>{const a=account();return{subjectId:subject,submissionsEnabled:a.submissions_enabled===1&&a.agreement_version===VOTE_DATA_NOTICE_VERSION,shareMusic:a.share_music===1,activityMonitoringEnabled:a.activity_monitoring_enabled===1,activityMonitoringVersion:a.activity_monitoring_version,agreementVersion:a.agreement_version,agreedAt:a.agreed_at};}},
  '@/lib/privacy-erasure':{dataTables:{},eraseData:()=>{throw Error('This preference test must never erase source data');}}
 };
-const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
-const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
-deps['@/lib/legacy-notice']={RETROSPECTIVE_NOTICE_VERSION:'retrospective-2026-10-18-v1'};const studiesExports={};vm.runInNewContext(ts.transpileModule(readFileSync('lib/consent-studies.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:studiesExports,require:name=>deps[name]});deps['@/lib/consent-studies']=studiesExports;
+const communityNotice={COMMUNITY_NOTICE_VERSION:'community-preferences-2026-10-19-v1'};deps['@/lib/community-notice']=communityNotice;const communityExports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/community-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:communityExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/community-server']=communityExports;
+const personalNotice={PERSONAL_RESEARCH_NOTICE_VERSION:'personal-research-2026-10-18-v1'};deps['@/lib/personal-research-notice']=personalNotice;const personalExports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/personal-research-server.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:personalExports,crypto,require:name=>{if(name in deps)return deps[name];throw Error(name);}});deps['@/lib/personal-research-server']=personalExports;
+deps['@/lib/legacy-notice']={RETROSPECTIVE_NOTICE_VERSION:'retrospective-2026-10-18-v1'};const studiesExports={};vm.runInNewContext(ts.transpileModule(readFileSync('site/lib/consent-studies.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:studiesExports,require:name=>deps[name]});deps['@/lib/consent-studies']=studiesExports;
 Object.assign(deps,accountSyncFixtureDeps(deps));
 const context=vm.createContext({exports:{},require:name=>{if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response,Request,Headers,URL,Date,TextEncoder,TextDecoder,Uint8Array});
-vm.runInContext(ts.transpileModule(readFileSync(new URL('../app/api/my-data/route.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
+vm.runInContext(ts.transpileModule(readFileSync(new URL('../site/app/api/my-data/route.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,context);
 const patch=(body,origin='https://fixture.test')=>context.exports.PATCH(new Request('https://fixture.test/api/my-data',{method:'PATCH',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(body)}));
 assert.equal((await patch({submissionsEnabled:true,shareMusic:false})).status,400,'Opt-in requires explicit current acknowledgement');
 assert.equal((await patch({submissionsEnabled:true,shareMusic:true,acknowledged:true,noticeVersion:VOTE_DATA_NOTICE_VERSION})).status,200);

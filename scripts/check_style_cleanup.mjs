@@ -4,7 +4,7 @@ import postcss from 'postcss';
 
 // Report exact-selector declarations superseded in the same cascade context.
 // Never infer that a class is unused from static JSX: runtime states create classes.
-const files=['app/globals.css','app/welcome.css','app/curve-credits/style.css','app/my-data/style.css','app/music-library/style.css','app/preference-tuning/style.css','app/owner-research/admin-layout.css','components/aura-nav-link.css','components/legacy-review.css','components/comparison-data-settings.css','components/results-profile.css','components/admin-review.css'];
+const files=['site/app/globals.css','site/app/welcome.css','site/app/curve-credits/style.css','site/app/my-data/style.css','site/app/music-library/style.css','site/app/preference-tuning/style.css','site/app/owner-research/admin-layout.css','site/components/aura-nav-link.css','site/components/legacy-review.css','site/components/comparison-data-settings.css','site/components/results-profile.css','site/components/admin-review.css'];
 const apply=process.argv.includes('--apply'),report=[];
 for(const file of files){
  const source=fs.readFileSync(file,'utf8'),root=postcss.parse(source,{from:file});
