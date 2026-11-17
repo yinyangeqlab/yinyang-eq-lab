@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-17T09:55:15Z |
 | Deployment | Verified by the [deployment receipt](../releases/update175-wallpaper-and-tuning-links-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source recorded as pushed; publication authorized in this record |
+| Publication | Reviewed source published as `45bfbfb24de4fcfaed83718641228953533ce273`; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.

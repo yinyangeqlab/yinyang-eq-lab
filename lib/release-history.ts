@@ -289,7 +289,10 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: candidateChanges },
+  {
+    update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: candidateChanges,
+    github: { commit: "45bfbfb24de4fcfaed83718641228953533ce273", releaseTag: "update175" },
+  },
   {
     update: 174, date: "2026-11-15", title: "Audio Fact Checks", changes: update174Changes,
     refreshReleases: [

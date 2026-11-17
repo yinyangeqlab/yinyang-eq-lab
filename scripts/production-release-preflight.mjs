@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import { recoveryState, verifyOrRefresh } from './release-state.mjs';
+import { releaseHistory } from '../lib/release-history.ts';
+import { releaseInfo } from '../lib/release-info.ts';
 
 const read = (directory, path) => JSON.parse(readFileSync(resolve(directory, path), 'utf8'));
 const timestamp = value => typeof value === 'string' ? Date.parse(value) : NaN;
@@ -93,10 +95,21 @@ function verifyDataExportRecovery(state, recordPath, workspace, privateRoot, pro
   'Registered data-export recovery snapshot differs from the recovery index');
 }
 
+export function verifyPriorPublishedRelease(state, candidateUpdate, history) {
+  const releaseTag = `update${state.update}`;
+  const { publicationTag, publishedSourceCommit } = state.gitSource;
+  if (candidateUpdate <= state.update || publicationTag !== releaseTag || !publishedSourceCommit) return;
+
+  const entry = history.find(({ update }) => update === state.update);
+  assert.equal(entry?.github?.releaseTag, releaseTag, `Version history must link to the published ${releaseTag} release`);
+  assert.equal(entry.github.commit, publishedSourceCommit, `Version history must link to the verified ${releaseTag} source commit`);
+}
+
 export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments) {
   const state = read(workspace, 'LIVE_RELEASE.json');
   const label = `update${state.update}`;
   verifyOrRefresh(workspace);
+  verifyPriorPublishedRelease(state, releaseInfo.build.update, releaseHistory);
   const recovery = recoveryState(state);
   assert.ok(!recovery.pending, `${label} needs a verified ${recovery.kind} handoff before another release can go live`);
   assert.ok(typeof state.applicationSnapshot === 'string' && state.applicationSnapshot.length > 0,

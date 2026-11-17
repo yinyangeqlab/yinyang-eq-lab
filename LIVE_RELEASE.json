@@ -44,7 +44,9 @@
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update175"
+    "publicationTag": "update175",
+    "publishedSourceCommit": "45bfbfb24de4fcfaed83718641228953533ce273",
+    "publicationVerification": "docs/releases/update175-publication.json"
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,

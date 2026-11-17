@@ -11,6 +11,8 @@ Research Rankings adds an approved Arya Stealth preset entry. The Version page k
 
 [Update175 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update175) · [Deployment verification](../releases/update175-wallpaper-and-tuning-links-verification.json) · [Recovery verification](../releases/update175-wallpaper-and-tuning-links-recovery-verification.json)
 
+The live page discovered the update175 link in both sections after publication on the same Worker deployment. The next build keeps the verified release tag and source commit in Version history. The guarded rollout checks both against the owner release record. [Publication verification](../releases/update175-publication.json)
+
 ## Update171 Wallpapers and Version history
 
 The wallpaper gallery adds portrait phone, portrait and landscape tablet, and ultrawide downloads. The live gallery provides the wallpaper files and their personal-use terms. Version history links to the update169 Rankings release, and update171 uses automatic release discovery.

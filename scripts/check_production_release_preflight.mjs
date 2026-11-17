@@ -5,7 +5,29 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { handoffs, stateViewPath, verifyOrRefresh } from './release-state.mjs';
-import { verifyProductionBaseline } from './production-release-preflight.mjs';
+import { verifyPriorPublishedRelease, verifyProductionBaseline } from './production-release-preflight.mjs';
+
+const published = {
+  update: 170,
+  gitSource: { publicationTag: 'update170', publishedSourceCommit: 'a'.repeat(40) },
+};
+const publishedEntry = {
+  update: 170,
+  github: { releaseTag: 'update170', commit: published.gitSource.publishedSourceCommit },
+};
+verifyPriorPublishedRelease(published, 170, []);
+verifyPriorPublishedRelease(published, 171, [publishedEntry]);
+verifyPriorPublishedRelease({ ...published, gitSource: {} }, 171, []);
+verifyPriorPublishedRelease({
+  ...published, gitSource: { ...published.gitSource, publicationTag: 'update170-refresh' },
+}, 171, []);
+assert.throws(() => verifyPriorPublishedRelease(published, 171, []), /published update170 release/);
+assert.throws(() => verifyPriorPublishedRelease(published, 171, [
+  { ...publishedEntry, github: { ...publishedEntry.github, releaseTag: 'update171' } },
+]), /published update170 release/);
+assert.throws(() => verifyPriorPublishedRelease(published, 171, [
+  { ...publishedEntry, github: { ...publishedEntry.github, commit: 'b'.repeat(40) } },
+]), /verified update170 source commit/);
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const directory = mkdtempSync(join(tmpdir(), 'release-preflight-'));

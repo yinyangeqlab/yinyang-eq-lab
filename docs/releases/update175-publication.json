@@ -1,0 +1,39 @@
+{
+  "update": 175,
+  "deployedSourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+  "publishedSourceCommit": "45bfbfb24de4fcfaed83718641228953533ce273",
+  "publicBaselineCommit": "3da9c30b85808395d6f474089418a594bb34c163",
+  "tag": "update175",
+  "githubLogin": "yinyangeqlab",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update175",
+  "publishedAt": "2026-11-17T11:15:42Z",
+  "authorAndCommitterVerified": true,
+  "ownerAuthorized": true,
+  "existingHistoryTagsPreserved": true,
+  "sourceScope": "Reviewed application source with public repository paths and credential-free deployment configuration. Owner-only inputs and generated build output are excluded.",
+  "deploymentVerification": "docs/releases/update175-wallpaper-and-tuning-links-verification.json",
+  "recoveryVerification": "docs/releases/update175-wallpaper-and-tuning-links-recovery-verification.json",
+  "filesVerifiedInEachArchive": 1231,
+  "publicZipAndTarDownloadsVerified": true,
+  "liveVersionLinkVerification": {
+    "currentReleaseLink": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update175",
+    "step": "Changes in this build and Release history",
+    "sourceRevision": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+    "workerDeployedAt": "2026-11-17T09:54:37.016718Z",
+    "githubPublishedAt": "2026-11-17T11:15:42Z",
+    "historyReleaseLinks": {
+      "update170": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update170",
+      "update169": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update169",
+      "update168": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update168",
+      "update167": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update167",
+      "update166": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update166",
+      "update164": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update164",
+      "update159": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update159",
+      "update174-tuning-playback-release-link": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update174-tuning-playback-release-link",
+      "update174-wallpapers-version-link": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update174-wallpapers-version-link"
+    },
+    "workerDeployedBeforePublication": true,
+    "verifiedAt": "2026-11-17T11:16:04.268811+00:00",
+    "matchedBeforePublicationSnapshot": true
+  }
+}

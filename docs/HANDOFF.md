@@ -11,6 +11,8 @@ Research Rankings adds an approved Arya Stealth preset entry. The Version page k
 
 [Update175 source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update175) · [Deployment verification](releases/update175-wallpaper-and-tuning-links-verification.json) · [Recovery verification](releases/update175-wallpaper-and-tuning-links-recovery-verification.json)
 
+The live page discovered the update175 link in both sections after publication on the same Worker deployment. The next build keeps the verified release tag and source commit in Version history. The guarded rollout checks both against the owner release record. [Publication verification](releases/update175-publication.json)
+
 ## Update174 Version page link for the Tuning playback fix
 
 The update173 Preference Tuning playback entry links to its GitHub release and source commit. The public checkout carries that entry alongside the recorded update171 build baseline. [Live Version entry](https://yinyangeq.com/version#update173) · [Playback fix release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update173)
