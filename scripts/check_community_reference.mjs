@@ -1,6 +1,6 @@
 import * as fitters from "../site/lib/fitter-settings.ts";
 import assert from 'node:assert/strict';import{readFileSync,readdirSync}from'node:fs';import{DatabaseSync}from'node:sqlite';import vm from'node:vm';import ts from'typescript';
-const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync('drizzle/'+f,'utf8'));
+const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const f of readdirSync('site/drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync('site/drizzle/'+f,'utf8'));
 class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async first(){return sql.prepare(this.query).get(...this.args)||null;}async all(){return{results:sql.prepare(this.query).all(...this.args)};}async run(){return sql.prepare(this.query).run(...this.args);}}
 const db={prepare:q=>new Statement(q),batch:async stmts=>{sql.exec('BEGIN');try{const r=[];for(const s of stmts)r.push(await s.run());sql.exec('COMMIT');return r;}catch(e){sql.exec('ROLLBACK');throw e;}}};
 let now=Date.now();class Clock extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}}

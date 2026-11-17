@@ -9,7 +9,7 @@ const root=resolve(import.meta.dirname,'../..'),dir=mkdtempSync(resolve(tmpdir()
 function test(name,fn){fn();passed++;console.log('PASS '+name)}
 try{
  const input=resolve(dir,'input.sqlite'),db=new DatabaseSync(input);
- for(const n of readdirSync(resolve(root,'drizzle')).filter(n=>n.endsWith('.sql')).sort())db.exec(readFileSync(resolve(root,'drizzle',n),'utf8'));
+ for(const n of readdirSync(resolve(root,'site/drizzle')).filter(n=>n.endsWith('.sql')).sort())db.exec(readFileSync(resolve(root,'site/drizzle',n),'utf8'));
  db.prepare('INSERT INTO '+ 'private_tester_invites (id,label,code_hash,created_at,code_expires_at) VALUES (?,?,?,?,?)').run('fixture','Fixture', 'old-credential-hash',0,9999999999);
  db.prepare('INSERT INTO '+ 'privacy_sessions(token_hash,subject_id,expires_at) VALUES (?,?,?)').run('old-data-hash','fixture',9999999999999);
  db.prepare("INSERT INTO privacy_accounts(subject_id) VALUES('invite:fixture')").run();

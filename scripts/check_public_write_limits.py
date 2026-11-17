@@ -5,7 +5,7 @@ from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
 db = sqlite3.connect(':memory:')
-db.executescript((root / 'drizzle' / '0011_public_write_limits.sql').read_text())
+db.executescript((root / 'site/drizzle' / '0011_public_write_limits.sql').read_text())
 statement = '''
     INSERT INTO public_write_limits (key, window_start, count, expires_at) VALUES (?, ?, 1, ?)
     ON CONFLICT(key) DO UPDATE SET

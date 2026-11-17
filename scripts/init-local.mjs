@@ -15,12 +15,12 @@ const result = JSON.parse(run(["--json", "--command", "SELECT name FROM sqlite_m
 const tables = result.flatMap(row => row.results || []).map(row => row.name)
   .filter(name => !name.startsWith("sqlite_") && !name.startsWith("_cf_"));
 if (tables.length) throw new Error("Local D1 already contains tables. Preserve it and apply only missing migrations as described in docs/LOCAL_SETUP.md.");
-const migrations = readdirSync(new URL("../drizzle/", import.meta.url)).filter(name => /^\d{4}_[a-z0-9_]+\.sql$/.test(name)).sort();
+const migrations = readdirSync(new URL("../site/drizzle/", import.meta.url)).filter(name => /^\d{4}_[a-z0-9_]+\.sql$/.test(name)).sort();
 mkdirSync(new URL("../.wrangler/", import.meta.url), { recursive: true });
 const sqlPath = new URL("../.wrangler/local-schema.sql", import.meta.url);
 try {
-  const schema = migrations.map(name => readFileSync(new URL(`../drizzle/${name}`, import.meta.url), "utf8"));
-  schema.push(readFileSync(new URL("../db/service-status.sql", import.meta.url), "utf8"));
+  const schema = migrations.map(name => readFileSync(new URL(`../site/drizzle/${name}`, import.meta.url), "utf8"));
+  schema.push(readFileSync(new URL("../site/db/service-status.sql", import.meta.url), "utf8"));
   writeFileSync(sqlPath, schema.join("\n"));
   run(["--file", fileURLToPath(sqlPath)]);
 } finally { if (existsSync(sqlPath)) unlinkSync(sqlPath); }

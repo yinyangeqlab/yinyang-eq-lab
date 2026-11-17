@@ -19,10 +19,7 @@ export default defineConfig({
       stream.pipe(response);
     });
   } }],
-  resolve: { alias: [
-    { find: /^@\/db(?=\/|$)/, replacement: fileURLToPath(new URL('../../../db', import.meta.url)) },
-    { find: '@', replacement: fileURLToPath(new URL('../../../site', import.meta.url)) },
-  ] },
+  resolve: { alias: { '@': fileURLToPath(new URL('../../../site', import.meta.url)) } },
   server: { host: '127.0.0.1', port: 5199, strictPort: true, fs: { allow: [fileURLToPath(new URL('../../..', import.meta.url))] } },
   build: { outDir: '../../../artifacts/autoeq-lab/dist', emptyOutDir: true },
 });

@@ -1,5 +1,5 @@
 // Read-only helper for the migration checker. No database, credentials or network.
-import * as schema from '../db/schema.ts';
+import * as schema from '../site/db/schema.ts';
 import {isTable} from 'drizzle-orm';
 import {getTableConfig} from 'drizzle-orm/sqlite-core';
 console.log(JSON.stringify(Object.values(schema).filter(isTable).map(table => {

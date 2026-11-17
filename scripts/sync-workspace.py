@@ -15,8 +15,8 @@ SOURCE_DIRS = {
     "components": "site/components",
     "hooks": "site/components/hooks",
     "lib": "site/lib",
-    "db": "db",
-    "drizzle": "drizzle",
+    "db": "site/db",
+    "drizzle": "site/drizzle",
 }
 SUFFIXES = {".ts", ".tsx", ".js", ".jsx", ".mjs", ".css", ".sql", ".json"}
 CHECKS = {
@@ -27,7 +27,7 @@ CHECKS = {
     "check_measurement_research.mjs", "check_migration_chain.py",
 }
 PRESERVED = {
-    "drizzle/0001_target_validation.sql",  # Working copy contains withheld seeds.
+    "site/drizzle/0001_target_validation.sql",  # Working copy contains withheld seeds.
 }
 
 

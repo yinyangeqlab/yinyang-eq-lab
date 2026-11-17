@@ -10,7 +10,7 @@ npm run setup:local
 npm run dev
 ```
 
-Open the URL printed by the server, normally `http://localhost:5173`. The setup command uses Wrangler's local D1 emulator with the same placeholder database ID and `.wrangler/state` directory as the Vite preview. It reads every checked-in SQL file in filename order, including both historical `0012` migrations, then installs `db/service-status.sql`. For an existing local database that lacks the service status table, apply that SQL file with the same local Wrangler configuration shown below. It creates ignored `.dev.vars` values for `ABUSE_RATE_SECRET` and `OWNER_ANALYTICS_TOKEN` using local random bytes. It does not contact or seed a production database. An existing `.dev.vars` is preserved; both values must be at least 32 characters long.
+Open the URL printed by the server, normally `http://localhost:5173`. The setup command uses Wrangler's local D1 emulator with the same placeholder database ID and `.wrangler/state` directory as the Vite preview. It reads every checked-in SQL file in filename order, including both historical `0012` migrations, then installs `site/db/service-status.sql`. For an existing local database that lacks the service status table, apply that SQL file with the same local Wrangler configuration shown below. It creates ignored `.dev.vars` values for `ABUSE_RATE_SECRET` and `OWNER_ANALYTICS_TOKEN` using local random bytes. It does not contact or seed a production database. An existing `.dev.vars` is preserved; both values must be at least 32 characters long.
 
 Setup refuses a database that already contains application tables. It is an initializer, not a migration-history detector. If initialization fails partway through, inspect the local schema before retrying; preserve any data you need. The checked-in migration journal and current schema snapshot describe the source schema, not the migration state of a database you already operate.
 
@@ -31,7 +31,7 @@ Back up existing state first and determine which migrations have already been ap
 For a local database already current through `0015`, apply only the new additive attachment migration:
 
 ```sh
-npx wrangler d1 execute DB --local --config scripts/recovery/wrangler.local.json --persist-to .wrangler/state --file drizzle/0016_measurement_file_chunks.sql
+npx wrangler d1 execute DB --local --config scripts/recovery/wrangler.local.json --persist-to .wrangler/state --file site/drizzle/0016_measurement_file_chunks.sql
 ```
 
 For an older database, apply its missing SQL files individually in filename order. The journal no longer references the nonexistent `0011_research_records.sql`; it lists the actual files. Historical filenames and SQL are retained. Do not treat repaired metadata as permission to replay previously applied migrations or automatically convert an existing database's migration bookkeeping.

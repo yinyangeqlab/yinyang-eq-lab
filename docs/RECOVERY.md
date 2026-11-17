@@ -119,4 +119,6 @@ Use the pinned environment (`npm run recovery:environment`), locked dependencies
 
 For a newly authorized environment, `scripts/recovery/prepare-environment.mjs` produces an offline plan from an external private profile; it does not grant provisioning approval. Review adoption of existing resources, all access/media/CPU/abuse/edge/cost protections and secrets separately. Exact rollback uses the release's original immutable source/build/configuration evidence, with data compatibility checked explicitly.
 
+Before registering a release built from this layout, configure the external owner recovery runner to fingerprint the migration chain under `site/drizzle/`. Historical recovery points use their original source checkout and migration path.
+
 The owner retains the historical recovery procedures and exact snapshots. Use the current release record when preparing a restore.

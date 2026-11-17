@@ -10,8 +10,8 @@ import { inspectDatabase, sanitizeDatabase } from './recovery/recovery.mjs';
 
 const sql = new DatabaseSync(':memory:');
 sql.exec('PRAGMA foreign_keys=ON');
-for (const file of readdirSync('drizzle').filter(name => name.endsWith('.sql')).sort()) {
-  sql.exec(readFileSync(join('drizzle', file), 'utf8'));
+for (const file of readdirSync('site/drizzle').filter(name => name.endsWith('.sql')).sort()) {
+  sql.exec(readFileSync(join('site/drizzle', file), 'utf8'));
 }
 
 function statement(query, args = []) {

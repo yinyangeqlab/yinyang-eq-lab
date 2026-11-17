@@ -11,7 +11,7 @@ import * as nicknames from '../site/lib/listener-nickname.ts';
 import {VOTE_DATA_NOTICE_VERSION} from '../site/lib/vote-data-notice.ts';
 import {ACTIVITY_MONITORING_NOTICE_VERSION,ACTIVITY_LOG_RETENTION_MS} from '../site/lib/activity-monitoring.ts';
 const sql=new DatabaseSync(':memory:');
-for(const f of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+f,import.meta.url),'utf8'));
+for(const f of readdirSync(new URL('../site/drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../site/drizzle/'+f,import.meta.url),'utf8'));
 class Statement{constructor(query,args=[]){this.query=query;this.args=args;}bind(...args){return new Statement(this.query,args);}async first(){return sql.prepare(this.query).get(...this.args)||null;}async all(){return{results:sql.prepare(this.query).all(...this.args)};}async run(){return{meta:{changes:Number(sql.prepare(this.query).run(...this.args).changes)}};}}
 const DB={prepare:q=>new Statement(q),batch:async statements=>{sql.exec('BEGIN');try{const out=[];for(const s of statements)out.push(await s.run());sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};
 const env={DB,OWNER_ANALYTICS_TOKEN:crypto.randomUUID()+crypto.randomUUID()};

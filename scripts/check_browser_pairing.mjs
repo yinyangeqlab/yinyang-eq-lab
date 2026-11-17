@@ -13,7 +13,7 @@ import vm from 'node:vm';
 // No network calls, production accounts, or real participant data.
 const sql = new DatabaseSync(':memory:');
 sql.exec('PRAGMA foreign_keys=ON');
-for (const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort()) sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
+for (const file of readdirSync(new URL('../site/drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort()) sql.exec(readFileSync(new URL('../site/drizzle/'+file,import.meta.url),'utf8'));
 class Statement {
   constructor(query,args=[]) {this.query=query;this.args=args;}
   bind(...args) {return new Statement(this.query,args);}

@@ -11,7 +11,7 @@ import * as nicknames from '../site/lib/listener-nickname.ts';
 import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../site/lib/activity-monitoring.ts';
 import {VOTE_DATA_NOTICE_VERSION} from '../site/lib/vote-data-notice.ts';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
-for(const file of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+file,import.meta.url),'utf8'));
+for(const file of readdirSync(new URL('../site/drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../site/drizzle/'+file,import.meta.url),'utf8'));
 let subject='synthetic-agreement-account';sql.prepare('INSERT INTO privacy_accounts(subject_id) VALUES(?)').run(subject);
 const account=()=>sql.prepare('SELECT * FROM privacy_accounts WHERE subject_id=?').get(subject);
 let failBatch=false;

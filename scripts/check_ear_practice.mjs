@@ -8,8 +8,8 @@ import ts from "typescript";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const db = new DatabaseSync(":memory:");
 db.exec("PRAGMA foreign_keys=ON");
-for (const migration of readdirSync(resolve(root, "drizzle")).filter(name => name.endsWith(".sql")).sort()) {
-  db.exec(readFileSync(resolve(root, "drizzle", migration), "utf8"));
+for (const migration of readdirSync(resolve(root, "site/drizzle")).filter(name => name.endsWith(".sql")).sort()) {
+  db.exec(readFileSync(resolve(root, "site/drizzle", migration), "utf8"));
 }
 const prepare = sql => ({
   bind: (...args) => ({

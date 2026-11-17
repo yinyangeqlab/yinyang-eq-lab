@@ -8,8 +8,8 @@ def sql(name):
 db=sqlite3.connect(':memory:'); db.row_factory=sqlite3.Row
 db.execute('CREATE TABLE votes (id TEXT PRIMARY KEY)')
 db.execute("INSERT INTO votes VALUES ('historical-vote')")
-db.executescript((root/'drizzle/0014_research_records.sql').read_text().split('--> statement-breakpoint')[0])
-for statement in (root/'drizzle/0015_ranked_repeats_uncertainty.sql').read_text().split('--> statement-breakpoint'):
+db.executescript((root/'site/drizzle/0014_research_records.sql').read_text().split('--> statement-breakpoint')[0])
+for statement in (root/'site/drizzle/0015_ranked_repeats_uncertainty.sql').read_text().split('--> statement-breakpoint'):
     if statement.strip(): db.executescript(statement)
 assert db.execute("SELECT reliability_weight FROM votes WHERE id = 'historical-vote'").fetchone()[0] == 0.5
 # Historical unlinked runs remain allowed; new assigned trials are one-use.

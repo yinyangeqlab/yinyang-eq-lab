@@ -7,8 +7,8 @@ import sqlite3
 import subprocess
 
 root = Path(__file__).resolve().parents[1]
-paths = sorted((root / "drizzle").glob("*.sql"))
-journal = json.loads((root / "drizzle/meta/_journal.json").read_text())
+paths = sorted((root / "site/drizzle").glob("*.sql"))
+journal = json.loads((root / "site/drizzle/meta/_journal.json").read_text())
 journaled = len(journal["entries"])
 assert [e["tag"] for e in journal["entries"]] == [p.stem for p in paths[:journaled]]
 assert [e["idx"] for e in journal["entries"]] == list(range(journaled))
@@ -28,7 +28,7 @@ manual = {
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:
     assert hashlib.sha256(path.read_bytes()).hexdigest() == manual[path.name], path.name
-snapshot = json.loads((root / "drizzle/meta" / (journal["entries"][-1]["tag"].split("_")[0] + "_snapshot.json")).read_text())
+snapshot = json.loads((root / "site/drizzle/meta" / (journal["entries"][-1]["tag"].split("_")[0] + "_snapshot.json")).read_text())
 
 def check_columns(expected):
     tables = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
@@ -66,7 +66,7 @@ except sqlite3.IntegrityError:
     pass
 db.execute("DELETE FROM research_measurements WHERE id = ?", ("sample",))
 assert db.execute("SELECT COUNT(*) FROM research_measurement_chunks").fetchone()[0] == 0
-db.executescript((root / "db/service-status.sql").read_text())
+db.executescript((root / "site/db/service-status.sql").read_text())
 assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 230
 assert not db.execute("PRAGMA foreign_key_check").fetchall()
 print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema230, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "d624806e89418e86d5902bda6b1870d8a6a8fa9b",
+  "baseRevision": "cffeaaf7d600f3c5098ed3860f151d97bcd9bc93",
   "recordedLiveUpdate": 175,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -71,26 +71,6 @@
       "executable": false
     },
     {
-      "path": "db/drizzle.config.ts",
-      "sha256": "af081f7384aaeb0082cf422e29f139d137ca2f6a57c69b2c37b9fb1f8479867b",
-      "executable": false
-    },
-    {
-      "path": "db/index.ts",
-      "sha256": "dc7610b00b918e0ffff1360a63626f16655ced3064b2eaf96095a4101fb14bcd",
-      "executable": false
-    },
-    {
-      "path": "db/schema.ts",
-      "sha256": "f73c54233200e43684ac5293c263276e1391ae21b019ea4da013ccd87124eb53",
-      "executable": false
-    },
-    {
-      "path": "db/service-status.sql",
-      "sha256": "7a9c347a5000316ff6a287c4ea3d5c4ef3cc31e100f313aab1449819ac06ce29",
-      "executable": false
-    },
-    {
       "path": "docs/ADMIN_TEST_ISOLATION.md",
       "sha256": "c6bab47be5347125e00ff3bf9e54c4b130234e188a6734989ae60f21fc12155a",
       "executable": false
@@ -147,7 +127,7 @@
     },
     {
       "path": "docs/ENGINEERING.md",
-      "sha256": "1d3c97164dcdfd6d8372c47cfc932bcd57afec024b6aca229dddd74d7c707c02",
+      "sha256": "5deadae51ff24b8953f7295e7398d096d5798a0ea39ecf585280adb438439d51",
       "executable": false
     },
     {
@@ -202,7 +182,7 @@
     },
     {
       "path": "docs/LOCAL_SETUP.md",
-      "sha256": "5b970f94b3b3e666d8d503a12a4c2c078501f157ec5d8d7b0ca87dd2a1b81b55",
+      "sha256": "5cb499fa7282a05bfaa5d977986f4fa4ab2e1581fd9e56ef33666a79203d39d4",
       "executable": false
     },
     {
@@ -252,7 +232,7 @@
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "fce66dddfe0c3270fde838640d5ff8d1bedc759502b54237088da377055e5781",
+      "sha256": "66f69d875aefc26c34404fb880a01a53b80c30a00ea8591aa3bab0af1f8e8cde",
       "executable": false
     },
     {
@@ -1301,356 +1281,6 @@
       "executable": false
     },
     {
-      "path": "drizzle/0000_targets_and_votes.sql",
-      "sha256": "c52a6c3aa4783c1a075ac9c692dd3cdf0e16e879c1946b62325bc6390319e578",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0001_target_validation.sql",
-      "sha256": "7e594d39379e24d371356c1e21ddc0f5e3417f20cb5fa44d5e74feaef05a0753",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0002_target_measurement.sql",
-      "sha256": "6a20e238b431a9509301756e85637f02dac1a50a2f87241274b70d68aecb41f3",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0003_remove_withheld_target.sql",
-      "sha256": "0cf25e459722d414128c954b5863c92098e5d390b7926609be764c8934150555",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0004_blind_test_mode.sql",
-      "sha256": "041e7707277fdbeeeb5141ec7c81b7372f6738274909cc79189349671b305bfa",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0005_vote_feedback.sql",
-      "sha256": "5ed258737937bc3035d05eff0c3d33c14861a47254867aa1e1cb958d6a93f051",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0006_ranked_trials.sql",
-      "sha256": "60a200499affa453e2bded8177bac8aef2dde04dcf003dafc62e8dd943d432cf",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0007_suggestion_recording_metadata.sql",
-      "sha256": "dceb9920e5e1fbcf25fe2acf19e72661a22ece7a2e53831eca69d10185f365c9",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0008_listener_headphone_type.sql",
-      "sha256": "9b5e8435a88931d7575c1b86ae6817d6f8427e7168decd41db1cfd19e04e9631",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0009_feedback_submissions.sql",
-      "sha256": "2168c0a3b94211325b0b49d0c2582f14310d2d85760dee18eea5f5bb95d32bb8",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0010_target_lineage.sql",
-      "sha256": "e56768c4dbde6d37c5e43f13ad36d0f7ca5cf07b487aefda3e6a110861db122d",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0011_public_write_limits.sql",
-      "sha256": "00c8db7beeaecf7faf66ae5ac897d0cbbaee59093f9b06e5170b7dd2b86d5acd",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0012_mature_giant_man.sql",
-      "sha256": "3a5d2a346e58baff366026f7bf8c944501433c8238eba6c0129973cee5c599a5",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0012_private_tester_invites.sql",
-      "sha256": "5f09d17bac27e9d38232854a271b3944873a11d01b5c73c5e05b2b7f129c53bc",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0013_bouncy_kingpin.sql",
-      "sha256": "46876e60dc6055b7045ef5e3a212e3aad0e0844730d018901976504a80345667",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0014_research_records.sql",
-      "sha256": "12b23ee9b1fd289f613ca34355f83aaff1ff735d6968d944ad1dd0efba50f9e4",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0015_ranked_repeats_uncertainty.sql",
-      "sha256": "45d79dda77c29f9476b018bb61966ad8e8bff8f978c46fc70ea809eae9a18633",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0016_measurement_file_chunks.sql",
-      "sha256": "df45821b45939af5cb98a3aa4f4ea7e3a07a931c281aa3aed2ead1861f3f219e",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0017_admin_moderation.sql",
-      "sha256": "9456ea0d1584c0617b0d6ffa8300872bcbc58dc4c0ba5f52e55007df572ad4fb",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0018_self_service_erasure.sql",
-      "sha256": "e2d1ffcb13e8774d6943388d32fecd1bff4b3b7a987d7815ebe61ea4fccb6776",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0019_required_participation_agreement.sql",
-      "sha256": "603461885b9cc4346e8ae9ccffebd7b92557405187fb9b1f8af0458863857b25",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0020_retention_and_deletion_totals.sql",
-      "sha256": "910619cd2118ca8c643e9a380ca779b4289b38a4459cc0c54af91a411bc253c8",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0021_statistics_archive.sql",
-      "sha256": "1162c596d103886ef5e7259f6a3e2f6dc6cf02c82aa9e0ccde615939f71acda3",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0022_small_study_retention.sql",
-      "sha256": "33c1ef87ccb86a728004703cef11626180a26e225cfe00768dd20500ce8605c1",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0023_repeat_aware_archive.sql",
-      "sha256": "ec4b5c6fcdaab5e58330d13f96855c085ef71d380c508afa109f8622a47f3b70",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0025_legacy_review.sql",
-      "sha256": "e74390b8b5104a083a4b24dd4c5881281c31bded94c2eb0535c05f04989e6f9a",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0026_comparison_integrity.sql",
-      "sha256": "985602480bc28956e9228fb320dfe649f2ec1ed5292b38b0db0b5b8cfa20d585",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0027_preference_target_names.sql",
-      "sha256": "e3b51a468f2df77f58b403e710c98f6edd67295656dc21cb1e773beedfd378b3",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0028_activity_monitoring.sql",
-      "sha256": "b2362c5f4b92902e4c93ade93105ced691a30e119988c181122dba702b0921b0",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0029_browser_pairing.sql",
-      "sha256": "04eb01d83149ff645acd0461ac6ffd5bf7454f145a68d3469b5192a028b69d8d",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0030_browser_sync_transfer.sql",
-      "sha256": "68ea6eb359aab87a53e60dd422ba47d4429d26e07b3565c99d04605454d2e688",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0031_site_access_settings.sql",
-      "sha256": "ab937e2c1f4d31b76c89d4a3a440418cf08bf1d585675ed2cd4d8357f6b692a2",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0032_listener_nicknames.sql",
-      "sha256": "4600fff3286a0123a5afaee8ee5613a7d49b5e96b8d3cea840a0caeead4ebc36",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0033_personal_research.sql",
-      "sha256": "45f1b62b9a428cb475ed1c1e6a779c6853f6a3de26defc4386e2bf4964e31daa",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0034_owner_public_profile.sql",
-      "sha256": "fd016e38442286e6c059a2da3f9f162128e36ea270255758de2c4675efc65005",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0035_target_context_and_ranking_changes.sql",
-      "sha256": "e63f4e0383981a23bc82eba5683b1dc06feb2f3f1c3d5d19fc196a06feaf68dd",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0036_community_prospective_pilot.sql",
-      "sha256": "9817f67b86081442a5833fbefabea1b729c633b1fede713fa3bb79d4cf449687",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0037_owner_account_sync.sql",
-      "sha256": "a4bff8c3657f87213b4017117d5dce9d7c4c98652fbe4c3dd7f5bac599b7bbf6",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0038_participant_account_sync.sql",
-      "sha256": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0039_segmented_account_sync.sql",
-      "sha256": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0040_target_removal_requests.sql",
-      "sha256": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0041_embed_shootouts.sql",
-      "sha256": "de9dbc88e900086caa6b3646cab07e5fcfb476da2b17c54f94f69b4e1e0a6a5f",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0042_ear_practice_rankings.sql",
-      "sha256": "355a9e1748ba965bf1b6f9ea6d9993122cac5ec299662d6868051facc3ad26d1",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0043_ear_practice_accuracy.sql",
-      "sha256": "2cd5bb97ce88dfd6eaca24d0c64711bfe99eb68164b41a74118a29a2da41b3d3",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0044_browser_ownership_codes.sql",
-      "sha256": "45c684b8f84f51e445bfef07d108ba7058331fe7966442c29130ef0f19d7a92a",
-      "executable": false
-    },
-    {
-      "path": "drizzle/0045_eq_preset_reactions.sql",
-      "sha256": "c80ac98549609535c84cca8170c8c377025ca095633df15915e291f3c5eb5259",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0012_snapshot.json",
-      "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0013_snapshot.json",
-      "sha256": "adb998f2da17863b7a2193640063db2650b9d10f3fdc38ea8fd97b11bca67a57",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0017_snapshot.json",
-      "sha256": "b8c737babd59ef80e7098cba3fb18dfc6d1ddcc98f0c22dfd569a50250666ead",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0018_snapshot.json",
-      "sha256": "c6d3ee002bd92195c755ff673c624d831a2d55837c836947862798697816cc97",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0019_snapshot.json",
-      "sha256": "a8eca0bcec883ffc8b926685d283d9ad026a9a3a3c5787b4bd2a9e460dbd1b5f",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0020_snapshot.json",
-      "sha256": "f18c95d2cd9d77548f78a7c454f1a3e1651a351e9a05b823bc3e2828128651b9",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0021_snapshot.json",
-      "sha256": "e7cda93cf548de693f4da1cc37521a70b69d82b4a0a60529dec65a5c9741498a",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0022_snapshot.json",
-      "sha256": "df2e3e0646c5d9d3b6cecd6859aa4d8eb591481c71bca3adfa37339931972980",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0023_snapshot.json",
-      "sha256": "6ff64e0eb6b02549989dfbe2b9e281bd58189a34cf99018445dfcc1908029270",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0024_snapshot.json",
-      "sha256": "6a2263451bcca16fbd27f308008626dd0a285875072883077cebc7345aca17b8",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0025_snapshot.json",
-      "sha256": "34b4745726428a25e50987afa4e501d6057d16113b41a77cbd229151a9dcff5b",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0026_snapshot.json",
-      "sha256": "62f5553af4d4b91f720efcbb4ff07d22dfe3d4de78d8574d00389e3c7f02fff4",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0027_snapshot.json",
-      "sha256": "32282d04ce1b79a70d0a01a56ab80fe2deb3b55c86cd3575ca15162dcc5e6913",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0028_snapshot.json",
-      "sha256": "243a2f9bc3bb8b421ddda795ccff3cf78b9256bef03ab68cb0e862c0e155f735",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0029_snapshot.json",
-      "sha256": "7bccea3be19d567f9cce97afc8cddb983113d544f7b0c72a6c4deff3165dbf2c",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0030_snapshot.json",
-      "sha256": "349d3ce82915cf9c8b5f1823cfadf3cbe66da816ea4543a47b2b2d75e7db54e4",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0031_snapshot.json",
-      "sha256": "8f8dd29f3f46430f78aa4fd113c2dc1cde56ed5563afdedfe174c1d77f2abf95",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0032_snapshot.json",
-      "sha256": "e79193d72ec81a1bec9110c441bbcda0029956881e73e15fb1b7b28cd780d219",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0033_snapshot.json",
-      "sha256": "db831f3eb80af46c89bf7130b7475252a2303d412024ad0c756258d249f20088",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0034_snapshot.json",
-      "sha256": "d2a3c7f4af75b0f250eb8569772630c90f999da6f8e820ec0968a601348febe5",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0035_snapshot.json",
-      "sha256": "7d93f77e988ca91f8b900d867409010f5dff5808ca468cd6ab5a40738867e9b3",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0036_snapshot.json",
-      "sha256": "98b0f452ec5bda9beebd0b08638cc7f62fb04aac74eaee435480614d4981d5c9",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/0037_snapshot.json",
-      "sha256": "66dd5eb9572dcc33d57312b429255b9f244c160d83887d99471c29767adfcf9d",
-      "executable": false
-    },
-    {
-      "path": "drizzle/meta/_journal.json",
-      "sha256": "0edf175e438270097db80f67c4bff54933667b5f2ab51d221ea541ef39b331cf",
-      "executable": false
-    },
-    {
       "path": "infra/cost-guard/policy.mjs",
       "sha256": "dc41799c43e7c2a31051997f2acf843b0ff86053d1535067fbb0062f3c9ae329",
       "executable": false
@@ -1722,7 +1352,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "ae1148f98c0e2241485a7629e23976b4d980c10075e67e07671caa0721ece6f5",
+      "sha256": "00258994fa168a9de083a01167520391cf37507c1bdff64977a9ad9fa4260977",
       "executable": false
     },
     {
@@ -2302,12 +1932,12 @@
     },
     {
       "path": "scripts/check-release.py",
-      "sha256": "1c8f407383590e5a76af77346b682a73d04d2a0e9ebc8a87f9b6034c22fd6c89",
+      "sha256": "2328dd656980a4ce34ea1d7b10fe96dab7aa7d5c78eb844d03fb83e23cca7fbc",
       "executable": false
     },
     {
       "path": "scripts/check_account_auto_sync.mjs",
-      "sha256": "5534bcc9acb118904677ea57ccfd76bad79f6e16ce04b7bfac543321ace45174",
+      "sha256": "36568ec5050e4b68119ad79831d72a6cca87a47a61f658a9183a682f042333ba",
       "executable": false
     },
     {
@@ -2332,12 +1962,12 @@
     },
     {
       "path": "scripts/check_activity_monitoring.mjs",
-      "sha256": "a27d60879e893b0c5864525047b7620ea7879bc4633fd1075c52f7631307ce26",
+      "sha256": "ee42a558a89fe031d664811687555af46b98a4973524c6e00cf5943786722de7",
       "executable": false
     },
     {
       "path": "scripts/check_admin_contributions.mjs",
-      "sha256": "da19983f894c24d35ea1b8e01b120fa6d8c5856bf20f4004589d8dbe20ab2272",
+      "sha256": "be1062e3b1a52562e502066e2250fb35905ca4434abdf1daeac276ae7ae49f0b",
       "executable": false
     },
     {
@@ -2352,12 +1982,12 @@
     },
     {
       "path": "scripts/check_agreement_preferences.mjs",
-      "sha256": "291ab4b21579c4d7048b49d310c3bf760a93a745d1faf194e66b308bfbc1fc7e",
+      "sha256": "9049099b926aea3e28599ee43c22be1aee6ed36ce972a6573c48f1ebd2037d4a",
       "executable": false
     },
     {
       "path": "scripts/check_audit_privacy.mjs",
-      "sha256": "87fe874892d89944f11e2a4bb10effebecdbf2113af16218569337755d9030a3",
+      "sha256": "e85a5612dc32a607c038e2b19e268bbafad05dba630c27f412477e55d7efacd2",
       "executable": false
     },
     {
@@ -2382,17 +2012,17 @@
     },
     {
       "path": "scripts/check_browser_ownership_proof.mjs",
-      "sha256": "734acc7eb8ea284d71d6964a2c37602f9381900cd3753e91e231d005a31fc490",
+      "sha256": "c0698a34ab0f0c07bc106de323c0457e5a3803fb019eb85f4d7fb2c0fdec4a28",
       "executable": false
     },
     {
       "path": "scripts/check_browser_pairing.mjs",
-      "sha256": "0f0c62c6a6c5930de7e21ed105d812aed64c91fe366c9faaaa9bfa0723dff93c",
+      "sha256": "63ec63255df216343b9475b60e6972f1ff29bd85cc52e13b17b5c67bc86730b1",
       "executable": false
     },
     {
       "path": "scripts/check_browser_sync.mjs",
-      "sha256": "ea7389e1976874e2712cb42b1c8858e51873657001fda2489cae56fe7fc75887",
+      "sha256": "9ea4409896eff6ed4a220607f4b1dc6af8d642779463bfdd85b1acad3a312f19",
       "executable": false
     },
     {
@@ -2407,7 +2037,7 @@
     },
     {
       "path": "scripts/check_community_reference.mjs",
-      "sha256": "264ad44349ecc2b9faf75fe30609834308a44b41bd861387794d8673703adfee",
+      "sha256": "82cacdd80ef60cd87bd7a5856534459dc5e2949a85edb1395a5d65202a3db44e",
       "executable": false
     },
     {
@@ -2437,7 +2067,7 @@
     },
     {
       "path": "scripts/check_ear_practice.mjs",
-      "sha256": "acec9de50d6ee40f7e80f0c2ed9b1e06afee391658c878c08e6ed8ed26b22170",
+      "sha256": "642171f05bac2e697387eb3bd5692d4ed27157761715398f204466eac16c40fa",
       "executable": false
     },
     {
@@ -2447,7 +2077,7 @@
     },
     {
       "path": "scripts/check_eq_preset_reactions.mjs",
-      "sha256": "cc92778dfcaca731a3afe83d28eeec7e6de5e9ff0539d61f863aaddbd86f274b",
+      "sha256": "64aec69a05803b712c4be9c8b649e619569a21eeef96b0a5cd890c8f2a3d204b",
       "executable": false
     },
     {
@@ -2472,7 +2102,7 @@
     },
     {
       "path": "scripts/check_free_listening.mjs",
-      "sha256": "df18f92cfa4e2f0fc40e04c349fe348ef175eecb3d3abce37d5d944820fa5f56",
+      "sha256": "6ebc64a242e2ff2e77458146ee0fec74b998f2918c28dbb607059a5cfed5059a",
       "executable": false
     },
     {
@@ -2497,12 +2127,12 @@
     },
     {
       "path": "scripts/check_large_account_sync.mjs",
-      "sha256": "d86a18dc6bd8b6bb1775e1c0ccc2693035f5885f1934a0937dcbb2ac2b5dceb6",
+      "sha256": "a10a836c03a160dcbd4ebbe80635caa1b08f261d6c2b96d03c616f40ffc57df6",
       "executable": false
     },
     {
       "path": "scripts/check_listener_nickname.mjs",
-      "sha256": "1e032b43c6f4d0127e9ff5ea5dbc795f97f6cbfebf6b38819b58f7e59ffc60b9",
+      "sha256": "c04ee3acc7770da5d931f8c26193ce44e693f8a893750121496061e23250c54b",
       "executable": false
     },
     {
@@ -2562,7 +2192,7 @@
     },
     {
       "path": "scripts/check_migration_chain.py",
-      "sha256": "22958f0d4ad970667cd10f489e1ec6ec253ec33ec48146fd573cd2004b92ae4c",
+      "sha256": "a2a5d9dfea8d3318971c462c6e35bb1d57e26e2dad6e5561bd1768c5550d1b9d",
       "executable": false
     },
     {
@@ -2602,7 +2232,7 @@
     },
     {
       "path": "scripts/check_participant_device_sync.mjs",
-      "sha256": "c1e88f9f9c32e19fa3514954f16f4cacad673da0604cea2319b6950a6a5a90d2",
+      "sha256": "3a6845b6de70c88c858aabd21c5369b439d7b2bf367e0952a99f65bb2d83748b",
       "executable": false
     },
     {
@@ -2687,7 +2317,7 @@
     },
     {
       "path": "scripts/check_personal_research.mjs",
-      "sha256": "ed8f16a0ddf305d92128da3fecd551bcefbc935f1ed8fd6da7fd867eea7baebd",
+      "sha256": "f910f454fbc5efc3814c5b5d0518af6c010046e0669b2b56d4def95fabfcef54",
       "executable": false
     },
     {
@@ -2732,7 +2362,7 @@
     },
     {
       "path": "scripts/check_public_write_limits.py",
-      "sha256": "04db74a34d8ffea6726401ffa9322434fee3702b3167f2fea4b12fc12eea53f1",
+      "sha256": "50c2760a5b7c11406d8ddb754d78c7ca269c744379b3e90a91745c1e3dd66a7d",
       "executable": false
     },
     {
@@ -2752,7 +2382,7 @@
     },
     {
       "path": "scripts/check_rate_penalties.py",
-      "sha256": "c103dcf87d2d9b0fedbc19b412cb88f99e5eef971df5941422e0715047424951",
+      "sha256": "ca4fb010f227871fd72c3d77177e8583ac275019f0cf594978766b6bbf7d7650",
       "executable": false
     },
     {
@@ -2832,7 +2462,7 @@
     },
     {
       "path": "scripts/check_target_context_and_changes.mjs",
-      "sha256": "02abc702c983ad9ef9c4c098a1847fa686abdd589f9389b214952cae9c5ff9d5",
+      "sha256": "093479811491d4749f1442d1be75bcbebab311f49f1dc2d6c37b1536a9b466bb",
       "executable": false
     },
     {
@@ -2842,7 +2472,7 @@
     },
     {
       "path": "scripts/check_test_account_controls.mjs",
-      "sha256": "c10bc98808a42f8ba8bf1d0bac1984c8a56421daa111c7384501468eaab27987",
+      "sha256": "c4267cf993ccabbb6791f2a7811946b952637d9b45f2cf91ca8d1c2dedd72788",
       "executable": false
     },
     {
@@ -2892,17 +2522,17 @@
     },
     {
       "path": "scripts/check_yinyangeq_account.mjs",
-      "sha256": "6651d1a566a02f5a7e7c41bc58864e776c4e7bcc1c1d6bb6fffb369f29777e95",
+      "sha256": "59e4caf0f5f288218b13599f225c01b34325a6b8fe78f7b096cbf4d6f8d788a4",
       "executable": false
     },
     {
       "path": "scripts/check_yinyangeq_api.mjs",
-      "sha256": "e314ab9002b04c2182f5d997db359eceeea77331a707965871a4a445554f8dcf",
+      "sha256": "62a33c8d7ae4023384fd6d2adc44dfe5a25ef2fdb5ee7616cd98d760ff9ebe5a",
       "executable": false
     },
     {
       "path": "scripts/check_yinyangeq_files.mjs",
-      "sha256": "e0860d028b33a87a0af71053972503ab81aba58f49149b975a6745abedfd04d2",
+      "sha256": "eb91b8705e93ebe57c407b0723d1df1194ca57acabe07fe0970338de9187af42",
       "executable": false
     },
     {
@@ -2912,7 +2542,7 @@
     },
     {
       "path": "scripts/check_yinyangeq_history.mjs",
-      "sha256": "5c46fcf782aae3c7b1e0d065a0b0941394d29b76a8352537aab995f065b06602",
+      "sha256": "a490fcef7176bb91ee10567668db99cd852a69701bf74a305795023fcfdc3b43",
       "executable": false
     },
     {
@@ -3012,7 +2642,7 @@
     },
     {
       "path": "scripts/experiments/autoeq/vite.config.ts",
-      "sha256": "a8b27acb3d67589ad662cdf806a044f7a256654343ac79e44097a930c2a9fb3f",
+      "sha256": "c2494a64308907d149f79a62b9b1f4c3f72bcb4965c659de07451aee9217a147",
       "executable": false
     },
     {
@@ -3047,7 +2677,7 @@
     },
     {
       "path": "scripts/init-local.mjs",
-      "sha256": "74ef2d6e09e635941f50d9b2cb69ee0ca08585c406f51c89557c71bd2778f061",
+      "sha256": "43f41231fdd905fcc792337d42c438e0600a5784e1b09cf8049bea6e196bcaad",
       "executable": false
     },
     {
@@ -3082,12 +2712,12 @@
     },
     {
       "path": "scripts/peqdb-assets.mjs",
-      "sha256": "dbe68543e5257c30b9f4c3faf5821676267cd073669fbbd94b2e05b975a09c8a",
+      "sha256": "cfb689644b9ebe1c45df2c8f46601e5a589030dee35b9b2f974032d2c375e2d8",
       "executable": false
     },
     {
       "path": "scripts/peqdb-source-allowlist.json",
-      "sha256": "1675a0e9d1773237402997673cd171853ae1235b6a1a273736532dc55635b27c",
+      "sha256": "4b846e780bc319bea13a942d2ef6473a10e60fbe0a4327ce3fd65003f84ff79f",
       "executable": false
     },
     {
@@ -3097,7 +2727,7 @@
     },
     {
       "path": "scripts/prepare-peqdb-autoeq.py",
-      "sha256": "df790f66b3e7563d2691c9f841f404b538934ae49ecc8c463abcd98f15677b77",
+      "sha256": "5e42811445500e124434de7ea22fcc8c694556a635ce6a24049967a128db56ff",
       "executable": false
     },
     {
@@ -3127,12 +2757,12 @@
     },
     {
       "path": "scripts/project-paths.mjs",
-      "sha256": "2b278531500da2420695737782eae09b761cb7ac75658eb4790f60746b226db0",
+      "sha256": "00cd5eb1051878c50cfc6e1e83e163ebd39bd790e0eeeed3a756a3f37f700627",
       "executable": false
     },
     {
       "path": "scripts/read-schema-columns.mjs",
-      "sha256": "0cacbe47a4639e54f19bc215e659e3ad05c1bdb21d1005edce6ce6e21d5a919c",
+      "sha256": "9effc9deffcf7a254350409d0551d29892b7765fc8c53e3f88de4ad04ce6cb10",
       "executable": false
     },
     {
@@ -3157,7 +2787,7 @@
     },
     {
       "path": "scripts/recovery/recovery.mjs",
-      "sha256": "8f3918f4b9c8ef46999510e4e61048eb0d270558fb3923d8b7a85a54318e2a67",
+      "sha256": "0dee5ea5c40490e6deaa40be1777bae9c85d42e9b603cf082eaf203a7a15e0b9",
       "executable": false
     },
     {
@@ -3167,7 +2797,7 @@
     },
     {
       "path": "scripts/recovery/test-recovery.mjs",
-      "sha256": "712f492b280bbba87612d6760a5fd3710d4545bb3c07d8c85910c1aaef9f3a8d",
+      "sha256": "989449743e071115db1c554e93137403cb484fd8727f1fc8d48f51e2c968dafb",
       "executable": false
     },
     {
@@ -3212,7 +2842,7 @@
     },
     {
       "path": "scripts/sync-workspace.py",
-      "sha256": "2c8d3816a0c8a593fe18531f260b6676eeb9e22ba1e592c58152d4e009d6f007",
+      "sha256": "85a1ca9d92516f4b386ed29fd6108b5633c7b75bc857c6ca46c8a223a20130ba",
       "executable": false
     },
     {
@@ -5246,6 +4876,376 @@
       "executable": false
     },
     {
+      "path": "site/db/drizzle.config.ts",
+      "sha256": "58c94435c44e7813d54f48b6148c156534ffa890a67e4f3b5f159e2aa815523d",
+      "executable": false
+    },
+    {
+      "path": "site/db/index.ts",
+      "sha256": "dc7610b00b918e0ffff1360a63626f16655ced3064b2eaf96095a4101fb14bcd",
+      "executable": false
+    },
+    {
+      "path": "site/db/schema.ts",
+      "sha256": "f73c54233200e43684ac5293c263276e1391ae21b019ea4da013ccd87124eb53",
+      "executable": false
+    },
+    {
+      "path": "site/db/service-status.sql",
+      "sha256": "7a9c347a5000316ff6a287c4ea3d5c4ef3cc31e100f313aab1449819ac06ce29",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0000_targets_and_votes.sql",
+      "sha256": "c52a6c3aa4783c1a075ac9c692dd3cdf0e16e879c1946b62325bc6390319e578",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0001_target_validation.sql",
+      "sha256": "7e594d39379e24d371356c1e21ddc0f5e3417f20cb5fa44d5e74feaef05a0753",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0002_target_measurement.sql",
+      "sha256": "6a20e238b431a9509301756e85637f02dac1a50a2f87241274b70d68aecb41f3",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0003_remove_withheld_target.sql",
+      "sha256": "0cf25e459722d414128c954b5863c92098e5d390b7926609be764c8934150555",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0004_blind_test_mode.sql",
+      "sha256": "041e7707277fdbeeeb5141ec7c81b7372f6738274909cc79189349671b305bfa",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0005_vote_feedback.sql",
+      "sha256": "5ed258737937bc3035d05eff0c3d33c14861a47254867aa1e1cb958d6a93f051",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0006_ranked_trials.sql",
+      "sha256": "60a200499affa453e2bded8177bac8aef2dde04dcf003dafc62e8dd943d432cf",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0007_suggestion_recording_metadata.sql",
+      "sha256": "dceb9920e5e1fbcf25fe2acf19e72661a22ece7a2e53831eca69d10185f365c9",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0008_listener_headphone_type.sql",
+      "sha256": "9b5e8435a88931d7575c1b86ae6817d6f8427e7168decd41db1cfd19e04e9631",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0009_feedback_submissions.sql",
+      "sha256": "2168c0a3b94211325b0b49d0c2582f14310d2d85760dee18eea5f5bb95d32bb8",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0010_target_lineage.sql",
+      "sha256": "e56768c4dbde6d37c5e43f13ad36d0f7ca5cf07b487aefda3e6a110861db122d",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0011_public_write_limits.sql",
+      "sha256": "00c8db7beeaecf7faf66ae5ac897d0cbbaee59093f9b06e5170b7dd2b86d5acd",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0012_mature_giant_man.sql",
+      "sha256": "3a5d2a346e58baff366026f7bf8c944501433c8238eba6c0129973cee5c599a5",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0012_private_tester_invites.sql",
+      "sha256": "5f09d17bac27e9d38232854a271b3944873a11d01b5c73c5e05b2b7f129c53bc",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0013_bouncy_kingpin.sql",
+      "sha256": "46876e60dc6055b7045ef5e3a212e3aad0e0844730d018901976504a80345667",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0014_research_records.sql",
+      "sha256": "12b23ee9b1fd289f613ca34355f83aaff1ff735d6968d944ad1dd0efba50f9e4",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0015_ranked_repeats_uncertainty.sql",
+      "sha256": "45d79dda77c29f9476b018bb61966ad8e8bff8f978c46fc70ea809eae9a18633",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0016_measurement_file_chunks.sql",
+      "sha256": "df45821b45939af5cb98a3aa4f4ea7e3a07a931c281aa3aed2ead1861f3f219e",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0017_admin_moderation.sql",
+      "sha256": "9456ea0d1584c0617b0d6ffa8300872bcbc58dc4c0ba5f52e55007df572ad4fb",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0018_self_service_erasure.sql",
+      "sha256": "e2d1ffcb13e8774d6943388d32fecd1bff4b3b7a987d7815ebe61ea4fccb6776",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0019_required_participation_agreement.sql",
+      "sha256": "603461885b9cc4346e8ae9ccffebd7b92557405187fb9b1f8af0458863857b25",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0020_retention_and_deletion_totals.sql",
+      "sha256": "910619cd2118ca8c643e9a380ca779b4289b38a4459cc0c54af91a411bc253c8",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0021_statistics_archive.sql",
+      "sha256": "1162c596d103886ef5e7259f6a3e2f6dc6cf02c82aa9e0ccde615939f71acda3",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0022_small_study_retention.sql",
+      "sha256": "33c1ef87ccb86a728004703cef11626180a26e225cfe00768dd20500ce8605c1",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0023_repeat_aware_archive.sql",
+      "sha256": "ec4b5c6fcdaab5e58330d13f96855c085ef71d380c508afa109f8622a47f3b70",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0025_legacy_review.sql",
+      "sha256": "e74390b8b5104a083a4b24dd4c5881281c31bded94c2eb0535c05f04989e6f9a",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0026_comparison_integrity.sql",
+      "sha256": "985602480bc28956e9228fb320dfe649f2ec1ed5292b38b0db0b5b8cfa20d585",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0027_preference_target_names.sql",
+      "sha256": "e3b51a468f2df77f58b403e710c98f6edd67295656dc21cb1e773beedfd378b3",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0028_activity_monitoring.sql",
+      "sha256": "b2362c5f4b92902e4c93ade93105ced691a30e119988c181122dba702b0921b0",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0029_browser_pairing.sql",
+      "sha256": "04eb01d83149ff645acd0461ac6ffd5bf7454f145a68d3469b5192a028b69d8d",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0030_browser_sync_transfer.sql",
+      "sha256": "68ea6eb359aab87a53e60dd422ba47d4429d26e07b3565c99d04605454d2e688",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0031_site_access_settings.sql",
+      "sha256": "ab937e2c1f4d31b76c89d4a3a440418cf08bf1d585675ed2cd4d8357f6b692a2",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0032_listener_nicknames.sql",
+      "sha256": "4600fff3286a0123a5afaee8ee5613a7d49b5e96b8d3cea840a0caeead4ebc36",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0033_personal_research.sql",
+      "sha256": "45f1b62b9a428cb475ed1c1e6a779c6853f6a3de26defc4386e2bf4964e31daa",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0034_owner_public_profile.sql",
+      "sha256": "fd016e38442286e6c059a2da3f9f162128e36ea270255758de2c4675efc65005",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0035_target_context_and_ranking_changes.sql",
+      "sha256": "e63f4e0383981a23bc82eba5683b1dc06feb2f3f1c3d5d19fc196a06feaf68dd",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0036_community_prospective_pilot.sql",
+      "sha256": "9817f67b86081442a5833fbefabea1b729c633b1fede713fa3bb79d4cf449687",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0037_owner_account_sync.sql",
+      "sha256": "a4bff8c3657f87213b4017117d5dce9d7c4c98652fbe4c3dd7f5bac599b7bbf6",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0038_participant_account_sync.sql",
+      "sha256": "d01407c4ed627052b3dd77058e967533374aecca9f4e93b293fbf20ba54d49e8",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0039_segmented_account_sync.sql",
+      "sha256": "38560d2630fe43bddf6899e34c32bd2df1c3ae48770b6f61f26a42b0876b7417",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0040_target_removal_requests.sql",
+      "sha256": "8c52c5b626b5e6fe5587ded958557d46b52410f541124a6620904f6d5d84d0f9",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0041_embed_shootouts.sql",
+      "sha256": "de9dbc88e900086caa6b3646cab07e5fcfb476da2b17c54f94f69b4e1e0a6a5f",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0042_ear_practice_rankings.sql",
+      "sha256": "355a9e1748ba965bf1b6f9ea6d9993122cac5ec299662d6868051facc3ad26d1",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0043_ear_practice_accuracy.sql",
+      "sha256": "2cd5bb97ce88dfd6eaca24d0c64711bfe99eb68164b41a74118a29a2da41b3d3",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0044_browser_ownership_codes.sql",
+      "sha256": "45c684b8f84f51e445bfef07d108ba7058331fe7966442c29130ef0f19d7a92a",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/0045_eq_preset_reactions.sql",
+      "sha256": "c80ac98549609535c84cca8170c8c377025ca095633df15915e291f3c5eb5259",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0012_snapshot.json",
+      "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0013_snapshot.json",
+      "sha256": "adb998f2da17863b7a2193640063db2650b9d10f3fdc38ea8fd97b11bca67a57",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0017_snapshot.json",
+      "sha256": "b8c737babd59ef80e7098cba3fb18dfc6d1ddcc98f0c22dfd569a50250666ead",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0018_snapshot.json",
+      "sha256": "c6d3ee002bd92195c755ff673c624d831a2d55837c836947862798697816cc97",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0019_snapshot.json",
+      "sha256": "a8eca0bcec883ffc8b926685d283d9ad026a9a3a3c5787b4bd2a9e460dbd1b5f",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0020_snapshot.json",
+      "sha256": "f18c95d2cd9d77548f78a7c454f1a3e1651a351e9a05b823bc3e2828128651b9",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0021_snapshot.json",
+      "sha256": "e7cda93cf548de693f4da1cc37521a70b69d82b4a0a60529dec65a5c9741498a",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0022_snapshot.json",
+      "sha256": "df2e3e0646c5d9d3b6cecd6859aa4d8eb591481c71bca3adfa37339931972980",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0023_snapshot.json",
+      "sha256": "6ff64e0eb6b02549989dfbe2b9e281bd58189a34cf99018445dfcc1908029270",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0024_snapshot.json",
+      "sha256": "6a2263451bcca16fbd27f308008626dd0a285875072883077cebc7345aca17b8",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0025_snapshot.json",
+      "sha256": "34b4745726428a25e50987afa4e501d6057d16113b41a77cbd229151a9dcff5b",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0026_snapshot.json",
+      "sha256": "62f5553af4d4b91f720efcbb4ff07d22dfe3d4de78d8574d00389e3c7f02fff4",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0027_snapshot.json",
+      "sha256": "32282d04ce1b79a70d0a01a56ab80fe2deb3b55c86cd3575ca15162dcc5e6913",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0028_snapshot.json",
+      "sha256": "243a2f9bc3bb8b421ddda795ccff3cf78b9256bef03ab68cb0e862c0e155f735",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0029_snapshot.json",
+      "sha256": "7bccea3be19d567f9cce97afc8cddb983113d544f7b0c72a6c4deff3165dbf2c",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0030_snapshot.json",
+      "sha256": "349d3ce82915cf9c8b5f1823cfadf3cbe66da816ea4543a47b2b2d75e7db54e4",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0031_snapshot.json",
+      "sha256": "8f8dd29f3f46430f78aa4fd113c2dc1cde56ed5563afdedfe174c1d77f2abf95",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0032_snapshot.json",
+      "sha256": "e79193d72ec81a1bec9110c441bbcda0029956881e73e15fb1b7b28cd780d219",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0033_snapshot.json",
+      "sha256": "db831f3eb80af46c89bf7130b7475252a2303d412024ad0c756258d249f20088",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0034_snapshot.json",
+      "sha256": "d2a3c7f4af75b0f250eb8569772630c90f999da6f8e820ec0968a601348febe5",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0035_snapshot.json",
+      "sha256": "7d93f77e988ca91f8b900d867409010f5dff5808ca468cd6ab5a40738867e9b3",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0036_snapshot.json",
+      "sha256": "98b0f452ec5bda9beebd0b08638cc7f62fb04aac74eaee435480614d4981d5c9",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/0037_snapshot.json",
+      "sha256": "66dd5eb9572dcc33d57312b429255b9f244c160d83887d99471c29767adfcf9d",
+      "executable": false
+    },
+    {
+      "path": "site/drizzle/meta/_journal.json",
+      "sha256": "0edf175e438270097db80f67c4bff54933667b5f2ab51d221ea541ef39b331cf",
+      "executable": false
+    },
+    {
       "path": "site/lib/account-consent.ts",
       "sha256": "ff5599c5f63c75bccb1e6f1180e041e30f159cc23bd05f933fa5b4bfc92e9301",
       "executable": false
@@ -6142,7 +6142,7 @@
     },
     {
       "path": "site/tsconfig.json",
-      "sha256": "c8f7d38d9a0cb468450b850d62f6817d26e21d464a07dd6bfa9d727f0b5abc23",
+      "sha256": "d7704f22904681a56098fe4b6b58d05ad1b225944ca6ae93d5a2e0ec810fe4aa",
       "executable": false
     },
     {

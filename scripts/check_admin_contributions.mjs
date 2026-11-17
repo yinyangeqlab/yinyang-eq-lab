@@ -7,7 +7,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {VOTE_DATA_NOTICE_VERSION} from '../site/lib/vote-data-notice.ts';
 import {ACTIVITY_MONITORING_NOTICE_VERSION} from '../site/lib/activity-monitoring.ts';
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
-for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sql.exec(readFileSync('drizzle/'+file,'utf8'));
+for(const file of readdirSync('site/drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sql.exec(readFileSync('site/drizzle/'+file,'utf8'));
 let writes=0;
 const db={prepare(query){const result={args:[],bind(...args){this.args=args;return this;},async first(){return sql.prepare(query).get(...this.args)||null;},async all(){return {results:sql.prepare(query).all(...this.args)};},async run(){writes++;return sql.prepare(query).run(...this.args);}};return result;},async batch(){writes++;throw Error('An admin contribution reached a database batch');}};
 const fail=()=>{throw Error('An admin contribution reached an application database operation');};

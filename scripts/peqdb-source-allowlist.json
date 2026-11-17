@@ -43,7 +43,7 @@
   "site/lib/ear-tuning-audio.ts",
   "site/lib/eq-candidates.ts",
   "site/lib/eq-playback.ts",
-  "drizzle/0044_browser_ownership_codes.sql",
+  "site/drizzle/0044_browser_ownership_codes.sql",
   "site/lib/browser-ownership-proof.ts",
   "site/lib/eq-recommendation.ts",
   "site/lib/eq-response.ts",

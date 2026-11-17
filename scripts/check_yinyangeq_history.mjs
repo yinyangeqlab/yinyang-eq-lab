@@ -6,7 +6,7 @@ import ts from 'typescript';
 import {validateSyncPayload} from '../site/lib/browser-sync.mjs';
 
 const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON');
-for(const file of readdirSync('drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('drizzle/'+file,'utf8'));
+for(const file of readdirSync('site/drizzle').filter(file=>/^\d{4}.*\.sql$/.test(file)).sort())sqlite.exec(readFileSync('site/drizzle/'+file,'utf8'));
 const db={prepare(query){if((query.match(/\bUNION\b/gi)||[]).length>=9)throw Error('D1 fixture rejects the observed wide compound SELECT');const self={args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(query).get(...this.args)||null;},async all(){return{results:sqlite.prepare(query).all(...this.args)};},async run(){return sqlite.prepare(query).run(...this.args);}};return self;},async batch(items){sqlite.exec('BEGIN');try{const result=[];for(const item of items)result.push(await item.run());sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
 function load(file,deps={}){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:name=>{assert.ok(name in deps,name);return deps[name];},crypto,Date,TextEncoder,TextDecoder,btoa,atob,Response,Request,URL,Headers});return exports;}
 const input=load('site/lib/request-json.ts'),account=load('site/lib/yinyangeq-account.ts',{'@/lib/request-json':input,'@/lib/browser-sync.mjs':{validateSyncPayload}});

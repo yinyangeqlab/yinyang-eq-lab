@@ -4,7 +4,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {validateSyncPayload} from '../site/lib/browser-sync.mjs';
-const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const f of readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync('drizzle/'+f,'utf8'));
+const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');for(const f of readdirSync('site/drizzle').filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync('site/drizzle/'+f,'utf8'));
 let writes=0,admin=false;
 class Statement{constructor(q,args=[]){this.q=q;this.args=args;}bind(...args){return new Statement(this.q,args);}async first(){return sql.prepare(this.q).get(...this.args)||null;}async all(){return{results:sql.prepare(this.q).all(...this.args)};}async run(){writes++;return{meta:{changes:sql.prepare(this.q).run(...this.args).changes}};}}
 const DB={prepare:q=>new Statement(q),batch:async rows=>{sql.exec('BEGIN');try{const out=[];for(const r of rows)out.push(await r.run());sql.exec('COMMIT');return out;}catch(e){sql.exec('ROLLBACK');throw e;}}};

@@ -13,7 +13,7 @@ Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE
 
 ## Repository layout
 
-Keep running npm commands from the repository root. The application source and framework config are in `site/`. Public URLs still come from root `public/`, and the packaged Worker and client still go to root `dist/`. Local D1 uses the repository's ignored `.wrangler/state`.
+Keep running npm commands from the repository root. The application source and framework config are in `site/`. The schema and ordered migrations are in `site/db/` and `site/drizzle/`. Public URLs still come from root `public/`, and the packaged Worker and client still go to root `dist/`. Local D1 uses the repository's ignored `.wrangler/state`.
 
 ## Boundaries to preserve
 

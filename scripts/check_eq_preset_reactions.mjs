@@ -9,8 +9,8 @@ import { VOTE_DATA_NOTICE_VERSION } from '../site/lib/vote-data-notice.ts';
 
 const sqlite = new DatabaseSync(':memory:');
 sqlite.exec('PRAGMA foreign_keys=ON');
-for (const file of readdirSync('drizzle').filter(name => /^\d{4}.*\.sql$/.test(name)).sort()) {
-  sqlite.exec(readFileSync('drizzle/' + file, 'utf8'));
+for (const file of readdirSync('site/drizzle').filter(name => /^\d{4}.*\.sql$/.test(name)).sort()) {
+  sqlite.exec(readFileSync('site/drizzle/' + file, 'utf8'));
 }
 let beforeWrite;
 const db = {

@@ -80,7 +80,7 @@ console.log(`PASS ${checks} free-listening API cases: actual timing, protocol se
 // The real migration chain must roll back the entire run when consent/session
 // changes after the handler's initial ownership read but before its atomic batch.
 const sql=new DatabaseSync(':memory:');sql.exec('PRAGMA foreign_keys=ON');
-for(const file of readdirSync('drizzle').filter(f=>/^\d{4}.*\.sql$/.test(f)).sort())sql.exec(readFileSync('drizzle/'+file,'utf8'));
+for(const file of readdirSync('site/drizzle').filter(f=>/^\d{4}.*\.sql$/.test(f)).sort())sql.exec(readFileSync('site/drizzle/'+file,'utf8'));
 sql.prepare("INSERT INTO privacy_accounts(subject_id,submissions_enabled,agreement_version) VALUES('browser:fixture',1,'2026-10-18-v7')").run();
 sql.prepare("INSERT INTO privacy_sessions(token_hash,subject_id,expires_at) VALUES('fixture','browser:fixture',?)").run(Date.now()+60000);
 function atomicRun(){sql.exec('BEGIN');try{sql.prepare("INSERT INTO listening_runs(id,voter_id,test_mode,headphone_type,target_a_id,target_b_id,target_a_name,target_b_name,result,intervals,heard_a,heard_b,overlap_seconds,created_at,protocol_version) VALUES('fixture-run','voter','bring','ie','a','b','A','B','a','[]',0,0,0,0,'free-listening-v1')").run();sql.prepare("INSERT INTO submission_owners(record_kind,record_id,subject_id,session_hash) VALUES('run','fixture-run','browser:fixture','fixture')").run();sql.exec('COMMIT');}catch(e){sql.exec('ROLLBACK');throw e;}}

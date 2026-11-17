@@ -13,7 +13,7 @@ const blocked=['Yin Yang','Ying Yang EQ','Yin Yang EQ Labs','Yin Yang Labs','DJ-
 for(const name of blocked){assert.equal(isReservedListenerNickname(name),true,name);assert.equal(normalizeListenerNickname(name),null,name);assert.equal(listenerNicknameError(name),NICKNAME_BRAND_FLAG);}
 for(const name of ['Sound Owl','Écoute 🎵','Tiny Angel','Yang','Yin listener','Midnight Listener','Lab Technician','Equality Listener'])assert.equal(isReservedListenerNickname(name),false,name);
 const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON;CREATE TABLE privacy_accounts(subject_id TEXT PRIMARY KEY);INSERT INTO privacy_accounts VALUES ("browser:first"),("browser:second");'.replaceAll('"',"'"));
-db.exec(readFileSync(new URL('../drizzle/0032_listener_nicknames.sql',import.meta.url),'utf8'));
+db.exec(readFileSync(new URL('../site/drizzle/0032_listener_nicknames.sql',import.meta.url),'utf8'));
 let subjectId='browser:first',authenticated=true;
 class RequestInputError extends Error{constructor(message,status){super(message);this.status=status;}}
 const source=readFileSync(new URL('../site/app/api/my-data/route.ts',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
