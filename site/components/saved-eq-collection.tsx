@@ -1,6 +1,7 @@
 "use client";
 import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
+import LibraryEqUpload from "./library-eq-upload";
 
 import { useEffect, useMemo, useState } from "react";
 import { measurementChannelMatch, readLibraryEqs, removeLibraryEq, removeLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
@@ -50,8 +51,9 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   }
   return <section className="saved-eq-collection" aria-labelledby="saved-eq-title">
     <h2 id="saved-eq-title">Saved EQs &amp; channel matches</h2>
-    <p>EQs saved from Tuning and Music library share this collection. Listen in either area, download settings, or delete EQs here. These copies stay in this browser unless you use account Sync.</p>
-    <div className="saved-eq-links"><Link href="/preference-tuning#saved-eq-listening" prefetch={false}>Listen in Tuning</Link><a href="/music-library">Listen in Music library</a></div>
+    <p>Save your EQ settings here and try them in Tuning or under Listening EQ in Music library. Saved EQs stay in this browser unless you enable account Sync.</p>
+    <LibraryEqUpload/>
+
     {eqs.length ? <>
       <div className="saved-eq-selection" role="group" aria-label="Select saved EQs">
         <strong>{selectedIds.length} of {eqs.length} selected</strong>
@@ -68,6 +70,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
           <div className="saved-eq-row-heading"><label className="saved-eq-check"><input type="checkbox" aria-label={`Select ${eq.name}`} checked={selectedIds.includes(eq.id)} onChange={event => { const checked = event.target.checked; setSelectedIds(ids => checked ? [...ids, eq.id] : ids.filter(id => id !== eq.id)); setDeleteRequest(null); }}/><span className="sr-only">Select EQ</span></label><div><h3>{eq.name}</h3><div className="saved-eq-dates"><SavedDate value={eq.createdAt} label="Saved"/>{eq.updatedAt && eq.updatedAt !== eq.createdAt && <SavedDate value={eq.updatedAt} label="Updated"/>}</div></div></div>
           <p>{eq.headphone && `${eq.headphone} · `}{eq.source} · {eq.filters.length} filters · {eq.preamp.toFixed(1)} dB preamp</p><small>{eq.channelMatch ? "Left/Right correction saved. Channel match is on by default while listening." : "No Left/Right channel correction saved."}</small>
           <div className="saved-eq-actions">
+            <Link className="saved-eq-try" aria-label={`Try ${eq.name} in Tuning`} href={`/preference-tuning#saved-eq=${encodeURIComponent(eq.id)}`} prefetch={false}>Try in Tuning</Link>
             <button type="button" onClick={() => act(() => downloadLocalFile("saved-eq.txt", `# ${eq.name.replace(/[\r\n]/g, " ")}\n# EQ only; channel match is a separate download.\nPreamp: ${eq.preamp} dB\n${eq.filters.map((f, i) => `Filter ${i + 1}: ON ${f.type || "PK"} Fc ${f.hz} Hz Gain ${f.gain} dB Q ${f.q}`).join("\n")}\n`, "text/plain"), "EQ settings downloaded.")}>Download EQ TXT</button>
             <button type="button" onClick={() => act(() => removeLibraryEq(eq.id), `EQ deleted from ${PERSONAL_AREA_TITLE}, Tuning and Music library.`)}>Delete EQ</button>
           </div>
@@ -79,7 +82,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
           </details>
         </li>;
       })}</ul>
-    </> : <p>No saved EQs yet. Finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
+    </> : <p>No saved EQs yet. Upload an EQ TXT above, or finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
     <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
       <div className="automatch-files" role="group" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
         <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>

@@ -1,7 +1,7 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update175**, source `1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4`.
+Recorded deployment: **update177**, source `867cb113729a7df640d4d23e8297b75bd97cbf32`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
 

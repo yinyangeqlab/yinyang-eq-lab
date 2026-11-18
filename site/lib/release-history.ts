@@ -12,6 +12,15 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "Upload a parametric EQ TXT from Saved EQs, Tuning, or Music library. No target curve or headphone measurement is needed.",
+  "Open a preset directly from Saved EQs to hear it in Tuning with your music.",
+] as const;
+
+const update176Changes = [
+  "IEM Measurement Guide Revision 01 adds bench gear and substitution checks, a fillable checklist, and illustrated left/right EQ verification.",
+] as const;
+
+const update175Changes = [
   "Try and download trudenpa’s original 19-band HiFiMAN Arya Stealth preset in Research Rankings, tagged Diamond and YYT1.",
 ] as const;
 
@@ -289,8 +298,10 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
+  { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: candidateChanges },
+  { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },
   {
-    update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: candidateChanges,
+    update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: update175Changes,
     github: { commit: "45bfbfb24de4fcfaed83718641228953533ce273", releaseTag: "update175" },
   },
   {

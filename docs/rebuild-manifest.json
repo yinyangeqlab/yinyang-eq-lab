@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "3ac6dab195c8583d748ccef7e97a78c32539aa49",
-  "recordedLiveUpdate": 175,
+  "baseRevision": "911f2694adf114ccc5d5993fe11b52d3cedd74ec",
+  "recordedLiveUpdate": 177,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "64bcf00af5c8a1d73fbd302040952c9dfedfc9c75ca44be83ee1305ab0c5d8d9",
+      "sha256": "3e49b3e4c60fb291bffe8c48e5cd6853a54ae4288089b52ffdb9601866708b84",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "59a87c98d48f4a8ac4d680578b1df3c0fa3b2de156dfdf33d8bcf216b2913888",
+      "sha256": "6e9de91f387817d40eea4d26ed152fb4d47f30060566b1e7b0d5bd46237d5861",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "66f69d875aefc26c34404fb880a01a53b80c30a00ea8591aa3bab0af1f8e8cde",
+      "sha256": "cfa2c39ddd65647fcd38c0760a6ef54b3b9763fa5049c7b19125977a513db58e",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "0877afed6b225690a34f303b3bc31be125ad48bd765687123e4e167ba575eb78",
+      "sha256": "1b6de10a4189cae2f4d40a221303262af6933e68da858be8ea30762976ffc8f1",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "fdaa115726a7e4025760162a31256f3ec0817e30718182bc47c0878a349d64f4",
+      "sha256": "608845ffe331b1902330637e781fce33e8a07732587dcf8dbddd9655848ef7f2",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "c37b3ebbb3fe78e990c531f0e64712af17f3062b0345e0de314d6092142ec4dc",
+      "sha256": "aa2504c6e7357909cf5c63a652ba3e31c037f0917af4743b682516ef69f2090e",
       "executable": false
     },
     {
@@ -976,6 +976,26 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update176-recovery-verification.json",
+      "sha256": "eba59cc4ba7ed43f6b6efd461d075b34df61f5255d92e8e2d5d0b0ac6bceb3b9",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update176-verification.json",
+      "sha256": "bb25b5942a9a18142b1267437f701f769173d5715f7cf4861fd540493f215d78",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update177-recovery-verification.json",
+      "sha256": "658a0971bdb56a1f95b8e0d94157b2d641e1e2d1604f78f1b32754feba819014",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update177-verification.json",
+      "sha256": "9a0ad444cdd0c93c7ce7e667186798867add098143355642341b449a2f048778",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update97-recovery-verification.json",
       "sha256": "7eb509e52dcd9a9a7b76f350479230dfb4da15653870a9129e7b7ddc72835c31",
       "executable": false
@@ -1322,7 +1342,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "74b6f2fc327c129193e0a61334c9e5dc3292c2e85294e6cb3e71b9f0dc7d52af",
+      "sha256": "fe8ac05be3fb4f26c00912f19f1b9fdbc4cb72556bf6106ee89ca23a80efb3bf",
       "executable": false
     },
     {
@@ -2282,7 +2302,7 @@
     },
     {
       "path": "scripts/checks/application/check_saved_eq.mjs",
-      "sha256": "7161f4bc72ea90581cff9cd686e41b91dc05eec6242a6322452d3b448c385f43",
+      "sha256": "c21c2836a66ebf195514a704d975db90f0a06cec6f17a12f0143ab6d55427c05",
       "executable": false
     },
     {
@@ -3396,13 +3416,18 @@
       "executable": false
     },
     {
+      "path": "site/app/glossary/iem-measurement/guide-revisions.json",
+      "sha256": "8ba156edf0a519d4fb3cda003a8e86699acbcd99e0ae1e553487dd99966c2561",
+      "executable": false
+    },
+    {
       "path": "site/app/glossary/iem-measurement/guide.css",
-      "sha256": "bd922baaea2f7d05593ed8538b4534339082c6a5b1264874ca886d832a7e8b48",
+      "sha256": "e2d1163c05227b44c010eb982bd55152891462a8c3773d612aa2c3431220d3ea",
       "executable": false
     },
     {
       "path": "site/app/glossary/iem-measurement/page.tsx",
-      "sha256": "46e0bfdb5a8b3de857a5b3a87bb39c1206cea1db27c24b407ca8f6e23a2f5b34",
+      "sha256": "0153817b5dfc32dcf7751533568023a4bf087d619a55e1424be7c46edbcdbb87",
       "executable": false
     },
     {
@@ -3527,7 +3552,7 @@
     },
     {
       "path": "site/app/preference-tuning/editor.tsx",
-      "sha256": "0156dfb6c0d0ad2e4d20e2c7073f7c35e008a14f779071e593031234f80dafe7",
+      "sha256": "25e0c28a789ebc7c4e9044b900605916f0083f089c1ae46e7633b2c9977beebb",
       "executable": false
     },
     {
@@ -4012,7 +4037,17 @@
     },
     {
       "path": "site/components/library-eq-panel.tsx",
-      "sha256": "1b0683cf0aa171c5e61ed23d0988451f5056df83475e7d6196e5a310596709d4",
+      "sha256": "1aba64087b6c99038cacb4ba50325d118a706919db608739ecf765a1a8f9b36a",
+      "executable": false
+    },
+    {
+      "path": "site/components/library-eq-upload.css",
+      "sha256": "0112a7591b936faf78da3bd89159fd3632934e30ff2b689da41e02e2c49636c6",
+      "executable": false
+    },
+    {
+      "path": "site/components/library-eq-upload.tsx",
+      "sha256": "f8e803292a3560435c8d5d2d501adeccd415abdbd7fa921af3edfcd5e44daa63",
       "executable": false
     },
     {
@@ -4237,12 +4272,12 @@
     },
     {
       "path": "site/components/saved-eq-collection.css",
-      "sha256": "193ef338bfcc72095140bd6743deb1683348f6499f55c345dd4295695614cba8",
+      "sha256": "26eef285b7ad8fbfeba0e724c55b297c288acfad9a7594935577f904274cac29",
       "executable": false
     },
     {
       "path": "site/components/saved-eq-collection.tsx",
-      "sha256": "0f947f726c0264d9c09c0eca1b42d6ef3f5d59a49b87e007408b0a6e115663ad",
+      "sha256": "2de6d2f22ed1f5185be08fc00de34c9697ddd90b4575d33fcf2d81cd89202c1d",
       "executable": false
     },
     {
@@ -4362,7 +4397,7 @@
     },
     {
       "path": "site/components/sound-setup.tsx",
-      "sha256": "28f62317eda7591a6214d6f86003696607276a950acf681eb4de6edf89e6dea8",
+      "sha256": "1e0195f96e331a498566f0ef79363e7985634042135234c9cb7d75876a2effcb",
       "executable": false
     },
     {
@@ -5757,7 +5792,7 @@
     },
     {
       "path": "site/lib/music-library-eq.ts",
-      "sha256": "c0e9939c1f352ad8ccbcc39ce464bf653f8331fb7b229426151a434988af978f",
+      "sha256": "adc503731f453349e7d81d83e3e37697a650fba0b7e1271f6d0ccdbcf890cb70",
       "executable": false
     },
     {
@@ -5912,12 +5947,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "c006321b81d3229023a44613bd3170982691458486353e4f5fde9325f189b320",
+      "sha256": "7fd216183aa53a2f077f336ae6f9eced92ecf450b0df1b185b3f82509016f625",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "87b7b049f3a0b48e7491e58330d7f0f704aa3e42fbaf495c1d7b49d5098eafd8",
+      "sha256": "bb5e58914c239aee2b8080b22500df50aad57f818a7406e5d240108c0d9e681a",
       "executable": false
     },
     {
@@ -5982,7 +6017,7 @@
     },
     {
       "path": "site/lib/site-help-guide.ts",
-      "sha256": "cb8a71f624996df1f903f3e33e818df6a86bc79f6f159907488fd0d5e0b3be1d",
+      "sha256": "ee83418276b045fa04ba94d7d2675b12b1f1ae68b3915bf2ddf767ff17d1fa9e",
       "executable": false
     },
     {

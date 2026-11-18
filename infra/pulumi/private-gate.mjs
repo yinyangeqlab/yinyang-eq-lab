@@ -219,10 +219,24 @@ const privateGate = {
       url.pathname = guidePdfPath;
       return Response.redirect(url, 308);
     }
-    const publicLandingAsset = isPublicAsset(path) || path === guidePdfPath || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
+    const approvedGuidePdfPaths = [
+      guidePdfPath,
+      "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf",
+      "/guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
+    ];
+    const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
-      if (publicLandingAsset) return env.ASSETS.fetch(request);
+      if (publicLandingAsset) {
+        const response = await env.ASSETS.fetch(request);
+        if (response.ok && approvedGuidePdfPaths.includes(path) && url.searchParams.get("download") === "1") {
+          const headers = new Headers(response.headers);
+          const filename = path.slice(path.lastIndexOf("/") + 1);
+          headers.set("Content-Disposition", `attachment; filename="${filename}"`);
+          return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+        }
+        return response;
+      }
       if(publicProfile){const limited=await preDatabaseGuard(request,env,false);if(limited)return limited;}
       const headers = new Headers(request.headers);
       for (const name of ["oai-authenticated-user-id", "oai-authenticated-user-email", "oai-authenticated-user-full-name", "oai-authenticated-user-full-name-encoding", "x-yinyang-data-session"]) headers.delete(name);

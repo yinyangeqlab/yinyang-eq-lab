@@ -50,19 +50,30 @@ export function safeLibraryEq(value: LibraryEq): LibraryEq {
 export function parseLibraryEq(text: string, name: string): LibraryEq {
   if (text.length > 100_000) throw new Error("The EQ file is too large.");
   if (/^\s*CH:\s*[01]\s*$/im.test(text)) throw new Error(`This is a channel-match preset. Attach it to a headphone model in ${PERSONAL_AREA_TITLE} instead of importing it as a shared EQ.`);
+  if (/^\s*Channel:\s*(?:L|R|1|2)\s*(?:#.*)?$/im.test(text)) throw new Error("This EQ has separate Left/Right settings. Use Blind EQ Comparison to test the complete stereo preset; Saved EQs currently use the same filters on both channels.");
   const filters: PeqFilter[] = [];
   let preamp = 0;
   let engine: LibraryEq["engine"], engineVersion: string | undefined;
-  for (const raw of text.split(/\r?\n/)) {
+  const number = "([-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+))";
+  const preampLine = new RegExp(`^Preamp:\\s*${number}\\s*dB$`, "i");
+  const filterLine = new RegExp(`^Filter(?:\\s+\\d+)?:\\s*ON\\s+(PK|PEQ|LS|LSC|HS|HSC)\\s+Fc\\s+${number}\\s*Hz\\s+Gain\\s+${number}\\s*dB(?:\\s+Q\\s+${number})?$`, "i");
+  for (const [index, raw] of text.replace(/^\uFEFF/, "").split(/\r?\n/).entries()) {
     const line = raw.trim();
     const provenance = /^# Engine: (peqdb|legacy) (.+)$/.exec(line);
     if (provenance) { engine = provenance[1] as LibraryEq["engine"]; engineVersion = provenance[2].slice(0, 160); }
-    if (!line || line.startsWith("#") || /^Filter\s+\d+:\s*OFF\b/i.test(line)) continue;
-    const pre = /^Preamp:\s*([-+]?\d+(?:\.\d+)?)\s*dB\s*$/i.exec(line);
-    if (pre) { preamp = Number(pre[1]); continue; }
-    const filter = /^Filter\s+\d+:\s*ON\s+(PK|LSC|HSC)\s+Fc\s+([\d.]+)\s*Hz\s+Gain\s+([-+]?\d+(?:\.\d+)?)\s*dB\s+Q\s+([\d.]+)\s*$/i.exec(line);
-    if (filter) { filters.push({ type: filter[1].toUpperCase() as PeqFilter["type"], hz: Number(filter[2]), gain: Number(filter[3]), q: Number(filter[4]) }); continue; }
-    if (/^(Filter\s+\d+:|Preamp:)/i.test(line)) throw new Error("This file contains an unsupported filter. Upload a peak/shelf EQ TXT export.");
+    const setting = line.split("#")[0].trim();
+    if (!setting || /^Filter(?:\s+\d+)?:\s*OFF\b/i.test(setting) || /^Channel:\s*(ALL|L\s+R|1\s+2)$/i.test(setting)) continue;
+    const pre = preampLine.exec(setting);
+    if (pre) { preamp += Number(pre[1]); continue; }
+    const filter = filterLine.exec(setting);
+    if (filter) {
+      const kind = filter[1].toUpperCase();
+      if ((kind === "PK" || kind === "PEQ") && filter[4] === undefined) throw new Error(`Line ${index + 1}: Peak filters need a Q value.`);
+      filters.push({ type: (kind === "PEQ" ? "PK" : kind === "LS" ? "LSC" : kind === "HS" ? "HSC" : kind) as PeqFilter["type"], hz: Number(filter[2]), gain: Number(filter[3]), q: filter[4] === undefined ? Math.SQRT1_2 : Number(filter[4]) });
+      continue;
+    }
+    if (/^[-+\d.]+[\s,;\t]+[-+\d.]+/.test(setting)) throw new Error("This looks like a target or measurement curve. Upload EQ settings with Preamp and Filter lines instead.");
+    throw new Error(`Line ${index + 1}: Unsupported EQ setting. Choose a parametric TXT export with PK, LS/LSC or HS/HSC filters. GraphicEQ, convolution, includes and native .peace files are not supported.`);
   }
   if (!filters.length) throw new Error("No supported EQ filters were found in this TXT file.");
   return safeLibraryEq({ id: crypto.randomUUID(), name, source: "Uploaded TXT", engine, engineVersion, filters, preamp });
@@ -75,8 +86,11 @@ export function readLibraryEqs(): LibraryEq[] {
   } catch { return []; }
 }
 
-export function saveLibraryEq(eq: LibraryEq) {
+export function saveLibraryEq(eq: LibraryEq, { refuseIfFull = false } = {}) {
   const safe = safeLibraryEq(eq), rows = readLibraryEqs(), existing = rows.find(item => item.id === safe.id);
+  if (refuseIfFull && !existing && rows.length >= 30) {
+    throw new Error("You have 30 saved EQs. Remove one in My Collection before importing another.");
+  }
   const now = Date.now();
   const next = [{ ...safe, createdAt: existing ? existing.createdAt : safe.createdAt ?? now, updatedAt: now }, ...rows.filter(item => item.id !== safe.id)].slice(0, 30);
   localStorage.setItem(LIBRARY_EQ_KEY, JSON.stringify(next));

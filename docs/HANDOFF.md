@@ -1,9 +1,16 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update175**, source `1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4`.
+Recorded deployment: **update177**, source `867cb113729a7df640d4d23e8297b75bd97cbf32`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update177 Saved EQ uploads
+
+Import a parametric EQ TXT file from Saved EQs, Tuning, or Music library. Saved EQs can open the imported preset in Tuning for listening. Update177 also includes the revised IEM measurement guide and its fillable checklist.
+
+[Deployment verification](releases/update177-verification.json) · [Source-only recovery verification](releases/update177-recovery-verification.json)
+
 
 ## Update175 Arya Stealth preset and Version history
 

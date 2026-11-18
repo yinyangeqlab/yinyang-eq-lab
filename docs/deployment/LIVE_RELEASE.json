@@ -1,72 +1,48 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 175,
+  "update": 177,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-17T09:55:15Z",
-  "sourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+  "verifiedAt": "2026-11-18T02:38:12Z",
+  "sourceCommit": "867cb113729a7df640d4d23e8297b75bd97cbf32",
   "sourceBranch": "",
-  "baselineCommit": "889dea82abf9c2a53ec14a976dd223e532437478",
-  "evidence": "docs/releases/update175-wallpaper-and-tuning-links-verification.json",
+  "baselineCommit": "11fa8ae467767f842b2148b603e11333d15e377c",
+  "evidence": "docs/releases/update177-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
-    "activatedAt": "2026-10-19T04:58:44.142Z",
-    "expiresAt": 1792389524011,
-    "expiresISO": "2026-10-19T05:58:44.011Z",
-    "expiresPacific": "Oct 18, 2026, 10:58 PM",
-    "message": "Major updates are underway. Shootouts are unavailable for one hour. Listening Pool and Preference Tuning remain available. Your saved results are preserved.",
-    "active": false,
-    "pauseSubmissions": false,
-    "researchRecordsChanged": false,
-    "verificationTime": "2026-10-20T02:35:34.085141+00:00",
-    "scope": [
-      "shootouts"
-    ],
-    "automaticExpiry": true,
-    "originalExpiryPreserved": true
+    "active": false
   },
   "ownerOnlyMaintenance": {
-    "enabled": false,
-    "automaticExpiry": false,
-    "reopeningAuthorizedByOwner": true,
-    "adminLogin": "https://yinyangeq.com/admin-login",
-    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
-  },
-  "deploymentRefresh": {
-    "slug": "wallpaper-and-tuning-links",
-    "previousEvidence": "docs/releases/update175-verification.json"
+    "enabled": false
   },
   "gitSource": {
-    "implementationCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+    "implementationCommit": "867cb113729a7df640d4d23e8297b75bd97cbf32",
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update175",
-    "publishedSourceCommit": "45bfbfb24de4fcfaed83718641228953533ce273",
-    "publicationVerification": "docs/releases/update175-publication.json"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 175,
-    "sourceBaselineVerifiedAt": "2026-11-17T10:25:41Z",
+    "sourceBaselineUpdate": 177,
+    "sourceBaselineVerifiedAt": "2026-11-18T03:04:09Z",
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update175SourceOnlyHandover": {
+    "update177SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
-      "evidence": "docs/releases/update175-wallpaper-and-tuning-links-recovery-verification.json"
+      "sourceCommit": "867cb113729a7df640d4d23e8297b75bd97cbf32",
+      "evidence": "docs/releases/update177-recovery-verification.json"
     }
   },
   "documentationFiles": [],
-  "scope": "Public release record. The owner retains the immutable deployment and recovery inputs."
+  "scope": "Historical update177 deployment evidence in the public source archive. The owner retains the immutable deployment and recovery inputs."
 }

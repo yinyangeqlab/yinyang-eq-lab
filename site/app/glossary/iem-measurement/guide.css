@@ -75,3 +75,47 @@
 .iem-measurement-guide .iem-guide-callouts li + li { margin-top: .15rem; }
 .iem-measurement-guide .iem-guide-callouts li::marker { color: var(--guide-accent); font-weight: 700; }
 @media (min-width: 42rem) { .iem-measurement-guide .iem-guide-callouts { columns: 2; column-gap: 2rem; } }
+
+.iem-measurement-guide .iem-guide-revisions {
+  margin-block-start: 1.25rem;
+  color: var(--guide-muted);
+  font-size: .85rem;
+  line-height: 1.55;
+}
+.iem-measurement-guide .iem-guide-revisions summary { width: fit-content; cursor: pointer; }
+.iem-measurement-guide .iem-guide-revisions summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.iem-measurement-guide .iem-guide-revisions ul { margin-block: .55rem 0; }
+.iem-measurement-guide .iem-guide-revisions li { font-size: inherit; line-height: inherit; }
+
+.iem-measurement-guide .iem-guide-intro { margin: .75rem 0 0; }
+.iem-measurement-guide .iem-guide-start { margin: 1rem 0 0; }
+.iem-measurement-guide .iem-guide-swap-checks > li + li { margin-block-start: .85rem; }
+.iem-measurement-guide .iem-guide-swap-checks > li > p { margin: .18rem 0 0; }
+.iem-measurement-guide .iem-guide-checklist { min-inline-size: 0; margin: 1.15rem 0 0; padding: .6rem 1rem .95rem; border: 1px solid var(--guide-line); border-radius: .55rem; }
+.iem-measurement-guide .iem-guide-checklist legend { padding-inline: .35rem; font-weight: 650; }
+.iem-measurement-guide .iem-guide-checklist ol { margin: 0; padding: 0; list-style: none; }
+.iem-measurement-guide .iem-guide-checklist li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .65rem; }
+.iem-measurement-guide .iem-guide-checklist li + li { margin-block-start: .75rem; }
+.iem-measurement-guide .iem-guide-checklist input { width: 1.15rem; height: 1.15rem; margin: .27rem 0 0; accent-color: var(--guide-accent); cursor: pointer; }
+.iem-measurement-guide .iem-guide-checklist input:focus-visible { outline: 2px solid var(--guide-accent); outline-offset: 3px; }
+.iem-measurement-guide .iem-guide-checklist label { font-weight: 650; cursor: pointer; }
+.iem-measurement-guide .iem-guide-checklist li p { margin: .1rem 0 0; }
+.iem-measurement-guide .iem-guide-question-index li + li { margin-block-start: .5rem; }
+.iem-measurement-guide .iem-guide-question-index span { display: block; color: var(--guide-muted); }
+.iem-measurement-guide .iem-guide-handbook .iem-guide-checklist-download { margin: .8rem 0 0; }
+
+
+.iem-measurement-guide .iem-guide-start { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin: .85rem 0 1rem; }
+.iem-measurement-guide .iem-guide-start a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.iem-measurement-guide .iem-guide-intro-sources { margin: .6rem 0 0; font-size: .88rem; }
+.iem-measurement-guide .iem-guide-gear > li + li { margin-block-start: .7rem; }
+.iem-measurement-guide .iem-guide-contents-groups { display: grid; gap: 1rem; }
+.iem-measurement-guide .iem-guide-contents-groups h3 { margin: .25rem 0 .3rem; font-size: .95rem; }
+.iem-measurement-guide .iem-guide-contents-groups p { margin: .1rem 0; font-size: .9rem; }
+.iem-measurement-guide .iem-guide-contents-groups ol { columns: 1; }
+.iem-measurement-guide .iem-guide-contents-groups ul { margin: .15rem 0 .35rem; list-style: disc outside; }
+.iem-measurement-guide .iem-guide-signal { margin-block: 1rem; padding: .8rem 1rem; border: 1px solid var(--guide-line); border-radius: .55rem; background: var(--guide-panel); }
+.iem-measurement-guide .iem-guide-signal p { margin: 0; }
+.iem-measurement-guide .iem-guide-signal p + p { margin-block-start: .35rem; }
+.iem-measurement-guide .iem-guide-signal strong { display: inline-block; min-width: 6rem; }
+@media (min-width: 48rem) { .iem-measurement-guide .iem-guide-contents-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
