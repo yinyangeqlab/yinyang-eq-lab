@@ -1,0 +1,82 @@
+[
+  {
+    "path": "guides/iem-measurement/channel-match-ideal.png",
+    "sha256": "d434f451b52289877fdf8c8ed53708822ce1736bd2a5e71ec4853525d1353052"
+  },
+  {
+    "path": "guides/iem-measurement/channel-match-off.png",
+    "sha256": "dce646166d2f938e1682f5a8c39f7b2994287911a2504d9f3e38751f575178fa"
+  },
+  {
+    "path": "guides/iem-measurement/channel-match-practical.png",
+    "sha256": "08ef2bb6bbac813aca125110aac8a2c4ddf4efb333c2ab68cc8616440d97e510"
+  },
+  {
+    "path": "guides/iem-measurement/figure-02.webp",
+    "sha256": "9a44fbcda673e6119d73bb4d2ecd3e1cac8b3b80866e736d3cba3ea70399126d"
+  },
+  {
+    "path": "guides/iem-measurement/figure-04.webp",
+    "sha256": "220816a7e5e4d5c6d6f3a01b7054107a71294ed9cea32586d30358ebcd941ddc"
+  },
+  {
+    "path": "guides/iem-measurement/figure-05.png",
+    "sha256": "830539af84241d49ec9f352c559010387640ce94450dc3fc03d924f2eed41912"
+  },
+  {
+    "path": "guides/iem-measurement/figure-06.png",
+    "sha256": "9d2f46d1cf3543095b5af0cf847f462eef243aaf0bf6b3c47ce7d8d00c13909c"
+  },
+  {
+    "path": "guides/iem-measurement/figure-08.png",
+    "sha256": "310ec2565a764f15db8fc054d359f83d713526bf483b32693e517ad9d3050631"
+  },
+  {
+    "path": "guides/iem-measurement/figure-09.png",
+    "sha256": "dea2019a390654758e375075de3b082aeb81683a61b8ba98db32d526fd5baaff"
+  },
+  {
+    "path": "guides/iem-measurement/figure-10.png",
+    "sha256": "c23087383d7ce71367cf5a919fb9e2c1056da4bf9295a00919dea79d7d9e1767"
+  },
+  {
+    "path": "guides/iem-measurement/figure-12.png",
+    "sha256": "15b824bc78d52b1b1b71672f936c6efc3f77cd1e6d766cb1acad53372186d26a"
+  },
+  {
+    "path": "guides/iem-measurement/figure-13.png",
+    "sha256": "ba263d6ba1c7cbdb3a3f3603524dc64be69275193d4ecab876215fe0816c606b"
+  },
+  {
+    "path": "guides/iem-measurement/figure-14.jpg",
+    "sha256": "80b003d08ac394acf14342a672d46a11d2e5a9d28c49e37f5e68ff86910e653c"
+  },
+  {
+    "path": "guides/iem-measurement/figure-15.jpg",
+    "sha256": "b1588c3c7c72b3a864c77eb6f713e52b7da101bd236263a6257ad4f8ac7b81ef"
+  },
+  {
+    "path": "guides/iem-measurement/figure-16.jpg",
+    "sha256": "c021dd1d08af1dac65e5cf355e348f116b3a6de5273fa503ec3ef29e5267d036"
+  },
+  {
+    "path": "guides/iem-measurement/figure-17.jpg",
+    "sha256": "1996e9f3d2b36f5daf03f329c56d0f028f723904840fa279f306e142b44b5d4f"
+  },
+  {
+    "path": "guides/iem-measurement/first-sweep-repeats.png",
+    "sha256": "5cf30f638bbf428aff1a2c717a5b4dca332f630b28625c74c8f6155f5f3cdc06"
+  },
+  {
+    "path": "guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
+    "sha256": "268572da6f94ac91a9796b634c433a498f511f7c35ea3e765269a401b2837d66"
+  },
+  {
+    "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf",
+    "sha256": "a775acefc71e6d9e57b8c7d3535113d23092eef042b77a79a345388d7d6d2529"
+  },
+  {
+    "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf",
+    "sha256": "b86cf6bfecb64670204469b0acc1747e0bac0990163e864ca2a8166cbfbe9fed"
+  }
+]

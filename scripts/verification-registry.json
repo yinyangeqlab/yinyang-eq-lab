@@ -726,6 +726,17 @@
       "scope": "Existing media recovery regression assertions; synthetic/source scope in the script"
     },
     {
+      "id": "guide-assets",
+      "path": "scripts/check_guide_assets.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 10000,
+      "requires": [],
+      "owner": "release",
+      "scope": "Missing guide assets fail full packaging, optional clone assets retain hash checks, and symlinks are rejected"
+    },
+    {
       "id": "migration-chain",
       "path": "scripts/check_migration_chain.py",
       "runtime": "python3",

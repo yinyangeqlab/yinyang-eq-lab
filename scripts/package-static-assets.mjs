@@ -1,6 +1,7 @@
 import { approvedEqModels } from "../site/data/approved-eq-models.ts";
 import { packagePeqdbAssets } from "./peqdb-assets.mjs";
 import { verifyVoteFontAssets } from "./vote-font-assets.mjs";
+import { verifyGuideAssets } from './guide-assets.mjs';
 import {readdirSync,mkdirSync,lstatSync,statSync,linkSync,copyFileSync,unlinkSync,readFileSync,existsSync,writeFileSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -8,6 +9,7 @@ import {execFileSync} from 'node:child_process';
 const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/client');
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
+verifyGuideAssets(source, { allowMissing: publicOnly });
 for (const { presets } of approvedEqModels) {
   for (const { preview } of presets) {
     if (!preview) continue;
@@ -49,6 +51,7 @@ if (existsSync(join(source, model))) {
  if (existsSync(join(destination, modelLicense))) unlinkSync(join(destination, modelLicense));
 }
 visit(source);
+verifyGuideAssets(destination, { allowMissing: publicOnly });
 packagePeqdbAssets(destination);
 if (existsSync(join(source, model))) {
  const headerFile = join(destination, '_headers');

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "cffeaaf7d600f3c5098ed3860f151d97bcd9bc93",
+  "baseRevision": "1ddab1c14a9a94611aa9d6e9ba36b0fbd4e70574",
   "recordedLiveUpdate": 175,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -2116,6 +2116,11 @@
       "executable": false
     },
     {
+      "path": "scripts/check_guide_assets.mjs",
+      "sha256": "3da8fa92bd27387e4c6c7757edfc4132de7e815a5eab36281d19e6768da6710f",
+      "executable": false
+    },
+    {
       "path": "scripts/check_isolated_consent_access.mjs",
       "sha256": "22acf73b980e76be08d916c2f7465a0d958cb948447fd2d57660b8f7c0aef057",
       "executable": false
@@ -2676,6 +2681,16 @@
       "executable": false
     },
     {
+      "path": "scripts/guide-assets.mjs",
+      "sha256": "b61d67a5448fae5d57493c24731de53a6ed5ec7a21010388c81636a8d57d2834",
+      "executable": false
+    },
+    {
+      "path": "scripts/iem-guide-assets.json",
+      "sha256": "84f2361f0a8f54ad79512a222bf43c6c5cc7f222c394a99e4f425b591c446d81",
+      "executable": false
+    },
+    {
       "path": "scripts/init-local.mjs",
       "sha256": "43f41231fdd905fcc792337d42c438e0600a5784e1b09cf8049bea6e196bcaad",
       "executable": false
@@ -2707,7 +2722,7 @@
     },
     {
       "path": "scripts/package-static-assets.mjs",
-      "sha256": "64d286325a5bba89d3ba2d587e5680115175acdf31834c193baef78a175a8411",
+      "sha256": "0469e3e3fdc6f2f00d621c313bb710996573870ee376c54ca7a8e434ea3d7703",
       "executable": false
     },
     {
@@ -2852,7 +2867,7 @@
     },
     {
       "path": "scripts/verification-registry.json",
-      "sha256": "18e2689fc77f9502731564130691286a96104d3ccfb1325be74ef3c732ddbccf",
+      "sha256": "758358e7f21f5689e026c31f6e84f4f85ce49fa70be8178df7c4d4fce430e64f",
       "executable": false
     },
     {
