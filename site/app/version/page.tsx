@@ -15,7 +15,14 @@ const publishedBuildTag = createPublishedBuildLookup(repositoryUrl, updateLabel)
 
 async function PublishedBuildLink() {
   const tag = await publishedBuildTag();
-  return tag ? <a href={`${repositoryUrl}/releases/tag/${encodeURIComponent(tag)}`}>GitHub release</a> : null;
+  if (!tag) return null;
+  const previous = releaseHistory.find(entry => entry.update < releaseInfo.build.update && entry.github)?.github;
+  const ref = encodeURIComponent(tag);
+  return <>
+    <a href={`${repositoryUrl}/releases/tag/${ref}`}>GitHub release</a>
+    <a href={`${repositoryUrl}/tree/${ref}`}>GitHub source</a>
+    {previous && <a href={`${repositoryUrl}/compare/${previous.commit}..${ref}`}>Compare published updates</a>}
+  </>;
 }
 
 export default function VersionPage() {
@@ -27,7 +34,7 @@ export default function VersionPage() {
 
   return (
     <main className="alpha-help-page alpha-version-page">
-      <h1>About this version</h1>
+      <h1>About This Version</h1>
       <div className="alpha-release-summary">
         <strong>{buildLabel}</strong>
         {!build.preview && <span>{releaseInfo.channel}</span>}

@@ -289,7 +289,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     <main className="es-card" aria-live="polite" aria-busy={phase === "loading" || busy}>
       {phase === "loading" && <p className="es-status">Loading shootout…</p>}
 
-      {phase === "error" && <div className="es-center"><h1>Shootout unavailable</h1><p>{error}</p><p>Reloading starts this quick comparison again and clears any choices not yet sent.</p><button type="button" className="es-button" onClick={()=>window.location.reload()}>Reload comparison</button>{!embed && <a className="es-button" href="/share-shootout">Make a new shootout</a>}</div>}
+      {phase === "error" && <div className="es-center"><h1>Shootout Unavailable</h1><p>{error}</p><p>Reloading starts this quick comparison again and clears any choices not yet sent.</p><button type="button" className="es-button" onClick={()=>window.location.reload()}>Reload comparison</button>{!embed && <a className="es-button" href="/share-shootout">Make a new shootout</a>}</div>}
 
       {phase === "intro" && config && <section className="es-intro">
         <p className="es-eyebrow">Blind shootout · {config.bands.length} targets · about {Math.max(1, Math.round(roundCount * 0.75))} min</p>
@@ -344,7 +344,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
           const winner = leaders.length === 1 ? result.reveal[leaders[0].index] : null;
           return <>
             <p className="es-eyebrow">The reveal</p>
-            <h1>{winner ? <>Your favorite: <span style={{ color: TARGET_COLORS[leaders[0].index] }}>{winner.name}</span></> : "No clear favorite from these choices"}</h1>
+            <h1>{winner ? <>Your Favorite: <span style={{ color: TARGET_COLORS[leaders[0].index] }}>{winner.name}</span></> : "No Clear Favorite From These Choices"}</h1>
             <CurvePlot label={`Frequency response of ${result.reveal.map(t => t.name).join(", ")}`} series={result.reveal.map(t => ({ name: t.name, bands: t.bands }))} />
             <ul className="es-reveal">
               {result.reveal.map((target, index) => {

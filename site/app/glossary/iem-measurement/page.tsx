@@ -20,29 +20,29 @@ export default function IemMeasurementGuidePage() {
   return (
     <main className="terms-page iem-measurement-guide">
       <article>
-        <a className="iem-guide-back" href="/glossary">Glossary &amp; Guides</a>
         <header>
-          <h1>Your First IEM Measurement With a 711 Coupler</h1>
+          <h1>Your First IEM Measurement With A 711 Coupler</h1>
           <p className="iem-guide-deck">{"Ever wonder why changing ear tips can make the bass sound stronger or the highs sound clearer? Why one side sounds louder than the other? Or what an equalizer setting actually changes? Welcome. We made this guide to help you measure those differences and decide what to try next."}</p>
-          <p className="iem-guide-intro">{"A 711 coupler stands in for a sealed ear canal. You fit an in-ear monitor (IEM), a small earphone with a sealing tip, into its opening. The free Room EQ Wizard (REW) app plays a test sound, and the coupler microphone records the level from bass to treble. A graph of those levels is called a frequency response."}</p>
-          <p className="iem-guide-intro">{"The goal is a measurement you can repeat. On the same setup, you can see whether changing tips alters the bass, whether the two earpieces play at similar levels, or whether equalization (EQ) did what you expected. Change one thing at a time."}</p>
-          <p className="iem-guide-intro">{"Your ear shape and the way the tip seals change what reaches your eardrum. The graph helps you decide what to try. Your ears tell you what you enjoy. Be careful with narrow peaks and dips around 8–10 kHz, where tiny fit changes can move them. Above 10 kHz, read the graph as a rough comparison."}</p>
-          <p className="iem-guide-intro-sources"><a href={"https://webstore.iec.ch/en/publication/1445"}>{"IEC 60318-4 standard"}</a> · <a href={"https://www.jstage.jst.go.jp/article/jasj/66/2/66_KJ00006063975/_pdf/-char/ja"}>{"Hirahara et al. (2010), 711 and real-ear measurements"}</a></p>
-          <nav className="iem-guide-start" aria-label="Choose where to start">
-            <a href="#check-the-playback-and-recording-connections">Take your first measurement</a>
-            <a href="#bench-checklist">Open the checklist</a>
-            <a href="#find-answers-by-question">Fix a problem</a>
-          </nav>
-          <p className="iem-guide-intro">{"You can see two ways we set up the bench. We used a Capra Audio holder to steady the earphone. In our makeshift setup, a padded case supported the earphone and we rested the coupler on a pillow to absorb vibrations. Both are shown in the guide so you can see how to hold the earphone still with what you have."} <a href="#figure-02">See the holder</a> or <a href="#figure-04">see the makeshift setup</a>.</p>
-          <p className="iem-guide-intro">{"The guide covers common home setups and the problems we could show with our own measurements. Detailed device settings and lab calibration depend on the gear you use, so keep its documentation handy."}</p>
-          <p className="iem-guide-intro">{"If a measurement looks odd, think like an IT technician. Check the simplest things first, follow where the test sound goes, and try one change at a time. Each result helps you decide what to check next."} <a href="#isolate-a-measurement-difference">See how to put that into practice</a>.</p>
           <p className="iem-guide-byline">Yin Yang EQ Lab</p>
-          <aside className="iem-guide-handbook" aria-labelledby="iem-guide-handbook-intro">
-            <h2 id="iem-guide-handbook-intro">711 Coupler Technical Guide</h2>
-            <p>The companion PDF goes deeper into wiring, REW settings, and troubleshooting. It includes additional annotated screenshots, ways to check that your sweeps repeat, and an optional Arch Linux and KDE Plasma appendix.</p>
-            <a className="iem-guide-handbook-link" href={technicalGuidePdf}>Open the technical guide (PDF)</a>
-          </aside>
+          <nav className="iem-guide-start" aria-label="Choose where to start">
+            <a href="#check-the-playback-and-recording-connections">First measurement</a>
+            <a href="#bench-checklist">Bench checklist</a>
+            <a href="#find-answers-by-question">Troubleshooting</a>
+          </nav>
         </header>
+        <h2>Before you measure</h2>
+        <p className="iem-guide-intro">{"A 711 coupler stands in for a sealed ear canal. You fit an in-ear monitor (IEM), a small earphone with a sealing tip, into its opening. The free Room EQ Wizard (REW) app plays a test sound, and the coupler microphone records the level from bass to treble. A graph of those levels is called a frequency response."}</p>
+        <p className="iem-guide-intro">{"The goal is a measurement you can repeat. On the same setup, you can see whether changing tips alters the bass, whether the two earpieces play at similar levels, or whether equalization (EQ) did what you expected. Change one thing at a time."}</p>
+        <p className="iem-guide-intro">{"Your ear shape and the way the tip seals change what reaches your eardrum. The graph helps you decide what to try. Your ears tell you what you enjoy. Be careful with narrow peaks and dips around 8–10 kHz, where tiny fit changes can move them. Above 10 kHz, read the graph as a rough comparison."}</p>
+        <p className="iem-guide-intro-sources"><a href={"https://webstore.iec.ch/en/publication/1445"}>{"IEC 60318-4 standard"}</a> · <a href={"https://www.jstage.jst.go.jp/article/jasj/66/2/66_KJ00006063975/_pdf/-char/ja"}>{"Hirahara et al. (2010), 711 and real-ear measurements"}</a></p>
+        <p className="iem-guide-intro">{"You can see two ways we set up the bench. We used a Capra Audio holder to steady the earphone. In our makeshift setup, a padded case supported the earphone and we rested the coupler on a pillow to absorb vibrations. Both are shown in the guide so you can see how to hold the earphone still with what you have."} <a href="#figure-02">See the holder</a> or <a href="#figure-04">see the makeshift setup</a>.</p>
+        <p className="iem-guide-intro">{"The guide covers common home setups and the problems we could show with our own measurements. Detailed device settings and lab calibration depend on the gear you use, so keep its documentation handy."}</p>
+        <p className="iem-guide-intro">{"If a measurement looks odd, think like an IT technician. Check the simplest things first, follow where the test sound goes, and try one change at a time. Each result helps you decide what to check next."} <a href="#isolate-a-measurement-difference">See how to put that into practice</a>.</p>
+        <aside className="iem-guide-handbook" aria-labelledby="iem-guide-handbook-intro">
+          <h2 id="iem-guide-handbook-intro">711 Coupler Technical Guide</h2>
+          <p>The companion PDF goes deeper into wiring, REW settings, and troubleshooting. It includes additional annotated screenshots, ways to check that your sweeps repeat, and an optional Arch Linux and KDE Plasma appendix.</p>
+          <a className="iem-guide-handbook-link" href={technicalGuidePdf}>Open the technical guide (PDF)</a>
+        </aside>
         <nav className="iem-guide-contents" aria-labelledby="iem-guide-toc">
           <h2 id="iem-guide-toc">Table of contents</h2>
           <div className="iem-guide-contents-groups">

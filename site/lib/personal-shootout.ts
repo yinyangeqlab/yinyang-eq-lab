@@ -270,7 +270,7 @@ export function personalFinalistReadiness(run:PersonalRun) {
   if (!run.schedulerVersion) return {ready:shortlist.length>=2,reason:"",ids:shortlist.map(row=>row.id)};
   const unseen=rows.filter(row=>row.heard===0).length;
   const result=(ready:boolean,reason:string)=>({ready,reason,ids:shortlist.map(row=>row.id)});
-  if(unseen)return result(false,`${unseen} targets in this pool are still unheard. These are early contenders, not a confirmed shortlist.`);
+  if(unseen)return result(false,`${unseen} targets in this pool are still unheard. Your ranking may change as you try more settings.`);
   const minimumOpponents=Math.min(2,rows.length-1);
   if(shortlist.length<2||shortlist.some(row=>row.heard<3||row.opponents.size<minimumOpponents))return result(false,"Leading targets need at least three comparisons and more than one opponent before finalist checks.");
   const fourth=ranked[3];

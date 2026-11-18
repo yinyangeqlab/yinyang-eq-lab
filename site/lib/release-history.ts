@@ -308,11 +308,18 @@ const update179Changes = [
   "Organized the repository into 16 top-level entries and updated the restore tools for the new layout.",
 ] as const;
 
-export const candidateChanges = ["Compare EQs adds side-by-side EQ selectors with one shared waveform player, a shared headphone choice and optional blind switching. Match loudness defaults to −14 LUFS and the listening reminder resets for new sessions."] as const;
+const update180Changes = ["Compare EQs adds side-by-side EQ selectors with one shared waveform player, a shared headphone choice and optional blind switching. Match loudness defaults to −14 LUFS and the listening reminder resets for new sessions."] as const;
+
+export const candidateChanges = [
+  "Hear the same instrumental with two EQ settings on the animated homepage. Sound A and Sound B play immediately.",
+  "Build your own EQ ranking in Personal Tournament. Review your data choices when you start.",
+  "Open Glossary & Guides in the navigation to find the IEM Measurement Guide, Audio Fact Checks and EQ Fitter Benchmark. Guide text and jump links reflow on narrow screens.",
+] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 180, date: "2026-11-18", title: "Compare saved EQs", changes: candidateChanges },
-  { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: update179Changes },
+  { update: 181, date: "2026-11-18", title: "Homepage listening preview and personal rankings", changes: candidateChanges },
+  { update: 180, date: "2026-11-18", title: "Compare saved EQs", changes: update180Changes, github: { commit: "421ed4c9e15ac7330f979938555ee5c7c3caa349", releaseTag: "update180" } },
+  { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: update179Changes, github: { commit: "e10e4116f46ba6bf7cc7ec63566401ef63731dd3" } },
   { update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: update178Changes, github: { commit: "364dd980d5550a11218b3696d913ca5a64b8ddb6", releaseTag: "update178" } },
   { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes, github: { commit: "8a793603a57cf020fe8c799cca66f70ed4fbd485", releaseTag: "update177" } },
   { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },

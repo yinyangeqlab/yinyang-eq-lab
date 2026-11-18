@@ -1,14 +1,12 @@
 .audio-facts {
   --fact-surface: #10232d;
   --fact-border: #405d6b;
-  --fact-accent: #a9e5dc;
-  --fact-pill: #173d3d;
+  --fact-accent: var(--guide-blue);
+  --fact-pill: var(--guide-hover-surface);
 }
 [data-site-theme="light"] .audio-facts {
   --fact-surface: #f3f8fa;
   --fact-border: #9bb0bd;
-  --fact-accent: #124a49;
-  --fact-pill: #d9efec;
 }
 .audio-facts-back, .audio-facts-crumbs { font-size: 14px; }
 .audio-facts-back { display: inline-block; margin-bottom: 18px; }

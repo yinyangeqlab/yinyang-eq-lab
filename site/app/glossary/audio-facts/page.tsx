@@ -10,9 +10,7 @@ export const metadata = shareMetadata(AUDIO_FACTS_PATH);
 export default function AudioFactsPage() {
   return (
     <main className="terms-page audio-facts">
-      <a className="audio-facts-back" href="/glossary">← Glossary &amp; Guides</a>
       <header>
-        <span>THE EVIDENCE LIBRARY</span>
         <h1>{AUDIO_FACTS_TITLE}</h1>
         <p>{AUDIO_FACTS_DESCRIPTION} Search a term, a claim you’ve heard, or a question in your own words.</p>
       </header>

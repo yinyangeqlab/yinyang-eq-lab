@@ -20,12 +20,12 @@ const SHARE_ART_REVISION = "20261110-hd";
 
 const WELCOME_IMAGE = { path: "/share/welcome.jpg", ...SHARE_IMAGE_SIZE, alt: "Red and cobalt yin-yang over red and blue mountain ridges and ocean waves" };
 
-const musicLibraryPage = { path: "/music-library", slug: "music-library", kind: "library", kicker: "MUSIC FOR COMPARISONS", title: "Music library | YinYang EQ", description: "Explore music used under open licenses or with artist permission, find recordings, or suggest a song.", tagline: "The music behind every comparison." };
+const musicLibraryPage = { path: "/music-library", slug: "music-library", kind: "library", kicker: "MUSIC FOR COMPARISONS", title: "Music Library | YinYang EQ", description: "Explore music used under open licenses or with artist permission, find recordings, or suggest a song.", tagline: "The music behind every comparison." };
 const songSuggestions = {
   ...musicLibraryPage,
   slug: "song-suggestions",
   kicker: "LISTENING POOL",
-  title: "Song suggestions | YinYang EQ",
+  title: "Song Suggestions | YinYang EQ",
   description: "Suggest a song for the Listening Pool and explore tracks other listeners have suggested.",
   tagline: "Suggest the next song to compare.",
   canonicalSearch: "?view=suggestions",
@@ -39,21 +39,21 @@ const factsArtwork = {
 
 export const sharePages = [
   { path: "/listen", slug: "listen", kind: "modes", kicker: "LISTENING MODES", title: "Listen | YinYang EQ", description: "Choose Personal Tournament, Blind Research or Open Comparison.", tagline: "Three ways to compare headphone targets." },
-  { path: "/software-licenses", slug: "software-licenses", kind: "version", kicker: "OPEN SOURCE", title: "Software licenses | YinYang EQ", description: "Open-source software credits, licenses and corresponding source for YinYang EQ.", tagline: "Licenses, credits and source code." },
+  { path: "/software-licenses", slug: "software-licenses", kind: "version", kicker: "OPEN SOURCE", title: "Software Licenses | YinYang EQ", description: "Open-source software credits, licenses and corresponding source for YinYang EQ.", tagline: "Licenses, credits and source code." },
   { path: "/eq-compare", noIndex: true, slug: "eq-compare", kind: "blind", kicker: "A/B LISTENING", title: "Compare EQs | YinYang EQ", description: "Switch between two EQ presets on one song with your headphones. Hide the names to listen blind.", tagline: "Hear two EQ presets on the same song." },
   { path: "/", slug: "welcome", title: "YinYang EQ", description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.", image: WELCOME_IMAGE },
-  { path: "/shootout", slug: "shootout", kind: "blind", kicker: "BLIND LISTENING", title: "Listen & results | YinYang EQ", ogTitle: "Hear hidden targets, side by side", description: "Hear two hidden headphone targets on the same music, pick the one you prefer, and see how listeners rank them.", tagline: "Hear two hidden targets on the same music." },
+  { path: "/shootout", slug: "shootout", kind: "blind", kicker: "BLIND LISTENING", title: "Listen & Results | YinYang EQ", ogTitle: "Hear Hidden Targets, Side By Side", description: "Hear two hidden headphone targets on the same music, pick the one you prefer, and see how listeners rank them.", tagline: "Hear two hidden targets on the same music." },
   { path: "/shootout/personal", slug: "personal", kind: "bracket", kicker: "YOUR EARS. YOUR FAVORITES.", title: "Personal Tournament | YinYang EQ", description: "Find your favorite headphone target with a blind tournament that adapts to your choices. Choices stay local by default.", tagline: "A blind bracket that adapts to your choices." },
   { path: "/preference-tuning", slug: "preference-tuning", kind: "tuning", kicker: "TUNING LAB", title: "Preference Tuning Lab | YinYang EQ", ogTitle: "Preference Tuning", description: "Choose a target, drag its curve, and hear your changes with your own music.", tagline: "Drag the curve. Hear it on your own music." },
   { path: "/ear-tuning", slug: "ear-tuning", kind: "finder", kicker: "EAR TRAINING & EQ", title: "Peak & Dip Finder | YinYang EQ", description: "Practice hearing peaks and dips, then use tones, pink noise or music to find and adjust them on your headphones.", tagline: "Hear the difference. Find the frequency." },
   { path: "/community-preferences", slug: "community", kind: "community", kicker: "PROSPECTIVE RESEARCH PILOT", title: "Community Preferences | YinYang EQ", description: "Patterns from Personal Tournaments, checked against a separate randomized reference sample.", tagline: "What do listeners prefer? A careful pilot." },
   musicLibraryPage,
-  { path: "/curve-credits", slug: "curve-credits", kind: "credits", kicker: "ATTRIBUTION", title: "Targets & credits | YinYang EQ", ogTitle: "Targets & credits", description: "Creators, sources and reuse notes for every built-in target curve.", tagline: "Creators, sources and reuse notes." },
-  { path: "/privacy", slug: "privacy", kind: "privacy", kicker: "PRIVACY & PARTICIPATION", title: "Privacy notice | YinYang EQ", description: "How YinYang EQ handles comparison data, what you can choose to share, and how to withdraw or delete it.", tagline: "What is kept, what is shared, your choices." },
-  { path: "/terms", slug: "terms", title: "Terms of Use | YinYang EQ", description: "Your rights in what you share, how research choices and rankings work, and how YinYang EQ updates the site.", image: WELCOME_IMAGE, artworkSlug: "welcome" },
-  { path: "/glossary", slug: "glossary-guides", kind: "book", kicker: "QUICK REFERENCE", title: "Glossary & Guides | YinYang EQ", description: "Look up audio and EQ terms, read the guides, and check common audio claims against the research.", tagline: "Look up listening and EQ terms." },
+  { path: "/curve-credits", slug: "curve-credits", kind: "credits", kicker: "ATTRIBUTION", title: "Targets & Credits | YinYang EQ", ogTitle: "Targets & Credits", description: "Creators, sources and reuse notes for every built-in target curve.", tagline: "Creators, sources and reuse notes." },
+  { path: "/privacy", slug: "privacy", kind: "privacy", kicker: "PRIVACY & PARTICIPATION", title: "Privacy Notice | YinYang EQ", description: "How YinYang EQ handles comparison data, what you can choose to share, and how to withdraw or delete it.", tagline: "What is kept, what is shared, your choices." },
+  { path: "/terms", slug: "terms", title: "Terms Of Use | YinYang EQ", description: "Your rights in what you share, how research choices and rankings work, and how YinYang EQ updates the site.", image: WELCOME_IMAGE, artworkSlug: "welcome" },
+  { path: "/glossary", slug: "glossary-guides", kind: "book", image: factsArtwork.image, kicker: "QUICK REFERENCE", title: "Glossary | YinYang EQ", description: "Look up listening and EQ terms, definitions and related words.", tagline: "Look up listening and EQ terms." },
   {
-    path: "/glossary/iem-measurement", slug: "iem-measurement", title: "Your First IEM Measurement With a 711 Coupler | YinYang EQ",
+    path: "/glossary/iem-measurement", slug: "iem-measurement", title: "Your First IEM Measurement With A 711 Coupler | YinYang EQ",
     description: "Learn to measure in-ear monitors with a 711 coupler and Room EQ Wizard, with annotated screenshots, AKG comparison plots, and a technical handbook.",
     image: {
       path: "/share/iem-measurement-guide.jpg", ...SHARE_IMAGE_SIZE,
@@ -65,25 +65,25 @@ export const sharePages = [
     ...factsArtwork, path: audioFactPath(fact.slug), slug: `audio-fact-${fact.slug}`,
     title: `${fact.title} | YinYang EQ`, description: fact.answer,
   })),
-  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ fitter benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
-  { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
-  { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
-  { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About this version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
-  { path: "/listeners/yinyangeq", slug: "journal", kind: "journal", kicker: "PUBLIC LISTENING JOURNAL", title: "YinYangEQ listening journal | YinYang EQ", description: "Tests, listening notes and gear the account owner chose to publish.", tagline: "Tests, notes and gear, published by choice." },
-  { path: "/share-shootout", slug: "share-shootout", kind: "embed", kicker: "SHAREABLE SHOOTOUT", title: "Create a shareable shootout | YinYang EQ", ogTitle: "Create a shareable blind shootout", description: "Pick two to four targets, share one link, and collect anonymous blind A/B votes. You decide whether to share the results.", tagline: "One link. Anonymous blind votes. Your data." },
-  { path: "/my-data", slug: "private", title: "My data | YinYang EQ", description: "Review, export or delete the data saved for this browser.", private: true },
-  { path: "/participation", slug: "private", title: "Participation choices | YinYang EQ", description: "Review and change how your comparison data is used.", private: true },
-  { path: "/account-sync", slug: "private", title: "Sync & devices | YinYang EQ", description: "Private account page.", private: true },
+  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
+  { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
+  { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
+  { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
+  { path: "/listeners/yinyangeq", slug: "journal", kind: "journal", kicker: "PUBLIC LISTENING JOURNAL", title: "YinYangEQ Listening Journal | YinYang EQ", description: "Tests, listening notes and gear the account owner chose to publish.", tagline: "Tests, notes and gear, published by choice." },
+  { path: "/share-shootout", slug: "share-shootout", kind: "embed", kicker: "SHAREABLE SHOOTOUT", title: "Create A Shareable Shootout | YinYang EQ", ogTitle: "Create A Shareable Blind Shootout", description: "Pick two to four targets, share one link, and collect anonymous blind A/B votes. You decide whether to share the results.", tagline: "One link. Anonymous blind votes. Your data." },
+  { path: "/my-data", slug: "private", title: "My Data | YinYang EQ", description: "Review, export or delete the data saved for this browser.", private: true },
+  { path: "/participation", slug: "private", title: "Participation Choices | YinYang EQ", description: "Review and change how your comparison data is used.", private: true },
+  { path: "/account-sync", slug: "private", title: "Sync & Devices | YinYang EQ", description: "Private account page.", private: true },
   { path: "/my-profile", slug: "private", title: "Profile | YinYang EQ", description: "Private account page.", private: true },
-  { path: "/profile-access", slug: "private", title: "Approved device access | YinYang EQ", description: "Private account page.", private: true },
-  { path: "/sync", slug: "private", title: "Link a browser | YinYang EQ", description: "Private account page.", private: true },
-  { path: "/pair", slug: "private", title: "Link a browser | YinYang EQ", description: "Private account page.", private: true },
+  { path: "/profile-access", slug: "private", title: "Approved Device Access | YinYang EQ", description: "Private account page.", private: true },
+  { path: "/sync", slug: "private", title: "Link A Browser | YinYang EQ", description: "Private account page.", private: true },
+  { path: "/pair", slug: "private", title: "Link A Browser | YinYang EQ", description: "Private account page.", private: true },
   { path: "/devices", slug: "private", title: "Devices | YinYang EQ", description: "Private account page.", private: true },
-  { path: "/access", slug: "private", title: "Sign in | YinYang EQ", description: "Private page.", private: true },
-  { path: "/test-history", slug: "private", title: "Private page | YinYang EQ", description: "Private page.", private: true },
-  { path: "/owner-research", slug: "private", title: "Private research admin | YinYang EQ", ogTitle: "Private page | YinYang EQ", description: "Private page.", private: true },
-  { path: "/admin-login", slug: "private", title: "Private page | YinYang EQ", description: "Private page.", private: true },
-  { path: "/owner-login", slug: "private", title: "Private page | YinYang EQ", description: "Private page.", private: true },
+  { path: "/access", slug: "private", title: "Sign In | YinYang EQ", description: "Private page.", private: true },
+  { path: "/test-history", slug: "private", title: "Private Page | YinYang EQ", description: "Private page.", private: true },
+  { path: "/owner-research", slug: "private", title: "Private Research Admin | YinYang EQ", ogTitle: "Private Page | YinYang EQ", description: "Private page.", private: true },
+  { path: "/admin-login", slug: "private", title: "Private Page | YinYang EQ", description: "Private page.", private: true },
+  { path: "/owner-login", slug: "private", title: "Private Page | YinYang EQ", description: "Private page.", private: true },
 ];
 
 // Paths that only redirect elsewhere share the destination's card.
@@ -97,10 +97,10 @@ const shootoutVariants = [
 ];
 const privateShootoutTabs = new Set(["measurements", "profile", "eqs", "upload"]);
 
-export const privateShareCard = { path: "/my-data", slug: "private", kind: "privacy", title: "Private page | YinYang EQ", description: "Private page.", private: true };
+export const privateShareCard = { path: "/my-data", slug: "private", kind: "privacy", title: "Private Page | YinYang EQ", description: "Private page.", private: true };
 export const sharedShootoutCard = {
   path: "/share-shootout", slug: "shared-shootout", kind: "embed", kicker: "SHARED LISTENING",
-  title: "Blind shootout | YinYang EQ", description: "Compare hidden headphone targets and pick the sound you prefer.",
+  title: "Blind Shootout | YinYang EQ", description: "Compare hidden headphone targets and pick the sound you prefer.",
   tagline: "Same song, two sounds, your choice.",
 };
 

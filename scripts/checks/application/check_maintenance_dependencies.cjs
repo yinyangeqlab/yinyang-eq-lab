@@ -9,7 +9,7 @@ vm.runInNewContext(js,{exports:exportsObj,require:n=>n.endsWith('.css')?{}:n==='
 const render=()=>{cursor=0;return exportsObj.default()};
 function nodes(tree,result=[]){if(!tree||typeof tree!=='object')return result;if(tree.props){result.push(tree);for(const c of Object.values(tree.props))if(Array.isArray(c))c.forEach(x=>nodes(x,result));else nodes(c,result)}return result}
 function control(tree,label){return nodes(tree).find(n=>n.type==='input'&&n.props['aria-label']===label)}
-const tournament=tree=>control(tree,'Pause Shootouts during maintenance'),contribution=tree=>control(tree,'Pause Shared uploads & suggestions during maintenance');
+const tournament=tree=>control(tree,'Pause Shootouts during maintenance'),contribution=tree=>control(tree,'Pause Shared Uploads & Suggestions during maintenance');
 let tree=render();assert.equal(contribution(tree).props.checked,true);assert.equal(contribution(tree).props.disabled,true);assert.equal(contribution(tree).props['aria-describedby'],'maintenance-contributions-dependency');
 tournament(tree).props.onChange({target:{checked:false}});tree=render();assert.equal(contribution(tree).props.checked,false);assert.equal(contribution(tree).props.disabled,false);
 contribution(tree).props.onChange({target:{checked:true}});tree=render();tournament(tree).props.onChange({target:{checked:true}});tree=render();assert.equal(contribution(tree).props.disabled,true);tournament(tree).props.onChange({target:{checked:false}});tree=render();assert.equal(contribution(tree).props.checked,true,'Independent pause survives parent round trip');

@@ -8,16 +8,17 @@ export const metadata: Metadata = shareMetadata("/terms");
 export default function TermsPage() {
   return (
     <main className="my-data">
-      <nav aria-label="Related pages">
+
+      <header>
+        <h1>Terms Of Use</h1>
+        <p>Effective <time dateTime="2026-11-11">November 11, 2026</time>.</p>
+        <p>YinYang EQ is an open source listening project operated by Yin Yang EQ Lab.</p>
+      </header>
+    <nav aria-label="Related pages">
         <Link href="/privacy">Privacy notice</Link>
         <Link href="/my-data">My data</Link>
         <Link href="/version">Version &amp; Release Notes</Link>
       </nav>
-      <header>
-        <h1>Terms of Use</h1>
-        <p>Effective <time dateTime="2026-11-11">November 11, 2026</time>.</p>
-        <p>YinYang EQ is an open source listening project operated by Yin Yang EQ Lab.</p>
-      </header>
 
       <section id="your-work">
         <h2>Your work and its sources</h2>

@@ -20,7 +20,7 @@ export default function SiteChrome({ children, help }: { children: ReactNode; he
   const pathname = usePathname();
   const comparison = pathname === BLIND_EQ_COMPARE_PATH;
   if (isStandalonePath(pathname) && pathname) {
-    const title = pathname === "/share-shootout" ? "Create a Shareable Shootout"
+    const title = pathname === "/share-shootout" ? "Create A Shareable Shootout"
       : /\/results\/?$/.test(pathname) ? "Private Shootout Results"
       : "Blind Shootout";
     return <>{!pathname.startsWith("/embed/") && <SiteTopbar title={title} />}{children}{help}</>;

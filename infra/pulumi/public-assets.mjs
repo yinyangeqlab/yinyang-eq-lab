@@ -5,6 +5,11 @@ export const publicAssetPaths = [
   "/brand-amoled.webp", "/brand-avatar-aligned.webp", "/brand-avatar-aligned.png",
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
+  // Only the fixed, original instrumental preview is public.
+  "/sample-assets/a.flac", "/sample-assets/b.flac",
+  "/sample-assets/Barlow-Regular.ttf", "/sample-assets/Barlow-SemiBold.ttf", "/sample-assets/OFL.txt",
+  "/sample-assets/destinations/ranking-print.webp", "/sample-assets/destinations/tuning-print.webp",
+  "/sample-assets/destinations/comparison-print.webp", "/sample-assets/destinations/contribute-print.webp",
   "/welcome-headphone-carpet.webp", "/welcome-iem-carpet.webp",
   "/vendor/site-help/potion-2m-int4-v1.bin", "/vendor/site-help/LICENSE.txt",
 ];

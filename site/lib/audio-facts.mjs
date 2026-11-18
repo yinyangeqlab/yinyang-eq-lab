@@ -45,7 +45,7 @@ const [headphones, measurement, digital, listening] = audioFactTopics;
 /** @type {AudioFact[]} */
 export const audioFacts = [
   {
-    slug: "harman-target", topic: headphones, title: "Does everyone prefer the Harman target?",
+    slug: "harman-target", topic: headphones, title: "Does Everyone Prefer The Harman Target?",
     claim: "The Harman target is the objectively best sound for every listener.",
     verdict: "Overgeneralized", answer: "The Harman target predicts group preference in controlled tests. Individual listeners can prefer a different tonal balance.",
     aliases: ["Harman curve", "best headphone target", "target preference", "bass preference", "neutral tuning"],
@@ -57,7 +57,7 @@ export const audioFacts = [
     related: ["flat-frequency-response", "blind-tests", "different-measurement-rigs"],
   },
   {
-    slug: "flat-frequency-response", topic: headphones, title: "Should a neutral headphone graph be flat?",
+    slug: "flat-frequency-response", topic: headphones, title: "Should A Neutral Headphone Graph Be Flat?",
     claim: "A flat raw trace is the definition of a neutral headphone.",
     verdict: "Misused term", answer: "A flat line means different things on raw and compensated graphs. On a target-compensated graph it means a match to the named reference.",
     aliases: ["neutral", "raw graph", "compensated graph", "frequency response", "flat headphones", "flat line"],
@@ -69,7 +69,7 @@ export const audioFacts = [
     related: ["harman-target", "different-measurement-rigs"],
   },
   {
-    slug: "headphone-soundstage", topic: headphones, title: "Can two headphone drivers reproduce spatial cues?",
+    slug: "headphone-soundstage", topic: headphones, title: "Can Two Headphone Drivers Reproduce Spatial Cues?",
     claim: "Two drivers can only reproduce left and right, so headphone soundstage is imaginary.",
     verdict: "Incorrect", answer: "Two channels can carry cues for direction and space. The resulting perception depends on the signals and how they reach the listener’s ears.",
     aliases: ["soundstage", "imaging", "binaural", "HRTF", "spatial audio", "front back", "virtual surround"],
@@ -81,7 +81,7 @@ export const audioFacts = [
     related: ["phase-audibility", "blind-tests"],
   },
   {
-    slug: "iem-seal-and-bass", topic: measurement, title: "Can a poor IEM seal reduce bass?",
+    slug: "iem-seal-and-bass", topic: measurement, title: "Can A Poor IEM Seal Reduce Bass?",
     claim: "Bass cannot change if the earphone and volume setting stay the same.",
     verdict: "Incorrect", answer: "Fit is part of the acoustic system. A leak can change frequency response, so the same IEM can measure and sound different after reseating.",
     aliases: ["ear tip", "ear tips", "earbuds", "no bass", "weak bass", "poor fit", "leakage", "seal", "coupler"],
@@ -93,7 +93,7 @@ export const audioFacts = [
     related: ["711-coupler-treble", "different-measurement-rigs"],
   },
   {
-    slug: "711-coupler-treble", topic: measurement, title: "Is a 711 coupler accurate all the way to 20 kHz?",
+    slug: "711-coupler-treble", topic: measurement, title: "Is A 711 Coupler Accurate All The Way To 20 kHz?",
     claim: "A 711 graph is equally reliable across its entire plotted frequency range.",
     verdict: "Overgeneralized", answer: "A plotted sweep can extend beyond the simulator’s specified range. IEC 60318-4 specifies ear simulation from 100 Hz to 10 kHz.",
     aliases: ["711", "60318-4", "10 khz", "8 khz peak", "20 khz", "upper treble", "coupler accuracy", "resonance"],
@@ -105,7 +105,7 @@ export const audioFacts = [
     related: ["iem-seal-and-bass", "different-measurement-rigs"],
   },
   {
-    slug: "different-measurement-rigs", topic: measurement, title: "Can you compare 711 and 5128 graphs directly?",
+    slug: "different-measurement-rigs", topic: measurement, title: "Can You Compare 711 And 5128 Graphs Directly?",
     claim: "Raw curves from different rigs should match if the measurements are correct.",
     verdict: "Incorrect", answer: "Different simulators can load the same headphone differently. Use a reference appropriate to each fixture and document the setup.",
     aliases: ["B&K 5128", "Bruel & Kjaer", "GRAS", "711 vs 5128", "target conversion", "cross rig", "measurement comparison"],
@@ -117,7 +117,7 @@ export const audioFacts = [
     related: ["flat-frequency-response", "711-coupler-treble", "iem-seal-and-bass"],
   },
   {
-    slug: "eq-q-and-gain", topic: measurement, title: "Is Q another way to express EQ gain?",
+    slug: "eq-q-and-gain", topic: measurement, title: "Is Q Another Way To Express EQ Gain?",
     claim: "A higher Q always makes an EQ boost stronger.",
     verdict: "Misused term", answer: "For a conventional parametric bell, gain sets the center boost or cut. At fixed frequency and gain, higher Q narrows the affected band.",
     aliases: ["parametric EQ", "quality factor", "bandwidth", "bell filter", "peaking filter", "Q factor", "shelf filter"],
@@ -129,7 +129,7 @@ export const audioFacts = [
     related: ["eq-boost-and-clipping", "flat-frequency-response"],
   },
   {
-    slug: "eq-boost-and-clipping", topic: measurement, title: "Does positive EQ gain always cause clipping?",
+    slug: "eq-boost-and-clipping", topic: measurement, title: "Does Positive EQ Gain Always Cause Clipping?",
     claim: "Any positive EQ gain clips digital audio, and cuts alone guarantee safety.",
     verdict: "Overgeneralized", answer: "Clipping depends on the signal level after processing and the ceiling of that stage. A boost can fit when enough headroom is available.",
     aliases: ["negative preamp", "positive gain", "headroom", "PEQ clipping", "cut only EQ", "0 dBFS", "overlapping filters"],
@@ -141,7 +141,7 @@ export const audioFacts = [
     related: ["eq-q-and-gain", "sample-peak-vs-true-peak"],
   },
   {
-    slug: "headphone-distortion", topic: measurement, title: "Does lower headphone THD always sound better?",
+    slug: "headphone-distortion", topic: measurement, title: "Does Lower Headphone THD Always Sound Better?",
     claim: "The headphone with the lowest distortion percentage necessarily sounds best.",
     verdict: "Overgeneralized", answer: "A single total harmonic distortion (THD) figure cannot rank overall sound quality or establish audibility.",
     aliases: ["THD", "distortion percentage", "audible distortion", "nonlinear distortion", "sound quality", "masking"],
@@ -153,7 +153,7 @@ export const audioFacts = [
     related: ["phase-audibility", "harman-target", "blind-tests"],
   },
   {
-    slug: "phase-audibility", topic: measurement, title: "Is phase distortion always audible or always inaudible?",
+    slug: "phase-audibility", topic: measurement, title: "Is Phase Distortion Always Audible Or Always Inaudible?",
     claim: "Any phase shift ruins sound quality, or phase never matters at all.",
     verdict: "Overgeneralized", answer: "Phase audibility depends on the change, its frequency range, the test signal and the listening conditions.",
     aliases: ["phase shift", "group delay", "linear phase", "minimum phase", "phase distortion", "time smear"],
@@ -165,7 +165,7 @@ export const audioFacts = [
     related: ["headphone-distortion", "blind-tests"],
   },
   {
-    slug: "digital-stair-steps", topic: digital, title: "Does digital audio play back as stair steps?",
+    slug: "digital-stair-steps", topic: digital, title: "Does Digital Audio Play Back As Stair Steps?",
     claim: "A PCM plot with steps is the analog waveform you hear.",
     verdict: "Incorrect", answer: "PCM stores sampled values. A stair-step drawing can show a sample-and-hold stage or plotting choice; it is not the intended reconstructed waveform.",
     aliases: ["staircase", "stair steps", "PCM", "Nyquist", "sampling theorem", "DAC", "44.1 kHz", "smooth wave", "sample rate"],
@@ -177,7 +177,7 @@ export const audioFacts = [
     related: ["high-resolution-audio", "bit-depth-and-dither", "sample-peak-vs-true-peak"],
   },
   {
-    slug: "bit-depth-and-dither", topic: digital, title: "Does 24-bit audio add more treble than 16-bit audio?",
+    slug: "bit-depth-and-dither", topic: digital, title: "Does 24-Bit Audio Add More Treble Than 16-Bit Audio?",
     claim: "More bits per PCM sample increase the highest frequency the file can store.",
     verdict: "Misused term", answer: "Bit depth concerns amplitude quantization. At the same sample rate, increasing bit depth does not extend the representable bandwidth.",
     aliases: ["16 bit", "24 bit", "32 bit", "bit depth", "dither", "noise floor", "quantization", "dynamic range", "sample rate"],
@@ -189,7 +189,7 @@ export const audioFacts = [
     related: ["digital-stair-steps", "high-resolution-audio"],
   },
   {
-    slug: "high-resolution-audio", topic: digital, title: "Is hi-res audio always audibly better than CD quality?",
+    slug: "high-resolution-audio", topic: digital, title: "Is Hi-Res Audio Always Audibly Better Than CD Quality?",
     claim: "A hi-res badge guarantees an audible upgrade over CD quality.",
     verdict: "Evidence is mixed", answer: "Some controlled tests find differences and others do not. Detecting a difference does not show which version sounds better.",
     aliases: ["hi res", "hi-res", "high resolution", "CD quality", "24 96", "16 44.1", "192 kHz", "audiophile"],
@@ -201,7 +201,7 @@ export const audioFacts = [
     related: ["blind-tests", "digital-stair-steps", "bit-depth-and-dither", "bitrate-and-lossless"],
   },
   {
-    slug: "bitrate-and-lossless", topic: digital, title: "Does a higher bitrate always mean better sound?",
+    slug: "bitrate-and-lossless", topic: digital, title: "Does A Higher Bitrate Always Mean Better Sound?",
     claim: "The file with the higher kbps is automatically higher quality.",
     verdict: "Overgeneralized", answer: "Bitrate counts bits per second. It does not identify the source, the codec, or whether the decoded samples match the original.",
     aliases: ["kbps", "FLAC", "WAV", "Opus", "MP3", "AAC", "lossy", "lossless", "compression", "bit rate"],
@@ -213,7 +213,7 @@ export const audioFacts = [
     related: ["high-resolution-audio", "bit-depth-and-dither"],
   },
   {
-    slug: "lufs-vs-peak-level", topic: listening, title: "Are LUFS, dBFS and dB SPL the same?",
+    slug: "lufs-vs-peak-level", topic: listening, title: "Are LUFS, dBFS And dB SPL The Same?",
     claim: "A peak reading tells you the loudness of a track and how loud it is in your room.",
     verdict: "Misused term", answer: "Integrated LUFS measures programme loudness. Sample peak in dBFS measures digital peak amplitude. SPL describes physical sound pressure.",
     aliases: ["volume", "loudness units", "lufs", "dbfs", "spl", "integrated loudness", "peak normalization", "same peak different loudness"],
@@ -225,7 +225,7 @@ export const audioFacts = [
     related: ["sample-peak-vs-true-peak", "minus-14-lufs", "equal-loudness-curves"],
   },
   {
-    slug: "sample-peak-vs-true-peak", topic: listening, title: "Can audio clip even when no sample reaches 0 dBFS?",
+    slug: "sample-peak-vs-true-peak", topic: listening, title: "Can Audio Clip Even When No Sample Reaches 0 dBFS?",
     claim: "A sample peak below 0 dBFS guarantees the reconstructed signal cannot overload.",
     verdict: "Incorrect", answer: "The reconstructed waveform can peak between samples. A true-peak estimate checks for peaks a sample meter can miss.",
     aliases: ["intersample peak", "inter sample peak", "sample peak", "true peak", "dBTP", "dBFS clipping", "analog overload"],
@@ -237,7 +237,7 @@ export const audioFacts = [
     related: ["lufs-vs-peak-level", "eq-boost-and-clipping", "minus-14-lufs"],
   },
   {
-    slug: "minus-14-lufs", topic: listening, title: "Must every master hit −14 LUFS?",
+    slug: "minus-14-lufs", topic: listening, title: "Must Every Master Hit −14 LUFS?",
     claim: "All streaming releases must be mastered to −14 LUFS.",
     verdict: "Incorrect", answer: "A service’s playback normalization setting is not a universal mastering or delivery requirement.",
     aliases: ["-14 LUFS", "minus 14 LUFS", "Spotify", "streaming normalization", "mastering target", "broadcast", "minus 23"],
@@ -249,7 +249,7 @@ export const audioFacts = [
     related: ["lufs-vs-peak-level", "sample-peak-vs-true-peak"],
   },
   {
-    slug: "blind-tests", topic: listening, title: "What does a blind audio test actually prove?",
+    slug: "blind-tests", topic: listening, title: "What Does A Blind Audio Test Actually Prove?",
     claim: "A successful ABX proves which sounds better, and a failed ABX proves they are identical.",
     verdict: "Misused term", answer: "ABX tests discrimination: can a listener identify whether X is A or B? Preference is a separate question, and a null result has limits.",
     aliases: ["ABX", "double blind", "A/B test", "listening test", "MUSHRA", "preference vs discrimination", "level matching", "null result", "statistical power"],
@@ -261,7 +261,7 @@ export const audioFacts = [
     related: ["high-resolution-audio", "harman-target", "phase-audibility"],
   },
   {
-    slug: "equal-loudness-curves", topic: listening, title: "Can you use Fletcher–Munson curves as headphone EQ?",
+    slug: "equal-loudness-curves", topic: listening, title: "Can You Use Fletcher–Munson Curves As Headphone EQ?",
     claim: "An equal-loudness contour is a universal EQ target for music.",
     verdict: "Misused term", answer: "Equal-loudness contours describe how much SPL different tones need to sound equally loud under defined conditions. They are not headphone preference curves.",
     aliases: ["Fletcher Munson", "ISO 226", "equal loudness", "phon", "loudness compensation", "quiet listening", "bass at low volume"],

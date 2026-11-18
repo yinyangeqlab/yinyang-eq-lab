@@ -14,12 +14,12 @@ const queryDestinations = new Map([
   ["/shootout?mode=bring", ["blind-research", "Blind Research"]],
   ["/shootout?mode=open", ["open-comparison", "Open Comparison"]],
   ["/shootout?tab=rankings", ["rankings", "Research Rankings"]],
-  ["/shootout?tab=measurements", ["private", "Private page"]],
-  ["/shootout?tab=profile", ["private", "Private page"]],
-  ["/shootout?tab=eqs", ["private", "Private page"]],
-  ["/shootout?tab=upload", ["private", "Private page"]],
-  ["/shootout?tab=music", ["song-suggestions", "Song suggestions"]],
-  ["/music-library?view=suggestions", ["song-suggestions", "Song suggestions"]],
+  ["/shootout?tab=measurements", ["private", "Private Page"]],
+  ["/shootout?tab=profile", ["private", "Private Page"]],
+  ["/shootout?tab=eqs", ["private", "Private Page"]],
+  ["/shootout?tab=upload", ["private", "Private Page"]],
+  ["/shootout?tab=music", ["song-suggestions", "Song Suggestions"]],
+  ["/music-library?view=suggestions", ["song-suggestions", "Song Suggestions"]],
 ]);
 
 function cardFor(href) {
@@ -128,8 +128,8 @@ const dependencies = {
 };
 const dynamicRoutes = [
   ["site/app/s/[id]/page.tsx", `/s/${id}`, sharedTitle, share.sharedShootoutCard],
-  ["site/app/embed/[id]/page.tsx", `/embed/${id}`, "Blind shootout", share.sharedShootoutCard],
-  ["site/app/s/[id]/results/page.tsx", `/s/${id}/results`, "Private page", share.privateShareCard],
+  ["site/app/embed/[id]/page.tsx", `/embed/${id}`, "Blind Shootout", share.sharedShootoutCard],
+  ["site/app/s/[id]/results/page.tsx", `/s/${id}/results`, "Private Page", share.privateShareCard],
 ];
 for (const [file, path, title, card] of dynamicRoutes) {
   const { generateMetadata } = loadSource(file, dependencies);
@@ -153,7 +153,7 @@ for (const [file, path, title, card] of dynamicRoutes) {
 
 const { generateMetadata: sharedMetadata } = loadSource("site/app/s/[id]/page.tsx", dependencies);
 const missing = await sharedMetadata({ params: Promise.resolve({ id: "doesntexst" }) });
-assert.equal(missing.openGraph.title, "Shootout not found");
+assert.equal(missing.openGraph.title, "Shootout Not Found");
 assert.deepEqual(missing.openGraph.images, []);
 assert.deepEqual(missing.twitter.images, []);
 assert.deepEqual(missing.robots, { index: false, follow: false });

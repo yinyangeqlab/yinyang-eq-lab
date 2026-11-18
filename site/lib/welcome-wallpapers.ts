@@ -1,5 +1,5 @@
 export const wallpaperScenes = [
-  { id: "landscape", title: "Landscape only" },
+  { id: "landscape", title: "Background only" },
   { id: "flying-gear", title: "Headphones, IEMs & flying carpets" },
 ] as const;
 

@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./site-light.css";
 import "@/components/action-hover.css";
+import "@/components/first-listen/site-layout.css";
 import SiteChrome from "@/components/site-chrome";
 import SiteHelp from "@/components/site-help";
 import { SiteHelpActionsProvider } from "@/components/site-help-actions";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { glossaryTerms, searchGlossary, relatedGlossaryWords, type GlossaryTerm } from "@/lib/glossary";
 
 export default function TermsReference() {
@@ -8,6 +8,17 @@ export default function TermsReference() {
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // The benchmark used to appear below the definitions. Preserve shared section links.
+  useEffect(() => {
+    function followLegacyBenchmark() {
+      if (["#eq-fitting", "#eq-fitting-title", "#benchmark", "#frequency-ranges", "#peqdb-optimizer", "#listening-preference"].includes(location.hash)) {
+        location.replace("/glossary/eq-fitting" + location.hash);
+      }
+    }
+    followLegacyBenchmark();
+    window.addEventListener("hashchange", followLegacyBenchmark);
+    return () => window.removeEventListener("hashchange", followLegacyBenchmark);
+  }, []);
   const results = searchGlossary(query);
   const expanded = open && results.length > 0;
   const activeIndex = results.findIndex(term => term.id === activeId);

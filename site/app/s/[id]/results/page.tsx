@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { image, twitterImage } = await requestShareImage(privateShareCard);
   const preview = { title: previewTitle(privateShareCard), description: privateShareCard.description };
   return {
-    title: "Private shootout results | YinYang EQ",
+    title: "Private Shootout Results | YinYang EQ",
     alternates: { canonical: url },
     robots: { index: false, follow: false },
     referrer: "no-referrer",

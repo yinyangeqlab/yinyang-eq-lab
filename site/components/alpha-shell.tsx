@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { PanelTopIcon } from "lucide-react";
+import { BookA, ChartSpline, ChevronDown, ClipboardCheck, PanelLeftIcon, PanelTopIcon, Ruler } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
-import type { KeyboardEvent, MouseEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
+import { Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
 import { BLIND_EQ_COMPARE_PATH } from "@/lib/blind-eq";
 import { buildLabel } from "@/lib/release-info";
 import { isPersonalAreaSection, PERSONAL_AREA_TITLE } from "@/lib/personal-area";
@@ -15,7 +15,6 @@ import { applyMotionPreference, readDisplayPreferences, subscribeDisplayPreferen
 type Destination = "home" | "listen" | "compare" | "tune" | "ear" | "library" | "rankings" | "space" | "terms";
 type Layout = "full" | "icons" | "hidden";
 const PHONE_VIEWPORT = "(max-width: 600px)";
-const SIDEBAR_EDGE_DISTANCE = 48;
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 // Match the path commands across poses so the browser can morph one unbroken EQ line.
@@ -42,13 +41,56 @@ const destinations: { id: Destination; label: string; href: string }[] = [
   { id: "home", label: "Home", href: "/" },
   { id: "listen", label: "Listen", href: "/listen" },
   { id: "compare", label: "Compare EQs", href: BLIND_EQ_COMPARE_PATH },
-  { id: "tune", label: "Preference Tuning", href: "/preference-tuning" },
+  { id: "tune", label: "Personal EQ Tuning", href: "/preference-tuning" },
   { id: "ear", label: "Peak & Dip Finder", href: "/ear-tuning" },
   { id: "space", label: PERSONAL_AREA_TITLE, href: "/shootout?tab=profile" },
   { id: "rankings", label: "Research", href: "/shootout?tab=rankings" },
-  { id: "library", label: "Music library", href: "/music-library" },
+  { id: "library", label: "Music Library", href: "/music-library" },
   { id: "terms", label: "Glossary & Guides", href: "/glossary" },
 ];
+
+const guides = [
+  { label: "Glossary", href: "/glossary", icon: BookA },
+  { label: "IEM Measurement Guide", href: "/glossary/iem-measurement", icon: Ruler },
+  { label: "Audio Fact Checks", href: "/glossary/audio-facts", icon: ClipboardCheck },
+  { label: "EQ Fitter Benchmark", href: "/glossary/eq-fitting", icon: ChartSpline },
+];
+
+function guideFor(path: string) {
+  return guides.find(guide => path === guide.href || (guide.href !== "/glossary" && path.startsWith(guide.href + "/")));
+}
+
+function GuideNavigation({ path, layout, expandRail, follow, documentNavigation }: {
+  path: string; layout: Layout; expandRail: () => void; documentNavigation: boolean; follow: () => void;
+}) {
+  const GuideLink = documentNavigation ? "a" : Link;
+  const current = guideFor(path);
+  const [open, setOpen] = useState(Boolean(current));
+  const expanded = open && layout === "full";
+  const toggle = useRef<HTMLButtonElement>(null);
+  function close(event: KeyboardEvent) {
+    if (event.key === "Escape" && expanded) {
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+      toggle.current?.focus();
+    }
+  }
+  return <div className="alpha-guide-group" onKeyDown={close}>
+    <button type="button" ref={toggle} className="alpha-destination alpha-guide-toggle" data-destination="terms"
+      title="Glossary & Guides" aria-label="Glossary & Guides" aria-expanded={expanded} aria-controls="alpha-guide-links"
+      onClick={() => { if (layout === "icons") expandRail(); setOpen(!expanded); }}>
+      <DestinationIcon kind="terms"/><span>Glossary &amp; Guides</span><ChevronDown className="alpha-guide-chevron" aria-hidden="true"/>
+    </button>
+    <ul id="alpha-guide-links" hidden={!expanded}>
+      {guides.map(({ label, href, icon: Icon }) => <li key={href}>
+        <GuideLink className={`alpha-destination alpha-guide-link${current?.href === href ? " is-current" : ""}`}
+          href={href} {...(!documentNavigation && {prefetch: false})} aria-current={current?.href === href ? path === href ? "page" : "location" : undefined}
+          onClick={follow}><Icon className="alpha-destination-icon" aria-hidden="true"/><span>{label}</span></GuideLink>
+      </li>)}
+    </ul>
+  </div>;
+}
 
 function destinationFor(path: string, tab: string | null): Destination | null {
   if (path === "/glossary" || path.startsWith("/glossary/")) return "terms";
@@ -155,7 +197,7 @@ const pageTitles: Record<string, string> = {
   "/shootout/personal": "Personal Tournament",
   "/shortcuts": "Help & Hotkeys",
   "/software-licenses": "Software Licenses",
-  "/terms": "Terms of Use",
+  "/terms": "Terms Of Use",
   "/test-history": "Private Test History",
   "/version": "About This Version",
 };
@@ -186,21 +228,19 @@ export default function AlphaShell({ children, help, privateComparison = false }
   const [layoutLoaded, setLayoutLoaded] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const menu = useRef<HTMLButtonElement>(null);
-  const peek = useRef<HTMLButtonElement>(null);
   const phoneToggle = useRef<HTMLButtonElement>(null);
   const tuneAnimation = useRef<SVGAnimationElement>(null);
-  const restoreToggleFocus = useRef(false);
   const keepSavedLayout = useRef(false);
   const listeningMode = pathname === "/shootout" && active === "listen" ? currentQuery?.mode : null;
   const modeTitle = listeningMode === "blind" ? "Blind Research" : listeningMode === "open" ? "Open Comparison" : null;
-  const title = modeTitle ?? pageTitles[pathname] ?? destinations.find(d => d.id === active)?.label ?? "YinYang EQ";
+  const title = modeTitle ?? guideFor(pathname)?.label ?? pageTitles[pathname] ?? destinations.find(d => d.id === active)?.label ?? "YinYang EQ";
 
   useEffect(() => {
     const compact = window.matchMedia("(max-width: 800px)").matches && !window.matchMedia(PHONE_VIEWPORT).matches;
     try {
       const saved = localStorage.getItem("yinyang-navigation-layout");
       // A saved desktop preference should leave room for content on the first narrow view.
-      keepSavedLayout.current = compact && saved === "full";
+      keepSavedLayout.current = compact && saved === "full" && !guideFor(window.location.pathname);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- Read browser-only layout preferences after hydration.
       setLayout(keepSavedLayout.current ? "icons" : saved === "full" || saved === "icons" || saved === "hidden" ? saved : compact ? "icons" : "full");
     }
@@ -235,36 +275,6 @@ export default function AlphaShell({ children, help, privateComparison = false }
     observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden", "open", "class", "style"] });
     return () => observer.disconnect();
   }, []);
-  useEffect(() => {
-    const edge = peek.current;
-    if (!edge || layout !== "hidden" || modalOpen) return;
-
-    const retract = () => edge.removeAttribute("data-edge-near");
-    const onPointerMove = (event: PointerEvent) => {
-      const nearEdge = event.pointerType === "mouse" &&
-        event.clientX >= 0 && event.clientX < SIDEBAR_EDGE_DISTANCE;
-      if (edge.hasAttribute("data-edge-near") !== nearEdge) {
-        edge.toggleAttribute("data-edge-near", nearEdge);
-      }
-    };
-    const onPointerOut = (event: PointerEvent) => {
-      if (!event.relatedTarget) retract();
-    };
-    window.addEventListener("pointermove", onPointerMove, { passive: true, capture: true });
-    window.addEventListener("pointerout", onPointerOut, true);
-    window.addEventListener("blur", retract);
-    return () => {
-      window.removeEventListener("pointermove", onPointerMove, true);
-      window.removeEventListener("pointerout", onPointerOut, true);
-      window.removeEventListener("blur", retract);
-      retract();
-    };
-  }, [layout, modalOpen, phone]);
-  useLayoutEffect(() => {
-    if (!restoreToggleFocus.current) return;
-    restoreToggleFocus.current = false;
-    (layout === "hidden" ? peek.current : menu.current)?.focus({ preventScroll: true });
-  }, [layout]);
   function closeExpandedNavigation(event: KeyboardEvent) {
     if (event.key !== "Escape" || layout !== "full") return;
     event.preventDefault();
@@ -293,35 +303,6 @@ export default function AlphaShell({ children, help, privateComparison = false }
   function stopTuningIcon() {
     tuneAnimation.current?.endElement?.();
   }
-  function cycleLayout(event: MouseEvent<HTMLButtonElement>) {
-    if (layout === "hidden" || nextLayout === "hidden") {
-      restoreToggleFocus.current = event.detail === 0 || event.currentTarget.matches(":focus-visible");
-    }
-    setLayout(nextLayout);
-  }
-  const sidebarArrow = (
-    <span className="alpha-divider-grip" aria-hidden="true">
-      <svg viewBox="0 0 24 24">
-        <path className="alpha-sidebar-arrowhead" d="M6 12 18 3l-2.6 9 2.6 9Z" fill="currentColor" />
-      </svg>
-    </span>
-  );
-  const navigationToggle = (
-    <button
-      ref={menu}
-      className="alpha-sidebar-divider alpha-sidebar-edge"
-      type="button"
-      onClick={cycleLayout}
-      aria-label={nextAction}
-      aria-controls="alpha-navigation"
-      aria-expanded="true"
-      aria-describedby="alpha-navigation-state"
-      data-next-layout={nextLayout}
-    >
-      {sidebarArrow}
-    </button>
-  );
-
   // The private player owns its audio context for the lifetime of this document.
   const ShellLink = privateComparison ? "a" : Link;
   const shellLinkOptions = privateComparison ? {} : { prefetch: false as const };
@@ -329,43 +310,36 @@ export default function AlphaShell({ children, help, privateComparison = false }
   return <div className="alpha-app" data-alpha-layout={layout} data-phone-menu-open={phone && phoneMenuOpen || undefined} data-alpha-layout-ready={layoutLoaded || undefined} data-alpha-destination={active || "utility"}>
     <Suspense fallback={null}><QueryDestination path={pathname} onChange={setQuery}/></Suspense>
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
-    {!phone && layout === "hidden" && (
-      <button
-        ref={peek}
-        className="alpha-sidebar-divider alpha-sidebar-peek"
-        type="button"
-        aria-label="Show sidebar"
-        aria-controls="alpha-navigation"
-        aria-expanded={false}
-        aria-describedby="alpha-navigation-state"
-        inert={modalOpen}
-        onClick={cycleLayout}
-      >
-        <span className="alpha-sidebar-glass" aria-hidden="true">{sidebarArrow}</span>
-      </button>
-    )}
     <div className="alpha-workspace">
-      <SiteTopbar title={title} inert={modalOpen} navigationControl={phone && (
-        <button
-          ref={phoneToggle}
-          className="alpha-sidebar-reopen"
-          type="button"
-          onClick={() => setPhoneMenuOpen(open => !open)}
-          onKeyDown={closeExpandedNavigation}
-          aria-controls="alpha-navigation"
-          aria-expanded={phoneMenuOpen}
-        >
-          <PanelTopIcon aria-hidden="true" />
-          <span>{phoneMenuOpen ? "Close menu" : "Open menu"}</span>
-        </button>
-      )} />
-      <div className="alpha-navigation-frame" inert={modalOpen} onKeyDown={closeExpandedNavigation}>
-        {!phone && layout !== "hidden" && navigationToggle}
+      <div className="alpha-nav-header">
+        <SiteTopbar title={title} inert={modalOpen} navigationControl={phone ? (
+          <button
+            ref={phoneToggle}
+            className="alpha-sidebar-reopen"
+            type="button"
+            onClick={() => setPhoneMenuOpen(open => !open)}
+            onKeyDown={closeExpandedNavigation}
+            aria-controls="alpha-navigation"
+            aria-expanded={phoneMenuOpen}
+          >
+            <PanelTopIcon aria-hidden="true" />
+            <span>{phoneMenuOpen ? "Close menu" : "Open menu"}</span>
+          </button>
+        ) : (
+          <button type="button" className="alpha-sidebar-reopen" ref={menu}
+            title={nextAction} aria-label={nextAction} aria-controls="alpha-navigation"
+            aria-expanded={layout !== "hidden"} aria-describedby="alpha-navigation-state"
+            onClick={() => setLayout(nextLayout)}>
+            <PanelLeftIcon aria-hidden="true" />
+          </button>
+        )} />
+        <div className="alpha-navigation-frame" inert={modalOpen} onKeyDown={closeExpandedNavigation}>
         <aside id="alpha-navigation" className="alpha-navigation" aria-label="Main navigation" inert={layout === "hidden"} aria-hidden={layout === "hidden"}>
           {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
           <ShellLink className="alpha-brand" href="/" {...shellLinkOptions} onClick={followNavigation}><img src={`/brand-mark.svg?v=${buildLabel}`} alt=""/><span>YinYang EQ<small>Find your sound.</small></span></ShellLink>
 
           <nav aria-label="Main destinations">{destinations.map(d => {
+            if (d.id === "terms") return <GuideNavigation key={pathname} path={pathname} layout={layout} expandRail={() => setLayout("full")} follow={followNavigation} documentNavigation={privateComparison}/>;
             // Enter Finder with a document navigation so Back can warn about an unfinished ranked challenge.
             const documentNavigation = privateComparison || d.id === "ear" || d.id === "compare";
             const DestinationLink = documentNavigation ? "a" : Link;
@@ -379,11 +353,12 @@ export default function AlphaShell({ children, help, privateComparison = false }
             {privateComparison && <button id="compare-help-launch" className="compare-help-link" aria-label="Ask for help" title="Ask for help" aria-haspopup="dialog" aria-controls="site-help-panel" onClick={() => document.getElementById("ask-site-help")?.click()}>
               <svg className="alpha-utility-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.1 2c-1.2.9-1.6 1.3-1.6 2.5M12 16.4v.1"/></svg><span>Ask for help</span>
             </button>}
-            <ShellLink href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} {...shellLinkOptions} title="Help and playback hotkeys" onClick={followNavigation}><UtilityIcon kind="keyboard"/><span>Help &amp; hotkeys</span></ShellLink>
-            <ShellLink href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} {...shellLinkOptions} title="Privacy notice" onClick={followNavigation}><UtilityIcon kind="privacy"/><span>Privacy &amp; data</span></ShellLink>
+            <ShellLink href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} {...shellLinkOptions} title="Help and playback hotkeys" onClick={followNavigation}><UtilityIcon kind="keyboard"/><span>Help &amp; Hotkeys</span></ShellLink>
+            <ShellLink href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} {...shellLinkOptions} title="Privacy notice" onClick={followNavigation}><UtilityIcon kind="privacy"/><span>Privacy &amp; Data</span></ShellLink>
           </nav>
         </aside>
         <span id="alpha-navigation-state" hidden>{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
+        </div>
       </div>
       {!privateComparison && <div className="alpha-sync-region" inert={modalOpen}><AccountAutoSync /></div>}
       <div id="alpha-content" className="alpha-route-content" tabIndex={-1}>{help}{children}</div>

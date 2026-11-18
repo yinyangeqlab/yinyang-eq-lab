@@ -119,7 +119,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
 
   const shareUrl = `${origin}/s/${id}`;
   const privateResultsUrl = `${origin}/s/${id}/results#key=${encodeURIComponent(key)}`;
-  if (deleted) return <div className="em-root"><main className="em-card em-center"><h1 ref={deletedHeading} tabIndex={-1}>Shootout deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
+  if (deleted) return <div className="em-root"><main className="em-card em-center"><h1 ref={deletedHeading} tabIndex={-1}>Shootout Deleted</h1><p>The link, its results and every anonymous run were removed.</p><a className="es-button es-primary" href="/share-shootout">Make a new shootout</a></main></div>;
 
   return <div className="em-root">
     <main className="em-wrap" aria-busy={loading}>
@@ -127,7 +127,7 @@ export default function EmbedResultsView({ id }: { id: string }) {
       {!keySaved && data && <p className="es-error" role="alert">Browser storage could not save your private results key. Keep the private results link bookmarked or copied before leaving.</p>}
       {loading && <p className="es-status">Loading results…</p>}
 
-      {!data && <section className="em-card"><h1>Private results</h1>
+      {!data && <section className="em-card"><h1>Private Results</h1>
         <p id="em-paste-help">Use the private results link you saved when you created the shootout.</p>
         <form onSubmit={event => {
           event.preventDefault();

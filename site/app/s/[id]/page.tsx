@@ -8,7 +8,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const shootout = await getShootout(id).catch(() => null);
   if (!shootout) {
-    const title = "Shootout not found";
+    const title = "Shootout Not Found";
     return {
       title: `${title} | YinYang EQ`,
       robots: { index: false, follow: false },

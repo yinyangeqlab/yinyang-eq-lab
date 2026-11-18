@@ -116,8 +116,8 @@ function ResultsShortlist({ entries, personal }: { entries: Entry[]; personal: b
   }
   const score = (row: Tally) => (row.wins + row.ties * .5) / row.total;
   const rows = [...tallies.values()].sort((a, b) => score(b) - score(a) || b.total - a.total || a.name.localeCompare(b.name));
-  return <section className="private-list collection-results-panel" aria-label="Ranking shortlist">
-    <h2>Ranking shortlist</h2>
+  return <section className="private-list collection-results-panel" aria-label="Top-ranked settings">
+    <h2>Top-ranked settings</h2>
     <p className="footnote">All dates · {comparisons.length} answered {comparisons.length === 1 ? "comparison" : "comparisons"} across {rows.length} targets in this view. Ties count as half a preference. This is your listening record.</p>
     {rows.length ? <>
       <div className="personal-model-head" aria-hidden="true"><span>Target</span><span>Wins / losses / ties</span><span>Preference</span></div>
@@ -126,8 +126,8 @@ function ResultsShortlist({ entries, personal }: { entries: Entry[]; personal: b
         <span aria-label={`${row.wins} wins, ${row.losses} losses, ${row.ties} ties`}>{row.wins} / {row.losses} / {row.ties}</span>
         <strong>{Math.round(score(row) * 100)}%</strong>
       </div>)}
-      {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show shortlist" : `Show all ${rows.length} targets`}</button>}
-    </> : <p className="footnote">Answer a trial with two different targets to build this shortlist.</p>}
+      {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show top settings" : `Show all ${rows.length} targets`}</button>}
+    </> : <p className="footnote">Answer a trial with two different targets to start your ranking.</p>}
   </section>;
 }
 
@@ -148,7 +148,7 @@ function TournamentRanking({ run }: { run: PersonalRun }) {
         <strong>{row.heard ? `${Math.round((row.wins + row.ties * .5) / row.heard * 100)}%` : "—"}</strong>
       </div>;
     })}
-    {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show shortlist" : `Show all ${rows.length} targets`}</button>}
+    {rows.length > 5 && <button type="button" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Show top settings" : `Show all ${rows.length} targets`}</button>}
   </section>;
 }
 

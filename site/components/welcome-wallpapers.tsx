@@ -115,8 +115,7 @@ function WallpaperGallery() {
 
   return <section className="welcome-wallpapers" aria-labelledby="wallpapers-title">
     <div className="welcome-section-head">
-      <h2 id="wallpapers-title">Homepage wallpapers</h2>
-      <p>Download the homepage artwork as an animated loop or still image for your screen.</p>
+      <h2 id="wallpapers-title">Wallpaper downloads</h2>
       <p className="welcome-wallpaper-usage">
         <a href={wallpaperUsagePath}>Personal use only</a>. Use in products, services, or advertising requires written permission.
       </p>
@@ -151,7 +150,12 @@ export default function WelcomeWallpapers() {
   return <details id="wallpapers" className="welcome-wallpaper-disclosure"
     onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="welcome-wallpaper-toggle">
-      Wallpapers <ChevronDown size={14} aria-hidden="true"/>
+      <img className="wallpaper-swatch" src={wallpaperUrl(wallpaperFilename("landscape", "1080p", "jpg"))} alt="" width="180" height="88" loading="lazy"/>
+      <span className="wallpaper-summary-copy">
+        <strong>Background art wallpapers</strong>
+        <span>Thought this would make a good wallpaper? We’re way ahead of you. Grab a free copy for your phone or desktop and flaunt a little YinYang EQ spirit.</span>
+      </span>
+      <ChevronDown size={20} aria-hidden="true"/>
     </summary>
     {open && <WallpaperGallery/>}
   </details>;

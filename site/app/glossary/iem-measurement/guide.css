@@ -2,33 +2,44 @@
   --guide-muted: #c2d2dc;
   --guide-line: #35515e;
   --guide-panel: #11252e;
-  --guide-accent: #a8e1db;
+  --guide-accent: var(--guide-blue);
   box-sizing: border-box;
-  max-width: 59rem;
-  padding: clamp(1.25rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) 4rem;
+  width: 100%;
+  max-width: 54rem;
+  padding: var(--reading-top) var(--reading-gutter) 4rem;
+  container: iem-guide / inline-size;
   margin-inline: auto;
 }
-.iem-measurement-guide article { min-width: 0; }
+.iem-measurement-guide article {
+  min-inline-size: 0;
+  font-size: clamp(1rem, .97rem + .3cqi, 1.125rem);
+  line-height: 1.62;
+  overflow-wrap: break-word;
+}
 .iem-measurement-guide h1 {
-  max-width: 22ch;
-  margin: 1rem 0 .8rem;
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  max-width: 26ch;
+  margin: 0 0 .55em;
+  font-size: clamp(1.8rem, 1.25rem + 3.6cqi, 3.05rem);
+  font-weight: 600;
+  text-wrap: balance;
   line-height: 1.1;
   letter-spacing: -.035em;
 }
-.iem-measurement-guide h2 { margin: 2.1rem 0 .7rem; font-size: clamp(1.25rem, 2.8vw, 1.6rem); scroll-margin-top: 5rem; }
-.iem-measurement-guide h3 { margin: 1.4rem 0 .65rem; scroll-margin-top: 5rem; }
+.iem-measurement-guide h2 { margin: 2em 0 .5em; font-size: clamp(1.3rem, 1.1rem + 1.35cqi, 1.75rem); font-weight: 600; line-height: 1.22; scroll-margin-top: 5rem; }
+.iem-measurement-guide h3 { margin: 1.55em 0 .45em; font-size: 1.13em; font-weight: 600; line-height: 1.3; scroll-margin-top: 5rem; }
 .iem-measurement-guide article > :where(p, ul, ol, pre) { margin-block: 0; }
 .iem-measurement-guide article > :where(p, ul, ol, pre) + :where(p, ul, ol, pre) { margin-block-start: 1rem; }
-.iem-measurement-guide p, .iem-measurement-guide li { line-height: 1.7; font-size: 1rem; }
-.iem-measurement-guide :is(p, ul, ol):not(nav :is(ul, ol)) { max-width: 73ch; }
+.iem-measurement-guide p, .iem-measurement-guide li { line-height: inherit; font-size: inherit; }
+.iem-measurement-guide :is(p, ul, ol):not(nav :is(ul, ol)) { max-width: 68ch; }
 .iem-measurement-guide a { color: var(--guide-accent); text-underline-offset: .2em; }
 .iem-measurement-guide a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
-.iem-measurement-guide :is(ol, ul) { padding-inline-start: 1.4rem; }
+.iem-measurement-guide :is(ol, ul) { padding-inline-start: 1.45em; }
+.iem-measurement-guide article > ol { list-style: decimal outside; }
+.iem-measurement-guide article > ul { list-style: disc outside; }
 .iem-measurement-guide :is(ol, ul) li + li { margin-top: .35rem; }
 .iem-measurement-guide .iem-guide-back { font-size: .875rem; }
 .iem-measurement-guide .iem-guide-byline { margin: 1rem 0 0; font-size: .85rem; color: var(--guide-muted); }
-.iem-measurement-guide .iem-guide-deck { margin: 0; max-width: 63ch; font-size: 1.06rem; }
+.iem-measurement-guide .iem-guide-deck { margin: 0; max-width: 64ch; font-size: 1.09em; line-height: 1.5; }
 .iem-measurement-guide .iem-guide-handbook {
   margin-block-start: 1.25rem;
   padding: 1rem;
@@ -43,6 +54,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+  max-width: 100%;
   padding: .4rem .8rem;
   border: 1px solid var(--guide-accent);
   border-radius: .4rem;
@@ -54,7 +66,7 @@
 .iem-measurement-guide .iem-guide-handbook-end { margin-block-start: 2rem; }
 .iem-measurement-guide .iem-guide-contents { margin-block-start: 1.25rem; padding: .75rem 1rem; border: 1px solid var(--guide-line); border-radius: .6rem; background: var(--guide-panel); }
 .iem-measurement-guide .iem-guide-contents h2 { margin: 0 0 .35rem; font-size: 1rem; line-height: 1.4; }
-.iem-measurement-guide .iem-guide-contents ol { columns: 2; column-gap: 2rem; margin: .15rem 0 .35rem; padding-inline-start: 1.6rem; list-style: decimal outside; }
+.iem-measurement-guide .iem-guide-contents ol { margin: .15rem 0 .35rem; padding-inline-start: 1.6rem; list-style: decimal outside; }
 .iem-measurement-guide .iem-guide-contents li { font-size: .9rem; break-inside: avoid; }
 .iem-measurement-guide .iem-guide-figure { margin: 1.25rem 0 1.8rem; }
 .iem-measurement-guide .iem-guide-figure img { display: block; width: 100%; max-width: 100%; height: auto; box-sizing: border-box; border: 1px solid var(--guide-line); border-radius: .55rem; }
@@ -66,15 +78,14 @@
   --guide-muted: var(--site-light-muted);
   --guide-line: var(--site-light-line);
   --guide-panel: var(--site-light-surface);
-  --guide-accent: var(--site-light-accent);
 }
-@media (max-width: 36rem) { .iem-measurement-guide .iem-guide-contents ol { columns: 1; } }
+
 
 .iem-measurement-guide .iem-guide-callouts { margin: .5rem 0 0; padding-inline-start: 1.35rem; color: var(--guide-muted); font-size: .86rem; list-style: decimal outside; }
 .iem-measurement-guide .iem-guide-callouts li { font-size: inherit; line-height: 1.5; break-inside: avoid; }
 .iem-measurement-guide .iem-guide-callouts li + li { margin-top: .15rem; }
 .iem-measurement-guide .iem-guide-callouts li::marker { color: var(--guide-accent); font-weight: 700; }
-@media (min-width: 42rem) { .iem-measurement-guide .iem-guide-callouts { columns: 2; column-gap: 2rem; } }
+@container iem-guide (min-width: 37rem) { .iem-measurement-guide .iem-guide-callouts { columns: 2; column-gap: 2rem; } }
 
 .iem-measurement-guide .iem-guide-revisions {
   margin-block-start: 1.25rem;
@@ -82,17 +93,16 @@
   font-size: .85rem;
   line-height: 1.55;
 }
-.iem-measurement-guide .iem-guide-revisions summary { width: fit-content; cursor: pointer; }
+.iem-measurement-guide .iem-guide-revisions summary { width: fit-content; max-width: 100%; cursor: pointer; }
 .iem-measurement-guide .iem-guide-revisions summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 .iem-measurement-guide .iem-guide-revisions ul { margin-block: .55rem 0; }
 .iem-measurement-guide .iem-guide-revisions li { font-size: inherit; line-height: inherit; }
 
-.iem-measurement-guide .iem-guide-intro { margin: .75rem 0 0; }
-.iem-measurement-guide .iem-guide-start { margin: 1rem 0 0; }
+.iem-measurement-guide .iem-guide-intro { margin: 1em 0 0; }
 .iem-measurement-guide .iem-guide-swap-checks > li + li { margin-block-start: .85rem; }
 .iem-measurement-guide .iem-guide-swap-checks > li > p { margin: .18rem 0 0; }
 .iem-measurement-guide .iem-guide-checklist { min-inline-size: 0; margin: 1.15rem 0 0; padding: .6rem 1rem .95rem; border: 1px solid var(--guide-line); border-radius: .55rem; }
-.iem-measurement-guide .iem-guide-checklist legend { padding-inline: .35rem; font-weight: 650; }
+.iem-measurement-guide .iem-guide-checklist legend { max-inline-size: 100%; padding-inline: .35rem; font-weight: 650; }
 .iem-measurement-guide .iem-guide-checklist ol { margin: 0; padding: 0; list-style: none; }
 .iem-measurement-guide .iem-guide-checklist li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: .65rem; }
 .iem-measurement-guide .iem-guide-checklist li + li { margin-block-start: .75rem; }
@@ -105,17 +115,36 @@
 .iem-measurement-guide .iem-guide-handbook .iem-guide-checklist-download { margin: .8rem 0 0; }
 
 
-.iem-measurement-guide .iem-guide-start { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin: .85rem 0 1rem; }
-.iem-measurement-guide .iem-guide-start a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.iem-measurement-guide .iem-guide-start {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.75em;
+  margin-block-start: 1.2em;
+  border-block: 1px solid var(--guide-line);
+}
+.iem-measurement-guide .iem-guide-start a {
+  display: flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+  padding-block: .5em;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+}
+.iem-measurement-guide .iem-guide-start a:is(:hover,:focus-visible) { text-decoration-color: currentColor; }
+@container iem-guide (max-width: 30em) {
+  .iem-measurement-guide .iem-guide-start { flex-direction: column; }
+  .iem-measurement-guide .iem-guide-start a + a { border-block-start: 1px solid var(--guide-line); }
+}
 .iem-measurement-guide .iem-guide-intro-sources { margin: .6rem 0 0; font-size: .88rem; }
 .iem-measurement-guide .iem-guide-gear > li + li { margin-block-start: .7rem; }
-.iem-measurement-guide .iem-guide-contents-groups { display: grid; gap: 1rem; }
-.iem-measurement-guide .iem-guide-contents-groups h3 { margin: .25rem 0 .3rem; font-size: .95rem; }
+.iem-measurement-guide .iem-guide-contents-groups { display: grid; gap: 1.25rem 2rem; }
+.iem-measurement-guide .iem-guide-contents-groups h3 { margin: .25rem 0 .45rem; font-size: 1rem; }
 .iem-measurement-guide .iem-guide-contents-groups p { margin: .1rem 0; font-size: .9rem; }
-.iem-measurement-guide .iem-guide-contents-groups ol { columns: 1; }
 .iem-measurement-guide .iem-guide-contents-groups ul { margin: .15rem 0 .35rem; list-style: disc outside; }
 .iem-measurement-guide .iem-guide-signal { margin-block: 1rem; padding: .8rem 1rem; border: 1px solid var(--guide-line); border-radius: .55rem; background: var(--guide-panel); }
 .iem-measurement-guide .iem-guide-signal p { margin: 0; }
 .iem-measurement-guide .iem-guide-signal p + p { margin-block-start: .35rem; }
 .iem-measurement-guide .iem-guide-signal strong { display: inline-block; min-width: 6rem; }
-@media (min-width: 48rem) { .iem-measurement-guide .iem-guide-contents-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@container iem-guide (min-width: 37rem) { .iem-measurement-guide .iem-guide-contents-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

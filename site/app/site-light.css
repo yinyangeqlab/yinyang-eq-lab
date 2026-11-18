@@ -72,22 +72,6 @@
   border-color: var(--site-light-line);
 }
 
-[data-site-theme="light"] .alpha-app[data-alpha-layout=hidden] > .alpha-sidebar-peek {
-  --sidebar-handle-fill: linear-gradient(90deg,#ddf5f4d9,#b7e6e4b8 48%,#90ccc987);
-  --sidebar-handle-edge: #35737370;
-}
-
-[data-site-theme="light"] .alpha-sidebar-divider {
-  --sidebar-handle-ink: #1f1f1f;
-  --sidebar-handle-idle: #555555;
-  --sidebar-handle-focus: #414141;
-  --sidebar-handle-depth: #39393938;
-  --sidebar-handle-press-shadow: #32323240;
-  --sidebar-handle-press-fill: #51515124;
-}
-[data-site-theme="light"] .alpha-sidebar-edge {
-  background-color:var(--site-light-surface);
-}
 [data-site-theme="light"] :is(.alpha-destination, .alpha-secondary-navigation a) {
   --alpha-marker: var(--site-light-accent);
   color: var(--site-light-muted);
@@ -251,7 +235,8 @@
   color: var(--site-light-muted);
 }
 [data-site-theme="light"] .terms-suggestions [role="option"]:is(:hover, [aria-selected="true"]) {
-  background: var(--site-light-hover);
+  background:var(--guide-hover-surface);
+  border-color:var(--guide-blue);
 }
 
 [data-site-theme="light"] .about-welcome {

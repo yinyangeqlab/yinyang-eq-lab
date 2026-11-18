@@ -46,7 +46,7 @@ const status=await context.exports.handler.fetch(new Request('https://fixture.te
 assert.equal(status.status,200);const visitorStatus=await status.json();assert.equal(visitorStatus.ownerOnly,true);assert.notEqual(visitorStatus.viewerHasAccess,true,'Visitor status must never claim admission');assert.equal(appReads,0);
 for(const path of ['/admin-login','/owner-login']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path),env,{});
- assert.equal(response.status,200);assert.match(await response.text(),/Admin sign in/);
+ assert.equal(response.status,200);assert.match(await response.text(),/Admin Sign In/);
 }
 for(const path of ['/','/shootout','/owner-research','/api/targets','/api/listening-audio/fixture','/_next/static/fixture.js']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{headers:{Cookie:'__Host-yinyangeq_owner='+cookie}}),env,{});

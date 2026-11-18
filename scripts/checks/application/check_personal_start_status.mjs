@@ -10,7 +10,7 @@ assert.equal(personalStartBlock({ ...ready, sharingState: 'unavailable' }), null
 // Every block says why, in a sentence, and names the way forward.
 const cases = [
   ['storage', { ...ready, storageError: 'Quota exceeded.' }, /storage is unavailable.*Quota exceeded/i],
-  ['headphones', { ...ready, hasHeadphones: false }, /Pick your headphones in step 1/],
+  ['headphones', { ...ready, hasHeadphones: false }, /Choose your headphones to start/],
   ['channel', { ...ready, playbackReady: false }, /Channel matching.*Uploaded.*Auto or Off/i],
   ['music', { ...ready, musicChosen: false }, /Choose at least one song/i],
   ['sharing-unavailable', { ...ready, setupReady: false, sharingState: 'unavailable' }, /could not be checked.*stays on this device/i],

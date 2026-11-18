@@ -1,0 +1,74 @@
+/* Shared type and reading rhythm for the local listening, reference and account pages. */
+@font-face {font-family:"YinYang UI";src:url("/sample-assets/Barlow-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face {font-family:"YinYang UI";src:url("/sample-assets/Barlow-SemiBold.ttf") format("truetype");font-weight:600 800;font-display:swap}
+:root {
+  --reading-gutter:clamp(16px,3.6vw,48px);
+  --reading-top:clamp(24px,3.2vw,48px);
+  --reading-rule:light-dark(var(--workbench-line),#304148);
+}
+.alpha-app, .eq-compare, .em-root, .es-root {font-family:"YinYang UI",Arial,sans-serif}
+:is(.alpha-route-content,.eq-compare,.em-root,.es-root) :is(h1,h2,h3) {
+  font-family:"YinYang UI",Arial,sans-serif;
+  text-shadow:none;
+  text-wrap:pretty;
+  overflow-wrap:break-word;
+}
+:is(.alpha-route-content,.eq-compare,.em-root,.es-root) h1 {letter-spacing:-.03em;line-height:1.12}
+.alpha-route-content :is(.terms-page:where(:not(.iem-measurement-guide)),.alpha-help-page,.reference-document,.my-data:not(.alpha-account)) {
+  box-sizing:border-box;max-width:64rem;width:100%;margin-inline:auto;
+  padding:var(--reading-top) var(--reading-gutter) clamp(46px,6vw,80px);
+}
+.alpha-route-content :is(.fitter-article,.audio-facts-detail,.reference-document,.my-data:not(.alpha-account)){max-width:56rem}
+.alpha-route-content :is(.terms-page:where(:not(.iem-measurement-guide)),.alpha-help-page,.reference-document,.my-data:not(.alpha-account)) h1 {
+  font-size:clamp(32px,3.5vw,50px);margin:0 0 .35em;
+}
+.alpha-route-content :is(.terms-page:where(:not(.iem-measurement-guide)),.reference-document,.my-data:not(.alpha-account)) p {max-width:73ch}
+.alpha-route-content .reference-document {line-height:1.6}
+.alpha-route-content .reference-document h2 {font-size:clamp(20px,2.2vw,28px);padding-top:20px;border-top:1px solid var(--reading-rule);margin:24px 0 8px}
+.alpha-route-content .reference-document p {margin:7px 0 12px}
+.alpha-route-content .reference-document a {text-underline-offset:.2em}
+.alpha-route-content :is(.terms-page,.alpha-account,.personal-shootout,.library-page,.alpha-tuning,.ear-tool,.owner-research) :is(h2,h3,fieldset,section),
+:is(.eq-compare,.em-root,.es-root) :is(section,fieldset) {min-inline-size:0}
+.alpha-route-content :is(.alpha-help-page,.my-data:not(.alpha-account)) > :is(.alpha-help-card,section):not(.data-confirm) {
+  box-shadow:none;border:0;border-top:1px solid var(--reading-rule);border-radius:0;
+  background:transparent;padding:clamp(16px,2.3vw,25px) 0 0;margin-top:clamp(20px,3vw,36px);
+}
+.alpha-route-content .my-data:not(.alpha-account)>nav {margin:20px 0;gap:12px 22px}
+.alpha-route-content .terms-page:where(:not(.iem-measurement-guide)) header>p {font-size:clamp(16px,1.45vw,19px);line-height:1.5}
+.alpha-route-content .glossary-index .terms-search {max-width:42rem}
+.alpha-route-content .glossary-index dl {display:block;border-top:1px solid var(--reading-rule)}
+.alpha-route-content .glossary-index dl>div {
+  display:grid;grid-template-columns:minmax(135px,.8fr) minmax(0,2fr);gap:20px;
+  padding:17px 0;border:0;border-bottom:1px solid var(--reading-rule);border-radius:0;background:transparent;
+}
+.alpha-route-content .glossary-index dt {margin:0;font-size:19px}
+.alpha-route-content .glossary-index dd {max-width:64ch;font-size:16px;line-height:1.55}
+.alpha-route-content .fitter-article .guide-jump-links {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px;
+  border-block:1px solid var(--reading-rule);padding-block:8px;margin:12px 0 20px;
+}
+.alpha-route-content .fitter-article .guide-jump-links a {display:flex;align-items:center;min-height:40px;padding:3px 0}
+.alpha-route-content .audio-facts .audio-facts-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+.alpha-route-content .audio-facts .audio-facts-card {border:0;border-top:1px solid var(--reading-rule);border-radius:0;background:transparent;padding:18px 0}
+.alpha-route-content .audio-facts .audio-facts-card h2 {font-size:21px}
+.alpha-route-content .audio-facts .audio-facts-card p {font-size:16px}
+.alpha-route-content .alpha-account .account-heading-row {align-items:start}
+.alpha-route-content .alpha-account .account-section-links {gap:6px 14px}
+.alpha-route-content .alpha-account .account-section-links a {min-height:40px}
+.alpha-route-content .library-hero p,.alpha-route-content .research-area-title p {max-width:65ch}
+.alpha-route-content .research-area-title h1 {font-size:clamp(29px,3.2vw,44px)}
+.alpha-route-content :is(.library-page,.pt-shell,.ear-tool,.owner-research) header > p,
+.eq-compare main > :is(.eq-intro,.eq-privacy),
+.em-wrap .es-lead,.es-root .es-lead {max-width:68ch}
+.eq-compare .eq-related-links {gap:18px;margin:14px 0 22px}
+.em-root .em-hero {background:transparent;border:0;border-bottom:1px solid var(--reading-rule);border-radius:0;padding-inline:0}
+.es-root .es-center {max-width:58ch;margin-inline:auto}
+@media(max-width:680px) {
+  .alpha-route-content .glossary-index dl>div {grid-template-columns:1fr;gap:5px}
+  .alpha-route-content .audio-facts .audio-facts-grid,.alpha-route-content .fitter-article .guide-jump-links {grid-template-columns:1fr}
+  .alpha-route-content .alpha-account .account-heading-row {flex-wrap:wrap;gap:12px}
+  .alpha-route-content .reference-document {overflow-wrap:anywhere}
+}
+
+.alpha-route-content .participation-page {max-width:64rem;margin-inline:auto;padding:var(--reading-top) var(--reading-gutter)}
+.alpha-route-content .participation-page>h1 {margin:0 0 16px;font-size:clamp(30px,3.2vw,44px)}

@@ -16,58 +16,33 @@ const defaultArtwork = {
   flights: defaultFlightArtwork,
 };
 
-// The middle 30 units of the rug never deform. Each loose side spans 35 units.
-const clothRest = 15;
-const clothWing = 35;
-const clothStrip = 5;
-
+// The long wave crosses the complete hem. The extra lift at the loose ends
+// fades continuously towards the middle, where the device rests.
 function clothLift(x: number, turn: number) {
-  // Vertical offset of the fabric in viewBox units (positive is down). The
-  // supported middle is exactly flat, and each side bends like a held sheet: no
-  // bend where it leaves the middle, most travel at the corner. Every term is a
-  // whole harmonic of the loop, so the last frame meets the first.
-  //  - A gust envelope (one strong and one weaker gust per loop) reaches the
-  //    corner slightly after the root, giving a travelling follow-through.
-  //  - A broad curl rolls outward twice per loop; the gust scales it and also
-  //    lifts the corner, so it rises high in a gust and sags a little at rest.
-  //  - Short bursts of a quick, small flick live only near the outer edge.
-  // The two sides run out of phase and at different strengths.
-  const reach = Math.min(1, Math.max(0, (Math.abs(x - 50) - clothRest) / clothWing));
-  if (reach === 0) return 0;
-  const hang = reach * reach * (1.5 - .5 * reach);
-  const left = x < 50;
-  const offset = left ? 0 : 2.3;
-  const looseness = left ? 1 : .86;
-  const strong = .5 + .5 * Math.sin(turn - offset - .6 * reach);
-  const weak = .5 + .5 * Math.sin(2 * turn - 1.1 - 1.6 * offset - .6 * reach);
-  const gust = (.62 * strong + .38 * weak) ** 2;
-  const curl = 13 * (.55 + .45 * gust) * Math.sin(2 * turn - 2.4 * reach - .7 - .6 * offset);
-  const burst = (.5 + .5 * Math.sin(3 * turn - 2 - offset)) ** 3;
-  const flick = 3.5 * burst * (.48 + .52 * gust) * Math.sin((left ? 8 : 7) * turn - 3.4 * reach - 1.4 * offset);
-  return looseness * (hang * (1 - 3 * gust + curl) + reach * reach * reach * flick);
+  const across = (x - 50) / 50;
+  const reach = across * across;
+  const ripple = 1.15 * Math.sin(turn - 3.1 * across);
+  const curl = 6.8 * Math.sin(2 * turn - 2.6 * across);
+  const swell = 2.6 * Math.sin(turn + 1.45 * across + .6);
+  return ripple + reach * (curl + swell);
 }
 
-const clothSamples = 60;
-const carpetSlices = [
-  ...Array.from({ length: clothWing / clothStrip }, (_, index) => index * clothStrip),
-  50 - clothRest,
-  ...Array.from({ length: clothWing / clothStrip }, (_, index) => 50 + clothRest + index * clothStrip)
-].map(left => {
-  const still = left === 50 - clothRest;
-  const width = still ? 2 * clothRest : clothStrip;
-  if (still) return { left, width, lift: "", skew: "" };
-  // Each narrow strip follows the fabric height at both of its edges, so
-  // neighbours always meet and the outline stays one continuous curve.
+const stripWidth = 5;
+const turns = Array.from({ length: 49 }, (_, frame) => frame * 2 * Math.PI / 48);
+// Stretch about the device's contact line. The front point and its tassel
+// travel farther than the supported back edge, as parts of one piece of cloth.
+const frontWave = turns.map(t => `1 ${(1 + .115 * Math.sin(t - .85) + .035 * Math.sin(2 * t + .45)).toFixed(4)}`).join(";");
+const carpetSlices = Array.from({ length: 100 / stripWidth }, (_, i) => {
+  const left = i * stripWidth;
   const lift: string[] = [];
   const skew: string[] = [];
-  for (let step = 0; step <= clothSamples; step++) {
-    const turn = step * Math.PI * 2 / clothSamples;
+  for (const turn of turns) {
     const start = clothLift(left, turn);
-    const slope = (clothLift(left + width, turn) - start) / width;
-    lift.push(`0 ${(start - left * slope).toFixed(2)}`);
-    skew.push((Math.atan(slope) * 180 / Math.PI).toFixed(2));
+    const slope = (clothLift(left + stripWidth, turn) - start) / stripWidth;
+    lift.push(`0 ${(start - left * slope).toFixed(3)}`);
+    skew.push((Math.atan(slope) * 180 / Math.PI).toFixed(3));
   }
-  return { left, width, lift: lift.join(";"), skew: skew.join(";") };
+  return { left, lift: lift.join(";"), skew: skew.join(";") };
 });
 
 /**
@@ -123,9 +98,9 @@ function FlyingArtwork({ kind, moving, image }: { kind: "headphones" | "iems"; m
   const rugFade = `${id}-rug-fade`;
   const rugMask = `${id}-rug-mask`;
   const carpet = `${id}-carpet`;
-  // One loop holds a strong and a weaker gust per side, with two broad curls.
+  const contactY = headphones ? 73 : 65;
   // The two rugs use different lengths and start points so they never match.
-  const clothTiming = { dur: headphones ? "3.8s" : "4.7s", begin: headphones ? "0s" : "-1.9s", repeatCount: "indefinite" };
+  const clothTiming = { dur: headphones ? "4.8s" : "5.5s", begin: headphones ? "0s" : "-1.9s", repeatCount: "indefinite" };
   return <>
    <svg className="welcome-flight-art" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <defs>
@@ -140,17 +115,22 @@ function FlyingArtwork({ kind, moving, image }: { kind: "headphones" | "iems"; m
         width="100" height="100" mask={`url(#${rugMask})`} />
       {carpetSlices.map(slice => <clipPath key={slice.left} id={`${carpet}-${slice.left}`}>
         {/* Overlap adjoining strips slightly so the fabric has no seams. */}
-        <rect x={slice.left - .3} width={slice.width + .6} height="100" />
+        <rect x={slice.left - .3} width={stripWidth + .6} height="100" />
       </clipPath>)}
     </defs>
     <g className="welcome-flight-rug">
-      {carpetSlices.map(slice => <g key={slice.left} className="welcome-carpet-slice">
-        {slice.lift && <>
-          <animateTransform attributeName="transform" type="translate" values={slice.lift} {...clothTiming} />
-          <animateTransform attributeName="transform" type="skewY" values={slice.skew} additive="sum" {...clothTiming} />
-        </>}
-        <use href={`#${carpet}`} clipPath={`url(#${carpet}-${slice.left})`} />
-      </g>)}
+      <g transform={`translate(0 ${contactY})`}>
+        <g className="welcome-front-wave">
+          <animateTransform attributeName="transform" type="scale" values={frontWave} {...clothTiming} />
+          <g transform={`translate(0 ${-contactY})`}>
+            {carpetSlices.map(slice => <g key={slice.left} className="welcome-carpet-slice">
+              <animateTransform attributeName="transform" type="translate" values={slice.lift} {...clothTiming} />
+              <animateTransform attributeName="transform" type="skewY" values={slice.skew} additive="sum" {...clothTiming} />
+              <use href={`#${carpet}`} clipPath={`url(#${carpet}-${slice.left})`} />
+            </g>)}
+          </g>
+        </g>
+      </g>
     </g>
    </svg>
    {/* The device canvas and its bubble share one HTML layer over the art box,

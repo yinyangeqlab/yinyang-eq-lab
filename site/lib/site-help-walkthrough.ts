@@ -1,7 +1,7 @@
 import type { HelpTopic } from "./site-help-guide";
 
 export type HelpPanel = "tuning-sound" | "tuning-tone" | "tuning-bass-band" | "tuning-music" | "tuning-waveform"
-  | "personal-setup" | "personal-advanced" | "saved-setups" | "data-retention" | "data-nickname" | "data-activity";
+  | "personal-setup" | "personal-headphones" | "personal-options" | "personal-advanced" | "saved-setups" | "data-retention" | "data-nickname" | "data-activity";
 
 export type HelpStep = {
   text: string;
@@ -14,7 +14,9 @@ export type HelpStep = {
 };
 
 const setup = ["personal-setup"] as const;
-const advanced = ["personal-setup", "personal-advanced"] as const;
+const headphonePanels = ["personal-setup", "personal-headphones"] as const;
+const poolPanels = ["personal-setup", "personal-options"] as const;
+const advanced = ["personal-setup", "personal-options", "personal-advanced"] as const;
 const sound = ["tuning-sound"] as const;
 const trackLoudness = "select[aria-label='Track loudness target']";
 const musicSource = "select[data-music-control='source']";
@@ -29,30 +31,30 @@ const eqMaker = ".pt-finalize-button";
 
 const tours: Partial<Record<string, readonly HelpStep[]>> = {
   start: [
-    { text: "Choose the headphones you’re wearing. Pick a saved measurement or browse for your model.", target: ".measurement-picker", open: setup },
+    { text: "Choose the headphones you’re wearing. Pick a saved measurement or browse for your model.", target: ".measurement-picker", open: headphonePanels },
     { text: "Pick a music source. Use a Listening Pool track or music from your device.", target: musicSource, open: setup },
-    { text: "Choose which targets to compare. Quick starter uses a smaller pool when available.", target: targetPool, open: setup },
-    { text: "Choose how many comparisons to hear before pausing to review your progress.", target: ".starter-size select" },
+    { text: "Choose which targets to compare. Quick starter uses a smaller pool when available.", target: targetPool, open: poolPanels },
+    { text: "Choose how many comparisons to hear before pausing to review your progress.", target: ".entry-budget select", open: poolPanels },
     { text: "Choose Start personal tournament when you’re ready. If it’s disabled, read the message below it.", target: startButton, manual: true, ifMissing: ".personal-session-bar > button", prerequisite: "The Start button appears on the setup screen. If a session is already open, use its session controls." },
   ],
   headphones: [
-    { text: "Choose In-Ear or Over-Ear, then find the model you’re wearing.", target: ".measurement-picker", open: setup },
-    { text: "If your model is missing, browse the database or use the upload option for your own measurement.", target: ".measurement-picker", open: setup },
+    { text: "Choose In-Ear or Over-Ear, then find the model you’re wearing.", target: ".measurement-picker", open: headphonePanels },
+    { text: "If your model is missing, browse the database or use the upload option for your own measurement.", target: ".measurement-picker", open: headphonePanels },
   ],
   pool: [
-    { text: "Open Targets to compare. Choose the full pool, Quick starter, or your own pool.", target: targetPool, open: setup },
-    { text: "If you chose your own pool, use Find a target to look up curves and select the ones you want.", target: "input[aria-label='Find a target by name']", open: setup, ifMissing: targetPool, prerequisite: "Select Choose my own pool to reveal the search field." },
+    { text: "Open Targets to compare. Choose the full pool, Quick starter, or your own pool.", target: targetPool, open: poolPanels },
+    { text: "If you chose your own pool, use Find a target to look up curves and select the ones you want.", target: "input[aria-label='Find a target by name']", open: poolPanels, ifMissing: targetPool, prerequisite: "Select Choose my own pool to reveal the search field." },
   ],
   "personal-music": [
     { text: "Choose a library option, My Playlist, or Music from my device.", target: musicSource, open: setup, ifMissing: ".song-actions button[aria-controls]" },
     { text: "For music from your device, start the run and select a stereo file from the player. Pick the local file again after reloading.", target: ".song-actions button[aria-controls]", ifMissing: startButton, prerequisite: "Start a run to use the player’s file chooser." },
   ],
   normalization: [
-    { text: "On the setup screen, open Advanced setup. During a run, use Show test options.", target: ".personal-starter .starter-advanced > summary, .personal-shootout .shootout-setup-toggle", open: advanced },
+    { text: "On the setup screen, open Tournament options, then Playback settings. During a run, use Show test options.", target: "#tournament-entry .entry-playback-settings > summary, .personal-shootout .shootout-setup-toggle", open: advanced },
     { text: "Under Track loudness target, choose −14, −16, or −18 LUFS. Choose Normalization off to keep the track’s original playback level before EQ.", target: trackLoudness, open: advanced },
   ],
   "personal-channels": [
-    { text: "Open Advanced setup or Show test options to find the listening settings.", target: ".personal-starter .starter-advanced > summary, .personal-shootout .shootout-setup-toggle", open: advanced },
+    { text: "Open Playback settings in Tournament options, or Show test options during a run to find the listening settings.", target: "#tournament-entry .entry-playback-settings > summary, .personal-shootout .shootout-setup-toggle", open: advanced },
     { text: "Use Auto for paired measurements, Uploaded for your own two-channel preset, or Off to turn correction off.", target: "select[aria-label='Personal channel matching']", open: advanced },
   ],
   vote: [
@@ -65,16 +67,16 @@ const tours: Partial<Record<string, readonly HelpStep[]>> = {
     { text: "Choose Unsure / Tie when neither sounds better. Use Skip comparison if you can’t judge this pair.", target: ".personal-votes", manual: true, prerequisite: "The choices appear during a comparison." },
   ],
   finalists: [
-    { text: "Open your results and review the message above the shortlist. It explains what’s needed for a finalist check.", target: ".personal-finalist-readiness", ifMissing: ".personal-session-bar > button", prerequisite: "Pause and see your results to check readiness." },
+    { text: "Open your results and review the message above your ranking. It explains what’s needed for a finalist check.", target: ".personal-finalist-readiness", ifMissing: ".personal-session-bar > button", prerequisite: "Pause and see your results to check readiness." },
     { text: "When the check is ready, choose Check top … on different music. A different recording of the same song may count as the same reference.", target: ".personal-results", manual: true },
   ],
   "personal-results": [
-    { text: "Use Pause & see results in an active session to open your shortlist.", target: ".personal-session-bar > button", ifMissing: ".personal-results > .personal-result-toolbar", prerequisite: "Start a run to see the session controls." },
+    { text: "Use Pause & see results in an active session to open your personal ranking.", target: ".personal-session-bar > button", ifMissing: ".personal-results > .personal-result-toolbar", prerequisite: "Start a run to see the session controls." },
     { text: "In your results, open View finalist target curves to see the curves after listening.", target: ".personal-result-curves > summary", prerequisite: "Pause and open your results to see this panel." },
   ],
   resume: [
     { text: "Open Saved setups & local data to review runs stored on this browser.", target: ".personal-saved-setups > summary", open: ["saved-setups"] },
-    { text: "Choose the same headphones, target pool and playback settings you used before. That setup restores its saved progress.", target: ".measurement-picker", open: setup },
+    { text: "Choose the same headphones, target pool and playback settings you used before. That setup restores its saved progress.", target: ".measurement-picker", open: headphonePanels },
     { text: "Use Resume Listening or Return to listening when your saved run appears.", target: ".personal-resume, .personal-results .personal-result-toolbar > button", ifMissing: ".personal-session-bar", prerequisite: "Choose the original setup first. The resume control appears when the matching run is paused." },
   ],
   "eq-support": [
@@ -193,7 +195,9 @@ const panelControls: Record<HelpPanel, { selector: string; disclosure?: true }> 
   "tuning-music": { selector: ".pt-shell .pt-music-toggle[aria-controls='pt-music-choices'][aria-expanded='false']" },
   "tuning-waveform": { selector: ".pt-shell .pt-strip-expand[aria-controls='pt-playback-full'][aria-expanded='false']" },
   "personal-setup": { selector: ".personal-shootout .shootout-setup-toggle[aria-controls='personal-setup-panel'][aria-expanded='false']" },
-  "personal-advanced": { selector: ".personal-shootout .starter-advanced", disclosure: true },
+  "personal-headphones": { selector: "#tournament-entry button[aria-controls='entry-device-picker'][aria-expanded='false']" },
+  "personal-options": { selector: "#tournament-entry .entry-options", disclosure: true },
+  "personal-advanced": { selector: "#tournament-entry .entry-playback-settings", disclosure: true },
   "saved-setups": { selector: ".personal-shootout .starter-more", disclosure: true },
   "data-retention": { selector: "main.my-data details#data-retention", disclosure: true },
   "data-nickname": { selector: "main.my-data details#data-account-tools", disclosure: true },

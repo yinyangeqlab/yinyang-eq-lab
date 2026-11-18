@@ -48,7 +48,7 @@ export async function hashManageKey(key: string): Promise<string> {
 
 export function cleanTitle(value: unknown): string {
   const text = String(value ?? "").replace(/[\u0000-\u001f\u007f<>]/g, " ").replace(/\s+/g, " ").trim().slice(0, 80);
-  return text || "Blind shootout";
+  return text || "Blind Shootout";
 }
 
 export class EmbedInputError extends Error {}

@@ -89,3 +89,8 @@ work/
 
 # Prepared third-party semantic help model.
 /public/vendor/site-help/
+
+# Generated from the original homepage illustration sources.
+/public/sample-assets/destinations/*.webp
+/public/sample-assets/*.ttf
+/public/sample-assets/OFL.txt

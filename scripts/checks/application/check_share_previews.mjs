@@ -196,7 +196,7 @@ for (const agent of ['Slackbot-LinkExpanding 1.0', 'Twitterbot/1.0', 'facebookex
   assert.deepEqual(openGraphImages(await response.text()), [shareImageUrl(sharePageFor('/ear-tuning')).url]);
 }
 const guide = sharePageFor(FITTER_GUIDE_PATH);
-assert.equal(previewTitle(guide), 'EQ fitter benchmark');
+assert.equal(previewTitle(guide), 'EQ Fitter Benchmark');
 assert.equal(shareAnimationUrl(guide), null, 'The original benchmark chart is the still preview');
 const guidePreview = await (await run(`${FITTER_GUIDE_PATH}#frequency-ranges`, { headers: discord })).text();
 assert.deepEqual(openGraphImages(guidePreview), [shareImageUrl(guide).url]);
@@ -206,13 +206,13 @@ assert.deepEqual(shareMetadataFields(FITTER_GUIDE_PATH).openGraph.images, [share
 for (const method of ['GET', 'HEAD']) assert.equal((await run(FITTER_GUIDE_PATH, { method })).status, 200);
 assert.equal(await run(FITTER_GUIDE_PATH, { method: 'POST' }), null, 'Only read requests bypass admission for the guide');
 assert.equal(await run(`${FITTER_GUIDE_PATH}/private`), null, 'Only the standalone guide path is public');
-assert.equal(previewTitle(sharePageFor('/glossary')), 'Glossary & Guides');
+assert.equal(previewTitle(sharePageFor('/glossary')), 'Glossary');
 
 const measurementPath = '/glossary/iem-measurement';
 const measurementPage = sharePageFor(measurementPath);
 const measurementStill = shareImageUrl(measurementPage);
 const measurementAsset = new URL(measurementStill.url);
-assert.equal(previewTitle(measurementPage), 'Your First IEM Measurement With a 711 Coupler');
+assert.equal(previewTitle(measurementPage), 'Your First IEM Measurement With A 711 Coupler');
 assert.equal(measurementAsset.pathname, '/share/iem-measurement-guide.jpg');
 assert.equal(shareAnimationUrl(measurementPage), null);
 assert.deepEqual(shareMetadataFields(measurementPath).openGraph.images, [measurementStill]);

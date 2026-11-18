@@ -16,7 +16,7 @@ for (const n of [0, 1, 5, 2.5, NaN]) assert.throws(() => planRounds(n));
 for (let i = 0; i < 50; i++) { assert.match(newShootoutId(), SHOOTOUT_ID_PATTERN); assert.match(newManageKey(), MANAGE_KEY_PATTERN); }
 assert.notEqual(newManageKey(), newManageKey());
 assert.equal(await hashManageKey('a'), await hashManageKey('a')); assert.notEqual(await hashManageKey('a'), await hashManageKey('b'));
-assert.equal(cleanTitle('  <b>Hi</b>\n there  '), 'b Hi /b there'); assert.equal(cleanTitle(''), 'Blind shootout'); assert.equal(cleanTitle('x'.repeat(200)).length, 80);
+assert.equal(cleanTitle('  <b>Hi</b>\n there  '), 'b Hi /b there'); assert.equal(cleanTitle(''), 'Blind Shootout'); assert.equal(cleanTitle('x'.repeat(200)).length, 80);
 
 // Run validation.
 const good = (n, winner = 'a') => ({ picks: planRounds(n).map((_, round) => ({ round, winner, flipped: round % 2 === 0, signal: 'noise' })), kind: 'iem', sighted: false });

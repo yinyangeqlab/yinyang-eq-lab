@@ -9,6 +9,39 @@ import {execFileSync} from 'node:child_process';
 const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/client');
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
+const previewRoot = join(source, 'sample-assets');
+const fontRevision = '6cdf01867df0813c2390f90dff7dc66c87f14cf7';
+const fonts = {
+  'Barlow-Regular.ttf': '95aa02c7c43096e0dd44d787ba6216864a67157e402adab59b35572e0c1577ea',
+  'Barlow-SemiBold.ttf': '86577cb32f8abe3673db53ca0f4221e6856751a4f6730c867e00f720f8bb1fc5',
+  'OFL.txt': '186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f',
+};
+mkdirSync(previewRoot, {recursive:true});
+for (const [name, hash] of Object.entries(fonts)) {
+  const file = join(previewRoot, name);
+  if (!existsSync(file)) {
+    const response = await fetch(`https://raw.githubusercontent.com/google/fonts/${fontRevision}/ofl/barlow/${name}`, {signal:AbortSignal.timeout(30000)});
+    if (!response.ok) throw Error('Unable to restore homepage font asset: ' + name);
+    const bytes = Buffer.from(await response.arrayBuffer());
+    if (createHash('sha256').update(bytes).digest('hex') !== hash) throw Error('Unexpected font download: ' + name);
+    writeFileSync(file, bytes);
+  }
+  if (digest(file) !== hash) throw Error('Unexpected homepage font asset: ' + name);
+}
+const panels = ['ranking','tuning','comparison','contribute'];
+if (panels.some(name => !existsSync(join(previewRoot, 'destinations', name + '-print.webp'))))
+  execFileSync('python3', ['scripts/build/first-listen-art.py', join(previewRoot, 'destinations')], {stdio:'inherit'});
+if (['a','b'].some(name => !existsSync(join(previewRoot, name + '.flac'))))
+  execFileSync('python3', ['scripts/build/first-listen-audio.py', previewRoot], {stdio:'inherit'});
+// Only the reviewed synthetic previews may be served from these public URLs.
+const sampleDigests = {
+  a: '42006475494f63f0c19e02018b5cde567d9482ca4e551e369159bcb9d7e26083',
+  b: '3766bb78cc9a4cc899ee6452c6ae8a42cb87fd3c88afb3b09bf3cd34656eead7',
+};
+for (const [side, expected] of Object.entries(sampleDigests)) {
+  const actual = execFileSync('ffmpeg', ['-v','error','-i',join(previewRoot, side + '.flac'),'-map','0:a:0','-f','hash','-'], {encoding:'utf8'}).trim();
+  if (actual !== 'SHA256=' + expected) throw Error('Incorrect homepage preview audio: ' + side);
+}
 verifyGuideAssets(source, { allowMissing: publicOnly });
 for (const { presets } of approvedEqModels) {
   for (const { preview } of presets) {

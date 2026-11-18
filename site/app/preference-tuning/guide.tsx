@@ -156,7 +156,7 @@ const TOPICS: Topic[] = [
       ["View generated EQ results", "Jumps to the most recent results for this setup. Select a result to change which EQ you’ll save or download."],
       ["Listen to both EQs", "Compares Target match and Lower boost using the same recording."],
       ["Result graph", "Response shows the predicted sound. Deviation from target shows how far the fit is above or below the adjusted target. Show all EQs overlays the generated results. Show selected EQ isolates the version you chose."],
-      ["Advanced EQ results", "Opens the full set of fitters and band counts. Choose a result to inspect its fit or use Compare generated EQ results to audition a shortlist."],
+      ["Advanced EQ results", "Opens the full set of fitters and band counts. Choose a result to inspect its fit or use Compare generated EQ results to listen to your top settings."],
       [`Download selected EQ and Save selected EQ to ${PERSONAL_AREA_TITLE}`, `Download uses the selected format. Save adds the selected filters to ${PERSONAL_AREA_TITLE}, where you can load them in Tuning or Music library.`],
       ["Download formats", "A parametric EQ text file, Equalizer APO, EasyEffects (use its Import APO action and set its input gain to the listed preamp if needed) and a Qudelix 5K manual-entry guide."],
       ["Download original target / Download preference target", "The original target is the curve you started from. The preference target includes your tuning changes. Both are available as CSV or TXT."],

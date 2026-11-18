@@ -163,7 +163,7 @@ export default function OwnerResearch() {
   return <main className="owner-research">
     <AdminPageHeader />
     <header>
-      <h1>Research admin</h1>
+      <h1>Research Admin</h1>
       <p>Review submissions, investigate activity and manage site controls. Username shows the current account nickname when available. Browser IDs help group records and do not verify ownership.</p>
     </header>
     {error && <p role="alert">{error}</p>}

@@ -9,8 +9,7 @@ export default function AboutPage() {
     <main className="about-page">
       <section className="about-welcome" aria-labelledby="about-title">
         <div className="about-welcome-copy">
-          <p className="about-kicker">About us · YinYang EQ</p>
-          <h1 id="about-title">Find what sounds right to you.</h1>
+          <h1 id="about-title">About YinYang EQ</h1>
           <p className="about-intro">
             Welcome to YinYang EQ, a listening lab for anyone curious about how their headphones sound.
             Start with a song you know, switch between two sound settings, and hear what changes.
@@ -20,8 +19,8 @@ export default function AboutPage() {
             The final call is always yours.
           </p>
           <div className="about-actions">
-            <Link href="/listen" className="about-primary">Choose how to listen <span aria-hidden="true">→</span></Link>
-            <Link href="/#how-it-works">See how it works</Link>
+            <Link href="/listen" className="about-primary">Choose how to listen</Link>
+            <Link href="/#sample">Try the preview</Link>
           </div>
         </div>
       </section>

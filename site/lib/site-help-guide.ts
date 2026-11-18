@@ -34,17 +34,17 @@ export const helpTopics: readonly HelpTopic[] = [
     steps: ["Yes. You can make parametric EQ from a target and a headphone measurement in Preference Tuning, play a saved EQ in the Listening Pool, or A/B two presets in Compare EQs.", "Open the Headphones / Target bar in Preference Tuning to choose Target or Saved EQ."],
   },
   {
-    id: "start", title: "Start a Personal Tournament", href: personal, targets: [".starter-start-button", ".personal-session-bar", ".personal-starter"],
+    id: "start", title: "Start a Personal Tournament", href: personal, targets: [".starter-start-button", ".personal-session-bar", "#tournament-entry"],
     terms: "start personal tournament; cannot start; wont start; start greyed out; start disabled; nothing happens start; getting started; begin first round; setup tournament; control gray before the first round; how to play; how to start; play tournament; gray start control before first comparison",
-    steps: ["Pick your headphones, choose a music source, and set Targets to compare and Comparisons per session. Then select Start personal tournament.", "If Start is disabled, check the message below it. A session size sets a stopping point. You can continue listening after reviewing your progress."],
+    steps: ["Choose your headphones and music, then select Start personal tournament. Tournament options lets you change the sound settings and the number of comparisons.", "If Start is disabled, check the message below it. A session size sets a stopping point. You can continue listening after reviewing your progress."],
   },
   {
     id: "headphones", title: "Find or add a headphone measurement", href: personal, targets: [".measurement-picker", ".shootout-setup-toggle"],
     terms: "find my headphones; pick headphones; add headphone measurement; headphones not listed; headphone model missing; import frequency response; upload headphone measurement; fit iem; choose in ear over ear; headphone not showing; add headphones",
-    steps: ["In Pick your headphones, choose In-Ear or Over-Ear and look for an existing measurement or browse the database. Use the measurement upload option if you have your own response file.", "Use a measurement for the headphones you are wearing. In an active run, open Show test options to return to setup. Changing the measurement can switch you to a different saved run."],
+    steps: ["Under Headphones, use Change headphones if a model is already selected. Choose In-Ear or Over-Ear and look for an existing measurement or browse the database. Use the measurement upload option if you have your own response file.", "Use a measurement for the headphones you are wearing. In an active run, open Show test options to return to setup. Changing the measurement can switch you to a different saved run."],
   },
   {
-    id: "pool", title: "Choose which targets enter the tournament", href: personal, targets: [".starter-start", ".shootout-setup-toggle"],
+    id: "pool", title: "Choose which targets enter the tournament", href: personal, targets: [".entry-options > summary", ".shootout-setup-toggle"],
     terms: "choose targets; what targets are available; change target pool; quick starter; custom pool; add private target to tournament; fewer curves; number of targets; only a handful of curves in bracket; filter targets; targets to compare",
     steps: ["Open Targets to compare. Use the public pool, Quick starter for a smaller pool, or Choose my own pool to pick individual targets. In an active run, look under Show test options.", "A large pool can take several sessions to explore. Changing the pool may switch you to a different saved run."],
   },
@@ -56,12 +56,12 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "normalization", title: "Normalize track loudness in Personal Tournament", href: personal, targets: ["select[aria-label='Track loudness target']", ".shootout-setup-toggle"],
     terms: "loudness normalization; normalization; normalisation; normalize songs; does this support loudness normalization; match volume across songs; lufs; loudness; track loudness; keep music at same volume; level normalize; a song blasts compared with the next one",
-    steps: ["Yes. In Personal Tournament, open Advanced setup or Show test options and use Track loudness target. Choose −14, −16, or −18 LUFS, or Normalization off.", "This adjusts the source level before EQ. Perceived loudness can still change after EQ. Changing this setting can switch you to a different saved setup."],
+    steps: ["Yes. In Personal Tournament, open Playback settings inside Tournament options, or use Show test options during a run, and use Track loudness target. Choose −14, −16, or −18 LUFS, or Normalization off.", "This adjusts the source level before EQ. Perceived loudness can still change after EQ. Changing this setting can switch you to a different saved setup."],
   },
   {
     id: "personal-channels", title: "Match the left and right channels", href: personal, targets: ["select[aria-label='Personal channel matching']", ".shootout-setup-toggle"],
     terms: "left right balance; channel match; one side louder; uploaded preset missing; use l r measurements; stereo correction; auto match; qudelix ch 0 ch 1",
-    steps: ["Open Advanced setup or Show test options. Auto uses the saved Left and Right responses when both exist. Uploaded uses a two-channel PEQdB or Qudelix TXT preset. Off leaves target EQ active and turns channel correction off.", "If Uploaded is blocking Start, add a two-channel preset or choose Auto or Off."],
+    steps: ["Open Playback settings inside Tournament options, or Show test options during a run. Auto uses the saved Left and Right responses when both exist. Uploaded uses a two-channel PEQdB or Qudelix TXT preset. Off leaves target EQ active and turns channel correction off.", "If Uploaded is blocking Start, add a two-channel preset or choose Auto or Off."],
   },
   {
     id: "vote", title: "Why is my preference button locked?", href: personal, targets: ["[aria-label='Play Sample A']", "#personal-vote-availability", ".starter-start-button"],
@@ -74,9 +74,9 @@ export const helpTopics: readonly HelpTopic[] = [
     steps: ["Play Sample A and Sample B to compare the same music. If playback is silent, check that the player has a track, its volume is up, and your browser can play the source. After reloading, reselect a locally chosen file.", "Choose Prefer A, Unsure / Tie, or Prefer B. Use Skip comparison if you cannot judge it. Practice choices do not count toward the run."],
   },
   {
-    id: "personal-results", title: "See your shortlist, finalist curves and results", href: personal, targets: [".personal-result-curves > summary", ".personal-session-bar > button", ".starter-start-button"],
+    id: "personal-results", title: "See your personal ranking and finalist curves", href: personal, targets: [".personal-result-curves > summary", ".personal-session-bar > button", ".starter-start-button"],
     terms: "how can i see my results; see targets i heard; reveal curves; see finalist target curves; show winner; reveal target names; find favorite; view shortlist; see ranking of my targets; podium; see graph of finalists; curves for the sounds that reached the end; see what i picked; personal tournament results",
-    steps: ["Select Pause & see results in the current session. The shortlist shows your current favorite or close contenders. Open View finalist target curves to see the curves after the blind comparisons.", "Use Check top … on different music when the run is ready, or explore more comparisons. Fine-tune my favorite opens Preference Tuning with that target."],
+    steps: ["Select Pause & see results in the current session. Your ranking shows your current favorite or close contenders. Open View finalist target curves to see the curves after the blind comparisons.", "Use Check top … on different music when the run is ready, or explore more comparisons. Fine-tune my favorite opens Preference Tuning with that target."],
   },
   {
     id: "resume", title: "Resume, undo, export or delete a saved run", href: personal, targets: [".personal-resume", ".personal-journey", ".personal-saved-setups > summary"],
@@ -86,7 +86,7 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "finalists", title: "Check finalists on different songs", href: personal, targets: [".personal-finalist-readiness", ".personal-session-bar > button", ".starter-start-button"],
     terms: "cant check finalists; why are finalist checks disabled; two different songs; how many songs for finalists; why no winner; check top 3; finalist readiness; need more tracks before trying the top choices; recheck contenders; how many comparisons; does tie count",
-    steps: ["Use Pause & see results to review the current shortlist. The message above the results explains whether Check top … on different music is ready. If it asks for more evidence, keep exploring the pool or add a more varied playlist.", "Finalist checks use different song references. Multiple recordings of the same song may share a reference. A tie records no preference and a shortlist can contain more than one plausible favorite."],
+    steps: ["Use Pause & see results to review your current ranking. The message above the results explains whether Check top … on different music is ready. If it asks for more evidence, keep exploring the pool or add a more varied playlist.", "Finalist checks use different song references. Multiple recordings of the same song may share a reference. A tie records no preference and several settings can share the lead."],
   },
   {
     id: "tuning-headphones", title: "Choose headphones or load a saved EQ in Tuning", href: tuning, targets: ["#tuning-headphones .measurement-picker", ".pt-sound-bar"],
@@ -227,7 +227,7 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "collection", title: "See saved results, dates and measurements", href: "/shootout?tab=profile", targets: [".alpha-collection-heading h1"],
     terms: "my collection; find my results; how can i see my saved trials; view dated trials; show old trials; see old trials; see past trials; review history; see all dates; view headphone measurements; filter my history; where did my results go; show past results; personal tournament history",
-    steps: ["Open My Collection → My results. Filter dated trials by headphone measurement. Personal Tournament history is in its own view, and the ranking shortlist summarizes all dates.", "For submitted research records and browser deletion controls, use My data."],
+    steps: ["Open My Collection → My results. Filter dated trials by headphone measurement. Personal Tournament history is in its own view, and the ranking summarizes all dates.", "For submitted research records and browser deletion controls, use My data."],
   },
   {
     id: "library-loudness", title: "Reduce volume differences between recordings", href: "/music-library", targets: [".library-loudness input"],
@@ -257,7 +257,7 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "rankings", title: "See research rankings and what counts", href: "/shootout?tab=rankings", targets: [".rankings-views"],
     terms: "where can i see global rankings; best target rankings; public leaderboard; what votes count; blind research results; standard cohort; rankings missing; read rank table; target leaderboard; see ranks",
-    steps: ["Open Rankings in the Shootout. Check the cohort and headphone category to see what is counted. Blind Research rankings and your personal shortlist answer different questions."],
+    steps: ["Open Rankings in the Shootout. Check the cohort and headphone category to see what is counted. Blind Research rankings and your personal ranking answer different questions."],
   },
   {
     id: "library", title: "Find music in the Listening Pool", href: "/music-library", targets: [".library-browse-controls"],

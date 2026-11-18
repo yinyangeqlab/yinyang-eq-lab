@@ -3,7 +3,7 @@
 import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AudioLines, Headphones, Pause, Play, Save, SlidersHorizontal, Trash2 } from "lucide-react";
+import { AudioLines, Pause, Play, Save, SlidersHorizontal, Trash2 } from "lucide-react";
 import BeforeYouListen from "@/components/before-you-listen";
 import MusicTrackPicker from "@/components/music-track-picker";
 import type { PeqFilter } from "@/lib/autoeq";
@@ -410,7 +410,6 @@ export default function EarTuningPage() {
 
   return <><main className="ear-tool">
     <header className="ear-intro">
-      <span className="ear-kicker"><Headphones size={16} aria-hidden="true"/> Listening tools</span>
       <h1>Peak &amp; Dip Finder</h1>
       <p>Find peaks that sound too strong and dips that sound too quiet. Try an adjustment and check it with music you know.</p>
       <div className="ear-safety">

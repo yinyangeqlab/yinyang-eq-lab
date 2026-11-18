@@ -28,8 +28,7 @@ export default async function AudioFactPage({ params }: Props) {
   return (
     <main className="terms-page audio-facts audio-facts-detail">
       <nav className="audio-facts-crumbs" aria-label="Breadcrumb">
-        <a href="/glossary">Glossary &amp; Guides</a><span aria-hidden="true">/</span>
-        <a href={AUDIO_FACTS_PATH}>Audio Fact Checks</a>
+        <a href={AUDIO_FACTS_PATH}>All audio fact checks</a>
       </nav>
       <article>
         <header>

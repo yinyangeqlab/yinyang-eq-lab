@@ -9,8 +9,8 @@ export default function EqFitterBenchmarkPage() {
   return <main className="terms-page fitter-article">
     <article>
       <header>
-        <a href="/glossary">Glossary &amp; Guides</a>
-        <h1>EQ fitter benchmark</h1>
+        <h1>EQ Fitter Benchmark</h1>
+        <p>See how closely six EQ fitters matched the same targets across seven headphone measurements.</p>
       </header>
       <EqFittingGuide showContents />
     </article>
