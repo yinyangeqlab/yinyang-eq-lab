@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "01f4450beb8173ac3a96934695283bc9bcb451f4",
+  "baseRevision": "ace0eefd792916e7da567c758b4e6adaf6a4335a",
   "recordedLiveUpdate": 181,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -6137,7 +6137,7 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "0ce6f38742aaf97cbc136f0f67d48ec7ee27c2bdbda2de33bc94e87e75f22a8b",
+      "sha256": "87cec16cbceafae56bec3f6db71d1eceb7e74299878cc465dccfb1afd41bf09a",
       "executable": false
     },
     {

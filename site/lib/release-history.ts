@@ -322,6 +322,7 @@ export const candidateChanges = [
 ] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
+  { update: 182, date: "2026-11-18", title: "YinYang Android Companion and listening tools", changes: candidateChanges },
   { update: 181, date: "2026-11-18", title: "Homepage listening preview and personal rankings", changes: update181Changes, github: { commit: "533a77d3953d379207de83b83cc4a87a1466ba51", releaseTag: "update181" } },
   { update: 180, date: "2026-11-18", title: "Compare saved EQs", changes: update180Changes, github: { commit: "421ed4c9e15ac7330f979938555ee5c7c3caa349", releaseTag: "update180" } },
   { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: update179Changes, github: { commit: "e10e4116f46ba6bf7cc7ec63566401ef63731dd3" } },
