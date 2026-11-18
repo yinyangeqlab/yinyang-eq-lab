@@ -11,12 +11,12 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
     <main className="companion-page" aria-labelledby="companion-title">
       <div className="companion-copy">
         <CompanionAppIcons/>
-        <h1 id="companion-title">Alternative Companion Android App <span>for Qudelix 5K</span></h1>
+        <h1 id="companion-title">YinYang Companion App <span>for Qudelix 5K</span></h1>
         <h2 className="companion-file-title">Import and export EQ files right from your phone</h2>
         <p className="companion-intro">Open a PEQ file from Android, edit or rename it offline, and export a Qudelix-format copy. Connect your 5K to audition the changes and save them to a hardware slot.</p>
         <div className="companion-install" id="install">
           <DownloadAppManager className="companion-features-link"/>
-          <p className="companion-availability">On Android 9 or later, open App Manager and choose YinYang Companion to install it. Return to the manager for updates.</p>
+          <p className="companion-availability">On Android 9 or later, open App Manager and choose YinYang Companion to install it. Return to the manager for updates. It verifies the Lab’s signing certificate before opening the Android installer.</p>
           {download === "testing" && <p role="status">Public downloads will open when the Lab publishes its Android release. <a href={repository}>View the project on GitHub</a>.</p>}
           {download === "unavailable" && <p role="status">The download service is unavailable. Check <a href={repository + "/releases"}>GitHub Releases</a> or try again later.</p>}
         </div>
@@ -25,6 +25,7 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
           <div><dt>Compare two presets blind</dt><dd>Switch between A and B on the 5K. Loudness matching keeps a louder preset from getting an easy advantage. Reveal the names after you pick a favorite.</dd></div>
           <div><dt>Send an EQ from browser Tuning</dt><dd>In the private preview, pair your phone by name. Send it an EQ from the browser and review the draft in the companion before applying it.</dd></div>
         </dl>
+        <p className="companion-availability">Qudelix 5K Plus support is coming soon. Use at your own risk and check your volume and EQ before listening.</p>
         <a className="companion-guide-link" href={repository + "/blob/main/FEATURES.md"}>Read the feature guide</a>
       </div>
       <figure className="companion-screen">
@@ -41,7 +42,6 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
           <div><dt>Mix files with a live USB input</dt><dd>The phone preview can mix local audio files and one compatible USB mic or capture input. Set the level of each source and send the mix to one output.</dd></div>
           <div><dt>Open your listening library</dt><dd>Use My Collection, Personal Tuning and headphone search inside the app. Browser Sync shares saved Lab data with devices you approve.</dd></div>
           <div><dt>Check firmware and troubleshoot</dt><dd>Run a read-only compatibility check, export an active EQ snapshot or a diagnostic log, and open the official Qudelix app for firmware updates.</dd></div>
-          <div><dt>Set up a 711 coupler for REW</dt><dd>Measurement mode selects the 48 kHz USB mic profile and turns off mic monitoring. When you finish, restore your previous USB and mic settings.</dd></div>
           <div><dt>Set up the app your way</dt><dd>Choose Blue, YinYang Green, AMOLED or Light. Display the familiar USR and SPK names or use PEQ Filters and Channel Match.</dd></div>
         </dl>
       </section>

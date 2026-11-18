@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ace0eefd792916e7da567c758b4e6adaf6a4335a",
+  "baseRevision": "fbb73babba3a4619c3bad56c0016910b64d31989",
   "recordedLiveUpdate": 181,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "ba50167ec371d44314315a5f4b3fdd334bdbe0d71e2aaa4a94620508821c9b5f",
+      "sha256": "cbac55cf8ee2a5ff11a8bdf2c18eb7cdb4fb808d72950dfed262a8678b4aae5b",
       "executable": false
     },
     {
@@ -3062,7 +3062,7 @@
     },
     {
       "path": "site/app/android/page.tsx",
-      "sha256": "7e75f35f8063e99326799c6919cb802762defdab1db3cc3e32256f2a18d9ff51",
+      "sha256": "644217abbe089967193c4dd45fc5e491176ea6abf983f95fcf18d39f84f45d34",
       "executable": false
     },
     {
@@ -6197,7 +6197,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "ad501986f699981ee42e8f4c8731f9afab221532192022935e157b3b6afe9bf2",
+      "sha256": "21d1bf99c8246eac85eb5050411396ceb0f62d27611fe0e12d3bb6c3381dafe9",
       "executable": false
     },
     {
