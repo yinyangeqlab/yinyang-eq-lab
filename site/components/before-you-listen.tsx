@@ -6,6 +6,7 @@ import { MeasurementEntryActions } from "@/components/headphone-picker";
 type Props = {
   personal?: boolean;
   earTuning?: boolean;
+  comparisonSession?: boolean;
   skip?: boolean;
   onSkipChange?: (value: boolean) => void;
   onReady: () => void;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 export default function BeforeYouListen({
-  personal = false, earTuning = false, skip, onSkipChange, onReady, onCancel, onMeasurementChoice,
+  personal = false, earTuning = false, comparisonSession = false, skip, onSkipChange, onReady, onCancel, onMeasurementChoice,
 }: Props) {
   const dialog = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -56,7 +57,7 @@ export default function BeforeYouListen({
         </p>}
         <p>
           Turn off other equalizers or sound presets on your device, music player, and headphone app to avoid applying adjustments twice.
-          {!earTuning && (personal
+          {!earTuning && (comparisonSession ? " Both EQs use the channel correction selected for your headphones." : personal
             ? " The website uses the left/right correction selected in Advanced setup: Auto, Uploaded or Off."
             : " The website handles supported left/right correction. Open Comparison can also use your saved correction file.")}
         </p>
@@ -75,8 +76,8 @@ export default function BeforeYouListen({
       </div>
       <div className="sound-check-actions">
         {onSkipChange && <>
-          <label className="sound-check-skip"><input type="checkbox" checked={skip} onChange={event => onSkipChange(event.target.checked)}/>Don’t show again</label>
-          <small className="sound-check-repeat-note">Leave unchecked to enable reminders before new tests. You can reopen this any time with Before You Listen.</small>
+          <label className="sound-check-skip"><input type="checkbox" checked={skip} onChange={event => onSkipChange(event.target.checked)}/>{comparisonSession ? "Don’t show again for this session" : "Don’t show again"}</label>
+          <small className="sound-check-repeat-note">{comparisonSession ? "A new comparison will show this reminder again." : "Leave unchecked to enable reminders before new tests. You can reopen this any time with Before You Listen."}</small>
         </>}
         <div className="sound-check-decision">
           <button type="button" onClick={onReady}>I’m ready to listen</button>

@@ -69,12 +69,17 @@ export async function analyzeTrack(file: Blob): Promise<TrackAnalysis> {
   } finally { await decoder.close(); }
 }
 
+export function connectLoudnessWeighting(context: BaseAudioContext, source: AudioNode) {
+  const shelf = context.createBiquadFilter(); shelf.type = "highshelf"; shelf.frequency.value = 1681.974; shelf.gain.value = 4;
+  const highpass = context.createBiquadFilter(); highpass.type = "highpass"; highpass.frequency.value = 38.135; highpass.Q.value = .5;
+  source.connect(shelf); shelf.connect(highpass);
+  return highpass;
+}
+
 async function estimateLufs(decoded: AudioBuffer): Promise<number> {
   const offline = new OfflineAudioContext(2, decoded.length, decoded.sampleRate);
   const source = offline.createBufferSource(); source.buffer = decoded;
-  const shelf = offline.createBiquadFilter(); shelf.type = "highshelf"; shelf.frequency.value = 1681.974; shelf.gain.value = 4;
-  const highpass = offline.createBiquadFilter(); highpass.type = "highpass"; highpass.frequency.value = 38.135; highpass.Q.value = .5;
-  source.connect(shelf); shelf.connect(highpass); highpass.connect(offline.destination); source.start();
+  connectLoudnessWeighting(offline, source).connect(offline.destination); source.start();
   const weighted = await offline.startRendering();
   const left = weighted.getChannelData(0), right = weighted.getChannelData(1);
   const block = Math.round(weighted.sampleRate * .4), hop = Math.round(weighted.sampleRate * .1);
@@ -85,6 +90,12 @@ async function estimateLufs(decoded: AudioBuffer): Promise<number> {
     energy /= block;
     if (energy > 0 && -.691 + 10 * Math.log10(energy) >= -70) energies.push(energy);
   }
+  return integratedLoudness(energies);
+}
+
+/** Mean-square stereo energies for overlapping 400 ms windows. */
+export function integratedLoudness(windows: number[]) {
+  const energies = windows.filter(power => power > 0 && -.691 + 10 * Math.log10(power) >= -70);
   if (!energies.length) throw new Error("Track is too quiet to measure loudness.");
   const mean = energies.reduce((a, b) => a + b, 0) / energies.length;
   const gate = -.691 + 10 * Math.log10(mean) - 10;

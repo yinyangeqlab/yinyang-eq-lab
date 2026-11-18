@@ -396,7 +396,7 @@ export default function PersonalShootout() {
     <div className="starter-intro">
       <p id="starter-title" className="personal-setup-lead">Find the sound you like best.</p>
       <p>Compare two sounds at a time on your own headphones. Your choices narrow {pool.length ? `${pool.length} targets` : "the targets"} to a personal shortlist, and names stay hidden until your results.</p>
-      <nav className="starter-modes" aria-label="Other listening modes"><a href="/shootout?mode=blind">Blind Research</a><a href="/shootout?mode=open">Open Comparison</a><a href="/eq-compare">Blind EQ comparison</a></nav>
+      <nav className="starter-modes" aria-label="Other listening modes"><a href="/shootout?mode=blind">Blind Research</a><a href="/shootout?mode=open">Open Comparison</a><a href="/eq-compare">Compare EQs</a></nav>
     </div>
     <ol className="starter-steps">
       <li className={`starter-step${measurement?" is-done":""}`}><h2><span className="starter-num" aria-hidden="true">{measurement?"✓":"1"}</span>Pick your headphones</h2><p className="starter-help">We use a saved measurement of your headphone model to estimate each sound setting. Your own pair and fit can affect what you hear.</p>{headphonePicker}</li>

@@ -1,0 +1,75 @@
+{
+  "update": 180,
+  "sourceCommit": "9cfdad57a04c35f6ffab316176cbbe5fd74326c8",
+  "deploymentVerification": {
+    "at": "2026-11-18T10:45:36.945426Z",
+    "update": 180,
+    "revision": "9cfdad57a04c35f6ffab316176cbbe5fd74326c8",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "ec2e129be56c577ab6a8052dd54f50c3f13a9639",
+    "publicGuideVerified": true,
+    "staticAndDiscordPreviewVerified": true,
+    "matchingGuideAssets": 20,
+    "technicalPdfDownloadVerified": true,
+    "fillableChecklistServed": true,
+    "legacyPdfRedirectVerified": true,
+    "protectedRecordingAccessRetained": true,
+    "versionPageVerified": true,
+    "matchingWorkerModules": 392,
+    "matchingSavedEqClientAssets": 15
+  },
+  "candidateVerification": {
+    "sourceRevision": "9cfdad57a04c35f6ffab316176cbbe5fd74326c8",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 2965,
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "packagedWidths": [
+      320,
+      390,
+      915,
+      1280
+    ],
+    "authenticatedProductionChecks": [
+      {
+        "width": 390,
+        "savedEqShortcut": true,
+        "blind": true,
+        "reveal": true,
+        "sharedPlayback": true,
+        "loudness": true,
+        "noParticipantWrites": true
+      },
+      {
+        "width": 1280,
+        "savedEqShortcut": true,
+        "blind": true,
+        "reveal": true,
+        "sharedPlayback": true,
+        "loudness": true,
+        "noParticipantWrites": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

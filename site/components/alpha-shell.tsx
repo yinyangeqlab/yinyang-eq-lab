@@ -5,13 +5,14 @@ import { PanelTopIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent, MouseEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
+import { BLIND_EQ_COMPARE_PATH } from "@/lib/blind-eq";
 import { buildLabel } from "@/lib/release-info";
 import { isPersonalAreaSection, PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import AccountAutoSync from "@/components/account-auto-sync";
 import SiteTopbar from "@/components/site-topbar";
 import { applyMotionPreference, readDisplayPreferences, subscribeDisplayPreferences } from "@/lib/display-preferences";
 
-type Destination = "home" | "listen" | "tune" | "ear" | "library" | "rankings" | "space" | "terms";
+type Destination = "home" | "listen" | "compare" | "tune" | "ear" | "library" | "rankings" | "space" | "terms";
 type Layout = "full" | "icons" | "hidden";
 const PHONE_VIEWPORT = "(max-width: 600px)";
 const SIDEBAR_EDGE_DISTANCE = 48;
@@ -40,6 +41,7 @@ function subscribePhoneViewport(onChange: () => void) {
 const destinations: { id: Destination; label: string; href: string }[] = [
   { id: "home", label: "Home", href: "/" },
   { id: "listen", label: "Listen", href: "/listen" },
+  { id: "compare", label: "Compare EQs", href: BLIND_EQ_COMPARE_PATH },
   { id: "tune", label: "Preference Tuning", href: "/preference-tuning" },
   { id: "ear", label: "Peak & Dip Finder", href: "/ear-tuning" },
   { id: "space", label: PERSONAL_AREA_TITLE, href: "/shootout?tab=profile" },
@@ -51,6 +53,7 @@ const destinations: { id: Destination; label: string; href: string }[] = [
 function destinationFor(path: string, tab: string | null): Destination | null {
   if (path === "/glossary" || path.startsWith("/glossary/")) return "terms";
   if (path === "/listen") return "listen";
+  if (path === BLIND_EQ_COMPARE_PATH) return "compare";
   if (path.startsWith("/shootout/personal")) return "listen";
   if (path.startsWith("/shootout")) return isPersonalAreaSection(tab) ? "space" : tab === "rankings" ? "rankings" : tab === "music" ? "library" : "listen";
   if (path.startsWith("/music-library")) return "library";
@@ -77,6 +80,7 @@ function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnima
       </g>
     </> :
       kind === "listen" ? <><path d="M5 18v-3a11 11 0 0 1 22 0v3"/><rect x="3" y="15" width="5" height="11" rx="2"/><rect x="24" y="15" width="5" height="11" rx="2"/><path className="alpha-room-wave room-wave-one" d="M12 15v6"/><path className="alpha-room-wave" d="M16 12v12"/><path className="alpha-room-wave room-wave-three" d="M20 15v6"/></> :
+      kind === "compare" ? <><rect x="3" y="7" width="11" height="18" rx="3"/><rect x="18" y="7" width="11" height="18" rx="3"/><path d="m6 19 2.5-6 2.5 6m-4.3-1.6h3.6M21.5 13h2.4a1.5 1.5 0 1 1 0 3h-2.4m0-3v6m0-3h2.7a1.5 1.5 0 1 1 0 3h-2.7"/></> :
       kind === "tune" ? <>
         <path d="M3 25h26M5 5v20" opacity=".65"/>
         <path className="alpha-tune-curve" d={tuningCurveRest}>
@@ -166,7 +170,11 @@ function QueryDestination({ path, onChange }: { path: string; onChange: (query: 
   return null;
 }
 
-export default function AlphaShell({ children }: { children: ReactNode }) {
+export default function AlphaShell({ children, help, privateComparison = false }: {
+  children: ReactNode;
+  help?: ReactNode;
+  privateComparison?: boolean;
+}) {
   const pathname = usePathname() || "/";
   const [query, setQuery] = useState<RouteQuery | null>(null);
   const currentQuery = query?.path === pathname ? query : null;
@@ -314,6 +322,10 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
     </button>
   );
 
+  // The private player owns its audio context for the lifetime of this document.
+  const ShellLink = privateComparison ? "a" : Link;
+  const shellLinkOptions = privateComparison ? {} : { prefetch: false as const };
+
   return <div className="alpha-app" data-alpha-layout={layout} data-phone-menu-open={phone && phoneMenuOpen || undefined} data-alpha-layout-ready={layoutLoaded || undefined} data-alpha-destination={active || "utility"}>
     <Suspense fallback={null}><QueryDestination path={pathname} onChange={setQuery}/></Suspense>
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
@@ -351,26 +363,30 @@ export default function AlphaShell({ children }: { children: ReactNode }) {
         {!phone && layout !== "hidden" && navigationToggle}
         <aside id="alpha-navigation" className="alpha-navigation" aria-label="Main navigation" inert={layout === "hidden"} aria-hidden={layout === "hidden"}>
           {/* eslint-disable-next-line @next/next/no-img-element -- This small fixed local brand asset uses the existing static asset pipeline; preserve its CSS sizing. */}
-          <Link className="alpha-brand" href="/" prefetch={false} onClick={followNavigation}><img src={`/brand-mark.svg?v=${buildLabel}`} alt=""/><span>YinYang EQ<small>Find your sound.</small></span></Link>
+          <ShellLink className="alpha-brand" href="/" {...shellLinkOptions} onClick={followNavigation}><img src={`/brand-mark.svg?v=${buildLabel}`} alt=""/><span>YinYang EQ<small>Find your sound.</small></span></ShellLink>
 
           <nav aria-label="Main destinations">{destinations.map(d => {
             // Enter Finder with a document navigation so Back can warn about an unfinished ranked challenge.
-            const DestinationLink = d.id === "ear" ? "a" : Link;
-            return <DestinationLink key={d.id} href={d.href} {...(d.id !== "ear" && { prefetch: false })} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={followNavigation}
+            const documentNavigation = privateComparison || d.id === "ear" || d.id === "compare";
+            const DestinationLink = documentNavigation ? "a" : Link;
+            return <DestinationLink key={d.id} href={d.href} {...(!documentNavigation && { prefetch: false })} className={`alpha-destination${active === d.id ? " is-current" : ""}`} data-destination={d.id} aria-current={active === d.id ? "page" : undefined} title={d.label} onClick={followNavigation}
               onPointerEnter={d.id === "tune" ? startTuningIcon : undefined} onPointerLeave={d.id === "tune" ? stopTuningIcon : undefined}>
               <DestinationIcon kind={d.id} tuneAnimation={d.id === "tune" ? tuneAnimation : undefined}/><span>{d.label}</span>
             </DestinationLink>;
           })}</nav>
           <nav className="alpha-secondary-navigation" aria-label="Data and help">
-            <Link href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} prefetch={false} title="Devices and Sync" onClick={followNavigation}><UtilityIcon kind="sync"/><span>Devices &amp; Sync</span></Link>
-            <Link href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} prefetch={false} title="Help and playback hotkeys" onClick={followNavigation}><UtilityIcon kind="keyboard"/><span>Help &amp; hotkeys</span></Link>
-            <Link href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} prefetch={false} title="Privacy notice" onClick={followNavigation}><UtilityIcon kind="privacy"/><span>Privacy &amp; data</span></Link>
+            <ShellLink href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} {...shellLinkOptions} title="Devices and Sync" onClick={followNavigation}><UtilityIcon kind="sync"/><span>Devices &amp; Sync</span></ShellLink>
+            {privateComparison && <button id="compare-help-launch" className="compare-help-link" aria-label="Ask for help" title="Ask for help" aria-haspopup="dialog" aria-controls="site-help-panel" onClick={() => document.getElementById("ask-site-help")?.click()}>
+              <svg className="alpha-utility-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.1 2c-1.2.9-1.6 1.3-1.6 2.5M12 16.4v.1"/></svg><span>Ask for help</span>
+            </button>}
+            <ShellLink href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} {...shellLinkOptions} title="Help and playback hotkeys" onClick={followNavigation}><UtilityIcon kind="keyboard"/><span>Help &amp; hotkeys</span></ShellLink>
+            <ShellLink href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} {...shellLinkOptions} title="Privacy notice" onClick={followNavigation}><UtilityIcon kind="privacy"/><span>Privacy &amp; data</span></ShellLink>
           </nav>
         </aside>
         <span id="alpha-navigation-state" hidden>{layoutNames[layout]}. Activate to cycle through full navigation, icons only and hidden navigation.</span>
       </div>
-      <div className="alpha-sync-region" inert={modalOpen}><AccountAutoSync /></div>
-      <div id="alpha-content" className="alpha-route-content" tabIndex={-1}>{children}</div>
+      {!privateComparison && <div className="alpha-sync-region" inert={modalOpen}><AccountAutoSync /></div>}
+      <div id="alpha-content" className="alpha-route-content" tabIndex={-1}>{help}{children}</div>
     </div>
   </div>;
 }

@@ -258,13 +258,13 @@ assert.equal(forwarded, null);
 console.log('PASS share previews: every page route has a preview, cards exist, crawlers get public copy only, shootout routes are public yet guarded and stripped of identity, and other routes stay gated.');
 
 const eq = shareMetadataFields('/eq-compare');
-assert.equal(eq.openGraph.title, 'Blind EQ Comparison');
+assert.equal(eq.openGraph.title, 'Compare EQs');
 assert.deepEqual(eq.robots, { index: false, follow: false });
 for (const [agent, artwork] of [[discord['User-Agent'], 'eq-compare-motion.webp'], ['Slackbot-LinkExpanding 1.0', 'eq-compare.jpg']]) {
   const response = await run('/eq-compare', { headers: { 'User-Agent': agent } });
   assert.equal(response.headers.get('X-Robots-Tag'), 'noindex, nofollow');
   const body = await response.text();
-  assert.match(body, /property="og:title" content="Blind EQ Comparison"/);
+  assert.match(body, /property="og:title" content="Compare EQs"/);
   assert.match(body, /noindex,nofollow/);
   assert.equal(new URL(openGraphImages(body)[0]).pathname, `/share/${artwork}`);
 }

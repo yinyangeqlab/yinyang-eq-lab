@@ -13,7 +13,7 @@ function stats(buffer: AudioBuffer) {
   return { rms: Math.sqrt(power / (buffer.length * buffer.numberOfChannels)), peak };
 }
 
-function connectPreset(context: BaseAudioContext, input: AudioNode, channels: number, preset: EqPreset, balance: ReturnType<typeof channelBalance>) {
+export function connectPreset(context: BaseAudioContext, input: AudioNode, channels: number, preset: EqPreset, balance: ReturnType<typeof channelBalance>) {
   const splitter = context.createChannelSplitter(2), merger = context.createChannelMerger(2);
   input.connect(splitter);
   for (let channel = 0; channel < 2; channel++) {

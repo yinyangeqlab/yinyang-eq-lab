@@ -1,9 +1,16 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update179**, source `ec2e129be56c577ab6a8052dd54f50c3f13a9639`.
+Recorded deployment: **update180**, source `50e9bdfd38641841f5b7934d86bbac7cb1d51cc2`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update180 Saved EQ comparison and Version page links
+
+Compare two Saved EQ presets blind with a shared song, headphone selection, and loudness matching. The Version page links update177 to its GitHub release and commit, and update178 to the direct source comparison.
+
+[Deployment verification](releases/update180-version-links-verification.json) · [Source-only recovery verification](releases/update180-version-links-recovery-verification.json)
+
 
 ## Update179 repository layout and restore
 

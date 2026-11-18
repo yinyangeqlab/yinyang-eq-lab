@@ -1,3 +1,13 @@
+# Compare EQs — update180
+
+Compare two presets at `/eq-compare`. Open **Listen → Compare EQs**, choose the headphones in use, and load a Saved EQ or parametric TXT on either side. Original sound bypasses the preset filters. Click the song title to select music for both EQs or open local audio. Press A or B to listen. The shared player pauses, resumes and seeks the same recording with either preset.
+
+**Listen blind** shuffles the two presets. Reveal restores the names in their shuffled positions. **Saved EQs → Compare blind** loads both local presets directly in blind mode. Tuning and Music library can open one saved preset. There are no rounds, vote submissions or result downloads.
+
+The selected headphone’s available channel correction is shared across A and B. Match loudness above the EQs defaults to −14 LUFS. −16 and −18 turn both sides down. The player estimates integrated loudness after filtering the full song, and preserves common peak headroom. Off retains relative preset levels. Playback settings controls volume and headphone channel correction. Before you listen appears before playback. Its dismissal lasts for the current comparison only. Starting a new session, changing headphones or presets, or starting a new blind shuffle restores it. A named model without correction plays the supplied preset filters and preamps. The browser sends playback to the active audio output. A preset tagged for a different headphone is identified before listening.
+
+## Earlier versions
+
 # Saved EQs comparison — update178
 
 Open **My Collection → Saved EQs**, select two presets, and choose **Compare blind**.

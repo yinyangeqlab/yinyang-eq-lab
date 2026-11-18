@@ -1,4 +1,5 @@
 "use client";
+import { blindEqHref } from "@/lib/blind-eq";
 import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
 import LibraryEqUpload from "./library-eq-upload";
@@ -34,7 +35,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   const matches = useMemo(() => new Map(measurements.map(row => [row.id, measurementChannelMatch(row)])), [measurements]);
   const pendingIds = deleteRequest?.filter(id => eqs.some(eq => eq.id === id)) ?? [];
   const compareHref = selectedIds.length === 2 && !deleteRequest
-    ? `/eq-compare#${new URLSearchParams(selectedIds.map(id => ["saved-eq", id]))}`
+    ? blindEqHref(...selectedIds)
     : null;
   function act(action: () => void, success: string) { try { action(); setMessage(success); return true; } catch (error) { setMessage(error instanceof Error ? error.message : "Could not save this change."); return false; } }
   function matchDownloads(match: ChannelMatch, name: string) {
@@ -54,12 +55,12 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   }
   return <section className="saved-eq-collection" aria-labelledby="saved-eq-title">
     <h2 id="saved-eq-title">Saved EQs &amp; channel matches</h2>
-    <p>Save your EQ settings here and try them in Tuning or under Listening EQ in Music library. Saved EQs stay in this browser unless you enable account Sync.</p>
+    <p>Use these EQs in Tuning or Music library, or compare two blind. Saved EQs stay in this browser unless you enable Account Sync.</p>
     <LibraryEqUpload/>
 
     {eqs.length ? <>
       {eqs.length >= 2 && <div className="saved-eq-compare">
-        <p>Select two saved EQs to compare them blind with the same music.</p>
+        <p>{selectedIds.length === 2 ? "Two presets ready to listen blind." : "Select exactly two presets to compare them blind."}</p>
         {compareHref
           ? <Link className="saved-eq-try" href={compareHref} prefetch={false}>Compare blind</Link>
           : <button type="button" disabled>Compare blind</button>}

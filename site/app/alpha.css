@@ -529,3 +529,13 @@
 
 @media(hover:none){.alpha-destination:active{background:color-mix(in srgb,var(--alpha-color) 17%,#070f15);border-color:var(--alpha-color);color:var(--alpha-color)}.alpha-destination:active .alpha-destination-icon{filter:drop-shadow(0 0 4px var(--alpha-color));transform:scale(.93)}}
 .alpha-destination-icon,.alpha-destination-icon *{pointer-events:none}
+
+.alpha-app[data-alpha-layout="full"] .alpha-destination[data-destination="compare"] {
+  margin-inline-start: 14px;
+  min-height: 42px;
+  font-size: .85rem;
+}
+
+@media (max-width: 400px) {
+  .alpha-app[data-alpha-destination="compare"] .site-topbar-title { display: none; }
+}

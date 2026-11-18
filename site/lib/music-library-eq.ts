@@ -50,7 +50,7 @@ export function safeLibraryEq(value: LibraryEq): LibraryEq {
 export function parseLibraryEq(text: string, name: string): LibraryEq {
   if (text.length > 100_000) throw new Error("The EQ file is too large.");
   if (/^\s*CH:\s*[01]\s*$/im.test(text)) throw new Error(`This is a channel-match preset. Attach it to a headphone model in ${PERSONAL_AREA_TITLE} instead of importing it as a shared EQ.`);
-  if (/^\s*Channel:\s*(?:L|R|1|2)\s*(?:#.*)?$/im.test(text)) throw new Error("This EQ has separate Left/Right settings. Use Blind EQ Comparison to test the complete stereo preset; Saved EQs currently use the same filters on both channels.");
+  if (/^\s*Channel:\s*(?:L|R|1|2)\s*(?:#.*)?$/im.test(text)) throw new Error("This EQ has separate Left/Right settings. Use Compare EQs to test the complete stereo preset; Saved EQs currently use the same filters on both channels.");
   const filters: PeqFilter[] = [];
   let preamp = 0;
   let engine: LibraryEq["engine"], engineVersion: string | undefined;

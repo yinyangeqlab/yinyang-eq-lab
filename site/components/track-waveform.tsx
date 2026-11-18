@@ -16,7 +16,7 @@ function seekClock(seconds: number) {
   return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${rest}` : `${minutes}:${rest}`;
 }
 
-type Props = { playing?:boolean; getPlaybackPosition?:()=>number; deferDetail?:boolean; sourceUrl?:string; resizablePassage?: boolean; passageBounds?: ResizablePassageBounds; viewCenter?:number|null; maxZoom?:number; onPassageChange?: (passage: ComparisonPassage) => void; passage?: ComparisonPassage | null; passageActive?: boolean; analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
+type Props = { maxPixelRatio?: number; playing?:boolean; getPlaybackPosition?:()=>number; deferDetail?:boolean; sourceUrl?:string; resizablePassage?: boolean; passageBounds?: ResizablePassageBounds; viewCenter?:number|null; maxZoom?:number; onPassageChange?: (passage: ComparisonPassage) => void; passage?: ComparisonPassage | null; passageActive?: boolean; analysis: Pick<TrackAnalysis, "waveform"> | null; position: number; duration: number; onSeek: (seconds: number) => void; dynamicRange: number; onDynamicRangeChange: (amount: number) => void; dynamicSliderEnabled?: boolean; dynamicRangeDisabled?: boolean; compact?: boolean; placeholder?: string; zoom?: number; onZoom?: (value: number) => void; hideZoom?: boolean; hideHeading?: boolean; displayOnly?: boolean };
 
 const waveformColors = {
   dark: {
@@ -29,7 +29,7 @@ const waveformColors = {
   },
 } as const;
 
-export default function TrackWaveform({ playing=false, getPlaybackPosition, analysis:sourceAnalysis, sourceUrl, deferDetail=false, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false, passage = null, passageActive = false, onPassageChange, resizablePassage=false, passageBounds=defaultResizablePassageBounds, viewCenter=null, maxZoom=8 }: Props) {
+export default function TrackWaveform({ maxPixelRatio=2, playing=false, getPlaybackPosition, analysis:sourceAnalysis, sourceUrl, deferDetail=false, position, duration, onSeek, dynamicRange, onDynamicRangeChange, dynamicSliderEnabled = false, dynamicRangeDisabled = false, compact = false, placeholder = "Waveform appears after a stereo track is analyzed.", zoom: controlledZoom, onZoom, hideZoom = false, hideHeading = false, displayOnly = false, passage = null, passageActive = false, onPassageChange, resizablePassage=false, passageBounds=defaultResizablePassageBounds, viewCenter=null, maxZoom=8 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const playedCanvasRef = useRef<HTMLCanvasElement>(null);
   const playedLayerRef = useRef<HTMLSpanElement>(null);
@@ -134,7 +134,7 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
     const traces = waveformColors[theme][expanding ? "expand" : "compress"];
     const drawLayer = (target:HTMLCanvasElement,played:boolean) => {
       const rect = canvas.getBoundingClientRect();
-      const scale = Math.min(2, window.devicePixelRatio || 1);
+      const scale = Math.min(maxPixelRatio, window.devicePixelRatio || 1);
       const width = Math.max(1, Math.round(rect.width * scale)), height = Math.max(1, Math.round(rect.height * scale));
       if (target.width !== width || target.height !== height) { target.width = width; target.height = height; }
       const pen = target.getContext("2d");
@@ -178,7 +178,7 @@ export default function TrackWaveform({ playing=false, getPlaybackPosition, anal
     const draw=()=>{drawLayer(canvas,false);drawLayer(playedCanvas,true);paintPlayheadRef.current?.();};
     const observer=new ResizeObserver(draw);observer.observe(canvas);draw();
     return()=>observer.disconnect();
-  }, [analysis,preview,adjusted,expanding,dynamicRange,duration,span,start,theme,light]);
+  }, [analysis,preview,adjusted,expanding,dynamicRange,duration,span,start,theme,light,maxPixelRatio]);
   useEffect(() => {
     const line=playheadRef.current,layer=playedLayerRef.current,canvas=canvasRef.current;
     if(!line||!layer||!canvas)return;

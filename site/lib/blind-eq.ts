@@ -31,27 +31,36 @@ export function validateEqPreset(preset: EqPreset): EqPreset {
   return structuredClone(preset);
 }
 
-/** Saved EQs store one filter chain for both channels. Headphone correction is a separate layer. */
+export const BLIND_EQ_COMPARE_PATH = "/eq-compare";
+
+export function blindEqHref(...savedIds: string[]) {
+  if (savedIds.length === 0) return BLIND_EQ_COMPARE_PATH;
+  return BLIND_EQ_COMPARE_PATH + "#" + new URLSearchParams(savedIds.map(id => ["saved-eq", id]));
+}
+
+/** Saved EQs store one filter chain for both channels. Headphone correction is separate. */
+export function savedEqToBlindPreset(eq: LibraryEq): EqPreset {
+  const channel = {
+    preampDb: eq.preamp,
+    filters: eq.filters.map(filter => ({ ...filter, type: filter.type ?? "PK" as const })),
+  };
+  return validateEqPreset({
+    name: eq.name.trim() || "Unnamed saved EQ",
+    channels: [channel, { ...channel, filters: channel.filters.map(filter => ({ ...filter })) }],
+  });
+}
+
 export function loadSavedEqPair(fragment: string, saved: readonly LibraryEq[]) {
   const ids = new URLSearchParams(fragment.slice(1)).getAll("saved-eq");
   if (ids.length !== 2 || ids[0] === ids[1] || ids.some(id => !id)) {
     throw Error("Select two different presets in Saved EQs.");
   }
-  const toPreset = (id: string): EqPreset => {
-    const eq = saved.find(item => item.id === id);
-    if (!eq) throw Error("One or both presets are unavailable in this browser. Return to Saved EQs and choose two presets.");
-    const channel = {
-      preampDb: eq.preamp,
-      filters: eq.filters.map(filter => ({ ...filter, type: filter.type ?? "PK" as const })),
-    };
-    return validateEqPreset({
-      name: eq.name.trim() || "Unnamed saved EQ",
-      channels: [channel, { ...channel, filters: channel.filters.map(filter => ({ ...filter })) }],
-    });
-  };
+  const matched = ids.map(id => saved.find(eq => eq.id === id));
+  const [first, second] = matched;
+  if (!first || !second) throw Error("One or both presets are unavailable in this browser. Choose two presets below.");
   return {
-    presets: [toPreset(ids[0]), toPreset(ids[1])] as [EqPreset, EqPreset],
-    includesChannelCorrection: saved.some(eq => ids.includes(eq.id) && Boolean(eq.channelMatch)),
+    presets: [savedEqToBlindPreset(first), savedEqToBlindPreset(second)] as [EqPreset, EqPreset],
+    includesChannelCorrection: Boolean(first.channelMatch || second.channelMatch),
   };
 }
 

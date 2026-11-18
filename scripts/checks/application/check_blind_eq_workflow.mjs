@@ -11,17 +11,11 @@ const flat = name => ({ name, channels: [{ preampDb: 0, filters: [] }, { preampD
 const compile = path => ts.transpileModule(readFileSync(new URL('../../../' + path, import.meta.url), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 const baseGlobals = { Error, URL, URLSearchParams, Blob, AbortController, structuredClone, crypto, console };
 function load(path, require, globals = {}) { const mod = { exports: {} }; vm.runInNewContext(compile(path), { ...baseGlobals, ...globals, require, module: mod, exports: mod.exports }); return mod.exports; }
-const search = load('site/lib/search.ts', id => { throw Error(id); });
 const model = load('site/lib/blind-eq.ts', id => {
   if (id === './peq-preset') return presetLimits;
   throw Error(id);
 });
 const text = node => node == null || typeof node === 'boolean' ? '' : typeof node === 'string' || typeof node === 'number' ? String(node) : Array.isArray(node) ? node.map(text).join('') : text(node.props?.children);
-const voteLabel = load('site/components/shootout-vote-label.tsx', id => {
-  if (id === './shootout-vote-label.css') return {};
-  if (id === 'react/jsx-runtime') return { jsx: (type, props) => ({ type, props }) };
-  throw Error(id);
-});
 function all(node, predicate, found = []) { if (node && typeof node === 'object') { if (!Array.isArray(node) && predicate(node)) found.push(node); for (const child of Array.isArray(node) ? node : [node.props?.children]) all(child, predicate, found); } return found; }
 function mount(path, imports, globals, props) {
   const hooks = [], pending = [], focus = []; let cursor = 0, active = true, lateUpdates = 0, tree;
@@ -31,104 +25,68 @@ function mount(path, imports, globals, props) {
     useMemo(fn, deps) { const i = cursor++; if (!hooks[i] || deps.some((d, j) => !Object.is(d, hooks[i].deps[j]))) hooks[i] = { value: fn(), deps }; return hooks[i].value; },
     useEffect(fn, deps) { const i = cursor++; if (!hooks[i] || deps.some((d, j) => !Object.is(d, hooks[i].deps[j]))) { const previous = hooks[i]?.cleanup; hooks[i] = { deps }; pending.push(() => { previous?.(); hooks[i].cleanup = fn(); }); } },
   };
-  const jsx = (type, props) => { if (type === voteLabel.default) return type(props); const element = { type, props }; if (typeof type === 'string' && props?.ref) props.ref.current = { focus() { focus.push(text(element)); } }; return element; };
+  const jsx = (type, props) => { const element = { type, props }; if (typeof type === 'string' && props?.ref) props.ref.current = { focus() { focus.push(text(element)); } }; return element; };
   const Component = load(path, id => id === 'react' ? React : id === 'react/jsx-runtime' ? { jsx, jsxs: jsx, Fragment: 'fragment' } : id in imports ? imports[id] : (() => { throw Error('Unexpected dependency ' + id); })(), globals).default;
   const render = () => { cursor = 0; tree = Component(props); while (pending.length) pending.shift()(); return tree; };
   render();
   return { render, focus, get tree() { return tree; }, get lateUpdates() { return lateUpdates; }, find(predicate) { const values = all(tree, predicate); assert.equal(values.length, 1, 'Expected one matching rendered element'); return values[0]; }, button(name) { return this.find(n => n.type === 'button' && text(n) === name); }, unmount() { active = false; for (const h of hooks) h?.cleanup?.(); } };
 }
-function pageFixture(sampleRate = 48000, { hash = "", saved = [] } = {}) {
-  const listeners = new Map(); let blob, failDownload = false, clicks = 0;
-  function Editor() {} function Listener() {}
-  const location = { hash, pathname: "/eq-compare", search: "" };
-  const history = { state: null, replaceState(_state, _title, path) { assert.equal(path, "/eq-compare"); location.hash = ""; } };
-  const window = { location, history, addEventListener(name, fn) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(fn); }, removeEventListener(name, fn) { listeners.get(name)?.delete(fn); }, setTimeout() {} };
-  const document = { body: { appendChild() {} }, createElement() { return { click() { clicks++; }, remove() {} }; } };
-  const URL = { createObjectURL(value) { if (failDownload) throw Error('Downloads unavailable'); blob = value; return 'blob:fixture'; }, revokeObjectURL() {} };
-  const pool = Array.from({ length: 35 }, (_, i) => ({ title: 'Synthetic ' + i, artist: 'Fixture', fileUrl: '/tone.wav' }));
-  const h = mount('site/app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-library-eq': { readLibraryEqs: () => saved }, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
-  return Object.assign(h, { location, listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
-    apply() { all(h.tree, n => n.type === Editor).forEach(n => n.props.onChange(flat('Same preset name'))); h.render(); },
-    songs() { return all(h.tree, n => n.type === 'label' && n.props.className === 'eq-song').map(n => all(n, child => child.type === 'input')[0]); },
-    add(files) { h.find(n => n.type === 'input' && n.props.type === 'file' && n.props.multiple).props.onChange({ target: { files, value: 'fixture' } }); h.render(); },
-    listener() { return h.find(n => n.type === Listener); },
-  });
+// The quick comparison uses the same decoded source for both sides, preserves its
+// position and channel correction, and ignores superseded playback requests.
+{
+  const samples = new Float32Array(48000).fill(.15);
+  const buffer = { duration: 1, length: samples.length, sampleRate: 48000, numberOfChannels: 1, getChannelData: () => samples };
+  const measured = [], applied = [], starts = [], switches = [], loaded = [], pending = deferred();
+  const eqs = [flat('A'), flat('B')], correction = { channelMatchMode: 'custom' };
+  class Player {
+    context = { sampleRate: 48000, decodeAudioData: () => pending.promise };
+    playing = false; time = 0;
+    resume() {}
+    playTrack(...args) { this.playing = true; starts.push(args); }
+    pause() { this.playing = false; }
+    switch(side) { switches.push(side); }
+    close() { this.pause(); }
+  }
+  const { ComparisonAudio } = load('site/app/eq-compare/audio.ts', id => {
+    if (id === '@/lib/blind-eq') return model;
+    if (id === '@/lib/blind-eq-audio') return { BlindEqPlayer: Player };
+    if (id === './levels') return {
+      measureComparison: async (...args) => { measured.push(args); return [{peak:.2,loudness:-20},{peak:.3,loudness:-18}]; },
+      comparisonLevels: (_measured, target) => { applied.push(target); return { gains:[.7,.8], headroomDb:0 }; }
+    };
+    throw Error(id);
+  }, { window: { dispatchEvent() {} }, document: { hidden: false }, Event });
+  const audio = new ComparisonAudio({ file: new Blob(['tone']) }, (...args) => loaded.push(args));
+  const a = audio.play(0, eqs, correction, -14), b = audio.play(1, eqs, correction, -14);
+  pending.resolve(buffer);
+  await Promise.all([a,b]);
+  check(starts.length === 1 && audio.side === 1, 'Latest side wins while decoding');
+  check(measured.length === 1 && measured[0][2] === correction && starts[0][5] === correction, 'Identical headphone correction reaches level matching and playback');
+  check(starts[0][0] === buffer && starts[0][1] === eqs, 'Both EQs share the decoded recording');
+  check(loaded.length === 1 && loaded[0][1].waveform.maxL[0] === samples[0] && loaded[0][1].waveform.maxR[0] === samples[0], 'Mono waveform represents both routed channels');
+  audio.player.time = .64;
+  await audio.play(0, eqs, correction, -14);
+  check(switches[0] === 0 && starts.length === 1 && audio.player.time === .64, 'Switching EQs preserves the playhead');
+  await audio.play(0, eqs, correction, -14);
+  check(audio.side === null, 'Pressing the playing side pauses');
+  audio.invalidate(); await audio.play(1, eqs, undefined, "off");
+  check(measured.length === 2 && applied.at(-1) === "off" && measured[1][2] === undefined, 'Settings invalidate old gains and correction');
+  audio.close();
 }
 {
-  const saved = [
-    { id: "a", name: "First uploaded EQ", preamp: -11.6, filters: [{ hz: 1000, gain: -2, q: .7 }], channelMatch: {} },
-    { id: "b", name: "Second uploaded EQ", preamp: -4, filters: [{ hz: 300, gain: 1, q: 1 }] },
-  ];
-  const h = pageFixture(48000, { hash: "#saved-eq=a&saved-eq=b", saved });
-  h.render();
-  check(h.location.hash === "", "The incoming saved IDs are cleared from the URL before listening");
-  check(all(h.tree, n => n.type === h.Editor).map(n => n.props.initialPreset?.name).join("|") === "First uploaded EQ|Second uploaded EQ", "Both saved presets populate the setup editors");
-  check(text(h.tree).includes("Attached headphone channel corrections are excluded"), "Separate channel correction is disclosed before listening");
-  check(h.button("Hide presets & start").props.disabled, "A saved pair does not bypass music selection");
-  h.songs()[0].props.onChange(); h.render();
-  h.button("Hide presets & start").props.onClick(); h.render();
-  check(!text(h.tree).includes("First uploaded EQ") && !text(h.tree).includes("Second uploaded EQ"), "Preset names are hidden during the blind session");
-  check(h.listener().props.presets.some(preset => preset.channels[0].preampDb === -11.6), "The listener uses the saved preamp");
-  h.unmount();
-  const missing = pageFixture(48000, { hash: "#saved-eq=a&saved-eq=missing", saved });
-  missing.render();
-  check(text(missing.tree).includes("unavailable in this browser") && missing.button("Hide presets & start").props.disabled, "Stale saved links keep manual setup available");
-  missing.unmount();
-}
-{
-  const h = pageFixture();
-  check(h.songs().length === 30, "Initial Listening Pool choices are limited to one batch");
-  h.button("Show more songs (5 remaining)").props.onClick(); h.render();
-  check(h.songs().length === 35, "Show more reaches songs beyond the initial batch");
-  h.songs()[34].props.onChange(); h.render();
-  h.find(n => n.type === "input" && n.props.type === "search").props.onChange({ target: { value: "no matching song" } }); h.render();
-  check(h.songs().length === 1 && h.songs()[0].props.checked, "Chosen songs stay available when the search changes");
-  h.unmount();
-}
-{
-  const h = pageFixture(); h.apply(); check(text(h.tree).includes('identical filter and preamp settings'), 'Identical presets are explicitly disclosed in setup');
-  for (let i = 0; i < 30; i++) { h.songs()[i].props.onChange(); h.render(); }
-  h.add([{ name: 'Extra.wav', size: 10 }]);
-  check(h.songs().filter(n => n.props.checked).length === 30, 'Local upload cannot exceed 30 selected pool/local songs');
-  check(text(h.tree).includes('only 30 songs can be selected'), 'Mixed-playlist limit has actionable feedback');
-  h.find(n => n.type === 'button' && n.props['aria-label'] === 'Remove local file Extra').props.onClick(); h.render();
-  check(!text(h.tree).includes('Remove local file Extra'), 'Local files can be removed without resetting presets');
-  h.button('Clear selection').props.onClick(); h.render();
-  h.add(Array.from({ length: 30 }, (_, i) => ({ name: `Local ${i}.wav`, size: 10 })));
-  h.find(n => n.type === 'button' && n.props['aria-label'] === 'Remove local file Local 0').props.onClick(); h.render();
-  h.add([{ name: 'Replacement.wav', size: 10 }]);
-  check(h.songs().filter(n => n.props.checked).length === 30 && all(h.tree, n => n.props?.['aria-label'] === 'Remove local file Replacement').length === 1, 'Removing a file releases both a local-file slot and selection slot'); h.unmount();
-}
-{
-  const h = pageFixture(); h.apply(); for (let i = 0; i < 3; i++) { h.songs()[i].props.onChange(); h.render(); }
-  h.button('Hide presets & start').props.onClick(); h.render();
-  check(h.listeners.get('beforeunload').size === 1, 'Active private session is protected on navigation');
-  h.listener().props.onVolumeChange(.07); h.render();
-  h.listener().props.onEvidence({ heard: [5, 5], start: 4, seconds: 15 }); h.render();
-  const firstVote = h.button('Prefer A'); firstVote.props.onClick(); firstVote.props.onClick(); h.render();
-  check(text(h.tree).includes('Song 2 of 3'), 'Double-click cannot record two songs using the old evidence');
-  check(h.listener().props.initialVolume === .07, 'Comfortable listening volume persists on the next song');
-  check(h.button('Prefer A').props.disabled, 'The next song starts with its own voting lock');
-  check(h.button('Unsure / Tie').props.disabled && h.button('Prefer B').props.disabled, 'All three shared vote choices observe the listening lock');
-  let restoredFocus = false; const opener = { focus() { restoredFocus = true; } };
-  h.button('Finish & reveal').props.onClick({ currentTarget: opener }); h.render();
-  check(h.focus.at(-1) === 'End this session now?', 'Early-reveal confirmation receives keyboard focus');
-  h.find(n => n.type === 'section' && n.props['aria-label'] === 'Confirm early reveal').props.onKeyDown({ key: 'Escape', preventDefault() {} }); h.render();
-  check(restoredFocus && !text(h.tree).includes('End this session now?'), 'Escape cancels confirmation and restores the invoking control');
-  h.button('Finish & reveal').props.onClick({ currentTarget: opener }); h.render(); h.button('End & reveal presets').props.onClick(); h.render();
-  check(/A · Preset [12] · Same preset name/.test(text(h.tree)), 'Duplicate preset names remain distinguishable in per-song results');
-  h.button('Download results (JSON file)').props.onClick(); h.render(); const result = JSON.parse(await h.getBlob().text());
-  check(result.playlist.length === 3 && result.unanswered === 2 && result.rounds[0].sourceId === result.playlist[0].id, 'Early-reveal JSON preserves the complete ordered playlist and unanswered count');
-  check(result.revealedAt && h.clicks() === 1, 'Download contains the original reveal timestamp and triggers one browser download');
-  check(h.listeners.get('beforeunload').size === 1 && text(h.tree).includes('Check that the file saved'), 'Requesting a download cannot silently disable the leave-page protection');
-  h.failDownload(); h.button('Download results (JSON file)').props.onClick(); h.render();
-  check(text(h.tree).includes('Your results are still in this tab') && text(h.tree).includes('The reveal'), 'Download failure gives feedback and preserves results');
-  h.button('New blind session').props.onClick({ currentTarget: opener }); h.render(); check(h.focus.at(-1) === 'Clear this session?', 'Clear-session confirmation receives focus');
-  h.button('Clear session').props.onClick(); h.render(); check(h.listeners.get('beforeunload').size === 0 && all(h.tree, n => n.type === h.Editor).every(n => n.props.initialPreset), 'Explicit clearing removes the leave guard but restores applied presets');
-  all(h.tree, n => n.type === h.Editor).forEach((n, i) => n.props.onChange(flat(`Preset ${i + 1}`))); h.render();
-  h.button('Hide presets & start').props.onClick(); h.render(); h.listener().props.onEvidence({ heard: [5, 5], start: 0, seconds: 15 }); h.render(); h.button('Prefer A').props.onClick(); h.render();
-  h.button('Finish & reveal').props.onClick({ currentTarget: opener }); h.render(); h.button('End & reveal presets').props.onClick(); h.render();
-  check(!/Preset ([12]) · Preset \1/.test(text(h.tree)), 'Default preset names are not repeated in the revealed choice labels'); h.unmount();
+  const { comparisonLevels } = load('site/app/eq-compare/levels.ts', () => ({}));
+  for (const peak of [.1, .95]) {
+    const meters = [{ loudness: -22, peak }, { loudness: -18, peak: peak / 2 }];
+    const results = [-14, -16, -18].map(target => comparisonLevels(meters, target));
+    for (const [index, result] of results.entries()) {
+      const output = meters.map((side, i) => side.loudness + 20 * Math.log10(result.gains[i]));
+      check(Math.abs(output[0]-output[1]) < 1e-9, 'Both filtered outputs share the same loudness');
+      check(Math.abs(output[0] - (-14 - 2*index + result.headroomDb)) < 1e-9, 'Quieter targets are 2 and 4 dB lower with common headroom');
+      check(meters.every((side,i)=>side.peak*result.gains[i] <= 10**(-3/20) + 1e-10), 'Peak headroom is preserved for both sides');
+    }
+    const off = comparisonLevels(meters, 'off');
+    check(off.gains[0] === off.gains[1], 'Off preserves relative preset levels');
+  }
 }
 function listenerFixture(options = {}) {
   const intervals = new Set(), events = new Map(), requests = [], evidence = [], volumes = [], players = [], renders = [];
@@ -191,20 +149,4 @@ for (const action of ['hide', 'unmount', 'change-passage']) {
   await assert.rejects(render, /cancelled/); check(instances === 1, 'Cancellation after the first offline render prevents rendering the second preset');
   await assert.rejects(dsp.prepareComparison(buffer, [flat('one'), flat('two')], 0, 5, true, controller.signal), /cancelled/); check(instances === 1, 'An already-cancelled preparation creates no new audio context');
 }
-console.log(`PASS ${checks} actual blind EQ workflow checks: mixed playlist limits/removal, volume persistence, confirmation focus/Escape, private export completeness, failed downloads/leave guards, silent-passage recovery, stale async work, hidden/muted playback and DSP cancellation.`);
-
-for (const rate of [44100, 48000]) {
- const h = pageFixture(rate); h.apply();
- const preset=flat('High filter');preset.channels[0].filters=[{type:'PK',hz:23000,gain:2,q:1}];
- all(h.tree,n=>n.type===h.Editor)[1].props.onChange(preset);h.render();h.songs()[0].props.onChange();h.render();
- h.button('Hide presets & start').props.onClick();h.render();
- if(rate===44100){check(text(h.tree).includes('Preset 2, Left filter 1'),'Rate failure identifies preset/channel/row before blinding');check(!h.listeners.get('beforeunload')?.size,'Invalid rate cannot enter a blinded session');}
- else {check(h.listener().props.context.sampleRate===48000,'Listener receives the same context validated at setup');}
- h.unmount();
-}
-console.log('PASS setup-time sample-rate boundaries and validated context handoff.');
-
-{
- const sourceCache={current:null};const first=listenerFixture({sourceCache});await first.prepare();check(first.requests.length===1&&sourceCache.current?.id==='synthetic','A generated-set round retains one decoded source for later pairs');first.find(n=>n.type==='input'&&n.props['aria-label']==='Section start').props.onChange({target:{value:'0'}});first.render();first.button('Use this section').props.onClick();await flush();first.render();first.unmount();const second=listenerFixture({sourceCache});await second.prepare();check(second.requests.length===0&&second.players[0].decodeCalls===undefined&&second.renders[0].at===0,'The next pair reuses decoded audio without fetching or decoding it again');second.unmount();
- const third=listenerFixture({sourceCache,song:{id:'different',title:'Other',artist:'Fixture',url:'/different.wav'}});await third.prepare();check(third.requests.length===1&&sourceCache.current?.id==='different','Changing recordings replaces the one-source cache');third.unmount();
-}
+console.log(`PASS ${checks} quick comparison and generated EQ listener checks.`);

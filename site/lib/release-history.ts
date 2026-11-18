@@ -304,14 +304,17 @@ const update132Changes = [
 
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
-export const candidateChanges = [
+const update179Changes = [
   "Organized the repository into 16 top-level entries and updated the restore tools for the new layout.",
 ] as const;
 
+export const candidateChanges = ["Compare EQs adds side-by-side EQ selectors with one shared waveform player, a shared headphone choice and optional blind switching. Match loudness defaults to −14 LUFS and the listening reminder resets for new sessions."] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: candidateChanges },
+  { update: 180, date: "2026-11-18", title: "Compare saved EQs", changes: candidateChanges },
+  { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: update179Changes },
   { update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: update178Changes, github: { commit: "364dd980d5550a11218b3696d913ca5a64b8ddb6", releaseTag: "update178" } },
-  { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes },
+  { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes, github: { commit: "8a793603a57cf020fe8c799cca66f70ed4fbd485", releaseTag: "update177" } },
   { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },
   {
     update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: update175Changes,

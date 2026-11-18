@@ -94,6 +94,8 @@ async function loadMatcher(): Promise<Matcher | undefined> {
 
 export default function SiteHelp() {
   const pathname = (usePathname() ?? "/").replace(/\/$/, "") || "/";
+  const comparison = pathname === "/eq-compare";
+  const HelpPanel = comparison ? "dialog" : "section";
   const router = useRouter();
   const helpActions = useSiteHelpActions();
   const [approval, setApproval] = useState<BassCutApproval>();
@@ -125,7 +127,14 @@ export default function SiteHelp() {
       if (!dialog.open) dialog.showModal();
     } else if (dialog.open) dialog.close();
   }, [approval, pathname]);
-  useEffect(() => { if (open && !tour) input.current?.focus(); }, [open, tour]);
+  useEffect(() => {
+    const panel = document.getElementById("site-help-panel");
+    if (panel instanceof HTMLDialogElement) {
+      if (open && !panel.open) panel.showModal();
+      if (!open && panel.open) panel.close();
+    }
+    if (open && !tour) input.current?.focus({ preventScroll: true });
+  }, [open, tour, comparison]);
   useEffect(() => {
     if (window.location.hash === "#ask-site-help" && !launch.current?.hidden && launch.current?.getAttribute("aria-expanded") === "false") launch.current.click();
   }, [pathname]);
@@ -221,7 +230,14 @@ export default function SiteHelp() {
     setResult(undefined);
     setQuestion("");
     setOpen(false);
-    launch.current?.focus();
+    const panel = document.getElementById("site-help-panel");
+    if (panel instanceof HTMLDialogElement && panel.open) panel.close();
+    if (comparison) requestAnimationFrame(() => {
+      const nav = document.getElementById("compare-help-launch");
+      const opener = nav?.closest("[inert]") ? document.querySelector<HTMLElement>(".alpha-sidebar-reopen") : nav;
+      opener?.focus({ preventScroll: true });
+    });
+    else launch.current?.focus({ preventScroll: true });
   }
 
   async function answer(event: FormEvent<HTMLFormElement>) {
@@ -261,6 +277,7 @@ export default function SiteHelp() {
     setActionMessage("");
     setOpen(false);
     setStepStatus("finding");
+    if (comparison) document.querySelector<HTMLButtonElement>('.alpha-sidebar-reopen[aria-expanded="true"]')?.click();
     setTour({ topic, index: 0, moveFocus: false });
     if (!onTopicPage(topic.href)) router.push(topic.href);
   }
@@ -381,7 +398,7 @@ export default function SiteHelp() {
         <button type="button" className="site-help-tour-next" disabled={!approval} onClick={applyBassCut}>Apply −1 dB</button>
       </div>
     </dialog>
-    <section id="site-help-panel" className="site-help-panel" role="dialog" aria-labelledby="site-help-title" hidden={!open}
+    <HelpPanel id="site-help-panel" className="site-help-panel" role="dialog" aria-modal={comparison || undefined} aria-labelledby="site-help-title" hidden={!open}
       onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); } }}>
       <header><h2 id="site-help-title">Site help</h2><button type="button" aria-label="Close site help" onClick={close}><X size={20} aria-hidden="true" /></button></header>
       <form onSubmit={answer}>
@@ -410,6 +427,6 @@ export default function SiteHelp() {
         </div>}
       </div>
       <p className="site-help-privacy">Questions stay in this browser.</p>
-    </section>
+    </HelpPanel>
   </div>;
 }

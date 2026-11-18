@@ -16,7 +16,7 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "compare-options", title: "Compare EQ presets or target curves", href: "/listen", targets: ["#welcome-modes-title"],
     terms: "which comparison mode; can i compare eq and targets; both eq presets and target curves",
-    steps: ["Yes. Use Blind EQ Comparison to switch between two EQ presets on the same passage. The names stay hidden until the reveal.", "Use Open Comparison to see two target curves side by side and listen to both with your headphone measurement. Pick a comparison below for its controls."],
+    steps: ["Yes. Use Compare EQs to switch between two EQ presets on the same passage. The names stay hidden until the reveal.", "Use Open Comparison to see two target curves side by side and listen to both with your headphone measurement. Pick a comparison below for its controls."],
   },
   {
     id: "compare-targets", title: "Compare two target curves side by side", href: "/shootout?mode=open", targets: [".shootout-view[data-mode='open'] .listen-surface", ".shootout-view[data-mode='open']"],
@@ -24,14 +24,14 @@ export const helpTopics: readonly HelpTopic[] = [
     steps: ["Use Open Comparison to pick two targets, see their names and curves, and switch between A and B with the same music. Choose a headphone measurement to hear them on your setup.", "Use Personal Tournament if you want the site to pick pairs for you and hide their identities until results."],
   },
   {
-    id: "compare-eq", title: "Compare two EQ presets", href: "/eq-compare", targets: [".eq-editors", ".eq-reveal-grid"],
+    id: "compare-eq", title: "Compare two EQ presets", href: "/eq-compare", targets: ["#quick-headphones", ".quick-preset", ".quick-song", ".quick-side"],
     terms: "side by side comparison of eq; compare two eqs; compare eq; blind eq comparison; ab eq presets; compare two presets; upload two eq files; load two filter files and hear which I prefer; compare equalizers; test peace presets",
-    steps: ["Yes. In Blind EQ Comparison, load two supported parametric TXT presets or enter their filters, then choose songs. Switch between A and B on the same passage. Use Match the EQs’ playback levels to reduce volume bias.", "The presets’ identities are revealed after the session. Download the results before refreshing or closing the tab."],
+    steps: ["In Listen → Compare EQs, choose the headphones you’re wearing.", "Click the preset name or Load EQ on either side. Pick a Saved EQ or open an EQ settings TXT.", "Click the song title in the shared player to choose music. You can also open a local audio file there.", "Press A or B to listen. Seek or pause in the shared player. Listen blind shuffles the presets and hides their names until you choose Reveal EQs."],
   },
   {
     id: "eq-support", title: "What EQ does the site support?", href: tuning, targets: [".sound-mode", ".pt-sound-bar"],
     terms: "does this support eq; eq support; does this have eq; equalizer; parametric equalization; use equalizer; apply eq; what eq can i use; use peq; can i use eq; supported eq formats",
-    steps: ["Yes. You can make parametric EQ from a target and a headphone measurement in Preference Tuning, play a saved EQ in the Listening Pool, or A/B two presets in Blind EQ Comparison.", "Open the Headphones / Target bar in Preference Tuning to choose Target or Saved EQ."],
+    steps: ["Yes. You can make parametric EQ from a target and a headphone measurement in Preference Tuning, play a saved EQ in the Listening Pool, or A/B two presets in Compare EQs.", "Open the Headphones / Target bar in Preference Tuning to choose Target or Saved EQ."],
   },
   {
     id: "start", title: "Start a Personal Tournament", href: personal, targets: [".starter-start-button", ".personal-session-bar", ".personal-starter"],
@@ -245,9 +245,9 @@ export const helpTopics: readonly HelpTopic[] = [
     steps: ["Blind Research uses a fixed −16 LUFS source loudness target. It shows Locked in the listening setup so research comparisons use the same source target.", "If you want to choose a different source level, use Open Comparison or Personal Tournament."],
   },
   {
-    id: "blind-eq-loudness", title: "Match levels in Blind EQ Comparison", href: "/eq-compare", targets: [".eq-check input", ".eq-editors"],
+    id: "blind-eq-loudness", title: "Match levels in Compare EQs", href: "/eq-compare", targets: ["#eq-match-levels"],
     terms: "loudness normalization; normalization; normalisation; match eq playback levels; loudness; one eq louder; fair comparison if one preset comes in hotter; test eq at same level; volume match blind eq",
-    steps: ["Yes. In Comparison settings, enable Match the EQs’ playback levels before starting the blind comparison. This reduces the chance that the louder preset wins just because of volume."],
+    steps: ["At the top of Compare EQs, Match loudness defaults to −14 LUFS. Choose −16 or −18 LUFS to make both sides quieter, or choose Off to keep the presets’ relative levels."],
   },
   {
     id: "sign-in", title: "Get help with listening access", href: "/listen", targets: ["#welcome-modes-title"],

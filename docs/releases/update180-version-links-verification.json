@@ -1,0 +1,74 @@
+{
+  "update": 180,
+  "sourceCommit": "50e9bdfd38641841f5b7934d86bbac7cb1d51cc2",
+  "deploymentVerification": {
+    "at": "2026-11-18T11:29:49.607387Z",
+    "update": 180,
+    "revision": "50e9bdfd38641841f5b7934d86bbac7cb1d51cc2",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "9cfdad57a04c35f6ffab316176cbbe5fd74326c8",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update177",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/8a793603a57cf020fe8c799cca66f70ed4fbd485",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/8a793603a57cf020fe8c799cca66f70ed4fbd485..364dd980d5550a11218b3696d913ca5a64b8ddb6",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 392,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "50e9bdfd38641841f5b7934d86bbac7cb1d51cc2",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 3000,
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [
+      {
+        "width": 1280,
+        "release": true,
+        "commit": true,
+        "comparison": true,
+        "noParticipantWrites": true
+      },
+      {
+        "width": 320,
+        "release": true,
+        "commit": true,
+        "comparison": true,
+        "noParticipantWrites": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

@@ -99,7 +99,7 @@ const storage = new Map([['private-blind-eq-fixture', JSON.stringify({ presets: 
 check(!Object.keys(captureAccountValues({ getItem: key => storage.get(key) ?? null })).length, 'Private data is outside Account Sync allowlist');
 for (const file of ['site/app/eq-compare/page.tsx', 'site/components/blind-eq-editor.tsx', 'site/lib/blind-eq.ts']) {
   const content = readFileSync(new URL('../../../' + file, import.meta.url), 'utf8');
-  check(!/localStorage|sessionStorage|fetch\(/.test(content), `${file} never persists or sends presets/results`);
+  check(!/(?:localStorage|sessionStorage)\.(?:setItem|removeItem)|fetch\(/.test(content), `${file} never persists or sends presets/results`);
 }
 // Exercise the real import handler and initial form, including automatic opt-in
 // to separate preamps only when an imported preset actually needs them.
@@ -130,20 +130,19 @@ state.newName = 'Renamed imported EQ'; vm.runInContext('rename(newName)', contex
 check(state.preset.name === state.newName && JSON.stringify(state.preset.channels) === JSON.stringify(stereo.channels), 'Renaming an applied preset keeps it ready and preserves every filter');
 state.initialPreset = null; state.preset = null; vm.runInContext('rename("Unapplied draft")', context);
 check(state.preset === null, 'Renaming a dirty draft cannot accidentally apply stale settings');
-// Run the actual site shell selector: the private tool must not mount internal
-// sidebar navigation or account/privacy effects that can discard its session.
+// Verify that the comparison enables shared navigation with the private shell mode.
 const shellSource = readFileSync(new URL('../../../site/components/site-chrome.tsx', import.meta.url), 'utf8');
 const shellModule = { exports: {} }; let shellPath = '/eq-compare';
 const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id.startsWith('@/components/') ? { default: ({children}) => require('react').createElement('aside', {'data-site-effect': id}, children) } : require(id) });
+vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id === '@/lib/blind-eq' ? { BLIND_EQ_COMPARE_PATH: '/eq-compare' } : id.startsWith('@/components/') ? { default: ({children, help, privateComparison}) => require('react').createElement('aside', {'data-site-effect': id, 'data-private-comparison': privateComparison || undefined}, help, children) } : require(id) });
 const helpButton = require('react').createElement('button', null, 'Ask for help');
 const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, { help: helpButton }, require('react').createElement('main', null, 'Private tool')));
 const privateMarkup = shellMarkup();
-check(privateMarkup === '<aside data-site-effect="@/components/site-topbar"></aside><button>Ask for help</button><main>Private tool</main>', 'Private EQ renders one Help control between the top bar and comparison, without Sync/sidebar/privacy effects');
+check(privateMarkup === '<aside data-site-effect="@/components/alpha-shell" data-private-comparison="true"><button>Ask for help</button><main>Private tool</main></aside>', 'Private EQ renders shared navigation and Help without tuning, privacy, service or footer effects');
 shellPath = '/home'; check(shellMarkup().includes('data-site-effect'), 'Ordinary site routes retain the existing shell and privacy controls');
 for (const route of ['/home', '/share-shootout', '/embed/abc123']) {
   shellPath = route;
   const html = shellMarkup();
-  check(html.endsWith('<button>Ask for help</button>') && html.split('Ask for help').length === 2, `One Help launcher follows the page on ${route}`);
+  check(html.split('Ask for help').length === 2, `There is one Help launcher on ${route}`);
 }
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

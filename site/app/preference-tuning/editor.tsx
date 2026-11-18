@@ -44,6 +44,7 @@ import MusicTrackPicker from "@/components/music-track-picker";
 import PlaybackEdgeToggle from "@/components/playback-edge-toggle";
 import TrackWaveform from "@/components/track-waveform";
 import { analyzeTrack, type TrackAnalysis } from "@/lib/loudness";
+import { blindEqHref } from "@/lib/blind-eq";
 import { EQ_COMPARISON_PLAY_EVENT } from "@/lib/blind-eq-audio";
 import { listeningPool as curatedMusic } from "@/lib/music-catalog";
 import TuningTargetPicker from "./target-picker";
@@ -2003,6 +2004,10 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
                 <label title="Evens out left and right using paired measurements or an uploaded preset"><input type="checkbox" aria-label="Enable channel match" checked={!!activeMatch && matchEnabled} disabled={!activeMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && activeMatch ? "on" : "off"}</label>
                 <button type="button" className="pt-link-button pt-help-button" aria-haspopup="dialog" onClick={event => openInstructions("compare", event.currentTarget)}><BookOpen size={13} aria-hidden="true"/>Listening help</button>
               </div>
+              <p className="pt-listen-note">
+                <a href={blindEqHref(...(soundMode === "saved" && savedEq ? [savedEq.id] : []))}>Compare EQs</a>
+                {" · "}{soundMode === "saved" && savedEq ? "Start with this saved preset and pick a second." : "Choose two presets in Compare EQs."}
+              </p>
             </section>
             {editLocked && <p className="pt-limit-note pt-lock-note" role="status">Editing is paused while {heardLabel} plays, so the snapshot and your tuning both stay as they are. <span className="pt-note-actions"><button type="button" className="pt-link-button" onClick={() => listenTo("live")}>Back to Your tuning</button><button type="button" className="pt-link-button" onClick={() => auditionSlot && applySnapshot(auditionSlot)}>Apply to tuning</button></span></p>}
             <div className="pt-panel-block pt-edit-card">
