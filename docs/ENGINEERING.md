@@ -26,7 +26,7 @@ Keep running npm commands from the repository root. The application source and f
 
 ## Verification and ownership
 
-The implementation owner selects and runs checks. The named domain in each registry entry owns its assertions and prerequisite description; a reviewer verifies coverage for the changed boundary. All top-level `scripts/check*` files must have an explicit registry entry, including manual exclusions. New checks without an entry fail registry validation. Enumeration validates inventory; execution uses only literal registered commands, never a filename glob or shell evaluation.
+The implementation owner selects and runs checks. The named domain in each registry entry owns its assertions and prerequisite description; a reviewer verifies coverage for the changed boundary. Checks in `scripts/checks/` and top-level `scripts/check*` files need explicit registry entries, including manual exclusions. New checks without an entry fail registry validation. Enumeration validates inventory; execution uses only literal registered commands, never a filename glob or shell evaluation.
 
 | Profile | Evidence | Inputs / limits |
 | --- | --- | --- |

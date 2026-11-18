@@ -4,7 +4,7 @@ import subprocess
 import tempfile
 
 root = Path(__file__).resolve().parents[1]
-fixtures = ["scripts/check_community_reference.mjs", "scripts/check_target_context_and_changes.mjs", "scripts/check_yinyangeq_history.mjs"]
+fixtures = ["scripts/checks/research/check_community_reference.mjs", "scripts/checks/application/check_target_context_and_changes.mjs", "scripts/checks/application/check_yinyangeq_history.mjs"]
 with tempfile.TemporaryDirectory(prefix="yinyang-lint-release-") as directory:
     checkout = Path(directory)
     def git(*args):
@@ -15,7 +15,9 @@ with tempfile.TemporaryDirectory(prefix="yinyang-lint-release-") as directory:
     (checkout / "scripts").mkdir()
     (checkout / "scripts/check-release.py").write_bytes((root / "scripts/check-release.py").read_bytes())
     for name in fixtures:
-        (checkout / name).write_bytes((root / name).read_bytes())
+        destination = checkout / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes((root / name).read_bytes())
     def scan():
         git("add", "scripts")
         return subprocess.run(["python3", "scripts/check-release.py"], cwd=checkout, capture_output=True, text=True)

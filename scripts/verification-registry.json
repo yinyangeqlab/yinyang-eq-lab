@@ -115,7 +115,7 @@
     },
     {
       "id": "account-auto-sync",
-      "path": "scripts/check_account_auto_sync.mjs",
+      "path": "scripts/checks/access-and-data/check_account_auto_sync.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -128,7 +128,7 @@
     },
     {
       "id": "account-storage-denial",
-      "path": "scripts/check_account_storage_denial.mjs",
+      "path": "scripts/checks/access-and-data/check_account_storage_denial.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -139,7 +139,7 @@
     },
     {
       "id": "account-sync-frequency",
-      "path": "scripts/check_account_sync_frequency.mjs",
+      "path": "scripts/checks/access-and-data/check_account_sync_frequency.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -152,7 +152,7 @@
     },
     {
       "id": "account-sync-manager",
-      "path": "scripts/check_account_sync_manager.mjs",
+      "path": "scripts/checks/access-and-data/check_account_sync_manager.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -165,7 +165,7 @@
     },
     {
       "id": "account-sync-unchanged-read",
-      "path": "scripts/check_account_sync_unchanged_read.mjs",
+      "path": "scripts/checks/access-and-data/check_account_sync_unchanged_read.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -176,7 +176,7 @@
     },
     {
       "id": "activity-monitoring",
-      "path": "scripts/check_activity_monitoring.mjs",
+      "path": "scripts/checks/application/check_activity_monitoring.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -189,7 +189,7 @@
     },
     {
       "id": "admin-contributions",
-      "path": "scripts/check_admin_contributions.mjs",
+      "path": "scripts/checks/access-and-data/check_admin_contributions.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -202,7 +202,7 @@
     },
     {
       "id": "admin-session-indicator",
-      "path": "scripts/check_admin_session_indicator.mjs",
+      "path": "scripts/checks/access-and-data/check_admin_session_indicator.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -215,7 +215,7 @@
     },
     {
       "id": "admin-signout",
-      "path": "scripts/check_admin_signout.mjs",
+      "path": "scripts/checks/access-and-data/check_admin_signout.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -226,7 +226,7 @@
     },
     {
       "id": "agreement-preferences",
-      "path": "scripts/check_agreement_preferences.mjs",
+      "path": "scripts/checks/application/check_agreement_preferences.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -239,7 +239,7 @@
     },
     {
       "id": "audit-privacy",
-      "path": "scripts/check_audit_privacy.mjs",
+      "path": "scripts/checks/access-and-data/check_audit_privacy.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -252,7 +252,7 @@
     },
     {
       "id": "beginner-guidance",
-      "path": "scripts/check_beginner_guidance.mjs",
+      "path": "scripts/checks/application/check_beginner_guidance.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -278,7 +278,7 @@
     },
     {
       "id": "blind-eq",
-      "path": "scripts/check_blind_eq.mjs",
+      "path": "scripts/checks/application/check_blind_eq.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -291,7 +291,7 @@
     },
     {
       "id": "blind-eq-workflow",
-      "path": "scripts/check_blind_eq_workflow.mjs",
+      "path": "scripts/checks/application/check_blind_eq_workflow.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -304,7 +304,7 @@
     },
     {
       "id": "browser-ownership-proof",
-      "path": "scripts/check_browser_ownership_proof.mjs",
+      "path": "scripts/checks/access-and-data/check_browser_ownership_proof.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -315,7 +315,7 @@
     },
     {
       "id": "browser-pairing",
-      "path": "scripts/check_browser_pairing.mjs",
+      "path": "scripts/checks/application/check_browser_pairing.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -328,7 +328,7 @@
     },
     {
       "id": "browser-sync",
-      "path": "scripts/check_browser_sync.mjs",
+      "path": "scripts/checks/access-and-data/check_browser_sync.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -339,7 +339,7 @@
     },
     {
       "id": "community-estimator-calibration",
-      "path": "scripts/check_community_estimator_calibration.mjs",
+      "path": "scripts/checks/research/check_community_estimator_calibration.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -350,7 +350,7 @@
     },
     {
       "id": "community-ranking-pilot",
-      "path": "scripts/check_community_ranking_pilot.mjs",
+      "path": "scripts/checks/research/check_community_ranking_pilot.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -361,7 +361,7 @@
     },
     {
       "id": "community-reference",
-      "path": "scripts/check_community_reference.mjs",
+      "path": "scripts/checks/research/check_community_reference.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -374,7 +374,7 @@
     },
     {
       "id": "comparison-passage",
-      "path": "scripts/check_comparison_passage.mjs",
+      "path": "scripts/checks/audio/check_comparison_passage.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -387,7 +387,7 @@
     },
     {
       "id": "consent-choices",
-      "path": "scripts/check_consent_choices.mjs",
+      "path": "scripts/checks/access-and-data/check_consent_choices.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -400,7 +400,7 @@
     },
     {
       "id": "consent-correlations",
-      "path": "scripts/check_consent_correlations.mjs",
+      "path": "scripts/checks/access-and-data/check_consent_correlations.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -413,7 +413,7 @@
     },
     {
       "id": "design-corrections",
-      "path": "scripts/check_design_corrections.mjs",
+      "path": "scripts/checks/application/check_design_corrections.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -426,7 +426,7 @@
     },
     {
       "id": "display-preferences",
-      "path": "scripts/check_display_preferences.mjs",
+      "path": "scripts/checks/application/check_display_preferences.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -437,7 +437,7 @@
     },
     {
       "id": "ear-practice",
-      "path": "scripts/check_ear_practice.mjs",
+      "path": "scripts/checks/audio/check_ear_practice.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -450,7 +450,7 @@
     },
     {
       "id": "embed-shootout",
-      "path": "scripts/check_embed_shootout.mjs",
+      "path": "scripts/checks/application/check_embed_shootout.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -461,7 +461,7 @@
     },
     {
       "id": "eq-response-fidelity",
-      "path": "scripts/check_eq_response_fidelity.mjs",
+      "path": "scripts/checks/audio/check_eq_response_fidelity.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -474,7 +474,7 @@
     },
     {
       "id": "file-matching",
-      "path": "scripts/check_file_matching.mjs",
+      "path": "scripts/checks/application/check_file_matching.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -487,7 +487,7 @@
     },
     {
       "id": "first-time-journey",
-      "path": "scripts/check_first_time_journey.mjs",
+      "path": "scripts/checks/application/check_first_time_journey.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -522,7 +522,7 @@
     },
     {
       "id": "free-listening",
-      "path": "scripts/check_free_listening.mjs",
+      "path": "scripts/checks/research/check_free_listening.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -535,7 +535,7 @@
     },
     {
       "id": "glossary-search",
-      "path": "scripts/check_glossary_search.mjs",
+      "path": "scripts/checks/application/check_glossary_search.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -548,7 +548,7 @@
     },
     {
       "id": "isolated-consent-access",
-      "path": "scripts/check_isolated_consent_access.mjs",
+      "path": "scripts/checks/access-and-data/check_isolated_consent_access.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -559,7 +559,7 @@
     },
     {
       "id": "landscape-motion",
-      "path": "scripts/check_landscape_motion.mjs",
+      "path": "scripts/checks/application/check_landscape_motion.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -572,7 +572,7 @@
     },
     {
       "id": "large-account-sync",
-      "path": "scripts/check_large_account_sync.mjs",
+      "path": "scripts/checks/access-and-data/check_large_account_sync.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -585,7 +585,7 @@
     },
     {
       "id": "listener-nickname",
-      "path": "scripts/check_listener_nickname.mjs",
+      "path": "scripts/checks/application/check_listener_nickname.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -598,7 +598,7 @@
     },
     {
       "id": "listening-audio",
-      "path": "scripts/check_listening_audio.cjs",
+      "path": "scripts/checks/audio/check_listening_audio.cjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -611,7 +611,7 @@
     },
     {
       "id": "listening-audio-worker",
-      "path": "scripts/check_listening_audio_worker.mjs",
+      "path": "scripts/checks/audio/check_listening_audio_worker.mjs",
       "runtime": "node",
       "args": [],
       "profile": "worker",
@@ -625,7 +625,7 @@
     },
     {
       "id": "listening-reminder",
-      "path": "scripts/check_listening_reminder.mjs",
+      "path": "scripts/checks/research/check_listening_reminder.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -638,7 +638,7 @@
     },
     {
       "id": "local-audio-error",
-      "path": "scripts/check_local_audio_error.mjs",
+      "path": "scripts/checks/audio/check_local_audio_error.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -651,7 +651,7 @@
     },
     {
       "id": "main-workflows",
-      "path": "scripts/check_main_workflows.mjs",
+      "path": "scripts/checks/application/check_main_workflows.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -664,7 +664,7 @@
     },
     {
       "id": "maintenance-dependencies",
-      "path": "scripts/check_maintenance_dependencies.cjs",
+      "path": "scripts/checks/application/check_maintenance_dependencies.cjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -675,7 +675,7 @@
     },
     {
       "id": "maintenance-scope",
-      "path": "scripts/check_maintenance_scope.mjs",
+      "path": "scripts/checks/application/check_maintenance_scope.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -688,7 +688,7 @@
     },
     {
       "id": "matched-listening",
-      "path": "scripts/check_matched_listening.mjs",
+      "path": "scripts/checks/research/check_matched_listening.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -714,7 +714,7 @@
     },
     {
       "id": "media-recovery",
-      "path": "scripts/check_media_recovery.cjs",
+      "path": "scripts/checks/application/check_media_recovery.cjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -727,7 +727,7 @@
     },
     {
       "id": "guide-assets",
-      "path": "scripts/check_guide_assets.mjs",
+      "path": "scripts/checks/release/check_guide_assets.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -749,7 +749,7 @@
     },
     {
       "id": "music-playback-requests",
-      "path": "scripts/check_music_playback_requests.mjs",
+      "path": "scripts/checks/audio/check_music_playback_requests.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -762,7 +762,7 @@
     },
     {
       "id": "music-preferences",
-      "path": "scripts/check_music_preferences.cjs",
+      "path": "scripts/checks/application/check_music_preferences.cjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -775,7 +775,7 @@
     },
     {
       "id": "music-rank-refresh",
-      "path": "scripts/check_music_rank_refresh.mjs",
+      "path": "scripts/checks/application/check_music_rank_refresh.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -788,7 +788,7 @@
     },
     {
       "id": "nickname-brand-forms",
-      "path": "scripts/check_nickname_brand_forms.mjs",
+      "path": "scripts/checks/application/check_nickname_brand_forms.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -801,7 +801,7 @@
     },
     {
       "id": "notice-duration",
-      "path": "scripts/check_notice_duration.mjs",
+      "path": "scripts/checks/application/check_notice_duration.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -814,7 +814,7 @@
     },
     {
       "id": "open-music-source",
-      "path": "scripts/check_open_music_source.mjs",
+      "path": "scripts/checks/application/check_open_music_source.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -827,7 +827,7 @@
     },
     {
       "id": "owner-only-maintenance",
-      "path": "scripts/check_owner_only_maintenance.mjs",
+      "path": "scripts/checks/application/check_owner_only_maintenance.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -838,7 +838,7 @@
     },
     {
       "id": "participant-device-sync",
-      "path": "scripts/check_participant_device_sync.mjs",
+      "path": "scripts/checks/access-and-data/check_participant_device_sync.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -851,7 +851,7 @@
     },
     {
       "id": "participation-entry",
-      "path": "scripts/check_participation_entry.mjs",
+      "path": "scripts/checks/application/check_participation_entry.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -862,7 +862,7 @@
     },
     {
       "id": "passage-edit",
-      "path": "scripts/check_passage_edit.mjs",
+      "path": "scripts/checks/audio/check_passage_edit.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -875,7 +875,7 @@
     },
     {
       "id": "passage-float-tolerance",
-      "path": "scripts/check_passage_float_tolerance.mjs",
+      "path": "scripts/checks/audio/check_passage_float_tolerance.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -886,7 +886,7 @@
     },
     {
       "id": "passage-keyboard",
-      "path": "scripts/check_passage_keyboard.mjs",
+      "path": "scripts/checks/audio/check_passage_keyboard.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -899,7 +899,7 @@
     },
     {
       "id": "passage-pointer-focus",
-      "path": "scripts/check_passage_pointer_focus.mjs",
+      "path": "scripts/checks/audio/check_passage_pointer_focus.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -912,7 +912,7 @@
     },
     {
       "id": "passage-ranking",
-      "path": "scripts/check_passage_ranking.mjs",
+      "path": "scripts/checks/audio/check_passage_ranking.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -925,7 +925,7 @@
     },
     {
       "id": "passage-shuffle",
-      "path": "scripts/check_passage_shuffle.mjs",
+      "path": "scripts/checks/audio/check_passage_shuffle.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -938,7 +938,7 @@
     },
     {
       "id": "passage-time",
-      "path": "scripts/check_passage_time.mjs",
+      "path": "scripts/checks/audio/check_passage_time.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -951,7 +951,7 @@
     },
     {
       "id": "peqdb-autoeq",
-      "path": "scripts/check_peqdb_autoeq.mjs",
+      "path": "scripts/checks/audio/check_peqdb_autoeq.mjs",
       "runtime": "node",
       "args": [],
       "profile": "prepared",
@@ -966,7 +966,7 @@
     },
     {
       "id": "peqdb-browser",
-      "path": "scripts/check_peqdb_browser.mjs",
+      "path": "scripts/checks/audio/check_peqdb_browser.mjs",
       "runtime": "node",
       "args": [],
       "profile": "manual",
@@ -978,7 +978,7 @@
     },
     {
       "id": "peqdb-built",
-      "path": "scripts/check_peqdb_built.mjs",
+      "path": "scripts/checks/release/check_peqdb_built.mjs",
       "runtime": "node",
       "args": [],
       "profile": "manual",
@@ -990,7 +990,7 @@
     },
     {
       "id": "peqdb-package",
-      "path": "scripts/check_peqdb_package.mjs",
+      "path": "scripts/checks/release/check_peqdb_package.mjs",
       "runtime": "node",
       "args": [],
       "profile": "built",
@@ -1005,7 +1005,7 @@
     },
     {
       "id": "permission-music",
-      "path": "scripts/check_permission_music.mjs",
+      "path": "scripts/checks/access-and-data/check_permission_music.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1016,7 +1016,7 @@
     },
     {
       "id": "personal-contribution-status",
-      "path": "scripts/check_personal_contribution_status.mjs",
+      "path": "scripts/checks/application/check_personal_contribution_status.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1029,7 +1029,7 @@
     },
     {
       "id": "personal-passage-optout",
-      "path": "scripts/check_personal_passage_optout.mjs",
+      "path": "scripts/checks/audio/check_personal_passage_optout.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1042,7 +1042,7 @@
     },
     {
       "id": "personal-playback",
-      "path": "scripts/check_personal_playback.mjs",
+      "path": "scripts/checks/audio/check_personal_playback.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1055,7 +1055,7 @@
     },
     {
       "id": "personal-research",
-      "path": "scripts/check_personal_research.mjs",
+      "path": "scripts/checks/research/check_personal_research.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1068,7 +1068,7 @@
     },
     {
       "id": "personal-shootout",
-      "path": "scripts/check_personal_shootout.mjs",
+      "path": "scripts/checks/application/check_personal_shootout.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1081,7 +1081,7 @@
     },
     {
       "id": "personal-start-status",
-      "path": "scripts/check_personal_start_status.mjs",
+      "path": "scripts/checks/application/check_personal_start_status.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1092,7 +1092,7 @@
     },
     {
       "id": "personal-target-pool",
-      "path": "scripts/check_personal_target_pool.mjs",
+      "path": "scripts/checks/application/check_personal_target_pool.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1105,7 +1105,7 @@
     },
     {
       "id": "playback-shortcuts",
-      "path": "scripts/check_playback_shortcuts.mjs",
+      "path": "scripts/checks/audio/check_playback_shortcuts.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1118,7 +1118,7 @@
     },
     {
       "id": "player-picker-rereview",
-      "path": "scripts/check_player_picker_rereview.mjs",
+      "path": "scripts/checks/application/check_player_picker_rereview.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1131,7 +1131,7 @@
     },
     {
       "id": "player-picker-review",
-      "path": "scripts/check_player_picker_review.mjs",
+      "path": "scripts/checks/application/check_player_picker_review.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1177,7 +1177,7 @@
     },
     {
       "id": "eq-preset-reactions",
-      "path": "scripts/check_eq_preset_reactions.mjs",
+      "path": "scripts/checks/research/check_eq_preset_reactions.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1201,7 +1201,7 @@
     },
     {
       "id": "ranking-view",
-      "path": "scripts/check_ranking_view.mjs",
+      "path": "scripts/checks/research/check_ranking_view.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1247,7 +1247,7 @@
     },
     {
       "id": "research-source",
-      "path": "scripts/check_research_source.mjs",
+      "path": "scripts/checks/research/check_research_source.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1260,7 +1260,7 @@
     },
     {
       "id": "research-source-focus",
-      "path": "scripts/check_research_source_focus.mjs",
+      "path": "scripts/checks/research/check_research_source_focus.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1273,7 +1273,7 @@
     },
     {
       "id": "saved-eq",
-      "path": "scripts/check_saved_eq.mjs",
+      "path": "scripts/checks/application/check_saved_eq.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1286,7 +1286,7 @@
     },
     {
       "id": "security-response-headers",
-      "path": "scripts/check_security_response_headers.mjs",
+      "path": "scripts/checks/access-and-data/check_security_response_headers.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1297,7 +1297,7 @@
     },
     {
       "id": "selected-passage-timing",
-      "path": "scripts/check_selected_passage_timing.mjs",
+      "path": "scripts/checks/audio/check_selected_passage_timing.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1321,7 +1321,7 @@
     },
     {
       "id": "setup-auto-hide",
-      "path": "scripts/check_setup_auto_hide.mjs",
+      "path": "scripts/checks/application/check_setup_auto_hide.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1334,7 +1334,7 @@
     },
     {
       "id": "share-previews",
-      "path": "scripts/check_share_previews.mjs",
+      "path": "scripts/checks/application/check_share_previews.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1345,7 +1345,7 @@
     },
     {
       "id": "share-preview-routes",
-      "path": "scripts/check_share_preview_routes.mjs",
+      "path": "scripts/checks/application/check_share_preview_routes.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1358,7 +1358,7 @@
     },
     {
       "id": "source-bitrate",
-      "path": "scripts/check_source_bitrate.mjs",
+      "path": "scripts/checks/access-and-data/check_source_bitrate.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1371,7 +1371,7 @@
     },
     {
       "id": "stable-passage",
-      "path": "scripts/check_stable_passage.mjs",
+      "path": "scripts/checks/audio/check_stable_passage.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1384,7 +1384,7 @@
     },
     {
       "id": "style-cleanup",
-      "path": "scripts/check_style_cleanup.mjs",
+      "path": "scripts/checks/application/check_style_cleanup.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1395,7 +1395,7 @@
     },
     {
       "id": "target-context-and-changes",
-      "path": "scripts/check_target_context_and_changes.mjs",
+      "path": "scripts/checks/application/check_target_context_and_changes.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1408,7 +1408,7 @@
     },
     {
       "id": "target-upload",
-      "path": "scripts/check_target_upload.mjs",
+      "path": "scripts/checks/application/check_target_upload.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1421,7 +1421,7 @@
     },
     {
       "id": "site-help",
-      "path": "scripts/check_site_help.mjs",
+      "path": "scripts/checks/application/check_site_help.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1434,7 +1434,7 @@
     },
     {
       "id": "test-account-controls",
-      "path": "scripts/check_test_account_controls.mjs",
+      "path": "scripts/checks/access-and-data/check_test_account_controls.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1447,7 +1447,7 @@
     },
     {
       "id": "tuning-unified",
-      "path": "scripts/check_tuning_unified.mjs",
+      "path": "scripts/checks/application/check_tuning_unified.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1460,7 +1460,7 @@
     },
     {
       "id": "unified-consent-flow",
-      "path": "scripts/check_unified_consent_flow.mjs",
+      "path": "scripts/checks/access-and-data/check_unified_consent_flow.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1486,7 +1486,7 @@
     },
     {
       "id": "waveform-asset-binding",
-      "path": "scripts/check_waveform_asset_binding.mjs",
+      "path": "scripts/checks/audio/check_waveform_asset_binding.mjs",
       "runtime": "node",
       "args": [],
       "profile": "worker",
@@ -1500,7 +1500,7 @@
     },
     {
       "id": "waveform-peaks",
-      "path": "scripts/check_waveform_peaks.mjs",
+      "path": "scripts/checks/audio/check_waveform_peaks.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1513,7 +1513,7 @@
     },
     {
       "id": "waveform-playhead",
-      "path": "scripts/check_waveform_playhead.mjs",
+      "path": "scripts/checks/audio/check_waveform_playhead.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1526,7 +1526,7 @@
     },
     {
       "id": "waveform-pyramid",
-      "path": "scripts/check_waveform_pyramid.py",
+      "path": "scripts/checks/audio/check_waveform_pyramid.py",
       "runtime": "python3",
       "args": [],
       "profile": "public",
@@ -1537,7 +1537,7 @@
     },
     {
       "id": "worker-media-route",
-      "path": "scripts/check_worker_media_route.mjs",
+      "path": "scripts/checks/application/check_worker_media_route.mjs",
       "runtime": "node",
       "args": [],
       "profile": "worker",
@@ -1564,7 +1564,7 @@
     },
     {
       "id": "yinyangeq-account",
-      "path": "scripts/check_yinyangeq_account.mjs",
+      "path": "scripts/checks/access-and-data/check_yinyangeq_account.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1577,7 +1577,7 @@
     },
     {
       "id": "yinyangeq-api",
-      "path": "scripts/check_yinyangeq_api.mjs",
+      "path": "scripts/checks/application/check_yinyangeq_api.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1590,7 +1590,7 @@
     },
     {
       "id": "yinyangeq-files",
-      "path": "scripts/check_yinyangeq_files.mjs",
+      "path": "scripts/checks/application/check_yinyangeq_files.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1603,7 +1603,7 @@
     },
     {
       "id": "yinyangeq-gate",
-      "path": "scripts/check_yinyangeq_gate.mjs",
+      "path": "scripts/checks/access-and-data/check_yinyangeq_gate.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1614,7 +1614,7 @@
     },
     {
       "id": "yinyangeq-history",
-      "path": "scripts/check_yinyangeq_history.mjs",
+      "path": "scripts/checks/application/check_yinyangeq_history.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1627,7 +1627,7 @@
     },
     {
       "id": "yinyangeq-replacement",
-      "path": "scripts/check_yinyangeq_replacement.mjs",
+      "path": "scripts/checks/application/check_yinyangeq_replacement.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",
@@ -1640,7 +1640,7 @@
     },
     {
       "id": "listening-controls",
-      "path": "scripts/check_listening_controls.mjs",
+      "path": "scripts/checks/audio/check_listening_controls.mjs",
       "profile": "public",
       "runtime": "node",
       "args": [],
@@ -1653,7 +1653,7 @@
     },
     {
       "id": "generated-eq-comparison",
-      "path": "scripts/check_generated_eq_comparison.mjs",
+      "path": "scripts/checks/audio/check_generated_eq_comparison.mjs",
       "runtime": "node",
       "args": [],
       "profile": "public",

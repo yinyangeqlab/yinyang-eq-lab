@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawn, execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, mkdtempSync, existsSync, lstatSync, openSync, closeSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { resolve, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { sourceIdentity, sha256 } from './verification/source.mjs';
 
@@ -28,7 +28,12 @@ export function validateRegistry(directory, registry) {
     demand(suite.profile !== 'manual' || (typeof suite.reason === 'string' && suite.reason.length > 0), `${suite.id}: manual exclusion needs a reason`);
     ids.add(suite.id); paths.add(suite.path); commands.add(invocation);
   }
-  const inventory = readdirSync(join(directory, 'scripts'), { withFileTypes: true }).filter(entry => entry.isFile() && entry.name.startsWith('check')).map(entry => `scripts/${entry.name}`);
+  const scripts = join(directory, 'scripts');
+  const checks = join(scripts, 'checks');
+  const entries = readdirSync(scripts, { withFileTypes: true });
+  if (existsSync(checks)) entries.push(...readdirSync(checks, { withFileTypes: true, recursive: true }));
+  const inventory = entries.filter(entry => entry.isFile() && entry.name.startsWith('check'))
+    .map(entry => relative(directory, join(entry.parentPath, entry.name)).split(sep).join('/'));
   const orphaned = inventory.filter(path => !paths.has(path));
   demand(orphaned.length === 0, `Unregistered check scripts: ${orphaned.join(', ')}`);
   return registry;

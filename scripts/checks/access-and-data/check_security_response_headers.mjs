@@ -1,0 +1,33 @@
+import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../../../infra/pulumi/shootout-failure-logger.mjs";
+import assert from 'node:assert/strict';
+import{readFileSync}from'node:fs';
+import vm from'node:vm';
+const src=readFileSync('infra/pulumi/private-gate.mjs','utf8');
+const wrapper=src.slice(src.indexOf('const worker = {'),src.indexOf('\nfunction rankingResponse')).replace('const worker =','exports.handler =');
+let response;
+const context={recordShootoutFailure,shootoutFailureHeader,shootoutSubmissionEndpoint,exports:{},privateGate:{fetch:async()=>response},Headers,Response,URL,withMediaLength:(_,r)=>r};vm.runInNewContext(wrapper,context);
+for(const type of ['text/html; charset=utf-8','application/json','audio/mpeg']){
+ response=new Response('fixture',{headers:{'Content-Type':type,'Referrer-Policy':'no-referrer'}});
+ const out=await context.exports.handler.fetch(new Request('https://fixture.test'),{},{});
+ assert.equal(out.headers.get('X-Frame-Options'),'DENY');assert.equal(out.headers.get('X-Content-Type-Options'),'nosniff');assert.equal(out.headers.get('Referrer-Policy'),'no-referrer');assert.match(out.headers.get('Permissions-Policy'),/microphone=\(\)/);
+ if(type.startsWith('text/html'))assert.match(out.headers.get('Content-Security-Policy'),/frame-ancestors 'none'/);else assert.equal(out.headers.get('Content-Security-Policy'),null);
+ assert.equal(await out.text(),'fixture');
+}
+// Only the chrome-less shootout page may be framed, and only by GET.
+for(const [path,method,framed] of [['/embed/k7m2q9xwab','GET',true],['/embed/k7m2q9xwab','POST',false],['/s/k7m2q9xwab','GET',false],['/embed/k7m2q9xwab/results','GET',false],['/embed/short','GET',false],['/shootout','GET',false]]){
+ response=new Response('x',{headers:{'Content-Type':'text/html'}});
+ const out=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{method,body:method==='POST'?'{}':undefined}),{},{});
+ assert.equal(out.headers.get('X-Frame-Options'),framed?null:'DENY',path);
+ assert.match(out.headers.get('Content-Security-Policy'),framed?/frame-ancestors \*;/:/frame-ancestors 'none'/,path);
+}
+const hardening = { CSP_REPORT_ONLY: "true", HSTS_CANONICAL: "true", CANONICAL_ORIGIN: "https://fixture.test" };
+const checked = await context.exports.handler.fetch(new Request("https://fixture.test"), hardening, {});
+assert.match(checked.headers.get("Content-Security-Policy-Report-Only"), /script-src 'self' 'wasm-unsafe-eval'/);
+assert.doesNotMatch(checked.headers.get("Content-Security-Policy"), /script-src/);
+assert.equal(checked.headers.get("Strict-Transport-Security"), "max-age=86400");
+for (const origin of ["http://fixture.test", "https://preview.fixture.test"]) {
+  const result = await context.exports.handler.fetch(new Request(origin), hardening, {});
+  assert.equal(result.headers.get("Strict-Transport-Security"), null);
+}
+assert.ok(src.includes('Browser Sync is unavailable for this hidden test account.'));
+console.log('PASS actual response wrapper: anti-framing, nosniff, minimized permissions, preserved private referrer policy and untouched non-HTML bodies; test Sync UI restricted.');

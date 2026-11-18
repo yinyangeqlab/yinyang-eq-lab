@@ -60,8 +60,8 @@ AUTOEQ_PLAYWRIGHT=/absolute/path/to/playwright/index.mjs node scripts/experiment
 node node_modules/typescript/bin/tsc --project site/tsconfig.json --noEmit --incremental false
 node node_modules/eslint/bin/eslint.js --config scripts/eslint.config.mjs scripts/experiments/autoeq --max-warnings 0
 node node_modules/vite/bin/vite.js build --config scripts/experiments/autoeq/vite.config.ts
-node scripts/check_blind_eq.mjs
-node scripts/check_blind_eq_workflow.mjs
+node scripts/checks/application/check_blind_eq.mjs
+node scripts/checks/application/check_blind_eq_workflow.mjs
 ```
 
 The engine checks execute real WASM: invalid-input/configuration rejection, flat curves in all three smoothing modes, deterministic output and stable memory over 50 fits. Browser checks execute all four fitters on six real curves at three rates, lazy loading, finite output/headroom, responsive main thread, actual offline audio rendering/A/B switching, desktop/360px layout, dark native select surfaces and keyboard focus. Native popup pixel rendering is not certified by the headless screenshot. Idle disposal and successful reload are checked. Existing 85 DSP/session tests and 37 actual workflow checks pass. Evidence and raw numerical results remain ignored in `artifacts/autoeq-lab/review/`.

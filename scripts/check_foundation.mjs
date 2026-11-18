@@ -342,6 +342,11 @@ try {
       assert.throws(() => validateRegistry(fixture, registry), /Unregistered/);
       rmSync(join(fixture, 'scripts', name));
     }
+    const nested = 'scripts/checks/audio/check_nested.mjs';
+    write(join(fixture, nested), '');
+    assert.throws(() => validateRegistry(fixture, registry), /Unregistered check scripts: scripts\/checks\/audio\/check_nested\.mjs/);
+    validateRegistry(fixture, { ...registry, suites: [...entries, suite('nested', { path: nested })] });
+    rmSync(join(fixture, nested));
   });
   const logs = join(temp, 'logs'); mkdirSync(logs);
   for (const [entry, expected] of [[entries[0], 'passed'], [entries[1], 'failed'], [entries[2], 'timeout'], [entries[3], 'passed'], [suite('pass', { requires: ['missing-input'] }), 'blocked']]) {
