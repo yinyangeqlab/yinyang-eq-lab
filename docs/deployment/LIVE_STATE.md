@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-18T06:42:52Z |
 | Deployment | Verified by the [deployment receipt](../releases/update178-mobile-compare-help-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication not authorized in this record |
+| Publication | Reviewed source published as `364dd980d5550a11218b3696d913ca5a64b8ddb6`; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.

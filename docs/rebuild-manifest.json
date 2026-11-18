@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "911f2694adf114ccc5d5993fe11b52d3cedd74ec",
+  "baseRevision": "364dd980d5550a11218b3696d913ca5a64b8ddb6",
   "recordedLiveUpdate": 178,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "95dbb89f74a19793d2bae511f19783ff4e320d44b43829866764788e7fa491f3",
+      "sha256": "41566c85f3866cf38848f0d151b1999114d590a02f2a361bb1499aae6d5f9749",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "4d301fb609b40dca44890f84aafbb3565bdf5b6f6b6b06cdb4e24da3f4db475d",
+      "sha256": "2dc091819462d4601549fcf9c2e904738341c41096574a2cece98c859fb3a9ee",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "be722892e5163bdd528e34c6deb7bbeab4ba9b7c0e52243788c85f12f01540a3",
+      "sha256": "6cf650e78f79443edaf992a0f7266f41c790f0dbaf10788e8bb3b308d30b57bd",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "71ebe1674660a7dae153d3fc7bbba43b6a10994d9b813022016f2824d649bb1d",
+      "sha256": "98ee5e6c5252ac41c314315c3ca584d69736d7288d13b14dfe9c869353be644b",
       "executable": false
     },
     {
@@ -1003,6 +1003,11 @@
     {
       "path": "docs/releases/update178-mobile-compare-help-verification.json",
       "sha256": "fde4f950663c85ed4922f34bc073929e40089dfa1c600bfaa4cb588ce289ea88",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update178-publication.json",
+      "sha256": "7ff799add2a0dc52e436748ab766da2b8d52f98ba2b27793a1bb2f736516a11a",
       "executable": false
     },
     {
@@ -5982,7 +5987,7 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "e12959e03552563bbf528fcc99289ace1f6dcf05473e6a1a1892ff54cae69f07",
+      "sha256": "c8bd2c3da7d57e4a67b5bd0002c839479e5b1b089aa46d9e6b3aecf3e678df95",
       "executable": false
     },
     {

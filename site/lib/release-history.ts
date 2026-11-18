@@ -305,7 +305,10 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: candidateChanges },
+  {
+    update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: candidateChanges,
+    github: { commit: "364dd980d5550a11218b3696d913ca5a64b8ddb6", releaseTag: "update178" },
+  },
   { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes },
   { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },
   {

@@ -1,0 +1,22 @@
+{
+  "update": 178,
+  "tag": "update178",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "d044bf6f0e8fd967567fa6fc31124d3748924fa5",
+  "publishedSourceCommit": "364dd980d5550a11218b3696d913ca5a64b8ddb6",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update178",
+  "publishedAt": "2026-11-18T07:14:18Z",
+  "authorAndCommitterVerified": true,
+  "historicalTagsPreserved": true,
+  "liveVersionPage": "https://yinyangeq.com/version",
+  "liveVersionVerifiedAt": "2026-11-18T07:15:13Z",
+  "automaticReleaseDiscoveryVerified": true,
+  "liveLinkBrowserWidths": [
+    1280,
+    320
+  ],
+  "deploymentVerification": "docs/releases/update178-mobile-compare-help-verification.json",
+  "recoveryVerification": "docs/releases/update178-mobile-compare-help-recovery-verification.json",
+  "filesVerifiedInEachArchive": 1251,
+  "publicZipAndTarDownloadsVerified": true
+}

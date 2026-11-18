@@ -23,10 +23,13 @@
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": false,
+    "pushed": true,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publicationTag": "update178",
+    "publishedSourceCommit": "364dd980d5550a11218b3696d913ca5a64b8ddb6",
+    "publicationVerification": "docs/releases/update178-publication.json"
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,

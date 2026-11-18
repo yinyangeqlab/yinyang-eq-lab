@@ -11,6 +11,8 @@ The Version page includes searchable release notes, direct links to all 76 updat
 
 [Deployment verification](releases/update178-mobile-compare-help-verification.json) · [Version page verification](releases/update178-version-page-fixes-verification.json)
 
+The live Version page discovered the GitHub release automatically. [Source release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update178) · [Publication verification](releases/update178-publication.json)
+
 
 ## Update175 Arya Stealth preset and Version history
 
