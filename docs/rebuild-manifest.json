@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "b97f56df402ecc3f5b8dceaf64b933a8ea604f84",
+  "baseRevision": "4365a51a5fa0513e1266afe965dc19fabe7132c6",
   "recordedLiveUpdate": 181,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -1598,6 +1598,11 @@
     {
       "path": "public/share/about.jpg",
       "sha256": "38e8cd9d533489e3290c4d27e2791f05f73fa653b1debcd05eb0f1f0abe6fc05",
+      "executable": false
+    },
+    {
+      "path": "public/share/android-apps-peq.jpg",
+      "sha256": "6ce24c2e155afd8a82229d024dd2648a032f25ea57538a6aa2e3a27fd6808af7",
       "executable": false
     },
     {
@@ -6197,7 +6202,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "21d1bf99c8246eac85eb5050411396ceb0f62d27611fe0e12d3bb6c3381dafe9",
+      "sha256": "5a60dff47d2ad57b1d6a587c6072a901b08db7cd5ad8d693a5925a448f6f9e1f",
       "executable": false
     },
     {
