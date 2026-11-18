@@ -5,6 +5,7 @@ export const publicAssetPaths = [
   "/brand-amoled.webp", "/brand-avatar-aligned.webp", "/brand-avatar-aligned.png",
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
+  "/android/companion.svg", "/android/manager.svg", "/android/compare.webp",
   // Only the fixed, original instrumental preview is public.
   "/sample-assets/a.flac", "/sample-assets/b.flac",
   "/sample-assets/Barlow-Regular.ttf", "/sample-assets/Barlow-SemiBold.ttf", "/sample-assets/OFL.txt",

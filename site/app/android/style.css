@@ -1,0 +1,39 @@
+.companion-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(200px, .62fr);
+  align-items: center;
+  gap: clamp(24px, 6vw, 86px);
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(24px, 5vw, 72px);
+  background: #0c171c;
+  color: #edf7f5;
+}
+.companion-page h1 { font-size: clamp(2.6rem, 5vw, 4.65rem); letter-spacing: -.045em; line-height: 1.02; margin: .4em 0 .25em; font-weight: 650; }
+.companion-page h1 span { display: block; color: #a6e7de; }
+.companion-file-title { margin: 1.2em 0 .35em; font-size: clamp(1.4rem, 2.5vw, 1.85rem); line-height: 1.18; font-weight: 650; }
+.companion-intro { font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.5; max-width: 41ch; }
+.companion-features { margin: 1.6rem 0; }
+.companion-features div { padding: .75rem 0; border-top: 1px solid #35474f; }
+.companion-features dt { font-weight: 650; }
+.companion-features dd, .companion-availability, .companion-screen figcaption { color: #b6c7cc; line-height: 1.55; }
+.companion-features dd { margin: .15em 0 0; }
+.companion-page a { color: #abede3; text-underline-offset: .22em; text-decoration: underline; }
+.companion-page .companion-features-link { display: inline-flex; align-items: center; min-height: 44px; padding: .6em 1em; background: #ace9de; color: #0a2529; border-radius: 6px; font-weight: 650; text-decoration: none; }
+.companion-page .companion-features-link:hover { background: #cefff4; }
+.companion-page a:focus-visible { outline: 3px solid #ffe2a6; outline-offset: 4px; }
+.companion-install { margin-top: 1.3rem; scroll-margin-top: 70px; }
+.companion-install [role="status"] { margin-top: .65rem; line-height: 1.5; }
+.companion-guide-link { display: inline-flex; align-items: center; min-height: 44px; }
+.companion-availability { margin-block: .85rem 0; max-width: 44ch; font-size: .92rem; }
+.companion-screen { display: grid; justify-items: center; gap: .8rem; margin: 0; }
+.companion-screen img { display: block; width: min(100%, 264px); height: auto; border: 1px solid #46575e; border-radius: 15px; }
+.companion-screen figcaption { font-size: .85rem; text-align: center; }
+.companion-controls { grid-column: 1 / -1; }
+.companion-controls h2 { margin: 0 0 .7em; font-size: clamp(1.5rem, 3vw, 2.15rem); line-height: 1.15; font-weight: 650; }
+.companion-controls dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(24px, 4vw, 56px); margin: 0; }
+@media (max-width: 760px) {
+  .companion-controls dl { grid-template-columns: minmax(0, 1fr); }
+  .companion-page { grid-template-columns: minmax(0, 1fr); }
+  .companion-screen { margin-top: .5rem; }
+}

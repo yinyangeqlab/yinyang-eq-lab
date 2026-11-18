@@ -1,0 +1,69 @@
+/* Resting positions double as the reduced-motion artwork. */
+.destination-art .stage-curtain { transform-origin:16px 16px; transform:scaleX(.19); }
+.destination-art :is(.eq-low-lobe,.eq-high-lobe) { transform-origin:0 52px; }
+
+@media (prefers-reduced-motion:no-preference) {
+  html:not([data-motion="reduced"]) .destination-art :is(.rank-piece,.eq-low-lobe,.eq-high-lobe,.eq-low-point,.eq-high-point,.stage-curtain,.cast-ballot) {
+    animation: var(--tool-animation) var(--period) cubic-bezier(.42,0,.27,1) var(--offset,0s) infinite both;
+    animation-play-state:var(--tool-play-state,paused);
+  }
+  #listening-tools[data-playing] { --tool-play-state:running; }
+}
+.target-a { --tool-animation:target-a; --period:4.8s; }
+.target-b { --tool-animation:target-b; --period:9.6s; }
+.target-c { --tool-animation:target-c; --period:9.6s; }
+/* Swap positions 1/2, 2/3, 3/1. Two rounds return all three targets to their starting places. */
+@keyframes target-a {
+  0%,12%,100% { transform:translateY(0); }
+  30%,45% { transform:translateY(27px); }
+  63%,78% { transform:translateY(54px); }
+  87% { transform:translate(9px,27px); }
+}
+@keyframes target-b {
+  0%,6%,82%,100% { transform:translateY(0); }
+  15%,39% { transform:translateY(-27px); }
+  44% { transform:translate(-9px,0); }
+  50%,72% { transform:translateY(27px); }
+}
+@keyframes target-c {
+  0%,22%,100% { transform:translateY(0); }
+  32%,56% { transform:translateY(-27px); }
+  65%,89% { transform:translateY(-54px); }
+  94% { transform:translate(-9px,-27px); }
+}
+
+.eq-low-lobe,.eq-high-lobe,.eq-low-point,.eq-high-point { --period:7.2s; }
+.eq-low-lobe { --tool-animation:drag-low-band; }
+.eq-high-lobe { --tool-animation:drag-high-band; }
+.eq-low-point { --tool-animation:drag-low-point; }
+.eq-high-point { --tool-animation:drag-high-point; }
+/* The curve scales about its 52-unit baseline. Each handle follows its own band's gain. */
+@keyframes drag-low-band {
+  0%,6%,100% {transform:scaleY(1)} 18%,48% {transform:scaleY(1.625)} 61%,89% {transform:scaleY(-.375)}
+}
+@keyframes drag-low-point {
+  0%,6%,100% {transform:translateY(0)} 18%,48% {transform:translateY(-10px)} 61%,89% {transform:translateY(22px)}
+}
+@keyframes drag-high-band {
+  0%,26%,82%,100% {transform:scaleY(1)} 38%,68% {transform:scaleY(-1.25)}
+}
+@keyframes drag-high-point {
+  0%,26%,82%,100% {transform:translateY(0)} 38%,68% {transform:translateY(-27px)}
+}
+
+.stage-curtain { --tool-animation:stage-reveal; --period:4.6s; --offset:-1.35s; }
+@keyframes stage-reveal {
+  0%,8%,94%,100% {transform:scaleX(1)}
+  25%,76% {transform:scaleX(.19)}
+}
+.cast-ballot { --tool-animation:cast-vote; --period:4.8s; transform-origin:0 27px; }
+.ballot-a { --throw-x:-10px; --tilt:-12deg; --offset:-.6s; }
+.ballot-b { --throw-x:10px; --tilt:12deg; --offset:-3s; }
+@keyframes cast-vote {
+  0%,100% {transform:translate(var(--throw-x),9px) rotate(var(--tilt)); opacity:0}
+  10% {transform:translate(var(--throw-x),1px) rotate(var(--tilt)); opacity:1}
+  24% {transform:translate(0,-6px) rotate(0); opacity:1}
+  36% {transform:translateY(4px); opacity:1; animation-timing-function:ease-in}
+  54%,62% {transform:translateY(52px); opacity:1}
+  63%,99% {transform:translateY(52px); opacity:0}
+}

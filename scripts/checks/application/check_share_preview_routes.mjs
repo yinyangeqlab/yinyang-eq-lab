@@ -5,6 +5,7 @@ import * as share from "../../../site/lib/share-pages.mjs";
 
 const { SITE_ORIGIN, sharePageFor, sharePages, shareHtml, shareImageUrl, shareAnimationUrl, previewTitle } = share;
 const aliasDestinations = new Map([
+  ["/android/download", "/android"],
   ["/home", "/"],
   ["/personal-tuning", "/preference-tuning"],
   ["/discover", "/shootout?tab=rankings"],

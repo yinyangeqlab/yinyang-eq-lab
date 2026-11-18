@@ -2,8 +2,11 @@
 
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { mountSample } from '@/components/first-listen/audio';
+import ToolIllustration from '@/components/first-listen/tool-illustration';
 import '@/components/first-listen/home.css';
+import '@/components/first-listen/tool-motion.css';
 import { Eye, EyeOff, Pause, Play } from 'lucide-react';
+import { CompanionAppIcons, DownloadAppManager } from '@/components/companion-app-brand';
 import WelcomeLandscape from '@/components/welcome-landscape';
 import WelcomeWallpapers from '@/components/welcome-wallpapers';
 import { displayPreferencesSnapshot, parseDisplayPreferences, subscribeDisplayPreferences, writeDisplayPreferences } from '@/lib/display-preferences';
@@ -14,7 +17,7 @@ const destinations = [
   { id: "tuning", title: "Personal EQ Tuning", description: "Adjust bass, mids and treble as you listen.", href: "/preference-tuning" },
   { id: "comparison", title: "EQ Comparison", description: "Compare 2 EQ presets side by side.", href: "/eq-compare" },
   { id: "contribute", title: "Contribute To Public EQ Rankings", description: "Cast your vote in a blind listening test.", href: "/shootout?mode=blind" },
-];
+] as const;
 
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
 function subscribeMotion(change: () => void) {
@@ -27,32 +30,44 @@ function Panorama() {
   const preferences = parseDisplayPreferences(useSyncExternalStore(subscribeDisplayPreferences, displayPreferencesSnapshot, () => '{}'));
   const systemReduced = useSyncExternalStore(subscribeMotion, () => matchMedia(reducedMotionQuery).matches, () => false);
   const running = !systemReduced && preferences.motion !== 'reduced';
-  const motionLabel = running ? 'Pause scene' : 'Resume scene';
+  const motionLabel = running ? 'Pause motion' : 'Resume motion';
   const flightsLabel = preferences.welcomeFlights ? 'Hide carpets' : 'Show carpets';
   return <>
-    <div className="scene-plate"><WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} /></div>
+    <section id="scene" className="landscape" aria-label="Animated YinYang EQ landscape">
+      <div className="scene-plate"><WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} /></div>
+    </section>
     {systemReduced ? null : <div className="scene-controls" role="group" aria-label="Landscape controls">
-      <button type="button" title={motionLabel} onClick={() => writeDisplayPreferences({ motion: running ? 'reduced' : 'auto' })}>
-        {running ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-        <span>{motionLabel}</span>
+      <div className="motion-setting">
+        <button type="button" aria-describedby="motion-benefit" onClick={() => writeDisplayPreferences({ motion: running ? 'reduced' : 'auto' })}>
+          {running ? <Pause aria-hidden="true"/> : <Play aria-hidden="true"/>}{motionLabel}
+        </button>
+        <small id="motion-benefit">Pausing saves battery and reduces processing.</small>
+      </div>
+      <button type="button" disabled={!running} onClick={() => writeDisplayPreferences({ welcomeFlights: !preferences.welcomeFlights })}>
+        {preferences.welcomeFlights ? <EyeOff aria-hidden="true"/> : <Eye aria-hidden="true"/>}{flightsLabel}
       </button>
-      {running && <button type="button" title={flightsLabel} onClick={() => writeDisplayPreferences({ welcomeFlights: !preferences.welcomeFlights })}>
-        {preferences.welcomeFlights ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
-        <span>{flightsLabel}</span>
-      </button>}
     </div>}
   </>;
 }
 
 export default function FirstListenHome() {
   const root = useRef<HTMLDivElement>(null);
+  const toolGrid = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const grid = toolGrid.current;
+    if (!grid) return;
+    let inView = false;
+    const sync = () => grid.toggleAttribute('data-playing', inView && !document.hidden);
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; sync(); });
+    observer.observe(grid);
+    document.addEventListener('visibilitychange', sync);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', sync); };
+  }, []);
   useEffect(() => {
     if (root.current) return mountSample(root.current);
   }, []);
   return <div ref={root} id="first-listen-home">
-  <section id="scene" className="landscape" aria-label="Red and blue YinYang EQ landscape with an aurora, sound waves and flying carpets">
-    <Panorama />
-  </section>
+  <Panorama />
   <div className="frame">
   <section className="first" aria-labelledby="home-title">
     <div className="intro">
@@ -75,11 +90,11 @@ export default function FirstListenHome() {
       </div>
     </section>
   </section>
-  <nav id="listening-tools" className="destination-grid" aria-label="Listening tools">
+  <nav ref={toolGrid} id="listening-tools" className="destination-grid" aria-label="Listening tools">
     {destinations.map(({ id, title, description, href }) => (
       <a key={id} href={href} className="destination-panel" data-tool={id}
         aria-labelledby={`tool-${id}`} aria-describedby={`tool-${id}-description`}>
-        <span className="destination-art" aria-hidden="true" />
+        <ToolIllustration tool={id} />
         <div className="destination-copy">
           <h2 id={`tool-${id}`}>{title}</h2>
           <p id={`tool-${id}-description`}>{description}</p>
@@ -87,6 +102,16 @@ export default function FirstListenHome() {
       </a>
     ))}
   </nav>
+  <section className="home-companion" aria-labelledby="home-companion-title">
+    <CompanionAppIcons/>
+    <h2 id="home-companion-title">Alternative Companion Android App for Qudelix 5K</h2>
+    <p className="home-companion-copy"><strong>Import and export EQ files right from your phone.</strong> Link EQ with Channel Match as a preset and compare two tunings blind at matched loudness.</p>
+    <div className="home-companion-actions">
+      <DownloadAppManager className="home-manager-download"/>
+      <a className="companion-more" href="/android">See app features</a>
+    </div>
+    <p className="home-companion-hint">Open App Manager on Android and choose YinYang Companion to install it.</p>
+  </section>
   <WelcomeWallpapers />
   </div>
 </div>;

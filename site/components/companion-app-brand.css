@@ -1,0 +1,23 @@
+.companion-app-icons {
+  display: flex;
+  gap: clamp(10px, 1.3vw, 18px);
+  align-items: start;
+  width: fit-content;
+}
+.companion-app-icons figure {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  margin: 0;
+}
+.companion-app-icons img {
+  display: block;
+  width: clamp(80px, 7.3vw, 104px);
+  height: auto;
+}
+.companion-app-icons figcaption {
+  color: #b8cccc;
+  font: 600 .85rem/1.25 Barlow, sans-serif;
+}
+.android-download { gap: .52em; }
+.android-download svg { flex: none; }

@@ -67,6 +67,7 @@ export const sharePages = [
   })),
   { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
+  { path: "/android", slug: "android", title: "Alternative Companion Android App for Qudelix 5K | YinYang EQ Lab", description: "Import and export EQ files on Android, pair listening presets with Channel Match, and compare them blind on the original Qudelix 5K.", image: { path: "/share/android-companion.jpg", width: 1200, height: 630, alt: "YinYang Companion App for Qudelix 5K with the Ridgelines app icon" } },
   { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
   { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
   { path: "/listeners/yinyangeq", slug: "journal", kind: "journal", kicker: "PUBLIC LISTENING JOURNAL", title: "YinYangEQ Listening Journal | YinYang EQ", description: "Tests, listening notes and gear the account owner chose to publish.", tagline: "Tests, notes and gear, published by choice." },
@@ -87,7 +88,7 @@ export const sharePages = [
 ];
 
 // Paths that only redirect elsewhere share the destination's card.
-const aliases = { "/personal-tuning": "/preference-tuning", "/home": "/" };
+const aliases = { "/android/download": "/android", "/personal-tuning": "/preference-tuning", "/home": "/" };
 
 // Shootout tabs and modes are query parameters on one route.
 const shootoutVariants = [

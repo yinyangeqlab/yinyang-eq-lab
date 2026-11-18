@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "533a77d3953d379207de83b83cc4a87a1466ba51",
+  "baseRevision": "01f4450beb8173ac3a96934695283bc9bcb451f4",
   "recordedLiveUpdate": 181,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -52,7 +52,7 @@
     },
     {
       "path": "THIRD_PARTY.md",
-      "sha256": "92bfc8dd3b686529726fbb748d666efed8d6e7e514cca25dc9b416b44af66fd1",
+      "sha256": "88fd4a1d821590b4885cddec6740ee2ce6decd085eb06ae6abeda1b6269a993f",
       "executable": false
     },
     {
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "da40a2d4b83da078af7f8d31b847a4f86ce0b7e8130a13b8d7bb88eaa86b1f7f",
+      "sha256": "ba50167ec371d44314315a5f4b3fdd334bdbe0d71e2aaa4a94620508821c9b5f",
       "executable": false
     },
     {
@@ -1422,7 +1422,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "9f5fc9e4b1907290b450f1798ccbfa43a6838dddb950179da7ec8d9f9fa4ec4c",
+      "sha256": "a224a0d71ab87c958bd74a11a09df9f2f36300d3958b96f38b15e0ad38959c2b",
       "executable": false
     },
     {
@@ -1432,7 +1432,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "b7f1ba24b0136084fab6fdb70777c0c713839b3f6cbbe535e2b9f693ff0ef8d3",
+      "sha256": "02ce73635628c5ccb8d0938dd5f2b6af5aecb0f14c79867bc42a76ad9108f572",
       "executable": false
     },
     {
@@ -1453,6 +1453,21 @@
     {
       "path": "package.json",
       "sha256": "00258994fa168a9de083a01167520391cf37507c1bdff64977a9ad9fa4260977",
+      "executable": false
+    },
+    {
+      "path": "public/android/companion.svg",
+      "sha256": "9b99811ab8fb0529942ca461ca2d4e8801c0db775413c71506a3340c44f2f2c8",
+      "executable": false
+    },
+    {
+      "path": "public/android/compare.webp",
+      "sha256": "ad8c0549da412bb17395d3350bcf77d01f75a8b473e62423c553bcebbfec47a8",
+      "executable": false
+    },
+    {
+      "path": "public/android/manager.svg",
+      "sha256": "15ffdc3f52855eda2df3c41b92221d96a44e60c3f9c88c58427b5678ffe5cc96",
       "executable": false
     },
     {
@@ -1583,6 +1598,11 @@
     {
       "path": "public/share/about.jpg",
       "sha256": "38e8cd9d533489e3290c4d27e2791f05f73fa653b1debcd05eb0f1f0abe6fc05",
+      "executable": false
+    },
+    {
+      "path": "public/share/android-companion.jpg",
+      "sha256": "9ddc4b30b1a260689733a720564217f20706b789adeba796d197830ca2f53fe9",
       "executable": false
     },
     {
@@ -2402,7 +2422,7 @@
     },
     {
       "path": "scripts/checks/application/check_share_preview_routes.mjs",
-      "sha256": "b5250fa9828e87ab054cc74373d70bf2dc93413078be7098b34d5dd871c6a5a9",
+      "sha256": "f3a1898e9ed171a181b54b2b785f0d21dd08c298364d6ad045ecb226093530c1",
       "executable": false
     },
     {
@@ -3036,6 +3056,21 @@
       "executable": false
     },
     {
+      "path": "site/app/android/download/route.ts",
+      "sha256": "7e6547eb2e8dc2b9938332fb1570c8715885f2ed378d9ac59646a086cb6a2de2",
+      "executable": false
+    },
+    {
+      "path": "site/app/android/page.tsx",
+      "sha256": "7e75f35f8063e99326799c6919cb802762defdab1db3cc3e32256f2a18d9ff51",
+      "executable": false
+    },
+    {
+      "path": "site/app/android/style.css",
+      "sha256": "8e58de283434b540a1d0676a469101e87d770734f801514ac9b71066dfcedc52",
+      "executable": false
+    },
+    {
       "path": "site/app/api/activity/route.ts",
       "sha256": "ea560718a4873f3e26549d3b47edeff5435d2d5c7d9f428b90fbef07ad583a0e",
       "executable": false
@@ -3537,7 +3572,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/page.tsx",
-      "sha256": "bb8a5740592c5364b399ac7b1f833f58fb7bd0bc47dd3deffddbcef481257101",
+      "sha256": "0994fd04897aace46657d791222e0f4260bd9201e783d57cc573becc2e40a9a1",
       "executable": false
     },
     {
@@ -3642,7 +3677,7 @@
     },
     {
       "path": "site/app/page.tsx",
-      "sha256": "c7449f2a8a36506bd9f6c628d9810898d757bddf04753d4b93c006bdf447ad96",
+      "sha256": "65845a9d07c3f627e5a8d4367f67319cbb6fa4608c402029e1eca16a5e0eb60e",
       "executable": false
     },
     {
@@ -3927,7 +3962,7 @@
     },
     {
       "path": "site/components/alpha-shell.tsx",
-      "sha256": "b2e0b7f86c7284c7786c5e56efba76aa926395f3a1fa619ebfba9fe2a445679f",
+      "sha256": "7ea9f39867d55eca44fdda0ae43a2ba9c72baefd3df5d1319f261f57e89e0b6c",
       "executable": false
     },
     {
@@ -3988,6 +4023,16 @@
     {
       "path": "site/components/community-sharing.tsx",
       "sha256": "b338f4e8c73bd9eb1cd85bf0bf6b3dd33f2e2f09a7a9eaa797acfa0de32c06ab",
+      "executable": false
+    },
+    {
+      "path": "site/components/companion-app-brand.css",
+      "sha256": "97c5de19c5a02ef325355ac9c958bdb8ee1325de91141e0c5ebbc3daa75fd8a5",
+      "executable": false
+    },
+    {
+      "path": "site/components/companion-app-brand.tsx",
+      "sha256": "185185fe456d4e2f393fc72b5b9c83332892d1ec320161b68bfd52ae712f099a",
       "executable": false
     },
     {
@@ -4112,7 +4157,7 @@
     },
     {
       "path": "site/components/first-listen/home.css",
-      "sha256": "f26c7aea4e25a41b7f6f95ec66296dc19624337b4471740bb06fed50b409f4a2",
+      "sha256": "03fe317d659010f31f115cfa6521bf89f3b23854ff6483d06af0e6a756db74ca",
       "executable": false
     },
     {
@@ -4123,6 +4168,16 @@
     {
       "path": "site/components/first-listen/site-layout.css",
       "sha256": "c004c37e4dcf712d03f8baf1d1cc0d725576ae9c77197533ec9e98599399be8f",
+      "executable": false
+    },
+    {
+      "path": "site/components/first-listen/tool-illustration.tsx",
+      "sha256": "c9915bd7cd59f0107ee09de76815c698773c84011e8ba41867b4af1a5ac5169e",
+      "executable": false
+    },
+    {
+      "path": "site/components/first-listen/tool-motion.css",
+      "sha256": "89a400be25e232e2d9899c50a810012884392262990b5fe4444bb8eee5b9cb6f",
       "executable": false
     },
     {
@@ -4482,7 +4537,7 @@
     },
     {
       "path": "site/components/site-data-footer.tsx",
-      "sha256": "e9380ca85f5be51599a615d45e98d678a8925b461b8c7d4c88728951e24131e8",
+      "sha256": "4f12ea0f1616980f211d9339f269175c607ad9da5fb8be5f2cf8ea2968f575d3",
       "executable": false
     },
     {
@@ -6082,12 +6137,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "86cf7075048a0ff9914d95a2967ecc07d41e042aa919efe2701d6198bc6843c4",
+      "sha256": "0ce6f38742aaf97cbc136f0f67d48ec7ee27c2bdbda2de33bc94e87e75f22a8b",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "f64f2ee3b22c3e96fd2d6d570ac208771825760f34fb332d4b1bff66eab39a53",
+      "sha256": "392018cdcfb2c42947842ef33a873ba59b736a96c5f783f7dbffad6c759409d4",
       "executable": false
     },
     {
@@ -6142,7 +6197,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "9c2af73e4df04f3d9c1e1098ca4a99c3d737663a9a62bac44cc220a97e26c56d",
+      "sha256": "ad501986f699981ee42e8f4c8731f9afab221532192022935e157b3b6afe9bf2",
       "executable": false
     },
     {

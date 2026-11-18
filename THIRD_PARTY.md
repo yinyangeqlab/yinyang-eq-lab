@@ -26,3 +26,7 @@ The application uses PEQdB autoeq-c, Copyright (C) 2026 PEQdB Inc., LGPL-3.0-or-
 ## Potion 2M site help model
 
 The optional semantic help matcher uses MinishLab's [Potion 2M model](https://huggingface.co/minishlab/potion-base-2M/tree/389b9f64be5aa4ae7a6bc6fe95ef20ce485ae5da), published under MIT. The application bundles a quantized derivative as a separate static asset. The [Model2Vec MIT notice](site/vendor/potion-2m-model2vec.LICENSE) accompanies the asset. It uses the model's token embeddings and does not include a remote inference client.
+
+## Android robot
+
+The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the [Creative Commons 3.0 Attribution License](https://creativecommons.org/licenses/by/3.0/). [Android brand guidelines](https://developer.android.com/distribute/marketing-tools/brand-guidelines)
