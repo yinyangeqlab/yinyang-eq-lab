@@ -55,11 +55,48 @@ function verifySourceOnlyRecovery(state, label, recordPath, workspace, privateRo
   assert.ok(isDeepStrictEqual(metadata.expectedDeployment, provider.expectedDeployment), 'Recovery metadata refers to a different Worker version');
 }
 
+function verifyPreparedCaptureSource(state, record, registration, workspace, capturedAt, deployedAt) {
+  const capturedSource = registration.capturedSourceCommit;
+  if (record.capturedSourceCommit !== capturedSource) return false;
+  if (capturedSource === state.baselineCommit) return true;
+
+  const refresh = registration.interveningSourceRefresh;
+  if (!refresh) return false;
+  const chain = refresh.chain ?? [refresh];
+  if (!Array.isArray(chain) || chain.length === 0) return false;
+  const previousUpdate = state.update - 1;
+  const prefix = `docs/releases/update${previousUpdate}`;
+  const original = read(workspace, `${prefix}-verification.json`).deploymentVerification;
+  if (original.deploymentVerified !== true || original.update !== previousUpdate || original.revision !== capturedSource ||
+      !(timestamp(original.at) <= capturedAt)) return false;
+  let previousSource = capturedSource;
+  let previousTime = capturedAt;
+  let refreshPath;
+  for (const step of chain) {
+    if (typeof step?.slug !== 'string' || !/^[a-z]+(?:-[a-z]+)*$/.test(step.slug)) return false;
+    refreshPath = `${prefix}-${step.slug}-verification.json`;
+    const intervening = read(workspace, refreshPath).deploymentVerification;
+    const activatedAt = timestamp(step.activatedAt);
+    const verifiedAt = timestamp(intervening.at);
+    const matchingFingerprint = key => /^[a-f0-9]{64}$/.test(refresh.captured?.[key]) &&
+      refresh.captured[key] === step.current?.[key];
+    if (intervening.deploymentVerified !== true || intervening.update !== previousUpdate || !/^[a-f0-9]{40}$/.test(intervening.revision) ||
+        intervening.verifiedPreviousSourceCommit !== previousSource || !isDeepStrictEqual(intervening.migrations, []) ||
+        intervening.existingBindingsUnchanged !== true || intervening.nonAppResourcesUnchanged !== true ||
+        !['databaseSchema', 'migrations', 'media', 'recoveryModule'].every(matchingFingerprint) ||
+        !(previousTime < activatedAt && activatedAt <= verifiedAt && verifiedAt <= deployedAt)) return false;
+    previousSource = intervening.revision;
+    previousTime = verifiedAt;
+  }
+  return previousSource === state.baselineCommit && record.interveningDeploymentEvidence === refreshPath;
+}
+
 function verifyDataExportRecovery(state, recordPath, workspace, privateRoot, provider, artifacts) {
   const recovery = state.recoveryProcess;
   assert.equal(recovery.releaseMetadataHandover.evidence, recordPath,
     'The owner release record must reference the matching data-export recovery receipt');
   const record = read(workspace, recordPath);
+  const prepared = record.preparedBeforeDeployment === true;
   assert.ok(record.update === state.update && record.sourceCommit === state.sourceCommit &&
     record.verifiedAt === recovery.sourceBaselineVerifiedAt &&
     recovery.sourceBaselineUpdate === state.update && recovery.matchingCurrentReleaseBaseline === true &&
@@ -69,12 +106,22 @@ function verifyDataExportRecovery(state, recordPath, workspace, privateRoot, pro
     record.newDataSnapshots === recovery.releaseMetadataHandover.newDataSnapshots &&
     record.independentDownloadDecryptionVerified === true && record.fullReconstructionVerified === true &&
     record.hostedValidationPassed === true && record.hostedValidateOnlyConfirmed === true &&
-    record.preMigrationSnapshotPreserved === true,
+    (prepared ? record.priorRecoveryPointsPreserved === true : record.preMigrationSnapshotPreserved === true),
   'Data export, independent reconstruction, and hosted validation must have passed');
 
-  const registration = read(workspace, `${artifacts}/post-migration-recovery.private.json`);
+  const registrationFile = prepared ? 'prepared-recovery.private.json' : 'post-migration-recovery.private.json';
+  const registration = read(workspace, `${artifacts}/${registrationFile}`);
   const { snapshot } = registration;
   const pointer = provider.baseline;
+  const capturedAt = timestamp(snapshot?.createdAt);
+  const deployedAt = timestamp(state.verifiedAt);
+  const verifiedCapture = prepared
+    ? registration.preparedBeforeDeployment === true && registration.schemaUnchanged === true &&
+      registration.priorRecoveryPointsPreserved === true && record.preparedSnapshotAt === snapshot?.createdAt &&
+      verifyPreparedCaptureSource(state, record, registration, workspace, capturedAt, deployedAt) &&
+      capturedAt <= deployedAt && deployedAt <= timestamp(registration.registeredAt)
+    : registration.preMigrationBackupPreserved === true && snapshot?.createdAt === record.postMigrationSnapshotAt &&
+      capturedAt >= deployedAt;
   assert.ok(!provider.releaseBaseline && typeof snapshot?.id === 'string' &&
     /^[A-Za-z0-9-]+$/.test(snapshot.id) &&
     typeof snapshot.snapshotObject === 'string' && snapshot.snapshotObject &&
@@ -83,12 +130,9 @@ function verifyDataExportRecovery(state, recordPath, workspace, privateRoot, pro
     registration.update === state.update && registration.sourceCommit === state.sourceCommit &&
     registration.databaseExportPerformed === true && registration.newDataSnapshots === record.newDataSnapshots &&
     registration.sourceBuildVerified === true && registration.fullReconstructionVerified === true &&
-    registration.preMigrationBackupPreserved === true &&
-    snapshot.verified === true && snapshot.liveUpdate === state.update &&
-    snapshot.createdAt === record.postMigrationSnapshotAt &&
+    verifiedCapture && snapshot.verified === true && snapshot.liveUpdate === state.update &&
     timestamp(record.verifiedAt) >= timestamp(registration.registeredAt) &&
-    timestamp(registration.registeredAt) >= timestamp(snapshot.createdAt) &&
-    timestamp(snapshot.createdAt) >= timestamp(state.verifiedAt),
+    timestamp(registration.registeredAt) >= capturedAt,
   'Private data-export recovery registration does not match the verified live release');
   const index = read(privateRoot, 'index.json');
   assert.ok(!index.releaseBaseline && isDeepStrictEqual(index.cloudBaseline, snapshot) &&

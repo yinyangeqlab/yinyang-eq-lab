@@ -1,9 +1,15 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update178**, source `d044bf6f0e8fd967567fa6fc31124d3748924fa5`.
+Recorded deployment: **update179**, source `ec2e129be56c577ab6a8052dd54f50c3f13a9639`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update179 repository layout and restore
+
+The verified update179 rollout retains the existing hosting safeguards and public URLs. Production checks covered the IEM guide PDF, its legacy redirect, the guide assets, and the Version page.
+
+[Deployment verification](../releases/update179-verification.json) · [Recovery verification](../releases/update179-recovery-verification.json)
 
 ## Update178 Version page and mobile Help refresh
 

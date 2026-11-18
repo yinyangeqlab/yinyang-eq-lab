@@ -10,8 +10,17 @@ if(existsSync(out))throw Error('Local worker assembly exists; preserve it or rem
 mkdirSync(out,{mode:0o700});
 function copyJS(dir){for(const e of readdirSync(dir,{withFileTypes:true})){const p=resolve(dir,e.name);if(e.isDirectory())copyJS(p);else if(e.isFile()&&e.name.endsWith('.js')){const dest=resolve(out,relative(server,p));mkdirSync(dirname(dest),{recursive:true});copyFileSync(p,dest)}}}
 copyJS(server);
-for(const [source,target] of [['infra/pulumi/private-gate.mjs','gate.mjs'],['infra/pulumi/shootout-failure-logger.mjs','shootout-failure-logger.mjs'],['infra/pulumi/abuse-controls.mjs','abuse-controls.mjs'],['infra/pulumi/public-assets.mjs','public-assets.mjs'],['site/lib/invite-settings.mjs','invite-settings.mjs'],['site/lib/browser-pairing.mjs','browser-pairing.mjs'],['site/lib/browser-sync.mjs','browser-sync.mjs'],['site/lib/worker-media-route.mjs','media-route.mjs'],['site/lib/worker-media-response.mjs','media-response.mjs']])copyFileSync(resolve(root,source),resolve(out,target));
-for(const [source,target] of [['site/lib/service-status.ts','service-status.mjs'],['site/lib/listening-audio.ts','media-stream.mjs']])writeFileSync(resolve(out,target),ts.transpileModule(readFileSync(resolve(root,source),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText);
+for(const [source,target] of [['infra/pulumi/private-gate.mjs','gate.mjs'],['infra/pulumi/shootout-failure-logger.mjs','shootout-failure-logger.mjs'],['infra/pulumi/abuse-controls.mjs','abuse-controls.mjs'],['infra/pulumi/public-assets.mjs','public-assets.mjs'],['site/lib/invite-settings.mjs','invite-settings.mjs'],['site/lib/browser-pairing.mjs','browser-pairing.mjs'],...['account-sync-notice','account-preferences','browser-sync','share-pages','audio-facts'].map(name=>['site/lib/'+name+'.mjs',name+'.mjs']),['site/lib/worker-media-route.mjs','media-route.mjs'],['site/lib/worker-media-response.mjs','media-response.mjs']])copyFileSync(resolve(root,source),resolve(out,target));
+for(const [source,target] of [
+ ['site/lib/service-status.ts','service-status.mjs'],
+ ['site/lib/maintenance-options.ts','maintenance-options.mjs'],
+ ['site/lib/listening-audio.ts','media-stream.mjs'],
+]){
+ const {outputText}=ts.transpileModule(readFileSync(resolve(root,source),'utf8'),{
+  compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022},
+ });
+ writeFileSync(resolve(out,target),outputText.replaceAll('@/lib/maintenance-options','./maintenance-options.mjs'));
+}
 writeFileSync(resolve(out,'media-manifest.mjs'),'export default '+readFileSync(resolve(root,'site/data/listening-pool-audio-manifest.json'),'utf8')+';\n');
 copyFileSync(resolve(root,'.dev.vars'),resolve(out,'.dev.vars'));chmodSync(resolve(out,'.dev.vars'),0o600);
 const binding=JSON.parse(readFileSync(resolve(root,'scripts/recovery/wrangler.local.json'),'utf8')).d1_databases;

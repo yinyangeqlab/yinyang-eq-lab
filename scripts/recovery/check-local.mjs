@@ -13,12 +13,29 @@ const research=await fetch(base+'/api/research',{headers:auth});assert.equal(res
 const range=await fetch(base+'/api/listening-audio/dreams-mastered',{headers:{...auth,Range:'bytes=0-63'}});assert.equal(range.status,206);const manifest=JSON.parse(readFileSync(dir+'/site/data/listening-pool-audio-manifest.json'));const file=dir+'/public'+manifest['dreams-mastered'].parts[0].path;assert.deepEqual(Buffer.from(await range.arrayBuffer()),readFileSync(file).subarray(0,64));proof.checks.push('Actual protected audio range bytes match recovered recording');
 for(const path of ['/','/shootout'])assert.equal((await fetch(base+path,{headers:auth})).status,200);
 assert.equal((await fetch(base+'/sync',{headers:auth})).status,403);proof.checks.push('Welcome and Shootout render; owner is correctly excluded from tester-only Sync');
-const invite=await (await fetch(base+'/__private/admin/invites',{method:'POST',headers:{...auth,Origin:base,'Content-Type':'application/json'},body:JSON.stringify({label:'Disposable local recovery tester'})})).json();assert(invite.code);
-let jar=new Map();function capture(r){for(const c of r.headers.getSetCookie()){const s=c.split(';')[0],i=s.indexOf('=');jar.set(s.slice(0,i),s.slice(i+1))}}
-async function tester(path,options={}){const h={...headers,Cookie:[...jar].map(([k,v])=>k+'='+v).join('; '),...options.headers};if(options.method)h.Origin=base;const r=await fetch(base+path,{...options,headers:h,redirect:'manual'});capture(r);return r}
-assert.equal((await tester('/access',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code:invite.code,return_to:encodeURIComponent('/shootout')})})).status,303);
-assert.equal((await tester('/api/my-data')).status,200);
-assert.equal((await tester('/api/my-data',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({submissionsEnabled:true,shareMusic:false,acknowledged:true,noticeVersion:'2026-10-18-v7'})})).status,200);
-assert.equal((await tester('/sync')).status,200);proof.checks.push('A newly issued local tester credential works with fresh participation consent and Sync; old credentials remain invalid');
-assert.equal((await tester('/api/my-data',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({scope:'all',confirmation:'DELETE ALL MY DATA'})})).status,200);proof.checks.push('Disposable local tester erased after verification');
+const inviteSystem=base+'/__private/admin/invite-system';
+const initial=await fetch(inviteSystem,{headers:auth});
+assert.equal(initial.status,200);
+const {enabled}=await initial.json();
+const adminJson={...auth,Origin:base,'Content-Type':'application/json'};
+async function setInvites(value){
+  const response=await fetch(inviteSystem,{method:'PATCH',headers:adminJson,body:JSON.stringify({enabled:value})});
+  assert.equal(response.status,200);
+  assert.equal((await response.json()).enabled,value);
+}
+if(!enabled) await setInvites(true);
+try {
+  const issued=await fetch(base+'/__private/admin/invites',{method:'POST',headers:adminJson,body:JSON.stringify({label:'Disposable local recovery tester'})});
+  assert.equal(issued.status,201);
+  const invite=await issued.json();assert(invite.code);
+  let jar=new Map();function capture(r){for(const c of r.headers.getSetCookie()){const s=c.split(';')[0],i=s.indexOf('=');jar.set(s.slice(0,i),s.slice(i+1))}}
+  async function tester(path,options={}){const h={...headers,Cookie:[...jar].map(([k,v])=>k+'='+v).join('; '),...options.headers};if(options.method)h.Origin=base;const r=await fetch(base+path,{...options,headers:h,redirect:'manual'});capture(r);return r}
+  assert.equal((await tester('/access',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code:invite.code,return_to:encodeURIComponent('/shootout')})})).status,303);
+  assert.equal((await tester('/api/my-data')).status,200);
+  assert.equal((await tester('/api/my-data',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({submissionsEnabled:true,shareMusic:false,acknowledged:true,noticeVersion:'2026-10-18-v7'})})).status,200);
+  assert.equal((await tester('/sync')).status,200);proof.checks.push('A newly issued local tester credential works with fresh participation consent and Sync; old credentials remain invalid');
+  assert.equal((await tester('/api/my-data',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({scope:'all',confirmation:'DELETE ALL MY DATA'})})).status,200);proof.checks.push('Disposable local tester erased after verification');
+} finally {
+  if(!enabled) await setInvites(false);
+}
 writeFileSync(dir+'/.recovery-local/http-check.json',JSON.stringify(proof,null,2)+'\n');console.log(proof);

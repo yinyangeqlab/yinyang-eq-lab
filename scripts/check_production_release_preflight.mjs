@@ -168,6 +168,72 @@ try {
   const index = { cloudBaseline: snapshotReceipt, snapshots: [snapshotReceipt] };
   write(privateRoot, 'index.json', index);
   assert.deepEqual(await verify(), { update: state.update });
+
+  const preparedSnapshot = { ...snapshotReceipt, createdAt: '2026-01-01T00:00:00Z' };
+  const preparedRecord = {
+    ...exportRecord, postMigrationSnapshotAt: undefined, preMigrationSnapshotPreserved: undefined,
+    preparedBeforeDeployment: true, priorRecoveryPointsPreserved: true,
+    capturedSourceCommit: state.baselineCommit, preparedSnapshotAt: preparedSnapshot.createdAt,
+  };
+  const preparedRegistration = {
+    update: state.update, sourceCommit: state.sourceCommit, registeredAt: verifiedAt,
+    snapshot: preparedSnapshot, newDataSnapshots: 1, databaseExportPerformed: true,
+    sourceBuildVerified: true, fullReconstructionVerified: true, preparedBeforeDeployment: true,
+    schemaUnchanged: true, priorRecoveryPointsPreserved: true, capturedSourceCommit: state.baselineCommit,
+  };
+  const preparedPath = `${snapshot}/artifacts/${artifact}/prepared-recovery.private.json`;
+  write(workspace, recoveryPath, preparedRecord);
+  write(workspace, preparedPath, preparedRegistration);
+  write(privateRoot, 'index.json', { cloudBaseline: preparedSnapshot, snapshots: [preparedSnapshot] });
+  assert.deepEqual(await verify(), { update: state.update });
+  write(workspace, preparedPath, { ...preparedRegistration, schemaUnchanged: false });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+  write(workspace, preparedPath, { ...preparedRegistration, capturedSourceCommit: 'a'.repeat(40) });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+
+  const captureSource = 'a'.repeat(40);
+  const previousUpdate = state.update - 1;
+  const interveningPath = `docs/releases/update${previousUpdate}-version-page-fixes-verification.json`;
+  const fingerprints = Object.fromEntries(['databaseSchema', 'migrations', 'media', 'recoveryModule'].map(key => [key, 'a'.repeat(64)]));
+  const bridge = { slug: 'version-page-fixes', activatedAt: '2026-01-02T00:00:00Z', captured: fingerprints, current: fingerprints };
+  const originalDeployment = { deploymentVerified: true, update: previousUpdate, revision: captureSource, at: '2025-12-31T00:00:00Z' };
+  const interveningDeployment = {
+    deploymentVerified: true, update: previousUpdate, revision: state.baselineCommit,
+    verifiedPreviousSourceCommit: captureSource, migrations: [], existingBindingsUnchanged: true,
+    nonAppResourcesUnchanged: true, at: '2026-01-02T00:01:00Z',
+  };
+  const linkedRegistration = { ...preparedRegistration, capturedSourceCommit: captureSource, interveningSourceRefresh: bridge };
+  write(workspace, `docs/releases/update${previousUpdate}-verification.json`, { deploymentVerification: originalDeployment });
+  write(workspace, interveningPath, { deploymentVerification: interveningDeployment });
+  write(workspace, recoveryPath, { ...preparedRecord, capturedSourceCommit: captureSource, interveningDeploymentEvidence: interveningPath });
+  write(workspace, preparedPath, linkedRegistration);
+  assert.deepEqual(await verify(), { update: state.update });
+  write(workspace, preparedPath, { ...linkedRegistration, interveningSourceRefresh: { ...bridge, current: { ...fingerprints, databaseSchema: 'b'.repeat(64) } } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+  write(workspace, preparedPath, { ...linkedRegistration, interveningSourceRefresh: { ...bridge, activatedAt: '2025-12-31T23:59:59Z' } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+  write(workspace, preparedPath, linkedRegistration);
+  write(workspace, interveningPath, { deploymentVerification: { ...interveningDeployment, migrations: ['unchecked.sql'] } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+
+  const intermediateSource = 'c'.repeat(40);
+  const secondPath = `docs/releases/update${previousUpdate}-mobile-compare-help-verification.json`;
+  write(workspace, interveningPath, { deploymentVerification: { ...interveningDeployment, revision: intermediateSource } });
+  const mobileHelp = { ...interveningDeployment, verifiedPreviousSourceCommit: intermediateSource, at: '2026-01-03T00:01:00Z' };
+  write(workspace, secondPath, { deploymentVerification: mobileHelp });
+  const secondRefresh = { slug: 'mobile-compare-help', activatedAt: '2026-01-03T00:00:00Z', current: fingerprints };
+  const chain = { captured: fingerprints, chain: [bridge, secondRefresh] };
+  write(workspace, recoveryPath, { ...preparedRecord, capturedSourceCommit: captureSource, interveningDeploymentEvidence: secondPath });
+  write(workspace, preparedPath, { ...linkedRegistration, interveningSourceRefresh: chain });
+  assert.deepEqual(await verify(), { update: state.update });
+  write(workspace, secondPath, { deploymentVerification: { ...mobileHelp, verifiedPreviousSourceCommit: captureSource } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+  write(workspace, secondPath, { deploymentVerification: mobileHelp });
+  write(workspace, preparedPath, { ...linkedRegistration, interveningSourceRefresh: { ...chain, chain: [secondRefresh, bridge] } });
+  await assert.rejects(verify(), /Private data-export recovery registration does not match/);
+
+  write(workspace, recoveryPath, exportRecord);
+
   write(privateRoot, 'index.json', { ...index, snapshots: [] });
   await assert.rejects(verify(), /differs from the recovery index/);
   write(privateRoot, 'index.json', index);

@@ -1,54 +1,67 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 178,
+  "update": 179,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-18T06:42:52Z",
-  "sourceCommit": "d044bf6f0e8fd967567fa6fc31124d3748924fa5",
-  "sourceBranch": "",
-  "baselineCommit": "4d34fdcf52aa60ac4739eadc4a3cd7033f764350",
-  "evidence": "docs/releases/update178-mobile-compare-help-verification.json",
+  "verifiedAt": "2026-11-18T08:46:28.193676Z",
+  "sourceCommit": "ec2e129be56c577ab6a8052dd54f50c3f13a9639",
+  "baselineCommit": "d044bf6f0e8fd967567fa6fc31124d3748924fa5",
+  "evidence": "docs/releases/update179-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
-    "active": false
+    "activatedAt": "2026-10-19T04:58:44.142Z",
+    "expiresAt": 1792389524011,
+    "expiresISO": "2026-10-19T05:58:44.011Z",
+    "expiresPacific": "Oct 18, 2026, 10:58 PM",
+    "message": "Major updates are underway. Shootouts are unavailable for one hour. Listening Pool and Preference Tuning remain available. Your saved results are preserved.",
+    "active": false,
+    "pauseSubmissions": false,
+    "researchRecordsChanged": false,
+    "verificationTime": "2026-10-20T02:35:34.085141+00:00",
+    "scope": [
+      "shootouts"
+    ],
+    "automaticExpiry": true,
+    "originalExpiryPreserved": true
   },
   "ownerOnlyMaintenance": {
-    "enabled": false
+    "enabled": false,
+    "automaticExpiry": false,
+    "reopeningAuthorizedByOwner": true,
+    "adminLogin": "https://yinyangeq.com/admin-login",
+    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "deploymentRefresh": {
-    "slug": "mobile-compare-help",
-    "previousEvidence": "docs/releases/update178-version-page-fixes-verification.json"
-  },
+  "sourceBranch": "",
   "gitSource": {
-    "implementationCommit": "d044bf6f0e8fd967567fa6fc31124d3748924fa5",
+    "implementationCommit": "ec2e129be56c577ab6a8052dd54f50c3f13a9639",
     "branch": "",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update178",
-    "publishedSourceCommit": "364dd980d5550a11218b3696d913ca5a64b8ddb6",
-    "publicationVerification": "docs/releases/update178-publication.json"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 178,
-    "sourceBaselineVerifiedAt": "2026-11-18T07:05:49Z",
-    "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "update178SourceOnlyHandover": {
-      "metadataOnly": true,
-      "databaseExport": false,
-      "newDataSnapshots": 0,
-      "registrationPending": false,
-      "sourceCommit": "d044bf6f0e8fd967567fa6fc31124d3748924fa5",
-      "evidence": "docs/releases/update178-mobile-compare-help-recovery-verification.json"
-    }
+    "sourceOnlyHandoverPending": false,
+    "releaseMetadataHandover": {
+      "update": 179,
+      "dataExportPerformed": true,
+      "newDataSnapshots": 1,
+      "matchingPreparedSourceCommit": "ec2e129be56c577ab6a8052dd54f50c3f13a9639",
+      "registered": true,
+      "hostedValidationPassed": true,
+      "independentDownloadDecryptionVerified": true,
+      "fullReconstructionVerified": true,
+      "evidence": "docs/releases/update179-recovery-verification.json",
+      "priorCaptureReused": true,
+      "newExportPerformed": false
+    },
+    "sourceBaselineUpdate": 179,
+    "sourceBaselineVerifiedAt": "2026-11-18T08:49:05.291689+00:00",
+    "dailyWorkflowActive": true
   },
   "documentationFiles": [],
   "scope": "Public release record. The owner retains the immutable deployment and recovery inputs."

@@ -1,9 +1,15 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update178**, source `d044bf6f0e8fd967567fa6fc31124d3748924fa5`.
+Recorded deployment: **update179**, source `ec2e129be56c577ab6a8052dd54f50c3f13a9639`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update179 repository layout and restore
+
+Build from the repository root. The app lives in `site/`, and the published source manifest tracks the 16-entry layout. The application and AutoEQ checks passed for the deployed revision.
+
+[Deployment verification](releases/update179-verification.json) · [Recovery verification](releases/update179-recovery-verification.json)
 
 ## Update178 Version page and mobile Help refresh
 

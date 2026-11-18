@@ -5,18 +5,18 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update178 |
-| Source | `d044bf6f0e8fd967567fa6fc31124d3748924fa5` |
-| Verified at | 2026-11-18T06:42:52Z |
-| Deployment | Verified by the [deployment receipt](../releases/update178-mobile-compare-help-verification.json) |
+| Release | update179 |
+| Source | `ec2e129be56c577ab6a8052dd54f50c3f13a9639` |
+| Verified at | 2026-11-18T08:46:28.193676Z |
+| Deployment | Verified by the [deployment receipt](../releases/update179-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Reviewed source published as `364dd980d5550a11218b3696d913ca5a64b8ddb6`; publication authorized in this record |
-| Recovery | Matching source-only metadata handover recorded as verified |
+| Publication | Source recorded as pushed; publication authorized in this record |
+| Recovery | Matching recovery registration recorded as verified, including a separately recorded data export |
 
-Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
+Source/build metadata registration is separate from a fresh data export. The recorded export has its own capture time and coverage; registration does not make it a new live-data capture. Generating this view performs no recovery operation.
 
 The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use the owner's release record. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](../rebuild-manifest.json).
 
-The deployment receipt records 126 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
+The deployment receipt records 127 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
 
 Start new work at [docs/HANDOFF.md](../HANDOFF.md) and [docs/ENGINEERING.md](../ENGINEERING.md). The [historical source inventory](../history/foundation-20261031/README.md) records earlier source inputs.

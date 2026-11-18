@@ -1,9 +1,15 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update178**, source `d044bf6f0e8fd967567fa6fc31124d3748924fa5`.
+Recorded deployment: **update179**, source `ec2e129be56c577ab6a8052dd54f50c3f13a9639`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update179 repository layout and restore
+
+The public repository has 16 top-level entries. The app lives in `site/`, recovery tools in `scripts/recovery/`, and hosting infrastructure in `infra/`. The deployed revision keeps mobile Help, Saved EQ blind comparisons, and the Version refresh with the published update178 link. The application and AutoEQ checks passed, and the matching encrypted recovery point passed a full restore.
+
+[Deployment verification](releases/update179-verification.json) · [Recovery verification](releases/update179-recovery-verification.json)
 
 ## Update178 Version page and mobile Help refresh
 

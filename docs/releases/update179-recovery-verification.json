@@ -1,0 +1,20 @@
+{
+  "update": 179,
+  "sourceCommit": "ec2e129be56c577ab6a8052dd54f50c3f13a9639",
+  "verifiedAt": "2026-11-18T08:49:05.291689+00:00",
+  "databaseExportPerformed": true,
+  "newDataSnapshots": 1,
+  "preparedBeforeDeployment": true,
+  "priorRecoveryPointsPreserved": true,
+  "capturedSourceCommit": "4832c914ca0647f4c8b324332fb1b1c22a303dc3",
+  "interveningDeploymentEvidence": "docs/releases/update178-mobile-compare-help-verification.json",
+  "priorCaptureReused": true,
+  "newExportPerformed": false,
+  "preparedSnapshotAt": "2026-11-18T05:35:54.726188+00:00",
+  "independentDownloadDecryptionVerified": true,
+  "fullReconstructionVerified": true,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "reusedMediaFiles": 362,
+  "newMediaFiles": 0
+}

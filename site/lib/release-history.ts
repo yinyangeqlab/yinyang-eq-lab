@@ -11,7 +11,7 @@ export type ReleaseNotes = {
   };
 };
 
-export const candidateChanges = [
+const update178Changes = [
   "On mobile, Help opens above the blind comparison so playback, voting, and results stay within reach.",
   "Find songs in smaller batches and see which preset was A and B for each song after reveal.",
   "Select two presets in Saved EQs and choose Compare blind. Both open in Blind EQ Comparison without requiring a target or another upload.",
@@ -304,11 +304,13 @@ const update132Changes = [
 
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
+export const candidateChanges = [
+  "Organized the repository into 16 top-level entries and updated the restore tools for the new layout.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  {
-    update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: candidateChanges,
-    github: { commit: "364dd980d5550a11218b3696d913ca5a64b8ddb6", releaseTag: "update178" },
-  },
+  { update: 179, date: "2026-11-17", title: "Repository layout and restore", changes: candidateChanges },
+  { update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: update178Changes, github: { commit: "364dd980d5550a11218b3696d913ca5a64b8ddb6", releaseTag: "update178" } },
   { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes },
   { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },
   {
