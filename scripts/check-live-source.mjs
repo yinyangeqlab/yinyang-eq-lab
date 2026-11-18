@@ -4,9 +4,10 @@ import {readFileSync,readdirSync,existsSync,lstatSync} from 'node:fs';
 import {resolve,join,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {releaseRecordRelativePath} from './project-paths.mjs';
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
 if(process.argv.includes('--source-only')){await import('./check-rebuild-source.mjs');process.exit(process.exitCode || 0);}
-const state=JSON.parse(readFileSync(join(root,'LIVE_RELEASE.json'),'utf8'));
+const state=JSON.parse(readFileSync(join(root,releaseRecordRelativePath(root)),'utf8'));
 const groups=['applicationFiles','infrastructureFiles','documentationFiles','buildFiles','localConfigurationFiles'];
 if(process.argv.includes('--assets'))groups.push('assetFiles');
 const snapshot=process.argv.includes('--snapshot');

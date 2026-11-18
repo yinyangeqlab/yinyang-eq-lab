@@ -10,10 +10,11 @@ import { candidateChanges, releaseHistory } from '../site/lib/release-history.ts
 import { buildLabel, bugReportUrl, releaseInfo, repositoryUrl } from '../site/lib/release-info.ts';
 import { createPublishedBuildLookup } from '../site/lib/github-release.ts';
 import { refreshSource } from './refresh-rebuild-manifest.mjs';
+import { releaseRecordPath } from './project-paths.mjs';
 import { fileRecord, sha256, sourceFiles, sourceIdentity } from './verification/source.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const live = JSON.parse(readFileSync(join(root, 'LIVE_RELEASE.json'), 'utf8'));
+const live = JSON.parse(readFileSync(join(root, releaseRecordPath), 'utf8'));
 const build = releaseInfo.build;
 assert.ok(build.update === live.update || build.update === live.update + 1);
 if (build.preview) {
@@ -167,7 +168,7 @@ try {
     if (originalCaches) Object.defineProperty(globalThis, 'caches', originalCaches);
     else delete globalThis.caches;
   }
-  const state = json(join(root, 'LIVE_RELEASE.json')), receipt = json(join(root, state.evidence));
+  const state = json(join(root, releaseRecordPath)), receipt = json(join(root, state.evidence));
   test('current release contract', () => validateRelease(state, receipt));
   test('deployment refresh preserves previous receipts on successive refreshes', () => {
     const refreshed = clone(state);
@@ -260,7 +261,7 @@ try {
     assert.throws(() => validateRelease(value, receipt), /publication authorization/);
   });
   const docs = join(temp, 'docs-fixture');
-  writeJson(join(docs, 'LIVE_RELEASE.json'), state); writeJson(join(docs, state.evidence), receipt);
+  writeJson(join(docs, releaseRecordPath), state); writeJson(join(docs, state.evidence), receipt);
   if (state.deploymentRefresh) {
     const previous = state.deploymentRefresh.previousEvidence;
     writeJson(join(docs, previous), json(join(root, previous)));
@@ -273,8 +274,17 @@ try {
     assert.equal(readFileSync(join(docs, stateViewPath), 'utf8'), 'stale\n');
     assert.equal(verifyOrRefresh(docs, true).changed.length, handoffs.length + 1);
     verifyOrRefresh(docs); assert.equal(verifyOrRefresh(docs, true).changed.length, 0);
+    assert.match(readFileSync(join(docs, stateViewPath), 'utf8'), /\[LIVE_RELEASE\.json\]\(LIVE_RELEASE\.json\)/);
     for (const path of handoffs) assert.match(readFileSync(join(docs, path), 'utf8'), /Keep this text/);
     assert.equal(readFileSync(join(docs, state.evidence), 'utf8'), receiptBefore);
+  });
+  test('two release records are rejected before generated files are written', () => {
+    const legacyRecord = join(docs, 'LIVE_RELEASE.json');
+    const before = readFileSync(join(docs, stateViewPath));
+    writeJson(legacyRecord, state);
+    assert.throws(() => verifyOrRefresh(docs, true), /Both release record paths exist/);
+    assert.deepEqual(readFileSync(join(docs, stateViewPath)), before);
+    rmSync(legacyRecord);
   });
   test('malformed handoff prevents partial refresh', () => {
     write(join(docs, stateViewPath), 'stale\n'); write(join(docs, handoffs[1]), 'missing markers');
@@ -295,6 +305,7 @@ try {
     assert.equal(verifyOrRefresh(older, true).changed.length, legacyPaths.length + 1);
     assert.match(readFileSync(join(older, 'HOSTING_HANDOFF.md'), 'utf8'), /\(LIVE_STATE\.md\)/);
     assert.match(readFileSync(join(older, 'docs/HANDOFF.md'), 'utf8'), /\(\.\.\/LIVE_STATE\.md\)/);
+    assert.match(readFileSync(join(older, 'LIVE_STATE.md'), 'utf8'), /\[LIVE_RELEASE\.json\]\(LIVE_RELEASE\.json\)/);
     verifyOrRefresh(older);
     write(join(older, stateViewPath), 'stale\n');
     assert.throws(() => verifyOrRefresh(older, true), /both release-view layouts/);
@@ -319,7 +330,7 @@ try {
   git('config', 'user.name', 'Yin Yang EQ Lab');
   git('config', 'user.email', '343846436+yinyangeqlab@users.noreply.github.com');
   write(join(fixture, '.gitignore'), 'artifacts/\n');
-  copyFileSync(join(root, '.node-version'), join(fixture, '.node-version'));
+  copyFileSync(join(root, '.nvmrc'), join(fixture, '.nvmrc'));
   writeJson(join(fixture, 'package.json'), { type: 'module', packageManager: json(join(root, 'package.json')).packageManager });
   write(join(fixture, 'scripts/pass.mjs'), 'console.log("fixture passed");\n');
   write(join(fixture, 'scripts/fail.mjs'), 'process.exitCode = 7;\n');
@@ -368,18 +379,18 @@ try {
   const blockedRegistry = clone(registry); blockedRegistry.suites[0].requires = ['missing-input'];
   const blocked = await runVerification(fixture, blockedRegistry, [blockedRegistry.suites[0]]);
   assert.equal(blocked.report.status, 'failed'); assert.equal(blocked.report.suites[0].status, 'blocked'); checks++;
-  write(join(fixture, '.node-version'), '0.0.0\n');
+  write(join(fixture, '.nvmrc'), '0.0.0\n');
   const wrongEnvironment = await runVerification(fixture, registry, [entries[0]]);
   assert.equal(wrongEnvironment.report.status, 'failed'); assert.match(wrongEnvironment.report.error, /Expected Node/);
   assert.equal(wrongEnvironment.report.suites[0].status, 'not-run'); checks++;
-  copyFileSync(join(root, '.node-version'), join(fixture, '.node-version'));
+  copyFileSync(join(root, '.nvmrc'), join(fixture, '.nvmrc'));
   const mutated = await runVerification(fixture, registry, [entries[4], entries[0]]);
   assert.equal(mutated.report.status, 'failed'); assert.equal(mutated.report.sourceUnchanged, false);
   assert.equal(mutated.report.suites[1].status, 'not-run'); assert.match(mutated.report.error, /Source changed/); checks++;
   rmSync(join(fixture, 'changed.txt'));
 
   // Exercise the actual CLI alias; failure propagation used to be lost here.
-  for (const name of ['scripts/check-live-source.mjs', 'scripts/check-rebuild-source.mjs', 'scripts/verification/source.mjs']) {
+  for (const name of ['scripts/check-live-source.mjs', 'scripts/check-rebuild-source.mjs', 'scripts/project-paths.mjs', 'scripts/verification/source.mjs']) {
     mkdirSync(dirname(join(fixture, name)), { recursive: true }); copyFileSync(join(root, name), join(fixture, name));
   }
   const sourceManifest = 'docs/rebuild-manifest.json';
@@ -404,6 +415,7 @@ try {
   test('snapshot CLI separates documentation-only drift and still fails on runtime drift', () => {
     const directory = join(temp, 'snapshot');
     write(join(directory, 'scripts/check-live-source.mjs'), readFileSync(join(root, 'scripts/check-live-source.mjs')));
+    write(join(directory, 'scripts/project-paths.mjs'), readFileSync(join(root, 'scripts/project-paths.mjs')));
     write(join(directory, 'work/release/app/a.txt'), 'application'); write(join(directory, 'HANDOFF.md'), 'original');
     const release = { update: 131, applicationSnapshot: 'work/release', infrastructureSnapshot: 'work/infra', runtimeDirectories: ['app'], applicationFiles: [{ path: 'app/a.txt', sha256: sha256('application') }], infrastructureFiles: [], documentationFiles: [{ path: 'HANDOFF.md', sha256: sha256('original') }], buildFiles: [], localConfigurationFiles: [] };
     writeJson(join(directory, 'LIVE_RELEASE.json'), release);
@@ -420,14 +432,13 @@ try {
     execFileSync('git', ['clone', '--quiet', '--shared', '--no-checkout', root, directory], { stdio: 'pipe' });
     const git = (...args) => execFileSync('git', args, { cwd: directory, stdio: 'pipe' });
     git('config', 'user.name', 'Yin Yang EQ Lab'); git('config', 'user.email', '343846436+yinyangeqlab@users.noreply.github.com');
-    write(join(directory, '.node-version'), process.versions.node + '\n');
+    write(join(directory, '.nvmrc'), process.versions.node + '\n');
     writeJson(join(directory, 'package.json'), { packageManager: json(join(root, 'package.json')).packageManager });
-    writeJson(join(directory, 'LIVE_RELEASE.json'), { update: 131 });
+    writeJson(join(directory, releaseRecordPath), { update: 131 });
     write(join(directory, 'scripts/new.mjs'), 'new source');
-    mkdirSync(join(directory, 'docs'));
     assert.throws(() => refreshSource(directory), /Unreviewed untracked/);
     assert.equal(existsSync(join(directory, sourceManifest)), false);
-    const approved = ['.node-version', 'package.json', 'LIVE_RELEASE.json', 'scripts/new.mjs'];
+    const approved = ['.nvmrc', 'package.json', releaseRecordPath, 'scripts/new.mjs'];
     assert.deepEqual(refreshSource(directory, approved).added.sort(), approved.sort());
     const before = readFileSync(join(directory, sourceManifest), 'utf8');
     assert.equal(refreshSource(directory).added.length, 0);

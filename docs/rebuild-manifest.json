@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ad4672f95da434c36495017bb67ee9c8db917093",
+  "baseRevision": "3ac6dab195c8583d748ccef7e97a78c32539aa49",
   "recordedLiveUpdate": 175,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -13,11 +13,6 @@
     {
       "path": ".gitignore",
       "sha256": "07cf1d0bdfcd8143b91e6edda31cb0a6fc115e44bd087db53e12c2795f9216cd",
-      "executable": false
-    },
-    {
-      "path": ".node-version",
-      "sha256": "b20a182c7b42cbf1ab3e380c2a050d469f6b5eacdf55dff575afb3ca372b6f2b",
       "executable": false
     },
     {
@@ -37,7 +32,7 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "dff581a0c82e5c5e24ff5ea558538f9b3afe75b24626409d9c390b7fc5bf9456",
+      "sha256": "fb08b6852c91184d9f855cb3db951bb3f4ca087acf42a49add80f8096bd8e2d0",
       "executable": false
     },
     {
@@ -51,18 +46,8 @@
       "executable": false
     },
     {
-      "path": "LIVE_RELEASE.json",
-      "sha256": "fdaa115726a7e4025760162a31256f3ec0817e30718182bc47c0878a349d64f4",
-      "executable": false
-    },
-    {
-      "path": "NOTICE",
-      "sha256": "9dc899f979fc735538ca0825ffef84dbb46ea5774598ab70c17ed7a6aae7d801",
-      "executable": false
-    },
-    {
       "path": "README.md",
-      "sha256": "8f98caafcaa876836bc46aa7b867097be16de00a4f2d83449081f6d2bc207bba",
+      "sha256": "7e7847709e3d07953685c1aae7edb15ae795d78fe1f01e8efc3efef313873916",
       "executable": false
     },
     {
@@ -82,12 +67,12 @@
     },
     {
       "path": "docs/ENGINEERING.md",
-      "sha256": "9fc6b66c27796a6ad51d37c2336de9a18187903a54f1c52ffd0c9028314c0a81",
+      "sha256": "c62b0ed568af73176eac17bba728b9faa2a35f3d70b98a92247f94f05a037436",
       "executable": false
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "8198175d2c01aedfa3a9ee57b40f0443ca6e9627f65cef498ac2d048551bff83",
+      "sha256": "64bcf00af5c8a1d73fbd302040952c9dfedfc9c75ca44be83ee1305ab0c5d8d9",
       "executable": false
     },
     {
@@ -107,12 +92,12 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "7fb572ffaca24ba60da04d4af8778fdbefa8642aac76f856a4c6b7bfc1c2e072",
+      "sha256": "2f005e5185c284862c7865d7e3cfac370818c96ebea6ac19a91557ed75ace70d",
       "executable": false
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "8973c8abd3f893586734534fabf3ebf17e3c5e4fb389e990bec24581d4644715",
+      "sha256": "59a87c98d48f4a8ac4d680578b1df3c0fa3b2de156dfdf33d8bcf216b2913888",
       "executable": false
     },
     {
@@ -131,18 +116,23 @@
       "executable": false
     },
     {
+      "path": "docs/deployment/LIVE_RELEASE.json",
+      "sha256": "fdaa115726a7e4025760162a31256f3ec0817e30718182bc47c0878a349d64f4",
+      "executable": false
+    },
+    {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "00dbf4649ec97e7bf761ff6ff1aec33f3856730415c55e4020333e55fe3e3050",
+      "sha256": "c37b3ebbb3fe78e990c531f0e64712af17f3062b0345e0de314d6092142ec4dc",
       "executable": false
     },
     {
       "path": "docs/deployment/OWNER_ONLY_MAINTENANCE.md",
-      "sha256": "2e8d3fbe77c15b359cb668be291aa477ba9193d265e15ce65991860bc45b9a21",
+      "sha256": "f9770edc7c8ff0b8141aa04e86acea335501ec7234873853869b97386d958147",
       "executable": false
     },
     {
       "path": "docs/deployment/PULUMI_DEPLOYMENT.md",
-      "sha256": "8129ff76005f58900d63c5f46d36b6871cde02dff208191ea859c209532898ed",
+      "sha256": "66e472e41ce7934fc7ea1c75b261dfca9c7c5123e77180ccb006732bf7972d69",
       "executable": false
     },
     {
@@ -251,8 +241,13 @@
       "executable": false
     },
     {
+      "path": "docs/legal/NOTICE",
+      "sha256": "9dc899f979fc735538ca0825ffef84dbb46ea5774598ab70c17ed7a6aae7d801",
+      "executable": false
+    },
+    {
       "path": "docs/media/DEMO.md",
-      "sha256": "3bd991748722b8f51331e0ab2c60c5c713189217ac0cf6509101de9616b58c02",
+      "sha256": "ff0891be05c53b390ff47a1020a967262ee930f554f6ba888fa2ba7008996738",
       "executable": false
     },
     {
@@ -1222,7 +1217,7 @@
     },
     {
       "path": "docs/skills/yinyangeq-release-versioning/SKILL.md",
-      "sha256": "9b1b779af26c05fd5f7a52475eba7cf41af5e65c36e1992231859cf3aed4a409",
+      "sha256": "aae38ae82107a20f1633e6b54a7dafe83077251b0099989270b4f8b74e3ae89d",
       "executable": false
     },
     {
@@ -1927,7 +1922,7 @@
     },
     {
       "path": "scripts/check-live-source.mjs",
-      "sha256": "a6f2f4ae0a96568979e8fb3585e8fe88365fde65572a162921bbc65399b81b90",
+      "sha256": "d7c5bbdc850b57fc715b07853cf928b83bf4effbcbb508069eb33c7ced5e7e13",
       "executable": false
     },
     {
@@ -1947,7 +1942,7 @@
     },
     {
       "path": "scripts/check_foundation.mjs",
-      "sha256": "8c233a61b33cf929763630054c09f9e479ccbcf5778b9103b4db5a225e343377",
+      "sha256": "16c59f3fee7d68c60b5bbe15d774be7f99f8e728658d9839deab59c40e5ff03c",
       "executable": false
     },
     {
@@ -1967,7 +1962,7 @@
     },
     {
       "path": "scripts/check_production_release_preflight.mjs",
-      "sha256": "d4958b6004b7c77dab7702629e6850a8145c60c97e7d296cc47055104f8a916b",
+      "sha256": "29ac001e40d4557b30719d164d4c8dbe90ee3f9131d0b13be0b3b09cf0b8a2fa",
       "executable": false
     },
     {
@@ -2502,7 +2497,7 @@
     },
     {
       "path": "scripts/checks/release/check_peqdb_package.mjs",
-      "sha256": "195801cca1810b8f7d9851921ebd7f06b34b86fed4392fc2d5513c59614151de",
+      "sha256": "ef30fa3c364c77b345cd46e12f51dfe55b055860f14c9aa76ce392e69f8ad5ff",
       "executable": false
     },
     {
@@ -2732,7 +2727,7 @@
     },
     {
       "path": "scripts/peqdb-assets.mjs",
-      "sha256": "cfb689644b9ebe1c45df2c8f46601e5a589030dee35b9b2f974032d2c375e2d8",
+      "sha256": "2ad28e24d1b1ee2b57fc169e7093a4b05d18c92bf4ede01c7dd4d05099141776",
       "executable": false
     },
     {
@@ -2747,7 +2742,7 @@
     },
     {
       "path": "scripts/prepare-peqdb-autoeq.py",
-      "sha256": "5e42811445500e124434de7ea22fcc8c694556a635ce6a24049967a128db56ff",
+      "sha256": "baebada3e3a375ed84b976d30948d95e409f219c436197c3f8910607b924a3d5",
       "executable": false
     },
     {
@@ -2772,12 +2767,12 @@
     },
     {
       "path": "scripts/production-release-preflight.mjs",
-      "sha256": "2f0a67e55faa3d7b7cb59ba2ae397656ddc7f22da822b21aea26b95b609e517b",
+      "sha256": "f7c5b25c27a115dd436e9eb428b39f3816c2aea829a47b0d36dcc701df913aca",
       "executable": false
     },
     {
       "path": "scripts/project-paths.mjs",
-      "sha256": "00cd5eb1051878c50cfc6e1e83e163ebd39bd790e0eeeed3a756a3f37f700627",
+      "sha256": "3cd7df64b68b5995aba7358fcab042a588dc09d1548ddfe2d7b4fc800c6fe5f8",
       "executable": false
     },
     {
@@ -2787,7 +2782,7 @@
     },
     {
       "path": "scripts/recovery/check-environment.mjs",
-      "sha256": "9d093445d15b901a90eb21d302155101e388c53cf57f32f80de7046b9a4b5dc9",
+      "sha256": "7ac29c5e75de49f8cb1d0848d48fae2b343316a30a8509d02dff01895b9d6664",
       "executable": false
     },
     {
@@ -2807,7 +2802,7 @@
     },
     {
       "path": "scripts/recovery/recovery.mjs",
-      "sha256": "0dee5ea5c40490e6deaa40be1777bae9c85d42e9b603cf082eaf203a7a15e0b9",
+      "sha256": "f4123549d0c2111095bc1383bab38923c689ab3caf8126b45d0a1c51cbb1e13e",
       "executable": false
     },
     {
@@ -2827,12 +2822,12 @@
     },
     {
       "path": "scripts/refresh-rebuild-manifest.mjs",
-      "sha256": "9ce3d4c2909f3a59d19b708ab5abac540a71d2148455162a1c65ef688132ec15",
+      "sha256": "caf284c60da87edc949b18045b549f539dfc4b89cfff8a0942f326708b0e7636",
       "executable": false
     },
     {
       "path": "scripts/release-state.mjs",
-      "sha256": "2d0752183babe6320b5c743be42114731767080be8ec0b5f2bb153d65519511b",
+      "sha256": "2f910be7b6a02504c4e55bd1f674774296405d4ce602bbfffe6f467739111392",
       "executable": false
     },
     {
@@ -2872,7 +2867,7 @@
     },
     {
       "path": "scripts/verification-registry.json",
-      "sha256": "ecc47543aa33ff20a78b72eec00aa587510e227609ce13064e81e04aacea3ae1",
+      "sha256": "f389b67ee88b39f039290f306352d667be70161ee08387e72951a4bece3ef5d7",
       "executable": false
     },
     {
@@ -2882,7 +2877,7 @@
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "dc8979f872618eabdb856881189355ae593277e146bcff1f555cc5efcfc755bd",
+      "sha256": "f9424bc665275620ebd37fcb311c714fe102378dcba7f6010345ba30f1accc5d",
       "executable": false
     },
     {

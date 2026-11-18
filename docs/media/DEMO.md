@@ -26,4 +26,4 @@ The music library screenshot also displays tracks and creator credits from the s
 
 ## Code and displayed data
 
-The repository's Apache 2.0 license covers original application code. Third-party music, data, names, and other materials retain their applicable rights and credits. Displayed headphone measurements and targets are part of the demo context; the public source release does not include the production target database or PEQdB curve/preset exports. See [README.md](../../README.md#license-and-provenance), [NOTICE](../../NOTICE), and [THIRD_PARTY.md](../../THIRD_PARTY.md).
+The repository's Apache 2.0 license covers original application code. Third-party music, data, names, and other materials retain their applicable rights and credits. Displayed headphone measurements and targets are part of the demo context; the public source release does not include the production target database or PEQdB curve/preset exports. See [README.md](../../README.md#license-and-provenance), [NOTICE](../legal/NOTICE), and [THIRD_PARTY.md](../../THIRD_PARTY.md).

@@ -43,7 +43,7 @@ YinYang EQ offers fixed-band and movable-band fitters and integrates the open-so
 
 ## Run locally
 
-Use the Node and npm versions pinned in `.node-version` and `package.json`.
+Use the Node and npm versions pinned in `.nvmrc` and `package.json`.
 
 ```sh
 npm run recovery:environment
@@ -57,7 +57,7 @@ Open the URL printed by the dev server, usually `http://localhost:5173`. Setup c
 
 ## License and credits
 
-Copyright © 2026 Yin Yang EQ Lab. The original software is licensed under Apache 2.0. Branding, site copy, screenshots, visual design, music, target curves, measurements, and datasets are outside that grant. Third-party components and materials retain their own licenses, including PEQdB AutoEQ under LGPL-3.0-or-later. [Apache 2.0 license](LICENSE) · [License scope](LICENSE_SCOPE.md) · [Notices](NOTICE) · [Third-party credits](THIRD_PARTY.md)
+Copyright © 2026 Yin Yang EQ Lab. The original software is licensed under Apache 2.0. Branding, site copy, screenshots, visual design, music, target curves, measurements, and datasets are outside that grant. Third-party components and materials retain their own licenses, including PEQdB AutoEQ under LGPL-3.0-or-later. [Apache 2.0 license](LICENSE) · [License scope](LICENSE_SCOPE.md) · [Notices](docs/legal/NOTICE) · [Third-party credits](THIRD_PARTY.md)
 
 Track cards credit the artists and link to available sources and licenses. The library includes Creative Commons recordings and recordings used with the artist’s permission. [Target credits](docs/research/TARGET_INVENTORY.md) · [Permission for Jason J. Chevallier recordings](docs/media/JASON_MUSIC_IMPORT_2026-10-23.md) · [Media credits](docs/media/VIDEOS.md)
 

@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { sourceFiles, fileRecord, git } from './verification/source.mjs';
+import { releaseRecordRelativePath } from './project-paths.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const manifestPath = 'docs/rebuild-manifest.json';
@@ -21,9 +22,9 @@ const manifest = {
   schemaVersion: 1,
   kind: 'candidate-source',
   baseRevision: git(directory, ['rev-parse', 'HEAD']),
-  recordedLiveUpdate: JSON.parse(readFileSync(resolve(directory, 'LIVE_RELEASE.json'), 'utf8')).update,
+  recordedLiveUpdate: JSON.parse(readFileSync(resolve(directory, releaseRecordRelativePath(directory)), 'utf8')).update,
   scope: 'Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.',
-  environment: { node: readFileSync(resolve(directory, '.node-version'), 'utf8').trim(), npm: JSON.parse(readFileSync(resolve(directory, 'package.json'), 'utf8')).packageManager },
+  environment: { node: readFileSync(resolve(directory, '.nvmrc'), 'utf8').trim(), npm: JSON.parse(readFileSync(resolve(directory, 'package.json'), 'utf8')).packageManager },
   reviewedUntrackedFiles: untracked,
   files
 };

@@ -56,7 +56,7 @@
       "profile": "manual",
       "timeoutMs": 180000,
       "requires": [
-        "LIVE_RELEASE.json"
+        "docs/deployment/LIVE_RELEASE.json"
       ],
       "owner": "release",
       "scope": "Immutable recorded application/infra/build/documentation/configuration hashes",

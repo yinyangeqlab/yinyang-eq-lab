@@ -13,7 +13,7 @@ Read [AGENTS.md](../AGENTS.md) for permanent project constraints and [LIVE_STATE
 
 ## Repository layout
 
-Keep running npm commands from the repository root. The application source and framework config are in `site/`. The schema and ordered migrations are in `site/db/` and `site/drizzle/`. Public URLs still come from root `public/`, and the packaged Worker and client still go to root `dist/`. Local D1 uses the repository's ignored `.wrangler/state`.
+Keep running npm commands from the repository root. The Node version is pinned in `.nvmrc`, and the project notice is under `docs/legal/`. The application source and framework config are in `site/`. The schema and ordered migrations are in `site/db/` and `site/drizzle/`. Public URLs still come from root `public/`, and the packaged Worker and client still go to root `dist/`. Local D1 uses the repository's ignored `.wrangler/state`.
 
 ## Boundaries to preserve
 
@@ -64,7 +64,7 @@ Run app types with `node node_modules/typescript/bin/tsc --project site/tsconfig
 
 Use the [release versioning skill](skills/yinyangeq-release-versioning/SKILL.md) for every review build and handoff. Keep the build ID visible in the app, group changes by update on the version page, and verify GitHub links against the published source. Record the exact build ID and deployment baseline separately.
 
-`LIVE_RELEASE.json` and its exact `evidence` receipt record the deployment captured by the source snapshot. `npm run release:check` validates the current fields and the generated `docs/deployment/LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence. The public README links to the live version page independently of these records.
+`docs/deployment/LIVE_RELEASE.json` and its exact `evidence` receipt record the deployment captured by the source snapshot. `npm run release:check` validates the current fields and the generated `docs/deployment/LIVE_STATE.md` plus handoff blocks. `npm run release:refresh` regenerates those views only after deliberately updating and verifying authoritative records. It never changes receipts, snapshots or recovery state. A pending recovery handover stays pending until that separate process supplies evidence. The public README links to the live version page independently of these records.
 
 `docs/rebuild-manifest.json` describes **candidate source inputs**, independently of production. After reviewing an intentional source change, run `npm run source:refresh`, then `node scripts/check-live-source.mjs --source-only`. Refreshing hashes is bookkeeping, not regression or deployment verification. The checker also rejects unlisted/deleted nonignored source files. Recovery bundles bind the exact manifest hash; existing bundles must be verified in their matching source checkout, never relabeled to match this candidate. Old manifests and handoffs remain under `docs/history/foundation-20261031`; their commands are historical. Full owner snapshot verification must run in the owner root with its original private paths.
 

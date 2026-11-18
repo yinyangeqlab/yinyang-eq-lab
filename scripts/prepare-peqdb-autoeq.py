@@ -32,7 +32,7 @@ def source_files():
     tracked = subprocess.check_output(['git', 'ls-files', '--cached', '-z'], cwd=ROOT).decode().split('\0')
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=ROOT).decode().split('\0')
     directories = ('site/app/', 'site/components/', 'site/lib/', 'scripts/', 'site/db/', 'site/drizzle/', 'site/data/', 'site/vendor/')
-    root_files = {'package.json', 'package-lock.json', 'site/vite.config.ts', 'site/tsconfig.json', 'site/postcss.config.mjs', 'site/next-env.d.ts', 'site/components.json', '.npmrc', '.node-version', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'README.md'}
+    root_files = {'package.json', 'package-lock.json', 'site/vite.config.ts', 'site/tsconfig.json', 'site/postcss.config.mjs', 'site/next-env.d.ts', 'site/components.json', '.npmrc', '.nvmrc', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'docs/legal/NOTICE', 'README.md'}
     extras = {'docs/PEQDB_AUTOEQ.md', 'docs/LOCAL_SETUP.md', 'public/dynamic-range-worklet.js'}
     eligible = lambda name: not name.startswith('scripts/experiments/autoeq/') and (
         name in root_files or name in extras or name.startswith(directories)

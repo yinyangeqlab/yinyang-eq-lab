@@ -107,7 +107,7 @@ The original compiled package was unavailable. The rebuild from `069253c28566b1a
 
 [Verified deployment](releases/update164-version-link-refresh-verification.json) · [Verified source-only backup](releases/update164-version-link-refresh-recovery-verification.json) · [Isolated recovery verification](releases/update164-version-link-refresh-isolated-recovery-verification.json)
 
-Use the exact `.node-version` / `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
+Use the exact `.nvmrc` and package manager in `package.json`. Validate with `npm run recovery:environment`. Install the committed lock with `npm ci`; retain optional/native dependencies. Do not share a mutable dependency directory with a sealed release.
 
 ```sh
 npm run recovery:environment

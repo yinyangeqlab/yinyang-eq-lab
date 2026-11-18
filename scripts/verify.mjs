@@ -97,7 +97,7 @@ export async function runSuite(directory, suite, logPath, signal) {
 function toolVersions(directory, selected) {
   const version = (command, args) => execFileSync(command, args, { cwd: directory, encoding: 'utf8', timeout: 15000 }).trim();
   const packageInfo = JSON.parse(readFileSync(join(directory, 'package.json'), 'utf8'));
-  const expectedNode = readFileSync(join(directory, '.node-version'), 'utf8').trim();
+  const expectedNode = readFileSync(join(directory, '.nvmrc'), 'utf8').trim();
   const npm = version('npm', ['--version']);
   demand(process.versions.node === expectedNode, `Expected Node ${expectedNode}, found ${process.versions.node}`);
   demand(`npm@${npm}` === packageInfo.packageManager, `Expected ${packageInfo.packageManager}, found npm@${npm}`);

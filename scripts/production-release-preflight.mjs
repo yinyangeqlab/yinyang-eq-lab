@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDeepStrictEqual } from 'node:util';
 import { recoveryState, verifyOrRefresh } from './release-state.mjs';
+import { releaseRecordRelativePath } from './project-paths.mjs';
 import { releaseHistory } from '../site/lib/release-history.ts';
 import { releaseInfo } from '../site/lib/release-info.ts';
 
@@ -106,7 +107,7 @@ export function verifyPriorPublishedRelease(state, candidateUpdate, history) {
 }
 
 export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments) {
-  const state = read(workspace, 'LIVE_RELEASE.json');
+  const state = read(workspace, releaseRecordRelativePath(workspace));
   const label = `update${state.update}`;
   verifyOrRefresh(workspace);
   verifyPriorPublishedRelease(state, releaseInfo.build.update, releaseHistory);
@@ -158,7 +159,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       'Usage: node scripts/production-release-preflight.mjs OWNER_WORKSPACE [ACCOUNT_ID SCRIPT_NAME]');
     const { update } = await verifyProductionBaseline(resolve(workspace),
       accountId === undefined ? undefined : { accountId, scriptName });
-    const recovery = recoveryState(read(resolve(workspace), 'LIVE_RELEASE.json'));
+    const recovery = recoveryState(read(resolve(workspace), releaseRecordRelativePath(resolve(workspace))));
     console.log(`Production preflight passed: update${update} is active with a verified handoff and ${recovery.kind} recovery.`);
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'Required owner release or recovery evidence is missing' :

@@ -1,6 +1,6 @@
 # Rebuilding and deploying the existing live application
 
-This guide was written for update81. Before using it, read the [recorded live state](LIVE_STATE.md), [release manifest](../../LIVE_RELEASE.json), [current handoff](../HANDOFF.md) and [rebuild guide](../REBUILD.md). The rebuild audit does not deploy anything.
+This guide was written for update81. Before using it, read the [recorded live state](LIVE_STATE.md), [release manifest](LIVE_RELEASE.json), [current handoff](../HANDOFF.md) and [rebuild guide](../REBUILD.md). The rebuild audit does not deploy anything.
 
 For a public clone, install with `npm ci`, verify `node scripts/check-live-source.mjs --source-only`, build with `npm run build`, then package preview assets with `node scripts/package-static-assets.mjs --public-only`. This preview package must not be deployed.
 
@@ -10,4 +10,4 @@ The tracked infra/pulumi deployment source wraps the app with the private gate. 
 
 Keep CPU5000ms, all six abuse bindings, private access/media, protected D1, disabled workers.dev and preview URLs, existing static exclusions, separate edge burst protection and independent scheduled cost guard. The guard's source is tracked, but its account bindings and narrow credential remain in the owner's secure configuration. Missing credentials or state must not be worked around by disabling protections.
 
-Deploy only when authorized. Verify the live assets and relevant flows/protections, check final infrastructure drift, erase only disposable fixtures, and update LIVE_RELEASE.json, docs/deployment/LIVE_STATE.md, docs/HANDOFF.md and docs/deployment/HOSTING_HANDOFF.md together. Commit/push is separate. Never replay migrations on an existing database blindly or restore erased user data.
+Deploy only when authorized. Verify the live assets and relevant flows/protections, check final infrastructure drift, erase only disposable fixtures, and update the release manifest, docs/deployment/LIVE_STATE.md, docs/HANDOFF.md and docs/deployment/HOSTING_HANDOFF.md together. Commit/push is separate. Never replay migrations on an existing database blindly or restore erased user data.

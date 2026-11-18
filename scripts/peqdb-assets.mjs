@@ -7,7 +7,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 export const peqdbAssets = resolve(root, 'artifacts/peqdb-autoeq/public/vendor/peqdb-autoeq');
 const digest = path => createHash('sha256').update(readFileSync(path)).digest('hex');
 export function peqdbSourceSnapshot() {
-  const roots = new Set(['package.json', 'package-lock.json', 'site/vite.config.ts', 'site/tsconfig.json', 'site/postcss.config.mjs', 'site/next-env.d.ts', 'site/components.json', '.npmrc', '.node-version', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'README.md', 'docs/PEQDB_AUTOEQ.md', 'docs/LOCAL_SETUP.md', 'public/dynamic-range-worklet.js']);
+  const roots = new Set(['package.json', 'package-lock.json', 'site/vite.config.ts', 'site/tsconfig.json', 'site/postcss.config.mjs', 'site/next-env.d.ts', 'site/components.json', '.npmrc', '.nvmrc', '.openai/hosting.json', 'LICENSE', 'LICENSE_SCOPE.md', 'THIRD_PARTY.md', 'docs/legal/NOTICE', 'README.md', 'docs/PEQDB_AUTOEQ.md', 'docs/LOCAL_SETUP.md', 'public/dynamic-range-worklet.js']);
   const eligible = name => !name.startsWith('scripts/experiments/autoeq/') &&
     (roots.has(name) || /^(site\/(app|components|lib|data|vendor|db|drizzle)|scripts)\//.test(name));
   const listing = flags => execFileSync('git', ['ls-files', ...flags, '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(eligible);

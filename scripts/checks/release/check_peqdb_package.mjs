@@ -7,6 +7,8 @@ assert.ok(manifest.assets['RUNTIME-NOTICES.txt']);
 assert.ok(manifest.sourceFiles['site/lib/autoeq.worker.ts']);
 assert.ok(manifest.sourceFiles['public/dynamic-range-worklet.js'], 'Standalone playback worklet must be included in application source');
 assert.ok(manifest.sourceFiles['docs/PEQDB_AUTOEQ.md']);
+assert.ok(manifest.sourceFiles['docs/legal/NOTICE']);
+assert.ok(manifest.sourceFiles['.nvmrc']);
 for (const file of [`site/lib/peqdb-source-check-${crypto.randomUUID()}.ts`, `site/data/peqdb-private-probe-${crypto.randomUUID()}.json`]) {
   try {
     writeFileSync(file, 'Synthetic unreviewed source input\n', { flag: 'wx' });

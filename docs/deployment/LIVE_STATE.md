@@ -15,7 +15,7 @@ This view describes the recorded production release. It does not assert that thi
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 
-The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](../../LIVE_RELEASE.json). Owner snapshot checks use that record in the owner root. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](../rebuild-manifest.json).
+The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use the owner's release record. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](../rebuild-manifest.json).
 
 The deployment receipt records 126 regression suites passed and 0 failed for its source; these are historical deployment results, not results for this working tree. Physical audio is not certified; native expanded-menu pixels are not certified. Read the receipt and review record for browser/device limits.
 
