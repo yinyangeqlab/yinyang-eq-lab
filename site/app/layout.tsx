@@ -34,7 +34,7 @@ export default async function RootLayout({
   const enabled = env.DB ? await invitesEnabled(env.DB) : false;
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteHelpActionsProvider><SiteChrome>{children}</SiteChrome><SiteHelp /></SiteHelpActionsProvider></InviteModeProvider></body>
+      <body className="antialiased"><InviteModeProvider enabled={enabled}><SiteHelpActionsProvider><SiteChrome help={<SiteHelp />}>{children}</SiteChrome></SiteHelpActionsProvider></InviteModeProvider></body>
     </html>
   );
 }

@@ -4,13 +4,15 @@ import ShootoutVoteLabel from "@/components/shootout-vote-label";
 import { useEffect, useMemo, useRef, useState } from "react";
 import BlindEqEditor from "@/components/blind-eq-editor";
 import BlindEqListener, { type EqSong, type ListeningEvidence } from "@/components/blind-eq-listener";
-import { validateEqSampleRate, createBlindSession, recordBlindRound, revealBlindSession, type BlindChoice, type BlindRound, type BlindSession, type EqPreset } from "@/lib/blind-eq";
+import { MAX_BLIND_EQ_FILTERS, loadSavedEqPair, validateEqSampleRate, createBlindSession, recordBlindRound, revealBlindSession, type BlindChoice, type BlindRound, type BlindSession, type EqPreset } from "@/lib/blind-eq";
+import { readLibraryEqs } from "@/lib/music-library-eq";
 import { listeningPool } from "@/lib/music-catalog";
 import { searchRows } from "@/lib/search";
 import { bugReportUrl, formatRequestUrl } from "@/lib/release-info";
 import "./style.css";
 
 const pool: EqSong[] = listeningPool.map((track, index) => ({ id: `pool-${index}`, title: track.title, artist: track.artist, url: track.fileUrl }));
+const SONG_PAGE_SIZE = 30;
 const emptyEvidence = (): ListeningEvidence => ({ heard: [0, 0], start: 0, seconds: 15 });
 
 function choiceText(session: BlindSession, round: BlindRound) {
@@ -22,7 +24,10 @@ function choiceText(session: BlindSession, round: BlindRound) {
 
 export default function BlindEqCompare() {
   const [presets, setPresets] = useState<[EqPreset | null, EqPreset | null]>([null, null]);
+  const [loadedPair, setLoadedPair] = useState<{ presets: [EqPreset, EqPreset]; includesChannelCorrection: boolean } | null>(null);
   const [localSongs, setLocalSongs] = useState<EqSong[]>([]), [selectedIds, setSelectedIds] = useState<string[]>([]), [search, setSearch] = useState("");
+  const [songLimit, setSongLimit] = useState(SONG_PAGE_SIZE);
+  const [handoffError, setHandoffError] = useState("");
   const [downloadRequested, setDownloadRequested] = useState(false);
   const [listeningVolume, setListeningVolume] = useState(1);
   const [match, setMatch] = useState(true), [session, setSession] = useState<BlindSession | null>(null), [queue, setQueue] = useState<EqSong[]>([]);
@@ -40,6 +45,21 @@ export default function BlindEqCompare() {
   const finished = Boolean(session && !song);
 
   useEffect(() => {
+    const location = window.location;
+    const presetFragment = location?.hash;
+    if (!presetFragment?.startsWith("#saved-eq=")) return;
+    try {
+      window.history.replaceState(window.history.state, "", location.pathname + location.search);
+      const savedPair = loadSavedEqPair(presetFragment, readLibraryEqs());
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- The browser-only handoff is read after hydration.
+      setPresets(savedPair.presets);
+      setLoadedPair(savedPair);
+    } catch (cause) {
+      setHandoffError(cause instanceof Error ? cause.message : "Could not open those presets. Choose them again in Saved EQs.");
+    }
+  }, []);
+
+  useEffect(() => {
     if (!session) return;
     const beforeUnload = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
     window.addEventListener("beforeunload", beforeUnload);
@@ -52,7 +72,7 @@ export default function BlindEqCompare() {
     confirmationOpener.current = opener; setConfirmReveal(kind === "reveal"); setConfirmReset(kind === "reset");
   }
   function cancelConfirmation() { setConfirmReveal(false); setConfirmReset(false); confirmationOpener.current?.focus(); }
-  function choosePreset(index: number, preset: EqPreset | null) { setPresets(current => { const next: typeof current = [...current]; next[index] = preset; return next; }); }
+  function choosePreset(index: number, preset: EqPreset | null) { setHandoffError(""); setPresets(current => { const next: typeof current = [...current]; next[index] = preset; return next; }); }
   function toggleSong(id: string) { setSelectedIds(current => current.includes(id) ? current.filter(value => value !== id) : current.length < 30 ? [...current, id] : current); }
   function addFiles(files: FileList | null) {
     if (!files) return;
@@ -111,34 +131,61 @@ export default function BlindEqCompare() {
     } catch { setError("The results download could not be started. Your results are still in this tab; try again before clearing or leaving."); }
   }
   const matchedSongs = searchRows(songs, search, song => [song.title, song.artist]);
-  const shown = [...songs.filter(song => selectedIds.includes(song.id)), ...matchedSongs.filter(song => !selectedIds.includes(song.id))];
+  const selectedSongs = songs.filter(song => selectedIds.includes(song.id)).sort((a, b) => selectedIds.indexOf(a.id) - selectedIds.indexOf(b.id));
+  const availableSongs = matchedSongs.filter(song => !selectedIds.includes(song.id));
+  const availablePool = availableSongs.filter(song => !song.file);
+  const shown = [...selectedSongs, ...availableSongs.filter(song => song.file), ...availablePool.slice(0, songLimit)];
   const decisive = session?.rounds.filter(round => round.choice === "A" || round.choice === "B").length || 0;
   return <div className="eq-compare">
     <main>
-      <p className="eq-eyebrow">Private listening room</p>
-      <h1 ref={heading} tabIndex={-1}>{session?.revealed ? "The reveal" : "Blind EQ comparison"}</h1>
-      <p className="eq-intro">{session?.revealed ? "Your choices are locked. Here’s which preset you preferred on each song." : session ? "Listen, switch and choose. Preset names stay hidden until you end the session." : "Already have two saved EQ settings? Hear them with the same music before seeing their names."}</p>
       <nav className="eq-related-links" aria-label="EQ comparison navigation"><a href="/listen">Listen</a><a href="/music-library">Music library</a></nav>
-      <p className="eq-privacy">Presets, local audio and choices stay in this tab. They aren’t sent to research, rankings or Account Sync. Refreshing or closing the page clears the session; download your results after the reveal.</p>
+      <h1 ref={heading} tabIndex={-1}>{session?.revealed ? "The reveal" : "Blind EQ comparison"}</h1>
+      <p className="eq-intro">{session?.revealed ? "See which preset you picked for each song. A and B were assigned separately for every song." : session ? "Switch between A and B on the same passage, then choose which you prefer." : "Compare two EQ presets on the same music. You’ll see their names after you’ve made your choices."}</p>
+      <p className="eq-privacy">Presets, local audio and choices stay in this tab, outside research, rankings and Account Sync. Refreshing or closing clears the session. Download your results after the reveal.</p>
 
       {!session && <>
-        <div className="eq-format-note"><p>New to EQ? <a href="/shootout/personal">Start with a guided sound comparison</a>. This page is for two saved sets of sound adjustments. A headphone measurement or target-curve file is a different file type.</p><p>Upload <strong>Equalizer APO / Peace parametric TXT</strong> or <strong>CH: 0 / CH: 1 two-channel TXT</strong>, or enter filters manually. Both shared and separate Left / Right settings work.</p><details><summary>Supported settings &amp; how to prepare</summary><p>Preset import accepts .txt (up to 200 KB), including AutoEq ParametricEQ.txt and FixedBandEQ.txt. Results JSON is a download, not a preset import. CH: 0 / CH: 1 names a supported syntax; compatibility with a particular producer is not verified. Check both channels in the preview.</p><pre>{"Preamp: -6 dB\nFilter 1: ON PK Fc 1000 Hz Gain -2 dB Q 1.4"}</pre><p>Supports preamp, peak (PK/PEQ) and center-frequency low/high shelves (LS/LSC, HS/HSC) with Q. Up to 32 enabled filters per channel. Export parametric TXT from Peace; native .peace, GraphicEQ, convolution, includes and slope/BW modifiers need a supported export or manual entry.</p><p>Use the same headphones throughout. Disable EQ in your system, player and DAC to avoid applying it twice. No headphone measurement is required.  The page hides names and curves during listening; someone inspecting browser tools could discover the mapping.</p><p><a href={formatRequestUrl}>Request a format</a> · <a href={bugReportUrl}>Report an import problem</a> (public GitHub issues)</p><p>Use synthetic examples only; do not attach private presets or audio.</p></details></div>
-        <div className="eq-editors"><BlindEqEditor title="Preset 1" initialName="Preset 1" initialPreset={presets[0]} onChange={preset => choosePreset(0, preset)} /><BlindEqEditor title="Preset 2" initialName="Preset 2" initialPreset={presets[1]} onChange={preset => choosePreset(1, preset)} /></div>
+        <section className="eq-preset-intro" aria-labelledby="eq-preset-heading">
+          <div className="eq-preset-heading">
+            <div><h2 id="eq-preset-heading">Choose two EQ presets</h2><p>Use presets saved in this browser, upload TXT files, or enter filters below.</p></div>
+            <a className="eq-library-link" href="/shootout?tab=eqs">Open Saved EQs</a>
+          </div>
+          <details className="eq-format-note"><summary>Supported settings &amp; how to prepare</summary>
+            <p>New to EQ? <a href="/shootout/personal">Start with a guided sound comparison</a>. Here you’ll need two sets of EQ settings. A headphone measurement or target-curve file is a different file type.</p>
+            <p>Import Equalizer APO / Peace parametric TXT files up to 200 KB, including AutoEq ParametricEQ.txt and FixedBandEQ.txt. Two-channel CH: 0 / CH: 1 syntax is supported. Check both channels in the preview. Results JSON is for export only.</p>
+            <pre>{"Preamp: -6 dB\nFilter 1: ON PK Fc 1000 Hz Gain -2 dB Q 1.4"}</pre>
+            <p>Supports preamp, peak (PK/PEQ) and center-frequency low/high shelves (LS/LSC, HS/HSC) with Q. Up to {MAX_BLIND_EQ_FILTERS} enabled filters per channel. Export parametric TXT from Peace. Native .peace, GraphicEQ, convolution, includes and slope/BW modifiers need a supported export or manual entry.</p>
+            <p>Use the same headphones throughout. Disable EQ in your system, player and DAC to avoid applying it twice. Names and curves are hidden while listening. Inspecting browser tools could reveal the mapping.</p>
+            <p><a href={formatRequestUrl}>Request a format</a> · <a href={bugReportUrl}>Report an import problem</a> (public GitHub issues). Use synthetic examples only.</p>
+          </details>
+        </section>
+        {handoffError && <p className="eq-error" role="alert">{handoffError} <a href="/shootout?tab=eqs">Return to Saved EQs</a></p>}
+        {loadedPair && presets[0] === loadedPair.presets[0] && presets[1] === loadedPair.presets[1] && <div className="eq-handoff"><p role="status">Two presets loaded from Saved EQs.{loadedPair.includesChannelCorrection && " Attached headphone channel corrections are excluded. The comparison uses each preset’s EQ filters and preamp."}</p><a href="#eq-songs">Choose your songs</a></div>}
+        <div className="eq-editors" key={loadedPair ? "saved-pair" : "manual-pair"}><BlindEqEditor title="Preset 1" initialName="Preset 1" initialPreset={presets[0]} onChange={preset => choosePreset(0, preset)} /><BlindEqEditor title="Preset 2" initialName="Preset 2" initialPreset={presets[1]} onChange={preset => choosePreset(1, preset)} /></div>
         {presets[0] && presets[1] && JSON.stringify(presets[0].channels) === JSON.stringify(presets[1].channels) && <p className="eq-muted" role="status">Both presets currently apply identical filter and preamp settings. Load or edit a preset if you want to compare different settings.</p>}
-        <section className="eq-card" aria-labelledby="eq-songs"><h2 id="eq-songs">Choose your songs</h2><p>One choice per song, in the order you select them. Choose up to 30 songs; each uses a looping 15-second passage you can move.</p>
+        <div className="eq-setup-grid">
+        <section className="eq-card" aria-labelledby="eq-songs"><h2 id="eq-songs" tabIndex={-1}>Choose your songs</h2><p>One choice per song, in the order you select them. Choose up to 30 songs; each uses a looping 15-second passage you can move.</p>
           <label className="eq-upload">Add local audio files<input type="file" accept="audio/*,.flac,.wav,.mp3,.m4a,.ogg,.aac" multiple onChange={event => { addFiles(event.target.files); event.target.value = ""; }} /></label>
           <p className="eq-muted">Local files stay on this device. Some files may not play in this browser. If one fails, try another file or a song from the music library. Listening Pool access uses your existing site sign-in.</p>
-          <label htmlFor="eq-song-search">Search Listening Pool and local songs</label><input id="eq-song-search" type="search" value={search} onChange={event => setSearch(event.target.value)} />
+          <label htmlFor="eq-song-search">Search Listening Pool and local songs</label><input id="eq-song-search" type="search" value={search} onChange={event => { setSearch(event.target.value); setSongLimit(SONG_PAGE_SIZE); }} />
           <div className="eq-selected"><span role="status">{selectedIds.length} selected · {matchedSongs.length} of {songs.length} match{search.trim() ? " (selected songs stay visible)" : ""}</span> <button type="button" disabled={!selectedIds.length} onClick={() => setSelectedIds([])}>Clear selection</button></div>
+          <a className="eq-skip-list" href="#eq-settings">Skip song list to comparison settings</a>
           <div className="eq-song-list" role="group" aria-label="Songs">{shown.map(song => <div className="eq-song-row" key={song.id}><label className="eq-song"><input type="checkbox" checked={selectedIds.includes(song.id)} disabled={selectedIds.length >= 30 && !selectedIds.includes(song.id)} onChange={() => toggleSong(song.id)} /><span><strong>{song.title}</strong><small>{song.artist}</small></span>{selectedIds.includes(song.id) && <span aria-hidden="true" className="eq-song-order">{selectedIds.indexOf(song.id) + 1}</span>}</label>{song.file && <button type="button" className="eq-song-remove" aria-label={`Remove local file ${song.title}`} onClick={() => removeLocalSong(song.id)}>Remove</button>}</div>)}{!shown.length && <p>No songs match this search.</p>}</div>
+          {availablePool.length > songLimit && <button className="eq-more-songs" type="button" onClick={() => setSongLimit(value => value + SONG_PAGE_SIZE)}>Show more songs ({availablePool.length - songLimit} remaining)</button>}
         </section>
-        <section className="eq-card"><h2>Comparison settings</h2><label className="eq-check"><input type="checkbox" checked={match} onChange={event => setMatch(event.target.checked)} />Match the EQs’ playback levels (recommended)</label><p className="eq-muted">Louder can sound preferable, so matching reduces that bias. Both versions receive a measured level adjustment to reduce the advantage of being louder. They may still sound different in loudness. The calculation uses stereo RMS and common sample-peak headroom, preserving EQ shapes and left/right balance.</p><p>Starting hides both presets and assigns A / B randomly. The mapping is randomized independently for each song. Listen to five seconds of each side before choosing A, B or no preference.</p><button type="button" className="eq-primary" disabled={!presets[0] || !presets[1] || !selectedIds.length} onClick={start}>Hide presets &amp; start</button><p className="eq-muted" role="status">{[!presets[0] && "Preset 1 is not ready", !presets[1] && "Preset 2 is not ready", !selectedIds.length && "Choose at least one song"].filter(Boolean).join(" · ") || "Both presets and your playlist are ready."}</p></section>
+        <section className="eq-card eq-settings" aria-labelledby="eq-settings"><h2 id="eq-settings" tabIndex={-1}>Comparison settings</h2>
+          <label className="eq-check"><input type="checkbox" checked={match} onChange={event => setMatch(event.target.checked)} />Match the EQs’ playback levels (recommended)</label>
+          <details><summary>How level matching works</summary><p className="eq-muted">A louder preset can sound better simply because of its volume. Matching uses stereo RMS on each passage and applies common sample-peak headroom. It preserves EQ shape and channel balance. Perceived loudness can still vary.</p></details>
+          <p>Each song gets a fresh A/B assignment. Listen to each side for at least five seconds before choosing a preference.</p>
+          <p className="eq-muted" id="eq-ready" role="status">{[!presets[0] && "Preset 1 is not ready", !presets[1] && "Preset 2 is not ready", !selectedIds.length && "Choose at least one song"].filter(Boolean).join(" · ") || `Ready with two presets and ${selectedIds.length} ${selectedIds.length === 1 ? "song" : "songs"}.`}</p>
+          <button type="button" className="eq-primary" aria-describedby="eq-ready" disabled={!presets[0] || !presets[1] || !selectedIds.length} onClick={start}>Hide presets &amp; start</button>
+        </section>
+        </div>
       </>}
 
       {session && !session.revealed && <>
         <p className="eq-progress">{song ? `Song ${count + 1} of ${queue.length}` : "Playlist complete"} · {session.rounds.filter(round => round.choice !== "skip").length} compared · {session.rounds.filter(round => round.choice === "skip").length} skipped · {queue.length - count} unanswered</p>
-        {song && blindPresets && <><BlindEqListener key={`${song.id}-${count}`} song={song} context={sessionContext ?? undefined} presets={blindPresets} match={match} initialVolume={listeningVolume} onVolumeChange={setListeningVolume} onEvidence={setEvidence} />
-          <section className="eq-card"><h2>Your preference for this song</h2><p>Listen to at least 5 seconds of A and B first (shown above). Several passes may help; five seconds is only the minimum. Skip a song you can’t compare.</p><div className="eq-votes"><button type="button" disabled={!comparisonReady} onClick={() => vote("A")}><ShootoutVoteLabel choice="a"/></button><button type="button" disabled={!comparisonReady} onClick={() => vote("tie")}><ShootoutVoteLabel choice="tie"/></button><button type="button" disabled={!comparisonReady} onClick={() => vote("B")}><ShootoutVoteLabel choice="b"/></button></div><button type="button" className="eq-text-button" onClick={() => vote("skip")}>Skip this song</button></section></>}
+        {song && blindPresets && <div className="eq-listening-grid"><BlindEqListener key={`${song.id}-${count}`} song={song} context={sessionContext ?? undefined} presets={blindPresets} match={match} initialVolume={listeningVolume} onVolumeChange={setListeningVolume} onEvidence={setEvidence} />
+          <section className="eq-card eq-preference"><h2>Your preference for this song</h2><p role="status">{comparisonReady ? "Both sides are ready. Choose a preference or keep listening." : "Listen to at least 5 seconds of A and B to unlock your choices."}</p><div className="eq-votes"><button type="button" disabled={!comparisonReady} onClick={() => vote("A")}><ShootoutVoteLabel choice="a"/></button><button type="button" disabled={!comparisonReady} onClick={() => vote("tie")}><ShootoutVoteLabel choice="tie"/></button><button type="button" disabled={!comparisonReady} onClick={() => vote("B")}><ShootoutVoteLabel choice="b"/></button></div><button type="button" className="eq-text-button" onClick={() => vote("skip")}>Skip this song</button></section></div>}
         {finished && <section className="eq-card"><h2>You’ve reached the end</h2><p>{session.rounds.some(round => round.choice !== "skip") ? "Reveal the presets and see your choices across all songs." : "All songs were skipped. Start again to make a comparison."}</p></section>}
         <div className="eq-actions"><button type="button" className="eq-primary" disabled={!session.rounds.some(round => round.choice !== "skip")} onClick={event => finished ? reveal() : requestConfirmation("reveal", event.currentTarget)}>Finish &amp; reveal</button><button type="button" onClick={event => requestConfirmation("reset", event.currentTarget)}>Discard session</button></div>
         {confirmReveal && <section className="eq-card" aria-label="Confirm early reveal" onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); cancelConfirmation(); } }}><h2 ref={confirmationHeading} tabIndex={-1}>End this session now?</h2><p>The remaining {queue.length - count} songs will be left unanswered. Revealing ends blind listening for this session.</p><div className="eq-actions"><button type="button" onClick={reveal}>End &amp; reveal presets</button><button type="button" onClick={cancelConfirmation}>Keep listening</button></div></section>}
@@ -148,7 +195,7 @@ export default function BlindEqCompare() {
         <div className="eq-reveal-grid">{session.presets.map((preset, index) => { return <section className="eq-card" key={index}><p className="eq-eyebrow">Preset {index + 1}</p><h2>{preset.name}</h2><strong className="eq-result-count">{session.rounds.filter(round => (round.choice === "A" || round.choice === "B") && round.order[round.choice === "A" ? 0 : 1] === index).length} preferred</strong><p className="eq-muted">Left {preset.channels[0].filters.length} / Right {preset.channels[1].filters.length} filters</p><details><summary>Reveal filter settings</summary>{preset.channels.map((channel, index) => <div key={index}><h3>{index === 0 ? "Left" : "Right"} · preamp {channel.preampDb} dB</h3>{channel.filters.length ? <ul>{channel.filters.map((filter, i) => <li key={i}>{filter.type} · {filter.hz} Hz · {filter.gain} dB · Q {Number(filter.q.toPrecision(3))}</li>)}</ul> : <p>Flat reference</p>}</div>)}</details></section>; })}</div>
         <p>{session.rounds.filter(round => round.choice === "tie").length} no preference · {session.rounds.filter(round => round.choice === "skip").length} skipped · {queue.length - count} unanswered</p>
         <p className="eq-muted">These are your preferences across {decisive} decisive choices in this session. These choices do not establish that you can reliably tell the settings apart or prove a statistically reliable winner. This is a preference comparison, not an ABX identification test.</p>
-        <div className="eq-results-wrap"><table className="eq-results"><caption>Your song-by-song choices</caption><thead><tr><th scope="col">Song</th><th scope="col">Passage</th><th scope="col">Choice</th></tr></thead><tbody>{session.rounds.map((round, index) => <tr key={index}><td>{round.song}<small>{round.artist}</small></td><td>{round.choice === "skip" ? "Not compared" : `${Math.floor(round.start)}–${Math.floor(round.start + round.seconds)} s`}</td><td>{choiceText(session, round)}</td></tr>)}</tbody></table></div>
+        <div className="eq-results-wrap"><table className="eq-results"><caption>Your song-by-song choices</caption><thead><tr><th scope="col">Song</th><th scope="col">Passage</th><th scope="col">Choice</th></tr></thead><tbody>{session.rounds.map((round, index) => <tr key={index}><td>{round.song}<small>{round.artist}</small></td><td>{round.choice === "skip" ? "Not compared" : `${Math.floor(round.start)}–${Math.floor(round.start + round.seconds)} s`}</td><td>{choiceText(session, round)}<details className="eq-round-mapping"><summary>Show A/B mapping</summary>{round.order.map((presetIndex, side) => <p key={side}>{side === 0 ? "A" : "B"} = Preset {presetIndex + 1}{session.presets[presetIndex].name !== `Preset ${presetIndex + 1}` && ` · ${session.presets[presetIndex].name}`}</p>)}</details></td></tr>)}</tbody></table></div>
         <div className="eq-actions"><button type="button" className="eq-primary" onClick={download}>Download results (JSON file)</button><button type="button" onClick={event => requestConfirmation("reset", event.currentTarget)}>New blind session</button></div>
         {downloadRequested && <p className="eq-muted" role="status">Download requested. Check that the file saved before clearing or leaving this session. The leave-page warning stays active because this page cannot confirm the browser saved it.</p>}
       </>}

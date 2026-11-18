@@ -172,7 +172,7 @@ export const helpTopics: readonly HelpTopic[] = [
   {
     id: "saved-eqs", title: "Find and use saved EQs", href: "/shootout?tab=eqs", targets: [".saved-eq-collection", ".alpha-collection-heading h1"],
     terms: "where is my saved eq; view saved eqs; show my presets; import preset; my collection eqs; manage saved eqs; get stored eq; saved eq missing",
-    steps: ["Go to My Collection → Saved EQs to manage your presets. Choose Saved EQ in Preference Tuning or the Listening Pool to use one.", "If it was saved on another device, check that you are using the original browser or that private Sync was enabled and both devices were approved."],
+    steps: ["Go to My Collection → Saved EQs and choose Upload your EQ (.txt). Use an Equalizer APO / Peace parametric TXT with Preamp and Filter settings. No target or headphone measurement is needed.", "Choose Saved EQ in Tuning or Music library to play the saved filters. You can also upload directly beside that selector.", "If it was saved on another device, check that you are using the original browser or that private Sync was enabled and both devices were approved."],
   },
   {
     id: "sharing", title: "See or change data and sharing choices", href: data, targets: ["#data-sharing", "a[href='/participation?review=1&return_to=/my-data']"],

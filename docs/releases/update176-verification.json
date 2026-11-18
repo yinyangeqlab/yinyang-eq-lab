@@ -1,0 +1,76 @@
+{
+  "update": 176,
+  "sourceCommit": "11fa8ae467767f842b2148b603e11333d15e377c",
+  "deploymentVerification": {
+    "at": "2026-11-17T13:18:01Z",
+    "update": 176,
+    "revision": "11fa8ae467767f842b2148b603e11333d15e377c",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4",
+    "previousRecoveryEvidence": "docs/releases/update175-wallpaper-and-tuning-links-recovery-verification.json",
+    "publicGuideVerified": true,
+    "staticAndDiscordPreviewVerified": true,
+    "matchingGuideAssets": 20,
+    "technicalPdfDownloadVerified": true,
+    "fillableChecklistServed": true,
+    "legacyPdfRedirectVerified": true,
+    "protectedRecordingAccessRetained": true,
+    "versionPageVerified": true,
+    "matchingWorkerModules": 369
+  },
+  "candidateVerification": {
+    "sourceRevision": "11fa8ae467767f842b2148b603e11333d15e377c",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "retainedPreviousClientFiles": 2779,
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": false,
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "gearList": true,
+        "charts": 3,
+        "tocKeyboard": true,
+        "checklist": true,
+        "pdfDownload": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 390,
+        "gearList": true,
+        "charts": 3,
+        "tocKeyboard": true,
+        "checklist": true,
+        "pdfDownload": true,
+        "horizontalOverflow": false
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

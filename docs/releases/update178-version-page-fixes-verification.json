@@ -1,0 +1,98 @@
+{
+  "update": 178,
+  "sourceCommit": "4d34fdcf52aa60ac4739eadc4a3cd7033f764350",
+  "deploymentVerification": {
+    "at": "2026-11-18T05:43:38Z",
+    "update": 178,
+    "revision": "4d34fdcf52aa60ac4739eadc4a3cd7033f764350",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "4832c914ca0647f4c8b324332fb1b1c22a303dc3",
+    "previousRecoveryEvidence": "docs/releases/update178-recovery-verification.json",
+    "publicGuideVerified": true,
+    "staticAndDiscordPreviewVerified": true,
+    "matchingGuideAssets": 20,
+    "technicalPdfDownloadVerified": true,
+    "fillableChecklistServed": true,
+    "legacyPdfRedirectVerified": true,
+    "protectedRecordingAccessRetained": true,
+    "versionPageVerified": true,
+    "matchingWorkerModules": 384,
+    "matchingVersionClientAssets": 2,
+    "publishedVersionReleaseLinks": 34
+  },
+  "candidateVerification": {
+    "sourceRevision": "4d34fdcf52aa60ac4739eadc4a3cd7033f764350",
+    "regressionSuitesPassed": 126,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "nodeVersion": "26.12.0",
+    "npmVersion": "12.2.1",
+    "retainedPreviousClientFiles": 2860,
+    "typeScriptAndLintPassed": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "dedicatedNonContributingLayoutAccount": true,
+    "authenticatedProductionUiVerified": true,
+    "liveBrowserChecks": [
+      {
+        "width": 1280,
+        "theme": "dark",
+        "javaScriptEnabled": true,
+        "status": "passed"
+      },
+      {
+        "width": 320,
+        "theme": "dark",
+        "javaScriptEnabled": true,
+        "status": "passed"
+      }
+    ],
+    "packagedBrowserChecks": [
+      {
+        "width": 1280,
+        "theme": "dark",
+        "javaScriptEnabled": true,
+        "status": "passed"
+      },
+      {
+        "width": 768,
+        "theme": "light",
+        "javaScriptEnabled": true,
+        "status": "passed"
+      },
+      {
+        "width": 320,
+        "theme": "dark",
+        "javaScriptEnabled": true,
+        "status": "passed"
+      },
+      {
+        "width": 320,
+        "theme": "light",
+        "javaScriptEnabled": false,
+        "status": "passed"
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true,
+  "newDataExport": false,
+  "newDataSnapshot": false,
+  "migrations": []
+}

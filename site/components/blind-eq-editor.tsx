@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { parseEqPresetText, validateEqPreset, type EqFilter, type EqPreset } from "@/lib/blind-eq";
+import { MAX_BLIND_EQ_FILTERS, MAX_BLIND_EQ_PREAMP, MIN_BLIND_EQ_PREAMP, parseEqPresetText, validateEqPreset, type EqFilter, type EqPreset } from "@/lib/blind-eq";
 import { MAX_PRESET_Q, MIN_PRESET_Q } from "@/lib/peq-preset";
 
 type Row = { scope: "both" | "left" | "right"; enabled: boolean; type: EqFilter["type"]; hz: string; gain: string; q: string };
@@ -19,7 +19,7 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
   const [name, setName] = useState(initialPreset?.name ?? initialName), [preamps, setPreamps] = useState<[string, string]>(() => initialPreset ? [String(initialPreset.channels[0].preampDb), String(initialPreset.channels[1].preampDb)] : ["0", "0"]);
   const [separatePreamps, setSeparatePreamps] = useState(() => Boolean(initialPreset && initialPreset.channels[0].preampDb !== initialPreset.channels[1].preampDb));
   const [rows, setRows] = useState<Row[]>(() => filterRows(initialPreset)), [manual, setManual] = useState(false);
-  const [message, setMessage] = useState(initialPreset ? "Ready · previous preset restored. Review or edit below." : ""), [error, setError] = useState(""), [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState(initialPreset ? "Ready · review or edit the loaded preset below." : ""), [error, setError] = useState(""), [busy, setBusy] = useState(false);
   function dirty() { onChange(null); setMessage("Not applied yet · choose Use these settings to make this preset ready."); setError(""); }
   function rename(value: string) {
     setName(value); setError("");
@@ -56,10 +56,10 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
     <h2 id={`${id}-title`}>{title}</h2>
     <label htmlFor={`${id}-name`}>Name to reveal at the end</label>
     <input id={`${id}-name`} maxLength={100} value={name} disabled={busy} onChange={event => rename(event.target.value)} />
-    <label className="eq-upload">{busy ? "Reading preset…" : "Choose EQ settings file (.txt)"}<input type="file" accept=".txt,text/plain" disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>
+    <label className="eq-upload">{busy ? "Reading preset…" : initialPreset ? "Replace EQ from TXT" : "Choose EQ settings file (.txt)"}<input type="file" accept=".txt,text/plain" disabled={busy} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }} /></label>
     <details open={manual} onToggle={event => setManual(event.currentTarget.open)}>
       <summary>Advanced: enter or inspect individual sound adjustments</summary>
-      {separatePreamps ? <div className="eq-preamps">{(["Left", "Right"] as const).map((channel, index) => <label key={channel}>{channel} preamp (dB)<input type="number" min={-40} max={40} step="any" value={preamps[index]} disabled={busy} onChange={event => { dirty(); const next: [string, string] = [...preamps]; next[index] = event.target.value; setPreamps(next); }} /></label>)}</div> : <label className="eq-shared-preamp">Preamp (dB)<input type="number" min={-40} max={40} step="any" value={preamps[0]} disabled={busy} onChange={event => { dirty(); setPreamps([event.target.value, event.target.value]); }} /></label>}
+      {separatePreamps ? <div className="eq-preamps">{(["Left", "Right"] as const).map((channel, index) => <label key={channel}>{channel} preamp (dB)<input type="number" min={MIN_BLIND_EQ_PREAMP} max={MAX_BLIND_EQ_PREAMP} step="any" value={preamps[index]} disabled={busy} onChange={event => { dirty(); const next: [string, string] = [...preamps]; next[index] = event.target.value; setPreamps(next); }} /></label>)}</div> : <label className="eq-shared-preamp">Preamp (dB)<input type="number" min={MIN_BLIND_EQ_PREAMP} max={MAX_BLIND_EQ_PREAMP} step="any" value={preamps[0]} disabled={busy} onChange={event => { dirty(); setPreamps([event.target.value, event.target.value]); }} /></label>}
       <label className="eq-check"><input type="checkbox" checked={separatePreamps} disabled={busy} onChange={event => { dirty(); setSeparatePreamps(event.target.checked); if (!event.target.checked) setPreamps([preamps[0], preamps[0]]); }} />Separate Left / Right preamps</label>
       <p className="eq-muted">{separatePreamps ? "Turn this off to use the Left value as one shared preamp." : "One preamp applies to both channels."}</p>
       <p className="eq-muted">Peak (PK), low shelf (LSC) or high shelf (HSC). Shelf frequency is the center; Q controls the slope. No enabled filters means a flat reference.</p>
@@ -73,9 +73,9 @@ export default function BlindEqEditor({ title, initialName, initialPreset, onCha
         <label>Q<input type="number" min={MIN_PRESET_Q} max={MAX_PRESET_Q} step="any" value={row.q} disabled={!row.enabled} onChange={event => update(index, { q: event.target.value })} /></label>
         <button type="button" className="eq-remove" aria-label={`Remove filter ${index + 1}`} onClick={() => { dirty(); setRows(current => current.filter((_, i) => i !== index)); }}>Remove</button>
       </fieldset>)}</div>
-      <div className="eq-actions"><button type="button" disabled={busy || rows.length >= 64} onClick={() => { dirty(); setRows(current => [...current, emptyRow()]); }}>Add filter</button></div>
+      <div className="eq-actions"><button type="button" disabled={busy || rows.length >= 2 * MAX_BLIND_EQ_FILTERS} onClick={() => { dirty(); setRows(current => [...current, emptyRow()]); }}>Add filter</button></div>
     </details>
-    <button type="button" disabled={busy} onClick={save}>Use these settings</button>
+    {!initialPreset && <button type="button" disabled={busy} onClick={save}>Use these settings</button>}
     {message && <p className="eq-success" role="status">{message}</p>}
     {error && <p className="eq-error" role="alert">{error}</p>}
   </section>;

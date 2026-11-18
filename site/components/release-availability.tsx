@@ -1,24 +1,50 @@
 "use client";
+
 import { useEffect, useState } from "react";
-/** Availability is operational state, independent from the beta product version. */
+
+const accountAccess = "Feature access depends on your account permissions.";
+
 export default function ReleaseAvailability() {
-  const [label, setLabel] = useState("Checking current access status…");
+  const [label, setLabel] = useState(accountAccess);
   useEffect(() => {
-    const abort = new AbortController(); let request = 0;
+    const lifetime = new AbortController();
+    let checking = false;
     const refresh = async () => {
-      const id = ++request;
+      if (checking || document.visibilityState === "hidden") return;
+      checking = true;
       try {
-        const response = await fetch("/api/maintenance", { cache: "no-store", signal: abort.signal });
-        if (!response.ok) throw Error("unavailable");
-        const value: unknown = await response.json();
-        if (!value || typeof value !== "object" || !("active" in value) || typeof value.active !== "boolean") throw Error("unavailable");
-        if (!abort.signal.aborted && id === request) setLabel("ownerOnly" in value && value.ownerOnly === true ? "Closed for private testing" : value.active ? "Some features are temporarily paused" : "No maintenance closure is reported; feature access follows your account permissions.");
-      } catch { if (!abort.signal.aborted && id === request) setLabel("Current access status is unavailable. The beta label does not indicate whether access is open."); }
+        const response = await fetch("/api/maintenance", {
+          cache: "no-store",
+          signal: AbortSignal.any([lifetime.signal, AbortSignal.timeout(8_000)]),
+        });
+        if (!response.ok) throw new Error("Status request failed");
+        const status: unknown = await response.json();
+        if (!status || typeof status !== "object" || !("active" in status) || typeof status.active !== "boolean") {
+          throw new Error("Invalid maintenance status");
+        }
+        if (lifetime.signal.aborted) return;
+        if ("ownerOnly" in status && status.ownerOnly === true) {
+          setLabel("The site is closed for private testing.");
+        } else if (status.active && "pauseSubmissions" in status && status.pauseSubmissions === true) {
+          setLabel("Some features are temporarily paused for maintenance.");
+        } else {
+          setLabel(status.active ? accountAccess : `No active maintenance. ${accountAccess}`);
+        }
+      } catch {
+        if (!lifetime.signal.aborted) setLabel(`Maintenance status is unavailable. ${accountAccess}`);
+      } finally {
+        checking = false;
+      }
     };
-    void refresh(); const timer = window.setInterval(()=>void refresh(), 60_000);
-    const visible = () => { if (document.visibilityState === "visible") void refresh(); };
-    document.addEventListener("visibilitychange", visible);
-    return () => { abort.abort(); window.clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
+    const check = () => void refresh();
+    check();
+    const timer = window.setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", check);
+    return () => {
+      lifetime.abort();
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", check);
+    };
   }, []);
   return <p role="status">{label}</p>;
 }

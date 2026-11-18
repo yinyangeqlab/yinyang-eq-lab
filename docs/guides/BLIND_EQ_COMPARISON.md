@@ -1,3 +1,19 @@
+# Saved EQs comparison — update178
+
+Open **My Collection → Saved EQs**, select two presets, and choose **Compare blind**.
+Pick music and select **Hide presets & start**. The comparison uses the saved
+filters and playback preamps from both presets. It shows a notice if either
+preset has an attached headphone channel correction, which is separate from the
+EQ being compared. You can still upload two TXT files on the comparison page.
+
+Comparison presets support up to 40 filters per channel and a preamp from −60 to
++40 dB. Starting with Saved EQs requires no targets or headphone measurements.
+The selected preset IDs stay in the URL fragment until the page loads them
+from this browser. The page removes the fragment before listening.
+
+The update178 release candidate is based on verified update177, source
+`867cb113729a7df640d4d23e8297b75bd97cbf32`. The records below describe earlier releases.
+
 # Pending local corrections — not committed or deployed
 
 The isolated design-corrections checkout validates both presets against the retained playback AudioContext rate before blinding. Listening-phase rate errors omit filter details. TXT support describes syntax rather than unverified producer compatibility; CH:0/CH:1 is not a claim that every Qudelix/PEQdB export is supported. Download names are timestamped, and progress separates compared, skipped and unanswered songs. The exported heard values remain five-second eligibility counters, not total listening duration. The deployment records below are historical and do not establish deployment of these corrections.

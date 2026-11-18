@@ -1,9 +1,16 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update175**, source `1f61fd196eef06e3a930e3aa98bc31ab61a4e0b4`.
+Recorded deployment: **update178**, source `d044bf6f0e8fd967567fa6fc31124d3748924fa5`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update178 Version page and mobile Help refresh
+
+The Version page includes searchable release notes, direct links to all 76 updates, and nine restored GitHub links. Ask for help has its own row above the blind comparison controls on phones.
+
+[Deployment verification](releases/update178-mobile-compare-help-verification.json) · [Version page verification](releases/update178-version-page-fixes-verification.json)
+
 
 ## Update175 Arya Stealth preset and Version history
 

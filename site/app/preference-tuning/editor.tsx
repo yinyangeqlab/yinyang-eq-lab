@@ -747,6 +747,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [soundMode, setSoundMode] = useState<SoundMode>("target");
   const [presets, setPresets] = useState<LibraryEq[]>([]);
   const [presetId, setPresetId] = useState("");
+  const openedPresetLink = useRef("");
   const [previewRate, setPreviewRate] = useState(48000);
   const [preparingEq, setPreparingEq] = useState(false);
   const modeDrafts = useRef<Record<SoundMode, Settings>>({ target: { ...defaults }, saved: { ...defaults } });
@@ -1582,29 +1583,29 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     window.addEventListener("keydown", escape);
     return () => window.removeEventListener("keydown", escape);
   }, [instructionsOpen, visible]);
-  function persistBrowserValue(key: string, value: string | null) {
+  const persistBrowserValue = useCallback((key: string, value: string | null) => {
     try { if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value); }
     catch { setStorageNotice("Browser storage is unavailable. Tuning and headphone changes apply in this tab only; they will not be saved when you leave."); }
-  }
+  }, []);
   function saveMeasurements(rows: HeadphoneMeasurement[]) { setMeasurements(rows); persistBrowserValue("target-lab-measurements", JSON.stringify(rows)); }
-  function chooseMeasurement(id: string) { setMeasurementId(id); persistBrowserValue("target-lab-active-measurement", id); const row = measurements.find(item => item.id === id); if (row) setHeadphoneType(row.type); }
+  const chooseMeasurement = useCallback((id: string) => { setMeasurementId(id); persistBrowserValue("target-lab-active-measurement", id); const row = measurements.find(item => item.id === id); if (row) setHeadphoneType(row.type); }, [measurements, persistBrowserValue]);
   function clearMeasurement() { setMeasurementId(""); persistBrowserValue("target-lab-active-measurement", null); }
   function addMeasurement(row: HeadphoneMeasurement) { saveMeasurements([...measurements, row]); setMeasurementId(row.id); setHeadphoneType(row.type); persistBrowserValue("target-lab-active-measurement", row.id); }
   function deleteMeasurement(id: string) { saveMeasurements(measurements.filter(row => row.id !== id)); if (measurementId === id) clearMeasurement(); }
   async function importMeasurement(entry: CatalogMeasurement) { try { const row = await importCatalogEntry(entry); addMeasurement(row); } catch (error) { setMessage(error instanceof Error ? error.message : "Could not import this headphone measurement."); } }
-  function changeSoundMode(next: SoundMode) {
+  const changeSoundMode = useCallback((next: SoundMode) => {
     if (next === soundMode) return;
     setSelectedGraphBand(null);
     setSelectedFocusHz(null);
     modeDrafts.current[soundMode] = { ...settings }; setSoundMode(next);
     showEdit({ ...editRef.current, settings: { ...modeDrafts.current[next] } }); setPast([]); setFuture([]);
-  }
-  function chooseSavedEq(id: string) {
+  }, [settings, showEdit, soundMode]);
+  const chooseSavedEq = useCallback((id: string) => {
     setPresetId(id); setMessage("");
     showEdit({ ...editRef.current, settings: { ...defaults } }); modeDrafts.current.saved = { ...defaults }; setPast([]); setFuture([]);
     const eq = presets.find(item => item.id === id);
     if (eq?.measurementId && measurements.some(row => row.id === eq.measurementId)) chooseMeasurement(eq.measurementId);
-  }
+  }, [chooseMeasurement, measurements, presets, showEdit]);
   function saveEditedEq() {
     if (!savedEq) return;
     try {
@@ -1648,12 +1649,39 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
     selectFocusedFilter(hz);
     applyEdit({ ...current, settings: { ...current.settings, focused } });
   }
+  // The browser-local preset ID stays in the fragment. Opening a link does not start audio.
+  useEffect(() => {
+    if (!visible || !axisLoaded) { openedPresetLink.current = ""; return; }
+    const openPreset = () => {
+      const hash = window.location.hash ?? "";
+      if (!hash.startsWith("#saved-eq=")) { openedPresetLink.current = ""; return; }
+      if (openedPresetLink.current === hash) return;
+      openedPresetLink.current = hash;
+      const id = new URLSearchParams(hash.slice(1)).get("saved-eq");
+      const eq = readLibraryEqs().find(item => item.id === id);
+      changeSoundMode("saved");
+      chooseSavedEq(eq?.id ?? "");
+      const destination = eq ? "saved-eq-listening" : "tuning-headphones";
+      if (eq) {
+        setBypass(false);
+        setPlayerOpen(true);
+      } else {
+        setMessage("This EQ is unavailable in this browser. Choose or upload a saved EQ.");
+        setSetupOpen(true);
+      }
+      requestAnimationFrame(() => document.getElementById(destination)?.scrollIntoView({ block: "start" }));
+    };
+    openPreset();
+    window.addEventListener("hashchange", openPreset);
+    return () => window.removeEventListener("hashchange", openPreset);
+  }, [axisLoaded, visible, route, changeSoundMode, chooseSavedEq]);
   // Links to #tuning-headphones or #saved-eq-listening, from this page or another, open the chooser or the full Playback controls they point at.
   // Client navigation raises no hashchange, so the hash is also read each time Tuning is entered or its route changes.
   useEffect(() => {
     if (!visible) return;
     const openFromHash = () => {
-      if (window.location.hash === "#saved-eq-listening") {
+      const hash = window.location.hash;
+      if (hash === "#saved-eq-listening") {
         setPlayerOpen(true);
         requestAnimationFrame(() => document.getElementById("saved-eq-listening")?.scrollIntoView({ block: "start" }));
         return;

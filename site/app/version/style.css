@@ -1,27 +1,104 @@
-.version-history { display: grid; gap: 12px; }
+.alpha-version-page {
+  --version-focus: #a5eee1;
+  --version-field-background: #0d2028;
+  --version-field-border: #59727b;
+  --version-hover: #162e37;
+  --version-muted: #b4c6ce;
+}
+
+[data-site-theme="light"] .alpha-version-page {
+  --version-focus: var(--site-light-accent);
+  --version-field-background: var(--site-light-surface);
+  --version-field-border: var(--site-light-muted);
+  --version-hover: var(--site-light-soft);
+  --version-muted: var(--site-light-muted);
+}
+
+.alpha-version-page a { text-decoration: underline; }
+.alpha-version-page :focus-visible {
+  outline: 2px solid var(--version-focus);
+  outline-offset: 3px;
+}
+.alpha-version-page .alpha-release-summary { margin-block: 10px 4px; }
+.alpha-version-page ul { list-style: disc outside; }
+.version-build-meta { display: flex; flex-wrap: wrap; gap: 0 12px; }
+.version-jump-links { margin-block: 12px 20px; }
+.alpha-version-page h2[id] { scroll-margin-block-start: 16px; }
+
+.version-history { padding: clamp(12px, 3vw, 20px); }
+.version-history-entries {
+  display: grid;
+  gap: 8px;
+  margin-block: 12px 18px;
+}
+.version-history-search {
+  display: grid;
+  gap: 6px;
+  max-width: 400px;
+}
+.version-history:has(> noscript > div) .version-history-search { display: none; }
+.version-history-search label { font-size: 14px; font-weight: 600; }
+.version-history-search input {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--version-field-border);
+  border-radius: 8px;
+  background: var(--version-field-background);
+  font-size: 16px;
+}
+.version-history-search input::placeholder { color: var(--version-muted); }
+.version-history-results { font-size: 13px; color: var(--version-muted); }
+
 .version-history details {
-  padding: 8px 11px;
+  min-width: 0;
   border: 1px solid #35525b;
   border-radius: 8px;
   background: #0d2028;
-  scroll-margin-top: 68px;
+  scroll-margin-block-start: 16px;
 }
+.version-history details:target { border-color: var(--version-focus); }
 .version-history summary {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr) max-content;
-  align-items: baseline;
-  gap: 8px;
-  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: inherit;
+  list-style: none;
   cursor: pointer;
 }
+.version-history summary::-webkit-details-marker { display: none; }
+.version-history summary:hover { background: var(--version-hover); }
+.version-history-chevron {
+  flex: 0 0 7px;
+  height: 7px;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  transform: rotate(-45deg);
+}
+.version-history details[open] .version-history-chevron { transform: rotate(45deg); }
+.version-history-heading {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  align-items: baseline;
+  gap: 8px 12px;
+  overflow-wrap: anywhere;
+}
 .version-history summary strong { color: #9de8dc; }
-.version-history summary strong::before { content: "▸"; display: inline-block; width: 13px; }
-.version-history details[open] summary strong::before { content: "▾"; }
-.version-history time { font-size: 12px; color: #b4c6ce; }
-.version-history details ul { margin: 7px 0 10px; }
-.version-history :focus-visible { outline: 2px solid #a5eee1; outline-offset: 3px; }
-@media (max-width: 520px) {
-  .version-history summary { grid-template-columns: minmax(0, 1fr) max-content; }
-  .version-history summary span { grid-row: 2; grid-column: 1 / -1; }
-  .version-history time { grid-row: 1; grid-column: 2; }
+.version-history time { font-size: 12px; color: var(--version-muted); }
+.version-history-content { padding: 0 12px 12px; }
+.version-history-content ul { margin: 4px 0 12px; }
+.version-history-content .alpha-version-links { gap: 8px 16px; }
+
+@media (max-width: 560px) {
+  .version-history-heading { grid-template-columns: minmax(0, 1fr) max-content; gap: 2px 8px; }
+  .version-history-heading > span { grid-row: 2; grid-column: 1 / -1; }
+  .version-history-heading time { grid-row: 1; grid-column: 2; }
+}
+
+@media (max-width: 380px) {
+  .alpha-app:has(.alpha-version-page) .site-topbar-title { display: none; }
 }

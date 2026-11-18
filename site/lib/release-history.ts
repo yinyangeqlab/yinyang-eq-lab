@@ -12,6 +12,22 @@ export type ReleaseNotes = {
 };
 
 export const candidateChanges = [
+  "On mobile, Help opens above the blind comparison so playback, voting, and results stay within reach.",
+  "Find songs in smaller batches and see which preset was A and B for each song after reveal.",
+  "Select two presets in Saved EQs and choose Compare blind. Both open in Blind EQ Comparison without requiring a target or another upload.",
+  "Search release history by update number or keyword, share links that open individual updates, and find the restored GitHub release links.",
+] as const;
+
+const update177Changes = [
+  "Upload a parametric EQ TXT from Saved EQs, Tuning, or Music library. No target curve or headphone measurement is needed.",
+  "Open a preset directly from Saved EQs to hear it in Tuning with your music.",
+] as const;
+
+const update176Changes = [
+  "IEM Measurement Guide Revision 01 adds bench gear and substitution checks, a fillable checklist, and illustrated left/right EQ verification.",
+] as const;
+
+const update175Changes = [
   "Try and download trudenpa’s original 19-band HiFiMAN Arya Stealth preset in Research Rankings, tagged Diamond and YYT1.",
 ] as const;
 
@@ -289,8 +305,11 @@ const update132Changes = [
 // The public changelog summarizes the recorded beta updates and their baseline.
 // Public source links are added only when the corresponding history is available.
 export const releaseHistory: readonly ReleaseNotes[] = [
+  { update: 178, date: "2026-11-17", title: "Blind comparison from Saved EQs", changes: candidateChanges },
+  { update: 177, date: "2026-11-17", title: "Saved EQ uploads", changes: update177Changes },
+  { update: 176, date: "2026-11-17", title: "IEM measurement guide Revision 01", changes: update176Changes },
   {
-    update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: candidateChanges,
+    update: 175, date: "2026-11-16", title: "Arya Stealth preset", changes: update175Changes,
     github: { commit: "45bfbfb24de4fcfaed83718641228953533ce273", releaseTag: "update175" },
   },
   {
@@ -298,6 +317,7 @@ export const releaseHistory: readonly ReleaseNotes[] = [
     refreshReleases: [
       { tag: "update174-tuning-playback-release-link", label: "Tuning playback link refresh on GitHub" },
       { tag: "update174-wallpapers-version-link", label: "Version page refresh on GitHub" },
+      { tag: "update174-version-release-links", label: "Release links refresh on GitHub" },
     ],
   },
   {
@@ -313,7 +333,11 @@ export const releaseHistory: readonly ReleaseNotes[] = [
     },
     refreshReleases: [{ tag: "update171-sidebar-version-link", label: "Version page refresh on GitHub" }],
   },
-  { update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes, github: { commit: "30e7d9d6bc5ad4df11f2772aac76489ec8ce3db0", releaseTag: "update170" } },
+  {
+    update: 170, date: "2026-11-15", title: "IEM measurement guide", changes: update170Changes,
+    github: { commit: "30e7d9d6bc5ad4df11f2772aac76489ec8ce3db0", releaseTag: "update170" },
+    refreshReleases: [{ tag: "update170-iem-guide-pdf-label", label: "IEM guide PDF title on GitHub" }],
+  },
   {
     update: 169, date: "2026-11-15", title: "Target and EQ preset rankings", changes: update169Changes,
     github: {
@@ -336,22 +360,26 @@ export const releaseHistory: readonly ReleaseNotes[] = [
   { update: 167, date: "2026-11-14", title: "Sidebar controls", changes: update167Changes, github: { commit: "677fd44ef9893134a5fa5e1553c28d6c49b54924", releaseTag: "update167" } },
   { update: 166, date: "2026-11-14", title: "Peak & Dip Finder saved EQ and live adjustments", changes: update166Changes, github: { commit: "42a3ddadbb2dcd9b7930f91bbade5439c09bc8ef", releaseTag: "update166" } },
   { update: 165, date: "2026-11-14", title: "Preference Tuning target match", changes: update165Changes, github: { commit: "da4977a00ba46537521b18340dd32e433110b662", releaseTag: "update165" } },
-  { update: 164, date: "2026-11-14", title: "Site Help and guided walkthroughs", changes: update164Changes, github: { commit: "ad71f9a649f581cc246507ceb1add6108fec7a85", releaseTag: "update164" } },
+  {
+    update: 164, date: "2026-11-14", title: "Site Help and guided walkthroughs", changes: update164Changes,
+    github: { commit: "ad71f9a649f581cc246507ceb1add6108fec7a85", releaseTag: "update164" },
+    refreshReleases: [{ tag: "update164-version-link-refresh", label: "Version page refresh on GitHub" }],
+  },
   { update: 163, date: "2026-11-14", title: "Blind Shootout submission diagnostics", changes: update163Changes, github: { commit: "77a20497340c0cb90262d6e395470be37aca34c7", releaseTag: "update163" } },
   { update: 162, date: "2026-11-13", title: "Personal Tournament rotation and progress", changes: update162Changes, github: { commit: "e2ab7a147004882b60636ec57914ef6966ae4d62", releaseTag: "update162" } },
   { update: 161, date: "2026-11-13", title: "Blind Shootout playback and Free Listening rankings", changes: update161Changes, github: { commit: "5e0abc5d4e8e442fed3fa30e754d6b077efa5065", releaseTag: "update161" } },
-  { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes },
+  { update: 160, date: "2026-11-13", title: "Sidebar glass and chevron", changes: update160Changes, github: { commit: "118e051dc5e32a096c10a7e365091450bd4edb67", releaseTag: "update160" } },
   { update: 159, date: "2026-11-13", title: "Layout, accessibility and site review fixes", changes: update159Changes, github: { commit: "7fd72eeaca962c567c44c37477d173eae1ae2f87", releaseTag: "update159" } },
   { update: 158, date: "2026-11-13", title: "Preference Tuning target picker and downloads", changes: update158Changes, github: { commit: "679693ee9ae543669295ca9e4f601ccad5a148be", releaseTag: "update158" } },
   { update: 157, date: "2026-11-13", title: "Shootout submission diagnostics", changes: update157Changes, github: { commit: "890be93afa4e0b77459c4ad46b3efe13356636e8", releaseTag: "update157" } },
-  { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: update156Changes, github: { commit: "f465c1d2ed3ce5361387aeafdcb8ecec4d178443" } },
-  { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: update155Changes },
+  { update: 156, date: "2026-11-13", title: "Shootout votes, target downloads and trial history", changes: update156Changes, github: { commit: "f465c1d2ed3ce5361387aeafdcb8ecec4d178443", releaseTag: "update156" } },
+  { update: 155, date: "2026-11-11", title: "Glossary and shareable EQ guides", changes: update155Changes, github: { commit: "ce8704e878a782e68b90469f377a0475fabc5cbc", releaseTag: "update155" } },
   { update: 154, date: "2026-11-11", title: "Reading the EQ fitter benchmark", changes: update154Changes },
-  { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: update153Changes },
-  { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: update152Changes },
+  { update: 153, date: "2026-11-11", title: "Browser ID verification", changes: update153Changes, github: { commit: "0ea0092ba4ef4b19eb1a347e2715f0de4b3e4279", releaseTag: "update153" } },
+  { update: 152, date: "2026-11-11", title: "Home rocket and My Collection", changes: update152Changes, github: { commit: "2cb5c66a7c8582e2818cce4b1f2fc69b72444ff8", releaseTag: "update152" } },
   { update: 151, date: "2026-11-11", title: "Private admin table improvements", changes: update151Changes },
   { update: 150, date: "2026-11-11", title: "Terms of Use and target sharing", changes: update150Changes },
-  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: update149Changes },
+  { update: 149, date: "2026-11-11", title: "AutoEq targets in Shootout and Tuning", changes: update149Changes, github: { commit: "ec0269bfbb9c0f587747a1cd6265d76965d5aab0", releaseTag: "update149" } },
   { update: 148, date: "2026-11-11", title: "Sidebar controls and icon animations", changes: update148Changes },
   { update: 147, date: "2026-11-11", title: "AutoEq target source library", changes: update147Changes },
   { update: 146, date: "2026-11-11", title: "Homepage wallpapers and Sound A/B design", changes: update146Changes },

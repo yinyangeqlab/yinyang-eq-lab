@@ -12,7 +12,7 @@ const window = new EventTarget(); let changes = 0; window.addEventListener('libr
 function load(file) {
   file = path.resolve(file); if (cache.has(file)) return cache.get(file);
   const mod = { exports: {} }; cache.set(file, mod.exports);
-  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,ArrayBuffer,DataView,Math,Number,crypto,localStorage,window,Event,setTimeout,require(name){const resolved=name.startsWith('@/')?path.resolve('site',name.slice(2)):path.resolve(path.dirname(file),name);return load(resolved.endsWith('.ts')?resolved:resolved+'.ts');}});
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,ArrayBuffer,DataView,Math,Number,Error,crypto,localStorage,window,Event,setTimeout,require(name){const resolved=name.startsWith('@/')?path.resolve('site',name.slice(2)):path.resolve(path.dirname(file),name);return load(resolved.endsWith('.ts')?resolved:resolved+'.ts');}});
   return mod.exports;
 }
 let sweeps = 0;
@@ -130,10 +130,87 @@ localStorage.setItem(LIBRARY_EQ_KEY,'broken');assert.throws(()=>removeLibraryEqs
 localStorage.setItem(LIBRARY_EQ_KEY,JSON.stringify(rows.slice(0,3)));
 const collection=mount('site/components/saved-eq-collection.tsx',{props:{measurements:[],onUpdate(){}},globals:{localStorage,crypto},imports:{'@/lib/music-library-eq':{readLibraryEqs,removeLibraryEq,removeLibraryEqs,saveLibraryEq,measurementChannelMatch}}});
 const fireRefresh=()=>{collection.events.get('library-eqs-changed').forEach(fn=>fn());collection.render();};
-collection.render();collection.button('Select all').props.onClick();collection.render();collection.button('Delete selected (3)').props.onClick();collection.render();
+collection.render();
+assert.ok(collection.button('Compare blind').props.disabled);
+for (const name of ['Bulk 0','Bulk 1']) {
+  collection.find(node=>node.props?.['aria-label']===`Select ${name}`).props.onChange({target:{checked:true}});
+  collection.render();
+}
+assert.equal(collection.find(node=>node.props?.href?.startsWith('/eq-compare#')).props.href,'/eq-compare#saved-eq=bulk-0&saved-eq=bulk-1');
+assert.equal(readLibraryEqs().length,3,'Selecting a pair does not write to the collection');
+collection.button('Select all').props.onClick();collection.render();collection.button('Delete selected (3)').props.onClick();collection.render();
 assert.equal(readLibraryEqs().length,3,'Opening confirmation does not delete anything');collection.button('Cancel').props.onClick();collection.render();assert.equal(readLibraryEqs().length,3);
 collection.button('Delete selected (3)').props.onClick();collection.render();localStorage.blocked=true;collection.button('Delete 3 EQs').props.onClick();collection.render();localStorage.blocked=false;
 assert.ok(collection.button('Delete 3 EQs'),'A failed write leaves confirmation available for retry');
 collection.button('Delete 3 EQs').props.onClick();fireRefresh();assert.equal(readLibraryEqs().length,0);collection.unmount();
 console.log('PASS saved EQ dates, cached safe headroom, coefficient invalidation, one-write/one-event bulk deletion, cross-tab preservation, storage failure and actual bulk confirmation/cancel handlers.');
+console.log(`Bulk deletion of 20/30 synthetic EQs: ${deleteMs.toFixed(2)} ms; zero frequency sweeps.`);
+
+// Import real settings, never reinterpret a target curve or discard DSP commands.
+const text=n=>n==null||typeof n==='boolean'?'':typeof n!=='object'?String(n):Array.isArray(n)?n.map(text).join(''):text(n.props?.children);
+const settings19 = '# Synthetic 19-band preset\nPreamp: -11.6 dB\n' + Array.from({length:19},(_,i)=>`Filter ${i+1}: ON PK Fc ${100+i*400} Hz Gain -1 dB Q ${.5+i/10}`).join('\n');
+const imported19 = parseLibraryEq(settings19,'Uploaded headphones EQ');
+assert.equal(imported19.filters.length,19);
+assert.equal(imported19.preamp,-11.6);
+assert.equal(imported19.target,undefined,'Import does not invent a target');
+assert.equal(imported19.measurementId,undefined,'Import needs no measurement');
+const aliases = parseLibraryEq('\uFEFF# APO/Peace export\nChannel: ALL\nPreamp: -6 dB # gain\nFilter: ON PEQ Fc 1000 Hz Gain -.5 dB Q .7\nFilter 2: ON LS Fc 80 Hz Gain 1 dB\nFilter 3: ON HS Fc 8000 Hz Gain -2 dB Q 0.5\nFilter 4: OFF PK Fc 400 Hz Gain 10 dB Q 1','Aliases');
+assert.deepEqual([...aliases.filters.map(row=>row.type)],['PK','LSC','HSC']);
+assert.equal(aliases.filters[0].q,.7);
+assert.equal(aliases.filters[1].q,Math.SQRT1_2);
+assert.equal(parseLibraryEq('Preamp: -2 dB\nPreamp: -3 dB\nFilter 1: ON PK Fc 1000 Hz Gain -1 dB Q 1','Cumulative preamp').preamp,-5);
+for (const command of ['Include: another.txt','Convolution: impulse.wav','GraphicEQ: 20 1; 1000 0','Channel: R','CH: 2','Filter 20: ON HP Fc 100 Hz Q .7']) {
+  assert.throws(()=>parseLibraryEq(settings19+'\n'+command,'Unsupported'),/Unsupported|separate Left\/Right/,'Unsupported processing must not be silently dropped');
+}
+assert.throws(()=>parseLibraryEq('20, 0\n1000, 2\n20000, 0','A target'),/target or measurement/);
+assert.throws(()=>parseLibraryEq('Filter 1: ON PK Fc 1000 Hz Gain 2 dB','No Q'),/Q value/);
+
+// Exercise the actual file input handler with shared storage and its publication event.
+localStorage.setItem(LIBRARY_EQ_KEY,JSON.stringify([eq]));
+const notificationsBefore=changes;
+let chosenImport;
+const uploader=mount('site/components/library-eq-upload.tsx',{props:{onImported:row=>chosenImport=row},globals:{localStorage,crypto},imports:{'@/lib/music-library-eq':{parseLibraryEq,saveLibraryEq}}});
+const uploadFile = async file => {
+  const input={files:[file],value:'chosen.txt'};
+  uploader.find(n=>n.type==='input'&&n.props.type==='file').props.onChange({target:input});
+  assert.equal(input.value,'','Input permits choosing the same file after an error');
+  await new Promise(resolve=>setImmediate(resolve));uploader.render();
+};
+await uploadFile({name:'My actual EQ.txt',size:settings19.length,text:async()=>settings19});
+assert.equal(changes,notificationsBefore+1,'Import notifies all listening areas once');
+assert.equal(chosenImport.name,'My actual EQ');
+const freshImport=readLibraryEqs().find(row=>row.id===chosenImport.id);
+assert.deepEqual([...freshImport.filters.map(row=>[row.type,row.hz,row.gain,row.q])],[...imported19.filters.map(row=>[row.type,row.hz,row.gain,row.q])],'Reload uses every uploaded filter unchanged');
+assert.ok(readLibraryEqs().some(row=>row.id===eq.id),'Import preserves existing EQs');
+assert.match(text(uploader.tree),/Saved My actual EQ/);
+const unchanged=localStorage.getItem(LIBRARY_EQ_KEY), selectedBefore=chosenImport;
+await uploadFile({name:'target.txt',size:24,text:async()=>'20 0\n1000 2\n20000 0'});
+assert.match(text(uploader.tree),/target or measurement/);
+assert.equal(localStorage.getItem(LIBRARY_EQ_KEY),unchanged);
+assert.equal(chosenImport,selectedBefore,'Failed import leaves listening selection intact');
+let fileRead=false;
+await uploadFile({name:'too-large.txt',size:100001,text:async()=>{fileRead=true;return settings19;}});
+assert.equal(fileRead,false,'Oversize files are rejected before reading');
+localStorage.blocked=true;
+await uploadFile({name:'valid.txt',size:settings19.length,text:async()=>settings19});
+localStorage.blocked=false;
+assert.match(text(uploader.tree),/Storage unavailable/);
+assert.equal(localStorage.getItem(LIBRARY_EQ_KEY),unchanged);
+assert.equal(chosenImport,selectedBefore);
+const full = JSON.stringify(Array.from({length:30}, (_, i) => ({...eq, id:`existing-${i}`})));
+localStorage.setItem(LIBRARY_EQ_KEY,full);
+await uploadFile({name:'new.txt',size:settings19.length,text:async()=>settings19});
+assert.match(text(uploader.tree),/30 saved EQs/);
+assert.equal(localStorage.getItem(LIBRARY_EQ_KEY),full,'A full collection rejects an import rather than evicting a preset');
+uploader.unmount();
+
+const soundImport=mount('site/components/sound-setup.tsx',{props:{mode:'saved',onMode(){},onPreset:id=>chosenImport=id,headphones:null,target:null,presets:[],presetId:''},imports:{'./library-eq-upload':{default:'upload-fixture'}}});
+soundImport.find(n=>n.type==='upload-fixture').props.onImported(freshImport);
+assert.equal(chosenImport,freshImport.id,'Tuning and Music library select an imported EQ immediately');
+soundImport.unmount();
+const emptyCollection=mount('site/components/saved-eq-collection.tsx',{props:{measurements:[],onUpdate(){}},imports:{'./library-eq-upload':{default:'upload-fixture'},'@/lib/music-library-eq':{readLibraryEqs:()=>[],measurementChannelMatch}}});
+emptyCollection.find(n=>n.type==='upload-fixture');
+assert.match(text(emptyCollection.tree),/Upload an EQ TXT above/,'Empty collection exposes the full-EQ importer');
+emptyCollection.unmount();
+console.log('PASS full-EQ file import, 19-filter fidelity, APO/Peace syntax, fail-closed DSP/channel validation, target-file guidance, storage failure, selection and empty-collection upload.');
 console.log(`Bulk deletion of 20/30 synthetic EQs: ${deleteMs.toFixed(2)} ms; zero frequency sweeps.`);

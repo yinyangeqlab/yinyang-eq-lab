@@ -1,0 +1,36 @@
+[
+  {
+    "number": 1,
+    "date": "2026-11-17",
+    "summary": "Added bench gear and reference checks, clarified troubleshooting and EQ verification, illustrated practical channel matching, and added a standalone fillable bench checklist.",
+    "pages": {
+      "wiring": 4,
+      "connections": 5,
+      "levels": 10,
+      "examples": 17,
+      "reference": 22,
+      "eq": 24,
+      "isolation": 15,
+      "bass": 16,
+      "repeat": 12,
+      "checklist": 28,
+      "index": 31,
+      "resonance": 23,
+      "verify": 26,
+      "checklistEnd": 29,
+      "advanced": 30,
+      "first": 11,
+      "save": 14,
+      "match": 25,
+      "input": 17,
+      "basics": 3,
+      "contents": 2,
+      "mount": 5,
+      "rew": 7,
+      "low": 19,
+      "overload": 20,
+      "leak": 18,
+      "appendix": 27
+    }
+  }
+]

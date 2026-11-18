@@ -10,7 +10,7 @@ import * as presetLimits from '../../../site/lib/peq-preset.ts';
 const source = readFileSync(new URL('../../../site/lib/blind-eq.ts', import.meta.url), 'utf8');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } }).outputText
   .replace('"./peq-preset"', JSON.stringify(new URL('../../../site/lib/peq-preset.ts', import.meta.url).href));
-const { parseEqPresetText: parse, validateEqPreset, eqCoefficients, comparisonGains, createBlindSession, recordBlindRound, revealBlindSession } = await import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
+const { parseEqPresetText: parse, validateEqPreset, loadSavedEqPair, eqCoefficients, comparisonGains, createBlindSession, recordBlindRound, revealBlindSession } = await import('data:text/javascript;base64,' + Buffer.from(javascript).toString('base64'));
 let assertions = 0;
 const check = (condition, message) => { assert.ok(condition, message); assertions++; };
 const rejects = (operation, pattern) => { assert.throws(operation, pattern); assertions++; };
@@ -39,8 +39,21 @@ rejects(() => parse(txt.repeat(3000), 'Big'), /200 KB/);
 rejects(() => parse('Preamp: 41 dB', 'Bad'), /Preamp/);
 rejects(() => parse('Preamp: 30 dB\nPreamp: 30 dB', 'Bad'), /Preamp/);
 rejects(() => parse(txt, ''), /name/);
-rejects(() => parse(Array.from({ length: 33 }, () => 'Filter: ON PK Fc 100 Hz Gain 0 dB Q 1').join('\n'), 'Too many'), /32/);
+rejects(() => parse(Array.from({ length: 41 }, () => 'Filter: ON PK Fc 100 Hz Gain 0 dB Q 1').join('\n'), 'Too many'), /40/);
 check(parse('Preamp: 0 dB', 'Flat').channels.every(c => c.filters.length === 0), 'Flat reference supported');
+
+const saved = [
+  { id: 'c + %', name: 'Forty filters', preamp: -60, filters: Array.from({length:40}, () => ({ hz: 100, gain: -2, q: .7 })) },
+  { id: 'second', name: 'Other pair', preamp: -11.6, filters: [{ type:'HSC', hz: 8000, gain: 1, q: .8 }], channelMatch: {} },
+];
+const pair = loadSavedEqPair('#saved-eq=c+%2B+%25&saved-eq=second', saved);
+check(pair.presets[0].channels.every(channel => channel.filters.length === 40 && channel.preampDb === -60), 'Blind setup accepts the full Saved EQ limits');
+check(pair.presets[1].channels.every(channel => channel.preampDb === -11.6 && channel.filters[0].type === 'HSC') && pair.includesChannelCorrection, 'Saved playback filters and preamp are preserved while channel correction is disclosed');
+pair.presets[0].channels[0].filters[0].gain = 2;
+check(saved[0].filters[0].gain === -2 && pair.presets[0].channels[1].filters[0].gain === -2, 'Session uses a detached copy of both saved chains');
+rejects(() => loadSavedEqPair('#saved-eq=second&saved-eq=second', saved), /two different presets/);
+rejects(() => loadSavedEqPair('#saved-eq=second&saved-eq=missing', saved), /unavailable/);
+
 
 function response(filter, frequency, sampleRate = 48000) {
   const { feedforward: b, feedback: a } = eqCoefficients(filter, sampleRate), w = 2 * Math.PI * frequency / sampleRate;
@@ -93,11 +106,11 @@ for (const file of ['site/app/eq-compare/page.tsx', 'site/components/blind-eq-ed
 const editorSource = readFileSync(new URL('../../../site/components/blind-eq-editor.tsx', import.meta.url), 'utf8');
 const require = createRequire(import.meta.url), compiledModule = { exports: {} };
 const editorCode = ts.transpileModule(editorSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-vm.runInNewContext(editorCode, { module: compiledModule, exports: compiledModule.exports, require: id => id === '@/lib/blind-eq' ? { parseEqPresetText: parse, validateEqPreset } : id === '@/lib/peq-preset' ? presetLimits : require(id) });
+vm.runInNewContext(editorCode, { module: compiledModule, exports: compiledModule.exports, require: id => id === '@/lib/blind-eq' ? { MAX_BLIND_EQ_FILTERS: 40, MIN_BLIND_EQ_PREAMP: -60, MAX_BLIND_EQ_PREAMP: 40, parseEqPresetText: parse, validateEqPreset } : id === '@/lib/peq-preset' ? presetLimits : require(id) });
 const markup = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Test preset', initialName: 'Synthetic', onChange() {} }));
 check(markup.includes('Preamp (dB)') && !markup.includes('Left<!-- --> preamp'), 'One shared preamp field is the initial form');
 const restored = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Restored preset', initialName: 'Unused default', initialPreset: stereo, onChange() {} }));
-check(restored.includes(stereo.name) && restored.includes('previous preset restored') && /Left(?:<!-- -->)? preamp/.test(restored), 'New-session editor restores the saved stereo preset rather than displaying defaults');
+check(restored.includes(stereo.name) && restored.includes('review or edit the loaded preset') && /Left(?:<!-- -->)? preamp/.test(restored), 'New-session editor restores the saved stereo preset rather than displaying defaults');
 check(restored.includes('value="' + stereo.channels[0].preampDb + '"') && restored.includes('value="' + stereo.channels[1].preampDb + '"'), 'Restored channel preamps match the preset used for playback');
 const broadMarkup = renderToStaticMarkup(require('react').createElement(compiledModule.exports.default, { title: 'Restored preset', initialName: 'Unused default', initialPreset: broad, onChange() {} }));
 check(broadMarkup.includes('min="0.01" max="20" step="any" value="0.074123"'), 'Restored editor preserves wide filter precision');
@@ -123,8 +136,14 @@ const shellSource = readFileSync(new URL('../../../site/components/site-chrome.t
 const shellModule = { exports: {} }; let shellPath = '/eq-compare';
 const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
 vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id.startsWith('@/components/') ? { default: ({children}) => require('react').createElement('aside', {'data-site-effect': id}, children) } : require(id) });
-const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, null, require('react').createElement('main', null, 'Private tool')));
+const helpButton = require('react').createElement('button', null, 'Ask for help');
+const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, { help: helpButton }, require('react').createElement('main', null, 'Private tool')));
 const privateMarkup = shellMarkup();
-check(privateMarkup === '<aside data-site-effect="@/components/site-topbar"></aside><main>Private tool</main>', 'Private EQ mounts the shared top bar without Sync/sidebar/privacy effects');
+check(privateMarkup === '<aside data-site-effect="@/components/site-topbar"></aside><button>Ask for help</button><main>Private tool</main>', 'Private EQ renders one Help control between the top bar and comparison, without Sync/sidebar/privacy effects');
 shellPath = '/home'; check(shellMarkup().includes('data-site-effect'), 'Ordinary site routes retain the existing shell and privacy controls');
+for (const route of ['/home', '/share-shootout', '/embed/abc123']) {
+  shellPath = route;
+  const html = shellMarkup();
+  check(html.endsWith('<button>Ask for help</button>') && html.split('Ask for help').length === 2, `One Help launcher follows the page on ${route}`);
+}
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

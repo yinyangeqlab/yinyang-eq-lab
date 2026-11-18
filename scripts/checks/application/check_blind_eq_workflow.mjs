@@ -9,7 +9,7 @@ const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve()
 const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
 const flat = name => ({ name, channels: [{ preampDb: 0, filters: [] }, { preampDb: 0, filters: [] }] });
 const compile = path => ts.transpileModule(readFileSync(new URL('../../../' + path, import.meta.url), 'utf8'), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-const baseGlobals = { Error, URL, Blob, AbortController, structuredClone, crypto, console };
+const baseGlobals = { Error, URL, URLSearchParams, Blob, AbortController, structuredClone, crypto, console };
 function load(path, require, globals = {}) { const mod = { exports: {} }; vm.runInNewContext(compile(path), { ...baseGlobals, ...globals, require, module: mod, exports: mod.exports }); return mod.exports; }
 const search = load('site/lib/search.ts', id => { throw Error(id); });
 const model = load('site/lib/blind-eq.ts', id => {
@@ -37,20 +37,53 @@ function mount(path, imports, globals, props) {
   render();
   return { render, focus, get tree() { return tree; }, get lateUpdates() { return lateUpdates; }, find(predicate) { const values = all(tree, predicate); assert.equal(values.length, 1, 'Expected one matching rendered element'); return values[0]; }, button(name) { return this.find(n => n.type === 'button' && text(n) === name); }, unmount() { active = false; for (const h of hooks) h?.cleanup?.(); } };
 }
-function pageFixture(sampleRate = 48000) {
+function pageFixture(sampleRate = 48000, { hash = "", saved = [] } = {}) {
   const listeners = new Map(); let blob, failDownload = false, clicks = 0;
   function Editor() {} function Listener() {}
-  const window = { addEventListener(name, fn) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(fn); }, removeEventListener(name, fn) { listeners.get(name)?.delete(fn); }, setTimeout() {} };
+  const location = { hash, pathname: "/eq-compare", search: "" };
+  const history = { state: null, replaceState(_state, _title, path) { assert.equal(path, "/eq-compare"); location.hash = ""; } };
+  const window = { location, history, addEventListener(name, fn) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(fn); }, removeEventListener(name, fn) { listeners.get(name)?.delete(fn); }, setTimeout() {} };
   const document = { body: { appendChild() {} }, createElement() { return { click() { clicks++; }, remove() {} }; } };
   const URL = { createObjectURL(value) { if (failDownload) throw Error('Downloads unavailable'); blob = value; return 'blob:fixture'; }, revokeObjectURL() {} };
   const pool = Array.from({ length: 35 }, (_, i) => ({ title: 'Synthetic ' + i, artist: 'Fixture', fileUrl: '/tone.wav' }));
-  const h = mount('site/app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
-  return Object.assign(h, { listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
+  const h = mount('site/app/eq-compare/page.tsx', { '@/components/shootout-vote-label': voteLabel, '@/components/blind-eq-editor': { default: Editor }, '@/components/blind-eq-listener': { default: Listener }, '@/lib/search': search, '@/lib/release-info': { bugReportUrl: 'https://example.test/issues' }, '@/lib/blind-eq': model, '@/lib/music-library-eq': { readLibraryEqs: () => saved }, '@/lib/music-catalog': { listeningPool: pool }, './style.css': {} }, { window, document, URL, AudioContext: class { sampleRate = sampleRate; state = "suspended"; async close() { this.state = "closed"; } } }, {});
+  return Object.assign(h, { location, listeners, Editor, Listener, getBlob: () => blob, failDownload: () => { failDownload = true; }, clicks: () => clicks,
     apply() { all(h.tree, n => n.type === Editor).forEach(n => n.props.onChange(flat('Same preset name'))); h.render(); },
     songs() { return all(h.tree, n => n.type === 'label' && n.props.className === 'eq-song').map(n => all(n, child => child.type === 'input')[0]); },
     add(files) { h.find(n => n.type === 'input' && n.props.type === 'file' && n.props.multiple).props.onChange({ target: { files, value: 'fixture' } }); h.render(); },
     listener() { return h.find(n => n.type === Listener); },
   });
+}
+{
+  const saved = [
+    { id: "a", name: "First uploaded EQ", preamp: -11.6, filters: [{ hz: 1000, gain: -2, q: .7 }], channelMatch: {} },
+    { id: "b", name: "Second uploaded EQ", preamp: -4, filters: [{ hz: 300, gain: 1, q: 1 }] },
+  ];
+  const h = pageFixture(48000, { hash: "#saved-eq=a&saved-eq=b", saved });
+  h.render();
+  check(h.location.hash === "", "The incoming saved IDs are cleared from the URL before listening");
+  check(all(h.tree, n => n.type === h.Editor).map(n => n.props.initialPreset?.name).join("|") === "First uploaded EQ|Second uploaded EQ", "Both saved presets populate the setup editors");
+  check(text(h.tree).includes("Attached headphone channel corrections are excluded"), "Separate channel correction is disclosed before listening");
+  check(h.button("Hide presets & start").props.disabled, "A saved pair does not bypass music selection");
+  h.songs()[0].props.onChange(); h.render();
+  h.button("Hide presets & start").props.onClick(); h.render();
+  check(!text(h.tree).includes("First uploaded EQ") && !text(h.tree).includes("Second uploaded EQ"), "Preset names are hidden during the blind session");
+  check(h.listener().props.presets.some(preset => preset.channels[0].preampDb === -11.6), "The listener uses the saved preamp");
+  h.unmount();
+  const missing = pageFixture(48000, { hash: "#saved-eq=a&saved-eq=missing", saved });
+  missing.render();
+  check(text(missing.tree).includes("unavailable in this browser") && missing.button("Hide presets & start").props.disabled, "Stale saved links keep manual setup available");
+  missing.unmount();
+}
+{
+  const h = pageFixture();
+  check(h.songs().length === 30, "Initial Listening Pool choices are limited to one batch");
+  h.button("Show more songs (5 remaining)").props.onClick(); h.render();
+  check(h.songs().length === 35, "Show more reaches songs beyond the initial batch");
+  h.songs()[34].props.onChange(); h.render();
+  h.find(n => n.type === "input" && n.props.type === "search").props.onChange({ target: { value: "no matching song" } }); h.render();
+  check(h.songs().length === 1 && h.songs()[0].props.checked, "Chosen songs stay available when the search changes");
+  h.unmount();
 }
 {
   const h = pageFixture(); h.apply(); check(text(h.tree).includes('identical filter and preamp settings'), 'Identical presets are explicitly disclosed in setup');

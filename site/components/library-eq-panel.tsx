@@ -16,7 +16,7 @@ import { fitAutoEqAsync } from "@/lib/autoeq-client";
 import { useFitterSettings } from "@/lib/use-fitter-settings";
 import FitterControls from "@/components/fitter-controls";
 import { fitterLabel } from "@/lib/fitter-settings";
-import { measurementChannelMatch, removeLibraryEq, parseLibraryEq, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
+import { measurementChannelMatch, removeLibraryEq, readLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
 
 type Target = { id: string; name: string; creator: string; points: Point[] };
 const flat: Target = { id: "flat", name: "Flat reference", creator: "Reference", points: [[20, 0], [20000, 0]] };
@@ -83,17 +83,6 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not import this measurement."); }
     finally { setBusy(false); }
   }
-  async function upload(file: File | undefined) {
-    if (!file) return;
-    setBusy(true);
-    try {
-      if (file.size > 100_000) throw new Error("Choose an EQ TXT file under 100 KB.");
-      const eq = parseLibraryEq(await file.text(), file.name.replace(/\.txt$/i, ""));
-      saveLibraryEq(eq); setSelectedId(eq.id); setSoundMode("saved"); setEnabled(true);
-      setMessage(`Saved ${eq.name}. Starting volume adjustment: ${eq.preamp.toFixed(1)} dB.`);
-    } catch (error) { setMessage(error instanceof Error ? error.message : "Could not read this EQ file."); }
-    finally { setBusy(false); }
-  }
   async function generate() {
     if (!sourceCurves.ready || !headphone?.points?.length || !target?.points?.length) { setMessage("Choose a headphone measurement and target first."); return; }
     fitRequest.current?.abort(); const request = new AbortController(); fitRequest.current = request;
@@ -116,7 +105,7 @@ export default function LibraryEqPanel({ onChange }: { onChange: (eq: LibraryEq 
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Full navigation runs access checks and unsaved-listening guards.
     headphones={<div className="shootout-content"><HeadphonePicker rows={measurements} selectedId={measurementId} headphoneType={headphoneType} onType={type => { setHeadphoneType(type); setMeasurementId(""); }} onSelect={chooseHeadphone} onClear={() => setMeasurementId("")} onImport={importHeadphone} onUpload={() => { window.location.href = "/shootout?tab=measurements"; }} onEdit={() => { window.location.href = "/shootout?tab=measurements"; }} onDelete={id => { const rows = measurements.filter(row => row.id !== id); try { localStorage.setItem("target-lab-measurements", JSON.stringify(rows)); setMeasurements(rows); if (measurementId === id) setMeasurementId(""); } catch { setMessage("Could not remove this measurement."); } }}/></div>}
     target={<><label htmlFor="library-target">Target curve<select id="library-target" value={targetId} onChange={event => setTargetId(event.target.value)}><option value="">Choose a target</option>{availableTargets.map(row => <option key={row.id} value={row.id}>{row.name} · {row.creator}</option>)}</select></label>{selectedTarget && <TargetCurveDownloads key={selectedTarget.id} target={selectedTarget}/>}<AutoEqCurveStatus {...sourceCurves}/><FitterControls value={fitter} defaultValue={defaultFitter} onChange={setFitter} onDefault={saveDefault} notice={fitterNotice}/><button type="button" className="library-eq-generate" disabled={busy || !measurementId || !targetId || !sourceCurves.ready} onClick={() => void generate()}>{busy ? "Preparing EQ…" : "Create EQ"}</button><p>{selected ? "Target EQ ready for the selected headphones." : "Choose headphones and a target, then create their EQ."}</p></>}
-    savedExtra={<details className="sound-import-eq"><summary>Import an EQ file</summary><label>EQ settings TXT<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/></label></details>}>
+    >
       {soundMode === "saved" && selected && !headphone && <p>{selected.measurementId ? "The linked measurement is unavailable here. The saved filters and channel correction still work." : "This EQ has no linked headphone measurement. It plays the saved filters directly."}</p>}
       <div className="sound-playback-options"><label><input type="checkbox" aria-label="Enable EQ" checked={enabled && !!selected} disabled={!selected} onChange={event => setEnabled(event.target.checked)}/>EQ {enabled && selected ? "on" : "off"}</label><label><input type="checkbox" aria-label="Enable channel match" checked={matchEnabled && !!selected?.channelMatch} disabled={!selected?.channelMatch} onChange={event => setMatchEnabled(event.target.checked)}/>Channel match {matchEnabled && selected?.channelMatch ? "on" : "off"}</label><span className="sound-state">{enabled && selected ? `EQ: ${selected.name}` : "EQ off · original sound"}{matchEnabled && selected?.channelMatch ? " · channel match on" : ""}</span></div>
       <p>{selected?.channelMatch ? "Channel match uses the Left/Right correction saved with this EQ." : "Channel matching needs paired headphone responses or a saved two-channel correction."} Turn off other EQ on your device before listening.</p>

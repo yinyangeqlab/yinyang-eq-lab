@@ -1,4 +1,5 @@
 import { isPresetQ, MAX_PRESET_Q, MIN_PRESET_Q } from "./peq-preset";
+import type { LibraryEq } from "./music-library-eq";
 
 /** Private preset comparisons have no server or browser-storage representation. */
 export type EqFilter = { type: "PK" | "LSC" | "HSC"; hz: number; gain: number; q: number };
@@ -6,14 +7,20 @@ export type EqChannel = { preampDb: number; filters: EqFilter[] };
 export type EqPreset = { name: string; channels: [EqChannel, EqChannel] };
 export type BlindChoice = "A" | "B" | "tie" | "skip";
 export type BlindRound = { sourceId?: string; order: [0 | 1, 0 | 1]; song: string; artist: string; start: number; seconds: number; choice: BlindChoice; heard: [number, number] };
+export const MIN_BLIND_EQ_PREAMP = -60;
+export const MAX_BLIND_EQ_PREAMP = 40;
+export const MAX_BLIND_EQ_FILTERS = 40;
+
 export type BlindSession = { presets: [EqPreset, EqPreset]; order: [0 | 1, 0 | 1]; rounds: BlindRound[]; revealed: boolean; revealedAt: string | null };
 
 export function validateEqPreset(preset: EqPreset): EqPreset {
   if (!preset.name.trim() || preset.name.length > 100) throw Error("Give this preset a name of 1–100 characters.");
   if (preset.channels.length !== 2) throw Error("A preset needs Left and Right channels.");
   for (const channel of preset.channels) {
-    if (!Number.isFinite(channel.preampDb) || Math.abs(channel.preampDb) > 40) throw Error("Preamp must be between −40 and +40 dB.");
-    if (channel.filters.length > 32) throw Error("Use at most 32 enabled filters per channel.");
+    if (!Number.isFinite(channel.preampDb) || channel.preampDb < MIN_BLIND_EQ_PREAMP || channel.preampDb > MAX_BLIND_EQ_PREAMP) {
+      throw Error("Preamp must be between −60 and +40 dB.");
+    }
+    if (channel.filters.length > MAX_BLIND_EQ_FILTERS) throw Error(`Use at most ${MAX_BLIND_EQ_FILTERS} enabled filters per channel.`);
     for (const filter of channel.filters) {
       if (!["PK", "LSC", "HSC"].includes(filter.type) || !Number.isFinite(filter.hz) || filter.hz < 10 || filter.hz > 24000 ||
         !Number.isFinite(filter.gain) || Math.abs(filter.gain) > 30 || !isPresetQ(filter.q)) {
@@ -22,6 +29,30 @@ export function validateEqPreset(preset: EqPreset): EqPreset {
     }
   }
   return structuredClone(preset);
+}
+
+/** Saved EQs store one filter chain for both channels. Headphone correction is a separate layer. */
+export function loadSavedEqPair(fragment: string, saved: readonly LibraryEq[]) {
+  const ids = new URLSearchParams(fragment.slice(1)).getAll("saved-eq");
+  if (ids.length !== 2 || ids[0] === ids[1] || ids.some(id => !id)) {
+    throw Error("Select two different presets in Saved EQs.");
+  }
+  const toPreset = (id: string): EqPreset => {
+    const eq = saved.find(item => item.id === id);
+    if (!eq) throw Error("One or both presets are unavailable in this browser. Return to Saved EQs and choose two presets.");
+    const channel = {
+      preampDb: eq.preamp,
+      filters: eq.filters.map(filter => ({ ...filter, type: filter.type ?? "PK" as const })),
+    };
+    return validateEqPreset({
+      name: eq.name.trim() || "Unnamed saved EQ",
+      channels: [channel, { ...channel, filters: channel.filters.map(filter => ({ ...filter })) }],
+    });
+  };
+  return {
+    presets: [toPreset(ids[0]), toPreset(ids[1])] as [EqPreset, EqPreset],
+    includesChannelCorrection: saved.some(eq => ids.includes(eq.id) && Boolean(eq.channelMatch)),
+  };
 }
 
 /** Validate before names are hidden; the context rate, not the file rate, sets Nyquist. */
