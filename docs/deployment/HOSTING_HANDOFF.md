@@ -1,9 +1,16 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update180**, source `50e9bdfd38641841f5b7934d86bbac7cb1d51cc2`.
+Recorded deployment: **update181**, source `533a77d3953d379207de83b83cc4a87a1466ba51`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update181 Listening Homepage and Guides
+
+The homepage offers an immediate A/B listening preview. Personal Tournament opens its data choices at Start. The IEM Measurement Guide and other guides share the desktop and mobile navigation. Production verification covered 391 Worker modules and the nine homepage assets. The encrypted off-device backup passed reconstruction and hosted validation using the existing data recovery point.
+
+[Deployment verification](../releases/update181-verification.json) · [Recovery verification](../releases/update181-recovery-verification.json) · [GitHub publication](../releases/update181-publication.json)
+
 
 ## Update179 repository layout and restore
 
