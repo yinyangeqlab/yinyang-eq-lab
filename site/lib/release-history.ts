@@ -316,7 +316,7 @@ const update181Changes = [
   "Open Glossary & Guides in the navigation to find the IEM Measurement Guide, Audio Fact Checks and EQ Fitter Benchmark. Guide text and jump links reflow on narrow screens.",
 ] as const;
 
-export const candidateChanges = ["The Discord trailer preview and video now share the same portrait dimensions. The public player supports byte-range seeking."] as const;
+const update185Changes = ["The Discord trailer preview and video now share the same portrait dimensions. The public player supports byte-range seeking."] as const;
 
 const update184Changes = ["Watch and share the 58-second Companion trailer on the Android page, with native playback controls and English captions."] as const;
 
@@ -330,8 +330,11 @@ const update182Changes = [
   "The IEM Measurement Guide identifies the KINGTOP headset splitter used on the bench and explains the electrical checks for compatible alternatives.",
 ] as const;
 
+export const candidateChanges = ["The homepage fits the entire landscape to the screen. Pause motion or opt into the flying carpets using the controls beneath the art."] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 185, date: "2026-11-18", title: "Portrait trailer sharing on Android", changes: candidateChanges },
+  { update: 186, date: "2026-11-18", title: "Full homepage landscape and optional carpets", changes: candidateChanges },
+  { update: 185, date: "2026-11-18", title: "Portrait trailer sharing on Android", changes: update185Changes, github: { commit: "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a", releaseTag: "update185" } },
   { update: 184, date: "2026-11-18", title: "Android Companion trailer", changes: update184Changes, github: { commit: "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc", releaseTag: "update184" } },
   { update: 183, date: "2026-11-18", title: "Qudelix 5K Companion gallery and sharing", changes: update183Changes, github: { commit: "35f76af011e397e08fe9c2757cf0678271dc8a45", releaseTag: "update183" } },
   { update: 182, date: "2026-11-18", title: "YinYang Android Companion and listening tools", changes: update182Changes, github: { commit: "4365a51a5fa0513e1266afe965dc19fabe7132c6", releaseTag: "update182" } },

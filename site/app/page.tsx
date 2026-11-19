@@ -34,17 +34,16 @@ function Panorama() {
   const flightsLabel = preferences.welcomeFlights ? 'Hide carpets' : 'Show carpets';
   return <>
     <section id="scene" className="landscape" aria-label="Animated YinYang EQ landscape">
-      <div className="scene-plate"><WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} /></div>
+      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} />
     </section>
     {systemReduced ? null : <div className="scene-controls" role="group" aria-label="Landscape controls">
-      <div className="motion-setting">
-        <button type="button" aria-describedby="motion-benefit" onClick={() => writeDisplayPreferences({ motion: running ? 'reduced' : 'auto' })}>
-          {running ? <Pause aria-hidden="true"/> : <Play aria-hidden="true"/>}{motionLabel}
-        </button>
-        <small id="motion-benefit">Pausing saves battery and reduces processing.</small>
-      </div>
+      <button type="button" className="motion-control" aria-label={motionLabel} aria-describedby="motion-benefit"
+        onClick={() => writeDisplayPreferences({ motion: running ? 'reduced' : 'auto' })}>
+        <span className="scene-control-face">{running ? <Pause aria-hidden="true"/> : <Play aria-hidden="true"/>}{motionLabel}</span>
+        <small id="motion-benefit">{running ? 'Saves battery & compute' : 'Saving battery & compute'}</small>
+      </button>
       <button type="button" disabled={!running} onClick={() => writeDisplayPreferences({ welcomeFlights: !preferences.welcomeFlights })}>
-        {preferences.welcomeFlights ? <EyeOff aria-hidden="true"/> : <Eye aria-hidden="true"/>}{flightsLabel}
+        <span className="scene-control-face">{preferences.welcomeFlights ? <EyeOff aria-hidden="true"/> : <Eye aria-hidden="true"/>}{flightsLabel}</span>
       </button>
     </div>}
   </>;

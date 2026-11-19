@@ -18,13 +18,13 @@ globalThis.document = { documentElement: { dataset: {} } };
 
 const prefs = await import('../../../site/lib/display-preferences.ts');
 const KEY = 'yinyang-display-preferences';
-const defaults = { motion: 'auto', welcomeFlights: true, singleKeyShortcuts: true, shortcutScope: 'everywhere' };
+const defaults = { motion: 'auto', welcomeFlights: false, singleKeyShortcuts: true, shortcutScope: 'everywhere' };
 
-assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'defaults keep motion, flying artwork and shortcuts on');
+assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'motion and shortcuts start on; flying artwork starts off');
 store.set(KEY, '{not json');
 assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'corrupt storage falls back to defaults');
-store.set(KEY, JSON.stringify({ motion: 'sideways', singleKeyShortcuts: 'no' }));
-assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'unknown values never disable features');
+store.set(KEY, JSON.stringify({ motion: 'sideways', singleKeyShortcuts: 'no', welcomeFlights: 'true' }));
+assert.deepEqual(prefs.readDisplayPreferences(), defaults, 'unrecognized values fall back to the defaults');
 store.set(KEY, JSON.stringify({ shortcutScope: 'player' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'player');store.set(KEY, JSON.stringify({ shortcutScope: 'off' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'off');store.set(KEY, JSON.stringify({ shortcutScope: 'bogus' }));assert.equal(prefs.readDisplayPreferences().shortcutScope, 'everywhere');store.delete(KEY);
 store.delete(KEY);
 
@@ -42,6 +42,8 @@ stop();
 prefs.writeDisplayPreferences({ motion: 'auto' });
 assert.equal(notified, 3, 'unsubscribed listeners are not called');
 
+prefs.writeDisplayPreferences({ welcomeFlights: true });
+assert.equal(prefs.readDisplayPreferences().welcomeFlights, true, 'a saved choice to show carpets is retained');
 prefs.writeDisplayPreferences({ welcomeFlights: false });
 assert.equal(prefs.readDisplayPreferences().welcomeFlights, false, 'the flying-artwork choice persists');
 assert.equal(prefs.readDisplayPreferences().motion, 'auto', 'hiding the flying artwork leaves landscape motion on');

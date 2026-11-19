@@ -5,6 +5,11 @@ Recorded deployment: **update185**, source `484e70f97c1f2bb0b7c76ef8e804d3c70da5
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update186 homepage panorama
+
+The update186 release candidate starts from the published update185 handoff (`469ecb5`). The homepage fits the full 1400 × 758 artwork within the content column and 68% of the small viewport height. The still, animated canvas and optional flights use the same frame. The right-aligned motion and carpet controls share the page background. Carpets default to hidden and an existing saved choice is honored. Browser checks covered 12 viewport sizes from 320 to 5120 px, both preference states after reload, keyboard operation and reduced motion.
+
+
 ## Update185 portrait trailer sharing
 
 The Android page includes the 58-second Companion walkthrough below the screenshot gallery. Its player has native playback controls and English captions. The [trailer share page](https://yinyangeq.com/q5k4android/trailer/portrait) supplies the video and poster to Discord. Production checks verified the public MP4 hash, browser playback and crawler metadata. The media endpoint supports byte-range playback and seeking.

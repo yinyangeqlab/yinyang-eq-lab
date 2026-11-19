@@ -4,7 +4,7 @@ export type DisplayPreferences = { motion: "auto" | "reduced"; welcomeFlights: b
 const KEY = "yinyang-display-preferences";
 export const DISPLAY_PREFERENCES_EVENT = "yinyang-display-preferences";
 let volatileSnapshot: string | null = null;
-const defaults: DisplayPreferences = { motion: "auto", welcomeFlights: true, singleKeyShortcuts: true, shortcutScope: "everywhere" };
+const defaults: DisplayPreferences = { motion: "auto", welcomeFlights: false, singleKeyShortcuts: true, shortcutScope: "everywhere" };
 
 /** Raw stored string; a stable primitive snapshot for useSyncExternalStore. */
 export function displayPreferencesSnapshot() {
@@ -16,7 +16,7 @@ export function parseDisplayPreferences(raw: string): DisplayPreferences {
     const saved = JSON.parse(raw) as Partial<DisplayPreferences>;
     return {
       motion: saved.motion === "reduced" ? "reduced" : "auto",
-      welcomeFlights: saved.welcomeFlights !== false,
+      welcomeFlights: saved.welcomeFlights === true,
       singleKeyShortcuts: saved.singleKeyShortcuts !== false,
       shortcutScope: saved.shortcutScope === "player" || saved.shortcutScope === "off" ? saved.shortcutScope : "everywhere",
     };

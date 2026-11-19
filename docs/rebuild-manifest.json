@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+  "baseRevision": "469ecb53d111ff5409b0b175978ebd9d78ba764c",
   "recordedLiveUpdate": 185,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "f1c3db66d325f1fb73f85bb209bf0ed39cdf07210b2842a6db51a52dcc067315",
+      "sha256": "ae8e079e1e5be30c163edd17d63e8ca5371b84d33382918996748f0323ccc9e0",
       "executable": false
     },
     {
@@ -2592,7 +2592,7 @@
     },
     {
       "path": "scripts/checks/application/check_display_preferences.mjs",
-      "sha256": "5cf42301aaf0ee21c082c69e2571c02ea99f96ede98ae371cac7d4df30f3c683",
+      "sha256": "78ac6ff1de094394df066459673658a2d9806e995c9e192acc96b6355b26edfc",
       "executable": false
     },
     {
@@ -3972,7 +3972,7 @@
     },
     {
       "path": "site/app/page.tsx",
-      "sha256": "17633dbb96070267e17bf8d77748e5056d9508dc64482d3cd96d4e30c6d44dd0",
+      "sha256": "9c685228b383a3c2d9d9d9eb3fa9ccc181c51ce19e7a7ce610258b35c1018690",
       "executable": false
     },
     {
@@ -4487,7 +4487,7 @@
     },
     {
       "path": "site/components/first-listen/home.css",
-      "sha256": "03fe317d659010f31f115cfa6521bf89f3b23854ff6483d06af0e6a756db74ca",
+      "sha256": "af9cdeb3453aa845a77fc7e7b1df2b16adf84c80c0fbd1e8cc4bf60452d859e7",
       "executable": false
     },
     {
@@ -6122,7 +6122,7 @@
     },
     {
       "path": "site/lib/display-preferences.ts",
-      "sha256": "a63e19a692eaa2f4d5f212b20f2761f9bb71468a93cc9f891c7a30b676677d0d",
+      "sha256": "e53635242e9dfdf62e58835cc02683959ba54a4fb6f6f301f2276ddff7624c69",
       "executable": false
     },
     {
@@ -6467,12 +6467,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "bc33c4d3328a8a02bc44230f69d766580e06cd97bcdad02021c223546f3d52d9",
+      "sha256": "0ac3ea8d9404407c4696295b1a3acc21b3d8dd2977a1e6450470bcb0fdc91bd8",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "921a6e622b44d5a565d6ee46a4a65e9ed886de1703d4e8c0c7bef23e649f248d",
+      "sha256": "0d4e86de4ec3dd8978287af10d1397f5793991954c4991aa1cdaae882ae49bab",
       "executable": false
     },
     {
