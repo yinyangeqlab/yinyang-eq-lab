@@ -1,0 +1,145 @@
+{
+  "update": 186,
+  "sourceCommit": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+  "deploymentVerification": {
+    "at": "2026-11-19T06:25:43.978512Z",
+    "update": 186,
+    "revision": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update185",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 400,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "homepageArtworkVerified": true,
+    "matchingHomepageClientAssets": 43,
+    "carpetsDefaultHidden": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 3213,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 320,
+        "height": 568,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 430,
+        "height": 932,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 1024,
+        "height": 768,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 1100,
+        "height": 450,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 1920,
+        "height": 1080,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 2560,
+        "height": 1440,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 3440,
+        "height": 1440,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      },
+      {
+        "width": 5120,
+        "height": 1440,
+        "fullArtworkVisible": true,
+        "controlsFit": true,
+        "horizontalOverflow": false
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

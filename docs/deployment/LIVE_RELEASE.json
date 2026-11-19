@@ -1,25 +1,25 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 185,
+  "update": 186,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-19T04:59:30.473066Z",
-  "sourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
-  "sourceBranch": "release/update185-discord-fullscreen",
-  "baselineCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
-  "evidence": "docs/releases/update185-verification.json",
+  "verifiedAt": "2026-11-19T06:25:43.978512Z",
+  "sourceCommit": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+  "sourceBranch": "release/update186-homepage-art",
+  "baselineCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+  "evidence": "docs/releases/update186-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "publishedSourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
-    "implementationCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
-    "branch": "release/update185-discord-fullscreen",
+    "publishedSourceCommit": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+    "implementationCommit": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+    "branch": "release/update186-homepage-art",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update185",
-    "publicationVerification": "docs/releases/update185-publication.json"
+    "publicationTag": "update186",
+    "publicationVerification": "docs/releases/update186-publication.json"
   },
   "maintenanceFreeze": {
     "active": false
@@ -31,21 +31,21 @@
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 185,
-    "sourceBaselineVerifiedAt": "2026-11-19T05:23:31Z",
+    "sourceBaselineUpdate": 186,
+    "sourceBaselineVerifiedAt": "2026-11-19T06:48:33Z",
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update185SourceOnlyHandover": {
+    "update186SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
-      "evidence": "docs/releases/update185-recovery-verification.json"
+      "sourceCommit": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+      "evidence": "docs/releases/update186-recovery-verification.json"
     }
   }
 }

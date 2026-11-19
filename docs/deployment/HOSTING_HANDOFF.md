@@ -1,9 +1,18 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update185**, source `484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a`.
+Recorded deployment: **update186**, source `54ce48fdd2bbc9984d599df74c75b826014dcbb0`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update186 homepage artwork
+
+The homepage fits the entire panorama on phone, tablet and ultrawide screens. Motion and carpet controls share the page background. Carpets start hidden and the browser saves the visitor’s choice. Local browser checks covered twelve viewport sizes from 320 to 5120 px. Production delivered the matching homepage, artwork and client assets.
+
+The encrypted off-device recovery baseline passed reconstruction and hosted validation. Existing data recovery points retain their original timestamps.
+
+[Deployment verification](../releases/update186-verification.json) · [Recovery verification](../releases/update186-recovery-verification.json) · [Publication verification](../releases/update186-publication.json)
+
 
 ## Update185 portrait trailer sharing
 
