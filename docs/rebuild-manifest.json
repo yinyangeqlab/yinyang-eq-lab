@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "0696b8abba972dbea45a943aca52905d34f09171",
-  "recordedLiveUpdate": 181,
+  "baseRevision": "2727e91164f6a8849afdfb22c541fe42f1cd6900",
+  "recordedLiveUpdate": 182,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
   "reviewedUntrackedFiles": [
-    "public/share/android-apps-peq-v2.jpg"
+    "docs/releases/update182-android-direct-download-verification.json",
+    "docs/releases/update182-verification.json"
   ],
   "files": [
     {
@@ -74,7 +75,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "cbac55cf8ee2a5ff11a8bdf2c18eb7cdb4fb808d72950dfed262a8678b4aae5b",
+      "sha256": "7a56285f15b1654db7f12da6d8004cf0bcfa261a328901c9466573e818c3ffb2",
       "executable": false
     },
     {
@@ -99,12 +100,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "cc74cbb48ec40ab2621b16a7baaa9cb8b88d908ebc0b23ea61f39f38d85909b1",
+      "sha256": "a59693e24c2c24efe3b6b688a03b4c1fe361c0c9fcdb51150adeda83f301add7",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "58c40abac70d0188788fe42c93cea609c48101005d8fc26a4ade1e51800f84fc",
+      "sha256": "3989647e85337727c0072d484be61e97ac9fc26a9ae88881fab5075778c888d8",
       "executable": false
     },
     {
@@ -114,17 +115,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "e21a760f62cb1d48e8c8c992a216e1eaf41f4c0f0b0313c6a9eca4da8af5cbbd",
+      "sha256": "7964a67b003584ce784382767927396e2f3bb503069c5b227cc9045db5796722",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "c0809b3c2398d5bf1f8c592ced27a8298c43f84f260daff74a307a14ed23c63e",
+      "sha256": "d7320656fd6861a53cf73ad5a2b4fdba769a8b1e44b1201501e67c9daa04637f",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "d70953ba15ce51ddce8db89865c82a1b8b4b38d18403dd3a34b60ca301cd9b78",
+      "sha256": "f4fbafc4d9191957aada389b03bfd2fa32a78a6d08e8a7dc08c6df948024d3d5",
       "executable": false
     },
     {
@@ -1075,6 +1076,16 @@
     {
       "path": "docs/releases/update181-verification.json",
       "sha256": "2d980058c3fa3ea3fa5e607cf7147ab424b240d38fac8b214ecfe6794b9c72e8",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update182-android-direct-download-verification.json",
+      "sha256": "fa43b977324f8cdb26fea3cb9075e1cbd2a79741bbb58a44c4bc1290e3bd8539",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update182-verification.json",
+      "sha256": "3ffe046b0a4dc12c6e44417f4a0e837eb058cb9f53f891033ec9b516dd45e5fa",
       "executable": false
     },
     {
