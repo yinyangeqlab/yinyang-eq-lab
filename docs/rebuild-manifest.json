@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "e60b6007bba2fb35b4295c174af282e7dad92108",
+  "baseRevision": "5fcf7289694e36259c3e142cdb99a9fb780ad350",
   "recordedLiveUpdate": 188,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -4102,7 +4102,7 @@
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "51604e811d242742b6163b20fb7aa0f736602ee6c135b6c10ecafe9f4f382c1b",
+      "sha256": "a327f0208b6f82cd8dc78688e0518f10a4a688069750006aa1424b47a5ef742a",
       "executable": false
     },
     {
@@ -4112,7 +4112,7 @@
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "1568b3e02d505deee8c413f95868cc2aef049202b08006c75d93a9c938bfd344",
+      "sha256": "29ed5bf0f146eeb10d5379de5be6b48ccee6784b2ec3766470bd84fea57ff5fb",
       "executable": false
     },
     {
@@ -6527,12 +6527,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "1d24728383acee5d711d130ca467c8d9d34243aa10b238224fb35429b0c77a08",
+      "sha256": "c8ba7a2d8c7d5bd2e0ab7bada7fa1818dc953c2dfce81669e559d430811566dc",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "92753f419625faca4e11f1dd1d755ab6a0280d48deb3c20247b49a41f580fbc8",
+      "sha256": "245dd6662e50be74cccaefeef9c7d3ca0ceb486be9ab55334d4924b2857a9c43",
       "executable": false
     },
     {

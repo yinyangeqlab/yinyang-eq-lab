@@ -334,13 +334,16 @@ const update186Changes = ["The homepage fits the entire landscape to the screen.
 
 const update187Changes = ["The landscape fills the homepage width. The first listening section starts by the middle of the screen, including on short and ultrawide windows."] as const;
 
-export const candidateChanges = [
+const update188Changes = [
   "Search engines can discover the public headphone EQ guides and Android Companion pages through a site-wide sitemap.",
   "The homepage, listening modes, and glossary provide clearer titles and descriptions for search results.",
 ] as const;
 
+export const candidateChanges = ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 188, date: "2026-11-18", title: "Search discovery for public EQ guides and tools", changes: candidateChanges, github: { commit: "7c1e46eca27b1067bd8f194e198d7ad815d622b2", releaseTag: "update188" } },
+  { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: candidateChanges },
+  { update: 188, date: "2026-11-18", title: "Search discovery for public EQ guides and tools", changes: update188Changes, github: { commit: "7c1e46eca27b1067bd8f194e198d7ad815d622b2", releaseTag: "update188" } },
   { update: 187, date: "2026-11-18", title: "Edge-to-edge landscape and first-screen comparison", changes: update187Changes, github: { commit: "7547d00252da68822557e987ebbe84f8727b1b62", releaseTag: "update187" } },
   { update: 186, date: "2026-11-18", title: "Full homepage landscape and optional carpets", changes: update186Changes, github: { commit: "54ce48fdd2bbc9984d599df74c75b826014dcbb0", releaseTag: "update186" } },
   { update: 185, date: "2026-11-18", title: "Portrait trailer sharing on Android", changes: update185Changes, github: { commit: "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a", releaseTag: "update185" } },
