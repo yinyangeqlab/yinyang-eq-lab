@@ -349,7 +349,7 @@ const update191Changes = [
 export const candidateChanges = ["Choose Original landscape or Ultrawide panorama, with or without the yin-yang, in every wallpaper layout. Both scenes offer PNG, JPEG, MP4, WebM and offline HTML downloads."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: candidateChanges },
+  { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: candidateChanges, github: { commit: "8641b1c1bfd2489a50de71988c03148c1b1301da", releaseTag: "update192" } },
   { update: 191, date: "2026-11-19", title: "IEM measurement guide Revision 02", changes: update191Changes },
   { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: update190Changes, github: { commit: "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb", releaseTag: "update190" } },
   { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."], github: { commit: "3010dcc2cd2f78b69864903150b13404be0b9587", releaseTag: "update189" } },

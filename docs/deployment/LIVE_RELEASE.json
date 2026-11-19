@@ -1,22 +1,25 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 191,
+  "update": 192,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-19T10:16:12.362257Z",
-  "sourceCommit": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
-  "sourceBranch": "release/update191-iem-guide",
-  "baselineCommit": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
-  "evidence": "docs/releases/update191-verification.json",
+  "verifiedAt": "2026-11-19T10:59:01.610727Z",
+  "sourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+  "sourceBranch": "release/update192-wallpaper-editions",
+  "baselineCommit": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
+  "evidence": "docs/releases/update192-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "implementationCommit": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
-    "branch": "release/update191-iem-guide",
+    "implementationCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+    "branch": "release/update192-wallpaper-editions",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": false,
+    "pushed": true,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+    "publicationTag": "update192",
+    "publicationVerification": "docs/releases/update192-publication.json"
   },
   "maintenanceFreeze": {
     "active": false
@@ -27,18 +30,22 @@
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": false,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "update191SourceOnlyHandover": {
+    "matchingCurrentReleaseBaseline": true,
+    "sourceBaselineUpdate": 192,
+    "sourceBaselineVerifiedAt": "2026-11-19T11:33:29Z",
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "update192SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "registrationPending": true,
-      "sourceCommit": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500"
+      "registrationPending": false,
+      "sourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+      "evidence": "docs/releases/update192-recovery-verification.json"
     }
   }
 }

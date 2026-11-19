@@ -1,0 +1,33 @@
+{
+  "update": 192,
+  "tag": "update192",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+  "publishedSourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/8641b1c1bfd2489a50de71988c03148c1b1301da",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update192",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/8952dc90f3e0f7fc880fedfae6333a2f7b91cacb..update192",
+  "publishedAt": "2026-11-19T10:59:03Z",
+  "liveVersionVerifiedAt": "2026-11-19T11:34:03.288695+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update192",
+  "filesVerifiedInEachArchive": 1374,
+  "publicZipAndTarDownloadsVerified": true,
+  "deploymentVerification": "docs/releases/update192-verification.json",
+  "recoveryVerification": "docs/releases/update192-recovery-verification.json",
+  "guideRevision02AndWallpaperSourcesVerified": {
+    "sourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+    "publicFilesMatched": [
+      "site/app/glossary/iem-measurement/page.tsx",
+      "site/app/glossary/iem-measurement/guide-revisions.json",
+      "scripts/iem-guide-assets.json",
+      "scripts/wallpapers/render-editions.mjs",
+      "site/lib/welcome-wallpapers.ts"
+    ],
+    "liveGuidePdfVerified": true
+  }
+}

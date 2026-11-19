@@ -1,9 +1,18 @@
 # Recovery boundaries and entry points
 
 <!-- release-state:start -->
-Recorded deployment: **update191**, source `ab0acd73fe4d2aade6ab46a8f551b0d89462b500`.
+Recorded deployment: **update192**, source `8641b1c1bfd2489a50de71988c03148c1b1301da`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update192 wallpaper catalog
+
+The gallery offers the original landscape and panorama with or without the yin-yang. All five layouts offer both scenes in image, video and offline formats.
+
+Encrypted off-device source-only recovery and hosted validation passed.
+
+[Deployment verification](releases/update192-verification.json) · [Recovery verification](releases/update192-recovery-verification.json) · [Publication verification](releases/update192-publication.json) · [Previous guide recovery](releases/update191-recovery-verification.json)
+
 
 ## Update191 IEM measurement guide
 
