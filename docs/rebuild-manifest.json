@@ -1,14 +1,16 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "aca689b5767309c11c73e63633f046532ab9d80b",
+  "baseRevision": "0696b8abba972dbea45a943aca52905d34f09171",
   "recordedLiveUpdate": 181,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [],
+  "reviewedUntrackedFiles": [
+    "public/share/android-apps-peq-v2.jpg"
+  ],
   "files": [
     {
       "path": ".gitignore",
@@ -1803,6 +1805,11 @@
     {
       "path": "public/share/about.jpg",
       "sha256": "38e8cd9d533489e3290c4d27e2791f05f73fa653b1debcd05eb0f1f0abe6fc05",
+      "executable": false
+    },
+    {
+      "path": "public/share/android-apps-peq-v2.jpg",
+      "sha256": "ffb92c8b49937c667a7bd7b7379b34728f3a4a39899fc7860feb396ce60c18dc",
       "executable": false
     },
     {
@@ -3962,7 +3969,7 @@
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "4555592118c4ee0b1635e42f780fdfe174375378e759972b9363c51a6466af5e",
+      "sha256": "d99d681f3324ef9d48f507aaf3ba44bbaf1fdf2b553e98a8dd789a60385f3734",
       "executable": false
     },
     {
@@ -6422,7 +6429,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "c8a60d63f881c1ab5dead4d1c916925a97ae0e5d363f1fc65c908d28152ba5bb",
+      "sha256": "9fd04eb108ffdcdfa30209c529f9537bcc3d41db2f00ec1481540030ab7295bd",
       "executable": false
     },
     {

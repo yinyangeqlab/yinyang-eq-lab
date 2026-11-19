@@ -34,7 +34,7 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
             <img src="/android/qudelix-5k.png" width="112" height="84" alt="Front and back of the original Qudelix 5K" />
             <span>Qudelix 5K product page ↗</span>
           </a>
-          <p>YinYang EQ Lab is independent and is not affiliated with Qudelix, Inc. Product photo by Qudelix.</p>
+          <p>YinYang EQ Lab privately develops the Companion and has no affiliation with Qudelix, Inc. We encourage you to use your 5K with YinYang EQ to explore headphone tunings, build a PEQ, and listen to it on your device. Product photo by Qudelix.</p>
         </aside>
         <a className="companion-guide-link" href={repository + "/blob/main/FEATURES.md"}>Read the feature guide</a>
       </div>
