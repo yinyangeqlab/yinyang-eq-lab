@@ -12,7 +12,7 @@ export default function SiteDataFooter({ home }: { home: boolean }) {
         <div>
           <strong>Project</strong>
           <a href="/about">About Us</a>
-          <a href="/android">Qudelix 5K Android companion</a>
+          <a href="/q5k4android">Qudelix 5K Android companion</a>
           <a className="site-footer-version" href="/version">
             Version &amp; Release Notes
             <small>{buildLabel}</small>

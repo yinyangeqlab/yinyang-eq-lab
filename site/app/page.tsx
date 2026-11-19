@@ -108,7 +108,7 @@ export default function FirstListenHome() {
     <p className="home-companion-copy"><strong>Import and export EQ files right from your phone.</strong> Link EQ with Channel Match as a preset and compare two tunings blind at matched loudness.</p>
     <div className="home-companion-actions">
       <DownloadAppManager className="home-manager-download"/>
-      <a className="companion-more" href="/android">See app features</a>
+      <a className="companion-more" href="/q5k4android">See app features</a>
     </div>
     <p className="home-companion-hint">Open App Manager on Android and choose YinYang Companion to install it.</p>
   </section>

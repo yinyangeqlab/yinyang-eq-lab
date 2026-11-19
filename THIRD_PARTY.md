@@ -30,3 +30,5 @@ The optional semantic help matcher uses MinishLab's [Potion 2M model](https://hu
 ## Android robot
 
 The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the [Creative Commons 3.0 Attribution License](https://creativecommons.org/licenses/by/3.0/). [Android brand guidelines](https://developer.android.com/distribute/marketing-tools/brand-guidelines)
+
+The photograph of the original Qudelix 5K on the Companion page and its share card is by Qudelix, Inc. YinYang EQ Lab is independent of Qudelix. [Original product page](https://www.qudelix.com/products/qudelix-5k)

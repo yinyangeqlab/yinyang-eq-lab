@@ -214,6 +214,10 @@ const privateGate = {
       return app.fetch(new Request(bounded, { headers: clean }), env, context);
     }
     // Limit public guide downloads to the approved files.
+    if ((request.method === "GET" || request.method === "HEAD") && path.toLowerCase() === "/q5k4android" && path !== "/q5k4android") {
+      url.pathname = "/q5k4android";
+      return Response.redirect(url, 308);
+    }
     const guidePdfPath = "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf";
     if ((request.method === "GET" || request.method === "HEAD") && path === "/guides/iem-measurement/technical-guide.pdf") {
       url.pathname = guidePdfPath;
@@ -226,7 +230,7 @@ const privateGate = {
     ];
     const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/q5k4android" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
       if (publicLandingAsset) {
         const response = await env.ASSETS.fetch(request);
         if (response.ok && approvedGuidePdfPaths.includes(path) && url.searchParams.get("download") === "1") {
