@@ -17,6 +17,16 @@ const { d1, r2 } = hostingConfig;
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
 
+// Keep Vinext's HTML-limited crawlers and include Googlebot so article metadata
+// is delivered in the initial <head>. Regular browsers keep streaming metadata.
+const htmlLimitedBots = new RegExp([
+  String.raw`Googlebot|(?:^|[^\w-])[\w-]+-Google|Google-[\w-]+`,
+  "Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare",
+  "quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit",
+  "facebookcatalog|meta-externalagent|meta-externalfetcher|Twitterbot|LinkedInBot|Slackbot",
+  "Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
+].join("|"), "i");
+
 const localBindingConfig = {
   main: join(repositoryRoot, "scripts/build/sites-worker.ts"),
   compatibility_flags: ["nodejs_compat"],
@@ -69,7 +79,7 @@ export default defineConfig(async ({ command }) => {
     },
     plugins: [
       peqdbLocalAssets({ buildDir: siteBuildRoot }),
-      vinext(),
+      vinext({ nextConfig: { htmlLimitedBots } }),
       sites({ mockAuth: !managedLinux, repositoryRoot, buildRoot: siteBuildRoot, migrationsRoot }),
       connectorPreview(),
       cloudflare({

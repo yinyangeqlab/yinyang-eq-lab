@@ -12,17 +12,18 @@ import SiteHelp from "@/components/site-help";
 import { SiteHelpActionsProvider } from "@/components/site-help-actions";
 import { buildLabel } from "@/lib/release-info";
 import { shareMetadata } from "@/lib/share-metadata";
+import { SITE_NAME, SITE_ORIGIN } from "@/lib/share-pages.mjs";
 
 const welcomeMetadata = shareMetadata("/");
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yinyangeq.com"),
-  title: welcomeMetadata.title,
+  metadataBase: new URL(SITE_ORIGIN),
+  title: SITE_NAME,
   description: welcomeMetadata.description,
   openGraph: welcomeMetadata.openGraph,
   twitter: welcomeMetadata.twitter,
   icons: {
-    icon: { url: `/favicon.svg?v=${buildLabel}`, type: "image/svg+xml", sizes: "any" },
+    icon: { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
     apple: { url: `/brand-yin-yang.png?v=${buildLabel}`, sizes: "180x180" },
   },
 };

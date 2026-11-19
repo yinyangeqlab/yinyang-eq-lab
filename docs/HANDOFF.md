@@ -1,9 +1,14 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update187**, source `7547d00252da68822557e987ebbe84f8727b1b62`.
+Recorded deployment: **update188**, source `7c1e46eca27b1067bd8f194e198d7ad815d622b2`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update188 Google Search discovery
+
+The root sitemap lists 31 public pages, including the Android Companion. Live checks verified the sitemap, crawler metadata, and protected sign-in pages. [Deployment verification](releases/update188-verification.json) · [Recovery verification](releases/update188-recovery-verification.json) · [Publication verification](releases/update188-publication.json)
+
 
 ## Update187 homepage artwork
 

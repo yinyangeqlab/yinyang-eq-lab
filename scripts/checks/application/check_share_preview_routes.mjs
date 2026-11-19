@@ -172,6 +172,9 @@ for (const path of [trailerPath, trailerPath + "/portrait"]) {
   const page = sharePageFor(path);
   const html = shareHtml(page, { animated: true });
   assert.equal(page.path, path);
+  assert.equal(share.shareMetadataFields(path).alternates.canonical, trailerPath);
+  assert.ok(html.includes(`<link rel="canonical" href="${SITE_ORIGIN}${trailerPath}">`));
+  assert.ok(html.includes(`property="og:url" content="${SITE_ORIGIN}${path}"`));
   for (const field of ["width", "height"]) {
     assert.equal(page.image[field], page.video[field]);
     for (const type of ["image", "video"]) assert.ok(html.includes(`property="og:${type}:${field}" content="${page.video[field]}"`));

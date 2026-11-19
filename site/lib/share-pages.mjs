@@ -38,10 +38,10 @@ const factsArtwork = {
 };
 
 export const sharePages = [
-  { path: "/listen", slug: "listen", kind: "modes", kicker: "LISTENING MODES", title: "Listen | YinYang EQ", description: "Choose Personal Tournament, Blind Research or Open Comparison.", tagline: "Three ways to compare headphone targets." },
+  { path: "/listen", slug: "listen", kind: "modes", kicker: "LISTENING MODES", title: "Headphone EQ Listening Tests | YinYang EQ", ogTitle: "Listen", description: "Compare headphone EQ by ear. Build a personal ranking, try blind research, or choose two settings for an open comparison.", tagline: "Three ways to compare headphone targets." },
   { path: "/software-licenses", slug: "software-licenses", kind: "version", kicker: "OPEN SOURCE", title: "Software Licenses | YinYang EQ", description: "Open-source software credits, licenses and corresponding source for YinYang EQ.", tagline: "Licenses, credits and source code." },
   { path: "/eq-compare", noIndex: true, slug: "eq-compare", kind: "blind", kicker: "A/B LISTENING", title: "Compare EQs | YinYang EQ", description: "Switch between two EQ presets on one song with your headphones. Hide the names to listen blind.", tagline: "Hear two EQ presets on the same song." },
-  { path: "/", slug: "welcome", title: "YinYang EQ", description: "Compare headphone target curves in blind listening tests, explore the listening pool, and tune your preferred sound.", image: WELCOME_IMAGE },
+  { path: "/", slug: "welcome", title: "Compare and Tune Headphone EQ | YinYang EQ", ogTitle: SITE_NAME, description: "Hear two headphone EQ settings on the same song, compare presets in blind listening tests, and tune bass, mids, and treble to find the sound you prefer.", image: WELCOME_IMAGE },
   { path: "/shootout", slug: "shootout", kind: "blind", kicker: "BLIND LISTENING", title: "Listen & Results | YinYang EQ", ogTitle: "Hear Hidden Targets, Side By Side", description: "Hear two hidden headphone targets on the same music, pick the one you prefer, and see how listeners rank them.", tagline: "Hear two hidden targets on the same music." },
   { path: "/shootout/personal", slug: "personal", kind: "bracket", kicker: "YOUR EARS. YOUR FAVORITES.", title: "Personal Tournament | YinYang EQ", description: "Find your favorite headphone target with a blind tournament that adapts to your choices. Choices stay local by default.", tagline: "A blind bracket that adapts to your choices." },
   { path: "/preference-tuning", slug: "preference-tuning", kind: "tuning", kicker: "TUNING LAB", title: "Preference Tuning Lab | YinYang EQ", ogTitle: "Preference Tuning", description: "Choose a target, drag its curve, and hear your changes with your own music.", tagline: "Drag the curve. Hear it on your own music." },
@@ -51,7 +51,7 @@ export const sharePages = [
   { path: "/curve-credits", slug: "curve-credits", kind: "credits", kicker: "ATTRIBUTION", title: "Targets & Credits | YinYang EQ", ogTitle: "Targets & Credits", description: "Creators, sources and reuse notes for every built-in target curve.", tagline: "Creators, sources and reuse notes." },
   { path: "/privacy", slug: "privacy", kind: "privacy", kicker: "PRIVACY & PARTICIPATION", title: "Privacy Notice | YinYang EQ", description: "How YinYang EQ handles comparison data, what you can choose to share, and how to withdraw or delete it.", tagline: "What is kept, what is shared, your choices." },
   { path: "/terms", slug: "terms", title: "Terms Of Use | YinYang EQ", description: "Your rights in what you share, how research choices and rankings work, and how YinYang EQ updates the site.", image: WELCOME_IMAGE, artworkSlug: "welcome" },
-  { path: "/glossary", slug: "glossary-guides", kind: "book", image: factsArtwork.image, kicker: "QUICK REFERENCE", title: "Glossary | YinYang EQ", description: "Look up listening and EQ terms, definitions and related words.", tagline: "Look up listening and EQ terms." },
+  { path: "/glossary", slug: "glossary-guides", kind: "book", image: factsArtwork.image, kicker: "QUICK REFERENCE", title: "Headphone EQ Glossary and Guides | YinYang EQ", ogTitle: "Glossary", description: "Look up headphone EQ and listening terms, then explore guides to measuring IEMs, fitting EQ, and checking common audio claims.", tagline: "Look up listening and EQ terms." },
   {
     path: "/glossary/iem-measurement", slug: "iem-measurement", title: "Your First IEM Measurement With A 711 Coupler | YinYang EQ",
     description: "Learn to measure in-ear monitors with a 711 coupler and Room EQ Wizard, with annotated screenshots, AKG comparison plots, and a technical handbook.",
@@ -116,7 +116,10 @@ function normalize(pathname) {
 export function sharePageFor(pathname, search = "") {
   const path = normalize(pathname);
   if (path === "/discover") return sharePageFor("/shootout", "?tab=rankings");
-  if (path === "/q5k4android/trailer/portrait") return { ...sharePageFor("/q5k4android/trailer"), path };
+  if (path === "/q5k4android/trailer/portrait") {
+    const trailer = sharePageFor("/q5k4android/trailer");
+    return { ...trailer, path, canonicalPath: trailer.path };
+  }
   const base = sharePages.find(page => page.path === path);
   if (!base || !search) return base ?? null;
   const params = new URLSearchParams(search);
@@ -187,11 +190,12 @@ function escapeHtml(value) {
 export function shareHtml(page, { origin = SITE_ORIGIN, pathname = page.path, animated = false } = {}) {
   const motion = animated ? shareAnimationUrl(page) : null;
   const image = motion ?? shareImageUrl(page);
-  const canonical = origin + pathname + (page.canonicalSearch ?? "");
+  const sharedUrl = origin + pathname + (page.canonicalSearch ?? "");
+  const canonical = page.canonicalPath ? origin + page.canonicalPath : sharedUrl;
   const title = previewTitle(page);
   const description = page.description;
   const meta = [
-    ["og:type", page.video ? "video.other" : "website"], ["og:site_name", SITE_NAME], ["og:title", title], ["og:description", description], ["og:url", canonical],
+    ["og:type", page.video ? "video.other" : "website"], ["og:site_name", SITE_NAME], ["og:title", title], ["og:description", description], ["og:url", sharedUrl],
     ["og:image", image.url], ["og:image:type", motion?.type ?? "image/jpeg"],
     ["og:image:width", image.width], ["og:image:height", image.height], ["og:image:alt", image.alt],
     ...(page.video ? [["og:video", origin + page.video.path], ["og:video:secure_url", origin + page.video.path], ["og:video:type", "video/mp4"], ["og:video:width", page.video.width], ["og:video:height", page.video.height]] : []),
@@ -204,7 +208,7 @@ export function shareHtml(page, { origin = SITE_ORIGIN, pathname = page.path, an
     + (page.private || page.noIndex ? `<meta name="robots" content="noindex,nofollow">` : "")
     + `<link rel="canonical" href="${escapeHtml(canonical)}">${meta.map(attr).join("")}<meta name="theme-color" content="#58d8c9"></head>`
     + `<body style="background:#000;color:#edf3f7;font-family:Arial,sans-serif;padding:24px"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>`
-    + `<p><a style="color:#58d8c9" href="${escapeHtml(canonical)}">Open ${SITE_NAME}</a></p></body></html>`;
+    + `<p><a style="color:#58d8c9" href="${escapeHtml(sharedUrl)}">Open ${SITE_NAME}</a></p></body></html>`;
 }
 
 /** Fields for Next's Metadata export; ordinary clients get the still card. */
@@ -215,7 +219,7 @@ export function shareMetadataFields(path) {
   return {
     title: page.title,
     description: page.description,
-    alternates: { canonical: page.path },
+    alternates: { canonical: page.canonicalPath ?? page.path },
     ...(page.private || page.noIndex ? { robots: { index: false, follow: false } } : {}),
     openGraph: { type: page.video ? "video.other" : "website", ...(page.video ? { videos: [{ url: SITE_ORIGIN + page.video.path, secureUrl: SITE_ORIGIN + page.video.path, type: "video/mp4", width: page.video.width, height: page.video.height }] } : {}), siteName: SITE_NAME, title, description: page.description, url: page.path, images: [image] },
     twitter: { card: "summary_large_image", title, description: page.description, images: [image.url] },
