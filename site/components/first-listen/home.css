@@ -165,6 +165,20 @@
   z-index: 0;
 }
 #first-listen-home .landscape .welcome-landscape-image { object-fit: cover; }
+/* Frame the moving center by the banner height. The wider landscape fills
+   the sides independently, so showing more ocean never pushes the title down. */
+@media (min-width: 1600px) and (min-aspect-ratio: 2/1) {
+  #first-listen-home .landscape {
+    container-type: size;
+    background: #0b1928 url("./landscape-panorama.webp") center 53% / cover no-repeat;
+  }
+  #first-listen-home .landscape .welcome-art {
+    width: min(100%, 210cqh);
+    margin-inline: auto;
+    container-type: inline-size;
+    mask-image: linear-gradient(to right, transparent, black 19%, black 81%, transparent);
+  }
+}
 /* Keep the optional flights and their ridge mask on the original 2:1 sky crop. */
 #first-listen-home .landscape .welcome-landscape-flights {
   inset-block: var(--welcome-art-anchor) auto;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "3010dcc2cd2f78b69864903150b13404be0b9587",
+  "baseRevision": "051f8e44c9afd48f4c209ffa00f308f0983d23f2",
   "recordedLiveUpdate": 189,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -4562,7 +4562,12 @@
     },
     {
       "path": "site/components/first-listen/home.css",
-      "sha256": "55340d350f6fb08614b65871b766e99b110503d41e5624c6c215227cd428e23e",
+      "sha256": "66928e1c1746830a0501e629f64071f8940ff4a8c123c5476e5c36f60593cb1b",
+      "executable": false
+    },
+    {
+      "path": "site/components/first-listen/landscape-panorama.webp",
+      "sha256": "54388bca036120d4d062b256f369815121753e5be8b42087b7140eb99f4427f8",
       "executable": false
     },
     {
@@ -6542,12 +6547,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "8cd7f478fc9fe8b170215a675d0122c1224f58faefc3d65d8ef60bb749a0876e",
+      "sha256": "78cfe56070df6fb5a9ee80633451478f4f181b06370c69d4a6ed70cd9ad679ad",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "245dd6662e50be74cccaefeef9c7d3ca0ceb486be9ab55334d4924b2857a9c43",
+      "sha256": "1fc4d9076a5aac3dc0fc16162f5f3133cc9a3a228ba18bfc492ce04eb6d25208",
       "executable": false
     },
     {
