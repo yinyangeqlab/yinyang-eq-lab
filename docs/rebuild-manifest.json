@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
-  "recordedLiveUpdate": 183,
+  "baseRevision": "32e4210329407577558b0142e4c386673f1e433a",
+  "recordedLiveUpdate": 184,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "cce311e0df50efd9752d9e354d840cf0c24bf2cef771878497cb4e7a45c7044c",
+      "sha256": "7ecee0e2f0a2a7989fb8c4148f59b187acd2b6ecd089a59780b6680904f59843",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "669bbc4f06203c0e246391d133cc5d0332d79765165c5d1beed322be4e7afd01",
+      "sha256": "4cdffdb9a329cadc0a28b63356afdd0f97a53ff5c3dfcb1069235345ef9ff5d7",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "857bf6074745533bb849f8ce142762352eef525f922b9d956f32b635f92a5411",
+      "sha256": "e8f63aa3f0d86a88ddbdbd5efc23846ca9d44dda9e08bea36cb9be84f0f45c03",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "43697f6b8366a70cae21ffcaa6c043f4737f64537a78470494bc212a63ac21fe",
+      "sha256": "6df1a1db1ed17eb295d500fbc6a00b4272daec45c2f23e778b436746c6725474",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "db33c5aa888698f0bfb1284c39f3a6092c720135e3b3928a6dd1e9b8b82cb75e",
+      "sha256": "4d81a1892bbaf617eb3ef06ffd5c16cbe5f700d5ff9512709c44093363208ce8",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "0392acf4c77967af40bf2a1cae9cad149157d9187c96e048cd0fb466802f5d21",
+      "sha256": "0e950824e7472147b4b27c60e3a370417c71b8bd93ca91a26ff194b1018865d8",
       "executable": false
     },
     {
@@ -1108,6 +1108,11 @@
     {
       "path": "docs/releases/update183-verification.json",
       "sha256": "833784bb5812cb37d6b01a0e39bbfd0fe1b4403d91f5bcf89190ee7f9cbdef35",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update184-verification.json",
+      "sha256": "8c49b7493e26db1e368dc9797cf174acc492a16f2fb0a71c86174c7fa8b92795",
       "executable": false
     },
     {
@@ -2642,7 +2647,7 @@
     },
     {
       "path": "scripts/checks/application/check_owner_only_maintenance.mjs",
-      "sha256": "f595f1f050a689a361c97b5ce929fda53c8dfd12d9b316cb39279baf36c49c67",
+      "sha256": "a36403fe39ff7750e0b46172028bed9b48a3058ed82b7d4f351be32cb7dab1ff",
       "executable": false
     },
     {

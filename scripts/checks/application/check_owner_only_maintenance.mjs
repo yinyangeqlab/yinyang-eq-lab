@@ -1,3 +1,4 @@
+import { isCompanionTrailer, serveCompanionTrailer } from '../../../infra/pulumi/public-assets.mjs';
 import { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../../../infra/pulumi/shootout-failure-logger.mjs";
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -8,7 +9,7 @@ const source = readFileSync('infra/pulumi/private-gate.mjs', 'utf8');
 let appReads = 0, databaseCalls = 0;
 const context = vm.createContext({
  recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint, exports: {}, crypto, Request, Response, Headers, URL, TextEncoder, Uint8Array, btoa, atob, console,
- ownerOnlyMaintenanceResponse, featureMaintenanceResponse, isPublicAudioFactRoute,
+ ownerOnlyMaintenanceResponse, featureMaintenanceResponse, isPublicAudioFactRoute, isCompanionTrailer, serveCompanionTrailer,
  readServiceStatus: async () => ({active:false}),
  preDatabaseGuard: async () => null, listenerGuard: async () => null, boundedBody: async r => r,
  isPublicAsset: path => path.startsWith('/share/') || path.startsWith('/_next/') || path.endsWith('.svg'),

@@ -1,0 +1,99 @@
+{
+  "update": 184,
+  "sourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+  "deploymentVerification": {
+    "at": "2026-11-19T01:45:35.226650Z",
+    "update": 184,
+    "revision": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update183",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/35f76af011e397e08fe9c2757cf0678271dc8a45",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 399,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "androidOverviewVerified": true,
+    "androidPublishedCatalogVerified": true,
+    "androidManagerDownloadVerified": true,
+    "measurementModeAbsentFromOverview": true,
+    "discordPreviewVerified": true,
+    "matchingAndroidPublicAssets": 44,
+    "legacyAndroidRedirectVerified": true,
+    "galleryThemes": 4,
+    "galleryPages": 10,
+    "publicTrailerHashMatched": true,
+    "discordVideoTagsVerified": true,
+    "mp4RangeResponse": 200,
+    "browserPlaybackVerified": true,
+    "browserSeekVerified": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 3298,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 2
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 320,
+        "nativePlayer": true,
+        "twoPages": true,
+        "captions": true,
+        "seek": true,
+        "keyboardFocus": true,
+        "noOverflow": true
+      },
+      {
+        "width": 390,
+        "nativePlayer": true,
+        "twoPages": true,
+        "captions": true,
+        "seek": true,
+        "keyboardFocus": true,
+        "noOverflow": true
+      },
+      {
+        "width": 1280,
+        "nativePlayer": true,
+        "twoPages": true,
+        "captions": true,
+        "seek": true,
+        "keyboardFocus": true,
+        "noOverflow": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

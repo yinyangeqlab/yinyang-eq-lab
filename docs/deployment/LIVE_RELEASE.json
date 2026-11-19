@@ -1,25 +1,23 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 183,
+  "update": 184,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-19T01:06:30.899080Z",
-  "sourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
-  "sourceBranch": "feature/android-share-card-20261118",
-  "baselineCommit": "4365a51a5fa0513e1266afe965dc19fabe7132c6",
-  "evidence": "docs/releases/update183-verification.json",
+  "verifiedAt": "2026-11-19T01:45:35.226650Z",
+  "sourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+  "sourceBranch": "release/update184-companion-trailer",
+  "baselineCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+  "evidence": "docs/releases/update184-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "publishedSourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
-    "implementationCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
-    "branch": "feature/android-share-card-20261118",
+    "publishedSourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+    "implementationCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+    "branch": "release/update184-companion-trailer",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update183",
-    "publicationVerification": "docs/releases/update183-publication.json"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "maintenanceFreeze": {
     "active": false
@@ -30,22 +28,16 @@
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 183,
-    "sourceBaselineVerifiedAt": "2026-11-19T01:27:49Z",
-    "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "update183SourceOnlyHandover": {
+    "matchingCurrentReleaseBaseline": false,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
+    "update184SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "registrationPending": false,
-      "sourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
-      "evidence": "docs/releases/update183-recovery-verification.json"
+      "registrationPending": true,
+      "sourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc"
     }
   }
 }
