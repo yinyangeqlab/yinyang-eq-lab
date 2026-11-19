@@ -5,13 +5,13 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update182 |
-| Source | `4365a51a5fa0513e1266afe965dc19fabe7132c6` |
-| Verified at | 2026-11-18T23:52:26.557466Z |
-| Deployment | Verified by the [deployment receipt](../releases/update182-android-direct-download-verification.json) |
+| Release | update183 |
+| Source | `35f76af011e397e08fe9c2757cf0678271dc8a45` |
+| Verified at | 2026-11-19T01:06:30.899080Z |
+| Deployment | Verified by the [deployment receipt](../releases/update183-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication authorized in this record |
-| Recovery | Matching source-only handover pending; do not claim this release has a registered recovery baseline |
+| Publication | Reviewed source published as `35f76af011e397e08fe9c2757cf0678271dc8a45`; publication authorized in this record |
+| Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 

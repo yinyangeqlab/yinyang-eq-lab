@@ -1,22 +1,25 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 182,
+  "update": 183,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-18T23:52:26.557466Z",
-  "sourceCommit": "4365a51a5fa0513e1266afe965dc19fabe7132c6",
-  "sourceBranch": "release/update182-android-direct-download",
-  "baselineCommit": "b97f56df402ecc3f5b8dceaf64b933a8ea604f84",
-  "evidence": "docs/releases/update182-android-direct-download-verification.json",
+  "verifiedAt": "2026-11-19T01:06:30.899080Z",
+  "sourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+  "sourceBranch": "feature/android-share-card-20261118",
+  "baselineCommit": "4365a51a5fa0513e1266afe965dc19fabe7132c6",
+  "evidence": "docs/releases/update183-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "implementationCommit": "4365a51a5fa0513e1266afe965dc19fabe7132c6",
-    "branch": "release/update182-android-direct-download",
+    "publishedSourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+    "implementationCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+    "branch": "feature/android-share-card-20261118",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publicationTag": "update183",
+    "publicationVerification": "docs/releases/update183-publication.json"
   },
   "maintenanceFreeze": {
     "active": false
@@ -27,25 +30,22 @@
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": false,
-    "sourceBaselineUpdate": null,
-    "sourceBaselineVerifiedAt": null,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "dailyWorkflowActive": null,
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "update182SourceOnlyHandover": {
+    "matchingCurrentReleaseBaseline": true,
+    "sourceBaselineUpdate": 183,
+    "sourceBaselineVerifiedAt": "2026-11-19T01:27:49Z",
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "update183SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "registrationPending": true,
-      "sourceCommit": "4365a51a5fa0513e1266afe965dc19fabe7132c6"
+      "registrationPending": false,
+      "sourceCommit": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+      "evidence": "docs/releases/update183-recovery-verification.json"
     }
-  },
-  "deploymentRefresh": {
-    "slug": "android-direct-download",
-    "previousEvidence": "docs/releases/update182-verification.json"
   }
 }

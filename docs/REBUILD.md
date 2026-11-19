@@ -1,9 +1,18 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update182**, source `4365a51a5fa0513e1266afe965dc19fabe7132c6`.
+Recorded deployment: **update183**, source `35f76af011e397e08fe9c2757cf0678271dc8a45`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update182 Qudelix 5K Android gallery
+
+The Android Companion page at /q5k4android shows ten screens in four themes. The gallery supports white arrows, page dots, touch swipes and keyboard navigation. The App Manager download opens the Lab’s signed GitHub release. The former /android URL redirects to the new page. The Discord card shows the original 5K and both apps. Production checks covered the Manager APK, 40 gallery screenshots and 397 Worker modules.
+
+The matching encrypted off-device source-only recovery passed independent reconstruction and hosted validation. Existing data snapshots retain their original timestamps.
+
+[Deployment verification](releases/update183-verification.json) · [Recovery verification](releases/update183-recovery-verification.json) · [Publication verification](releases/update183-publication.json)
+
 
 ## Update181 Listening Homepage and Guides
 
