@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "b2fb888f0efcac367b961193774a42dae3857909",
-  "recordedLiveUpdate": 186,
+  "baseRevision": "7547d00252da68822557e987ebbe84f8727b1b62",
+  "recordedLiveUpdate": 187,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "354a4a068d56fb862a2a0a3db1815ed89e6c25dabc14679172e05cd7dd112673",
+      "sha256": "fd016e377df05b24af060adf39459119999b22dea86bfd558863ced8daa99098",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "77da745f8e42981430dd9e31fc43f6636eff8fb5cd6a5c8f798dcbeb2c76a439",
+      "sha256": "99abd50fa6737661ceb2afa2ea8fe6160d4f63bea1a6f8e8d044ff60ae9dc83e",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "2f3799df4824de652e61517a0beb2d512b2db613f738b0ea0639b2a8feccb813",
+      "sha256": "dce88dd3f67737ccdddb0b6418c4241438c504ec03883df2e28fe02efced92b5",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "c958d051463b18d8020f6ee57c772bf56b85d9ad33d82a8f04638d4e4ca759b1",
+      "sha256": "72e38f6a236c5408cc95ccfe912dfc6897ca2f8cde3893ba00f30fee3f56a8f3",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "a60e89823aaf7a692729ecaf4bd99fe04883c48440530570972c3b1f956ad2ef",
+      "sha256": "4f99a2b36776b44839d6f43ada9701d6a917e3f636d7fc48aabace0aa517c585",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "f87086f7069a54656c876fc04a48b99b2a33a5dbe99fc76d464fef4e3eebfc83",
+      "sha256": "1f929c5f7945e1cf602f503ed60c96bd02c882218cbc06100058b58dc1081c51",
       "executable": false
     },
     {
@@ -1156,6 +1156,11 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update187-verification.json",
+      "sha256": "2b2f8235d54a23f5865d52e7475643d2317bd632da9bc325ca9065ee8cbd0729",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update97-recovery-verification.json",
       "sha256": "7eb509e52dcd9a9a7b76f350479230dfb4da15653870a9129e7b7ddc72835c31",
       "executable": false
@@ -1502,7 +1507,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "bf2bafca32d5f694c2d523a64f606349d346d633dca7f413807556d9ceffc35b",
+      "sha256": "f843bae19494517fcef48c3ad8ad1e629bcb1abb91f0de56fc6f232a52148c13",
       "executable": false
     },
     {
@@ -2567,7 +2572,7 @@
     },
     {
       "path": "scripts/checks/access-and-data/check_yinyangeq_gate.mjs",
-      "sha256": "a7edf917880daf4f3faff21772e290b53870c180a01a85f99bf63f835fa4099c",
+      "sha256": "c90b11a57b2126a4a4dd5e29e482dc7d730c8b79eba4f13f88cf2e68a447bc2b",
       "executable": false
     },
     {
@@ -2687,7 +2692,7 @@
     },
     {
       "path": "scripts/checks/application/check_owner_only_maintenance.mjs",
-      "sha256": "a36403fe39ff7750e0b46172028bed9b48a3058ed82b7d4f351be32cb7dab1ff",
+      "sha256": "58c5ad34dce05d70566043db8d215cbb67e33dde441f2d5cb88c2809b0f92e9d",
       "executable": false
     },
     {
@@ -2737,7 +2742,7 @@
     },
     {
       "path": "scripts/checks/application/check_share_preview_routes.mjs",
-      "sha256": "424824ac8a5303f6f1ac3213edd1505080580ee500e5a566845dc36c22a34bda",
+      "sha256": "5587ca69409c5ccdd0c4e1816bea25976b42d6b7ca1351da50f38c88ca81d07d",
       "executable": false
     },
     {
@@ -3862,7 +3867,7 @@
     },
     {
       "path": "site/app/glossary/audio-facts/sitemap.xml/route.ts",
-      "sha256": "e5bafca8b009c151d145dab1fbd792e1f43ff8c6d9e8669cfb48bf9a53082d94",
+      "sha256": "81e04a7507c1f1b0c12e26a374376e37cb99f9def311268de1357a77b14c3de5",
       "executable": false
     },
     {
@@ -3896,13 +3901,18 @@
       "executable": false
     },
     {
+      "path": "site/app/home-content.tsx",
+      "sha256": "9c685228b383a3c2d9d9d9eb3fa9ccc181c51ce19e7a7ce610258b35c1018690",
+      "executable": false
+    },
+    {
       "path": "site/app/home/route.ts",
       "sha256": "03203d0fe7c8b391704b0cb6058a35661a1abb60a3d305479dfd7ad1f3088c95",
       "executable": false
     },
     {
       "path": "site/app/layout.tsx",
-      "sha256": "339bf4034db99be0026a6c498a3d3314d1d554f00d4a1506f310f097c5a9a372",
+      "sha256": "be7a70792f69a3e028bb046ce4644ad39aff422a5e693dd35fbefece6b919dd0",
       "executable": false
     },
     {
@@ -3987,7 +3997,7 @@
     },
     {
       "path": "site/app/page.tsx",
-      "sha256": "9c685228b383a3c2d9d9d9eb3fa9ccc181c51ce19e7a7ce610258b35c1018690",
+      "sha256": "5be9cd4f75fd874fa35e807ea6c8262d360dae90bc9e413b27dbebeff601666b",
       "executable": false
     },
     {
@@ -4096,6 +4106,11 @@
       "executable": false
     },
     {
+      "path": "site/app/robots.txt/route.ts",
+      "sha256": "e83a799b2d5e7bbffac35a690706848eb197b7f578a7b7fef2e39b850389f45b",
+      "executable": false
+    },
+    {
       "path": "site/app/s/[id]/card.png/route.ts",
       "sha256": "92783edb797c87e033e4cb74dc53b88d3ca5d89123a1679e3f385ea64a3a020a",
       "executable": false
@@ -4163,6 +4178,11 @@
     {
       "path": "site/app/site-light.css",
       "sha256": "0ea158b4dffd65d5aa0763c8b2652d1a7dc81b2e044aebf56c8fb4c8b4c5cba8",
+      "executable": false
+    },
+    {
+      "path": "site/app/sitemap.xml/route.ts",
+      "sha256": "fcf62adf8abca9726453de0fdfc4c48e06b79dd2d76731ab5b25bf611b285a60",
       "executable": false
     },
     {
@@ -6482,12 +6502,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "4b0fe617a809c154e86f2f072a0c20475d8bc3e2f9409b94f35de1c364acba36",
+      "sha256": "c858822a69b38ac253e2109f00989c07de6350631a92ef94e67d56cba47467e6",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "1eac89e714f1a0dc28e778377d6435bde9025b789182a286dcea5b80fa9cbd94",
+      "sha256": "92753f419625faca4e11f1dd1d755ab6a0280d48deb3c20247b49a41f580fbc8",
       "executable": false
     },
     {
@@ -6508,6 +6528,11 @@
     {
       "path": "site/lib/saved-section-summary.ts",
       "sha256": "7ce6611555a8ae532f347a4da7d92544a4077f029bb21c7817afcdd77c7e27fd",
+      "executable": false
+    },
+    {
+      "path": "site/lib/search-sitemap.ts",
+      "sha256": "32e7a42bbc31da63642f96a3fbcf5260d9da888cf7891e7da6d97f3b2ab845cc",
       "executable": false
     },
     {
@@ -6537,12 +6562,12 @@
     },
     {
       "path": "site/lib/share-pages.d.mts",
-      "sha256": "bcd528e260e61e3b5d4ce7eaa24a4a4cd8633ca5793b6bebbdfc62c99a56e0b3",
+      "sha256": "ef9dc1a5db770c37fab73fb054a9a4dd6130e157261dd00023df362253109ef6",
       "executable": false
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "60c4b82aa2d8ed9bb1f9eb316e9566a16b6e555bb6e1f30c61f5b40a1798be1f",
+      "sha256": "88933eb69557193fb9225081bd56bc9c6970a78745010f64f10deb025f4f6843",
       "executable": false
     },
     {
@@ -6757,7 +6782,7 @@
     },
     {
       "path": "site/vite.config.ts",
-      "sha256": "4fad6b1f9bf6d41b4cdafb084a7c96409d5ea64d4b050af8ea16406ffe923ba1",
+      "sha256": "8ea8585cfaecae9517195539f25be83e58c72ef773dbbaebd97daacb0a6543b1",
       "executable": false
     }
   ]

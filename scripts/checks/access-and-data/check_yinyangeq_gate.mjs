@@ -4,6 +4,7 @@ import collector, { recordShootoutFailure, shootoutFailureHeader, shootoutSubmis
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {isPublicAudioFactRoute} from '../../../site/lib/share-pages.mjs';
+import {searchSitemapPaths} from '../../../site/lib/search-sitemap.ts';
 import {preDatabaseGuard,abuseBindings} from '../../../infra/pulumi/abuse-controls.mjs';
 const source=readFileSync('infra/pulumi/private-gate.mjs','utf8'),AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
 const start=source.indexOf('const guidePdfPath ='),end=source.indexOf('const password =',start);assert.ok(start>0&&end>start);
@@ -17,7 +18,7 @@ for(const path of ['/listeners/yinyangeq','/api/public-profiles/yinyangeq','/api
 }
 // Public release/help pages must not require or save participation choices.
 // Exercise the actual early gate with a DB that fails on any access.
-for (const path of ['/version','/about','/shortcuts','/glossary','/glossary/iem-measurement','/glossary/audio-facts','/glossary/audio-facts/harman-target','/glossary/audio-facts/sitemap.xml']) {
+for (const path of [...searchSitemapPaths,'/robots.txt','/sitemap.xml','/glossary/audio-facts/sitemap.xml']) {
  for (const method of ['GET','HEAD']) {
   const deniedDb={prepare(){throw Error('Public information must not access participant DB')}};
   const request=new Request('https://fixture.invalid'+path+'?_rsc=fixture', {method,headers:{Cookie:'__Host-yinyang-tester=opted-out-fixture','oai-authenticated-user-id':'owner','x-yinyang-data-session':'forged'}});
@@ -27,7 +28,7 @@ for (const path of ['/version','/about','/shortcuts','/glossary','/glossary/iem-
  }
  assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path,{method:'POST'}),env,{},()=>false,app,async()=>null),null);
 }
-for (const path of ['/version/private','/about/private','/shortcuts/private','/glossary/private','/glossary/audio-facts/not-a-published-article','/glossary/audio-facts/harman-target/private','/api/glossary','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
+for (const path of ['/robots.txt/private','/sitemap.xml/private','/version/private','/about/private','/shortcuts/private','/glossary/private','/glossary/audio-facts/not-a-published-article','/glossary/audio-facts/harman-target/private','/api/glossary','/music-library','/preference-tuning','/api/my-profile/sync','/music/private.mp3']) {
  assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path),env,{},()=>false,app,async()=>null),null,'Public information must not bypass private or listening routes');
 }
 const guideEnv={...env,ASSETS:{fetch:async () => new Response('guide file')}};

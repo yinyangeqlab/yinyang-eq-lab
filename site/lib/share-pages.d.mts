@@ -4,6 +4,7 @@ export type SharePage = {
   image?: { path: string; width: number; height: number; alt: string };
   video?: { path: string; width: number; height: number };
   artworkSlug?: string;
+  canonicalPath?: string;
   canonicalSearch?: string;
 };
 export const SITE_ORIGIN: string;
