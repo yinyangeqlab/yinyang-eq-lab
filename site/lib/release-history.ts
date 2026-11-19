@@ -342,7 +342,7 @@ const update188Changes = [
 export const candidateChanges = ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: candidateChanges },
+  { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: candidateChanges, github: { commit: "3010dcc2cd2f78b69864903150b13404be0b9587", releaseTag: "update189" } },
   { update: 188, date: "2026-11-18", title: "Search discovery for public EQ guides and tools", changes: update188Changes, github: { commit: "7c1e46eca27b1067bd8f194e198d7ad815d622b2", releaseTag: "update188" } },
   { update: 187, date: "2026-11-18", title: "Edge-to-edge landscape and first-screen comparison", changes: update187Changes, github: { commit: "7547d00252da68822557e987ebbe84f8727b1b62", releaseTag: "update187" } },
   { update: 186, date: "2026-11-18", title: "Full homepage landscape and optional carpets", changes: update186Changes, github: { commit: "54ce48fdd2bbc9984d599df74c75b826014dcbb0", releaseTag: "update186" } },

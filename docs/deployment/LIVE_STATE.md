@@ -5,12 +5,12 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update188 |
-| Source | `7c1e46eca27b1067bd8f194e198d7ad815d622b2` |
-| Verified at | 2026-11-19T07:25:25.806207Z |
-| Deployment | Verified by the [deployment receipt](../releases/update188-verification.json) |
+| Release | update189 |
+| Source | `3010dcc2cd2f78b69864903150b13404be0b9587` |
+| Verified at | 2026-11-19T08:41:43.010890Z |
+| Deployment | Verified by the [deployment receipt](../releases/update189-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Reviewed source published as `7c1e46eca27b1067bd8f194e198d7ad815d622b2`; publication authorized in this record |
+| Publication | Reviewed source published as `3010dcc2cd2f78b69864903150b13404be0b9587`; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.

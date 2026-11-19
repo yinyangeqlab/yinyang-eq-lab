@@ -1,51 +1,51 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 188,
+  "update": 189,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-19T07:25:25.806207Z",
-  "sourceCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
-  "sourceBranch": "release/update188-google-search-seo",
-  "baselineCommit": "7547d00252da68822557e987ebbe84f8727b1b62",
-  "evidence": "docs/releases/update188-verification.json",
+  "verifiedAt": "2026-11-19T08:41:43.010890Z",
+  "sourceCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+  "sourceBranch": "release/update189-direct-companion",
+  "baselineCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
+  "evidence": "docs/releases/update189-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "implementationCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
-    "branch": "release/update188-google-search-seo",
+    "publishedSourceCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+    "implementationCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+    "branch": "release/update189-direct-companion",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
-    "publicationTag": "update188",
-    "publicationVerification": "docs/releases/update188-publication.json"
-  },
-  "ownerOnlyMaintenance": {
-    "enabled": false
+    "publicationTag": "update189",
+    "publicationVerification": "docs/releases/update189-publication.json"
   },
   "maintenanceFreeze": {
     "active": false
   },
-  "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
+  "ownerOnlyMaintenance": {
+    "enabled": false
+  },
   "documentationFiles": [],
+  "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 188,
-    "sourceBaselineVerifiedAt": "2026-11-19T07:47:56Z",
+    "sourceBaselineUpdate": 189,
+    "sourceBaselineVerifiedAt": "2026-11-19T09:02:52Z",
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "dailyWorkflowActive": true,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update188SourceOnlyHandover": {
+    "update189SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
       "registrationPending": false,
-      "sourceCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
-      "evidence": "docs/releases/update188-recovery-verification.json"
+      "sourceCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+      "evidence": "docs/releases/update189-recovery-verification.json"
     }
   }
 }

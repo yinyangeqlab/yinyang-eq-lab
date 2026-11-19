@@ -1,0 +1,81 @@
+{
+  "update": 189,
+  "sourceCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+  "deploymentVerification": {
+    "at": "2026-11-19T08:41:43.010890Z",
+    "update": 189,
+    "revision": "3010dcc2cd2f78b69864903150b13404be0b9587",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "7c1e46eca27b1067bd8f194e198d7ad815d622b2",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update188",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/7c1e46eca27b1067bd8f194e198d7ad815d622b2",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 404,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "standaloneCompanionDownloadVerified": true,
+    "companionListedInSitemap": true,
+    "bothApkHashesVerified": true,
+    "matchingHomepageClientAssets": 43,
+    "carpetsDefaultHidden": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "3010dcc2cd2f78b69864903150b13404be0b9587",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 3434,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 320,
+        "bothDownloadLinksVerified": true,
+        "keyboardFocusVerified": true,
+        "layout": "stack"
+      },
+      {
+        "width": 390,
+        "bothDownloadLinksVerified": true,
+        "keyboardFocusVerified": true,
+        "layout": "stack"
+      },
+      {
+        "width": 1280,
+        "bothDownloadLinksVerified": true,
+        "keyboardFocusVerified": true,
+        "layout": "row"
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

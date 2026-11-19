@@ -1,9 +1,18 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update188**, source `7c1e46eca27b1067bd8f194e198d7ad815d622b2`.
+Recorded deployment: **update189**, source `3010dcc2cd2f78b69864903150b13404be0b9587`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update189 Android downloads
+
+The Android page links directly to the signed Companion APK alongside App Manager. The downloads matched their published releases. Both controls were checked at 320, 390 and 1280 px and with keyboard navigation.
+
+Encrypted off-device source-only recovery and hosted validation passed.
+
+[Deployment verification](releases/update189-verification.json) · [Recovery verification](releases/update189-recovery-verification.json) · [Publication verification](releases/update189-publication.json)
+
 
 ## Update188 Google Search discovery
 
