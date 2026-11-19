@@ -5,6 +5,11 @@ Recorded deployment: **update186**, source `54ce48fdd2bbc9984d599df74c75b826014d
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update187 homepage panorama
+
+The release candidate fills the homepage width and keeps the listening section visible by the vertical midpoint. On short or wide displays the artwork crops vertically around the YinYang mark. Fourteen Chromium viewports from 320 to 5120 px passed the geometry and preference checks.
+
+
 ## Update186 homepage artwork
 
 The homepage fits the entire panorama on phone, tablet and ultrawide screens. Motion and carpet controls share the page background. Carpets start hidden and the browser saves the visitor’s choice. Local browser checks covered twelve viewport sizes from 320 to 5120 px. Production delivered the matching homepage, artwork and client assets.

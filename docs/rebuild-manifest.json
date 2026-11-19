@@ -1,18 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+  "baseRevision": "b2fb888f0efcac367b961193774a42dae3857909",
   "recordedLiveUpdate": 186,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [
-    "docs/releases/update186-publication.json",
-    "docs/releases/update186-recovery-verification.json",
-    "docs/releases/update186-verification.json"
-  ],
+  "reviewedUntrackedFiles": [],
   "files": [
     {
       "path": ".gitignore",
@@ -76,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a75875c5810e8ed0b32005535aed23e1170261130926a87f8c27503546a891bb",
+      "sha256": "354a4a068d56fb862a2a0a3db1815ed89e6c25dabc14679172e05cd7dd112673",
       "executable": false
     },
     {
@@ -4506,7 +4502,7 @@
     },
     {
       "path": "site/components/first-listen/home.css",
-      "sha256": "af9cdeb3453aa845a77fc7e7b1df2b16adf84c80c0fbd1e8cc4bf60452d859e7",
+      "sha256": "55340d350f6fb08614b65871b766e99b110503d41e5624c6c215227cd428e23e",
       "executable": false
     },
     {
@@ -6486,12 +6482,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "7407ba33e06a1e81b6d3ea2c0f37c96f083bc9b44d24bf9de5def7211f020333",
+      "sha256": "4b0fe617a809c154e86f2f072a0c20475d8bc3e2f9409b94f35de1c364acba36",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "0d4e86de4ec3dd8978287af10d1397f5793991954c4991aa1cdaae882ae49bab",
+      "sha256": "1eac89e714f1a0dc28e778377d6435bde9025b789182a286dcea5b80fa9cbd94",
       "executable": false
     },
     {
