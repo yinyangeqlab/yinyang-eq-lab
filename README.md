@@ -1,8 +1,8 @@
 # YinYang EQ
 
-[Android Companion and App Manager](https://yinyangeq.com/q5k4android) · [Watch the trailer](https://yinyangeq.com/q5k4android/trailer/portrait) · [Update186 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update186)
+[Android Companion and App Manager](https://yinyangeq.com/q5k4android) · [Watch the trailer](https://yinyangeq.com/q5k4android/trailer/portrait) · [Update187 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update187)
 
-[Website version history](https://yinyangeq.com/version#update186) · [Release source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update186) · [Recovery verification](docs/releases/update186-recovery-verification.json)
+[Website version history](https://yinyangeq.com/version#update187) · [Release source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update187) · [Recovery verification](docs/releases/update187-recovery-verification.json)
 
 YinYang EQ is a free, noncommercial browser lab for headphone equalization (EQ). Compare two sound profiles on your own headphones, find targets you prefer, or shape a curve and export an EQ preset. You can also contribute to an exploratory study of how consistent listeners are and where their preferences differ.
 

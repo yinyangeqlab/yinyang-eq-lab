@@ -1,9 +1,18 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update186**, source `54ce48fdd2bbc9984d599df74c75b826014dcbb0`.
+Recorded deployment: **update187**, source `7547d00252da68822557e987ebbe84f8727b1b62`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update187 homepage artwork
+
+The homepage artwork fills its content column and crops vertically around the red and blue lights when needed. The comparison heading starts by the vertical midpoint. On short phones the closed Help button sits in a corner of the artwork. Motion and carpet controls share the page background. Carpets start hidden and the browser saves the visitor’s choice. Local browser checks covered fourteen viewport sizes from 320 to 5120 px. Production delivered the matching homepage, artwork and client assets.
+
+The encrypted off-device recovery baseline passed reconstruction and hosted validation. Existing data recovery points retain their original timestamps.
+
+[Deployment verification](releases/update187-verification.json) · [Recovery verification](releases/update187-recovery-verification.json) · [Publication verification](releases/update187-publication.json)
+
 
 ## Update186 homepage artwork
 
