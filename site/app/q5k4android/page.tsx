@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import { shareMetadata } from "@/lib/share-metadata";
 import { CompanionAppIcons, DownloadAppManager } from "@/components/companion-app-brand";
 import { TrailerPlayer } from "./trailer-player";
@@ -18,9 +19,14 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
         <h2 className="companion-file-title">Import and export EQ files right from your phone</h2>
         <p className="companion-intro">Open a PEQ file from Android, edit or rename it offline, and export a Qudelix-format copy. Connect your 5K to audition the changes and save them to a hardware slot.</p>
         <div className="companion-install" id="install">
-          <DownloadAppManager className="companion-features-link"/>
+          <div className="companion-downloads">
+            <a className="companion-features-link android-download" href={repository + "/releases/latest/download/YinYang-Companion.apk"}>
+              <Download size={22} aria-hidden="true"/> Download Companion APK
+            </a>
+            <DownloadAppManager className="companion-features-link"/>
+          </div>
+          <p className="companion-availability">On Android 9 or later, choose the Companion APK to install the app directly. App Manager checks the Lab’s signing certificate and helps you install updates. Keep Google Play Protect on with either download.</p>
           <ShareCompanion/>
-          <p className="companion-availability">On Android 9 or later, open App Manager and choose YinYang Companion to install it. Return to the manager for updates. It verifies the Lab’s signing certificate before opening the Android installer.</p>
           {download === "testing" && <p role="status">Public downloads will open when the Lab publishes its Android release. <a href={repository}>View the project on GitHub</a>.</p>}
           {download === "unavailable" && <p role="status">The download service is unavailable. Check <a href={repository + "/releases"}>GitHub Releases</a> or try again later.</p>}
         </div>

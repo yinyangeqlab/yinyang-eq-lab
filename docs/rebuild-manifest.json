@@ -1,18 +1,14 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "54ce48fdd2bbc9984d599df74c75b826014dcbb0",
+  "baseRevision": "b2fb888f0efcac367b961193774a42dae3857909",
   "recordedLiveUpdate": 186,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
     "npm": "npm@12.2.1"
   },
-  "reviewedUntrackedFiles": [
-    "docs/releases/update186-publication.json",
-    "docs/releases/update186-recovery-verification.json",
-    "docs/releases/update186-verification.json"
-  ],
+  "reviewedUntrackedFiles": [],
   "files": [
     {
       "path": ".gitignore",
@@ -4071,7 +4067,7 @@
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "51604e811d242742b6163b20fb7aa0f736602ee6c135b6c10ecafe9f4f382c1b",
+      "sha256": "a327f0208b6f82cd8dc78688e0518f10a4a688069750006aa1424b47a5ef742a",
       "executable": false
     },
     {
@@ -4081,7 +4077,7 @@
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "1568b3e02d505deee8c413f95868cc2aef049202b08006c75d93a9c938bfd344",
+      "sha256": "29ed5bf0f146eeb10d5379de5be6b48ccee6784b2ec3766470bd84fea57ff5fb",
       "executable": false
     },
     {

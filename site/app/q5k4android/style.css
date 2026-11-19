@@ -23,6 +23,7 @@
 .companion-page .companion-features-link:hover { background: #cefff4; }
 .companion-page a:focus-visible { outline: 3px solid #ffe2a6; outline-offset: 4px; }
 .companion-install { margin-top: 1.3rem; scroll-margin-top: 70px; }
+.companion-downloads { display: flex; flex-wrap: wrap; gap: .65rem; }
 .companion-install [role="status"] { margin-top: .65rem; line-height: 1.5; }
 .companion-guide-link { display: inline-flex; align-items: center; min-height: 44px; }
 .companion-availability { margin-block: .85rem 0; max-width: 44ch; font-size: .92rem; }
