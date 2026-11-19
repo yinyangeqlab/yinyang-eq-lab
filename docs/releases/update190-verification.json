@@ -1,0 +1,151 @@
+{
+  "update": 190,
+  "sourceCommit": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+  "deploymentVerification": {
+    "at": "2026-11-19T09:18:31.149058Z",
+    "update": 190,
+    "revision": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "3010dcc2cd2f78b69864903150b13404be0b9587",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update189",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/3010dcc2cd2f78b69864903150b13404be0b9587",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 404,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "ultrawidePanoramaVerified": true,
+    "panoramaSha256": "54388bca036120d4d062b256f369815121753e5be8b42087b7140eb99f4427f8",
+    "matchingHomepageClientAssets": 43
+  },
+  "candidateVerification": {
+    "sourceRevision": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "retainedPreviousClientFiles": 3302,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 390,
+        "height": 211.15625,
+        "title": 315.15625,
+        "scroll": 0,
+        "centerWidth": 390,
+        "sceneWidth": 390,
+        "visible": 0.9999957715986739,
+        "topCrop": 7.188282254333434e-07,
+        "edgeError": 0,
+        "centerError": 0,
+        "background": false,
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "width": 1280,
+        "height": 272.3125,
+        "title": 379.625,
+        "scroll": 0,
+        "centerWidth": 1131.65625,
+        "sceneWidth": 1131.65625,
+        "visible": 0.44443871269716334,
+        "topCrop": 0.09444541884148223,
+        "edgeError": 0,
+        "centerError": 0,
+        "background": false,
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "width": 1920,
+        "height": 400,
+        "title": 510,
+        "scroll": 0,
+        "centerWidth": 1700,
+        "sceneWidth": 1700,
+        "visible": 0.43458016451963377,
+        "topCrop": 0.09612137203166227,
+        "edgeError": 0,
+        "centerError": 0,
+        "background": false,
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "width": 2560,
+        "height": 379,
+        "title": 505.46875,
+        "scroll": 0,
+        "centerWidth": 795.890625,
+        "sceneWidth": 2307,
+        "visible": 0.879517835757897,
+        "topCrop": 0.02048196792115751,
+        "edgeError": 0,
+        "centerError": 0.015625,
+        "background": true,
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "width": 5120,
+        "height": 510,
+        "title": 675,
+        "scroll": 0,
+        "centerWidth": 1071,
+        "sceneWidth": 4790,
+        "visible": 0.8795074758135444,
+        "topCrop": 0.020483729111697456,
+        "edgeError": 0,
+        "centerError": 0,
+        "background": true,
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "width": 3440,
+        "height": 545,
+        "title": 682.5,
+        "scroll": 0,
+        "centerWidth": 1144.5,
+        "sceneWidth": 3165,
+        "visible": 0.8795074758135445,
+        "topCrop": 0.02048372911169744,
+        "edgeError": 0,
+        "centerError": 0,
+        "background": true,
+        "overflow": false,
+        "ready": "true"
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

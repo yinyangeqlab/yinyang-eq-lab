@@ -342,7 +342,7 @@ const update188Changes = [
 export const candidateChanges = ["Ultrawide displays show the whole yin-yang and more of the ocean. The headphone comparison still starts by mid-screen."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: candidateChanges },
+  { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: candidateChanges, github: { commit: "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb", releaseTag: "update190" } },
   { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."], github: { commit: "3010dcc2cd2f78b69864903150b13404be0b9587", releaseTag: "update189" } },
   { update: 188, date: "2026-11-18", title: "Search discovery for public EQ guides and tools", changes: update188Changes, github: { commit: "7c1e46eca27b1067bd8f194e198d7ad815d622b2", releaseTag: "update188" } },
   { update: 187, date: "2026-11-18", title: "Edge-to-edge landscape and first-screen comparison", changes: update187Changes, github: { commit: "7547d00252da68822557e987ebbe84f8727b1b62", releaseTag: "update187" } },

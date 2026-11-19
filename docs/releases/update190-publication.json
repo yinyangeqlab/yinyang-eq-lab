@@ -1,0 +1,22 @@
+{
+  "update": 190,
+  "tag": "update190",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+  "publishedSourceCommit": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update190",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update190",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/3010dcc2cd2f78b69864903150b13404be0b9587..update190",
+  "publishedAt": "2026-11-19T09:18:33Z",
+  "liveVersionVerifiedAt": "2026-11-19T09:39:57.477020+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update190",
+  "filesVerifiedInEachArchive": 1365,
+  "publicZipAndTarDownloadsVerified": true,
+  "deploymentVerification": "docs/releases/update190-verification.json",
+  "recoveryVerification": "docs/releases/update190-recovery-verification.json"
+}

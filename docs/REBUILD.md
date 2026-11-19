@@ -1,9 +1,18 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update189**, source `3010dcc2cd2f78b69864903150b13404be0b9587`.
+Recorded deployment: **update190**, source `8952dc90f3e0f7fc880fedfae6333a2f7b91cacb`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update190 ultrawide homepage
+
+The desktop panorama extends the red and blue mountains to the edges and reveals more waves. The listening heading sits above the midpoint at 3440 × 1440 and 5120 × 1440. The phone keeps its original artwork framing.
+
+Encrypted off-device source-only recovery and hosted validation passed.
+
+[Deployment verification](releases/update190-verification.json) · [Recovery verification](releases/update190-recovery-verification.json) · [Publication verification](releases/update190-publication.json)
+
 
 ## Update189 Android downloads
 
