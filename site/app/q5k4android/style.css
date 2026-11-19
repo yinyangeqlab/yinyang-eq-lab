@@ -65,3 +65,15 @@
 .companion-share span { font-size: .85rem; }
 .companion-share button:focus-visible { outline: 3px solid #ffe2a6; outline-offset: 2px; }
 .companion-share input { width: 100%; padding: .5rem; background: #17292f; color: #fff; }
+
+.companion-trailer { grid-column: 1 / -1; width: 100%; display: grid; grid-template-columns: minmax(180px, 280px) minmax(0, 1fr); gap: clamp(24px, 6vw, 72px); align-items: center; padding-block: 32px; border-block: 1px solid #334c53; scroll-margin-top: 1rem; }
+.companion-trailer video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; border-radius: 16px; background: #0b141c; }
+.companion-trailer :is(h1, h2) { margin: 0 0 .7rem; font-size: clamp(1.75rem, 4vw, 3.1rem); line-height: 1.08; }
+.companion-trailer p { max-width: 44ch; line-height: 1.55; }
+.companion-trailer .trailer-duration { color: #b4cccf; font-size: .9rem; }
+.companion-film-page { max-width: 960px; margin: auto; padding: clamp(22px, 6vw, 72px); color: #edf7f5; background: #0c171c; }
+.companion-film-page .companion-guide-link { display: inline-block; margin-top: 1.25rem; }
+@media (max-width: 620px) {
+  .companion-trailer { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .companion-trailer video { width: min(100%, 300px); margin-inline: auto; }
+}

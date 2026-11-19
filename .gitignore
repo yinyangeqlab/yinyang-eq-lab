@@ -94,3 +94,6 @@ work/
 /public/sample-assets/destinations/*.webp
 /public/sample-assets/*.ttf
 /public/sample-assets/OFL.txt
+
+# Prepared from the signed Android distribution repository during packaging.
+/public/android/companion-tour.mp4

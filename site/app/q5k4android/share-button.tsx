@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { Share2 } from "lucide-react";
 
-export function ShareCompanion() {
+export function ShareCompanion({ trailer = false }: { trailer?: boolean }) {
   const [status, setStatus] = useState("");
   const [manual, setManual] = useState(false);
-  const url = "https://yinyangeq.com/q5k4android";
+  const url = "https://yinyangeq.com/q5k4android" + (trailer ? "/trailer" : "");
   async function share() {
     setStatus("");
     if (navigator.share) {
       try {
-        await navigator.share({ title: "YinYang Companion App for Qudelix 5K", url });
+        await navigator.share({ title: trailer ? "YinYang Companion walkthrough" : "YinYang Companion App for Qudelix 5K", url });
         return;
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") return;
@@ -25,7 +25,7 @@ export function ShareCompanion() {
     }
   }
   return <div className="companion-share">
-    <button type="button" onClick={share}><Share2 aria-hidden="true" size={18}/>Share with your friends and community</button>
+    <button type="button" onClick={share}><Share2 aria-hidden="true" size={18}/>{trailer ? "Share trailer" : "Share with your friends and community"}</button>
     <span role="status">{status}</span>
     {manual && <input readOnly aria-label="Share link" value={url} onFocus={e => e.target.select()}/>}
   </div>;

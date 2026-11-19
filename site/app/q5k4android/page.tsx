@@ -1,5 +1,6 @@
 import { shareMetadata } from "@/lib/share-metadata";
 import { CompanionAppIcons, DownloadAppManager } from "@/components/companion-app-brand";
+import { TrailerPlayer } from "./trailer-player";
 import { CompanionGallery } from "./gallery";
 import { ShareCompanion } from "./share-button";
 import "./style.css";
@@ -39,6 +40,7 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
         <a className="companion-guide-link" href={repository + "/blob/main/FEATURES.md"}>Read the feature guide</a>
       </div>
       <CompanionGallery/>
+      <TrailerPlayer/>
       <section className="companion-controls" aria-labelledby="companion-controls-title">
         <h2 id="companion-controls-title">The 5K controls you use every day</h2>
         <dl className="companion-features">

@@ -9,6 +9,16 @@ import {execFileSync} from 'node:child_process';
 const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/client');
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
+// The approved promotional film is distributed alongside the Android release.
+const trailerFile = join(source, 'android/companion-tour.mp4');
+const trailerDigest = '903d64d4ec7dc5fb595abafc2f3106b996cb9031dff584d6ce92dafee9b4667c';
+if (!existsSync(trailerFile)) {
+  const bytes = execFileSync('curl', ['--fail', '--silent', '--show-error', '--location',
+    'https://github.com/yinyangeqlab/yinyang-android/releases/download/android-20261118-r3/YinYang-Companion-Rain-Garden.mp4'], { maxBuffer: 8 * 1024 * 1024 });
+  if (createHash('sha256').update(bytes).digest('hex') !== trailerDigest) throw Error('Unexpected Companion trailer download');
+  writeFileSync(trailerFile, bytes);
+}
+if (digest(trailerFile) !== trailerDigest) throw Error('Unexpected Companion trailer checksum');
 const previewRoot = join(source, 'sample-assets');
 const fontRevision = '6cdf01867df0813c2390f90dff7dc66c87f14cf7';
 const fonts = {

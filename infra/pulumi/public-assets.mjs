@@ -5,7 +5,7 @@ export const publicAssetPaths = [
   "/brand-amoled.webp", "/brand-avatar-aligned.webp", "/brand-avatar-aligned.png",
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
-  "/android/qudelix-5k.png",
+  "/android/qudelix-5k.png", "/android/companion-tour.mp4", "/android/companion-tour.webp", "/android/companion-tour.vtt",
   ...["blue", "amoled", "light", "green"].flatMap(theme =>
     ["presets", "eq", "match", "compare", "audio", "usb", "mixer", "collection", "tuning", "debug"]
       .map(screen => `/android/screens/${theme}/${screen}.webp`)),

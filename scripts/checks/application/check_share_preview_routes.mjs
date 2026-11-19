@@ -160,4 +160,15 @@ assert.deepEqual(missing.openGraph.images, []);
 assert.deepEqual(missing.twitter.images, []);
 assert.deepEqual(missing.robots, { index: false, follow: false });
 
+// Discord fetches crawler HTML before loading the MP4 independently.
+const trailerPath = "/q5k4android/trailer";
+const trailer = sharePageFor(trailerPath);
+const videoUrl = SITE_ORIGIN + "/android/companion-tour.mp4";
+const trailerHtml = shareHtml(trailer, { animated: true });
+assert.ok(trailerHtml.includes('property="og:type" content="video.other"'));
+assert.ok(trailerHtml.includes('property="og:video" content="' + videoUrl + '"'));
+assert.ok(trailerHtml.includes('property="og:video:type" content="video/mp4"'));
+assert.equal(share.shareMetadataFields(trailerPath).openGraph.videos[0].url, videoUrl);
+assert.ok(!shareHtml(sharePageFor("/q5k4android"), { animated: true }).includes('property="og:video"'));
+
 console.log(`PASS share-preview destinations, ${linkedPages.size} distinct internal links and ${dynamicRoutes.length} dynamic routes.`);

@@ -67,6 +67,7 @@ export const sharePages = [
   })),
   { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
+  { path: "/q5k4android/trailer", slug: "companion-tour", title: "YinYang Companion for Qudelix 5K | Android trailer", ogTitle: "YinYang Companion for Qudelix 5K · Android trailer", description: "Watch the 58-second walkthrough of PEQ import, Channel Match, four themes and App Manager updates.", image: { path: "/share/companion-tour.jpg", width: 1200, height: 630, alt: "YinYang Companion for Qudelix 5K Android walkthrough" }, video: { path: "/android/companion-tour.mp4", width: 720, height: 1280 } },
   { path: "/q5k4android", slug: "android", title: "YinYang Companion App for Qudelix 5K | YinYang EQ Lab", ogTitle: "YinYang Companion App for Qudelix 5K", description: "Install and update the Companion with the YinYang App Manager. Import and export PEQ files on the go, and pair a listening EQ with its left and right Channel Match filters on the original Qudelix 5K.", image: { path: "/share/android-apps-peq-v2.jpg", width: 1200, height: 630, alt: "The original Qudelix 5K, Android robot, YinYang App Manager and Companion icons. Import and export PEQ files on the go. Pair EQ with Channel Match." } },
   { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
   { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
@@ -189,9 +190,10 @@ export function shareHtml(page, { origin = SITE_ORIGIN, pathname = page.path, an
   const title = previewTitle(page);
   const description = page.description;
   const meta = [
-    ["og:type", "website"], ["og:site_name", SITE_NAME], ["og:title", title], ["og:description", description], ["og:url", canonical],
+    ["og:type", page.video ? "video.other" : "website"], ["og:site_name", SITE_NAME], ["og:title", title], ["og:description", description], ["og:url", canonical],
     ["og:image", image.url], ["og:image:type", motion?.type ?? "image/jpeg"],
     ["og:image:width", image.width], ["og:image:height", image.height], ["og:image:alt", image.alt],
+    ...(page.video ? [["og:video", origin + page.video.path], ["og:video:secure_url", origin + page.video.path], ["og:video:type", "video/mp4"], ["og:video:width", page.video.width], ["og:video:height", page.video.height]] : []),
     ["twitter:card", "summary_large_image"], ["twitter:title", title], ["twitter:description", description],
     ...(animated ? [] : [["twitter:image", image.url]]),
   ];
@@ -214,7 +216,7 @@ export function shareMetadataFields(path) {
     description: page.description,
     alternates: { canonical: page.path },
     ...(page.private || page.noIndex ? { robots: { index: false, follow: false } } : {}),
-    openGraph: { type: "website", siteName: SITE_NAME, title, description: page.description, url: page.path, images: [image] },
+    openGraph: { type: page.video ? "video.other" : "website", ...(page.video ? { videos: [{ url: SITE_ORIGIN + page.video.path, secureUrl: SITE_ORIGIN + page.video.path, type: "video/mp4", width: page.video.width, height: page.video.height }] } : {}), siteName: SITE_NAME, title, description: page.description, url: page.path, images: [image] },
     twitter: { card: "summary_large_image", title, description: page.description, images: [image.url] },
   };
 }

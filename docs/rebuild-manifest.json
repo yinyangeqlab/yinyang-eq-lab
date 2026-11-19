@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "35f76af011e397e08fe9c2757cf0678271dc8a45",
+  "baseRevision": "d75e1aa24941c73ee741c76c3747c7dfb8a9a31d",
   "recordedLiveUpdate": 183,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "2771d4bbea072c6487c74a3b594c834422f209d39c5e817d75eb372330a96661",
+      "sha256": "7e19fa4602abc86e616abf872b002dc05d32a9f94dc6e0f9a99c656c742b1ca9",
       "executable": false
     },
     {
@@ -1457,7 +1457,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "797dbdc4d5c1b4e8b83957b615f7e1d3944c3a3d1a7cf56b243af36b2c4dbbfd",
+      "sha256": "cebffc09dbd8fb18c0a5497f3b9dd0579f68c011aba6b6cf4e28bdffbea93e3d",
       "executable": false
     },
     {
@@ -1467,7 +1467,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "f0904e3572b046f7a7bd76ee576cf16f273d0bd18cf9289d9321b1cfe954e550",
+      "sha256": "6f231e905ba73fba33654029daa477442ae28471f79533b3cdc0659da5c336fb",
       "executable": false
     },
     {
@@ -1488,6 +1488,16 @@
     {
       "path": "package.json",
       "sha256": "00258994fa168a9de083a01167520391cf37507c1bdff64977a9ad9fa4260977",
+      "executable": false
+    },
+    {
+      "path": "public/android/companion-tour.vtt",
+      "sha256": "9827adf24d19de30bd2793c06a5374faf2d0f3042b265b8cc8ec854bba4c8bc1",
+      "executable": false
+    },
+    {
+      "path": "public/android/companion-tour.webp",
+      "sha256": "d43fa422229db26ce8cae4f4c008ec22f41b9caa21cd049654800be809c987c2",
       "executable": false
     },
     {
@@ -1883,6 +1893,11 @@
     {
       "path": "public/share/community.jpg",
       "sha256": "55f9384642d81cf7088b44a3cc6069d7b0a752ce3bcb2c7b3a0fec733d82abdd",
+      "executable": false
+    },
+    {
+      "path": "public/share/companion-tour.jpg",
+      "sha256": "ceafd010099a7c21001e2635d3755f82c600357b01406257834a0d8f80c1cae5",
       "executable": false
     },
     {
@@ -2672,7 +2687,7 @@
     },
     {
       "path": "scripts/checks/application/check_share_preview_routes.mjs",
-      "sha256": "2ce093b527a7cde8b3e060389561daf57a139f1b7d5242283cdab27bc2cc2267",
+      "sha256": "3b8be777ebee14a74e90d8c650aef19d8d3377a6f3d98e6a9e78ba5e012c866e",
       "executable": false
     },
     {
@@ -3102,7 +3117,7 @@
     },
     {
       "path": "scripts/package-static-assets.mjs",
-      "sha256": "df2f2d78e4893aec50a86f49ab30e881c421678739a781f795c51725111a328b",
+      "sha256": "4fc2d3a934334e0cc4e509dc8f5fd7ba8e39918294d807cdd77cb085eaf6cafe",
       "executable": false
     },
     {
@@ -4002,17 +4017,27 @@
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "d99d681f3324ef9d48f507aaf3ba44bbaf1fdf2b553e98a8dd789a60385f3734",
+      "sha256": "51604e811d242742b6163b20fb7aa0f736602ee6c135b6c10ecafe9f4f382c1b",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/share-button.tsx",
-      "sha256": "27f4d2d1e2edcbc18facffed64b7d9738c4d229c80abe4ac4f81f406d585bced",
+      "sha256": "17f375577d3ddfe14bfab682aebfefc61fc318d0b2a4a312ec737071737e2835",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "09f64ba0ac29b890aee73e7a04cf26316dcbfa6855a17c27a4a852618114e0af",
+      "sha256": "1568b3e02d505deee8c413f95868cc2aef049202b08006c75d93a9c938bfd344",
+      "executable": false
+    },
+    {
+      "path": "site/app/q5k4android/trailer-player.tsx",
+      "sha256": "9d0c6269f5f12ee40b9cb84173c6f6369853f09df62e8814c0ee41ee69224333",
+      "executable": false
+    },
+    {
+      "path": "site/app/q5k4android/trailer/page.tsx",
+      "sha256": "134cfab4ce851b291855233672a3c3adb417e68de354b3efa74de4aa87f7cae4",
       "executable": false
     },
     {
@@ -6402,12 +6427,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "028a37016ebb859cf74b2573be76a59af24f541aec41ffb1272596cee02bc6d4",
+      "sha256": "bb98f137aad709b34ccfd2ccf10ace73d6545c66eaeb9591891c2de8cab5b143",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "ae8efb086c9ea5a95102a91064b999e313a4b24057f62c23945e01a3bd9ab559",
+      "sha256": "05fcc013186fde88cbd2b925e04785f4ffe8c64c7891df163982b118d5c57279",
       "executable": false
     },
     {
@@ -6457,12 +6482,12 @@
     },
     {
       "path": "site/lib/share-pages.d.mts",
-      "sha256": "57a74738ee2f0d87c981bc3355b8109753b7e6d936a7412d9a2e7692ddbcbd52",
+      "sha256": "bcd528e260e61e3b5d4ce7eaa24a4a4cd8633ca5793b6bebbdfc62c99a56e0b3",
       "executable": false
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "9fd04eb108ffdcdfa30209c529f9537bcc3d41db2f00ec1481540030ab7295bd",
+      "sha256": "3f64ca1b1c1f3b3f65a303b0f6db22c5e3f9b40dfa7e1e8cf19e24c0f03854a4",
       "executable": false
     },
     {
