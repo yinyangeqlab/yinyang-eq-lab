@@ -1,3 +1,4 @@
+import { isCompanionTrailer, serveCompanionTrailer } from "../../../infra/pulumi/public-assets.mjs";
 import vm from "node:vm";
 import collector, { recordShootoutFailure, shootoutFailureHeader, shootoutSubmissionEndpoint } from "../../../infra/pulumi/shootout-failure-logger.mjs";
 import assert from 'node:assert/strict';
@@ -6,8 +7,8 @@ import {isPublicAudioFactRoute} from '../../../site/lib/share-pages.mjs';
 import {preDatabaseGuard,abuseBindings} from '../../../infra/pulumi/abuse-controls.mjs';
 const source=readFileSync('infra/pulumi/private-gate.mjs','utf8'),AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
 const start=source.indexOf('const guidePdfPath ='),end=source.indexOf('const password =',start);assert.ok(start>0&&end>start);
-const publicRead=new AsyncFunction('request','env','context','isPublicAsset','app','preDatabaseGuard','isPublicAudioFactRoute',`const url=new URL(request.url),path=url.pathname;${source.slice(start,end)}return null;`);
-const readThroughGate=(...args)=>publicRead(...args,isPublicAudioFactRoute);
+const publicRead=new AsyncFunction('request','env','context','isPublicAsset','app','preDatabaseGuard','isPublicAudioFactRoute','isCompanionTrailer','serveCompanionTrailer',`const url=new URL(request.url),path=url.pathname;${source.slice(start,end)}return null;`);
+const readThroughGate=(...args)=>publicRead(...args,isPublicAudioFactRoute,isCompanionTrailer,serveCompanionTrailer);
 let forwarded;
 const app={fetch:async request=>{forwarded=request;return new Response('fixture');}},env={ASSETS:{fetch:()=>{throw Error('unexpected asset bypass')}}};
 for(const path of ['/listeners/yinyangeq','/api/public-profiles/yinyangeq','/api/public-profiles/yinyangeq/files/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/single']){
