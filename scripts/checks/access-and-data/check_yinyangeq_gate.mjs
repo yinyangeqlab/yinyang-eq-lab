@@ -33,23 +33,30 @@ for (const path of ['/robots.txt/private','/sitemap.xml/private','/version/priva
 }
 const guideEnv={...env,ASSETS:{fetch:async () => new Response('guide file')}};
 const guidePdfPath = '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf';
-for(const path of [guidePdfPath,'/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
+const revisedGuideFilename = 'yinyang-eq-iem-711-measurement-guide-r02.pdf';
+const revisedGuidePath = '/guides/iem-measurement/' + revisedGuideFilename;
+for(const path of [guidePdfPath,revisedGuidePath,'/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
  for(const method of ['GET','HEAD']){
   const response=await readThroughGate(new Request('https://fixture.invalid'+path,{method}),guideEnv,{},()=>false,app,async()=>null);
   assert.equal(await response.text(),'guide file');
+  assert.equal(response.headers.get('content-disposition'),null);
  }
  assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path,{method:'POST'}),guideEnv,{},()=>false,app,async()=>null),null);
 }
 const legacyPdfPath = '/guides/iem-measurement/technical-guide.pdf';
 const pdfQuery = '?download=1&note=A%2BB';
 for (const method of ['GET', 'HEAD']) {
+ const revisedRequest = new Request('https://fixture.invalid' + revisedGuidePath + pdfQuery, { method });
+ const download = await readThroughGate(revisedRequest, guideEnv, {}, () => false, app, async () => null);
+ assert.equal(download.status, 200);
+ assert.equal(download.headers.get('content-disposition'), `attachment; filename="${revisedGuideFilename}"`);
  const request = new Request('https://fixture.invalid' + legacyPdfPath + pdfQuery, { method });
  const response = await readThroughGate(request, env, {}, () => false, app, async () => null);
  assert.equal(response.status, 308);
  assert.equal(response.headers.get('location'), 'https://fixture.invalid' + guidePdfPath + pdfQuery);
 }
 assert.equal(await readThroughGate(new Request('https://fixture.invalid' + legacyPdfPath, { method: 'POST' }), env, {}, () => false, app, async () => null), null);
-for(const path of ['/guides/iem-measurement/unlisted.pdf',guidePdfPath + '.bak','/glossary/iem-measurement/private']){
+for(const path of ['/guides/iem-measurement/unlisted.pdf',revisedGuidePath + '.bak','/glossary/iem-measurement/private']){
  assert.equal(await readThroughGate(new Request('https://fixture.invalid'+path),guideEnv,{},()=>false,app,async()=>null),null);
 }
 assert.equal(await readThroughGate(new Request('https://fixture.invalid/api/public-profiles/yinyangeq/private'),env,{},()=>false,app,async()=>null),null);

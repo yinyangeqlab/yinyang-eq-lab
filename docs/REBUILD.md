@@ -1,9 +1,14 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update190**, source `8952dc90f3e0f7fc880fedfae6333a2f7b91cacb`.
+Recorded deployment: **update191**, source `ab0acd73fe4d2aade6ab46a8f551b0d89462b500`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update191 IEM measurement guide
+
+The live guide includes Revision 02 of the technical PDF and its section on resonance near 8 kHz. [Deployment verification](releases/update191-verification.json)
+
 
 ## Update190 ultrawide homepage
 

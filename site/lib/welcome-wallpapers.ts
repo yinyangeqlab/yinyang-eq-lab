@@ -44,4 +44,16 @@ export const wallpaperManifest = "files.json";
 export const wallpaperUsagePath = `${wallpaperDirectory}/usage.txt`;
 export const wallpaperFilename = (scene: string, size: string, extension: string) =>
   `yinyang-eq-${scene}-${size}.${extension}`;
-export const offlineWallpaperFilename = (scene: string) => `yinyang-eq-${scene}-offline.zip`;
+export const offlineWallpaperFilename = (scene: string, layout = "desktop") =>
+  `yinyang-eq-${scene}${layout === "desktop" ? "" : "-" + layout}-offline.zip`;
+
+export const wallpaperEditions = [
+  { artwork: "original", symbol: true, suffix: "" },
+  { artwork: "original", symbol: false, suffix: "-no-symbol" },
+  { artwork: "panorama", symbol: true, suffix: "-panorama" },
+  { artwork: "panorama", symbol: false, suffix: "-panorama-no-symbol" },
+] as const;
+export type WallpaperEdition = typeof wallpaperEditions[number];
+export function wallpaperScenesFor(edition: WallpaperEdition) {
+  return wallpaperScenes.map(scene => ({ ...scene, id: scene.id + edition.suffix }));
+}

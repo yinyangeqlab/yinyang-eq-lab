@@ -1,6 +1,8 @@
 // Render the homepage scene offline. Requires Chromium/Playwright and FFmpeg with libx264 and libvpx-vp9.
 // Use --add-layouts[=layout,layout] with existing wallpapers to export layouts without recapturing the scene.
 // Phone and tablet compositions use artifacts/wallpaper-artwork/<scene>-<layout>.png as source artwork.
+// After a full original set is ready, run node scripts/wallpapers/render-editions.mjs
+// to add the panoramic and symbol-free downloads and the offline packages for each layout.
 import { execFile, execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
@@ -10,7 +12,7 @@ import { createServer } from "node:http";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
-import { crc32 } from "node:zlib";
+import { addStillUsageNotice } from "./wallpapers/usage-notice.mjs";
 import { build } from "esbuild";
 import { LANDSCAPE_CYCLE_SECONDS } from "../site/lib/welcome-landscape.ts";
 import { wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperScenes, wallpaperSizes, wallpaperUsagePath } from "../site/lib/welcome-wallpapers.ts";
@@ -265,41 +267,6 @@ async function verifyDownloads(folder, variants = wallpaperSizes) {
   return sizes;
 }
 
-const pngKeyword = Buffer.from("Usage Terms\0\0\0\0\0");
-const jpegHeading = Buffer.from("YinYang EQ Wallpaper Usage Terms\n");
-
-function addStillUsageNotice(bytes, extension, notice) {
-  if (extension === "png") {
-    // Put the uncompressed UTF-8 text immediately after IHDR.
-    const offset = 33;
-    const type = Buffer.from("iTXt");
-    const payload = Buffer.concat([pngKeyword, Buffer.from(notice)]);
-    const chunk = Buffer.alloc(payload.length + 12);
-    chunk.writeUInt32BE(payload.length);
-    type.copy(chunk, 4);
-    payload.copy(chunk, 8);
-    chunk.writeUInt32BE(crc32(chunk.subarray(4, -4)), chunk.length - 4);
-    const hasNotice = bytes.subarray(offset + 4, offset + 8).equals(type)
-      && bytes.subarray(offset + 8, offset + 8 + pngKeyword.length).equals(pngKeyword);
-    const end = hasNotice ? offset + 12 + bytes.readUInt32BE(offset) : offset;
-    if (bytes.subarray(offset, end).equals(chunk)) return bytes;
-    return Buffer.concat([bytes.subarray(0, offset), chunk, bytes.subarray(end)]);
-  }
-
-  // Keep the standard JFIF APP0 segment immediately after SOI when present.
-  const offset = bytes.readUInt16BE(2) === 0xffe0 ? 4 + bytes.readUInt16BE(4) : 2;
-  const payload = Buffer.from(notice);
-  const comment = Buffer.alloc(payload.length + 4);
-  comment.writeUInt16BE(0xfffe);
-  comment.writeUInt16BE(payload.length + 2, 2);
-  payload.copy(comment, 4);
-  const hasNotice = bytes.readUInt16BE(offset) === 0xfffe
-    && bytes.subarray(offset + 4, offset + 4 + jpegHeading.length).equals(jpegHeading);
-  const end = hasNotice ? offset + 2 + bytes.readUInt16BE(offset + 2) : offset;
-  if (bytes.subarray(offset, end).equals(comment)) return bytes;
-  return Buffer.concat([bytes.subarray(0, offset), comment, bytes.subarray(end)]);
-}
-
 async function installDownloads(folder, sizes, existing = {}) {
   const notice = await readFile(join(publicDir, wallpaperUsagePath.slice(1)), "utf8");
   const stills = wallpaperScenes.flatMap(({ id }) => [...wallpaperSizes, ...extraSizes].flatMap(size =>
@@ -319,7 +286,11 @@ async function installDownloads(folder, sizes, existing = {}) {
   }
   await mkdir(destination, { recursive: true });
   for (const name of Object.keys(sizes)) await rename(join(folder, name), join(destination, name));
-  await writeFile(join(folder, wallpaperManifest), JSON.stringify({ ...existing, ...sizes }, null, 2) + "\n");
+  // Variant downloads are prepared separately and share this catalog.
+  const previous = existsSync(join(destination, wallpaperManifest))
+    ? JSON.parse(await readFile(join(destination, wallpaperManifest), "utf8")) : {};
+  const editions = Object.fromEntries(Object.entries(previous).filter(([name]) => name.includes("-panorama-") || name.includes("-no-symbol-") || /-(phone|tablet-landscape|tablet-portrait|ultrawide)-offline\.zip$/.test(name)));
+  await writeFile(join(folder, wallpaperManifest), JSON.stringify({ ...editions, ...existing, ...sizes }, null, 2) + "\n");
   await rename(join(folder, wallpaperManifest), join(destination, wallpaperManifest));
   console.log(`Verified ${Object.keys(sizes).length} downloads in ${destination}`);
 }

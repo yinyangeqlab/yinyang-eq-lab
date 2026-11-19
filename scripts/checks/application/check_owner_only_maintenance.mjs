@@ -34,7 +34,7 @@ const actors=[{}, {'Cookie':'__Host-yinyangeq_tester='+'a'.repeat(43)}, {'Cookie
 const paths=['/','/home','/robots.txt','/sitemap.xml','/shootout','/shootout/personal','/eq-compare','/music-library','/privacy','/terms','/glossary/eq-fitting','/glossary/iem-measurement','/glossary/audio-facts','/glossary/audio-facts/harman-target','/glossary/audio-facts/sitemap.xml','/guides/iem-measurement/technical-guide.pdf','/my-data','/owner-research','/admin-login/','/access','/sync','/pair','/profile-access','/share-shootout','/s/abcdefghij','/embed/abcdefghij','/s/abcdefghij/card.png','/api/targets','/api/my-data','/api/my-profile/sync','/api/embed-shootouts','/api/embed-shootouts/abcdefghij/votes','/api/listening-audio/fixture','/music/protected.flac','/share/welcome.jpg','/_next/static/fixture.js','/favicon.svg'];
 const enginePaths = ['autoeq-wasm.mjs','autoeq-wasm.wasm','LICENSE','COPYING','RUNTIME-NOTICES.txt','source.tar.gz'].map(name => '/vendor/peqdb-autoeq/' + name);
 const wallpaperPaths = ['/wallpapers/files.json', '/wallpapers/yinyang-eq-landscape-4k.mp4', '/wallpapers/yinyang-eq-flying-gear-1080p.jpg'];
-paths.push(...enginePaths, ...wallpaperPaths, '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf');
+paths.push(...enginePaths, ...wallpaperPaths, '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf', '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf');
 let cases=0;
 for(const actor of actors)for(const path of paths)for(const method of ['GET','HEAD','POST','OPTIONS']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{method,headers:{...actor,'User-Agent':'Discordbot'}}),env,{});

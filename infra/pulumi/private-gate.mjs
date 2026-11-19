@@ -226,6 +226,7 @@ const privateGate = {
     const approvedGuidePdfPaths = [
       guidePdfPath,
       "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf",
+      "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf",
       "/guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
     ];
     const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);

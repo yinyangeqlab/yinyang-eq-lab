@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ChevronDown, Download, ExternalLink, Play } from "lucide-react";
 import { buildLabel } from "@/lib/release-info";
-import { offlineWallpaperFilename, wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperScenes, wallpaperUsagePath } from "@/lib/welcome-wallpapers";
+import { offlineWallpaperFilename, wallpaperDirectory, wallpaperFilename, wallpaperFormats, wallpaperLayouts, wallpaperManifest, wallpaperEditions, wallpaperScenesFor, wallpaperUsagePath, type WallpaperEdition } from "@/lib/welcome-wallpapers";
 
-type WallpaperScene = typeof wallpaperScenes[number];
+type WallpaperScene = ReturnType<typeof wallpaperScenesFor>[number];
 type WallpaperLayout = typeof wallpaperLayouts[number];
 type WallpaperSize = WallpaperLayout["sizes"][number];
 const desktopLayout = wallpaperLayouts[0];
 
-function downloadGroups(scene: WallpaperScene, layout: WallpaperLayout) {
+function downloadGroups(scene: WallpaperScene, layout: WallpaperLayout, sizes: Record<string, number>) {
   const groups = [["video", "Animated loops"], ["still", "Still images"]].map(([kind, label]) => ({
     label,
     choices: layout.sizes.flatMap(size => wallpaperFormats.filter(format => format.kind === kind).map(format => ({
@@ -20,20 +20,17 @@ function downloadGroups(scene: WallpaperScene, layout: WallpaperLayout) {
       previewable: true,
     }))),
   }));
-  if (layout.id === "desktop") groups.push({
-    label: "Live desktop wallpaper",
-    choices: [{ name: offlineWallpaperFilename(scene.id), label: "Offline HTML (ZIP)", detail: "Fits your display", previewable: false }],
+  const offline = offlineWallpaperFilename(scene.id, layout.id);
+  if (layout.id === "desktop" || sizes[offline] > 0) groups.push({
+    label: "Offline wallpaper",
+    choices: [{ name: offline, label: "Offline HTML (ZIP)", detail: "Fits your display", previewable: false }],
   });
   return groups;
 }
 
-const filesByLayout = new Map(wallpaperLayouts.map(layout => [
-  layout.id,
-  wallpaperScenes.flatMap(scene => downloadGroups(scene, layout).flatMap(group => group.choices.map(choice => choice.name))),
-]));
-
-function hasDownloads(layout: WallpaperLayout, sizes: Record<string, number>) {
-  return filesByLayout.get(layout.id)?.every(name => Number.isSafeInteger(sizes[name]) && sizes[name] > 0);
+function hasDownloads(layout: WallpaperLayout, sizes: Record<string, number>, edition: WallpaperEdition = wallpaperEditions[0]) {
+  return wallpaperScenesFor(edition).every(scene => downloadGroups(scene, layout, sizes).every(group =>
+    group.choices.every(({ name }) => Number.isSafeInteger(sizes[name]) && sizes[name] > 0)));
 }
 
 function wallpaperUrl(name: string) {
@@ -69,14 +66,14 @@ function WallpaperPreview({ scene, size }: { scene: WallpaperScene; size: Wallpa
 }
 
 function WallpaperDownload({ scene, layout, sizes }: { scene: WallpaperScene; layout: WallpaperLayout; sizes: Record<string, number> }) {
-  const groups = downloadGroups(scene, layout);
-  const [selectedName, setSelectedName] = useState(groups[0].choices[0].name);
-  const choice = groups.flatMap(group => group.choices).find(item => item.name === selectedName) ?? groups[0].choices[0];
+  const groups = downloadGroups(scene, layout, sizes);
+  const [selectedFormat, setSelectedFormat] = useState(groups[0].choices[0].label);
+  const choice = groups.flatMap(group => group.choices).find(item => item.label === selectedFormat) ?? groups[0].choices[0];
 
   return <div className="welcome-wallpaper-download">
-    <select value={choice.name} onChange={event => setSelectedName(event.currentTarget.value)} aria-label={`${scene.title} download format`}>
+    <select value={choice.label} onChange={event => setSelectedFormat(event.currentTarget.value)} aria-label={`${scene.title} download format`}>
       {groups.map(group => <optgroup key={group.label} label={group.label}>
-        {group.choices.map(item => <option key={item.name} value={item.name}>
+        {group.choices.map(item => <option key={item.name} value={item.label}>
           {item.label} · {(sizes[item.name] / 1_000_000).toFixed(1)} MB
         </option>)}
       </optgroup>)}
@@ -97,6 +94,8 @@ function WallpaperDownload({ scene, layout, sizes }: { scene: WallpaperScene; la
 function WallpaperGallery() {
   const [sizes, setSizes] = useState<Record<string, number> | null>();
   const [layoutId, setLayoutId] = useState<string>(desktopLayout.id);
+  const [artwork, setArtwork] = useState<WallpaperEdition["artwork"]>("original");
+  const [showSymbol, setShowSymbol] = useState(true);
   useEffect(() => {
     const abort = new AbortController();
     fetch(wallpaperUrl(wallpaperManifest), { signal: abort.signal })
@@ -111,6 +110,9 @@ function WallpaperGallery() {
   }, []);
   const availableLayouts = wallpaperLayouts.filter(layout => sizes && hasDownloads(layout, sizes));
   const layout = availableLayouts.find(layout => layout.id === layoutId) ?? desktopLayout;
+  const editions = sizes ? wallpaperEditions.filter(item => hasDownloads(layout, sizes, item)) : [];
+  const edition = editions.find(item => item.artwork === artwork && item.symbol === showSymbol)
+    ?? editions.find(item => item.artwork === artwork) ?? wallpaperEditions[0];
   const previewSize = layout.sizes[1];
 
   return <section className="welcome-wallpapers" aria-labelledby="wallpapers-title">
@@ -123,21 +125,35 @@ function WallpaperGallery() {
     {sizes === undefined && <p role="status">Loading wallpapers…</p>}
     {sizes === null && <p role="status">Wallpaper downloads are unavailable in this build.</p>}
     {sizes && <>
+      <div className="welcome-wallpaper-options">
       {availableLayouts.length > 1 && <label className="welcome-wallpaper-layout">
         Screen layout
         <select value={layout.id} onChange={event => setLayoutId(event.currentTarget.value)}>
           {availableLayouts.map(layout => <option key={layout.id} value={layout.id}>{layout.label}</option>)}
         </select>
       </label>}
-      <div key={layout.id} className="welcome-wallpaper-grid"
+      {editions.some(item => item.artwork === "panorama") && <label className="welcome-wallpaper-layout">
+        Artwork
+        <select value={edition.artwork} onChange={event => setArtwork(event.currentTarget.value === "panorama" ? "panorama" : "original")}>
+          <option value="original">Original landscape</option>
+          <option value="panorama">Ultrawide panorama</option>
+        </select>
+      </label>}
+      {editions.some(item => item.artwork === edition.artwork && item.symbol !== edition.symbol) &&
+        <label className="welcome-wallpaper-symbol">
+          <input type="checkbox" checked={edition.symbol} onChange={event => setShowSymbol(event.currentTarget.checked)}/>
+          Show yin-yang symbol
+        </label>}
+      </div>
+      <div className="welcome-wallpaper-grid"
         style={{ "--wallpaper-preview-ratio": previewSize.width / previewSize.height } as CSSProperties}>
-        {wallpaperScenes.map(scene => <article key={scene.id} className="welcome-wallpaper-card">
+        {wallpaperScenesFor(edition).map(scene => <article key={scene.title} className="welcome-wallpaper-card">
           <h3>{scene.title}</h3>
-          <WallpaperPreview scene={scene} size={previewSize}/>
+          <WallpaperPreview key={scene.id + previewSize.id} scene={scene} size={previewSize}/>
           <WallpaperDownload scene={scene} layout={layout} sizes={sizes}/>
         </article>)}
       </div>
-      {layout.id === "desktop" && <details className="welcome-wallpaper-help">
+      {sizes[offlineWallpaperFilename(wallpaperScenesFor(edition)[0].id, layout.id)] > 0 && <details className="welcome-wallpaper-help">
         <summary>Use as a live desktop wallpaper</summary>
         <p>Choose <strong>Offline HTML (ZIP)</strong> and extract it into its own folder. Open <strong>index.html</strong> in a browser, or import it as a web wallpaper in an app such as Wallpaper Engine or Lively on Windows. It runs on your computer without streaming.</p>
       </details>}
@@ -147,7 +163,16 @@ function WallpaperGallery() {
 
 export default function WelcomeWallpapers() {
   const [open, setOpen] = useState(false);
-  return <details id="wallpapers" className="welcome-wallpaper-disclosure"
+  const disclosure = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    function openFromLink() {
+      if (location.hash === "#wallpapers" && disclosure.current) disclosure.current.open = true;
+    }
+    openFromLink();
+    window.addEventListener("hashchange", openFromLink);
+    return () => window.removeEventListener("hashchange", openFromLink);
+  }, []);
+  return <details ref={disclosure} id="wallpapers" className="welcome-wallpaper-disclosure"
     onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="welcome-wallpaper-toggle">
       <img className="wallpaper-swatch" src={wallpaperUrl(wallpaperFilename("landscape", "1080p", "jpg"))} alt="" width="180" height="88" loading="lazy"/>

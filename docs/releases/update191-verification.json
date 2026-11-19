@@ -1,0 +1,53 @@
+{
+  "update": 191,
+  "sourceCommit": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
+  "deploymentVerification": {
+    "at": "2026-11-19T10:16:12.362257Z",
+    "update": 191,
+    "revision": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
+    "liveGuideVerified": true,
+    "liveDownloadGetAndHeadVerified": true,
+    "pdfPageLinksVerified": true,
+    "pdfSha256": "23ee81e0d0f91b163ba99417737dd524e372da0cd5bdc48404a430a70ba57a02",
+    "pdfBytes": 5294189,
+    "versionPageVerified": true,
+    "matchingWorkerModules": 404,
+    "protectedRecordingAccessRetained": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "ab0acd73fe4d2aade6ab46a8f551b0d89462b500",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserWidths": [
+      320,
+      390,
+      1280
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

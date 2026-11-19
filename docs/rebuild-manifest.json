@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb",
-  "recordedLiveUpdate": 190,
+  "baseRevision": "088e62d68aa4d0b5e48354941094216472e2949c",
+  "recordedLiveUpdate": 191,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "10ce776a926cc3732a7600be351208090a8cc683266ee85644b1989383ffabe7",
+      "sha256": "a78befb2b90989bb6be6ce6f48b8ed58be908d335a5d9bb5e09912b3d02c6c50",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "727c0beef9188ee0bf5a8e75db945df764aebbaa1e47313eb97f9e968539c491",
+      "sha256": "b5b8ee2a010160a867608803e20c5ef9ac15e23b4fe35a001e0a72cd07d36af0",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "ac168842cb5a9319b02ba5caa293465e460e255e1ac0513d58595252091cb0d1",
+      "sha256": "1a10b57dfe39ea9c73af42cb9112375c14d80dd32b5421eb2944e6725e8dcf1b",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "35f88151b4951bfae4eaf4bcd4f9694d1eacbea0bb3192987b25807c8edf97d7",
+      "sha256": "f1b2c5c68c9dd152302f21299c03e07d825616ecbcb381897c228009fe6789a4",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "c6eef998c329d36aa3360f893180c29abbc7b956f91f8434c90ddcab6d96e235",
+      "sha256": "2a2326f6bd9ab7d485d7fdaa8fd2a67cecc8187d04776bac2c068458c668f3cd",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "d63771b8596426a800b36609b633c469ea45d9612b16a5362a11714538d05799",
+      "sha256": "aa81896797832c8e1dec1060e1a55e24d9b2e270dbe2018f01d0bb932ec5e926",
       "executable": false
     },
     {
@@ -1216,6 +1216,11 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update191-verification.json",
+      "sha256": "ed1c429fb524b04c7c5be8cbd2b28b81e62db5262a078bb3acbf003787c3fa92",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update97-recovery-verification.json",
       "sha256": "7eb509e52dcd9a9a7b76f350479230dfb4da15653870a9129e7b7ddc72835c31",
       "executable": false
@@ -1562,7 +1567,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "f843bae19494517fcef48c3ad8ad1e629bcb1abb91f0de56fc6f232a52148c13",
+      "sha256": "719e4d170b642c43754c16655a311906e5b8c821778bcdda1d9de929c92e9b98",
       "executable": false
     },
     {
@@ -2627,7 +2632,7 @@
     },
     {
       "path": "scripts/checks/access-and-data/check_yinyangeq_gate.mjs",
-      "sha256": "c90b11a57b2126a4a4dd5e29e482dc7d730c8b79eba4f13f88cf2e68a447bc2b",
+      "sha256": "f3070a6ecd0b56f5c489c26b153efcd52c776f9795bd9bb3df7a49c9b68dcf2e",
       "executable": false
     },
     {
@@ -2747,7 +2752,7 @@
     },
     {
       "path": "scripts/checks/application/check_owner_only_maintenance.mjs",
-      "sha256": "58c5ad34dce05d70566043db8d215cbb67e33dde441f2d5cb88c2809b0f92e9d",
+      "sha256": "2f9b07aa74c1a4eb8d693e1dfacb89a9c4d16f244f386db3b6d38620dd9e2033",
       "executable": false
     },
     {
@@ -3182,7 +3187,7 @@
     },
     {
       "path": "scripts/generate-welcome-wallpapers.mjs",
-      "sha256": "0b5f861c2e6a4d8785d786d46193240207f3dc8ca03cfe86892a2111cbfc43fe",
+      "sha256": "8d257d16cd1ff792fc28c6019b029a4ccbe2e7889d0dc3b7609575f2748e83ae",
       "executable": false
     },
     {
@@ -3192,7 +3197,7 @@
     },
     {
       "path": "scripts/iem-guide-assets.json",
-      "sha256": "84f2361f0a8f54ad79512a222bf43c6c5cc7f222c394a99e4f425b591c446d81",
+      "sha256": "0c93197c2b9ceb1658b1fae6def40ebe1e23de62c004bda7253ed596d01acd24",
       "executable": false
     },
     {
@@ -3391,8 +3396,23 @@
       "executable": false
     },
     {
+      "path": "scripts/wallpapers/artwork/aurora-sky.webp",
+      "sha256": "088a53ce02f0146b9acdff9530a8852838e387b7719acca3d05d959e756bf4d6",
+      "executable": false
+    },
+    {
+      "path": "scripts/wallpapers/loop-player.html",
+      "sha256": "57fc0101012518fa76c5a8e90a1ee4422a9d00f7f33fddfc5efc24bd3324a99f",
+      "executable": false
+    },
+    {
       "path": "scripts/wallpapers/offline.tsx",
       "sha256": "a99106cef647d73ebb900ed36f513a4454a46ee039cebc254e4fe1022aba6da9",
+      "executable": false
+    },
+    {
+      "path": "scripts/wallpapers/package-loop.mjs",
+      "sha256": "e79ba9480b226dbd467304e2f0591013f738d8c8a2df66fc0d91b45d860ea3ec",
       "executable": false
     },
     {
@@ -3401,8 +3421,18 @@
       "executable": false
     },
     {
+      "path": "scripts/wallpapers/render-editions.mjs",
+      "sha256": "f0e5de2e50ccc772646f781f48093b088b3702b7554e524832ba44c6fddc95d3",
+      "executable": false
+    },
+    {
       "path": "scripts/wallpapers/scene.tsx",
       "sha256": "3566f5e1dbb61d9ef56d4f6b1503da956fca77b263b146a0f2d4bbccd36c7241",
+      "executable": false
+    },
+    {
+      "path": "scripts/wallpapers/usage-notice.mjs",
+      "sha256": "e94a8f6c9eccae1f92366119a2acfa07238690acf12162c642a179e40a7b3218",
       "executable": false
     },
     {
@@ -3932,7 +3962,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/guide-revisions.json",
-      "sha256": "8ba156edf0a519d4fb3cda003a8e86699acbcd99e0ae1e553487dd99966c2561",
+      "sha256": "b2ebe70bd4ed8dbab656bd7df62b23bb79a0b249dcada7b7125e003a77783b7f",
       "executable": false
     },
     {
@@ -3942,7 +3972,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/page.tsx",
-      "sha256": "0994fd04897aace46657d791222e0f4260bd9201e783d57cc573becc2e40a9a1",
+      "sha256": "fa617b0f3744e3fe42c6c4968b6d70e994e3780b67ca8be5eb902a874aa26c7e",
       "executable": false
     },
     {
@@ -4277,7 +4307,7 @@
     },
     {
       "path": "site/app/welcome.css",
-      "sha256": "6dae55d29e7bd639542e1a451e2c7b61834e21b0f6a7192c526d41180824c065",
+      "sha256": "dbc1143e8f0e9ca6d2d1d0620986f75699d51121bc8abf48158e2223ee85db88",
       "executable": false
     },
     {
@@ -5427,7 +5457,7 @@
     },
     {
       "path": "site/components/welcome-wallpapers.tsx",
-      "sha256": "b1c48c894301afed4c631341230a736c4b553a779be0eeab9928c209fb5d0a4a",
+      "sha256": "6c7be0e450e7ccc2df97367dad989488dae454b1bc0c1cf092bca8f98f5b8e25",
       "executable": false
     },
     {
@@ -6562,12 +6592,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "aa1cb883fd617bfa83858317f7746dd8b7f2cbbd00e66ef57cdf99f63b918385",
+      "sha256": "f670519473f1551ff439fb217a93fdd018cdec191d85467b0885ecd41daa7a47",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "1fc4d9076a5aac3dc0fc16162f5f3133cc9a3a228ba18bfc492ce04eb6d25208",
+      "sha256": "e7c39c2f313f760ba05023d7e8d89affaf5440cde6fe9ebe7d43117ad97e9342",
       "executable": false
     },
     {
@@ -6772,7 +6802,7 @@
     },
     {
       "path": "site/lib/welcome-wallpapers.ts",
-      "sha256": "062ace7165bc444ff6beb03295c17ed97232038bf97f86b161b5082589a27a14",
+      "sha256": "ca92d34ab4fa25e39eb8a6d78221b276868a419b108e15161f30ff4518f0a152",
       "executable": false
     },
     {

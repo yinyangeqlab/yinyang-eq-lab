@@ -339,10 +339,19 @@ const update188Changes = [
   "The homepage, listening modes, and glossary provide clearer titles and descriptions for search results.",
 ] as const;
 
-export const candidateChanges = ["Ultrawide displays show the whole yin-yang and more of the ocean. The headphone comparison still starts by mid-screen."] as const;
+const update190Changes = ["Ultrawide displays show the whole yin-yang and more of the ocean. The headphone comparison still starts by mid-screen."] as const;
+
+const update191Changes = [
+  "The IEM measurement guide explains the resonance near 8 kHz and how insertion depth moves it.",
+  "Download Revision 02 of the technical guide for research citations and advice on measuring your own IEMs and comparing 711 clone couplers.",
+] as const;
+
+export const candidateChanges = ["Choose Original landscape or Ultrawide panorama, with or without the yin-yang, in every wallpaper layout. Both scenes offer PNG, JPEG, MP4, WebM and offline HTML downloads."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: candidateChanges, github: { commit: "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb", releaseTag: "update190" } },
+  { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: candidateChanges },
+  { update: 191, date: "2026-11-19", title: "IEM measurement guide Revision 02", changes: update191Changes },
+  { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: update190Changes, github: { commit: "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb", releaseTag: "update190" } },
   { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."], github: { commit: "3010dcc2cd2f78b69864903150b13404be0b9587", releaseTag: "update189" } },
   { update: 188, date: "2026-11-18", title: "Search discovery for public EQ guides and tools", changes: update188Changes, github: { commit: "7c1e46eca27b1067bd8f194e198d7ad815d622b2", releaseTag: "update188" } },
   { update: 187, date: "2026-11-18", title: "Edge-to-edge landscape and first-screen comparison", changes: update187Changes, github: { commit: "7547d00252da68822557e987ebbe84f8727b1b62", releaseTag: "update187" } },

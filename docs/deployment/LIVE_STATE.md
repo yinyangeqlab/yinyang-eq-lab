@@ -5,13 +5,13 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update190 |
-| Source | `8952dc90f3e0f7fc880fedfae6333a2f7b91cacb` |
-| Verified at | 2026-11-19T09:18:31.149058Z |
-| Deployment | Verified by the [deployment receipt](../releases/update190-verification.json) |
+| Release | update191 |
+| Source | `ab0acd73fe4d2aade6ab46a8f551b0d89462b500` |
+| Verified at | 2026-11-19T10:16:12.362257Z |
+| Deployment | Verified by the [deployment receipt](../releases/update191-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Reviewed source published as `8952dc90f3e0f7fc880fedfae6333a2f7b91cacb`; publication authorized in this record |
-| Recovery | Matching source-only metadata handover recorded as verified |
+| Publication | Source not pushed; publication not authorized in this record |
+| Recovery | Matching source-only handover pending; do not claim this release has a registered recovery baseline |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
 
