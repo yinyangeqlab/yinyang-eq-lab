@@ -1,11 +1,29 @@
 # Recovery boundaries and entry points
 
 <!-- release-state:start -->
-Recorded deployment: **update184**, source `f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc`.
+Recorded deployment: **update185**, source `484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
-## Update182 Qudelix 5K Android gallery
+## Update185 portrait trailer sharing
+
+The Android page includes the 58-second Companion walkthrough below the screenshot gallery. Its player has native playback controls and English captions. The [trailer share page](https://yinyangeq.com/q5k4android/trailer/portrait) supplies the video and poster to Discord. Production checks verified the public MP4 hash, browser playback and crawler metadata. The media endpoint supports byte-range playback and seeking.
+
+The encrypted off-device recovery baseline passed reconstruction and hosted validation. Existing data recovery points retain their original timestamps.
+
+[Deployment verification](releases/update185-verification.json) · [Recovery verification](releases/update185-recovery-verification.json) · [Publication verification](releases/update185-publication.json)
+
+
+## Update184 Companion walkthrough
+
+The Android page includes the 58-second Companion walkthrough below the screenshot gallery. Its player has native playback controls and English captions. The [trailer share page](https://yinyangeq.com/q5k4android/trailer) supplies the video and poster to Discord. Production checks verified the public MP4 hash, browser playback and crawler metadata. The media endpoint returned the full MP4 for a Range request.
+
+The encrypted off-device recovery baseline passed reconstruction and hosted validation. Existing data recovery points retain their original timestamps.
+
+[Deployment verification](releases/update184-verification.json) · [Recovery verification](releases/update184-recovery-verification.json) · [Publication verification](releases/update184-publication.json)
+
+
+## Update183 Qudelix 5K Android gallery
 
 The Android Companion page at /q5k4android shows ten screens in four themes. The gallery supports white arrows, page dots, touch swipes and keyboard navigation. The App Manager download opens the Lab’s signed GitHub release. The former /android URL redirects to the new page. The Discord card shows the original 5K and both apps. Production checks covered the Manager APK, 40 gallery screenshots and 397 Worker modules.
 

@@ -1,0 +1,22 @@
+{
+  "update": 184,
+  "tag": "update184",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+  "publishedSourceCommit": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update184",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update184",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/35f76af011e397e08fe9c2757cf0678271dc8a45..update184",
+  "publishedAt": "2026-11-19T01:45:36Z",
+  "liveVersionVerifiedAt": "2026-11-19T01:47:31.593157+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update184",
+  "filesVerifiedInEachArchive": 1340,
+  "publicZipAndTarDownloadsVerified": true,
+  "deploymentVerification": "docs/releases/update184-verification.json",
+  "recoveryVerification": "docs/releases/update184-recovery-verification.json"
+}

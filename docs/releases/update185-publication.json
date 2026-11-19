@@ -1,0 +1,22 @@
+{
+  "update": 185,
+  "tag": "update185",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+  "publishedSourceCommit": "484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update185",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/484e70f97c1f2bb0b7c76ef8e804d3c70da5c45a",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update185",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc..update185",
+  "publishedAt": "2026-11-19T04:59:31Z",
+  "liveVersionVerifiedAt": "2026-11-19T05:22:03.004404+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update185",
+  "filesVerifiedInEachArchive": 1343,
+  "publicZipAndTarDownloadsVerified": true,
+  "deploymentVerification": "docs/releases/update185-verification.json",
+  "recoveryVerification": "docs/releases/update185-recovery-verification.json"
+}
