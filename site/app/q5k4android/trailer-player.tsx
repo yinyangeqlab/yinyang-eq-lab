@@ -5,9 +5,9 @@ export function TrailerPlayer({ standalone = false }: { standalone?: boolean }) 
   return <section id="trailer" className="companion-trailer" aria-labelledby="trailer-title">
     <video controls playsInline preload="none" width="720" height="1280"
       poster="/android/companion-tour.webp" aria-label="YinYang Companion walkthrough with instrumental music">
-      <source src="/android/companion-tour.mp4" type="video/mp4" />
+      <source src="/android/companion-tour-portrait.mp4" type="video/mp4" />
       <track kind="captions" src="/android/companion-tour.vtt" srcLang="en" label="English" />
-      <a href="/android/companion-tour.mp4">Watch the MP4</a>
+      <a href="/android/companion-tour-portrait.mp4">Watch the MP4</a>
     </video>
     <div>
       <Heading id="trailer-title">Watch the Companion in action</Heading>

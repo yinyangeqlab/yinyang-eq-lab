@@ -10,15 +10,20 @@ const root=process.cwd(),source=join(root,'public'),destination=join(root,'dist/
 const digest=file=>createHash('sha256').update(readFileSync(file)).digest('hex');
 const publicOnly=process.argv.includes('--public-only'),marker=join(root,'dist/.public-only-package');
 // The approved promotional film is distributed alongside the Android release.
-const trailerFile = join(source, 'android/companion-tour.mp4');
-const trailerDigest = '903d64d4ec7dc5fb595abafc2f3106b996cb9031dff584d6ce92dafee9b4667c';
-if (!existsSync(trailerFile)) {
-  const bytes = execFileSync('curl', ['--fail', '--silent', '--show-error', '--location',
-    'https://github.com/yinyangeqlab/yinyang-android/releases/download/android-20261118-r3/YinYang-Companion-Rain-Garden.mp4'], { maxBuffer: 8 * 1024 * 1024 });
-  if (createHash('sha256').update(bytes).digest('hex') !== trailerDigest) throw Error('Unexpected Companion trailer download');
-  writeFileSync(trailerFile, bytes);
+const films = [
+  ["companion-tour.mp4", "android-20261118-r3/YinYang-Companion-Rain-Garden.mp4", "903d64d4ec7dc5fb595abafc2f3106b996cb9031dff584d6ce92dafee9b4667c"],
+  ["companion-tour-portrait.mp4", "android-20261118-r4/YinYang-Companion-Discord-Portrait.mp4", "4e9206917bffa8151904420eacc3972b58d103525c516230b9257f7914d72c02"],
+];
+for (const [name, releaseAsset, checksum] of films) {
+  const file = join(source, 'android', name);
+  if (!existsSync(file)) {
+    const bytes = execFileSync('curl', ['--fail', '--silent', '--show-error', '--location',
+      'https://github.com/yinyangeqlab/yinyang-android/releases/download/' + releaseAsset], { maxBuffer: 8 * 1024 * 1024 });
+    if (createHash('sha256').update(bytes).digest('hex') !== checksum) throw Error('Unexpected trailer download: ' + name);
+    writeFileSync(file, bytes);
+  }
+  if (digest(file) !== checksum) throw Error('Unexpected trailer checksum: ' + name);
 }
-if (digest(trailerFile) !== trailerDigest) throw Error('Unexpected Companion trailer checksum');
 const previewRoot = join(source, 'sample-assets');
 const fontRevision = '6cdf01867df0813c2390f90dff7dc66c87f14cf7';
 const fonts = {

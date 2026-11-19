@@ -97,3 +97,4 @@ work/
 
 # Prepared from the signed Android distribution repository during packaging.
 /public/android/companion-tour.mp4
+/public/android/companion-tour-portrait.mp4

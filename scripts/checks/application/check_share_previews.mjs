@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { isPublicAsset, publicAssetBypassPatterns } from '../../../infra/pulumi/public-assets.mjs';
+import { isPublicAsset, publicAssetBypassPatterns, serveCompanionTrailer } from '../../../infra/pulumi/public-assets.mjs';
 import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../../../site/lib/share-pages.mjs';
 
 // Every page route in app/ has its own preview entry (or is a documented alias / dynamic route).
@@ -269,3 +269,20 @@ for (const [agent, artwork] of [[discord['User-Agent'], 'eq-compare-motion.webp'
   assert.equal(new URL(openGraphImages(body)[0]).pathname, `/share/${artwork}`);
 }
 console.log('PASS Blind EQ Comparison has dedicated previews and remains noindex.');
+
+const movie = "https://yinyangeq.com/android/companion-tour.mp4";
+assert.ok(!publicAssetBypassPatterns.includes("!/android/companion-tour.mp4"));
+const binding = { async fetch(request) {
+  assert.equal(request.headers.get("range"), null);
+  return new Response(request.method === "HEAD" ? null : "012345", { headers: { ETag: '"movie"' } });
+} };
+for (const [range, status, bounds, text] of [
+  ["bytes=0-1", 206, "bytes 0-1/6", "01"], ["bytes=3-", 206, "bytes 3-5/6", "345"],
+  ["bytes=-2", 206, "bytes 4-5/6", "45"], ["bytes=8-", 416, "bytes */6", ""],
+  ["bytes=0-1,4-5", 200, null, "012345"]
+]) {
+  const res = await serveCompanionTrailer(new Request(movie, {headers:{ Range: range }}), binding);
+  assert.equal(res.status, status);
+  assert.equal(res.headers.get("Content-Range"), bounds);
+  assert.equal(await res.text(), text);
+}

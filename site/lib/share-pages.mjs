@@ -67,7 +67,7 @@ export const sharePages = [
   })),
   { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
-  { path: "/q5k4android/trailer", slug: "companion-tour", title: "YinYang Companion for Qudelix 5K | Android trailer", ogTitle: "YinYang Companion for Qudelix 5K · Android trailer", description: "Watch the 58-second walkthrough of PEQ import, Channel Match, four themes and App Manager updates.", image: { path: "/share/companion-tour.jpg", width: 1200, height: 630, alt: "YinYang Companion for Qudelix 5K Android walkthrough" }, video: { path: "/android/companion-tour.mp4", width: 720, height: 1280 } },
+  { path: "/q5k4android/trailer", slug: "companion-tour", title: "YinYang Companion for Qudelix 5K | Android trailer", ogTitle: "YinYang Companion for Qudelix 5K · Android trailer", description: "Watch the 58-second walkthrough of PEQ import, Channel Match, four themes and App Manager updates.", image: { path: "/share/companion-tour-portrait.jpg", width: 720, height: 1280, alt: "YinYang Companion for Qudelix 5K Android walkthrough" }, video: { path: "/android/companion-tour-portrait.mp4", width: 720, height: 1280 } },
   { path: "/q5k4android", slug: "android", title: "YinYang Companion App for Qudelix 5K | YinYang EQ Lab", ogTitle: "YinYang Companion App for Qudelix 5K", description: "Install and update the Companion with the YinYang App Manager. Import and export PEQ files on the go, and pair a listening EQ with its left and right Channel Match filters on the original Qudelix 5K.", image: { path: "/share/android-apps-peq-v2.jpg", width: 1200, height: 630, alt: "The original Qudelix 5K, Android robot, YinYang App Manager and Companion icons. Import and export PEQ files on the go. Pair EQ with Channel Match." } },
   { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
   { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
@@ -116,6 +116,7 @@ function normalize(pathname) {
 export function sharePageFor(pathname, search = "") {
   const path = normalize(pathname);
   if (path === "/discover") return sharePageFor("/shootout", "?tab=rankings");
+  if (path === "/q5k4android/trailer/portrait") return { ...sharePageFor("/q5k4android/trailer"), path };
   const base = sharePages.find(page => page.path === path);
   if (!base || !search) return base ?? null;
   const params = new URLSearchParams(search);

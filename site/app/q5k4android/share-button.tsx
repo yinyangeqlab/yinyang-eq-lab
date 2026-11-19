@@ -6,7 +6,7 @@ import { Share2 } from "lucide-react";
 export function ShareCompanion({ trailer = false }: { trailer?: boolean }) {
   const [status, setStatus] = useState("");
   const [manual, setManual] = useState(false);
-  const url = "https://yinyangeq.com/q5k4android" + (trailer ? "/trailer" : "");
+  const url = "https://yinyangeq.com/q5k4android" + (trailer ? "/trailer/portrait" : "");
   async function share() {
     setStatus("");
     if (navigator.share) {

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "d75e1aa24941c73ee741c76c3747c7dfb8a9a31d",
+  "baseRevision": "f1aa683d7c35c5cbea30939f0cd10eb6f5036bbc",
   "recordedLiveUpdate": 183,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "7e19fa4602abc86e616abf872b002dc05d32a9f94dc6e0f9a99c656c742b1ca9",
+      "sha256": "c9c974fd0db968a961e295b8235745c4c4b018ec6262c2b4f4620ec1a2904bfc",
       "executable": false
     },
     {
@@ -1457,7 +1457,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "cebffc09dbd8fb18c0a5497f3b9dd0579f68c011aba6b6cf4e28bdffbea93e3d",
+      "sha256": "bf2bafca32d5f694c2d523a64f606349d346d633dca7f413807556d9ceffc35b",
       "executable": false
     },
     {
@@ -1467,7 +1467,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "6f231e905ba73fba33654029daa477442ae28471f79533b3cdc0659da5c336fb",
+      "sha256": "9fb2455a296a44470d4e68f137877f52e9edefddb625ca122cd0bea951af0b7f",
       "executable": false
     },
     {
@@ -1893,6 +1893,11 @@
     {
       "path": "public/share/community.jpg",
       "sha256": "55f9384642d81cf7088b44a3cc6069d7b0a752ce3bcb2c7b3a0fec733d82abdd",
+      "executable": false
+    },
+    {
+      "path": "public/share/companion-tour-portrait.jpg",
+      "sha256": "7e615435b5613e40c9997e787727aa6ec0cec0ae084e49b10fc1bea66c1d2a23",
       "executable": false
     },
     {
@@ -2687,12 +2692,12 @@
     },
     {
       "path": "scripts/checks/application/check_share_preview_routes.mjs",
-      "sha256": "3b8be777ebee14a74e90d8c650aef19d8d3377a6f3d98e6a9e78ba5e012c866e",
+      "sha256": "424824ac8a5303f6f1ac3213edd1505080580ee500e5a566845dc36c22a34bda",
       "executable": false
     },
     {
       "path": "scripts/checks/application/check_share_previews.mjs",
-      "sha256": "f536aabc957830f07cf65789ef31ab5879468ac593b781243250209dc56ba42d",
+      "sha256": "d6327031281f1b676a7f4aa8a15ce666df5863ff808653172c3475959a19b8d1",
       "executable": false
     },
     {
@@ -3117,7 +3122,7 @@
     },
     {
       "path": "scripts/package-static-assets.mjs",
-      "sha256": "4fc2d3a934334e0cc4e509dc8f5fd7ba8e39918294d807cdd77cb085eaf6cafe",
+      "sha256": "b1c208a1bf143389f0eab4b4ad34e66d63dcf228ac873dcafc4236a76ef0b365",
       "executable": false
     },
     {
@@ -4022,7 +4027,7 @@
     },
     {
       "path": "site/app/q5k4android/share-button.tsx",
-      "sha256": "17f375577d3ddfe14bfab682aebfefc61fc318d0b2a4a312ec737071737e2835",
+      "sha256": "540892da28930892f8e1d62326ac7cd88036e68ff5cc16e064e8e1b240130224",
       "executable": false
     },
     {
@@ -4032,12 +4037,17 @@
     },
     {
       "path": "site/app/q5k4android/trailer-player.tsx",
-      "sha256": "9d0c6269f5f12ee40b9cb84173c6f6369853f09df62e8814c0ee41ee69224333",
+      "sha256": "3d5ca564af0a0053261575fb9352b3c63a0491ecce158c6d96b78d3dc681099b",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/trailer/page.tsx",
       "sha256": "134cfab4ce851b291855233672a3c3adb417e68de354b3efa74de4aa87f7cae4",
+      "executable": false
+    },
+    {
+      "path": "site/app/q5k4android/trailer/portrait/page.tsx",
+      "sha256": "2b92e6afe3608d6b2b9272855aef7cb6c2ba83aab1bd6b264bcb73956ed0216d",
       "executable": false
     },
     {
@@ -6427,12 +6437,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "bb98f137aad709b34ccfd2ccf10ace73d6545c66eaeb9591891c2de8cab5b143",
+      "sha256": "bc33c4d3328a8a02bc44230f69d766580e06cd97bcdad02021c223546f3d52d9",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "05fcc013186fde88cbd2b925e04785f4ffe8c64c7891df163982b118d5c57279",
+      "sha256": "921a6e622b44d5a565d6ee46a4a65e9ed886de1703d4e8c0c7bef23e649f248d",
       "executable": false
     },
     {
@@ -6487,7 +6497,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "3f64ca1b1c1f3b3f65a303b0f6db22c5e3f9b40dfa7e1e8cf19e24c0f03854a4",
+      "sha256": "60c4b82aa2d8ed9bb1f9eb316e9566a16b6e555bb6e1f30c61f5b40a1798be1f",
       "executable": false
     },
     {

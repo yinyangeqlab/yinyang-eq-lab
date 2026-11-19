@@ -5,7 +5,7 @@ import app from "./index.js";
 import {readServiceStatus} from "./service-status.mjs";
 import {featureMaintenanceResponse,ownerOnlyMaintenanceResponse} from "./maintenance-options.mjs";
 import { preDatabaseGuard, listenerGuard, boundedBody } from "./abuse-controls.mjs";
-import { isPublicAsset } from "./public-assets.mjs";
+import { isPublicAsset, isCompanionTrailer, serveCompanionTrailer } from "./public-assets.mjs";
 import { invitesEnabled, testerSubject } from "./invite-settings.mjs";
 import { browserPairing, linkedTester } from "./browser-pairing.mjs";
 import { sharePageFor, shareHtml, isUnfurlCrawler, isPublicAudioFactRoute } from "./share-pages.mjs";
@@ -230,8 +230,9 @@ const privateGate = {
     ];
     const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/q5k4android/trailer/portrait" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path) || publicLandingAsset)) {
       if (publicLandingAsset) {
+        if (isCompanionTrailer(path)) return serveCompanionTrailer(request, env.ASSETS);
         const response = await env.ASSETS.fetch(request);
         if (response.ok && approvedGuidePdfPaths.includes(path) && url.searchParams.get("download") === "1") {
           const headers = new Headers(response.headers);

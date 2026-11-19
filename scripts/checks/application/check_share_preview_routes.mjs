@@ -163,11 +163,20 @@ assert.deepEqual(missing.robots, { index: false, follow: false });
 // Discord fetches crawler HTML before loading the MP4 independently.
 const trailerPath = "/q5k4android/trailer";
 const trailer = sharePageFor(trailerPath);
-const videoUrl = SITE_ORIGIN + "/android/companion-tour.mp4";
+const videoUrl = SITE_ORIGIN + "/android/companion-tour-portrait.mp4";
 const trailerHtml = shareHtml(trailer, { animated: true });
 assert.ok(trailerHtml.includes('property="og:type" content="video.other"'));
 assert.ok(trailerHtml.includes('property="og:video" content="' + videoUrl + '"'));
 assert.ok(trailerHtml.includes('property="og:video:type" content="video/mp4"'));
+for (const path of [trailerPath, trailerPath + "/portrait"]) {
+  const page = sharePageFor(path);
+  const html = shareHtml(page, { animated: true });
+  assert.equal(page.path, path);
+  for (const field of ["width", "height"]) {
+    assert.equal(page.image[field], page.video[field]);
+    for (const type of ["image", "video"]) assert.ok(html.includes(`property="og:${type}:${field}" content="${page.video[field]}"`));
+  }
+}
 assert.equal(share.shareMetadataFields(trailerPath).openGraph.videos[0].url, videoUrl);
 assert.ok(!shareHtml(sharePageFor("/q5k4android"), { animated: true }).includes('property="og:video"'));
 
