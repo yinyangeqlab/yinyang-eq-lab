@@ -1,0 +1,19 @@
+{
+  "update": 200,
+  "sourceCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
+  "publishedSourceCommit": "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12",
+  "releaseTag": "update200",
+  "repository": "https://github.com/yinyangeqlab/yinyang-eq-lab",
+  "releaseUrl": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update200",
+  "taggedSourceUrl": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update200",
+  "publishedAt": "2026-11-20T14:00:41Z",
+  "authorAndCommitterVerified": true,
+  "publicRuntimeMatchesDeploymentSource": true,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1480,
+  "liveBuildAtVerification": "update200",
+  "liveVersionPage": "https://yinyangeq.com/version#update200",
+  "publishWorktreePublicChecksPassed": 121,
+  "androidRelease": "https://github.com/yinyangeqlab/yinyang-android/releases/tag/android-20261120-unified",
+  "deploymentVerification": "docs/releases/update200-verification.json"
+}

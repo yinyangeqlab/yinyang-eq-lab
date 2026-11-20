@@ -1,0 +1,13 @@
+{
+  "update": 200,
+  "sourceCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
+  "previousSchemaUpdate": 199,
+  "migration": "0047_companion_preset_history.sql",
+  "allApplicationAndBuildFilesReconstructedLocally": true,
+  "localEncryptedArchiveVerified": true,
+  "androidApksAndNativeSourceVerified": true,
+  "publicSourceArchivesVerified": true,
+  "newOffDeviceSourceArchiveVerified": false,
+  "matchingPostMigrationDataSnapshot": false,
+  "freshDataExport": false
+}

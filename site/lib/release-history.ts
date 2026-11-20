@@ -378,7 +378,7 @@ export const candidateChanges = [
 ] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 200, date: "2026-11-20", title: "Qudelix Companion and collection sync", changes: candidateChanges },
+  { update: 200, date: "2026-11-20", title: "Qudelix Companion and collection sync", changes: candidateChanges, github: { commit: "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12", releaseTag: "update200", linkTaggedSource: true } },
   { update: 199, date: "2026-11-19", title: "Help in the site header", changes: update199Changes, github: { commit: "dbb7e53bf806fbe26793f449750f21c6dfa0ced9", releaseTag: "update199", linkTaggedSource: true } },
   { update: 198, date: "2026-11-19", title: "Update196 Version history links", changes: update198Changes },
   { update: 197, date: "2026-11-19", title: "Android companion account sync", changes: update197Changes },

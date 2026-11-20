@@ -36,10 +36,13 @@
     "branch": "release/update200-q5k-android",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": false,
+    "pushed": true,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12",
+    "publicationTag": "update200",
+    "publicationVerification": "docs/releases/update200-publication.json"
   },
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
@@ -50,6 +53,9 @@
     "matchingCurrentReleaseBaseline": false,
     "sourceOnlyHandoverPending": false,
     "hostedValidationPassed": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": true
+    "nextScheduledRunMayRefuseBaselineMismatch": true,
+    "localReleaseSourceVerified": true,
+    "matchingPostMigrationDataSnapshot": false,
+    "sourceVerification": "docs/releases/update200-source-verification.json"
   }
 }

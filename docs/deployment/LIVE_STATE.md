@@ -10,7 +10,7 @@ This view describes the recorded production release. It does not assert that thi
 | Verified at | 2026-11-20T13:55:56.818769Z |
 | Deployment | Verified by the [deployment receipt](../releases/update200-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Source not pushed; publication not authorized in this record |
+| Publication | Reviewed source published as `7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12`; publication authorized in this record |
 | Recovery | Existing encrypted recovery covers the previous schema. Matching recovery for this schema is pending and the scheduled runner refuses a mismatched baseline. |
 
 Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
