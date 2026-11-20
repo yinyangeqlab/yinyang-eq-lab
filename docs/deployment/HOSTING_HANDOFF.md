@@ -15,6 +15,8 @@ Matching encrypted source-only recovery and hosted validation passed. The handof
 
 [Deployment verification](../releases/update199-verification.json) · [Recovery verification](../releases/update199-recovery-verification.json)
 
+Published the [GitHub release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update199) and [tagged source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update199). The live Version entry shows both links and the comparison with update196. [Publication verification](../releases/update199-publication.json)
+
 ## Update198 Version history links
 
 The Version page restores the update196 release and tagged-source links. All three measurement guide PDFs retain their verified contents and URLs. The scoped Time Travel approval applied to the update198 rollout. A later matching encrypted recovery point captured the schema introduced by migration 0046 and passed reconstruction and hosted validation.

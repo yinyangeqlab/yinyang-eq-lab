@@ -36,10 +36,13 @@
     "branch": "release/update199-header-help",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "dbb7e53bf806fbe26793f449750f21c6dfa0ced9",
+    "publicationTag": "update199",
+    "publicationVerification": "docs/releases/update199-publication.json"
   },
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",

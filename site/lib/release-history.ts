@@ -372,7 +372,7 @@ export const candidateChanges = [
 ] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 199, date: "2026-11-19", title: "Help in the site header", changes: candidateChanges },
+  { update: 199, date: "2026-11-19", title: "Help in the site header", changes: candidateChanges, github: { commit: "dbb7e53bf806fbe26793f449750f21c6dfa0ced9", releaseTag: "update199", linkTaggedSource: true } },
   { update: 198, date: "2026-11-19", title: "Update196 Version history links", changes: update198Changes },
   { update: 197, date: "2026-11-19", title: "Android companion account sync", changes: update197Changes },
   { update: 196, date: "2026-11-19", title: "Version history links", changes: update196Changes, github: { commit: "80debbf2b94b30d4ee4df0cd0e4064bccabbb247", releaseTag: "update196", linkTaggedSource: true } },
