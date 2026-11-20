@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { BookA, ChartSpline, ChevronDown, ClipboardCheck, PanelLeftIcon, PanelTopIcon, Ruler } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
 import { BLIND_EQ_COMPARE_PATH } from "@/lib/blind-eq";
 import { buildLabel } from "@/lib/release-info";
@@ -106,7 +106,6 @@ function destinationFor(path: string, tab: string | null): Destination | null {
 }
 
 function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnimation?: Ref<SVGAnimationElement> }) {
-  const paperClip = useId();
   return <svg className="alpha-destination-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
     {kind === "home" ? <>
       <path d="m5 15 11-9 11 9m-19-2.5V25h5.5v-7h5v7H24V12.5"/>
@@ -144,20 +143,8 @@ function DestinationIcon({ kind, tuneAnimation }: { kind: Destination; tuneAnima
       kind === "rankings" ? <><path d="M4 28h25" opacity=".5"/><rect className="alpha-research-bar" x="5" y="16" width="6" height="12" rx="1"/><rect className="alpha-research-bar" x="13" y="7" width="6" height="21" rx="1"/><rect className="alpha-research-bar" x="21" y="20" width="6" height="8" rx="1"/><path d="m14 3 2-2 2 2"/></> :
       kind === "terms" ? <><path d="M16 8C12 5 7 5 3 6v19c4-1 9-1 13 2 4-3 9-3 13-2V6c-4-1-9-1-13 2Zm0 0v19"/><path className="alpha-terms-lines" pathLength="1" d="m7 11 5 1m-5 4 5 1m8-5 5-1m-5 6 5-1" opacity=".65"/></> :
       <>
-        <clipPath id={paperClip}><rect width="32" height="15"/></clipPath>
-        <path d="M3 15V9a2 2 0 0 1 2-2h5l3 3"/>
-        <g clipPath={`url(#${paperClip})`} strokeWidth="1.25">
-          <g className="alpha-folder-paper alpha-folder-paper-back">
-            <rect x="13" y="7.5" width="11.5" height="13" rx="1"/>
-            <path d="M16 10.5h5.5m-5.5 2.5h4" opacity=".65"/>
-          </g>
-          <g className="alpha-folder-paper alpha-folder-paper-front">
-            <rect x="7.5" y="10" width="11.5" height="12" rx="1"/>
-            <path d="M10.5 13h5.5m-5.5 2.5h4" opacity=".75"/>
-          </g>
-        </g>
-        <path d="M3 15h26v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        <path d="m12 21 3 3 5-5"/>
+        <path d="M9 24a6.5 6.5 0 0 1-.7-13 8.4 8.4 0 0 1 16.2 1.4A5.9 5.9 0 0 1 23.6 24Z"/>
+        <path className="alpha-collection-upload" d="M16 20v-7m-3 3 3-3 3 3"/>
       </>}
   </svg>;
 }

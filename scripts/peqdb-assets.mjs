@@ -1,3 +1,4 @@
+import { packageCompanionFitter } from './build/companion-fitter.mjs';
 import { readFileSync, existsSync, mkdirSync, copyFileSync, lstatSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -43,4 +44,5 @@ export function packagePeqdbAssets(destination) {
   verifyPeqdbBuildSource(manifest, destination);
   const out = join(destination, 'vendor/peqdb-autoeq'); mkdirSync(out, { recursive: true });
   for (const name of Object.keys(manifest.assets)) copyFileSync(join(peqdbAssets, name), join(out, name));
+  packageCompanionFitter(out, out);
 }

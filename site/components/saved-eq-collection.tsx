@@ -2,6 +2,7 @@
 import { blindEqHref } from "@/lib/blind-eq";
 import { PERSONAL_AREA_TITLE } from "@/lib/personal-area";
 import Link from "next/link";
+import CompanionPresetHistory from "./companion-preset-history";
 import LibraryEqUpload from "./library-eq-upload";
 
 import { useEffect, useMemo, useState } from "react";
@@ -16,7 +17,7 @@ function SavedDate({ value, label }: { value?: number; label: string }) {
   return value ? <span>{label} <time dateTime={new Date(value).toISOString()}>{new Date(value).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time></span> : <span>Saved date unavailable</span>;
 }
 
-export default function SavedEqCollection({ measurements, onUpdate }: { measurements: HeadphoneMeasurement[]; onUpdate: (row: HeadphoneMeasurement) => void }) {
+export default function SavedEqCollection({ measurements, onUpdate, companionOnly=false }: { companionOnly?:boolean; measurements: HeadphoneMeasurement[]; onUpdate: (row: HeadphoneMeasurement) => void }) {
   const [eqs, setEqs] = useState<LibraryEq[]>([]), [message, setMessage] = useState("");
   const [modelId, setModelId] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -24,13 +25,13 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
   const [eqModels, setEqModels] = useState<Record<string, string>>({});
   useEffect(() => {
     const refresh = () => {
-      const next = readLibraryEqs(); setEqs(next);
+      const next = readLibraryEqs().filter(eq=>!companionOnly || eq.companionOrigin); setEqs(next);
       setSelectedIds(ids => ids.filter(id => next.some(eq => eq.id === id)));
     };
     refresh();
     window.addEventListener("library-eqs-changed", refresh); window.addEventListener("storage", refresh); window.addEventListener("yinyang-data-changed", refresh);
     return () => { window.removeEventListener("library-eqs-changed", refresh); window.removeEventListener("storage", refresh); window.removeEventListener("yinyang-data-changed", refresh); };
-  }, []);
+  }, [companionOnly]);
   const model = measurements.find(row => row.id === modelId);
   const matches = useMemo(() => new Map(measurements.map(row => [row.id, measurementChannelMatch(row)])), [measurements]);
   const pendingIds = deleteRequest?.filter(id => eqs.some(eq => eq.id === id)) ?? [];
@@ -58,6 +59,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
     <p>Use these EQs in Tuning or Music library, or compare two blind. Saved EQs stay in this browser unless you enable Account Sync.</p>
     <LibraryEqUpload/>
 
+    <CompanionPresetHistory part="main"/>
     {eqs.length ? <>
       {eqs.length >= 2 && <div className="saved-eq-compare">
         <p>{selectedIds.length === 2 ? "Two presets ready to listen blind." : "Select exactly two presets to compare them blind."}</p>
@@ -94,6 +96,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
       })}</ul>
     </> : <p>No saved EQs yet. Upload an EQ TXT above, or finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
     <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
+      <CompanionPresetHistory part="match"/>
       <div className="automatch-files" role="group" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
         <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>
         {matchDownloads({ ...row, channelMatchMode: "auto" }, row.device || row.name)}
@@ -109,6 +112,7 @@ export default function SavedEqCollection({ measurements, onUpdate }: { measurem
         <p><strong>WAV (FIR)</strong> is a 48 kHz stereo impulse. Load it into a stereo convolver at 48 kHz or use a convolver that resamples impulses. It adds about 85 ms of delay. Use one channel match at a time.</p>
       </details>
     </section>
+    <CompanionPresetHistory part="history"/>
     {message && <p role="status">{message}</p>}
   </section>;
 }

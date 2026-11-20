@@ -71,8 +71,7 @@
 }
 .alpha-home-orbit{visibility:hidden}
 .alpha-home-rocket{transform-box:view-box;transform-origin:50% 50%}
-.alpha-folder-paper{transform-box:view-box;transform-origin:50% 58%}
-.alpha-home-rocket-body,.alpha-folder-paper rect{fill:var(--site-light-surface,#0a1417)}
+.alpha-home-rocket-body{fill:var(--site-light-surface,#0a1417)}
 .alpha-key{opacity:.72}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){
  .alpha-destination:hover .alpha-home-orbit{visibility:visible}
@@ -81,9 +80,8 @@
  .alpha-destination:hover .room-wave-one{animation-delay:-.3s}
  .alpha-destination:hover .room-wave-three{animation-delay:-.65s}
  .alpha-destination:hover .alpha-ear-marker{animation:alpha-marker-pulse 1.45s ease-in-out infinite;transform-origin:19px 8px}
- .alpha-folder-paper{transition:transform 280ms cubic-bezier(.2,.7,.3,1)}
- .alpha-destination:hover .alpha-folder-paper-front{transform:translate(-1px,-4px) rotate(-10deg)}
- .alpha-destination:hover .alpha-folder-paper-back{transform:translate(1px,-2.5px) rotate(11deg);transition-delay:45ms}
+ .alpha-collection-upload{transition:transform 220ms ease-out}
+ .alpha-destination:is(:hover,:focus-visible) .alpha-collection-upload{transform:translateY(-2px)}
  .alpha-destination:hover .alpha-terms-lines{stroke-dasharray:1;animation:alpha-draw-mark 2.8s ease-in-out infinite}
  .alpha-destination:hover .alpha-research-bar{animation:alpha-bar-rise 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center bottom}
  .alpha-destination:hover .alpha-research-bar:nth-of-type(2){animation-delay:-.6s}
@@ -96,7 +94,7 @@
  .alpha-secondary-navigation a:hover .alpha-scroll-writing{stroke-dasharray:1;animation:alpha-draw-mark 2.8s ease-in-out infinite}
 }
 :root[data-motion=reduced] .alpha-destination:hover .alpha-home-orbit{visibility:hidden}
-:root[data-motion=reduced] .alpha-destination:hover .alpha-folder-paper{transform:none}
+:root[data-motion=reduced] .alpha-destination:is(:hover,:focus-visible) .alpha-collection-upload{transform:none;transition:none}
 @keyframes alpha-room-sound{50%{transform:scaleY(1.26)}}
 @keyframes alpha-marker-pulse{45%{transform:scale(1.5);opacity:.65}}
 @keyframes alpha-draw-mark{

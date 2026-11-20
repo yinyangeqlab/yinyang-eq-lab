@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "dbb7e53bf806fbe26793f449750f21c6dfa0ced9",
-  "recordedLiveUpdate": 199,
+  "baseRevision": "f753450846eac0f75d9225f58703e8740ef23cdb",
+  "recordedLiveUpdate": 200,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "a88813a1e9550e42f0d2476255493e5651396d7f3d0b87a51a0b81854ff250c3",
+      "sha256": "1e00825699421c352a947630d194a629702d9a1b381dc24e782653477e0cdc52",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "d662bdf95b17d6da20e72013cb00ffc2ac136557d4c47e53dabd72d3407d6a69",
+      "sha256": "8037f34d8b243fa439ccbc52ab5e29f7536b811225117fccb8e5ee6a87d63dd8",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "32ef712ceaeb883f60c8b06ef5dce099c55c3d6fe6a8c746a8eedcabb5a35e51",
+      "sha256": "4e09372a30dfcdb1d1fad32f8ec3ce6f7448f75f0988c922b1028a8800f8a97e",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "33af3779f1ca01906536f7035f66378a260ebfb49c86fb5299e8c1e65ecca88d",
+      "sha256": "0f3fb35dd00a9497e9c1c1e3bae9003282c18081a674395c44821aba39ee9f48",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "2d2804c73cd235085d19feb4d94ce6b41d2cf0cecba6c114b25befdc51543e57",
+      "sha256": "c6fd191724c604559601d615de8b3d94eee1b0f1e47012ddf2b575092be0e4d0",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "1bffd986f6c3fe705820cc69e764b8b5bfe82641ce982a8472e0d6eb3b02e691",
+      "sha256": "d6baef069532d078e1d29ec20427fe76dc8cde3feb394d4f6f90d406ed02a0e7",
       "executable": false
     },
     {
@@ -1326,6 +1326,11 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update200-verification.json",
+      "sha256": "a422f929da2f3fc38351be713b1505fa1598630287cceca7a6e1776351806fc3",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update97-recovery-verification.json",
       "sha256": "7eb509e52dcd9a9a7b76f350479230dfb4da15653870a9129e7b7ddc72835c31",
       "executable": false
@@ -1672,7 +1677,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "7c9d441437b271cb611ac45f55e0c3429fc2859c72fc738911dcdaba6bfa3030",
+      "sha256": "6531eae34abbed4f2a350da09cae38a3385968973941680328ed11adec85f779",
       "executable": false
     },
     {
@@ -1717,7 +1722,7 @@
     },
     {
       "path": "public/android/companion.svg",
-      "sha256": "39bd6422646345df7629e707c83f4d6ab33d31617e2d862ba26aafada2fcd9b4",
+      "sha256": "bf660090904f4fab4f564c7c506f187d5e6386b973db8b01da94f3ab7893e89e",
       "executable": false
     },
     {
@@ -1728,6 +1733,16 @@
     {
       "path": "public/android/manager.svg",
       "sha256": "bc66611e8805f67c7b2156d373fd0b6bd1f87c5c2f1a68b913f1c796d32b0e96",
+      "executable": false
+    },
+    {
+      "path": "public/android/qudelix-5k-angle.webp",
+      "sha256": "a36a66b25dd306970b6683233e9dc9ca4e9730116ce1e5a43a67a85e86a445d5",
+      "executable": false
+    },
+    {
+      "path": "public/android/qudelix-5k-plus-angle.webp",
+      "sha256": "77076e760032431727fbb890e52c23fd168ec5c125185dda89d80f01f569926d",
       "executable": false
     },
     {
@@ -1933,6 +1948,81 @@
     {
       "path": "public/android/screens/light/usb.webp",
       "sha256": "227c9050531b34349b734b74515ff5dd5b68de5af68aea47a89ae15ddbb5e8ee",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/amoled/audio.webp",
+      "sha256": "ce9cb6588d7b7739efbf7c6d095c76e1eeb6b13b5e3075994c36363c05acfb40",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/amoled/autoeq.webp",
+      "sha256": "7d6ede3c12a3b0075cb8bf9e1b1ef702058c3308f44815f16d6e87692cee3a3b",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/amoled/match.webp",
+      "sha256": "7e6a3b454db2e359f7d3c2deda8bcc12487aee38f7c2166dec836a3e5e2c5adb",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/blue/audio.webp",
+      "sha256": "5d1c4d1323a7df87bc6ffdecb8f3ec707b5a6313414bc1a796d24c75b9a83dc9",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/blue/autoeq.webp",
+      "sha256": "ee6dde410278310e4e3ad18ee899c076e7e777a144c86836a830e89ac046cb9d",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/blue/match.webp",
+      "sha256": "9442c129ce968a30d92515afe7ff63cdd9634033fc74645e3307f1040905457c",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/green/audio.webp",
+      "sha256": "234af1cf107d368db4fddc9de165bfbc87bded7a28e9df11cf23c77d5cbf51d3",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/green/autoeq.webp",
+      "sha256": "47f7a5fd5c5a0abb985f8dfafe6959e44b7d1cbe3ed8491098b1354c3a515017",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/green/match.webp",
+      "sha256": "3dae78dfc565a758d893b8a5aadd31ff2583c152335e31702ae99ad080a01fa8",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/light/audio.webp",
+      "sha256": "a9680f6083b9b04b47ed629c70f7d570ef38986920354b2a3d8d78ec07b95983",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/light/autoeq.webp",
+      "sha256": "cb930ed606be2af8c2a7ae896d81d99c2b393358d1e5a91b7a316bd9e425ee41",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/light/match.webp",
+      "sha256": "271e0b95406aaea8c0d70d18cda8e88f058d9666e50aae02514e91dfd74ed019",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/yinyangeq/audio.webp",
+      "sha256": "2e982a04456e19dd9ecc864f83cbc414049702658a05122a89e66b8a0d73dda6",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/yinyangeq/autoeq.webp",
+      "sha256": "9fb555c48f74ac185b1640102c9eb5ff7562abff8a2ac9aa29219cc2d0d3d151",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-0161/yinyangeq/match.webp",
+      "sha256": "e492471057388bd3fa1edd0cbaff9a96c77f1b3afa429326d6e92311c8c65e1b",
       "executable": false
     },
     {
@@ -2526,6 +2616,11 @@
       "executable": false
     },
     {
+      "path": "public/share/q5k-companion-0161.jpg",
+      "sha256": "154dea9d2977c14dfa52deef3affa514fe52e3552c311abb030bd2ed52397bba",
+      "executable": false
+    },
+    {
       "path": "public/share/rankings-motion.gif",
       "sha256": "35623f518a4b1060195803615add516991ae824f7cb5810d53b89a0a358b11c5",
       "executable": false
@@ -2691,6 +2786,11 @@
       "executable": true
     },
     {
+      "path": "scripts/build/companion-fitter.mjs",
+      "sha256": "3a09ba33178e99b773e73c4a8f6effab6f3ca50e76bdde9a44bfd3c01f65c0be",
+      "executable": false
+    },
+    {
       "path": "scripts/build/connector-preview-plugin.mjs",
       "sha256": "a6a9fe2086e302f94a3f91e3c1a68a45bb3aa07d4a79faf01b14732191eb4e80",
       "executable": false
@@ -2767,7 +2867,7 @@
     },
     {
       "path": "scripts/check_migration_chain.py",
-      "sha256": "a37f04863bf063fcd902efcda55d93894d7cdd8dec65c9cde47ce20f02a8b1b4",
+      "sha256": "7fe36413e29e1f4b0c2263a70f76afb128a627d862883af109e78c5a28c0cfec",
       "executable": false
     },
     {
@@ -3542,12 +3642,12 @@
     },
     {
       "path": "scripts/peqdb-assets.mjs",
-      "sha256": "2ad28e24d1b1ee2b57fc169e7093a4b05d18c92bf4ede01c7dd4d05099141776",
+      "sha256": "fdf01608ec92faf857045c35895ced03c97e21766f22c953be47b009876d34a1",
       "executable": false
     },
     {
       "path": "scripts/peqdb-source-allowlist.json",
-      "sha256": "e2c763ea1238a1e34066126115c6b24f1ab883c0cbe714a45fa0939506a83400",
+      "sha256": "3724c6813c5906e8fe18a78855f6f52199f6427cca409ae496fc73da584e7d72",
       "executable": false
     },
     {
@@ -3812,7 +3912,7 @@
     },
     {
       "path": "site/app/alpha.css",
-      "sha256": "bbd88b5a78fe220674fa5f7d14cee87a75095a993557c88d17e152e725972f06",
+      "sha256": "46b908c7a1e5fcfacfab339adc6a2e4cdd6c21890b2e3f219f0b82fb9236a03f",
       "executable": false
     },
     {
@@ -3846,13 +3946,18 @@
       "executable": false
     },
     {
+      "path": "site/app/api/companion/backups/route.ts",
+      "sha256": "e11c5a939bb64b975c55f17ba575e8fcbe22103e106e405207282b445639a4ea",
+      "executable": false
+    },
+    {
       "path": "site/app/api/companion/grants/route.ts",
-      "sha256": "7e31ff838e1e68fbfa0dadecf00f064d73e4ee7c00bb2223098adb4862f9a423",
+      "sha256": "15a2fbc0e16261d3573fb6df5e7630daa94f764ff8b6e693ee42c652991907dc",
       "executable": false
     },
     {
       "path": "site/app/api/companion/library/route.ts",
-      "sha256": "882be26c7294d1ba4988510b91a0c118872158aed46d256ad503d61e45a86d9b",
+      "sha256": "49324c6809a3e4d9f65940a6f7f3e619968e5e33b92f52812b614009961558e3",
       "executable": false
     },
     {
@@ -4136,8 +4241,13 @@
       "executable": false
     },
     {
+      "path": "site/app/companion-link/link.css",
+      "sha256": "3e350c0d5bb953f0261e63a479e725cc2983e650fcafb06003b2d31856ef13d7",
+      "executable": false
+    },
+    {
       "path": "site/app/companion-link/page.tsx",
-      "sha256": "d5f9839dbbfa7124395eb8d0b3ed1f17b4596c5387b51d62736bc95dc36372ea",
+      "sha256": "9614c88c8aa7538a6932aa431e4888ed0a8211de08022bbdafa2e33e89a37fc9",
       "executable": false
     },
     {
@@ -4357,7 +4467,7 @@
     },
     {
       "path": "site/app/home-content.tsx",
-      "sha256": "9c685228b383a3c2d9d9d9eb3fa9ccc181c51ce19e7a7ce610258b35c1018690",
+      "sha256": "7c3e070e268e14aa6a7b5059bc91abf58289277c8999632d6757af9e4ba4ebc2",
       "executable": false
     },
     {
@@ -4527,22 +4637,22 @@
     },
     {
       "path": "site/app/q5k4android/gallery.tsx",
-      "sha256": "0eb6c552e93379a91925ad79076dd6ad56e8028ce60557b5dea86f360da0dd1e",
+      "sha256": "08ae17e5b78001a1f5368da6e8d70a0e5184bfd676b21f837a3c8972f7a4dbee",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "b8f626df037aedaa7fd9c57e7221c43461c344fa64e4136074baf1b826cc28d3",
+      "sha256": "42a5295bf5625f5a3da16c5e8ed51f29f09a456c366386e40e06d94115794398",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/share-button.tsx",
-      "sha256": "540892da28930892f8e1d62326ac7cd88036e68ff5cc16e064e8e1b240130224",
+      "sha256": "87ea11849f454947871d33fb9a353cb361962fe6b0910c114e1bfe60a308ee1b",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "31e573d1fe53ae2e370409aae51abdc6e2af5a21b2996fd010a150cc1b160133",
+      "sha256": "54ac789b5fccb7d7c8587774ed03c04cf919e4452a5ad7232c3b1ca98b78788f",
       "executable": false
     },
     {
@@ -4597,7 +4707,7 @@
     },
     {
       "path": "site/app/shootout/page.tsx",
-      "sha256": "aa8e5e6ba3c7437504b66e4b5a62f7f37f135a38e8524c99e71d3470c411c888",
+      "sha256": "853771d4a57036b8c2ed460bdcbda508ea9f5f52f76c1eb5b0653ba6844f1447",
       "executable": false
     },
     {
@@ -4782,7 +4892,7 @@
     },
     {
       "path": "site/components/alpha-shell.tsx",
-      "sha256": "f6e43b4770124922efda26897dfe36cec6a503e74403a5eb7dc237b705441b7f",
+      "sha256": "b69808e9c38770df59bbb5cc9ba536aa0479b42000e6e805c6f357f5f45c2f1b",
       "executable": false
     },
     {
@@ -4853,6 +4963,11 @@
     {
       "path": "site/components/companion-app-brand.tsx",
       "sha256": "f581a200086a0646aa2f4a93913738215a7bee5bc7588607241fe51db65ea071",
+      "executable": false
+    },
+    {
+      "path": "site/components/companion-preset-history.tsx",
+      "sha256": "c24110e1785368d7fd54412bf33e2f74c77f44cecab1597693623b21603e15f7",
       "executable": false
     },
     {
@@ -5102,7 +5217,7 @@
     },
     {
       "path": "site/components/measurement-manager.tsx",
-      "sha256": "008daca9ef8ca9697051a4d4e826088cb4a5823d35680da1e3c2bbae91e6548e",
+      "sha256": "cae63578d53f9a7a1d28aa3f1052024c2fa4324476469ac4e53b6e98386a8c17",
       "executable": false
     },
     {
@@ -5292,7 +5407,7 @@
     },
     {
       "path": "site/components/saved-eq-collection.tsx",
-      "sha256": "7b64e4d2dc125ff1b7636225077d02064e085816a3c085128d30b5e212f6bb1c",
+      "sha256": "b3bbbbaa14933d7002f88bb46b307ac6512a55ef14f92d05213375c0a0c8f87f",
       "executable": false
     },
     {
@@ -5952,7 +6067,7 @@
     },
     {
       "path": "site/db/schema.ts",
-      "sha256": "5569c63ed9c0292b7406577f25884ab6cfa77cd6aa3b0bdede716e6569dbdfd9",
+      "sha256": "82b1f7c45e4a71c2bc04c05a76181f0f792041682f001f2420aea5ff2d0f4dae",
       "executable": false
     },
     {
@@ -6196,6 +6311,11 @@
       "executable": false
     },
     {
+      "path": "site/drizzle/0047_companion_preset_history.sql",
+      "sha256": "710098e15bc75b112ee0dfc77e6c36bce1eb2274170af126b8374a6a50cd205b",
+      "executable": false
+    },
+    {
       "path": "site/drizzle/meta/0012_snapshot.json",
       "sha256": "61c58720f4048bf93b31a2a898c226d5f1f32a0b9f61a13e38162142ae7f9e6f",
       "executable": false
@@ -6362,7 +6482,7 @@
     },
     {
       "path": "site/lib/account-sync-segments.ts",
-      "sha256": "8f11c90269e9645958253805a773f20224b36d76f71ca78bb79c5654d62cffad",
+      "sha256": "35e041aede8ed8f39e59a5db88de14909ba8538f2a5024fcc8c912c1f66f8802",
       "executable": false
     },
     {
@@ -6456,6 +6576,11 @@
       "executable": false
     },
     {
+      "path": "site/lib/autoeq-runner.ts",
+      "sha256": "4e27953b60050a57230d94977ea93cf3133a48b13f6a980f7a27c974a8937c1a",
+      "executable": false
+    },
+    {
       "path": "site/lib/autoeq-target-sources.ts",
       "sha256": "7ba629bda82d0b22fdd1151e0f24983a78a0ae08e7973173e35b560cca8ac15a",
       "executable": false
@@ -6467,7 +6592,7 @@
     },
     {
       "path": "site/lib/autoeq.worker.ts",
-      "sha256": "7b6bbe346270905f1f4c1f58623e5b4e4807ec306f5324f63d0d384de8e74dd3",
+      "sha256": "ae324d94580fabc332d7a02f5bfeb60519052c88d88db3b264839797df7e2aef",
       "executable": false
     },
     {
@@ -6543,6 +6668,26 @@
     {
       "path": "site/lib/community-server.ts",
       "sha256": "3244a9acb0a584fdb6da7367a859e458b4db8586a7c092d3c5d939c786048a1d",
+      "executable": false
+    },
+    {
+      "path": "site/lib/companion-access.ts",
+      "sha256": "0fbcd9df2dc42bc557d93d3b2f82c709921170f24ea0e9ece0d769801c9cb608",
+      "executable": false
+    },
+    {
+      "path": "site/lib/companion-backups.ts",
+      "sha256": "b37efc19d77a7b91482e635e740476ae89ecf5858d8164f88f4951dddb23636a",
+      "executable": false
+    },
+    {
+      "path": "site/lib/companion-fitter.js",
+      "sha256": "ab1417aff6edf737d253381d8d1ee5575f25fe71261519318c8a0fbbbb7810b6",
+      "executable": false
+    },
+    {
+      "path": "site/lib/companion-save.ts",
+      "sha256": "71fc35b31e8481d80f269008af5abcb61eef3f64c22eabefce3d53a2319d2768",
       "executable": false
     },
     {
@@ -6661,8 +6806,13 @@
       "executable": false
     },
     {
+      "path": "site/lib/eq-candidate-core.ts",
+      "sha256": "ff8ec6578a66a029786aa898615383308d2eca2856bc5f49415e2d94708d9048",
+      "executable": false
+    },
+    {
       "path": "site/lib/eq-candidates.ts",
-      "sha256": "d74e738e212a8caaeeec4470616993528075d3f8f20c7e6baf862cd1af52875f",
+      "sha256": "c2d030e328ab91ef5fbead069160b44b7d08f7a00ea31ab4558725ab8f3e8637",
       "executable": false
     },
     {
@@ -6677,7 +6827,7 @@
     },
     {
       "path": "site/lib/eq-recommendation.ts",
-      "sha256": "d0c522d7a9d0c652ca0a701965bb3570eafe835822c9163ec3965850fd807ef6",
+      "sha256": "a9e5c2e10619cb2325211775a941bc17654e2d97c2535337fcfc65dc25ea121b",
       "executable": false
     },
     {
@@ -6792,7 +6942,7 @@
     },
     {
       "path": "site/lib/measurement.ts",
-      "sha256": "09f46fa1d7c3bc46242aa81e1d38880d622cef6dfa6f66f6f62c260434f3221c",
+      "sha256": "bb8dd1c909405ed86fe7a45f78d39b69b911965595a81b8471d351983b5caa4e",
       "executable": false
     },
     {
@@ -6817,7 +6967,7 @@
     },
     {
       "path": "site/lib/music-library-eq.ts",
-      "sha256": "459fdf0c2d50a90308a6c601c78b1d92c1e9c98cadd3166b9a5460c403d0cbc1",
+      "sha256": "099b551ab8047c82b445e1f88ec0da7cf5cf0345b7af2a60f387db2703436b20",
       "executable": false
     },
     {
@@ -6972,12 +7122,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "f07e20ab4b0f104806df218918bd80e3ef8c02fa3cadf420386dbd0da7c93b6d",
+      "sha256": "abee33239a1265a144f2dd3bd8a75652b70976035bab0801132fe68926919f76",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "21be5454879161e9a5d4fb1f745c2c6b2a4e422fd5ff60f99f6e0fdf800bfa73",
+      "sha256": "a52ac9231550cdf330b50c0e4b91fe2c69b060eac897b3db2065535d94cf9fa7",
       "executable": false
     },
     {
@@ -7037,7 +7187,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "acec38b2e2f3874b5010288d7ce641341f471eeb1cb0d50f9793ede1ace52ba6",
+      "sha256": "1076430fd0e43b18f91c6c4083bc0e93c5e458103d1ea0f8e2e72e5f46a5c7b7",
       "executable": false
     },
     {

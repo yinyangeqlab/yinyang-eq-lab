@@ -141,8 +141,8 @@ async function entryOwner(db: D1Database, account: Account, key: string, value: 
         fail('A saved contribution belongs to another account or was erased. Local data is unchanged.', 422);
     return row;
 }
-export async function segmentedSyncWrite(db: D1Database, account: Account, body: Record<string, unknown>) {
-    const auth = authorization(account), at = syncLocation(account);
+export async function segmentedSyncWrite(db: D1Database, account: Account, body: Record<string, unknown>, companionGuard?: {sql:string;args:string[]}) {
+    const auth = companionGuard ?? authorization(account), at = syncLocation(account);
     if (body.action === 'begin') {
         if (typeof body.id !== 'string' || !/^[a-f0-9-]{36}$/i.test(body.id) || typeof body.epoch !== 'string' || !Number.isSafeInteger(body.revision) || !body.manifest || typeof body.manifest !== 'object' || Array.isArray(body.manifest))
             fail('Read current account state before starting a transfer.', 400);
@@ -166,7 +166,7 @@ export async function segmentedSyncWrite(db: D1Database, account: Account, body:
         if (version.version.manifest !== JSON.stringify(manifest))
             fail('This transfer identifier already describes different data.');
         // Only unfinished transfers can expire; current committed data is never age-trimmed.
-        await db.prepare(`DELETE FROM account_sync_versions WHERE subject_id=? AND committed_at IS NULL AND id<>? AND (device_id=? OR created_at<?) AND ${auth.sql}`).bind(account.subject_id, body.id, account.deviceId, Date.now() - 86400000, ...auth.args).run();
+        if(!companionGuard)await db.prepare(`DELETE FROM account_sync_versions WHERE subject_id=? AND committed_at IS NULL AND id<>? AND (device_id=? OR created_at<?) AND ${auth.sql}`).bind(account.subject_id, body.id, account.deviceId, Date.now() - 86400000, ...auth.args).run();
         return { ok: true, resumed: !!existing };
     }
     const { version, current } = await stage(db, account, body.id), manifest = JSON.parse(version.manifest) as Manifest;

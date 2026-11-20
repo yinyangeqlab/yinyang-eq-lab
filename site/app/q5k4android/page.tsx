@@ -15,58 +15,57 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
     <main className="companion-page" aria-labelledby="companion-title">
       <div className="companion-copy">
         <CompanionAppIcons/>
-        <h1 id="companion-title">YinYang Companion App <span>for Qudelix 5K</span></h1>
-        <h2 className="companion-file-title">Import and export EQ files right from your phone</h2>
-        <p className="companion-intro">Open a PEQ file from Android, edit or rename it offline, and export a Qudelix-format copy. Connect your 5K to audition the changes and save them to a hardware slot.</p>
+        <h1 id="companion-title">YinYangEQ Qudelix 5k and 5K Plus <span>Companion App</span></h1>
+        <h2 className="companion-file-title">EQ and channel matching from your phone</h2>
+        <p className="companion-intro">Link one Qudelix to your phone. The companion opens that device’s Main EQ, Channel Match and Audio controls, and keeps its drafts available offline.</p>
         <div className="companion-install" id="install">
           <div className="companion-downloads">
             <div className="companion-download-option">
-              <a className="companion-download companion-download-primary" href={repository + "/releases/latest/download/YinYang-Companion.apk"} aria-describedby="companion-download-note">
-                <Download size={20} aria-hidden="true"/> Download Companion APK
-              </a>
-              <p id="companion-download-note">Direct install</p>
+              <a className="companion-download companion-download-primary" href={repository + "/releases/latest/download/YinYang-Companion.apk"} aria-describedby="companion-download-note"><Download size={20} aria-hidden="true"/> YinYangEQ Q5K Companion App</a>
+              <p id="companion-download-note">Companion 0.16.1 · Android 8 or later</p>
             </div>
             <div className="companion-download-option">
               <a className="companion-download companion-download-secondary" href="/android/download" aria-describedby="manager-download-note">
                 <Download size={20} aria-hidden="true"/> Download App Manager APK
               </a>
-              <p id="manager-download-note">Installs and updates Companion</p>
+              <p id="manager-download-note">App Manager 1.6.0 · Android 9 or later</p>
             </div>
           </div>
-          <p className="companion-availability">Requires Android 9 or later. App Manager checks the Lab’s signing certificate. Keep Google Play Protect on with either download.</p>
-          <a className="companion-guide-link" href="#companion-gallery">Preview the new Companion UI</a>
+          <p className="companion-availability">Already use the separate 5K Plus preview? Export phone-only presets there, then import them in the unified app. Hardware presets stay on your Qudelix.</p>
+          <a className="companion-guide-link" href="#companion-gallery">Explore the five themes</a>
           <ShareCompanion/>
           {download === "testing" && <p role="status">Public downloads will open when the Lab publishes its Android release. <a href={repository}>View the project on GitHub</a>.</p>}
           {download === "unavailable" && <p role="status">The download service is unavailable. Check <a href={repository + "/releases"}>GitHub Releases</a> or try again later.</p>}
         </div>
         <dl className="companion-features">
-          <div><dt>Link EQ with Channel Match as a preset</dt><dd>Save a pair under one name on your phone. Open both stages together, or change the listening EQ while keeping the left and right corrections for your earpieces.</dd></div>
-          <div><dt>Compare two presets blind</dt><dd>Switch between A and B on the 5K. Loudness matching keeps a louder preset from getting an easy advantage. Reveal the names after you pick a favorite.</dd></div>
-          <div><dt>Send an EQ from browser Tuning</dt><dd>In the private preview, pair your phone by name. Send it an EQ from the browser and review the draft in the companion before applying it.</dd></div>
+          <div><dt>Main EQ · USR</dt><dd>Import or export a PEQ, edit its filters in place, and reload a saved preset. Link Main EQ with a Channel Match preset or save either one on its own.</dd></div>
+          <div><dt>Channel Match · SPK</dt><dd>See both gains on one row when the filter type, frequency and Q match. The original 5K supports 10 independent bands per ear. The Plus supports 20 per ear with up to 10 Main EQ bands, or 10 per ear with 20 Main EQ bands. All 30 bands can serve Main EQ when no channel correction is needed.</dd></div>
+          <div><dt>Offline Auto EQ</dt><dd>Choose an IEM or headphone measurement and a target. Compare the closest fit with a close fit that needs less peak boost. Local files work offline, including paired left and right measurements.</dd></div>
         </dl>
-        <p className="companion-availability">Qudelix 5K Plus support is coming soon. Use at your own risk and check your volume and EQ before listening.</p>
-        <aside className="companion-hardware">
-          <a href="https://www.qudelix.com/products/qudelix-5k">
-            <img src="/android/qudelix-5k.png" width="112" height="84" alt="Front and back of the original Qudelix 5K" />
-            <span>Qudelix 5K product page ↗</span>
-          </a>
-          <p>YinYang EQ Lab privately develops the Companion and has no affiliation with Qudelix, Inc. We encourage you to use your 5K with YinYang EQ to explore headphone tunings, build a PEQ, and listen to it on your device. Product photo by Qudelix.</p>
-        </aside>
+        <section className="companion-hardware" aria-label="Supported Qudelix models">
+          <div className="companion-models">
+            <a href="https://www.qudelix.com/products/qudelix-5k">
+              <img src="/android/qudelix-5k-angle.webp" width="420" height="286" alt="Original 5K with its headphone outputs facing forward"/>
+              <strong>Qudelix 5K</strong>
+            </a>
+            <a href="https://www.qudelix.com/products/qudelix-5k-plus-bluetooth-dac-amp">
+              <img src="/android/qudelix-5k-plus-angle.webp" width="420" height="286" alt="5K Plus with its screen and headphone outputs visible"/>
+              <strong>Qudelix 5K Plus</strong>
+            </a>
+          </div>
+          <p>Product images by Qudelix. YinYang EQ Lab develops this independent companion.</p>
+        </section>
         <a className="companion-guide-link" href={repository + "/blob/main/FEATURES.md"}>Read the feature guide</a>
       </div>
       <CompanionGallery/>
       <TrailerPlayer/>
       <section className="companion-controls" aria-labelledby="companion-controls-title">
-        <h2 id="companion-controls-title">The 5K controls you use every day</h2>
+        <h2 id="companion-controls-title">Audio, sync and appearance</h2>
         <dl className="companion-features">
-          <div><dt>Edit, audition, and restore</dt><dd>Browse named hardware slots, adjust ten bands and preamp, and try an edit before saving. Restore the saved EQ or choose from up to eight earlier versions of a loaded custom slot.</dd></div>
-          <div><dt>Keep a low-latency USB audio path</dt><dd>Play from your computer over USB and adjust EQ from your phone over Bluetooth. The 5K processes the audio, so the companion adds no playback buffer.</dd></div>
-          <div><dt>See and control what’s playing</dt><dd>Set the 5K volume and Android media volume separately. Choose USB or Bluetooth input priority. Check codec, bit depth, sample rate, battery, and charge limit while you listen.</dd></div>
-          <div><dt>Swap earpieces with their corrections</dt><dd>Reverse left and right playback and their Channel Match filters in one action. Your original files keep their channel order.</dd></div>
-          <div><dt>Mix files with a live USB input</dt><dd>The phone preview can mix local audio files and one compatible USB mic or capture input. Set the level of each source and send the mix to one output.</dd></div>
-          <div><dt>Open your listening library</dt><dd>Use My Collection, Personal Tuning and headphone search inside the app. Browser Sync shares saved Lab data with devices you approve.</dd></div>
-          <div><dt>Check firmware and troubleshoot</dt><dd>Run a read-only compatibility check, export an active EQ snapshot or a diagnostic log, and open the official Qudelix app for firmware updates.</dd></div>
-          <div><dt>Set up the app your way</dt><dd>Choose Blue, YinYang Green, AMOLED, or Light.</dd></div>
+          <div><dt>Audio levels and output</dt><dd>Adjust hardware and phone media volume separately. Read the input RMS when available and estimate SPL from your headphone specifications. The Audio tab shows gain, DAC profile and input options supported by your model.</dd></div>
+          <div><dt>Sync with My Collection</dt><dd>Confirm the matching code in your browser to link the companion. With upload permission, save measurements, EQs and paired preset history. Live filter edits stay local. Organize or delete saved entries on the website.</dd></div>
+          <div><dt>Connect one Qudelix</dt><dd>The companion identifies your 5K or 5K Plus before choosing its controls. Drafts and device settings belong to the linked unit. Open the official Qudelix app for firmware updates.</dd></div>
+          <div><dt>Choose your theme</dt><dd>Open Theme at the top of the app to choose Blue, AMOLED black, Light, Green, or the fifth option, YinYangEQ theme, which uses the website palette.</dd></div>
         </dl>
       </section>
     </main>

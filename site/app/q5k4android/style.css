@@ -104,3 +104,8 @@
   .companion-trailer { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .companion-trailer video { width: min(100%, 300px); margin-inline: auto; }
 }
+
+.companion-models { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(.65rem,2vw,1.2rem); max-width:29rem; }
+.companion-models a { display:grid; gap:.45rem; min-width:0; color:inherit; text-decoration:none; }
+.companion-models img { width:100%; height:auto; padding:0; background:#fff; }
+.companion-models a:focus-visible { outline:2px solid #79d8d2; outline-offset:4px; }

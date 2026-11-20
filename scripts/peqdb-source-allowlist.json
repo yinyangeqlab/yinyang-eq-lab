@@ -83,5 +83,15 @@
   "site/app/api/companion/grants/route.ts",
   "site/app/api/companion/library/route.ts",
   "site/app/companion-link/page.tsx",
-  "site/drizzle/0046_companion_library.sql"
+  "site/drizzle/0046_companion_library.sql",
+  "scripts/build/companion-fitter.mjs",
+  "site/app/api/companion/backups/route.ts",
+  "site/components/companion-preset-history.tsx",
+  "site/drizzle/0047_companion_preset_history.sql",
+  "site/lib/autoeq-runner.ts",
+  "site/lib/companion-access.ts",
+  "site/lib/companion-backups.ts",
+  "site/lib/companion-fitter.js",
+  "site/lib/companion-save.ts",
+  "site/lib/eq-candidate-core.ts"
 ]

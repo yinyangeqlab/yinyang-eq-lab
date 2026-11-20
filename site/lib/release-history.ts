@@ -366,13 +366,20 @@ const update196Changes = [
 
 const update198Changes = ["Restore the GitHub release and tagged source links for update196 in Version history."] as const;
 
-export const candidateChanges = [
+const update199Changes = [
   "Open site help from the question mark in the header. On desktop, hover over it or tab to it to see its label.",
   "The help panel and walkthrough expand above the page content, leaving the player and other controls clear.",
 ] as const;
 
+export const candidateChanges = [
+  "Use one Android companion for Qudelix 5K and 5K Plus, with model-specific EQ and audio controls.",
+  "Preview five themes, including YinYangEQ, and get Companion 0.16.1 and App Manager 1.6.0 on the Android page.",
+  "Approve a lasting companion link to save EQs, measurements and preset history to My Collection.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 199, date: "2026-11-19", title: "Help in the site header", changes: candidateChanges, github: { commit: "dbb7e53bf806fbe26793f449750f21c6dfa0ced9", releaseTag: "update199", linkTaggedSource: true } },
+  { update: 200, date: "2026-11-20", title: "Qudelix Companion and collection sync", changes: candidateChanges },
+  { update: 199, date: "2026-11-19", title: "Help in the site header", changes: update199Changes, github: { commit: "dbb7e53bf806fbe26793f449750f21c6dfa0ced9", releaseTag: "update199", linkTaggedSource: true } },
   { update: 198, date: "2026-11-19", title: "Update196 Version history links", changes: update198Changes },
   { update: 197, date: "2026-11-19", title: "Android companion account sync", changes: update197Changes },
   { update: 196, date: "2026-11-19", title: "Version history links", changes: update196Changes, github: { commit: "80debbf2b94b30d4ee4df0cd0e4064bccabbb247", releaseTag: "update196", linkTaggedSource: true } },

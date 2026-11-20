@@ -40,6 +40,15 @@ function reduceBoost(fit: FinalizedVariant, deepBass: number, raw: Point[], targ
   };
 }
 
+export const CLOSE_FIT_RMS_DB = .15;
+export function recommendDeviceFits<T extends {rms:number;peak:number;count:number}>(fits:T[]) {
+  const ordered=[...fits].sort((a,b)=>a.rms-b.rms || a.peak-b.peak || a.count-b.count);
+  const best=ordered[0];
+  const close=best && ordered.filter(f=>f.rms<=best.rms+CLOSE_FIT_RMS_DB)
+    .sort((a,b)=>a.peak-b.peak || a.rms-b.rms || a.count-b.count)[0];
+  return {best,close};
+}
+
 /** A disclosed numerical heuristic, not an audibility threshold or preference result. */
 export function recommendCandidates(fits: FinalizedVariant[], tuning?: { raw: Point[]; target: Point[] }) {
   if (!fits.length) return null;
@@ -69,6 +78,6 @@ export function recommendCandidates(fits: FinalizedVariant[], tuning?: { raw: Po
   const bounded = valid.filter(f=>f.filters.every(filter=>filter.q<=4));
   const pool = bounded.length ? bounded : valid;
   const bestBounded = Math.min(...pool.map(f=>f.rms));
-  const recommended = pool.filter(f=>f.rms<=bestBounded+.15).sort((a,b)=>a.bands-b.bands || b.preamp-a.preamp || a.rms-b.rms)[0];
+  const recommended = pool.filter(f=>f.rms<=bestBounded+CLOSE_FIT_RMS_DB).sort((a,b)=>a.bands-b.bands || b.preamp-a.preamp || a.rms-b.rms)[0];
   return { recommended, bestError, lowerBoost: null, leastHeadroom };
 }

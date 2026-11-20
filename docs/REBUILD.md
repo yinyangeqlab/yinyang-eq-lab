@@ -1,9 +1,16 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update199**, source `ce94316b3b812d1a4f7578014a75f836f2e824b4`.
+Recorded deployment: **update200**, source `7bcdb972e677596564d949a1d9445f3598920dcf`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update200 Android companion and collection sync
+
+Companion 0.16.1 and App Manager 1.6.0 support the unified Qudelix release. The Android page includes model photos, an updated Discord preview and all five app themes. Browser approval enables lasting writable Sync, including measurement uploads and paired EQ history. Migration 0047 adds an empty history table and its index. The owner selected existing encrypted recovery. It covers the preceding schema. A matching post-migration data snapshot is pending. The scheduled backup refuses a mismatched baseline.
+
+[Android release](https://github.com/yinyangeqlab/yinyang-android/releases/tag/android-20261120-unified) · [Android page](https://yinyangeq.com/q5k4android?release=0.16.1)
+
 
 ## Update199 Help in the site header
 

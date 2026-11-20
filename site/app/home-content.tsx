@@ -103,13 +103,13 @@ export default function FirstListenHome() {
   </nav>
   <section className="home-companion" aria-labelledby="home-companion-title">
     <CompanionAppIcons/>
-    <h2 id="home-companion-title">Alternative Companion Android App for Qudelix 5K</h2>
-    <p className="home-companion-copy"><strong>Import and export EQ files right from your phone.</strong> Link EQ with Channel Match as a preset and compare two tunings blind at matched loudness.</p>
+    <h2 id="home-companion-title">Android companion for Qudelix 5K and 5K Plus</h2>
+    <p className="home-companion-copy"><strong>Import and export EQ files right from your phone.</strong> Edit Main EQ and Channel Match, or generate a fit offline from your measurements.</p>
     <div className="home-companion-actions">
       <DownloadAppManager className="home-manager-download"/>
       <a className="companion-more" href="/q5k4android">See app features</a>
     </div>
-    <p className="home-companion-hint">Open App Manager on Android and choose YinYang Companion to install it.</p>
+    <p className="home-companion-hint">Open App Manager on Android and choose the Qudelix Companion to install it.</p>
   </section>
   <WelcomeWallpapers />
   </div>

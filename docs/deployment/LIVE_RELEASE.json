@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 199,
+  "update": 200,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-20T11:27:16.992011Z",
-  "sourceCommit": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
-  "sourceBranch": "release/update199-header-help",
-  "baselineCommit": "4e15b3f3285b361007d5daebb64c7b18539bb317",
-  "evidence": "docs/releases/update199-verification.json",
+  "verifiedAt": "2026-11-20T13:55:56.818769Z",
+  "sourceCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
+  "sourceBranch": "release/update200-q5k-android",
+  "baselineCommit": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
+  "evidence": "docs/releases/update200-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,36 +32,24 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
-    "branch": "release/update199-header-help",
+    "implementationCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
+    "branch": "release/update200-q5k-android",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
-    "publicationAuthorized": true,
+    "pushed": false,
+    "publicationAuthorized": false,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "dbb7e53bf806fbe26793f449750f21c6dfa0ced9",
-    "publicationTag": "update199",
-    "publicationVerification": "docs/releases/update199-publication.json"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": true,
-    "sourceBaselineUpdate": 199,
-    "sourceBaselineVerifiedAt": "2026-11-20T12:23:46Z",
+    "schemaRecoveryDeferred": true,
+    "previousSchemaUpdate": 199,
+    "newDataExport": false,
+    "matchingCurrentReleaseBaseline": false,
     "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
-    "dailyWorkflowActive": true,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "update199SourceOnlyHandover": {
-      "registrationPending": false,
-      "metadataOnly": true,
-      "databaseExport": false,
-      "newDataSnapshots": 0,
-      "evidence": "docs/releases/update199-recovery-verification.json"
-    }
+    "hostedValidationPassed": false,
+    "nextScheduledRunMayRefuseBaselineMismatch": true
   }
 }

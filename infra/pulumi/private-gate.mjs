@@ -266,6 +266,10 @@ const privateGate = {
         const bounded=await boundedBody(request);if(bounded instanceof Response)return blockedSubmission("request_body", bounded);request=bounded;
       }
       const enabled = await invitesEnabled(env.DB);
+      // Offline fitter updates contain only the public calculation program. Respect private-site mode.
+      if (!enabled && ["GET","HEAD"].includes(request.method) && ["/vendor/peqdb-autoeq/companion-v1.json","/vendor/peqdb-autoeq/companion-v1.mjs"].includes(path)) {
+        return env.ASSETS.fetch(new Request(url.origin+path,{method:request.method}));
+      }
       if (path === "/api/invite-system" && request.method === "GET") return json({enabled});
       if ((path === "/owner-login" || path === "/admin-login") && request.method === "POST") return await ownerFormLogin(request, env, enabled);
       if ((path === "/owner-login" || path === "/admin-login") && !hasOwnerSession) return request.method === "GET" ? ownerLoginPage("", 200, enabled) : new Response(null, { status: 405 });
@@ -307,9 +311,9 @@ const privateGate = {
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
       const practiceScores = path === "/api/ear-practice";
       const practiceManagement = practiceScores && (["PATCH", "DELETE"].includes(request.method) || url.searchParams.has("mine") && request.method === "GET");
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync", "/companion-link", "/api/companion/grants"].includes(path) || communityManagement || practiceManagement;
-      // The app route checks the read-only library grant, its issuing browser and current sync consent.
-      const companionRead = path === "/api/companion/library" && ["GET","DELETE"].includes(request.method)
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync", "/companion-link", "/api/companion/grants", "/api/companion/backups"].includes(path) || communityManagement || practiceManagement;
+      // The app route checks the scoped library grant, its issuing browser and current sync consent.
+      const companionLibrary = path === "/api/companion/library" && ["GET","POST","DELETE"].includes(request.method)
         && /^Bearer [a-f0-9]{64}$/.test(request.headers.get("Authorization") || "") && !request.headers.has("Cookie");
       const managementOnly = dataRoute && cookie(request, dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
@@ -348,7 +352,7 @@ const privateGate = {
       }
       if (!owner && path === "/owner-research") return Response.redirect(new URL("/admin-login", request.url), 303);
       if (!owner && path.startsWith("/api/owner-research")) return json({ error: "Admin access denied." }, 403);
-      if (!owner && !tester && !companionRead && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
+      if (!owner && !tester && !companionLibrary && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
         if (path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD") return blockedSubmission("sign_in_required", json({ error: enabled ? "Sign in with an approved invitation to use this site." : "Open Shootout to start this browser session." }, 401));
         const signIn = new URL(enabled ? "/access" : "/shootout", request.url);
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);

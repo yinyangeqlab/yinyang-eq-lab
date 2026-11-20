@@ -549,3 +549,10 @@ export const companionLibraryGrants = sqliteTable("companion_library_grants", {
   deviceId: text("device_id").notNull().references(()=>accountDeviceStatus.id,{onDelete:"cascade"}),
   expiresAt: integer("expires_at").notNull(),
 }, table => [index("companion_grants_subject").on(table.subjectId, table.expiresAt)]);
+
+export const companionPresetHistory = sqliteTable("companion_preset_history", {
+  id:text("id").primaryKey(),subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
+  model:text("model").notNull(),name:text("name").notNull(),kind:text("kind").notNull(),
+  mainName:text("main_name").notNull(),matchName:text("match_name").notNull(),
+  mainEq:text("main_eq").notNull(),channelMatch:text("channel_match").notNull(),savedAt:integer("saved_at").notNull()
+},table=>[index("companion_history_account").on(table.subjectId,table.savedAt,table.id)]);
