@@ -1,0 +1,93 @@
+{
+  "update": 196,
+  "sourceCommit": "edab759cfdea525ff2c9bf51ed87fb3046c30e66",
+  "deploymentVerification": {
+    "at": "2026-11-20T03:11:59.123965Z",
+    "update": 196,
+    "revision": "edab759cfdea525ff2c9bf51ed87fb3046c30e66",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+    "matchingWorkerModules": 404,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "versionPageVerified": true,
+    "liveGuideRevision02Verified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update194",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update194",
+        "httpStatus": 200
+      }
+    ],
+    "pdfDownloadsVerified": [
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide-r01.pdf",
+        "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf?download=1",
+        "sha256": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58",
+        "httpStatus": 200
+      },
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide-r02.pdf",
+        "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf?download=1",
+        "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d",
+        "httpStatus": 200
+      },
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide.pdf",
+        "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf?download=1",
+        "sha256": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897",
+        "httpStatus": 200
+      }
+    ]
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 390,
+        "release": true,
+        "taggedSource": true,
+        "hashNavigation": true,
+        "keyboardFocus": true
+      },
+      {
+        "width": 1280,
+        "release": true,
+        "taggedSource": true,
+        "hashNavigation": true,
+        "keyboardFocus": true
+      }
+    ]
+  },
+  "candidateVerification": {
+    "sourceRevision": "edab759cfdea525ff2c9bf51ed87fb3046c30e66",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5,
+    "retainedPreviousClientFiles": 3438
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

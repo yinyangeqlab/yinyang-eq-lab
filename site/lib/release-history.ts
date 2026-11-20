@@ -363,7 +363,7 @@ export const candidateChanges = [
 ] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 196, date: "2026-11-19", title: "Version history links", changes: candidateChanges },
+  { update: 196, date: "2026-11-19", title: "Version history links", changes: candidateChanges, github: { commit: "80debbf2b94b30d4ee4df0cd0e4064bccabbb247", releaseTag: "update196", linkTaggedSource: true } },
   { update: 195, date: "2026-11-19", title: "Independent aurora wallpaper motion", changes: update195Changes, github: { commit: "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2", releaseTag: "update195", linkTaggedSource: true } },
   { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: update194Changes, github: { commit: "60d91d0fd1b3a56200e053c8202145319a7add7e", releaseTag: "update194", linkTaggedSource: true } },
   { update: 193, date: "2026-11-19", title: "Android Companion UI gallery", changes: update193Changes },

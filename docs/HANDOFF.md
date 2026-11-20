@@ -1,9 +1,18 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update195**, source `9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2`.
+Recorded deployment: **update196**, source `edab759cfdea525ff2c9bf51ed87fb3046c30e66`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update196 Version history links
+
+The update194 entry shows the GitHub release and tagged source. The three existing IEM guide PDF downloads matched their recorded filenames and checksums.
+
+Published the [GitHub release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update196) and [tagged source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update196). At verification, the live site was running update197. Its update196 entry showed only the section link.
+
+[Deployment verification](releases/update196-verification.json) · [Recovery verification](releases/update196-recovery-verification.json) · [Publication verification](releases/update196-publication.json)
+
 
 ## Update195 independent aurora wallpaper motion
 

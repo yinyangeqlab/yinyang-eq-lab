@@ -1,0 +1,44 @@
+{
+  "update": 196,
+  "tag": "update196",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "edab759cfdea525ff2c9bf51ed87fb3046c30e66",
+  "publishedSourceCommit": "80debbf2b94b30d4ee4df0cd0e4064bccabbb247",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update196",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update196",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/80debbf2b94b30d4ee4df0cd0e4064bccabbb247",
+  "publishedAt": "2026-11-20T04:13:13Z",
+  "authorAndCommitterVerified": true,
+  "publicRuntimeMatchesDeploymentSource": true,
+  "releaseHttpStatus": 200,
+  "taggedSourceHttpStatus": 200,
+  "publicZipAndTarDownloadsVerified": true,
+  "filesVerifiedInEachArchive": 1436,
+  "liveVersionPage": "https://yinyangeq.com/version#update196",
+  "liveVersionCheckedAt": "2026-11-20T04:14:16.105944+00:00",
+  "liveBuildAtVerification": "update197",
+  "liveVersionEntryLinks": [
+    "#update196"
+  ],
+  "liveVersionReleaseLinkPresent": false,
+  "liveVersionTaggedSourceLinkPresent": false,
+  "pdfDownloadsVerified": [
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide-r01.pdf",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf?download=1",
+      "sha256": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58"
+    },
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide-r02.pdf",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf?download=1",
+      "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d"
+    },
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide.pdf",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf?download=1",
+      "sha256": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897"
+    }
+  ],
+  "deploymentVerification": "docs/releases/update196-verification.json",
+  "recoveryVerification": "docs/releases/update196-recovery-verification.json"
+}
