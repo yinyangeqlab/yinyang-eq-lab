@@ -73,14 +73,14 @@
   },
   {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf",
-    "sha256": "a775acefc71e6d9e57b8c7d3535113d23092eef042b77a79a345388d7d6d2529"
+    "sha256": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58"
   },
   {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf",
-    "sha256": "23ee81e0d0f91b163ba99417737dd524e372da0cd5bdc48404a430a70ba57a02"
+    "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d"
   },
   {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf",
-    "sha256": "b86cf6bfecb64670204469b0acc1747e0bac0990163e864ca2a8166cbfbe9fed"
+    "sha256": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897"
   }
 ]

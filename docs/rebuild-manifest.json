@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+  "baseRevision": "3e616ce5d3aa0d06047ab93320a4332485d4764d",
   "recordedLiveUpdate": 192,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -1597,7 +1597,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "9fb2455a296a44470d4e68f137877f52e9edefddb625ca122cd0bea951af0b7f",
+      "sha256": "88319b12d5dfde6304398c1c21ecc0001a8c314dff77168f275df7af42dc55c6",
       "executable": false
     },
     {
@@ -1632,7 +1632,7 @@
     },
     {
       "path": "public/android/companion.svg",
-      "sha256": "9b99811ab8fb0529942ca461ca2d4e8801c0db775413c71506a3340c44f2f2c8",
+      "sha256": "39bd6422646345df7629e707c83f4d6ab33d31617e2d862ba26aafada2fcd9b4",
       "executable": false
     },
     {
@@ -1642,7 +1642,7 @@
     },
     {
       "path": "public/android/manager.svg",
-      "sha256": "15ffdc3f52855eda2df3c41b92221d96a44e60c3f9c88c58427b5678ffe5cc96",
+      "sha256": "bc66611e8805f67c7b2156d373fd0b6bd1f87c5c2f1a68b913f1c796d32b0e96",
       "executable": false
     },
     {
@@ -1848,6 +1848,206 @@
     {
       "path": "public/android/screens/light/usb.webp",
       "sha256": "227c9050531b34349b734b74515ff5dd5b68de5af68aea47a89ae15ddbb5e8ee",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/audio.webp",
+      "sha256": "db54c15195bd578efdc6af8c84c565815cd4378a658010682e1d1a0dbf8da04a",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/compare.webp",
+      "sha256": "3291a7ef7be6dc7067eef511cf22bf420860cb45f093c8ec6e205f4643ef30bd",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/debug.webp",
+      "sha256": "1d10c794be0ac1d4eb597a7b2f8814063d2ceeaea585913686daddf7df8bb7c7",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/device.webp",
+      "sha256": "d7eff8756a0d4f01d9fa119f1cb2bd8c2c14fff83864741644ef0061b35df0f2",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/eq.webp",
+      "sha256": "cb8d8f290f2fcc19e4fbf401b48d57d50c0db19e7bb57b41d5870b62c519a41b",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/match.webp",
+      "sha256": "3a9885f658f68a96d1a209f691f7221ea359611eb988939fd343568d5d9271d3",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/mixer.webp",
+      "sha256": "2723f7bfe451bd8ee0f3d706c45c328e90d82f13270f1d6e131a963a93f6e650",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/output.webp",
+      "sha256": "dc43ea760c801bc8d0ee578379192e916b0b7230e8766f65b8ab8865985dbc54",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/presets.webp",
+      "sha256": "413685ee11bd21c4b6fdeb6734e4691f26cbcacd49aaf4210d5d7a7ec3db100e",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/amoled/usb.webp",
+      "sha256": "ae0eeefa34adf6aa257d9adca68051f07348e6a0b21aeae5b0c986342ddab6ba",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/audio.webp",
+      "sha256": "c5a9c25ae965aee3525bd78cb65f5212343533616ab9a83235eb52d618ae8165",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/compare.webp",
+      "sha256": "abd1e740c1c5eed57de0eb5295441b8e753c8494fb4d9ee511220c6006345ec1",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/debug.webp",
+      "sha256": "6f7b0a03c7706ac920dc54170e51ad816eb379e100c5b10af87404a62ab44157",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/device.webp",
+      "sha256": "322b6b952dc8e72131fce50de2f4d0ed184c03efc7f7c09162c402f537f313d1",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/eq.webp",
+      "sha256": "caae960adfeea82fb1eb785552a9d37fb29239b85134ff602cd8a7ac3ed7902e",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/match.webp",
+      "sha256": "0ee6eb0316ea448e87ba8bdb6c0658cf455729b493eb0681723046d94dff4c90",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/mixer.webp",
+      "sha256": "7efdd2d592bd1ceffb2a1eab83bc91d2b774cf3700e9082afeb1f307fea146db",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/output.webp",
+      "sha256": "5c6a31565b054d47801b92293b4262972c246fff8caabc5400aa6743e731d961",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/presets.webp",
+      "sha256": "97d85dd589fe39ceff5a7751cc6dc2b324c54714f832d1af095ec475f50e0752",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/blue/usb.webp",
+      "sha256": "31ead3e7a16e76ef14db18518bbd6146fc4c7e180912d8b5874e82fd65422671",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/audio.webp",
+      "sha256": "0241f3a652b85614e18f610c5a6665ad23d80754a57d18f4d88b2e5aaf5ca529",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/compare.webp",
+      "sha256": "ffccdde72d9248cb337b636c4c314efda87f9510a522577cf3ddf6e5e49a9d8e",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/debug.webp",
+      "sha256": "049051e3d2e1db284859f1693e8cf536b9ef04508b2e7378a9eb721a86adf025",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/device.webp",
+      "sha256": "04eee5fc6f6ff03058cf39f7500e5ddcddc6aca1f1b66f5de6fe7326bdfa0927",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/eq.webp",
+      "sha256": "5553593285fd78b32f79ebe6371ec4b8f4e2531ffe386b11873c9ff3fcd3ab95",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/match.webp",
+      "sha256": "405da915adf16858438b425462044f1c441f52286e9c11dcea9658d880bf77fa",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/mixer.webp",
+      "sha256": "f5017b30cb43c7350807c66922cb7fdf9db57db58311a55938302844fe93c93a",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/output.webp",
+      "sha256": "cdf92143b9e22df1fc8edd4e62f75b2e61722492993ef5b0081c605716800305",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/presets.webp",
+      "sha256": "09849608f6a101049a900a7e991a577bd7621e419e66e65bce72cdb2e301cae0",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/green/usb.webp",
+      "sha256": "bfb68ef17ddb7797e3bd89c86cbe635eb58c67b950df10ef9e5263a4dca9857a",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/audio.webp",
+      "sha256": "0c86a50ad3506000621a63bbcf048928a96b23b9ccb0015a3af3495b59a0faa0",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/compare.webp",
+      "sha256": "b614244f8b978c64c542e61c9c56b99397ef3ec74701f702100abea61478c2b3",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/debug.webp",
+      "sha256": "2e2c98cd3ec15b5b6cbb623656f3dc432e89b2d401d4584802fd3a53a7ca3171",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/device.webp",
+      "sha256": "e87deaab202d22c5684563634266b6efa2b9cddb4b455a1ec719f81f7df0dea8",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/eq.webp",
+      "sha256": "c2983850150fdc0d927c4345831d2eb69447dff6e59db8baacdf062bf42a0b53",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/match.webp",
+      "sha256": "2e42769069663007831e489fd45df26fd6eff953fc562eb01f0eb46adfb8d939",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/mixer.webp",
+      "sha256": "d0c329acd0d810029b29ce732a3fb035b8e243db0b386063253677847610a7ea",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/output.webp",
+      "sha256": "2c012822b907fc9baeedd7c5031bb9e56eac118e94175c287ea76490752f3ddb",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/presets.webp",
+      "sha256": "70401275ae0e1d1efe784ec9fba4a22a6faf41daddef483fc7ee8a077c4c4b30",
+      "executable": false
+    },
+    {
+      "path": "public/android/screens/ui-preview-v4/light/usb.webp",
+      "sha256": "1fabff6bd815ce44e1e3622d0cafd669ffbfd1fa2ea0b6c3988ef296e20eee1e",
       "executable": false
     },
     {
@@ -2827,7 +3027,7 @@
     },
     {
       "path": "scripts/checks/application/check_share_previews.mjs",
-      "sha256": "d6327031281f1b676a7f4aa8a15ce666df5863ff808653172c3475959a19b8d1",
+      "sha256": "645b6e29b13ede237581c534e8eacd72ef07f2860e4d20923cf8a5e64fa8dbd1",
       "executable": false
     },
     {
@@ -3217,7 +3417,7 @@
     },
     {
       "path": "scripts/iem-guide-assets.json",
-      "sha256": "0c93197c2b9ceb1658b1fae6def40ebe1e23de62c004bda7253ed596d01acd24",
+      "sha256": "1dc238ecb527a1566ea7f3b6babe3bfd0e67432f4ed682143ca4d0f6d3555b28",
       "executable": false
     },
     {
@@ -3992,7 +4192,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/page.tsx",
-      "sha256": "fa617b0f3744e3fe42c6c4968b6d70e994e3780b67ca8be5eb902a874aa26c7e",
+      "sha256": "ad8b9eaf47d6c88c499e98ec31d0af911eabf3c8010a2dac55f893ccbacb0b1c",
       "executable": false
     },
     {
@@ -4177,12 +4377,12 @@
     },
     {
       "path": "site/app/q5k4android/gallery.tsx",
-      "sha256": "9fe109688f87c6c037e15119231608eb3c6f7191babe75293391aaf5bd393f0a",
+      "sha256": "0eb6c552e93379a91925ad79076dd6ad56e8028ce60557b5dea86f360da0dd1e",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "a327f0208b6f82cd8dc78688e0518f10a4a688069750006aa1424b47a5ef742a",
+      "sha256": "b8f626df037aedaa7fd9c57e7221c43461c344fa64e4136074baf1b826cc28d3",
       "executable": false
     },
     {
@@ -4192,7 +4392,7 @@
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "29ed5bf0f146eeb10d5379de5be6b48ccee6784b2ec3766470bd84fea57ff5fb",
+      "sha256": "31e573d1fe53ae2e370409aae51abdc6e2af5a21b2996fd010a150cc1b160133",
       "executable": false
     },
     {
@@ -4497,12 +4697,12 @@
     },
     {
       "path": "site/components/companion-app-brand.css",
-      "sha256": "97c5de19c5a02ef325355ac9c958bdb8ee1325de91141e0c5ebbc3daa75fd8a5",
+      "sha256": "dc9faae0d7a83085f55088254d2155431b64ddaa7a7b45492d1dc24c91d06d2d",
       "executable": false
     },
     {
       "path": "site/components/companion-app-brand.tsx",
-      "sha256": "185185fe456d4e2f393fc72b5b9c83332892d1ec320161b68bfd52ae712f099a",
+      "sha256": "f581a200086a0646aa2f4a93913738215a7bee5bc7588607241fe51db65ea071",
       "executable": false
     },
     {
@@ -6612,12 +6812,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "b85124dcc3f7a4efdc5bb7d22875dbfd42f712276c7f850cbaaee003e59d6727",
+      "sha256": "7f60861c59b2e2a9639c5de2665fcc0ba45f775ec781e2662d7369713a2b55bf",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "e7c39c2f313f760ba05023d7e8d89affaf5440cde6fe9ebe7d43117ad97e9342",
+      "sha256": "5432fa1c380b7c4dd89b6dd7393de3ab9bd8157b93c8cbe62dadefb62ee42c44",
       "executable": false
     },
     {

@@ -1,7 +1,7 @@
 .companion-page {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(200px, .62fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(24px, 6vw, 86px);
   max-width: 1120px;
   margin-inline: auto;
@@ -19,11 +19,35 @@
 .companion-features dd, .companion-availability, .companion-screen figcaption { color: #b6c7cc; line-height: 1.55; }
 .companion-features dd { margin: .15em 0 0; }
 .companion-page a { color: #abede3; text-underline-offset: .22em; text-decoration: underline; }
-.companion-page .companion-features-link { display: inline-flex; align-items: center; min-height: 44px; padding: .6em 1em; background: #ace9de; color: #0a2529; border-radius: 6px; font-weight: 650; text-decoration: none; }
-.companion-page .companion-features-link:hover { background: #cefff4; }
-.companion-page a:focus-visible { outline: 3px solid #ffe2a6; outline-offset: 4px; }
+.companion-page a:focus-visible { outline: 2px solid #ffe2a6; outline-offset: 3px; }
 .companion-install { margin-top: 1.3rem; scroll-margin-top: 70px; }
-.companion-downloads { display: flex; flex-wrap: wrap; gap: .65rem; }
+.companion-downloads { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.companion-download-option { display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+.companion-page .companion-download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .42rem;
+  min-height: 48px;
+  padding: .65rem .6rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: .875rem;
+  font-weight: 650;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.companion-download svg { flex: none; }
+.companion-page .companion-download-primary { color: #0a2529; background: #ace9de; border-color: #ace9de; }
+.companion-page .companion-download-primary:hover { background: #c5f3ea; border-color: #c5f3ea; }
+.companion-page .companion-download-primary:active { background: #91d4c8; border-color: #91d4c8; }
+.companion-page .companion-download-secondary { color: #dcf4ef; background: #15262c; border-color: #718f92; }
+.companion-page .companion-download-secondary:hover { background: #203941; border-color: #ace9de; }
+.companion-page .companion-download-secondary:active { background: #2b494e; border-color: #ace9de; }
+.companion-download-option p { color: #b6c7cc; font-size: .83rem; line-height: 1.35; margin: .32rem 0 0; }
+@media (max-width: 960px) {
+  .companion-downloads { grid-template-columns: minmax(0, 1fr); }
+}
 .companion-install [role="status"] { margin-top: .65rem; line-height: 1.5; }
 .companion-guide-link { display: inline-flex; align-items: center; min-height: 44px; }
 .companion-availability { margin-block: .85rem 0; max-width: 44ch; font-size: .92rem; }
@@ -39,10 +63,12 @@
   .companion-screen { margin-top: .5rem; }
 }
 
-.companion-gallery { width: 100%; min-width: 0; align-self: start; }
+.companion-gallery { width: 100%; min-width: 0; align-self: start; scroll-margin-top: 70px; }
+.companion-gallery h2 { margin: 0; text-align: center; font-size: 1.4rem; font-weight: 650; }
+.gallery-intro { margin: .3rem 0 1rem; text-align: center; color: #b6c7cc; font-size: .88rem; line-height: 1.45; }
 .gallery-themes { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; border: 0; padding: 0; margin: 0 0 1rem; min-width: 0; }
 .gallery-themes legend { width: 100%; text-align: center; color: #cad7da; margin-bottom: .5rem; }
-.gallery-themes button { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .65rem; font-size: .85rem; color: #dee8ea; background: #13252b; border: 1px solid #42585f; border-radius: 7px; cursor: pointer; }
+.gallery-themes button { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .4rem .65rem; font-size: .85rem; color: #dee8ea; background: #13252b; border: 1px solid #42585f; border-radius: 7px; cursor: pointer; }
 .gallery-themes button[aria-pressed="true"] { color: #fff; background: #274248; border-color: #a8e4d9; }
 .gallery-themes button span { width: .72rem; height: .72rem; border-radius: 50%; border: 1px solid #8a9fa5; }
 .gallery-stage { width: 100%; display: grid; grid-template-columns: 40px minmax(0, 300px) 40px; align-items: center; justify-content: center; touch-action: pan-y; }

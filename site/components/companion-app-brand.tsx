@@ -2,8 +2,8 @@ import './companion-app-brand.css';
 
 export function CompanionAppIcons() {
   return <div className="companion-app-icons">
-    <figure><img src="/android/manager.svg" alt="" width="104" height="104"/><figcaption>App Manager</figcaption></figure>
     <figure><img src="/android/companion.svg" alt="" width="104" height="104"/><figcaption>Companion</figcaption></figure>
+    <figure><img src="/android/manager.svg" alt="" width="104" height="104"/><figcaption>App Manager</figcaption></figure>
   </div>;
 }
 
