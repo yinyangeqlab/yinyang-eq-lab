@@ -8,6 +8,7 @@ export type ReleaseNotes = {
     commit: string;
     pull?: number;
     releaseTag?: string;
+    linkTaggedSource?: boolean;
   };
 };
 
@@ -350,16 +351,21 @@ const update192Changes = ["Choose Original landscape or Ultrawide panorama, with
 
 const update193Changes = ["The Android page previews the redesigned Companion in ten screens and four themes, with updated Companion and App Manager icons and distinct download buttons."] as const;
 
-export const candidateChanges = [
+const update195Changes = [
   "Aurora curtains fold independently behind the mountain peaks in the wallpaper gallery.",
   "Choose original or panoramic art, with or without the yin-yang. The flying-gear scenes animate headphones and IEMs on flying carpets across all five layouts.",
 ] as const;
 
 const update194Changes = ["The IEM guide and its PDFs identify the measured coupler and explain how its level-aligned AKG sweeps compare with the PEQdB Studio reference."] as const;
 
+export const candidateChanges = [
+  "Restore the GitHub release and tagged source links for update194 in Version history.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 195, date: "2026-11-19", title: "Independent aurora wallpaper motion", changes: candidateChanges, github: { commit: "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2", releaseTag: "update195" } },
-  { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: update194Changes, github: { commit: "60d91d0fd1b3a56200e053c8202145319a7add7e", releaseTag: "update194" } },
+  { update: 196, date: "2026-11-19", title: "Version history links", changes: candidateChanges },
+  { update: 195, date: "2026-11-19", title: "Independent aurora wallpaper motion", changes: update195Changes, github: { commit: "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2", releaseTag: "update195", linkTaggedSource: true } },
+  { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: update194Changes, github: { commit: "60d91d0fd1b3a56200e053c8202145319a7add7e", releaseTag: "update194", linkTaggedSource: true } },
   { update: 193, date: "2026-11-19", title: "Android Companion UI gallery", changes: update193Changes },
   { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: update192Changes, github: { commit: "8641b1c1bfd2489a50de71988c03148c1b1301da", releaseTag: "update192" } },
   { update: 191, date: "2026-11-19", title: "IEM measurement guide Revision 02", changes: update191Changes },

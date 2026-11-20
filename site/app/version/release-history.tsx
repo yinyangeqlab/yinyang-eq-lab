@@ -90,7 +90,9 @@ export default function ReleaseHistory({ entries, currentUpdate, currentReleaseL
                   {releaseTag ? <a href={releaseUrl(releaseTag)}>GitHub release</a>
                     : entry.update === currentUpdate && currentReleaseLink}
                   {entry.refreshReleases?.map(({ tag, label }) => <a key={tag} href={releaseUrl(tag)}>{label}</a>)}
-                  {entry.github && <a href={`${repositoryUrl}/commit/${entry.github.commit}`}>GitHub commit</a>}
+                  {entry.github && (entry.github.linkTaggedSource && releaseTag
+                    ? <a href={`${repositoryUrl}/tree/${encodeURIComponent(releaseTag)}`}>GitHub source</a>
+                    : <a href={`${repositoryUrl}/commit/${entry.github.commit}`}>GitHub commit</a>)}
                   {entry.github && previous && <a href={`${repositoryUrl}/compare/${previous.commit}..${entry.github.commit}`}>Compare published updates</a>}
                   {entry.github?.pull && <a href={`${repositoryUrl}/pull/${entry.github.pull}`}>Pull request #{entry.github.pull}</a>}
                   {id === releaseInfo.baseline.label && <a href={`${repositoryUrl}/tree/${releaseInfo.baseline.commit}`}>Published baseline snapshot</a>}
