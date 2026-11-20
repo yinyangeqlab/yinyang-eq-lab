@@ -1,0 +1,93 @@
+{
+  "update": 193,
+  "sourceCommit": "1d39c936e3e46e86493fcb4b2c940fd64464eabd",
+  "deploymentVerification": {
+    "at": "2026-11-19T23:50:58.963852Z",
+    "update": 193,
+    "revision": "1d39c936e3e46e86493fcb4b2c940fd64464eabd",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "8641b1c1bfd2489a50de71988c03148c1b1301da",
+    "versionPageVerified": true,
+    "androidPageVerified": true,
+    "downloadDestinationsVerified": true,
+    "matchingGalleryImages": 40,
+    "matchingAppLogos": 2,
+    "matchingAndroidClientAssets": 41,
+    "matchingWorkerModules": 404,
+    "protectedRecordingAccessRetained": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "1d39c936e3e46e86493fcb4b2c940fd64464eabd",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "androidGalleryImages": 40,
+    "retainedPreviousClientFiles": 3365,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "productionHttpChecks": true,
+    "localPackagedBrowserChecks": [
+      {
+        "width": 320,
+        "height": 740,
+        "screenThemePairs": 40,
+        "keyboardFocus": true,
+        "arrowNavigation": true,
+        "swipe": true,
+        "downloads": true,
+        "logosHaveTransparency": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "screenThemePairs": 40,
+        "keyboardFocus": true,
+        "arrowNavigation": true,
+        "swipe": true,
+        "downloads": true,
+        "logosHaveTransparency": true
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "screenThemePairs": 40,
+        "keyboardFocus": true,
+        "arrowNavigation": true,
+        "swipe": true,
+        "downloads": true,
+        "logosHaveTransparency": true
+      },
+      {
+        "width": 1280,
+        "height": 900,
+        "screenThemePairs": 40,
+        "keyboardFocus": true,
+        "arrowNavigation": true,
+        "swipe": true,
+        "downloads": true,
+        "logosHaveTransparency": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

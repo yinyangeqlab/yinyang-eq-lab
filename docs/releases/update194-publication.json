@@ -1,0 +1,39 @@
+{
+  "update": 194,
+  "tag": "update194",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+  "publishedSourceCommit": "60d91d0fd1b3a56200e053c8202145319a7add7e",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update194",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/60d91d0fd1b3a56200e053c8202145319a7add7e",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update194",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/8641b1c1bfd2489a50de71988c03148c1b1301da..update194",
+  "publishedAt": "2026-11-20T01:47:49Z",
+  "liveVersionVerifiedAt": "2026-11-20T01:48:45.544568+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update194",
+  "filesVerifiedInEachArchive": 1418,
+  "publicZipAndTarDownloadsVerified": true,
+  "pdfDownloadsVerified": [
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide-r01.pdf",
+      "sha256": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf?download=1"
+    },
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide-r02.pdf",
+      "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf?download=1"
+    },
+    {
+      "filename": "yinyang-eq-iem-711-measurement-guide.pdf",
+      "sha256": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897",
+      "url": "https://yinyangeq.com/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf?download=1"
+    }
+  ],
+  "deploymentVerification": "docs/releases/update194-verification.json",
+  "recoveryVerification": "docs/releases/update194-recovery-verification.json"
+}

@@ -1,0 +1,73 @@
+{
+  "update": 194,
+  "sourceCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+  "deploymentVerification": {
+    "at": "2026-11-20T00:49:24.351343Z",
+    "update": 194,
+    "revision": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "1d39c936e3e46e86493fcb4b2c940fd64464eabd",
+    "liveGuideVerified": true,
+    "liveDownloadGetAndHeadVerified": true,
+    "pdfPageLinksVerified": true,
+    "existingPdfVersionsPreserved": true,
+    "legacyPdfAliasVerified": true,
+    "pdfDownloadsVerified": [
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide.pdf",
+        "sha256": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897",
+        "bytes": 4150991,
+        "inlineGetAndDownloadGetHeadVerified": true
+      },
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide-r01.pdf",
+        "sha256": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58",
+        "bytes": 4673186,
+        "inlineGetAndDownloadGetHeadVerified": true
+      },
+      {
+        "filename": "yinyang-eq-iem-711-measurement-guide-r02.pdf",
+        "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d",
+        "bytes": 5298197,
+        "inlineGetAndDownloadGetHeadVerified": true
+      }
+    ],
+    "versionPageVerified": true,
+    "matchingWorkerModules": 404,
+    "protectedRecordingAccessRetained": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserWidths": [
+      320,
+      390,
+      1280
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

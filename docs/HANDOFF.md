@@ -1,9 +1,24 @@
 # Development handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update192**, source `8641b1c1bfd2489a50de71988c03148c1b1301da`.
+Recorded deployment: **update194**, source `1475d7cea0816b39b2aa2d0a640ebf07df3bd91f`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update194 IEM guide coupler wording
+
+The guide identifies the Type E610A coupler used by the Lab and explains how its level-aligned AKG sweeps compared with the PEQdB Studio reference in the bass and mids. The existing PDF revisions and filenames are preserved.
+
+The [live Version page](https://yinyangeq.com/version#update194) links to the GitHub release, tagged source and comparison. The tagged runtime matches the verified deployment. All three PDF downloads matched the deployed files.
+
+[Deployment verification](releases/update194-verification.json) · [Recovery verification](releases/update194-recovery-verification.json) · [Publication verification](releases/update194-publication.json)
+
+## Update193 Android Companion gallery
+
+The Android page previews ten screens in four themes and gives the Companion and App Manager separate download buttons.
+
+[Deployment verification](releases/update193-verification.json) · [Recovery verification](releases/update193-recovery-verification.json)
+
 
 ## Update192 wallpaper catalog
 

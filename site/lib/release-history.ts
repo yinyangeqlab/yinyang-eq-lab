@@ -353,7 +353,7 @@ const update193Changes = ["The Android page previews the redesigned Companion in
 export const candidateChanges = ["The IEM guide and its PDFs identify the measured coupler and explain how its level-aligned AKG sweeps compare with the PEQdB Studio reference."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: candidateChanges },
+  { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: candidateChanges, github: { commit: "60d91d0fd1b3a56200e053c8202145319a7add7e", releaseTag: "update194" } },
   { update: 193, date: "2026-11-19", title: "Android Companion UI gallery", changes: update193Changes },
   { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: update192Changes, github: { commit: "8641b1c1bfd2489a50de71988c03148c1b1301da", releaseTag: "update192" } },
   { update: 191, date: "2026-11-19", title: "IEM measurement guide Revision 02", changes: update191Changes },
