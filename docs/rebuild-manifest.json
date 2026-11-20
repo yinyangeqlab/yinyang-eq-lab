@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "b1408b6e407b5eb0993eaa32090d4148549c8b2a",
+  "baseRevision": "81b3f6c3dd01a5cbe9e97d52f62fd9033c9d87a2",
   "recordedLiveUpdate": 194,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -47,7 +47,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "1e960d7366dc1182ed1f5d27b09f9de65e6f6ba25933bf77601b2f2c56a31746",
+      "sha256": "707f021074c64c89b86b213d07fdacc2b5cef8e64c65b46c2131bb8fc19b30b6",
       "executable": false
     },
     {

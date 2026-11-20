@@ -6,7 +6,7 @@
 
 YinYang EQ is a free, noncommercial browser lab for headphone equalization (EQ). Compare two sound profiles on your own headphones, find targets you prefer, or shape a curve and export an EQ preset. You can also contribute to an exploratory study of how consistent listeners are and where their preferences differ.
 
-**[Try YinYang EQ](https://yinyangeq.com) · [Help & hotkeys](https://yinyangeq.com/shortcuts) · [Glossary & Guides](https://yinyangeq.com/glossary)**
+**[Try YinYang EQ](https://yinyangeq.com) · [Help & hotkeys](https://yinyangeq.com/shortcuts) · [Glossary & Guides](https://yinyangeq.com/glossary) · [IEM measurement guide](https://yinyangeq.com/glossary/iem-measurement)**
 
 ## Start listening
 
