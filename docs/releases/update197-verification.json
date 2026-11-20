@@ -1,0 +1,53 @@
+{
+  "update": 197,
+  "sourceCommit": "99435a51079ac28b0983ccd8c85341b25e04f7bf",
+  "deploymentVerification": {
+    "at": "2026-11-20T04:07:11.356586Z",
+    "update": 197,
+    "revision": "99435a51079ac28b0983ccd8c85341b25e04f7bf",
+    "deploymentVerified": true,
+    "migrations": [
+      "0046_companion_library.sql"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "edab759cfdea525ff2c9bf51ed87fb3046c30e66",
+    "matchingWorkerModules": 408,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "unapprovedCredentialRejected": true,
+    "browserLinkReachable": true,
+    "savedAccountDataInspected": false
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": {
+      "browserApprovalAndNativeLibraryFixturePassed": true
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "99435a51079ac28b0983ccd8c85341b25e04f7bf",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5,
+    "retainedPreviousClientFiles": 3468
+  },
+  "recoveryRegistrationPending": true
+}

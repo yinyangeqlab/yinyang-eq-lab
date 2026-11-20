@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
 import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { handoffs, stateViewPath, verifyOrRefresh } from './release-state.mjs';
+import { handoffs, recoveryState, stateViewPath, verifyOrRefresh } from './release-state.mjs';
 import { verifyPriorPublishedRelease, verifyProductionBaseline } from './production-release-preflight.mjs';
+import { update197Source } from './recovery/update197-time-travel.mjs';
 
 const published = {
   update: 170,
@@ -292,6 +294,7 @@ case "$1 $2" in
   'up --stack')
     [[ "$DEPLOY_OWNER_WORKSPACE" == "$FIXTURE_WORKSPACE" && "$*" == *"$FIXTURE_PLAN"* ]] || exit 13
     flock -n -x "$FIXTURE_LOCK" true && exit 14
+    [[ "$DEPLOY_REVIEWED_PLAN" == "$FIXTURE_PLAN" ]] || exit 16
     printf 'applied\n' >> "$FIXTURE_OUTPUT" ;;
   *) exit 15 ;;
 esac
@@ -315,9 +318,185 @@ esac
   const passedCheck = run('bash', [wrapper, '--check', workspace], 0);
   assert.equal(passedCheck.status, 0, passedCheck.stderr);
   assert.throws(() => readFileSync(output), { code: 'ENOENT' });
+  const planCheck = run('bash', [wrapper, '--check', workspace, plan], 0);
+  assert.equal(planCheck.status, 0, planCheck.stderr);
+  assert.throws(() => readFileSync(output), { code: 'ENOENT' });
   const ready = run('bash', [wrapper, workspace, plan], 0);
   assert.equal(ready.status, 0, ready.stderr);
   assert.equal(readFileSync(output, 'utf8'), 'applied\n');
+
+  const previousCommit = 'edab759cfdea525ff2c9bf51ed87fb3046c30e66';
+  const previousAt = '2026-11-20T03:00:00Z';
+  const migratedAt = '2026-11-20T04:06:25.479113+00:00';
+  const deployedAt = '2026-11-20T04:07:11Z';
+  const bookmarkAt = '2026-11-20T04:08:00Z';
+  const approvedAt = '2026-11-20T04:10:00Z';
+  const expiresAt = '2026-11-21T04:08:00Z';
+  const approvedBookmark = '00000003-00000001-00000000-' + 'a'.repeat(32);
+  const active197 = { id: 'deployment-197', versions: [{ version_id: 'worker-197', percentage: 100 }] };
+  const update197 = {
+    ...state, update: 197, sourceCommit: update197Source, baselineCommit: previousCommit,
+    verifiedAt: deployedAt, evidence: 'docs/releases/update197-verification.json',
+    gitSource: { ...state.gitSource, implementationCommit: update197Source, pushed: false, publicationAuthorized: false },
+    recoveryProcess: {
+      schemaRecoveryDeferred: true, previousSchemaUpdate: 196, newDataExport: false,
+      matchingCurrentReleaseBaseline: false, sourceOnlyHandoverPending: false, nextScheduledRunMayRefuseBaselineMismatch: true,
+    },
+  };
+  delete update197.deploymentRefresh;
+  delete update197.gitSource.publishedSourceCommit;
+  const migration = '0046_companion_library.sql';
+  const sql = 'CREATE TABLE companion_library_grants (challenge TEXT PRIMARY KEY)';
+  const sha = value => createHash('sha256').update(value).digest('hex');
+  const definitions = [{ type: 'table', name: 'companion_library_grants', tbl_name: 'companion_library_grants', sql }];
+  const schemaProof = {
+    migration, appliedAt: migratedAt, migrationSha256: sha(sql), definitions,
+    existingPreMigrationRecoveryVerified: true, newDataExport: false,
+  };
+  const update197Receipt = {
+    ...deploymentRecord, update: 197, sourceCommit: update197Source,
+    deploymentVerification: {
+      ...deploymentRecord.deploymentVerification, update: 197, at: deployedAt, revision: update197Source, migrations: [migration],
+    },
+    candidateVerification: { ...deploymentRecord.candidateVerification, sourceRevision: update197Source },
+  };
+  write(workspace, 'LIVE_RELEASE.json', update197);
+  write(workspace, update197.evidence, update197Receipt);
+  write(workspace, 'docs/releases/update196-verification.json', {
+    deploymentVerification: { update: 196, revision: previousCommit, at: previousAt, deploymentVerified: true },
+  });
+  write(workspace, 'docs/releases/update196-recovery-verification.json', {
+    ...recoveryRecord, update: 196, sourceCommit: previousCommit, verifiedAt: '2026-11-20T03:30:00Z',
+  });
+  write(workspace, snapshot + '/site/drizzle/' + migration, sql);
+  write(workspace, snapshot + '/artifacts/update197/migrated-schema.private.json', schemaProof);
+  write(workspace, snapshot + '/artifacts/update197/handover-verification.private.json', {
+    deploymentVerified: true, revision: update197Source, deployment: active197, migrations: [migration],
+  });
+  write(privateRoot, settingsPath, { provider: { ...settings.provider, databaseId: 'synthetic-db' } });
+  write(privateRoot, registrationPath, { ...registration, liveUpdate: 196, registeredAt: '2026-11-20T03:20:00Z' });
+  write(privateRoot, metadataPath, { ...metadata, liveUpdate: 196, implementationCommit: previousCommit });
+  verifyOrRefresh(workspace, true);
+  const preparedPlan = {
+    resourcePlans: {
+      'urn:pulumi::staging::test::cloudflare:index/workersScript:WorkersScript::target-shootout-worker': {
+        steps: ['update'],
+        state: { ...target, assets: { config: { runWorkerFirst: ['/*'] } } },
+        goal: {
+          type: 'cloudflare:index/workersScript:WorkersScript',
+          inputDiff: { updates: { files: {}, assets: {
+            directory: join(workspace, 'dist/client'), config: { runWorkerFirst: ['/*'] },
+          } } },
+        },
+      },
+      database: { steps: ['same'] },
+    },
+  };
+  const planPath = join(directory, 'time-travel-plan');
+  const candidateCommit = 'e'.repeat(40);
+  const approval = {
+    kind: 'update197-d1-time-travel-v1', sourceCommit: update197Source, candidateCommit,
+    ...target, databaseId: 'synthetic-db', deploymentId: active197.id,
+    planSha256: sha(JSON.stringify(preparedPlan)), schemaReceiptSha256: sha(JSON.stringify(schemaProof)),
+    bookmark: approvedBookmark, bookmarkAt, approvedAt, expiresAt,
+  };
+  write(directory, 'time-travel-plan', preparedPlan);
+  chmodSync(planPath, 0o600);
+  const approvalPath = 'update197-time-travel-approval.json';
+  const setApproval = value => {
+    write(privateRoot, approvalPath, value);
+    chmodSync(join(privateRoot, approvalPath), 0o600);
+  };
+  const bookmarks = new Map([
+    [previousAt, '00000001-00000001-00000000-' + 'a'.repeat(32)],
+    [deployedAt, '00000002-00000001-00000000-' + 'a'.repeat(32)],
+    [bookmarkAt, approvedBookmark],
+  ]);
+  const observedCalls = [];
+  const resource = 'https://api.cloudflare.com/client/v4/accounts/synthetic-account';
+  const bookmarkUrl = resource + '/d1/database/synthetic-db/time_travel/bookmark';
+  let databaseId = 'synthetic-db';
+  let currentDefinitions = definitions;
+  let checkedGuideAssets = false;
+  const options = {
+    build: { update: 198, basedOn: 197, preview: 0 }, candidateRoot: workspace, buildRoot: workspace, planPath,
+    now: () => Date.parse(approvedAt) + 30_000,
+    getCandidate: () => ({ commit: candidateCommit, status: '', changes: ['site/lib/release-history.ts'] }),
+    checkGuideAssets(directory) {
+      assert.equal(directory, join(workspace, 'dist/client'));
+      checkedGuideAssets = true;
+    },
+    async fetchCloudflare(url, request) {
+      observedCalls.push(url);
+      assert.equal(request.headers.Authorization, 'Bearer synthetic-read-only');
+      let result;
+      if (url === resource + '/workers/scripts/synthetic-worker/settings') {
+        assert.equal(request.method, undefined);
+        result = { bindings: [{ name: 'DB', type: 'd1', database_id: databaseId }] };
+      } else if (url === resource + '/d1/database/synthetic-db/query') {
+        assert.equal(request.method, 'POST');
+        assert.match(JSON.parse(request.body).sql, /^SELECT type,name,tbl_name,sql FROM sqlite_master /);
+        result = [{ success: true, meta: { changed_db: false, rows_written: 0 }, results: currentDefinitions }];
+      } else {
+        assert.equal(url.split('?')[0], bookmarkUrl);
+        assert.equal(request.method, undefined);
+        result = { bookmark: bookmarks.get(new URL(url).searchParams.get('timestamp')) };
+      }
+      return { ok: true, json: async () => ({ success: true, result }) };
+    },
+  };
+  const verify197 = (overrides = {}, active = active197) => verifyProductionBaseline(workspace, target,
+    async () => [active], { ...options, ...overrides });
+  await assert.rejects(verify197({ planPath: '' }), /needs a verified schema-deferred handoff/);
+  await assert.rejects(verify197(), { code: 'ENOENT' });
+  setApproval(approval);
+  await assert.rejects(verify197({ build: { ...options.build, preview: 1 } }), /limited to the update197/);
+  await assert.rejects(verify197({ now: () => Date.parse(expiresAt) }), /expired/);
+  setApproval({ ...approval, planSha256: 'f'.repeat(64) });
+  await assert.rejects(verify197(), /approval does not match/);
+  setApproval(approval);
+  chmodSync(join(privateRoot, approvalPath), 0o644);
+  await assert.rejects(verify197(), /owner-only/);
+  setApproval(approval);
+  await assert.rejects(verify197({
+    getCandidate: () => ({ commit: candidateCommit, status: '', changes: ['site/lib/release-history.ts', 'public/guide.pdf'] }),
+  }), /only the reviewed Version links/);
+  const dangerousPlan = structuredClone(preparedPlan);
+  dangerousPlan.resourcePlans.database.steps = ['update'];
+  write(directory, 'time-travel-plan', dangerousPlan);
+  setApproval({ ...approval, planSha256: sha(JSON.stringify(dangerousPlan)) });
+  await assert.rejects(verify197(), /update only the application Worker/);
+  write(directory, 'time-travel-plan', preparedPlan);
+  setApproval(approval);
+  assert.deepEqual(await verify197(), { update: 197, timeTravel: true });
+  assert.equal(observedCalls.length, 5);
+  assert.equal(checkedGuideAssets, true);
+  databaseId = 'foreign-db';
+  await assert.rejects(verify197(), /live Worker database binding changed/);
+  databaseId = 'synthetic-db';
+  currentDefinitions = [];
+  await assert.rejects(verify197(), /live D1 schema differs/);
+  currentDefinitions = definitions;
+  bookmarks.set(bookmarkAt, undefined);
+  await assert.rejects(verify197(), /did not confirm the approved post-migration bookmark/);
+  bookmarks.set(bookmarkAt, approvedBookmark);
+  await assert.rejects(verify197({}, { ...active197, id: 'deployment-198' }), /active Worker changed/);
+  const carried = {
+    ...update197, update: 198, baselineCommit: update197Source,
+    recoveryProcess: { ...update197.recoveryProcess, timeTravelRolloutFrom: 197 },
+  };
+  assert.deepEqual(recoveryState(carried), { kind: 'schema-deferred', pending: true });
+  assert.throws(() => recoveryState({ ...carried, baselineCommit: previousCommit }), /lacks prior coverage/);
+  carried.evidence = 'docs/releases/update198-verification.json';
+  const carriedReceipt = {
+    ...update197Receipt, update: 198,
+    deploymentVerification: { ...update197Receipt.deploymentVerification, update: 198, migrations: [], timeTravelRecoveryUsed: true },
+  };
+  write(workspace, 'LIVE_RELEASE.json', carried);
+  write(workspace, carried.evidence, carriedReceipt);
+  verifyOrRefresh(workspace, true);
+  await assert.rejects(verify197(), /update198 needs a verified schema-deferred handoff/);
+
   console.log('Verified matching release evidence, missing or stale proof rejection, and locked rollout ordering.');
 } finally {
   rmSync(directory, { recursive: true, force: true });

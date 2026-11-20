@@ -358,12 +358,24 @@ const update195Changes = [
 
 const update194Changes = ["The IEM guide and its PDFs identify the measured coupler and explain how its level-aligned AKG sweeps compare with the PEQdB Studio reference."] as const;
 
-export const candidateChanges = [
+const update197Changes = ["Approve read-only Android companion access to your saved EQs, headphone measurements and channel matches in Sync & Devices."] as const;
+
+const update196Changes = [
   "Restore the GitHub release and tagged source links for update194 in Version history.",
 ] as const;
 
+const update198Changes = ["Restore the GitHub release and tagged source links for update196 in Version history."] as const;
+
+export const candidateChanges = [
+  "Open site help from the question mark in the header. On desktop, hover over it or tab to it to see its label.",
+  "The help panel and walkthrough expand above the page content, leaving the player and other controls clear.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 196, date: "2026-11-19", title: "Version history links", changes: candidateChanges, github: { commit: "80debbf2b94b30d4ee4df0cd0e4064bccabbb247", releaseTag: "update196", linkTaggedSource: true } },
+  { update: 199, date: "2026-11-19", title: "Help in the site header", changes: candidateChanges },
+  { update: 198, date: "2026-11-19", title: "Update196 Version history links", changes: update198Changes },
+  { update: 197, date: "2026-11-19", title: "Android companion account sync", changes: update197Changes },
+  { update: 196, date: "2026-11-19", title: "Version history links", changes: update196Changes, github: { commit: "80debbf2b94b30d4ee4df0cd0e4064bccabbb247", releaseTag: "update196", linkTaggedSource: true } },
   { update: 195, date: "2026-11-19", title: "Independent aurora wallpaper motion", changes: update195Changes, github: { commit: "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2", releaseTag: "update195", linkTaggedSource: true } },
   { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: update194Changes, github: { commit: "60d91d0fd1b3a56200e053c8202145319a7add7e", releaseTag: "update194", linkTaggedSource: true } },
   { update: 193, date: "2026-11-19", title: "Android Companion UI gallery", changes: update193Changes },

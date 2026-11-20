@@ -6,11 +6,7 @@
   --help-muted: #b3cbd3;
   --help-accent: #91e6d8;
   --help-button-text: #092824;
-  --help-bottom: max(14px, env(safe-area-inset-bottom));
-  position: fixed;
-  inset-inline-end: max(14px, env(safe-area-inset-right));
-  inset-block-end: var(--help-bottom);
-  z-index: 48;
+  padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right));
   color: var(--help-text);
   font: inherit;
 }
@@ -30,38 +26,72 @@
 .site-help button:disabled { opacity: .65; cursor: default; }
 .site-help :is(button, input, a):focus-visible { outline: 2px solid var(--help-accent); outline-offset: 3px; }
 
-.site-help .site-help-launch {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-inline-start: auto;
-  min-height: 44px;
-  padding: 8px 13px;
-  border: 1px solid var(--help-edge);
-  border-radius: 999px;
-  background: var(--help-surface);
-  color: var(--help-text);
-  box-shadow: 0 3px 15px #0004;
-  font-size: 13px;
-  font-weight: 700;
+.site-topbar:has(.site-help-launch) {
+  position: sticky;
+  inset-block-start: 0;
 }
 
-.site-help-launch svg { color: var(--help-accent); flex: none; }
+.site-help-launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: none;
+  gap: 6px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding-inline: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: 600 12px/1.2 Arial, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.site-help-launch:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -3px;
+}
+
+.site-help-launch-label { display: none; white-space: nowrap; }
+.site-help-launch-icon {
+  display: grid;
+  place-items: center;
+  inline-size: 20px;
+  block-size: 20px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 13px;
+}
+
+@container (min-width: 560px) {
+  @media (hover: hover) and (pointer: fine) {
+    .site-help-launch-label { display: inline; visibility: hidden; }
+    .site-help-launch:is(:hover, :focus-visible) .site-help-launch-label { visibility: visible; }
+  }
+}
+
+/* The phone shell pins the shared header and navigation frame as one unit. */
+@media (max-width: 600px) {
+  .alpha-nav-header .site-topbar:has(.site-help-launch) { position: relative; }
+}
+
+:is(.site-help-panel, .site-help-walkthrough) {
+  scroll-margin-block-start: calc(var(--site-topbar-height, 48px) + 12px);
+}
 
 .site-help-panel {
-  position: absolute;
-  inset-inline-end: 0;
-  inset-block-end: 53px;
   display: flex;
   flex-direction: column;
-  width: min(390px, calc(100vw - 30px));
-  max-height: min(570px, calc(100dvh - var(--help-bottom) - 65px));
+  width: min(390px, 100%);
+  max-height: 570px;
+  margin: 8px 0 12px auto;
   padding: 15px;
   border: 1px solid var(--help-edge);
   border-radius: 16px;
   background: var(--help-surface);
   color: var(--help-text);
-  box-shadow: 0 12px 32px #0006;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -113,24 +143,20 @@
   color: var(--help-text);
   text-align: start;
 }
-.site-help-launch:hover, .site-help-topics button:hover { border-color: var(--help-accent); }
+.site-help-topics button:hover { border-color: var(--help-accent); }
 .site-help-privacy, .site-help-miss, .site-help-actions > p { margin: 9px 0 0; color: var(--help-muted); }
 .site-help-privacy { font-size: 12px; }
-.site-help .site-help-launch[hidden] { display: none; }
 
 .site-help-walkthrough {
   display: grid;
   gap: 7px;
-  width: min(390px, calc(100vw - 28px));
-  max-height: min(255px, 46dvh);
-  overflow: auto;
-  overscroll-behavior: contain;
+  width: min(390px, 100%);
+  margin: 12px 0 12px auto;
   padding: 10px 12px;
   border: 1px solid var(--help-edge);
   border-radius: 14px;
   background: var(--help-surface);
   color: var(--help-text);
-  box-shadow: 0 12px 32px #0006;
   font-size: 14px;
   line-height: 1.35;
 }
@@ -181,8 +207,3 @@
 .site-help-confirm p { margin: 0 0 14px; }
 
 [data-site-help-highlight] { outline: 3px solid #54cfba !important; outline-offset: 3px; box-shadow: 0 0 0 5px #10473fb3 !important; }
-
-@media (max-width: 720px) {
-  body:has(.tuning-dock.edge-collapsed) .site-help { --help-bottom: max(65px, calc(env(safe-area-inset-bottom) + 58px)); }
-  body:has(.tuning-dock.edge-expanded) .site-help { --help-bottom: max(145px, calc(env(safe-area-inset-bottom) + 138px)); }
-}

@@ -2,10 +2,11 @@ import { buildLabel, releaseInfo, updateLabel } from "@/lib/release-info";
 import SiteDataMenu from "@/components/welcome-data-menu";
 import type { ReactNode } from "react";
 
-export default function SiteTopbar({ title, inert, navigationControl }: {
+export default function SiteTopbar({ title, inert, navigationControl, helpControl }: {
   title: string;
   inert?: boolean;
   navigationControl?: ReactNode;
+  helpControl?: ReactNode;
 }) {
   return (
     <header className="site-topbar" inert={inert}>
@@ -26,6 +27,7 @@ export default function SiteTopbar({ title, inert, navigationControl }: {
           {" "}<span className="site-topbar-version-badge">{releaseInfo.build.preview ? `PREVIEW ${releaseInfo.build.preview}` : "BETA"}</span>
         </a>
         <SiteDataMenu />
+        {helpControl}
       </div>
     </header>
   );

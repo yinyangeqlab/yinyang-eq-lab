@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowUpRight, CircleHelp, LocateFixed, Search, X } from "lucide-react";
+import { ArrowUpRight, LocateFixed, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { helpTopics, type HelpTopic } from "@/lib/site-help-guide";
 import type { createSiteHelpMatcher } from "@/lib/site-help-model";
 import { HELP_QUESTION_LIMIT, canShowHelpTopic, normalizeHelpQuestion, searchSiteHelp, suggestedTopics } from "@/lib/site-help-search";
@@ -56,15 +56,6 @@ function onTopicPage(href: string) {
     [...url.searchParams].every(([key, value]) => new URLSearchParams(window.location.search).get(key) === value);
 }
 
-function positionControl(target: HTMLElement, panel: HTMLElement | null) {
-  target.scrollIntoView({ block: "center", behavior: "instant" });
-  if (!panel) return;
-  const bottom = panel.getBoundingClientRect().top - 12;
-  const rect = target.getBoundingClientRect();
-  const lowerEdge = rect.height > bottom - 80 ? rect.top + 60 : rect.bottom;
-  if (lowerEdge > bottom) window.scrollBy({ top: lowerEdge - bottom, behavior: "instant" });
-}
-
 function controlIsDisabled(control: HTMLElement) {
   return control.matches(":disabled, [aria-disabled='true']") ||
     !!control.querySelector("button:disabled") && !control.querySelector("button:enabled");
@@ -92,10 +83,10 @@ async function loadMatcher(): Promise<Matcher | undefined> {
   }
 }
 
-export default function SiteHelp() {
+export default function SiteHelp({ children }: {
+  children: (control: ReactNode, panel: ReactNode) => ReactNode;
+}) {
   const pathname = (usePathname() ?? "/").replace(/\/$/, "") || "/";
-  const comparison = pathname === "/eq-compare";
-  const HelpPanel = comparison ? "dialog" : "section";
   const router = useRouter();
   const helpActions = useSiteHelpActions();
   const [approval, setApproval] = useState<BassCutApproval>();
@@ -114,8 +105,8 @@ export default function SiteHelp() {
   const [tour, setTour] = useState<Walkthrough>();
   const [stepStatus, setStepStatus] = useState<StepStatus>("finding");
   const launch = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
-  const tourPanel = useRef<HTMLElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
   const currentControl = useRef<HTMLElement | null>(null);
 
@@ -128,20 +119,20 @@ export default function SiteHelp() {
     } else if (dialog.open) dialog.close();
   }, [approval, pathname]);
   useEffect(() => {
-    const panel = document.getElementById("site-help-panel");
-    if (panel instanceof HTMLDialogElement) {
-      if (open && !panel.open) panel.showModal();
-      if (!open && panel.open) panel.close();
+    if (!open || tour) return;
+    const header = launch.current?.closest("header");
+    if (panel.current && header && panel.current.getBoundingClientRect().top < header.getBoundingClientRect().bottom) {
+      panel.current.scrollIntoView({ block: "start", behavior: "instant" });
     }
-    if (open && !tour) input.current?.focus({ preventScroll: true });
-  }, [open, tour, comparison]);
+    input.current?.focus({ preventScroll: true });
+  }, [open, tour]);
   useEffect(() => {
     if (window.location.hash === "#ask-site-help" && !launch.current?.hidden && launch.current?.getAttribute("aria-expanded") === "false") launch.current.click();
   }, [pathname]);
   useEffect(() => {
     if (!tour) return;
     const step = walkthroughSteps(tour.topic)[tour.index];
-    if (!tour.moveFocus) progress.current?.focus({ preventScroll: true });
+    if (!tour.moveFocus) progress.current?.focus();
     const started = performance.now();
     const opened = new Set<HTMLElement>();
     let highlight: HTMLElement | undefined;
@@ -171,9 +162,11 @@ export default function SiteHelp() {
           highlight = control;
           control.setAttribute("data-site-help-highlight", "");
           currentControl.current = target ?? null;
-          positionControl(control, tourPanel.current);
           const disabled = controlIsDisabled(control);
-          if (tour.moveFocus && target && !disabled && !step.manual) focusControl(control);
+          if (tour.moveFocus) {
+            control.scrollIntoView({ block: "center" });
+            if (target && !disabled && !step.manual) focusControl(control);
+          }
           setStepStatus(!target || disabled ? "prerequisite" : "ready");
           observer?.disconnect();
           observer = new MutationObserver(() => {
@@ -230,14 +223,7 @@ export default function SiteHelp() {
     setResult(undefined);
     setQuestion("");
     setOpen(false);
-    const panel = document.getElementById("site-help-panel");
-    if (panel instanceof HTMLDialogElement && panel.open) panel.close();
-    if (comparison) requestAnimationFrame(() => {
-      const nav = document.getElementById("compare-help-launch");
-      const opener = nav?.closest("[inert]") ? document.querySelector<HTMLElement>(".alpha-sidebar-reopen") : nav;
-      opener?.focus({ preventScroll: true });
-    });
-    else launch.current?.focus({ preventScroll: true });
+    launch.current?.focus();
   }
 
   async function answer(event: FormEvent<HTMLFormElement>) {
@@ -277,7 +263,6 @@ export default function SiteHelp() {
     setActionMessage("");
     setOpen(false);
     setStepStatus("finding");
-    if (comparison) document.querySelector<HTMLButtonElement>('.alpha-sidebar-reopen[aria-expanded="true"]')?.click();
     setTour({ topic, index: 0, moveFocus: false });
     if (!onTopicPage(topic.href)) router.push(topic.href);
   }
@@ -342,19 +327,25 @@ export default function SiteHelp() {
   const steps = tour ? walkthroughSteps(tour.topic) : [];
   const step = tour ? steps[tour.index] : undefined;
   const onTourTuning = tour?.topic.href === "/preference-tuning" && pathname === "/preference-tuning";
-  return <div className="site-help">
-    <button id="ask-site-help" ref={launch} type="button" className="site-help-launch" hidden={!!tour} aria-expanded={open} aria-controls="site-help-panel"
+  const control = <button id="ask-site-help" ref={launch} type="button" className="site-help-launch"
+      aria-label={tour ? "Return to help walkthrough" : "Ask for help"}
+      aria-expanded={open || !!tour} aria-controls={tour ? "site-help-walkthrough" : "site-help-panel"}
       onClick={() => {
-        if (tour) return;
-        if (open) close();
+        if (tour) {
+          progress.current?.closest("section")?.scrollIntoView({ block: "start", behavior: "instant" });
+          progress.current?.focus({ preventScroll: true });
+        } else if (open) close();
         else {
           setOpen(true);
           setStatus(pageStatus(topic, pathname));
         }
       }}>
-      <CircleHelp size={19} aria-hidden="true" /> <span>Ask for help</span>
-    </button>
-    {tour && step && <section id="site-help-walkthrough" ref={tourPanel} className="site-help-walkthrough" role="region" aria-labelledby="site-help-step-title">
+      <span className="site-help-launch-label" aria-hidden="true">{tour ? "Walkthrough" : "Ask for help"}</span>
+      <span className="site-help-launch-icon" aria-hidden="true">?</span>
+    </button>;
+
+  return children(control, <div className="site-help">
+    {tour && step && <section id="site-help-walkthrough" className="site-help-walkthrough" role="region" aria-labelledby="site-help-step-title">
       <div className="site-help-tour-header">
         <span ref={progress} tabIndex={-1}>Step {tour.index + 1} of {steps.length}</span>
         <button type="button" aria-label="End walkthrough" onClick={finishTour}><X size={19} aria-hidden="true" /></button>
@@ -371,7 +362,7 @@ export default function SiteHelp() {
         {step.target && <button type="button" disabled={stepStatus === "finding"} onClick={() => {
           const control = currentControl.current;
           if (control?.isConnected && step.target && visibleTarget(step.target) === control && !controlIsDisabled(control)) {
-            positionControl(control, tourPanel.current);
+            control.scrollIntoView({ block: "center" });
             if (!step.manual) focusControl(control);
           } else changeStep(tour.index, true);
         }}><LocateFixed size={16} aria-hidden="true" /> {stepStatus === "away" ? "Go to page" : "Find control"}</button>}
@@ -398,7 +389,7 @@ export default function SiteHelp() {
         <button type="button" className="site-help-tour-next" disabled={!approval} onClick={applyBassCut}>Apply −1 dB</button>
       </div>
     </dialog>
-    <HelpPanel id="site-help-panel" className="site-help-panel" role="dialog" aria-modal={comparison || undefined} aria-labelledby="site-help-title" hidden={!open}
+    <section id="site-help-panel" ref={panel} className="site-help-panel" aria-labelledby="site-help-title" hidden={!open}
       onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); } }}>
       <header><h2 id="site-help-title">Site help</h2><button type="button" aria-label="Close site help" onClick={close}><X size={20} aria-hidden="true" /></button></header>
       <form onSubmit={answer}>
@@ -427,6 +418,6 @@ export default function SiteHelp() {
         </div>}
       </div>
       <p className="site-help-privacy">Questions stay in this browser.</p>
-    </HelpPanel>
-  </div>;
+    </section>
+  </div>);
 }

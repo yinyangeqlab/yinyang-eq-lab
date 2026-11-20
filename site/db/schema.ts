@@ -540,3 +540,12 @@ export const embedShootoutRuns = sqliteTable("embed_shootout_runs", {
   id: text("id").primaryKey(), shootoutId: text("shootout_id").notNull().references(() => embedShootouts.id, { onDelete: "cascade" }),
   hour: integer("hour").notNull(), listenerKind: text("listener_kind").notNull(), sighted: integer("sighted").notNull().default(0), picks: text("picks").notNull(),
 }, table => [index("embed_shootout_runs_shootout").on(table.shootoutId, table.hour), check("embed_run_kind", sql`${table.listenerKind} IN ('headphones','iem','speakers','other','unknown')`), check("embed_run_sighted", sql`${table.sighted} IN (0,1)`), check("embed_run_picks_json", sql`json_valid(${table.picks})`)]);
+
+export const companionLibraryGrants = sqliteTable("companion_library_grants", {
+  challenge: text("challenge").primaryKey(),
+  subjectId: text("subject_id").notNull(),
+  accessHash: text("access_hash").notNull(),
+  sessionHash: text("session_hash").notNull(),
+  deviceId: text("device_id").notNull().references(()=>accountDeviceStatus.id,{onDelete:"cascade"}),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [index("companion_grants_subject").on(table.subjectId, table.expiresAt)]);

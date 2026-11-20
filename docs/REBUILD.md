@@ -1,9 +1,29 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update196**, source `edab759cfdea525ff2c9bf51ed87fb3046c30e66`.
+Recorded deployment: **update199**, source `ce94316b3b812d1a4f7578014a75f836f2e824b4`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update199 Help in the site header
+
+The header has one **?** button. Help opens in the current page and makes room above the player and controls. Escape closes it and returns focus to the button.
+
+All 127 release checks passed. The isolated layout account verified the packaged and live site at 1280, 390, and 320 px. The guarded rollout updated the existing application Worker and its assets. The post-deployment preview found no drift.
+
+Matching encrypted source-only recovery and hosted validation passed. The handoff reused the update198 data snapshot and timestamp.
+
+[Deployment verification](releases/update199-verification.json) · [Recovery verification](releases/update199-recovery-verification.json)
+
+## Update198 Version history links
+
+The Version page restores the update196 release and tagged-source links. All three measurement guide PDFs retain their verified contents and URLs. The scoped Time Travel approval applied to the update198 rollout. A later matching encrypted recovery point captured the schema introduced by migration 0046 and passed reconstruction and hosted validation.
+
+[Deployment verification](releases/update198-verification.json) · [Recovery verification](releases/update198-recovery-verification.json)
+
+## Update197 Android companion account sync
+
+The companion can read saved EQs, measurements, and channel matches after browser approval. Migration 0046 added the grant table and its index. [Deployment verification](releases/update197-verification.json)
 
 ## Update196 Version history links
 

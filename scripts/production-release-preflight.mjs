@@ -7,6 +7,9 @@ import { recoveryState, verifyOrRefresh } from './release-state.mjs';
 import { releaseRecordRelativePath } from './project-paths.mjs';
 import { releaseHistory } from '../site/lib/release-history.ts';
 import { releaseInfo } from '../site/lib/release-info.ts';
+import { update197Source, verifyUpdate197TimeTravel } from './recovery/update197-time-travel.mjs';
+
+const candidateRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 
 const read = (directory, path) => JSON.parse(readFileSync(resolve(directory, path), 'utf8'));
 const timestamp = value => typeof value === 'string' ? Date.parse(value) : NaN;
@@ -150,13 +153,15 @@ export function verifyPriorPublishedRelease(state, candidateUpdate, history) {
   assert.equal(entry.github.commit, publishedSourceCommit, `Version history must link to the verified ${releaseTag} source commit`);
 }
 
-export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments) {
+export async function verifyProductionBaseline(workspace, target, getDeployments = readDeployments, options = {}) {
   const state = read(workspace, releaseRecordRelativePath(workspace));
   const label = `update${state.update}`;
   verifyOrRefresh(workspace);
   verifyPriorPublishedRelease(state, releaseInfo.build.update, releaseHistory);
   const recovery = recoveryState(state);
-  assert.ok(!recovery.pending, `${label} needs a verified ${recovery.kind} handoff before another release can go live`);
+  const timeTravel = recovery.kind === 'schema-deferred' && state.update === 197 && state.sourceCommit === update197Source &&
+    Boolean(options.planPath ?? process.env.DEPLOY_REVIEWED_PLAN);
+  assert.ok(!recovery.pending || timeTravel, `${label} needs a verified ${recovery.kind} handoff before another release can go live`);
   assert.ok(typeof state.applicationSnapshot === 'string' && state.applicationSnapshot.length > 0,
     'Run the rollout check against the owner workspace with the immutable release snapshot');
   const artifact = state.deploymentRefresh?.slug ?? label;
@@ -175,7 +180,7 @@ export async function verifyProductionBaseline(workspace, target, getDeployments
   }
   if (recovery.kind === 'source-only') {
     verifySourceOnlyRecovery(state, label, recordPath, workspace, privateRoot, provider);
-  } else {
+  } else if (!timeTravel) {
     verifyDataExportRecovery(state, recordPath, workspace, privateRoot, provider, artifacts);
   }
 
@@ -186,14 +191,38 @@ export async function verifyProductionBaseline(workspace, target, getDeployments
   assert.ok(typeof expected?.id === 'string' && expected.id &&
     expected.versions?.length === 1 && expected.versions[0].percentage === 100,
   'Private deployment receipt must identify the fully active Worker version');
-  assert.ok(isDeepStrictEqual(provider.expectedDeployment, expected), 'Configured recovery Worker version differs from the deployment receipt');
-
   const token = readFileSync(resolve(privateRoot, 'cloudflare-read-token.txt'), 'utf8').trim();
   assert.ok(token, 'Owner deployment read credential is unavailable');
+  if (timeTravel) {
+    const previousPath = 'docs/releases/update196-recovery-verification.json';
+    const previous = read(workspace, previousPath);
+    const before = read(workspace, 'docs/releases/update196-verification.json').deploymentVerification;
+    assert.ok(before.update === 196 && before.deploymentVerified === true && before.revision === state.baselineCommit &&
+      isDeepStrictEqual(deployment.migrations, ['0046_companion_library.sql']),
+      'Time Travel requires the verified update196 recovery and update197 migration receipts');
+    verifySourceOnlyRecovery({
+      update: 196, sourceCommit: state.baselineCommit, verifiedAt: before.at,
+      recoveryProcess: {
+        sourceBaselineVerifiedAt: previous.verifiedAt,
+        update196SourceOnlyHandover: { evidence: previousPath },
+      },
+    }, 'update196', previousPath, workspace, privateRoot, provider);
+    await verifyUpdate197TimeTravel({
+      workspace, privateRoot, state, artifactRoot: resolve(workspace, artifacts), deployment: expected,
+      provider, target, token, previousVerifiedAt: before.at, build: options.build ?? releaseInfo.build,
+      candidateRoot: options.candidateRoot ?? candidateRoot,
+      planPath: options.planPath ?? process.env.DEPLOY_REVIEWED_PLAN,
+      buildRoot: options.buildRoot ?? process.env.DEPLOY_BUILD_ROOT,
+      fetchCloudflare: options.fetchCloudflare, now: options.now, getCandidate: options.getCandidate,
+      checkGuideAssets: options.checkGuideAssets,
+    });
+  } else {
+    assert.ok(isDeepStrictEqual(provider.expectedDeployment, expected), 'Configured recovery Worker version differs from the deployment receipt');
+  }
   const [active] = await getDeployments(provider.accountId, provider.scriptName, token);
   assert.ok(isDeepStrictEqual(active && { id: active.id, versions: active.versions }, expected),
     'The active Worker changed. Verify its handoff and recovery before the next rollout');
-  return { update: state.update };
+  return timeTravel ? { update: state.update, timeTravel: true } : { update: state.update };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -201,10 +230,14 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const [workspace, accountId, scriptName] = process.argv.slice(2);
     assert.ok(process.argv.length === 3 || process.argv.length === 5,
       'Usage: node scripts/production-release-preflight.mjs OWNER_WORKSPACE [ACCOUNT_ID SCRIPT_NAME]');
-    const { update } = await verifyProductionBaseline(resolve(workspace),
+    const { update, timeTravel } = await verifyProductionBaseline(resolve(workspace),
       accountId === undefined ? undefined : { accountId, scriptName });
     const recovery = recoveryState(read(resolve(workspace), releaseRecordRelativePath(resolve(workspace))));
-    console.log(`Production preflight passed: update${update} is active with a verified handoff and ${recovery.kind} recovery.`);
+    if (timeTravel) {
+      console.log(`Production preflight passed: update${update} has an approved D1 Time Travel bookmark for this plan. Off-device schema recovery is still pending.`);
+    } else {
+      console.log(`Production preflight passed: update${update} is active with a verified handoff and ${recovery.kind} recovery.`);
+    }
   } catch (error) {
     const reason = error.code === 'ENOENT' ? 'Required owner release or recovery evidence is missing' :
       error instanceof assert.AssertionError ? error.message : 'Could not read or verify owner release evidence';

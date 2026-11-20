@@ -246,15 +246,6 @@
   #first-listen-home { --listen-padding: 20px; }
 }
 
-/* Keep Help clear of the player and avoid an extra toolbar on short phones. */
-@media (max-width: 700px) and (max-height: 650px) {
-  body:has(#first-listen-home) .site-help:has(.site-help-launch[aria-expanded="false"]:not([hidden])) {
-    position: relative;
-    inset: auto;
-    margin: 0 8px -44px;
-  }
-}
-
 #first-listen-home .destination-grid {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));

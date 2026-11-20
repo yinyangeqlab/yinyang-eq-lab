@@ -307,7 +307,10 @@ const privateGate = {
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
       const practiceScores = path === "/api/ear-practice";
       const practiceManagement = practiceScores && (["PATCH", "DELETE"].includes(request.method) || url.searchParams.has("mine") && request.method === "GET");
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync"].includes(path) || communityManagement || practiceManagement;
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync", "/companion-link", "/api/companion/grants"].includes(path) || communityManagement || practiceManagement;
+      // The app route checks the read-only library grant, its issuing browser and current sync consent.
+      const companionRead = path === "/api/companion/library" && ["GET","DELETE"].includes(request.method)
+        && /^Bearer [a-f0-9]{64}$/.test(request.headers.get("Authorization") || "") && !request.headers.has("Cookie");
       const managementOnly = dataRoute && cookie(request, dataCookie);
       if (!enabled && !owner && !tester && request.method === "GET" && !path.startsWith("/api/") && !path.startsWith("/music/") && !path.startsWith("/devices") && !adminPath && !syncReceive && !managementOnly) {
         const id = `open-${crypto.randomUUID()}`, session = randomToken(), now = Math.floor(Date.now()/1000);
@@ -345,7 +348,7 @@ const privateGate = {
       }
       if (!owner && path === "/owner-research") return Response.redirect(new URL("/admin-login", request.url), 303);
       if (!owner && path.startsWith("/api/owner-research")) return json({ error: "Admin access denied." }, 403);
-      if (!owner && !tester && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
+      if (!owner && !tester && !companionRead && !((path === "/my-data" && request.method === "GET") || dataRoute && data)) {
         if (path.startsWith("/api/") || path.startsWith("/music/") || request.method !== "GET" && request.method !== "HEAD") return blockedSubmission("sign_in_required", json({ error: enabled ? "Sign in with an approved invitation to use this site." : "Open Shootout to start this browser session." }, 401));
         const signIn = new URL(enabled ? "/access" : "/shootout", request.url);
         signIn.searchParams.set("return_to", `${url.pathname}${url.search}`);

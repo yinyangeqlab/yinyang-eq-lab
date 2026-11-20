@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if (( $# != 2 )); then
-  printf 'Usage: bash scripts/deploy-reviewed.sh OWNER_WORKSPACE REVIEWED_PLAN\n       bash scripts/deploy-reviewed.sh --check OWNER_WORKSPACE\n' >&2
+if (( $# != 2 )) && ! { (( $# == 3 )) && [[ "$1" == --check ]]; }; then
+  printf 'Usage: bash scripts/deploy-reviewed.sh OWNER_WORKSPACE REVIEWED_PLAN\n       bash scripts/deploy-reviewed.sh --check OWNER_WORKSPACE [REVIEWED_PLAN]\n' >&2
   exit 2
 fi
 
 check_only=false
+plan=
 if [[ "$1" == --check ]]; then
   check_only=true
   workspace="$(realpath -- "$2")"
+  if (( $# == 3 )); then plan="$(realpath -- "$3")"; fi
 else
   workspace="$(realpath -- "$1")"
   plan="$(realpath -- "$2")"
@@ -24,6 +26,8 @@ if ! flock -n -x 9; then
   exit 1
 fi
 export DEPLOY_OWNER_WORKSPACE="$workspace"
+unset DEPLOY_REVIEWED_PLAN
+if [[ -n "${plan:-}" ]]; then export DEPLOY_REVIEWED_PLAN="$plan"; fi
 account="$(pulumi config get cloudflareAccountId --stack staging --non-interactive)"
 script="$(pulumi config --stack staging --non-interactive --json | node -e '
   const config = JSON.parse(require("node:fs").readFileSync(0, "utf8"));

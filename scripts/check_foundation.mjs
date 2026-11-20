@@ -58,13 +58,12 @@ const dataExportRecord = state => ({
 });
 const sourceOnlyFixture = state => {
   const value = clone(state);
-  delete value.recoveryProcess.releaseMetadataHandover;
-  Object.assign(value.recoveryProcess, {
+  value.recoveryProcess = {
     sourceOnlyHandoverPending: true,
     [`update${state.update}SourceOnlyHandover`]: {
       metadataOnly: true, databaseExport: false, registrationPending: true,
     },
-  });
+  };
   return value;
 };
 try {
@@ -226,9 +225,7 @@ try {
   });
   test('data-export shape binds revision and verification, without claiming data was unchanged', () => {
     const value = clone(state), record = dataExportRecord(state);
-    delete value.recoveryProcess[`update${state.update}SourceOnlyHandover`];
-    value.recoveryProcess.releaseMetadataHandover = record;
-    value.recoveryProcess.sourceOnlyHandoverPending = false;
+    value.recoveryProcess = { releaseMetadataHandover: record, sourceOnlyHandoverPending: false };
     assert.deepEqual(recoveryState(value), { kind: 'data-export', pending: false });
     assert.match(renderState(value, receipt), /export has its own capture time/);
     record.matchingPreparedSourceCommit = 'f'.repeat(40);
@@ -238,9 +235,9 @@ try {
   });
   test('current release contract supports separately evidenced data-export completion', () => {
     const value = clone(state), proof = clone(receipt);
-    delete value.recoveryProcess[`update${state.update}SourceOnlyHandover`];
-    value.recoveryProcess.releaseMetadataHandover = dataExportRecord(state);
-    value.recoveryProcess.sourceOnlyHandoverPending = false;
+    value.recoveryProcess = {
+      releaseMetadataHandover: dataExportRecord(state), sourceOnlyHandoverPending: false,
+    };
     delete proof.sourceOnlyRecoveryRegistrationPending; proof.recoveryRegistrationPending = false;
     validateRelease(value, proof);
     value.recoveryProcess.sourceOnlyHandoverPending = true;

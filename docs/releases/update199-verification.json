@@ -1,0 +1,147 @@
+{
+  "update": 199,
+  "sourceCommit": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
+  "deploymentVerification": {
+    "at": "2026-11-20T11:27:16.992011Z",
+    "update": 199,
+    "revision": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "verifiedPreviousSourceCommit": "4e15b3f3285b361007d5daebb64c7b18539bb317",
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "pulumiPlanMatchesAppliedState": true,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "liveHelpButtonVerified": true,
+    "matchingWorkerModules": 407,
+    "workerModuleVerificationSource": "script-content",
+    "matchingVersionClientAssets": 2,
+    "liveVersionPageVerified": true,
+    "protectedRecordingAccessRetained": true,
+    "liveSchemaUnchanged": true,
+    "liveDatabaseBindingUnchanged": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "isolatedLiveFixtureRetired": true,
+    "localPackagedBrowserChecks": [
+      {
+        "width": 1280,
+        "height": 850,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      },
+      {
+        "width": 320,
+        "height": 640,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      }
+    ],
+    "authenticatedProductionChecks": [
+      {
+        "width": 1280,
+        "height": 850,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      },
+      {
+        "width": 320,
+        "height": 640,
+        "chrome": "Chromium",
+        "isolatedLayoutAccount": true,
+        "singleHeaderQuestionMark": true,
+        "helpOpensInPlace": true,
+        "playerAndControlsUnobstructed": true,
+        "focusRestored": true,
+        "dropdownKeyboardSelection": true,
+        "noParticipantWrites": true,
+        "routes": [
+          "/",
+          "/eq-compare"
+        ]
+      }
+    ]
+  },
+  "candidateVerification": {
+    "sourceRevision": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224,
+    "retainedPreviousClientFiles": 3517
+  },
+  "recoveryRegistrationPending": true
+}

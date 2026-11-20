@@ -75,6 +75,7 @@ export const sharePages = [
   { path: "/share-shootout", slug: "share-shootout", kind: "embed", kicker: "SHAREABLE SHOOTOUT", title: "Create A Shareable Shootout | YinYang EQ", ogTitle: "Create A Shareable Blind Shootout", description: "Pick two to four targets, share one link, and collect anonymous blind A/B votes. You decide whether to share the results.", tagline: "One link. Anonymous blind votes. Your data." },
   { path: "/my-data", slug: "private", title: "My Data | YinYang EQ", description: "Review, export or delete the data saved for this browser.", private: true },
   { path: "/participation", slug: "private", title: "Participation Choices | YinYang EQ", description: "Review and change how your comparison data is used.", private: true },
+  { path: "/companion-link", slug: "private", title: "Companion sync | YinYang EQ", description: "Private account page.", private: true },
   { path: "/account-sync", slug: "private", title: "Sync & Devices | YinYang EQ", description: "Private account page.", private: true },
   { path: "/my-profile", slug: "private", title: "Profile | YinYang EQ", description: "Private account page.", private: true },
   { path: "/profile-access", slug: "private", title: "Approved Device Access | YinYang EQ", description: "Private account page.", private: true },

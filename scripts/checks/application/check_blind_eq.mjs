@@ -134,15 +134,33 @@ check(state.preset === null, 'Renaming a dirty draft cannot accidentally apply s
 const shellSource = readFileSync(new URL('../../../site/components/site-chrome.tsx', import.meta.url), 'utf8');
 const shellModule = { exports: {} }; let shellPath = '/eq-compare';
 const shellCode = ts.transpileModule(shellSource, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText;
-vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: id => id === 'next/navigation' ? { usePathname: () => shellPath } : id === '@/lib/blind-eq' ? { BLIND_EQ_COMPARE_PATH: '/eq-compare' } : id.startsWith('@/components/') ? { default: ({children, help, privateComparison}) => require('react').createElement('aside', {'data-site-effect': id, 'data-private-comparison': privateComparison || undefined}, help, children) } : require(id) });
-const helpButton = require('react').createElement('button', null, 'Ask for help');
-const shellMarkup = () => renderToStaticMarkup(require('react').createElement(shellModule.exports.default, { help: helpButton }, require('react').createElement('main', null, 'Private tool')));
+const element = require('react').createElement;
+const helpButton = element('button', { 'aria-label': 'Ask for help' }, '?');
+const helpPanel = element('section', { id: 'site-help-panel', hidden: true });
+function shellRequire(id) {
+  if (id === 'next/navigation') return { usePathname: () => shellPath };
+  if (id === '@/lib/blind-eq') return { BLIND_EQ_COMPARE_PATH: '/eq-compare' };
+  if (id === '@/components/site-help') return { default: ({ children }) => children(helpButton, helpPanel) };
+  if (id === '@/components/site-topbar') return { default: ({ helpControl }) => element('header', null, helpControl) };
+  if (id.startsWith('@/components/')) return {
+    default: ({ children, helpControl, helpPanel, privateComparison }) => element('aside',
+      { 'data-site-effect': id, 'data-private-comparison': privateComparison || undefined },
+      helpControl && element('header', null, helpControl), helpPanel, children),
+  };
+  return require(id);
+}
+vm.runInNewContext(shellCode, { module: shellModule, exports: shellModule.exports, require: shellRequire });
+const shellMarkup = () => renderToStaticMarkup(element(shellModule.exports.default, null, element('main', null, 'Private tool')));
 const privateMarkup = shellMarkup();
-check(privateMarkup === '<aside data-site-effect="@/components/alpha-shell" data-private-comparison="true"><button>Ask for help</button><main>Private tool</main></aside>', 'Private EQ renders shared navigation and Help without tuning, privacy, service or footer effects');
+check(privateMarkup === '<aside data-site-effect="@/components/alpha-shell" data-private-comparison="true"><header><button aria-label="Ask for help">?</button></header><section id="site-help-panel" hidden=""></section><main>Private tool</main></aside>', 'Private EQ places one Help control in the header and its panel before the player, without tuning, privacy, service or footer effects');
 shellPath = '/home'; check(shellMarkup().includes('data-site-effect'), 'Ordinary site routes retain the existing shell and privacy controls');
-for (const route of ['/home', '/share-shootout', '/embed/abc123']) {
+for (const route of ['/home', '/share-shootout']) {
   shellPath = route;
   const html = shellMarkup();
   check(html.split('Ask for help').length === 2, `There is one Help launcher on ${route}`);
+  check(html.indexOf('</header>') < html.indexOf('id="site-help-panel"') &&
+    html.indexOf('id="site-help-panel"') < html.indexOf('<main>'), `Help expands between the header and page content on ${route}`);
 }
+shellPath = '/embed/abc123';
+check(shellMarkup() === '<main>Private tool</main>', 'Embeds omit the site header and Help');
 console.log(`PASS ${assertions} blind EQ checks: TXT formats, strict validation, stereo routing, shelf math, RMS/headroom, private session lifecycle and Sync exclusion.`);

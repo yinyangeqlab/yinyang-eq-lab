@@ -101,12 +101,3 @@ button.quick-transport-play { margin-left: auto; display: flex; gap: 7px; align-
 .quick-compare .sound-check-dialog button { color: #e7f4fb; }
 .quick-compare .sound-check-decision button:first-child { color: #091b1e; background: #95d8cd; }
 .quick-transport-play svg { stroke-width: 1.6; stroke-linejoin: round; }
-
-.alpha-app[data-alpha-destination="compare"] .site-help-launch { display: none; }
-.alpha-app[data-alpha-destination="compare"] dialog.site-help-panel { position: fixed; inset: 0; margin: auto; width: min(390px, calc(100vw - 24px)); max-height: min(600px, calc(100dvh - 24px)); }
-.alpha-app[data-alpha-destination="compare"] dialog.site-help-panel::backdrop { background: #050d15a8; }
-.alpha-app[data-alpha-destination="compare"] dialog.site-help-panel:not([open]) { display: none; }
-.alpha-secondary-navigation .compare-help-link { display: flex; gap: 8px; align-items: center; min-height: 42px; padding: 6px 8px; font: inherit; font-size: 13px; text-align: left; border: 0; border-radius: 5px; background: transparent; color: inherit; cursor: pointer; }
-.alpha-secondary-navigation .compare-help-link:hover, .alpha-secondary-navigation .compare-help-link:focus-visible { color: light-dark(#085468, #b2e4eb); background: light-dark(#deebeb, #17272f); }
-.alpha-app[data-alpha-layout=icons] .compare-help-link { justify-content: center; padding-inline: 0; }
-.alpha-app[data-alpha-layout=icons] .compare-help-link span { display: none; }

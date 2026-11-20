@@ -213,9 +213,10 @@ function QueryDestination({ path, onChange }: { path: string; onChange: (query: 
   return null;
 }
 
-export default function AlphaShell({ children, help, privateComparison = false }: {
+export default function AlphaShell({ children, helpControl, helpPanel, privateComparison = false }: {
   children: ReactNode;
-  help?: ReactNode;
+  helpControl?: ReactNode;
+  helpPanel?: ReactNode;
   privateComparison?: boolean;
 }) {
   const pathname = usePathname() || "/";
@@ -313,7 +314,7 @@ export default function AlphaShell({ children, help, privateComparison = false }
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
     <div className="alpha-workspace">
       <div className="alpha-nav-header">
-        <SiteTopbar title={title} inert={modalOpen} navigationControl={phone ? (
+        <SiteTopbar title={title} inert={modalOpen} helpControl={helpControl} navigationControl={phone ? (
           <button
             ref={phoneToggle}
             className="alpha-sidebar-reopen"
@@ -351,9 +352,6 @@ export default function AlphaShell({ children, help, privateComparison = false }
           })}</nav>
           <nav className="alpha-secondary-navigation" aria-label="Data and help">
             <ShellLink href="/account-sync" aria-current={pathname === "/account-sync" ? "page" : undefined} {...shellLinkOptions} title="Devices and Sync" onClick={followNavigation}><UtilityIcon kind="sync"/><span>Devices &amp; Sync</span></ShellLink>
-            {privateComparison && <button id="compare-help-launch" className="compare-help-link" aria-label="Ask for help" title="Ask for help" aria-haspopup="dialog" aria-controls="site-help-panel" onClick={() => document.getElementById("ask-site-help")?.click()}>
-              <svg className="alpha-utility-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.1 2c-1.2.9-1.6 1.3-1.6 2.5M12 16.4v.1"/></svg><span>Ask for help</span>
-            </button>}
             <ShellLink href="/shortcuts" aria-current={pathname === "/shortcuts" ? "page" : undefined} {...shellLinkOptions} title="Help and playback hotkeys" onClick={followNavigation}><UtilityIcon kind="keyboard"/><span>Help &amp; Hotkeys</span></ShellLink>
             <ShellLink href="/privacy" aria-current={pathname === "/privacy" ? "page" : undefined} {...shellLinkOptions} title="Privacy notice" onClick={followNavigation}><UtilityIcon kind="privacy"/><span>Privacy &amp; Data</span></ShellLink>
           </nav>
@@ -362,7 +360,7 @@ export default function AlphaShell({ children, help, privateComparison = false }
         </div>
       </div>
       {!privateComparison && <div className="alpha-sync-region" inert={modalOpen}><AccountAutoSync /></div>}
-      <div id="alpha-content" className="alpha-route-content" tabIndex={-1}>{help}{children}</div>
+      <div id="alpha-content" className="alpha-route-content" tabIndex={-1}>{helpPanel}{children}</div>
     </div>
   </div>;
 }

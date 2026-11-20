@@ -79,5 +79,9 @@
   "scripts/peqdb-assets.mjs",
   "scripts/peqdb-source-allowlist.json",
   "scripts/prepare-peqdb-autoeq.py",
-  "site/vendor/potion-2m-model2vec.LICENSE"
+  "site/vendor/potion-2m-model2vec.LICENSE",
+  "site/app/api/companion/grants/route.ts",
+  "site/app/api/companion/library/route.ts",
+  "site/app/companion-link/page.tsx",
+  "site/drizzle/0046_companion_library.sql"
 ]

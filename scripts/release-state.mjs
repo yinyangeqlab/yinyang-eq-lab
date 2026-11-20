@@ -4,6 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { posix, resolve } from 'node:path';
 import { releaseRecordPath, releaseRecordRelativePath } from './project-paths.mjs';
+import { update197Source } from './recovery/update197-time-travel.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const sharedHandoffs = ['docs/HANDOFF.md', 'docs/REBUILD.md', 'docs/RECOVERY.md'];
@@ -23,6 +24,15 @@ export function recoveryState(state) {
   const recovery = state.recoveryProcess;
   check(recovery && typeof recovery === 'object', 'recoveryProcess is required');
   const handover = recovery[`update${state.update}SourceOnlyHandover`];
+  if (recovery.schemaRecoveryDeferred === true) {
+    check(recovery.matchingCurrentReleaseBaseline === false && recovery.sourceOnlyHandoverPending === false && !handover && !recovery.releaseMetadataHandover, 'deferred schema recovery conflicts with registered recovery evidence');
+    const carriedForward = recovery.timeTravelRolloutFrom === 197 && state.update === 198 &&
+      state.baselineCommit === update197Source && recovery.previousSchemaUpdate === 196;
+    const initialGap = recovery.timeTravelRolloutFrom === undefined && recovery.previousSchemaUpdate === state.update - 1;
+    check((initialGap || carriedForward) && recovery.newDataExport === false &&
+      recovery.nextScheduledRunMayRefuseBaselineMismatch === true, 'schema recovery gap lacks prior coverage');
+    return { kind: 'schema-deferred', pending: true };
+  }
   const exported = recovery.releaseMetadataHandover;
   if (exported?.update === state.update && exported.dataExportPerformed === true) {
     check(!handover, 'conflicting current source-only and data-export recovery records');
@@ -104,7 +114,12 @@ export function validateRelease(state, receipt) {
   boolean(deployment.maintenanceDisabled, 'receipt maintenanceDisabled');
   boolean(deployment.ownerOnlyMaintenance, 'receipt ownerOnlyMaintenance');
   check(state.maintenanceFreeze.active === !deployment.maintenanceDisabled && state.ownerOnlyMaintenance.enabled === deployment.ownerOnlyMaintenance, 'maintenance state differs from receipt');
-  recoveryState(state);
+  const recovery = recoveryState(state);
+  if (state.recoveryProcess.timeTravelRolloutFrom === 197) {
+    check(recovery.kind === 'schema-deferred' && deployment.timeTravelRecoveryUsed === true &&
+      Array.isArray(deployment.migrations) && deployment.migrations.length === 0,
+    'Time Travel rollout evidence must record the continuing schema gap and an unchanged schema');
+  }
   // Never rewrite a receipt to reconcile it with a later recovery closeout.
   // Current recovery state comes from the matching public recovery record.
   boolean(receipt.sourceOnlyRecoveryRegistrationPending ?? receipt.recoveryRegistrationPending, 'receipt recovery pending');
@@ -113,7 +128,9 @@ export function validateRelease(state, receipt) {
 
 export function renderState(state, receipt, outputPath = stateViewPath, recordPath = releaseRecordPath) {
   const recovery = recoveryState(state), pending = recovery.pending;
-  const recoveryText = recovery.kind === 'data-export'
+  const recoveryText = recovery.kind === 'schema-deferred'
+    ? 'Existing encrypted recovery covers the previous schema. Matching recovery for this schema is pending and the scheduled runner refuses a mismatched baseline.'
+    : recovery.kind === 'data-export'
     ? (pending ? 'Data export recorded; matching recovery registration pending' : 'Matching recovery registration recorded as verified, including a separately recorded data export')
     : (pending ? 'Matching source-only handover pending; do not claim this release has a registered recovery baseline' : 'Matching source-only metadata handover recorded as verified');
   const browser = receipt.browserVerification;

@@ -78,9 +78,6 @@ main[data-personal-entry] .starter-more > summary { padding:14px 0; color:var(--
   #tournament-entry .entry-start { display:grid; gap:9px; margin-top:18px; }
   #tournament-entry .entry-start button { justify-self:start; }
   #tournament-entry .entry-sharing { margin-top:16px; }
-  body:has(main[data-personal-entry]) .site-help:has(.site-help-launch[aria-expanded="false"]:not([hidden])) {
-    position:relative; inset:auto; margin:0 16px max(12px,env(safe-area-inset-bottom));
-  }
 }
 #tournament-entry .entry-options > summary::before { content:none; }
 #tournament-entry ~ .personal-support { padding:0; border:0; background:transparent; }

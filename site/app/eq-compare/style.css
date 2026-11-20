@@ -144,20 +144,3 @@
   .eq-handoff a { display: inline-block; margin-top: 8px; }
   .eq-round-mapping summary { line-height: 1.35; }
 }
-
-/* Keep Help above the comparison on narrow screens and touch-first devices. */
-@media (max-width: 850px), (pointer: coarse) {
-  body:has(.eq-compare) .site-help {
-    position: static;
-    padding: 6px max(16px, env(safe-area-inset-right)) 6px max(16px, env(safe-area-inset-left));
-    background: var(--help-surface);
-    border-bottom: 1px solid var(--help-edge);
-  }
-  body:has(.eq-compare) .site-help-launch { box-shadow: none; }
-  body:has(.eq-compare) .site-help-panel {
-    position: static;
-    width: 100%;
-    max-width: 390px;
-    margin: 6px 0 0 auto;
-  }
-}
