@@ -1,0 +1,23 @@
+{
+  "update": 195,
+  "tag": "update195",
+  "githubLogin": "yinyangeqlab",
+  "deployedSourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+  "publishedSourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+  "githubRelease": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update195",
+  "githubCommit": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+  "githubSource": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update195",
+  "githubComparison": "https://github.com/yinyangeqlab/yinyang-eq-lab/compare/8641b1c1bfd2489a50de71988c03148c1b1301da..update195",
+  "publishedAt": "2026-11-20T02:18:21Z",
+  "liveVersionVerifiedAt": "2026-11-20T02:18:38.461157+00:00",
+  "publicRuntimeMatchesDeploymentSource": true,
+  "authorAndCommitterVerified": true,
+  "releaseHttpStatus": 200,
+  "automaticReleaseDiscoveryVerified": true,
+  "liveVersionPage": "https://yinyangeq.com/version#update195",
+  "filesVerifiedInEachArchive": 1431,
+  "publicZipAndTarDownloadsVerified": true,
+  "deploymentVerification": "docs/releases/update195-verification.json",
+  "recoveryVerification": "docs/releases/update195-recovery-verification.json",
+  "includedLiveAndroidGalleryAndIemGuideSource": true
+}

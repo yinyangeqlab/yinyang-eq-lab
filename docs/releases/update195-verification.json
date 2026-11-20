@@ -1,0 +1,111 @@
+{
+  "update": 195,
+  "sourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+  "deploymentVerification": {
+    "at": "2026-11-20T02:18:05.488659Z",
+    "update": 195,
+    "revision": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+    "versionPageVerified": true,
+    "verifiedVersionLinks": [
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192",
+        "httpStatus": 200
+      },
+      {
+        "url": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/8641b1c1bfd2489a50de71988c03148c1b1301da",
+        "httpStatus": 200
+      }
+    ],
+    "matchingWorkerModules": 404,
+    "matchingVersionClientAssets": 1,
+    "protectedRecordingAccessRetained": true,
+    "liveGuideRevision02Verified": true,
+    "companionGalleryScreensVerified": 40,
+    "wallpaperCatalogVerified": true,
+    "downloadLinksVerified": 488,
+    "sampleDownloadHashesVerified": 10,
+    "isolatedDownloadSessionVerified": true,
+    "layoutSessionRetired": true,
+    "ultrawidePanoramaVerified": true,
+    "panoramaSha256": "54388bca036120d4d062b256f369815121753e5be8b42087b7140eb99f4427f8",
+    "matchingHomepageClientAssets": 43
+  },
+  "candidateVerification": {
+    "sourceRevision": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "wallpapers": {
+      "downloadCount": 488,
+      "updatedDownloads": 488,
+      "downloadBytes": 2140466827,
+      "decodedSymbolComparisons": 80,
+      "offlineArchivesVerified": 40
+    },
+    "retainedPreviousClientFiles": 3419,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 5
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": [
+      {
+        "width": 390,
+        "height": 844,
+        "editionsChecked": 4,
+        "layoutsChecked": 5,
+        "downloads": 488,
+        "animationPlayed": true,
+        "keyboardMenuChecked": true,
+        "selectedFormatRetained": true,
+        "downloadMatched": true,
+        "offlinePlaybackAndReducedMotionVerified": true
+      },
+      {
+        "width": 768,
+        "height": 1024,
+        "editionsChecked": 4,
+        "layoutsChecked": 5,
+        "downloads": 488,
+        "animationPlayed": true,
+        "keyboardMenuChecked": true,
+        "selectedFormatRetained": true,
+        "downloadMatched": true,
+        "offlinePlaybackAndReducedMotionVerified": true
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "editionsChecked": 4,
+        "layoutsChecked": 5,
+        "downloads": 488,
+        "animationPlayed": true,
+        "keyboardMenuChecked": true,
+        "selectedFormatRetained": true,
+        "downloadMatched": true,
+        "offlinePlaybackAndReducedMotionVerified": true
+      }
+    ]
+  },
+  "sourceOnlyRecoveryRegistrationPending": true
+}

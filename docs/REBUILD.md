@@ -1,17 +1,32 @@
 # Rebuild and source verification
 
 <!-- release-state:start -->
-Recorded deployment: **update194**, source `1475d7cea0816b39b2aa2d0a640ebf07df3bd91f`.
+Recorded deployment: **update195**, source `9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
+## Update195 independent aurora wallpaper motion
+
+Aurora curtains fold independently behind the mountains, with the stars anchored in place. All five layouts offer both scenes in image, video and offline formats.
+
+Encrypted off-device source-only recovery and hosted validation passed.
+
+[Deployment verification](releases/update195-verification.json) · [Recovery verification](releases/update195-recovery-verification.json) · [Publication verification](releases/update195-publication.json) · [Previous release recovery](releases/update194-recovery-verification.json)
+
+
 ## Update194 IEM guide coupler wording
 
-The guide and three PDFs describe the Type E610A measurement and the level-aligned reference comparison. [Deployment verification](releases/update194-verification.json)
+The guide identifies the Type E610A coupler used by the Lab and explains how its level-aligned AKG sweeps compared with the PEQdB Studio reference in the bass and mids. The existing PDF revisions and filenames are preserved.
+
+The [live Version page](https://yinyangeq.com/version#update194) links to the GitHub release, tagged source and comparison. The tagged runtime matches the verified deployment. All three PDF downloads matched the deployed files.
+
+[Deployment verification](releases/update194-verification.json) · [Recovery verification](releases/update194-recovery-verification.json) · [Publication verification](releases/update194-publication.json)
 
 ## Update193 Android Companion gallery
 
-The Android page includes ten Companion screens in four themes. [Deployment verification](releases/update193-verification.json) · [Recovery verification](releases/update193-recovery-verification.json)
+The Android page previews ten screens in four themes and gives the Companion and App Manager separate download buttons.
+
+[Deployment verification](releases/update193-verification.json) · [Recovery verification](releases/update193-recovery-verification.json)
 
 
 ## Update192 wallpaper catalog

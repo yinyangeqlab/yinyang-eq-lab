@@ -1,24 +1,26 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 194,
+  "update": 195,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-20T00:49:24.351343Z",
-  "sourceCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
-  "sourceBranch": "release/update194-iem-guide-wording",
-  "baselineCommit": "1d39c936e3e46e86493fcb4b2c940fd64464eabd",
-  "evidence": "docs/releases/update194-verification.json",
+  "verifiedAt": "2026-11-20T02:18:05.488659Z",
+  "sourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+  "sourceBranch": "release/update195-aurora-wallpapers",
+  "baselineCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
+  "evidence": "docs/releases/update195-verification.json",
   "cpuLimitMs": 5000,
   "gitSource": {
-    "implementationCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f",
-    "branch": "release/update194-iem-guide-wording",
+    "implementationCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+    "branch": "release/update195-aurora-wallpapers",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": false,
+    "pushed": true,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+    "publicationTag": "update195",
+    "publicationVerification": "docs/releases/update195-publication.json"
   },
-  "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "maintenanceFreeze": {
     "active": false
   },
@@ -26,19 +28,24 @@
     "enabled": false
   },
   "documentationFiles": [],
+  "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": false,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
-    "metadataOnlyHandoverVerified": false,
-    "metadataValidationPassed": false,
-    "update194SourceOnlyHandover": {
+    "matchingCurrentReleaseBaseline": true,
+    "sourceBaselineUpdate": 195,
+    "sourceBaselineVerifiedAt": "2026-11-20T03:03:17Z",
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "dailyWorkflowActive": true,
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "update195SourceOnlyHandover": {
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "registrationPending": true,
-      "sourceCommit": "1475d7cea0816b39b2aa2d0a640ebf07df3bd91f"
+      "registrationPending": false,
+      "sourceCommit": "9d20326f35fee1e4fb25ba25c9b9c91fae6d65a2",
+      "evidence": "docs/releases/update195-recovery-verification.json"
     }
   }
 }
