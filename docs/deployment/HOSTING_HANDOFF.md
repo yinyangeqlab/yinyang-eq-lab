@@ -1,9 +1,18 @@
 # Hosting handoff
 
 <!-- release-state:start -->
-Recorded deployment: **update192**, source `8641b1c1bfd2489a50de71988c03148c1b1301da`.
+Recorded deployment: **update194**, source `1475d7cea0816b39b2aa2d0a640ebf07df3bd91f`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+## Update194 IEM guide coupler wording
+
+The guide and three PDFs describe the Type E610A measurement and the level-aligned reference comparison. [Deployment verification](../releases/update194-verification.json)
+
+## Update193 Android Companion gallery
+
+The Android page includes ten Companion screens in four themes. [Deployment verification](../releases/update193-verification.json) · [Recovery verification](../releases/update193-recovery-verification.json)
+
 
 ## Update192 wallpaper catalog
 

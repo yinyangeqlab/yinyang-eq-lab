@@ -1,6 +1,6 @@
 import { Download } from "lucide-react";
 import { shareMetadata } from "@/lib/share-metadata";
-import { CompanionAppIcons, DownloadAppManager } from "@/components/companion-app-brand";
+import { CompanionAppIcons } from "@/components/companion-app-brand";
 import { TrailerPlayer } from "./trailer-player";
 import { CompanionGallery } from "./gallery";
 import { ShareCompanion } from "./share-button";
@@ -20,12 +20,21 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
         <p className="companion-intro">Open a PEQ file from Android, edit or rename it offline, and export a Qudelix-format copy. Connect your 5K to audition the changes and save them to a hardware slot.</p>
         <div className="companion-install" id="install">
           <div className="companion-downloads">
-            <a className="companion-features-link android-download" href={repository + "/releases/latest/download/YinYang-Companion.apk"}>
-              <Download size={22} aria-hidden="true"/> Download Companion APK
-            </a>
-            <DownloadAppManager className="companion-features-link"/>
+            <div className="companion-download-option">
+              <a className="companion-download companion-download-primary" href={repository + "/releases/latest/download/YinYang-Companion.apk"} aria-describedby="companion-download-note">
+                <Download size={20} aria-hidden="true"/> Download Companion APK
+              </a>
+              <p id="companion-download-note">Direct install</p>
+            </div>
+            <div className="companion-download-option">
+              <a className="companion-download companion-download-secondary" href="/android/download" aria-describedby="manager-download-note">
+                <Download size={20} aria-hidden="true"/> Download App Manager APK
+              </a>
+              <p id="manager-download-note">Installs and updates Companion</p>
+            </div>
           </div>
-          <p className="companion-availability">On Android 9 or later, choose the Companion APK to install the app directly. App Manager checks the Lab’s signing certificate and helps you install updates. Keep Google Play Protect on with either download.</p>
+          <p className="companion-availability">Requires Android 9 or later. App Manager checks the Lab’s signing certificate. Keep Google Play Protect on with either download.</p>
+          <a className="companion-guide-link" href="#companion-gallery">Preview the new Companion UI</a>
           <ShareCompanion/>
           {download === "testing" && <p role="status">Public downloads will open when the Lab publishes its Android release. <a href={repository}>View the project on GitHub</a>.</p>}
           {download === "unavailable" && <p role="status">The download service is unavailable. Check <a href={repository + "/releases"}>GitHub Releases</a> or try again later.</p>}
@@ -57,7 +66,7 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
           <div><dt>Mix files with a live USB input</dt><dd>The phone preview can mix local audio files and one compatible USB mic or capture input. Set the level of each source and send the mix to one output.</dd></div>
           <div><dt>Open your listening library</dt><dd>Use My Collection, Personal Tuning and headphone search inside the app. Browser Sync shares saved Lab data with devices you approve.</dd></div>
           <div><dt>Check firmware and troubleshoot</dt><dd>Run a read-only compatibility check, export an active EQ snapshot or a diagnostic log, and open the official Qudelix app for firmware updates.</dd></div>
-          <div><dt>Set up the app your way</dt><dd>Choose Blue, YinYang Green, AMOLED or Light. Display the familiar USR and SPK names or use PEQ Filters and Channel Match.</dd></div>
+          <div><dt>Set up the app your way</dt><dd>Choose Blue, YinYang Green, AMOLED, or Light.</dd></div>
         </dl>
       </section>
     </main>

@@ -1,3 +1,5 @@
+import ridgeline from "./landscape-ridgeline.json" with { type: "json" };
+
 /** Decorative image-space motion. It never reads audio or changes playback. */
 const pulseSeconds = 8.5;
 const pulseDelaySeconds = 3.5;
@@ -27,6 +29,7 @@ void main(){screenUv=vec2(position.x*.5+.5,.5-position.y*.5);gl_Position=vec4(po
 const FRAGMENT = `
 precision highp float;
 uniform sampler2D artwork;
+uniform sampler2D skyline;
 uniform vec2 imageSize;
 uniform vec2 viewSize;
 uniform float artworkAnchorY;
@@ -135,26 +138,14 @@ vec3 equinoxAurora(vec2 uv,float phase){
  vec2 ground=ray.xz/ray.y;
  vec3 light=
    auroraBand(ground,vec4(2.,.80,.26,.70),vec4(.33,1.78,1.,.6),vec4(.55,1.,1.,.45),vec2(-1.5,7.),.19,.8,phase)
-  +auroraBand(ground,vec4(4.6,.65,.40,.60),vec4(.85,1.43,1.,2.1),vec4(.70,1.,3.2,.35),vec2(-9.,9.),.04,.9,phase)
-  +auroraBand(ground,vec4(9.5,.45,.75,.40),vec4(1.43,1.04,-1.,4.),vec4(.45,-1.,.4,.30),vec2(-12.,14.),-.10,1.3,phase)
-  +auroraBand(ground,vec4(3.2,.70,.30,.80),vec4(.28,1.88,1.,5.2),vec4(.90,1.,2.,.20),vec2(-5.,.2),.59,.45,phase);
+  +auroraBand(ground,vec4(4.6,.65,.40,.60),vec4(.85,1.43,1.,2.1),vec4(.70,1.,3.2,.35),vec2(-9.,9.),.04,.9,-2.*phase+2.4)
+  +auroraBand(ground,vec4(9.5,.45,.75,.40),vec4(1.43,1.04,-1.,4.),vec4(.45,-1.,.4,.30),vec2(-12.,14.),-.10,1.3,2.*phase+1.7)
+  +auroraBand(ground,vec4(3.2,.70,.30,.80),vec4(.28,1.88,1.,5.2),vec4(.90,1.,2.,.20),vec2(-5.,.2),.59,.45,-phase+.8);
  return 1.-exp(-1.15*light*smoothstep(0.,.08,elevation));
 }
 float ridgeSkyHeight(float x){
- // Left and right skyline heights sampled across the source artwork.
- float outward=min(abs(x-.5)*20.,9.9999);
- float part=fract(outward);
- vec2 heights=vec2(.493);
- if(outward>=9.) heights=mix(vec2(.307,.280),vec2(.323),part);
- else if(outward>=8.) heights=mix(vec2(.327,.338),vec2(.307,.280),part);
- else if(outward>=7.) heights=mix(vec2(.360,.365),vec2(.327,.338),part);
- else if(outward>=6.) heights=mix(vec2(.385,.373),vec2(.360,.365),part);
- else if(outward>=5.) heights=mix(vec2(.405,.398),vec2(.385,.373),part);
- else if(outward>=4.) heights=mix(vec2(.470,.438),vec2(.405,.398),part);
- else if(outward>=3.) heights=mix(vec2(.493,.476),vec2(.470,.438),part);
- else if(outward>=2.) heights=mix(vec2(.493),vec2(.493,.476),part);
- float leftPeak=(x-.082)/.013, rightPeak=(x-.956)/.011;
- return mix(heights.x,heights.y,step(.5,x))-.043*exp(-leftPeak*leftPeak)-.015*exp(-rightPeak*rightPeak);
+ // The two normalized channels hold the high and low bytes of the traced silhouette.
+ return dot(texture2D(skyline,vec2(x,.5)).ra,vec2(65280.,255.))/65535.;
 }
 float waterArrival(vec2 point,float horizon){
  // Invert the same widening crest that deforms the ocean below.
@@ -308,14 +299,11 @@ void main(){
  /* Build the sky and halo behind the translucent orb. */
  float skyLimit=ridgeSkyHeight(warped.x);
  float fromSkyline=warped.y-skyLimit;
- if(fromSkyline<.025){
-  float skyMask=1.-smoothstep(-.009,.013,fromSkyline);
+ if(fromSkyline<0.){
+  float skyMask=1.-smoothstep(-2./imageSize.y,0.,fromSkyline);
   vec3 aurora=equinoxAurora(vec2(uv.x,min(uv.y,skyLimit-.004)),turn);
   vec3 twilight=vec3(.019,.034,.079)*(1.-smoothstep(0.,.40,uv.y));
   col+=(twilight+aurora+vec3(.74,.84,1.)*nightStars(uv))*skyMask;
-  float ridgeDistance=fromSkyline/.018;
-  float backlight=.12*exp(-ridgeDistance*ridgeDistance)*skyBehindTip*(1.-skyMask);
-  col+=aurora*backlight;
   if(dd<1.90){
    // A broad falloff blends the mint and violet halo into the sky.
    float distance=max(dd-1.,0.);
@@ -396,7 +384,8 @@ export function createLandscapeRenderer(
   if (!gl) return null;
   const shaders: WebGLShader[] = [];
   let program: WebGLProgram | null = null, buffer: WebGLBuffer | null = null, texture: WebGLTexture | null = null;
-  const release = () => { if (buffer) gl.deleteBuffer(buffer); if (texture) gl.deleteTexture(texture); if (program) gl.deleteProgram(program); for (const shader of shaders) gl.deleteShader(shader); };
+  let crest: WebGLTexture | null = null;
+  const release = () => { if (crest) gl.deleteTexture(crest); if (buffer) gl.deleteBuffer(buffer); if (texture) gl.deleteTexture(texture); if (program) gl.deleteProgram(program); for (const shader of shaders) gl.deleteShader(shader); };
   try {
     const compile = (kind: number, source: string) => {
       const shader = gl.createShader(kind); if (!shader) throw new Error("Decorative shader unavailable");
@@ -413,6 +402,22 @@ export function createLandscapeRenderer(
     texture = gl.createTexture(); if (!texture) throw new Error("Decorative texture unavailable"); gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    crest = gl.createTexture();
+    if (!crest) throw new Error("Decorative skyline unavailable");
+    const heights = new Uint8Array(ridgeline.length * 2);
+    ridgeline.forEach((height, x) => {
+      heights[x * 2] = height >> 8;
+      heights[x * 2 + 1] = height & 255;
+    });
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, crest);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE_ALPHA, heights.length/2, 1, 0, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, heights);
+    gl.uniform1i(gl.getUniformLocation(program, "skyline"), 1);
+    gl.activeTexture(gl.TEXTURE0);
     const uniforms = Object.fromEntries(["imageSize","viewSize","artworkAnchorY","time","rhythmLength","rhythmStrengths[0]"].map(name => [name, gl.getUniformLocation(program!, name)]));
     let rhythm = rhythmPatterns.length - 1; // Open with the double-tap groove.
     let nextRhythmChange = rhythmChangeSeconds + pulseDelaySeconds;

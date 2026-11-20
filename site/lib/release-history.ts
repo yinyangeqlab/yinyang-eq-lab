@@ -346,10 +346,22 @@ const update191Changes = [
   "Download Revision 02 of the technical guide for research citations and advice on measuring your own IEMs and comparing 711 clone couplers.",
 ] as const;
 
-export const candidateChanges = ["Choose Original landscape or Ultrawide panorama, with or without the yin-yang, in every wallpaper layout. Both scenes offer PNG, JPEG, MP4, WebM and offline HTML downloads."] as const;
+const update192Changes = ["Choose Original landscape or Ultrawide panorama, with or without the yin-yang, in every wallpaper layout. Both scenes offer PNG, JPEG, MP4, WebM and offline HTML downloads."] as const;
+
+const update193Changes = ["The Android page previews the redesigned Companion in ten screens and four themes, with updated Companion and App Manager icons and distinct download buttons."] as const;
+
+export const candidateChanges = [
+  "Aurora curtains fold independently behind the mountain peaks in the wallpaper gallery.",
+  "Choose original or panoramic art, with or without the yin-yang. The flying-gear scenes animate headphones and IEMs on flying carpets across all five layouts.",
+] as const;
+
+const update194Changes = ["The IEM guide and its PDFs identify the measured coupler and explain how its level-aligned AKG sweeps compare with the PEQdB Studio reference."] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: candidateChanges, github: { commit: "8641b1c1bfd2489a50de71988c03148c1b1301da", releaseTag: "update192" } },
+  { update: 195, date: "2026-11-19", title: "Independent aurora wallpaper motion", changes: candidateChanges },
+  { update: 194, date: "2026-11-19", title: "IEM guide coupler wording", changes: update194Changes },
+  { update: 193, date: "2026-11-19", title: "Android Companion UI gallery", changes: update193Changes },
+  { update: 192, date: "2026-11-19", title: "Panorama and symbol-free wallpapers", changes: update192Changes, github: { commit: "8641b1c1bfd2489a50de71988c03148c1b1301da", releaseTag: "update192" } },
   { update: 191, date: "2026-11-19", title: "IEM measurement guide Revision 02", changes: update191Changes },
   { update: 190, date: "2026-11-19", title: "Ultrawide homepage panorama", changes: update190Changes, github: { commit: "8952dc90f3e0f7fc880fedfae6333a2f7b91cacb", releaseTag: "update190" } },
   { update: 189, date: "2026-11-19", title: "Standalone Android Companion download", changes: ["Download the signed standalone Companion APK directly from the Android page, alongside App Manager."], github: { commit: "3010dcc2cd2f78b69864903150b13404be0b9587", releaseTag: "update189" } },

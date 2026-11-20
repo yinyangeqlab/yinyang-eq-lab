@@ -1,9 +1,12 @@
-import { execFileSync } from "node:child_process";
-import { readFile, stat } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { existsSync } from "node:fs";
+import { mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { build } from "esbuild";
-import { offlineWallpaperFilename, wallpaperScenes, wallpaperUsagePath } from "../../site/lib/welcome-wallpapers.ts";
+import { offlineWallpaperFilename, wallpaperFilename, wallpaperScenes, wallpaperUsagePath } from "../../site/lib/welcome-wallpapers.ts";
 
+const run = promisify(execFile);
 const readme = `YinYang EQ — Offline desktop wallpaper
 
 Extract the ZIP to its own folder. Open index.html in a modern browser to
@@ -22,13 +25,15 @@ Use a downloaded still for a standard desktop background, or import an MP4
 loop if your wallpaper app does not support web wallpapers or WebGL.
 `;
 
-export async function packageOfflineWallpapers(root, folder) {
+export async function packageOfflineWallpapers(root, folder, poster) {
   const css = await readFile(join(root, "site/app/welcome.css"), "utf8");
   const terms = await readFile(join(root, "public", wallpaperUsagePath.slice(1)), "utf8");
   const image = async name => "data:image/webp;base64," + (await readFile(join(root, "public", name))).toString("base64");
-  const [texture, still, headphones, iems] = await Promise.all([
+  const [texture, fallback, headphones, iems] = await Promise.all([
     "brand-landscape.webp", "brand-landscape-crimson.webp", "welcome-headphone-carpet.webp", "welcome-iem-carpet.webp",
   ].map(image));
+  poster ??= join(root, "public/wallpapers", wallpaperFilename("landscape", "1080p", "jpg"));
+  const still = existsSync(poster) ? "data:image/jpeg;base64," + (await readFile(poster)).toString("base64") : fallback;
   const sizes = {};
   for (const scene of wallpaperScenes) {
     const flights = scene.id === "flying-gear";
@@ -54,18 +59,27 @@ html,body{margin:0;overflow:hidden;background:#020608}
 </style></head><body><main id="wallpaper" aria-label="YinYang EQ wallpaper"></main><script>${script}</script></body></html>`;
     const name = offlineWallpaperFilename(scene.id);
     const path = join(folder, name);
-    execFileSync("python3", ["-c", `import sys, zipfile
+    const staging = await mkdtemp(join(folder, ".offline-"));
+    try {
+      const entry = join(staging, "index.html"), archive = join(staging, name);
+      await writeFile(entry, html);
+      await run("python3", ["-c", `import sys, zipfile
+from pathlib import Path
 with zipfile.ZipFile(sys.argv[1], "w") as archive:
-    archive.writestr(zipfile.ZipInfo("index.html"), sys.stdin.buffer.read(), compress_type=zipfile.ZIP_DEFLATED)
+    archive.writestr(zipfile.ZipInfo("index.html"), Path(sys.argv[4]).read_bytes(), compress_type=zipfile.ZIP_DEFLATED)
     archive.writestr(zipfile.ZipInfo("README.txt"), sys.argv[2], compress_type=zipfile.ZIP_DEFLATED)
     archive.writestr(zipfile.ZipInfo("WALLPAPER-USAGE.txt"), sys.argv[3], compress_type=zipfile.ZIP_DEFLATED)
 with zipfile.ZipFile(sys.argv[1]) as archive:
     if archive.testzip() is not None:
         raise RuntimeError("Offline wallpaper failed its ZIP integrity check")
-`, path, readme, terms], { input: html });
-    const { size } = await stat(path);
-    if (!size || size >= 25 * 1024 * 1024) throw Error(`Invalid static asset size: ${name}`);
-    sizes[name] = size;
+`, archive, readme, terms, entry]);
+      const { size } = await stat(archive);
+      if (!size || size >= 25 * 1024 * 1024) throw Error(`Invalid static asset size: ${name}`);
+      await rename(archive, path);
+      sizes[name] = size;
+    } finally {
+      await rm(staging, { recursive: true, force: true });
+    }
   }
   return sizes;
 }

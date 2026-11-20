@@ -1,8 +1,8 @@
 // Render the homepage scene offline. Requires Chromium/Playwright and FFmpeg with libx264 and libvpx-vp9.
 // Use --add-layouts[=layout,layout] with existing wallpapers to export layouts without recapturing the scene.
 // Phone and tablet compositions use artifacts/wallpaper-artwork/<scene>-<layout>.png as source artwork.
-// After a full original set is ready, run node scripts/wallpapers/render-editions.mjs
-// to add the panoramic and symbol-free downloads and the offline packages for each layout.
+// A normal run builds all original and panoramic editions with the shared sky compositor.
+// Historical --resume and --add-formats can still recover original captures. The edition builder caches verified media for retries.
 import { execFile, execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
@@ -27,6 +27,7 @@ const resume = process.argv.find(arg => arg.startsWith("--resume="))?.slice(9);
 const addFormats = process.argv.includes("--add-formats");
 const addLayouts = process.argv.find(arg => arg === "--add-layouts" || arg.startsWith("--add-layouts="));
 const offlineOnly = process.argv.includes("--offline-only");
+const flightFrames = process.argv.find(arg => arg.startsWith("--flight-frames="))?.slice("--flight-frames=".length);
 const fps = 24;
 const landscapeFrames = LANDSCAPE_CYCLE_SECONDS * fps;
 const stillFrame = Math.round(1.5 * fps);
@@ -38,7 +39,7 @@ const overlayClip = { x: 0, y: 0, width: full.width, height: Math.ceil(.51 * ful
 const artworkFiles = ["brand-landscape.webp", "welcome-headphone-carpet.webp", "welcome-iem-carpet.webp"];
 const captureInputs = [
   "site/app/welcome.css", "site/components/welcome-landscape.tsx", "site/components/welcome-flight-model.tsx",
-  "site/lib/welcome-flight-path.ts", "site/lib/welcome-landscape.ts", "scripts/wallpapers/scene.tsx",
+  "site/lib/welcome-flight-path.ts", "site/lib/welcome-landscape.ts", "site/lib/landscape-ridgeline.json", "scripts/wallpapers/scene.tsx",
   ...artworkFiles.map(name => "public/" + name),
 ];
 
@@ -122,6 +123,10 @@ async function captureFrames(folder) {
     await saveFrame(flying(index), await page.screenshot({ clip: overlayClip, omitBackground: true }));
   };
   try {
+    if (flightFrames) {
+      await capture("?flights", 2 * landscapeFrames, index => !existsSync(flying(index)), drawFlight);
+      return;
+    }
     if (addFormats) {
       await captureBatch("", drawStill);
       await captureBatch("?flights", page => drawFlight(page, stillFrame));
@@ -317,29 +322,6 @@ async function buildOfflineOnly() {
   }
 }
 
-async function buildDisplaySizes() {
-  const requested = addLayouts === "--add-layouts"
-    ? extraLayouts.map(layout => layout.id)
-    : addLayouts.slice("--add-layouts=".length).split(",");
-  if (requested.some(id => !extraLayouts.some(layout => layout.id === id))) {
-    throw Error(`Available additional layouts: ${extraLayouts.map(layout => layout.id).join(", ")}`);
-  }
-  const variants = extraSizes.filter(size => requested.includes(size.layout));
-  const manifest = join(destination, wallpaperManifest);
-  const existing = {
-    ...(existsSync(manifest) ? JSON.parse(await readFile(manifest, "utf8")) : {}),
-    ...await verifyDownloads(destination),
-  };
-  const folder = await mkdtemp(join(scratch, "wallpaper-layouts-"));
-  try {
-    await encodeDisplaySizes(destination, folder, variants);
-    const additions = await verifyDownloads(folder, variants);
-    await installDownloads(folder, { ...additions, ...await packageOfflineWallpapers(root, folder) }, existing);
-  } finally {
-    await rm(folder, { recursive: true });
-  }
-}
-
 async function renderWallpapers() {
   const folder = resume ? join(scratch, resume) : await mkdtemp(join(scratch, "wallpaper-render-"));
   const fingerprint = createHash("sha256").update(JSON.stringify({ viewport, fps, landscapeFrames, stillFrame }));
@@ -374,6 +356,10 @@ async function renderWallpapers() {
   await rm(folder, { recursive: true });
 }
 
-if (offlineOnly) await buildOfflineOnly();
-else if (addLayouts) await buildDisplaySizes();
-else await renderWallpapers();
+if (flightFrames) {
+  const folder = resolve(flightFrames);
+  await mkdir(folder, { recursive: true });
+  await captureFrames(folder);
+} else if (offlineOnly) await buildOfflineOnly();
+else if (resume || addFormats) await renderWallpapers();
+else await import("./wallpapers/render-editions.mjs");

@@ -1,3 +1,8 @@
+const companionThemes = ["blue", "amoled", "light", "green"];
+const previousCompanionScreens = companionThemes.flatMap(theme =>
+  ["presets", "eq", "match", "compare", "audio", "usb", "mixer", "collection", "tuning", "debug"]
+    .map(screen => `/android/screens/${theme}/${screen}.webp`));
+
 // Shared by the access gate and infrastructure so the bypass cannot drift.
 // Private audio, worklets, API responses and HTML must always run the Worker.
 export const publicAssetPaths = [
@@ -6,9 +11,9 @@ export const publicAssetPaths = [
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
   "/android/qudelix-5k.png", "/android/companion-tour.mp4", "/android/companion-tour-portrait.mp4", "/android/companion-tour.webp", "/android/companion-tour.vtt",
-  ...["blue", "amoled", "light", "green"].flatMap(theme =>
-    ["presets", "eq", "match", "compare", "audio", "usb", "mixer", "collection", "tuning", "debug"]
-      .map(screen => `/android/screens/${theme}/${screen}.webp`)),
+  ...companionThemes.flatMap(theme =>
+    ["eq", "presets", "match", "compare", "output", "audio", "device", "usb", "mixer", "debug"]
+      .map(screen => `/android/screens/ui-preview-v4/${theme}/${screen}.webp`)),
   "/android/companion.svg", "/android/manager.svg", "/android/compare.webp",
   // Only the fixed, original instrumental preview is public.
   "/sample-assets/a.flac", "/sample-assets/b.flac",
@@ -22,7 +27,9 @@ export const publicAssetPaths = [
 const shareCardPattern = /^\/share\/[a-z0-9-]+(?:\.jpg|-motion\.(?:webp|avif|gif))$/;
 export const publicAssetBypassPatterns = ["!/_next/static/*", "!/share/*",...publicAssetPaths.filter(path => !isCompanionTrailer(path)).map(path => `!${path}`)];
 export function isPublicAsset(path) {
-  return path.startsWith("/_next/static/") || shareCardPattern.test(path) || publicAssetPaths.includes(path);
+  // Cached gallery pages can still request the previous screens through the Worker.
+  return path.startsWith("/_next/static/") || shareCardPattern.test(path)
+    || publicAssetPaths.includes(path) || previousCompanionScreens.includes(path);
 }
 
 export function isCompanionTrailer(path) {

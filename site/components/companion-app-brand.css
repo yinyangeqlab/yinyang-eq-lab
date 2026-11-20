@@ -1,6 +1,6 @@
 .companion-app-icons {
   display: flex;
-  gap: clamp(10px, 1.3vw, 18px);
+  gap: clamp(18px, 2.2vw, 28px);
   align-items: start;
   width: fit-content;
 }
@@ -12,7 +12,7 @@
 }
 .companion-app-icons img {
   display: block;
-  width: clamp(80px, 7.3vw, 104px);
+  width: clamp(86px, 8vw, 108px);
   height: auto;
 }
 .companion-app-icons figcaption {

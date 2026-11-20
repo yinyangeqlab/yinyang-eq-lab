@@ -8,7 +8,8 @@ import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import sharp from "sharp";
-import ts from "typescript";
+import { build } from "esbuild";
+import { fileURLToPath } from "node:url";
 import { SHARE_IMAGE_SIZE, SHARE_MOTION_FPS, shareAnimationUrl, sharePreviewCards } from "../site/lib/share-pages.mjs";
 import { encodeShareStill, prepareShareCard } from "./generate-share-cards.mjs";
 
@@ -31,10 +32,11 @@ async function captureWelcome(size, callback) {
   try {
     const artwork = await readFile(new URL("brand-landscape.webp", publicDir));
     const page = await browser.newPage({ viewport: size, deviceScaleFactor: 1 });
-    const source = await readFile(new URL("../site/lib/welcome-landscape.ts", import.meta.url), "utf8");
-    const renderer = ts.transpileModule(source, {
-      compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-    }).outputText;
+    const bundle = await build({
+      entryPoints: [fileURLToPath(new URL("../site/lib/welcome-landscape.ts", import.meta.url))],
+      bundle: true, write: false, format: "esm", target: "es2022",
+    });
+    const renderer = bundle.outputFiles[0].text;
     await page.setContent('<body style="margin:0"><canvas style="width:100vw;height:100vh"></canvas></body>');
     const cycleSeconds = await page.evaluate(async ({ renderer, artwork, size }) => {
       const moduleUrl = URL.createObjectURL(new Blob([renderer], { type: "text/javascript" }));

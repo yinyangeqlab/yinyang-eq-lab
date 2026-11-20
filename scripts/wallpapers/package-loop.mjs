@@ -30,13 +30,13 @@ with zipfile.ZipFile(folder/sys.argv[2]) as z:
   return name;
 }
 
-export async function packageLayoutLoops(library, sizes) {
+export async function packageLayoutLoops(library, sizes, layouts = wallpaperLayouts) {
   const staging = resolve("artifacts/wallpaper-variants");
   await mkdir(staging, {recursive: true});
   const folder = await mkdtemp(join(staging, "offline-"));
   try {
     const archives = new Map();
-    for (const layout of wallpaperLayouts)
+    for (const layout of layouts)
       for (const edition of wallpaperEditions) {
         for (const scene of wallpaperScenesFor(edition)) {
           for (const size of layout.sizes)

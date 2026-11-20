@@ -51,6 +51,18 @@ for (const path of ['/brand-mark.svg', '/brand-header.svg', '/favicon.svg', '/br
   assert.ok(publicAssetBypassPatterns.includes(`!${path}`));
 }
 assert.equal(isPublicAsset('/private/brand-mark.svg'), false);
+const companionPreview = '/android/screens/ui-preview-v4';
+for (const theme of ['blue', 'amoled', 'light', 'green']) {
+  for (const screen of ['eq', 'presets', 'match', 'compare', 'output', 'audio', 'device', 'usb', 'mixer', 'debug']) {
+    const path = `${companionPreview}/${theme}/${screen}.webp`;
+    assert.ok(existsSync(new URL(`../../../public${path}`, import.meta.url)), `missing Companion preview ${path}`);
+    assert.ok(isPublicAsset(path));
+    assert.ok(publicAssetBypassPatterns.includes(`!${path}`));
+  }
+  assert.ok(isPublicAsset(`/android/screens/${theme}/collection.webp`));
+}
+assert.equal(isPublicAsset(companionPreview + '/blue/unlisted.webp'), false);
+assert.ok(publicAssetBypassPatterns.length + 1 <= 100, 'Cloudflare Worker routing rule limit');
 const brand = name => readFileSync(new URL(`../../../public/${name}`, import.meta.url), 'utf8');
 assert.equal(brand('favicon.svg'), brand('brand-mark.svg'));
 for (const color of ['#db4b5c', '#3f6ac0']) {
