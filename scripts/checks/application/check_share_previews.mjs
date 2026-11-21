@@ -282,10 +282,14 @@ for (const [agent, artwork] of [[discord['User-Agent'], 'eq-compare-motion.webp'
 }
 console.log('PASS Blind EQ Comparison has dedicated previews and remains noindex.');
 
-const movie = "https://yinyangeq.com/android/companion-tour.mp4";
-assert.ok(!publicAssetBypassPatterns.includes("!/android/companion-tour.mp4"));
+for (const path of ["/android/companion-tour.mp4", "/android/companion-btfo.mp4", "/android/companion-btfo-hd.mp4"]) {
+  assert.ok(isPublicAsset(path));
+  assert.ok(!publicAssetBypassPatterns.includes("!" + path));
+}
+const movie = "https://yinyangeq.com/android/companion-btfo.mp4?v=205";
 const binding = { async fetch(request) {
   assert.equal(request.headers.get("range"), null);
+  assert.equal(new URL(request.url).searchParams.get("v"), "205");
   return new Response(request.method === "HEAD" ? null : "012345", { headers: { ETag: '"movie"' } });
 } };
 for (const [range, status, bounds, text] of [

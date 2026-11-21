@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 200,
+  "update": 204,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-20T13:55:56.818769Z",
-  "sourceCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
-  "sourceBranch": "release/update200-q5k-android",
-  "baselineCommit": "ce94316b3b812d1a4f7578014a75f836f2e824b4",
-  "evidence": "docs/releases/update200-verification.json",
+  "verifiedAt": "2026-11-21T06:40:07.402785Z",
+  "sourceCommit": "8ba865e0414e8a1f474870a46176e0656d883998",
+  "sourceBranch": "release/update204-companion-btfo",
+  "baselineCommit": "088b1b62e71efe0fa0cb5998fd3e72bdb30a04b4",
+  "evidence": "docs/releases/update204-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -32,30 +32,37 @@
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
   "gitSource": {
-    "implementationCommit": "7bcdb972e677596564d949a1d9445f3598920dcf",
-    "branch": "release/update200-q5k-android",
+    "implementationCommit": "8ba865e0414e8a1f474870a46176e0656d883998",
+    "branch": "release/update204-companion-btfo",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12",
-    "publicationTag": "update200",
-    "publicationVerification": "docs/releases/update200-publication.json"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "documentationFiles": [],
   "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
   "recoveryProcess": {
-    "schemaRecoveryDeferred": true,
-    "previousSchemaUpdate": 199,
-    "newDataExport": false,
-    "matchingCurrentReleaseBaseline": false,
+    "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
-    "hostedValidationPassed": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": true,
-    "localReleaseSourceVerified": true,
-    "matchingPostMigrationDataSnapshot": false,
-    "sourceVerification": "docs/releases/update200-source-verification.json"
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
+    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "newDataExport": false,
+    "latestDataSnapshotUnchanged": true,
+    "update204SourceOnlyHandover": {
+      "registrationPending": false,
+      "metadataOnly": true,
+      "databaseExport": false,
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update204-recovery-verification.json"
+    },
+    "sourceBaselineUpdate": 204,
+    "sourceBaselineVerifiedAt": "2026-11-21T06:47:15Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "latestHostedRunMode": "validate-only",
+    "dailyWorkflowActive": true
   }
 }

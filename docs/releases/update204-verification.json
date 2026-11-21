@@ -1,0 +1,75 @@
+{
+  "update": 204,
+  "sourceCommit": "8ba865e0414e8a1f474870a46176e0656d883998",
+  "deploymentVerification": {
+    "at": "2026-11-21T06:40:07.402785Z",
+    "update": 204,
+    "revision": "8ba865e0414e8a1f474870a46176e0656d883998",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "088b1b62e71efe0fa0cb5998fd3e72bdb30a04b4",
+    "matchingWorkerModules": 410,
+    "matchingVersionClientAssets": 2,
+    "protectedRecordingAccessRetained": true,
+    "unapprovedCredentialRejected": true,
+    "trailerDesktopAndMobileHashesMatch": true,
+    "trailerRangeSeekingVerified": true,
+    "trailerPosterAndCaptionsMatch": true,
+    "discordAndroidPreviewVerified": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": {
+      "androidPage": [
+        {
+          "width": 320,
+          "videoWidth": 720,
+          "captionTracks": 1,
+          "reachedEnd": true,
+          "keyboardPlayback": true
+        },
+        {
+          "width": 390,
+          "videoWidth": 720,
+          "captionTracks": 1,
+          "reachedEnd": true,
+          "keyboardPlayback": true
+        },
+        {
+          "width": 1280,
+          "videoWidth": 1080,
+          "captionTracks": 1,
+          "reachedEnd": true,
+          "keyboardPlayback": true
+        }
+      ]
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "8ba865e0414e8a1f474870a46176e0656d883998",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 7,
+    "retainedPreviousClientFiles": 3688
+  },
+  "recoveryRegistrationPending": true
+}

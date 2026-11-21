@@ -1,0 +1,20 @@
+{
+  "update": 203,
+  "sourceCommit": "088b1b62e71efe0fa0cb5998fd3e72bdb30a04b4",
+  "sourceOnlyHandoverPassed": true,
+  "priorDataSnapshotsExactlyUnchanged": true,
+  "priorDataTimestampUnchanged": true,
+  "dataSnapshotCreatedAt": "2026-11-20T21:23:38.645202+00:00",
+  "databaseExportPerformed": false,
+  "newDataSnapshots": 0,
+  "remoteIndexAuthenticated": true,
+  "independentReconstructionPassed": true,
+  "applicationInputsReconstructed": 1643,
+  "compiledBuildFilesReconstructed": 6210,
+  "archiveFilesVerifiedIndependently": 7853,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "dailyWorkflowActive": true,
+  "additionalEncryptedObjectBytes": 149202354,
+  "verifiedAt": "2026-11-21T02:50:28Z"
+}

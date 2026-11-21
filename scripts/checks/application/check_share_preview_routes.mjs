@@ -163,7 +163,7 @@ assert.deepEqual(missing.robots, { index: false, follow: false });
 // Discord fetches crawler HTML before loading the MP4 independently.
 const trailerPath = "/q5k4android/trailer";
 const trailer = sharePageFor(trailerPath);
-const videoUrl = SITE_ORIGIN + "/android/companion-tour-portrait.mp4";
+const videoUrl = SITE_ORIGIN + "/android/companion-btfo.mp4?v=205";
 const trailerHtml = shareHtml(trailer, { animated: true });
 assert.ok(trailerHtml.includes('property="og:type" content="video.other"'));
 assert.ok(trailerHtml.includes('property="og:video" content="' + videoUrl + '"'));

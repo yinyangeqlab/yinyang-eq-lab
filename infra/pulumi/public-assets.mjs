@@ -11,6 +11,7 @@ export const publicAssetPaths = [
   "/brand-amoled-aligned.webp", "/social-preview-aligned-v2.png",
   "/brand-yin-yang.png", "/brand-mark.svg", "/brand-header.svg", "/favicon.svg", "/favicon.ico",
   "/android/qudelix-5k.png", "/android/companion-tour.mp4", "/android/companion-tour-portrait.mp4", "/android/companion-tour.webp", "/android/companion-tour.vtt",
+  "/android/companion-btfo.mp4", "/android/companion-btfo-hd.mp4", "/android/companion-btfo.webp", "/android/companion-btfo.vtt",
   ...companionThemes.flatMap(theme =>
     ["eq", "presets", "match", "compare", "output", "audio", "device", "usb", "mixer", "debug"]
       .map(screen => `/android/screens/ui-preview-v4/${theme}/${screen}.webp`)),
@@ -33,7 +34,8 @@ export function isPublicAsset(path) {
 }
 
 export function isCompanionTrailer(path) {
-  return path === "/android/companion-tour.mp4" || path === "/android/companion-tour-portrait.mp4";
+  return path === "/android/companion-tour.mp4" || path === "/android/companion-tour-portrait.mp4"
+    || path === "/android/companion-btfo.mp4" || path === "/android/companion-btfo-hd.mp4";
 }
 
 // The static binding returns the whole public movie even when a client requests a byte range.

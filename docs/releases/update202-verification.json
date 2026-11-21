@@ -1,0 +1,87 @@
+{
+  "update": 202,
+  "sourceCommit": "d335ca1e526c2f3fe8821f7ae522eade9c51cfd5",
+  "deploymentVerification": {
+    "at": "2026-11-20T23:11:53.496202Z",
+    "update": 202,
+    "revision": "d335ca1e526c2f3fe8821f7ae522eade9c51cfd5",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "764f5e32689feb789768d8db96e58084aed20024",
+    "matchingWorkerModules": 410,
+    "matchingVersionClientAssets": 2,
+    "protectedRecordingAccessRetained": true,
+    "unapprovedCredentialRejected": true,
+    "browserLinkReachable": true,
+    "savedAccountDataInspected": false,
+    "publishedManagerDownloadVerified": true,
+    "discordAndroidPreviewVerified": true,
+    "themeGalleryVerified": 5,
+    "featureScreensVerified": 125,
+    "themeSampleAssetsCheckedOnProduction": 25,
+    "transparentDevicePhotosVerified": 2,
+    "fitterUpdateHashVerified": true,
+    "existingTrailerLinkVerified": true
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": {
+      "androidPage": [
+        {
+          "width": 320,
+          "screenCount": 25,
+          "themeCount": 5,
+          "imagesLoaded": 15,
+          "allImagesLoaded": true,
+          "keyboardNavigation": true,
+          "isolatedLayoutAccount": true
+        },
+        {
+          "width": 390,
+          "screenCount": 25,
+          "themeCount": 5,
+          "imagesLoaded": 15,
+          "allImagesLoaded": true,
+          "keyboardNavigation": true,
+          "isolatedLayoutAccount": true
+        },
+        {
+          "width": 1280,
+          "screenCount": 25,
+          "themeCount": 5,
+          "imagesLoaded": 125,
+          "allImagesLoaded": true,
+          "keyboardNavigation": true,
+          "isolatedLayoutAccount": true
+        }
+      ]
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "d335ca1e526c2f3fe8821f7ae522eade9c51cfd5",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 7,
+    "retainedPreviousClientFiles": 3625
+  },
+  "recoveryRegistrationPending": true
+}

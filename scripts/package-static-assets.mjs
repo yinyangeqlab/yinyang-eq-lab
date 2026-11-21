@@ -24,6 +24,22 @@ for (const [name, releaseAsset, checksum] of films) {
   }
   if (digest(file) !== checksum) throw Error('Unexpected trailer checksum: ' + name);
 }
+// The approved film is served by the Android website. Owner rebuilds use the
+// preserved assets, and public builds verify their download from the same URLs.
+const companionTrailer = [
+  ["companion-btfo-hd.mp4", "d30df321cc198a98e9b664b715cf1861cb0dd32bc6caeb9ebd97aacdbcf95ca9"],
+  ["companion-btfo.mp4", "be1137965bf2141ec3f05b4b2b156074627520bd95f01685a1de5b9492fae9fb"],
+];
+for (const [name, checksum] of companionTrailer) {
+  const file = join(source, 'android', name);
+  if (!existsSync(file)) {
+    const bytes = execFileSync('curl', ['--fail', '--silent', '--show-error', '--location',
+      'https://yinyangeq.com/android/' + name + '?v=205'], { maxBuffer: 25 * 1024 * 1024 });
+    if (createHash('sha256').update(bytes).digest('hex') !== checksum) throw Error('Unexpected Companion trailer download: ' + name);
+    writeFileSync(file, bytes);
+  }
+  if (digest(file) !== checksum) throw Error('Unexpected Companion trailer checksum: ' + name);
+}
 const previewRoot = join(source, 'sample-assets');
 const fontRevision = '6cdf01867df0813c2390f90dff7dc66c87f14cf7';
 const fonts = {

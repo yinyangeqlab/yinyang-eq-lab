@@ -371,14 +371,29 @@ const update199Changes = [
   "The help panel and walkthrough expand above the page content, leaving the player and other controls clear.",
 ] as const;
 
-export const candidateChanges = [
+const update200Changes = [
   "Use one Android companion for Qudelix 5K and 5K Plus, with model-specific EQ and audio controls.",
   "Preview five themes, including YinYangEQ, and get Companion 0.16.1 and App Manager 1.6.0 on the Android page.",
   "Approve a lasting companion link to save EQs, measurements and preset history to My Collection.",
 ] as const;
 
+const update201Changes = ["Explore the Android Companion screen by screen and see how the 5K Plus divides its filters between Main EQ and Channel Match."] as const;
+
+const update202Changes = ["Switch the entire Android screenshot tour between all five themes.", "Compare the original Qudelix 5K and 5K Plus, and share a Discord preview that shows both devices."] as const;
+
+const update203Changes = ["See how to measure headphones using your usual Bluetooth codec in the Android Companion’s Auto EQ tour."] as const;
+
+const update204Changes = ["Watch the new Android Companion trailer for Qudelix 5K and 5K Plus. It shows offline Auto EQ, preset import and export, My Collection sync, and all five themes."] as const;
+
+export const candidateChanges = ["The Android Companion trailer has a slower opening, a continuous minute of BTFO, and app demos timed to the beat."] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 200, date: "2026-11-20", title: "Qudelix Companion and collection sync", changes: candidateChanges, github: { commit: "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12", releaseTag: "update200", linkTaggedSource: true } },
+  { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: candidateChanges },
+  { update: 204, date: "2026-11-20", title: "Android Companion trailer", changes: update204Changes },
+  { update: 203, date: "2026-11-20", title: "Bluetooth measurement tip", changes: update203Changes },
+  { update: 202, date: "2026-11-20", title: "Android device photos and theme tour", changes: update202Changes },
+  { update: 201, date: "2026-11-20", title: "Android Companion feature tour", changes: update201Changes },
+  { update: 200, date: "2026-11-20", title: "Qudelix Companion and collection sync", changes: update200Changes, github: { commit: "7ddc8fe2d8a79b7f6e61b8b2505386ce206f7d12", releaseTag: "update200", linkTaggedSource: true } },
   { update: 199, date: "2026-11-19", title: "Help in the site header", changes: update199Changes, github: { commit: "dbb7e53bf806fbe26793f449750f21c6dfa0ced9", releaseTag: "update199", linkTaggedSource: true } },
   { update: 198, date: "2026-11-19", title: "Update196 Version history links", changes: update198Changes },
   { update: 197, date: "2026-11-19", title: "Android companion account sync", changes: update197Changes },

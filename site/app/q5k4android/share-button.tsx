@@ -6,12 +6,12 @@ import { Share2 } from "lucide-react";
 export function ShareCompanion({ trailer = false }: { trailer?: boolean }) {
   const [status, setStatus] = useState("");
   const [manual, setManual] = useState(false);
-  const url = "https://yinyangeq.com/q5k4android" + (trailer ? "/trailer/portrait" : "?release=0.16.1");
+  const url = "https://yinyangeq.com/q5k4android" + (trailer ? "/trailer/portrait?v=205" : "?tour=qudelix");
   async function share() {
     setStatus("");
     if (navigator.share) {
       try {
-        await navigator.share({ title: trailer ? "YinYang Companion walkthrough" : "YinYangEQ Qudelix 5k and 5K Plus Companion App", url });
+        await navigator.share({ title: trailer ? "YinYang EQ Companion trailer" : "YinYangEQ Qudelix 5k and 5K Plus Companion App", url });
         return;
       } catch (error) {
         if (error instanceof Error && error.name === "AbortError") return;
