@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 204,
+  "update": 210,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-21T06:40:07.402785Z",
-  "sourceCommit": "8ba865e0414e8a1f474870a46176e0656d883998",
-  "sourceBranch": "release/update204-companion-btfo",
-  "baselineCommit": "088b1b62e71efe0fa0cb5998fd3e72bdb30a04b4",
-  "evidence": "docs/releases/update204-verification.json",
+  "verifiedAt": "2026-11-21T13:33:15.166334Z",
+  "sourceCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+  "sourceBranch": "release/update210-homepage-guide-trailer",
+  "baselineCommit": "c7155bd2c49c958a57ac71bec392a10e2b8ad47a",
+  "evidence": "docs/releases/update210-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -26,14 +26,11 @@
   },
   "ownerOnlyMaintenance": {
     "enabled": false,
-    "automaticExpiry": false,
-    "reopeningAuthorizedByOwner": true,
-    "adminLogin": "https://yinyangeq.com/admin-login",
-    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
+    "automaticExpiry": false
   },
   "gitSource": {
-    "implementationCommit": "8ba865e0414e8a1f474870a46176e0656d883998",
-    "branch": "release/update204-companion-btfo",
+    "implementationCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+    "branch": "release/update210-homepage-guide-trailer",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": false,
@@ -41,8 +38,7 @@
     "publicationSeparateFromDeployment": true,
     "repository": "yinyangeqlab/yinyang-eq-lab"
   },
-  "documentationFiles": [],
-  "scope": "Public deployment record. The owner retains the immutable deployment and recovery inputs.",
+  "scope": "Public deployment record captured before GitHub publication. See the live Version page for release links.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
@@ -51,18 +47,28 @@
     "nextScheduledRunMayRefuseBaselineMismatch": false,
     "newDataExport": false,
     "latestDataSnapshotUnchanged": true,
-    "update204SourceOnlyHandover": {
+    "sourceBaselineUpdate": 210,
+    "sourceBaselineVerifiedAt": "2026-11-21T13:40:15Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "latestHostedRunMode": "validate-only",
+    "dailyWorkflowActive": true,
+    "update210SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update204-recovery-verification.json"
+      "evidence": "docs/releases/update210-recovery-verification.json"
+    }
+  },
+  "documentationFiles": [
+    {
+      "path": "docs/releases/update210-verification.json",
+      "sha256": "0d2fcac2d0d6d0c0f39ef2e20f5d21ac5a934fb317f2d7f1e2956b255c7ff221"
     },
-    "sourceBaselineUpdate": 204,
-    "sourceBaselineVerifiedAt": "2026-11-21T06:47:15Z",
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "latestHostedRunMode": "validate-only",
-    "dailyWorkflowActive": true
-  }
+    {
+      "path": "docs/releases/update210-recovery-verification.json",
+      "sha256": "65ad16cf70ad3df259fd23b6cd7238685586903221456646f8fc8c14e1cfafe2"
+    }
+  ]
 }

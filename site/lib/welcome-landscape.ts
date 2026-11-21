@@ -30,7 +30,8 @@ const FRAGMENT = `
 precision highp float;
 uniform sampler2D artwork;
 uniform sampler2D skyline;
-uniform float steadyAurora;
+uniform sampler2D stillSky;
+uniform bool useStillSky;
 uniform vec2 imageSize;
 uniform vec2 viewSize;
 uniform float artworkAnchorY;
@@ -131,8 +132,6 @@ vec3 auroraBand(vec2 ground,vec4 sheet,vec4 wave,vec4 patches,vec2 span,float ti
  return color*(1.-exp(-gain*intensity));
 }
 vec3 equinoxAurora(vec2 uv,float phase){
- // Keep the homepage curtains near the established composition while they move.
- phase=mix(phase,.28*sin(phase),steadyAurora);
  // Tilt the view upward and align its horizon with the landscape plate.
  vec2 camera=vec2((uv.x-.5)*2.22,(.104-uv.y)*1.2);
  vec3 ray=vec3(camera.x,camera.y*.9063+.4226,.9063-camera.y*.4226);
@@ -170,6 +169,16 @@ float nightStars(vec2 uv){
  vec2 offset=.16+.68*seed.xy;
  float distance=length(fract(field)-offset);
  return step(.92,seed.z)*(1.-smoothstep(.02,.102,distance))*(.13+.22*seed.x);
+}
+// Rebuild the sky from either end of each chord across the baked orb.
+vec3 clearBakedOrb(sampler2D source,vec2 uv,vec2 center,float radius,float aspect,vec3 color){
+ vec2 local=(uv-center)*vec2(aspect,1.)/radius;
+ if(dot(local,local)>=1.) return color;
+ float chord=sqrt(max(1.-local.y*local.y,.000001));
+ float reach=chord*radius/aspect;
+ vec3 left=texture2D(source,vec2(center.x-reach,uv.y)).rgb;
+ vec3 right=texture2D(source,vec2(center.x+reach,uv.y)).rgb;
+ return mix(left,right,clamp(.5+.5*local.x/chord,0.,1.));
 }
 void main(){
  float aspect=imageSize.x/imageSize.y, viewport=viewSize.x/viewSize.y;
@@ -286,19 +295,7 @@ void main(){
  vec3 orbReflection=mix(vec3(.67,.31,.32),vec3(.15,.67,.88),smoothstep(-.028,.028,uv.x-moon.x));
  col+=max(vec3(0.),1.-col)*orbReflection*reflectionMask
    *(.085+.04*(.5+.5*hover)+.145*reflectionPulse);
- /* Clear the fixed baked orb so only the current sky shows through the floating orb. */
- /* Each row is rebuilt from the sky at both ends of its chord, so the fill meets the */
- /* surrounding artwork without a seam. */
- vec2 skyLocal=(warped-plate)*vec2(aspect,1.)/radius;
- float clearRadius=1.03;
- if(dot(skyLocal,skyLocal)<clearRadius*clearRadius){
-  float chordHalf=sqrt(max(clearRadius*clearRadius-skyLocal.y*skyLocal.y,.000001));
-  float rowY=plate.y+skyLocal.y*radius;
-  float rowReach=chordHalf*radius/aspect;
-  vec3 leftSky=texture2D(artwork,vec2(plate.x-rowReach,rowY)).rgb;
-  vec3 rightSky=texture2D(artwork,vec2(plate.x+rowReach,rowY)).rgb;
-  col=mix(leftSky,rightSky,clamp(.5+.5*skyLocal.x/chordHalf,0.,1.));
- }
+ col=clearBakedOrb(artwork,warped,plate,1.03*radius,aspect,col);
  /* Build the sky and halo behind the translucent orb. */
  float skyLimit=ridgeSkyHeight(warped.x);
  float fromSkyline=warped.y-skyLimit;
@@ -306,7 +303,14 @@ void main(){
   float skyMask=1.-smoothstep(-2./imageSize.y,0.,fromSkyline);
   vec3 aurora=equinoxAurora(vec2(uv.x,min(uv.y,skyLimit-.004)),turn);
   vec3 twilight=vec3(.019,.034,.079)*(1.-smoothstep(0.,.40,uv.y));
-  col+=(twilight+aurora+vec3(.74,.84,1.)*nightStars(uv))*skyMask;
+  if(useStillSky){
+   // The still has a smaller, higher baked orb than the animation texture.
+   vec3 sky=clearBakedOrb(stillSky,uv,vec2(.5,.259),.184,aspect,texture2D(stillSky,uv).rgb);
+   // Retain the same aurora through the handoff and layer motion over it.
+   col=mix(col,sky+.18*aurora,skyMask);
+  }else{
+   col+=(twilight+aurora+vec3(.74,.84,1.)*nightStars(uv))*skyMask;
+  }
   if(dd<1.90){
    // A broad falloff blends the mint and violet halo into the sky.
    float distance=max(dd-1.,0.);
@@ -377,11 +381,11 @@ export function createLandscapeRenderer(
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
   ready: (value: boolean) => void,
-  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25, steadyAurora = false }: {
+  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25, stillSky }: {
     maxWidth?: number;
     maxHeight?: number;
     getArtworkAnchor?: () => number;
-    steadyAurora?: boolean;
+    stillSky?: HTMLImageElement;
   } = {},
 ): LandscapeRenderer | null {
   const gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false });
@@ -389,7 +393,8 @@ export function createLandscapeRenderer(
   const shaders: WebGLShader[] = [];
   let program: WebGLProgram | null = null, buffer: WebGLBuffer | null = null, texture: WebGLTexture | null = null;
   let crest: WebGLTexture | null = null;
-  const release = () => { if (crest) gl.deleteTexture(crest); if (buffer) gl.deleteBuffer(buffer); if (texture) gl.deleteTexture(texture); if (program) gl.deleteProgram(program); for (const shader of shaders) gl.deleteShader(shader); };
+  let skyTexture: WebGLTexture | null = null;
+  const release = () => { if (skyTexture) gl.deleteTexture(skyTexture); if (crest) gl.deleteTexture(crest); if (buffer) gl.deleteBuffer(buffer); if (texture) gl.deleteTexture(texture); if (program) gl.deleteProgram(program); for (const shader of shaders) gl.deleteShader(shader); };
   try {
     const compile = (kind: number, source: string) => {
       const shader = gl.createShader(kind); if (!shader) throw new Error("Decorative shader unavailable");
@@ -421,7 +426,18 @@ export function createLandscapeRenderer(
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE_ALPHA, heights.length/2, 1, 0, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, heights);
     gl.uniform1i(gl.getUniformLocation(program, "skyline"), 1);
-    gl.uniform1f(gl.getUniformLocation(program, "steadyAurora"), Number(steadyAurora));
+    gl.uniform1i(gl.getUniformLocation(program, "useStillSky"), stillSky ? 1 : 0);
+    if (stillSky) {
+      skyTexture = gl.createTexture();
+      if (!skyTexture) throw new Error("Decorative sky texture unavailable");
+      gl.activeTexture(gl.TEXTURE2);
+      gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.uniform1i(gl.getUniformLocation(program, "stillSky"), 2);
+    }
     gl.activeTexture(gl.TEXTURE0);
     const uniforms = Object.fromEntries(["imageSize","viewSize","artworkAnchorY","time","rhythmLength","rhythmStrengths[0]"].map(name => [name, gl.getUniformLocation(program!, name)]));
     let rhythm = rhythmPatterns.length - 1; // Open with the double-tap groove.
@@ -469,7 +485,13 @@ export function createLandscapeRenderer(
     };
     const load = () => {
       if (disposed || !image.complete || !image.naturalWidth || gl.isContextLost()) return;
+      if (stillSky && (!stillSky.complete || stillSky.naturalWidth !== image.naturalWidth || stillSky.naturalHeight !== image.naturalHeight)) return;
       try {
+        if (stillSky) {
+          gl.activeTexture(gl.TEXTURE2);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, stillSky);
+        }
+        gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
         gl.uniform2f(uniforms.imageSize, image.naturalWidth, image.naturalHeight);
         loaded = true; resize(); ready(true); setRunning(running);

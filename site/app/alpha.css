@@ -392,13 +392,8 @@
 @media (max-width: 400px) {
   .alpha-app[data-alpha-destination="compare"] .site-topbar-title { display: none; }
 }
-.alpha-guide-group{--alpha-guide-accent:light-dark(#3b6625,#a8db82);display:contents}
-.alpha-navigation .alpha-guide-group :is(.alpha-guide-toggle,.alpha-guide-link){
- --alpha-color:var(--alpha-guide-accent);--alpha-marker:var(--alpha-guide-accent);
-}
-.alpha-navigation .alpha-guide-group :is(button,a):focus-visible{
- outline:2px solid var(--alpha-guide-accent);outline-offset:-2px;
-}
+.alpha-guide-group{display:contents}
+.alpha-navigation .alpha-guide-group :is(button,a):focus-visible{outline-offset:-2px}
 .alpha-guide-group .alpha-guide-toggle{
  width:100%;margin:0;font-family:inherit;font-weight:inherit;text-align:start;line-height:inherit;
  box-shadow:none;filter:none;
@@ -408,7 +403,7 @@
 .alpha-app[data-alpha-layout=icons] .alpha-guide-chevron{display:none}
 #alpha-guide-links{
  display:grid;list-style:none;gap:2px;margin:0 0 4px 17px;padding:0 0 0 8px;
- border-inline-start:1px solid color-mix(in srgb,var(--alpha-guide-accent) 30%,transparent);
+ border-inline-start:1px solid color-mix(in srgb,var(--alpha-nav-accent) 30%,transparent);
 }
 #alpha-guide-links[hidden]{display:none}
 #alpha-guide-links li{min-width:0}

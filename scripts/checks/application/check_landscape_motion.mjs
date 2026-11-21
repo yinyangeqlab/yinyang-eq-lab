@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {buildSync} from 'esbuild';
 const source=buildSync({entryPoints:['site/lib/welcome-landscape.ts'],bundle:true,format:'cjs',write:false,target:'es2022'}).outputFiles[0].text;
-function fixture({available=true,compile=true,buffer=true,getArtworkAnchor}={}){
+function fixture({available=true,compile=true,buffer=true,getArtworkAnchor,stillSky}={}){
  const jobs=new Map(),calls=[],ready=[],uniforms={};let id=0;
  const gl={VERTEX_SHADER:1,FRAGMENT_SHADER:2,COMPILE_STATUS:3,LINK_STATUS:4,ARRAY_BUFFER:5,STATIC_DRAW:6,FLOAT:7,TEXTURE_2D:8,TEXTURE_WRAP_S:9,TEXTURE_WRAP_T:10,CLAMP_TO_EDGE:11,TEXTURE_MIN_FILTER:12,TEXTURE_MAG_FILTER:13,LINEAR:14,RGB:15,UNSIGNED_BYTE:16,TRIANGLES:17,
   createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>compile,createProgram:()=>({}),attachShader(){},linkProgram(){},getProgramParameter:()=>true,useProgram(){},createBuffer:()=>buffer?{}:null,bindBuffer(){},bufferData(){},getAttribLocation:()=>0,enableVertexAttribArray(){},vertexAttribPointer(){},createTexture:()=>({}),bindTexture(){},activeTexture(){},uniform1i:(n,v)=>uniforms[n]=v,texParameteri(){},getUniformLocation:(_,n)=>n,uniform2f:(n,...v)=>uniforms[n]=v,uniform4fv:(n,v)=>uniforms[n]=Array.from(v),uniform1f:(n,v)=>uniforms[n]=v,viewport(){},texImage2D:()=>calls.push('texture'),drawArrays:()=>calls.push('draw'),isContextLost:()=>false,deleteBuffer:()=>calls.push('free-buffer'),deleteTexture:()=>calls.push('free-texture'),deleteProgram:()=>calls.push('free-program'),deleteShader:()=>calls.push('free-shader')};
  const canvas={width:0,height:0,getContext:()=>available?gl:null,getBoundingClientRect:()=>({width:2000,height:1200})},image={complete:true,naturalWidth:1400,naturalHeight:758};
  const fixtureModule={exports:{}},document={hidden:false};
  vm.runInNewContext(source,{module:fixtureModule,exports:fixtureModule.exports,Float32Array,window:{devicePixelRatio:3},document,requestAnimationFrame:fn=>{jobs.set(++id,fn);return id},cancelAnimationFrame:i=>jobs.delete(i)});
- const engine=fixtureModule.exports.createLandscapeRenderer(canvas,image,value=>ready.push(value),{getArtworkAnchor});
+ const engine=fixtureModule.exports.createLandscapeRenderer(canvas,image,value=>ready.push(value),{getArtworkAnchor,stillSky});
  const step=now=>{const pending=[...jobs.values()];jobs.clear();for(const fn of pending)fn(now)};
  return {engine,canvas,image,document,jobs,calls,ready,uniforms,step};
 }
@@ -46,4 +46,16 @@ f.engine.dispose();
 let anchor=.25;
 f=fixture({getArtworkAnchor:()=>anchor});f.engine.load();assert.equal(f.uniforms.artworkAnchorY,.25);
 anchor=0;f.engine.resize();assert.equal(f.uniforms.artworkAnchorY,0,'responsive crop is applied when the canvas resizes');f.engine.dispose();
+const stillSky={complete:false,naturalWidth:1400,naturalHeight:758};
+f=fixture({stillSky});
+f.engine.setRunning(true);f.engine.load();
+assert.deepEqual(f.ready,[],'the still stays visible while its sky is being decoded');
+assert.equal(f.jobs.size,0,'the animation does not start before both textures are ready');
+stillSky.complete=true; f.engine.load();
+assert.equal(f.ready.at(-1),true);
+assert.equal(f.uniforms.useStillSky,1);
+assert.equal(f.uniforms.stillSky,2,'the animated sky samples the same image shown on load');
+assert.equal(f.calls.filter(call=>call==='texture').length,3);
+f.engine.dispose();
+assert.equal(f.calls.filter(call=>call==='free-texture').length,3,'the still sky texture is released');
 console.log('PASS decorative renderer fallback, resource cleanup, image readiness, bounded resolution, frame cap, pause/resume, hidden-tab stop, shared landscape texture, automatic rhythm changes and disposal.');

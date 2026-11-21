@@ -1,0 +1,17 @@
+{
+  "update": 210,
+  "sourceCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+  "sourceOnlyHandoverPassed": true,
+  "priorDataSnapshotsExactlyUnchanged": true,
+  "priorDataTimestampUnchanged": true,
+  "databaseExportPerformed": false,
+  "newDataSnapshots": 0,
+  "independentReconstructionPassed": true,
+  "applicationInputsReconstructed": 1655,
+  "compiledBuildFilesReconstructed": 6454,
+  "archiveFilesVerifiedIndependently": 8109,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "dailyWorkflowActive": true,
+  "verifiedAt": "2026-11-21T13:40:15Z"
+}

@@ -1,9 +1,14 @@
-# Current release — update204 Android Companion trailer
+# Current release — update210 Homepage aurora, guide icons and trailer sharing
 
 <!-- release-state:start -->
-Recorded deployment: **update204**, source `8ba865e0414e8a1f474870a46176e0656d883998`.
+Recorded deployment: **update210**, source `5fdc4863f98b7c0671098547090d01125a1d2af1`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+The aurora stays visible when the homepage animation starts. Glossary & Guides and all four submenu icons share the sidebar glow. Each trailer format has one Share trailer button. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update210-verification.json) [Recovery verification](releases/update210-recovery-verification.json)
+
+## Previous release records
+# Current release — update204 Android Companion trailer
 
 The Android page serves a 60-second trailer scored to BTFO by Jason J. Chevallier. The live desktop and mobile encodes passed byte-range checks. Independent reconstruction and hosted validation passed using the existing encrypted data recovery point. [Deployment verification](releases/update204-verification.json) [Recovery verification](releases/update204-recovery-verification.json)
 

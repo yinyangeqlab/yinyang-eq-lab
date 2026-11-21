@@ -149,15 +149,14 @@
 .companion-film-page .companion-guide-link { color: #a8e6da; text-underline-offset: .22em; }
 .trailer-download { gap: .5rem; }
 .trailer-formats { display: flex; flex-wrap: wrap; gap: 3px; margin-top: .75rem; }
-.trailer-formats button, .trailer-copy-link button {
+.trailer-formats button, .trailer-actions .companion-share button {
   min-height: 44px; border: 1px solid transparent; border-radius: 7px;
   padding: 7px 12px; font: inherit; cursor: pointer; background: transparent; color: #a8e6da;
 }
 .trailer-formats button[aria-pressed="true"] { border-color: #759f9e; background: #1b3339; color: #edf7f5; }
-.trailer-formats button:hover, .trailer-copy-link button:hover { background: #20353b; }
+.trailer-formats button:hover, .trailer-actions .companion-share button:hover { background: #20353b; }
 .trailer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
-.trailer-share-links { display: flex; flex-wrap: wrap; gap: 2px 8px; min-width: 0; }
-.trailer-copy-link input { min-width: 0; border: 1px solid #759f9e; border-radius: 7px; }
+.trailer-actions .companion-share input { min-width: 0; border: 1px solid #759f9e; border-radius: 7px; }
 @media (min-width: 781px) and (min-height: 601px) {
   .companion-trailer[data-format="portrait"] { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 12px 36px; }
   .companion-trailer[data-format="portrait"] .trailer-intro { grid-column: 2; align-self: end; }

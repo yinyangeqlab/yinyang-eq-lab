@@ -3,7 +3,7 @@
 import { useRef, useState, useSyncExternalStore } from "react";
 import { DownloadAppManager } from "@/components/companion-app-brand";
 import { companionTrailers } from "@/lib/companion-trailer.mjs";
-import { CopyTrailerLink } from "./share-button";
+import { ShareTrailer } from "./share-button";
 
 type Format = keyof typeof companionTrailers;
 const phonePortrait = "(orientation: portrait) and (max-width: 767px)";
@@ -71,9 +71,7 @@ export function TrailerPlayer({ standaloneFormat }: { standaloneFormat?: Format 
     </video>
     <div className="trailer-actions">
       <p className="trailer-duration">60 seconds · “BTFO” by Jason J. Chevallier</p>
-      <div className="trailer-share-links" role="group" aria-label="Copy a trailer link">
-        {formats.map(option => <CopyTrailerLink key={option} format={option} path={companionTrailers[option].path} />)}
-      </div>
+      <ShareTrailer key={format} format={format} path={trailer.path} />
       {standaloneFormat && <DownloadAppManager className="companion-guide-link trailer-download" />}
     </div>
   </section>;

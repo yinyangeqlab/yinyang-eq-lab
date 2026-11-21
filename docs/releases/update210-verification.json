@@ -1,0 +1,140 @@
+{
+  "update": 210,
+  "sourceCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+  "deploymentVerification": {
+    "at": "2026-11-21T13:33:15.166334Z",
+    "update": 210,
+    "revision": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "c7155bd2c49c958a57ac71bec392a10e2b8ad47a",
+    "matchingWorkerModules": 413,
+    "matchingVersionClientAssets": 38,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true,
+    "matchingFeatureClientAssets": 50
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": {
+      "wallpaper": [
+        {
+          "width": 1920,
+          "canvasReady": true,
+          "framesPreserved": true,
+          "pauseAndReducedMotion": true
+        },
+        {
+          "width": 3440,
+          "canvasReady": true,
+          "framesPreserved": true,
+          "pauseAndReducedMotion": true
+        },
+        {
+          "width": 390,
+          "canvasReady": true,
+          "framesPreserved": true,
+          "pauseAndReducedMotion": true
+        },
+        {
+          "width": 320,
+          "canvasReady": true,
+          "framesPreserved": true,
+          "pauseAndReducedMotion": true
+        }
+      ],
+      "guides": [
+        {
+          "width": 1920,
+          "matchingInvokedIcons": 5,
+          "colors": {
+            "dark": "rgb(112, 223, 208)",
+            "light": "rgb(12, 99, 91)"
+          },
+          "keyboardFocus": true,
+          "themes": [
+            "dark",
+            "light"
+          ]
+        },
+        {
+          "width": 390,
+          "matchingInvokedIcons": 5,
+          "colors": {
+            "dark": "rgb(112, 223, 208)",
+            "light": "rgb(12, 99, 91)"
+          },
+          "keyboardFocus": true,
+          "themes": [
+            "dark",
+            "light"
+          ]
+        },
+        {
+          "width": 320,
+          "matchingInvokedIcons": 5,
+          "colors": {
+            "dark": "rgb(112, 223, 208)",
+            "light": "rgb(12, 99, 91)"
+          },
+          "keyboardFocus": true,
+          "themes": [
+            "dark",
+            "light"
+          ]
+        }
+      ],
+      "trailer": [
+        {
+          "width": 1920,
+          "singleButton": true,
+          "checks": [
+            "native-share",
+            "clipboard",
+            "manual-fallback",
+            "portrait-page",
+            "landscape-page"
+          ]
+        },
+        {
+          "width": 390,
+          "singleButton": true,
+          "checks": [
+            "native-share",
+            "clipboard",
+            "manual-fallback",
+            "portrait-page",
+            "landscape-page"
+          ]
+        }
+      ]
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "5fdc4863f98b7c0671098547090d01125a1d2af1",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 9,
+    "retainedPreviousClientFiles": 3881
+  },
+  "recoveryRegistrationPending": true
+}

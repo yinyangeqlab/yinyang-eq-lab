@@ -399,17 +399,23 @@ const update208Changes = [
   "Install and update the Companion through App Manager. The Android apps have updated launcher names and icons.",
 ] as const;
 
-export const candidateChanges = [
+const update209Changes = [
   "The homepage keeps the aurora visible behind the yin-yang as the wallpaper moves.",
   "Compare EQs puts volume, channel correction and session actions below the player.",
   "The Tuning graph stays below the site header when you scroll.",
   "My Collection puts Add measurement beside the heading and groups Use, Edit and Delete with each saved measurement. Remove automatic channel matches from the list individually or in bulk.",
 ] as const;
+export const candidateChanges = [
+  "The aurora behind the yin-yang stays visible after the homepage animation starts.",
+  "Glossary & Guides and all its submenu icons use the same green glow as the other sidebar icons.",
+  "The active Companion trailer format has one Share trailer button with the standard share icon.",
+] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 209, date: "2026-11-21", title: "Wallpaper, listening controls and My Collection", changes: candidateChanges },
-  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: update208Changes },
-  { update: 207, date: "2026-11-21", title: "Sidebar alignment and guide icons", changes: update207Changes },
+  { update: 210, date: "2026-11-21", title: "Homepage aurora, guide icons and trailer sharing", changes: candidateChanges },
+  { update: 209, date: "2026-11-21", title: "Wallpaper, listening controls and My Collection", changes: update209Changes, github: { commit: "b5c0d90f9d25906299ed2cd309f1b147b4b44803", releaseTag: "update209", linkTaggedSource: true } },
+  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: update208Changes, github: { commit: "33b0c8006874bdeea2bda141c401f67709f0b044", releaseTag: "update208", linkTaggedSource: true } },
+  { update: 207, date: "2026-11-21", title: "Sidebar alignment and guide icons", changes: update207Changes, github: { commit: "cd3fd76bbac2781e0a3c746607fe80b19bec080e", releaseTag: "update207", linkTaggedSource: true } },
   { update: 206, date: "2026-11-21", title: "Android download versions", changes: update206Changes },
   { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: update205Changes, github: { commit: "bec3f393703ad2985d663d671bd18282f79d9206", releaseTag: "update205", linkTaggedSource: true } },
   { update: 204, date: "2026-11-20", title: "Android Companion trailer", changes: update204Changes },
