@@ -77,6 +77,7 @@ modules["shootout-failure-logger.mjs"] = {
 };
 modules["invite-settings.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/invite-settings.mjs"))};
 modules["audio-facts.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/audio-facts.mjs"))};
+modules["companion-trailer.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/companion-trailer.mjs"))};
 modules["share-pages.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/share-pages.mjs"))};
 modules["browser-pairing.mjs"] = { contentType:"application/javascript+module", contentFile:moduleFile(join(buildRoot,"site/lib/browser-pairing.mjs")) };
 modules["account-sync-notice.mjs"] = {contentType:"application/javascript+module",contentFile:moduleFile(join(buildRoot,"site/lib/account-sync-notice.mjs"))};

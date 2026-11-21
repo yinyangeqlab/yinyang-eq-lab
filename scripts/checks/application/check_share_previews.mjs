@@ -282,23 +282,25 @@ for (const [agent, artwork] of [[discord['User-Agent'], 'eq-compare-motion.webp'
 }
 console.log('PASS Blind EQ Comparison has dedicated previews and remains noindex.');
 
-for (const path of ["/android/companion-tour.mp4", "/android/companion-btfo.mp4", "/android/companion-btfo-hd.mp4"]) {
+for (const path of ["/android/companion-tour.mp4", "/android/companion-btfo.mp4", "/android/companion-btfo-hd.mp4", "/android/companion-btfo-landscape.mp4"]) {
   assert.ok(isPublicAsset(path));
   assert.ok(!publicAssetBypassPatterns.includes("!" + path));
 }
-const movie = "https://yinyangeq.com/android/companion-btfo.mp4?v=205";
-const binding = { async fetch(request) {
-  assert.equal(request.headers.get("range"), null);
-  assert.equal(new URL(request.url).searchParams.get("v"), "205");
-  return new Response(request.method === "HEAD" ? null : "012345", { headers: { ETag: '"movie"' } });
-} };
-for (const [range, status, bounds, text] of [
-  ["bytes=0-1", 206, "bytes 0-1/6", "01"], ["bytes=3-", 206, "bytes 3-5/6", "345"],
-  ["bytes=-2", 206, "bytes 4-5/6", "45"], ["bytes=8-", 416, "bytes */6", ""],
-  ["bytes=0-1,4-5", 200, null, "012345"]
-]) {
-  const res = await serveCompanionTrailer(new Request(movie, {headers:{ Range: range }}), binding);
-  assert.equal(res.status, status);
-  assert.equal(res.headers.get("Content-Range"), bounds);
-  assert.equal(await res.text(), text);
+for (const path of ["/android/companion-btfo.mp4?v=yyeq5k", "/android/companion-btfo-landscape.mp4"]) {
+  const movie = "https://yinyangeq.com" + path;
+  const binding = { async fetch(request) {
+    assert.equal(request.headers.get("range"), null);
+    assert.equal(request.url, movie);
+    return new Response(request.method === "HEAD" ? null : "012345", { headers: { ETag: '"movie"' } });
+  } };
+  for (const [range, status, bounds, text] of [
+    ["bytes=0-1", 206, "bytes 0-1/6", "01"], ["bytes=3-", 206, "bytes 3-5/6", "345"],
+    ["bytes=-2", 206, "bytes 4-5/6", "45"], ["bytes=8-", 416, "bytes */6", ""],
+    ["bytes=0-1,4-5", 200, null, "012345"]
+  ]) {
+    const res = await serveCompanionTrailer(new Request(movie, {headers:{ Range: range }}), binding);
+    assert.equal(res.status, status);
+    assert.equal(res.headers.get("Content-Range"), bounds);
+    assert.equal(await res.text(), text);
+  }
 }

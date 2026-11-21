@@ -385,10 +385,19 @@ const update203Changes = ["See how to measure headphones using your usual Blueto
 
 const update204Changes = ["Watch the new Android Companion trailer for Qudelix 5K and 5K Plus. It shows offline Auto EQ, preset import and export, My Collection sync, and all five themes."] as const;
 
-export const candidateChanges = ["The Android Companion trailer has a slower opening, a continuous minute of BTFO, and app demos timed to the beat."] as const;
+const update205Changes = ["The Android Companion trailer has a slower opening, a continuous minute of BTFO, and app demos timed to the beat."] as const;
+
+const update206Changes = ["The Android download page shows Companion v0.16.2 and App Manager v1.6.2."] as const;
+
+export const candidateChanges = [
+  "Watch the Companion trailer in portrait or landscape. The portrait cut opens with the phone panorama wallpaper, and the Welcome page links straight to the trailer.",
+  "Install and update the Companion through App Manager. The Android apps have updated launcher names and icons.",
+] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: candidateChanges },
+  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: candidateChanges },
+  { update: 206, date: "2026-11-21", title: "Android download versions", changes: update206Changes },
+  { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: update205Changes, github: { commit: "bec3f393703ad2985d663d671bd18282f79d9206", releaseTag: "update205", linkTaggedSource: true } },
   { update: 204, date: "2026-11-20", title: "Android Companion trailer", changes: update204Changes },
   { update: 203, date: "2026-11-20", title: "Bluetooth measurement tip", changes: update203Changes },
   { update: 202, date: "2026-11-20", title: "Android device photos and theme tour", changes: update202Changes },

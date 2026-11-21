@@ -1,4 +1,9 @@
 import { shareMetadata } from "@/lib/share-metadata";
-export { default } from "../page";
+import { TrailerPlayer } from "../../trailer-player";
+import "../../style.css";
 
 export const metadata = shareMetadata("/q5k4android/trailer/portrait");
+
+export default function PortraitTrailerPage() {
+  return <main className="companion-film-page"><TrailerPlayer standaloneFormat="portrait" /></main>;
+}
