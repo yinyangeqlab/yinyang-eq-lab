@@ -27,13 +27,13 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
                 <a className="companion-download companion-download-primary" href={repository + "/releases/latest/download/YinYang-Companion.apk"} aria-describedby="companion-download-note">
                   <Download size={18} aria-hidden="true"/> YinYangEQ Q5K Companion App
                 </a>
-                <p id="companion-download-note">Direct APK · 0.16.1 · Android 8+</p>
+                <p id="companion-download-note">Direct APK · v0.16.2 · Android 8+</p>
               </div>
               <div className="companion-download-option">
                 <a className="companion-download companion-download-secondary" href="/android/download" aria-describedby="manager-download-note">
                   <Download size={18} aria-hidden="true"/> Download App Manager APK
                 </a>
-                <p id="manager-download-note">Install and update · 1.6.0 · Android 9+</p>
+                <p id="manager-download-note">Install and update · v1.6.2 · Android 9+</p>
               </div>
             </div>
             {download === "testing" && <p role="status">Check the <a href={repository + "/releases"}>published Android releases</a> for the latest signed APK.</p>}
