@@ -104,12 +104,13 @@ export default function FirstListenHome() {
   <section className="home-companion" aria-labelledby="home-companion-title">
     <CompanionAppIcons/>
     <h2 id="home-companion-title">Android companion for Qudelix 5K and 5K Plus</h2>
-    <p className="home-companion-copy"><strong>Import and export EQ files right from your phone.</strong> Edit Main EQ and Channel Match, or generate a fit offline from your measurements.</p>
+    <p className="home-companion-copy"><strong>Build and manage EQs right from your phone.</strong> Import and edit presets, or use your measurements to create an EQ offline.</p>
     <div className="home-companion-actions">
       <DownloadAppManager className="home-manager-download"/>
+      <a className="companion-more" href="/q5k4android#trailer">Watch trailer</a>
       <a className="companion-more" href="/q5k4android">See app features</a>
     </div>
-    <p className="home-companion-hint">Open App Manager on Android and choose the Qudelix Companion to install it.</p>
+    <p className="home-companion-hint">Use App Manager on Android to install and update the Qudelix Companion.</p>
   </section>
   <WelcomeWallpapers />
   </div>

@@ -389,13 +389,19 @@ const update205Changes = ["The Android Companion trailer has a slower opening, a
 
 const update206Changes = ["The Android download page shows Companion v0.16.2 and App Manager v1.6.2."] as const;
 
-export const candidateChanges = [
+const update207Changes = [
   "Compare EQs lines up with the other sidebar items.",
   "The Glossary & Guides icon and its submenu icons glow green on hover and keyboard focus.",
 ] as const;
 
+export const candidateChanges = [
+  "Watch the Companion trailer in portrait or landscape. The portrait cut opens with the phone panorama wallpaper, and the Welcome page links straight to the trailer.",
+  "Install and update the Companion through App Manager. The Android apps have updated launcher names and icons.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 207, date: "2026-11-21", title: "Sidebar alignment and guide icons", changes: candidateChanges },
+  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: candidateChanges },
+  { update: 207, date: "2026-11-21", title: "Sidebar alignment and guide icons", changes: update207Changes },
   { update: 206, date: "2026-11-21", title: "Android download versions", changes: update206Changes },
   { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: update205Changes, github: { commit: "bec3f393703ad2985d663d671bd18282f79d9206", releaseTag: "update205", linkTaggedSource: true } },
   { update: 204, date: "2026-11-20", title: "Android Companion trailer", changes: update204Changes },

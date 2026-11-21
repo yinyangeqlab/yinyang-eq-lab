@@ -162,25 +162,28 @@ assert.deepEqual(missing.robots, { index: false, follow: false });
 
 // Discord fetches crawler HTML before loading the MP4 independently.
 const trailerPath = "/q5k4android/trailer";
-const trailer = sharePageFor(trailerPath);
-const videoUrl = SITE_ORIGIN + "/android/companion-btfo.mp4?v=205";
-const trailerHtml = shareHtml(trailer, { animated: true });
-assert.ok(trailerHtml.includes('property="og:type" content="video.other"'));
-assert.ok(trailerHtml.includes('property="og:video" content="' + videoUrl + '"'));
-assert.ok(trailerHtml.includes('property="og:video:type" content="video/mp4"'));
-for (const path of [trailerPath, trailerPath + "/portrait"]) {
+for (const [path, movie, width, height] of [
+  [trailerPath, "/android/companion-btfo-landscape.mp4", 1920, 1080],
+  [trailerPath + "/portrait", "/android/companion-btfo.mp4?v=yyeq5k", 720, 1280],
+]) {
   const page = sharePageFor(path);
   const html = shareHtml(page, { animated: true });
+  const videoUrl = SITE_ORIGIN + movie;
+  const metadata = share.shareMetadataFields(path);
   assert.equal(page.path, path);
-  assert.equal(share.shareMetadataFields(path).alternates.canonical, trailerPath);
-  assert.ok(html.includes(`<link rel="canonical" href="${SITE_ORIGIN}${trailerPath}">`));
+  assert.equal(metadata.alternates.canonical, path);
+  assert.equal(metadata.openGraph.videos[0].url, videoUrl);
+  assert.deepEqual([page.video.width, page.video.height], [width, height]);
+  assert.ok(html.includes(`<link rel="canonical" href="${SITE_ORIGIN}${path}">`));
   assert.ok(html.includes(`property="og:url" content="${SITE_ORIGIN}${path}"`));
+  assert.ok(html.includes(`property="og:video" content="${videoUrl}"`));
+  assert.ok(html.includes('property="og:type" content="video.other"'));
+  assert.ok(html.includes('property="og:video:type" content="video/mp4"'));
   for (const field of ["width", "height"]) {
     assert.equal(page.image[field], page.video[field]);
     for (const type of ["image", "video"]) assert.ok(html.includes(`property="og:${type}:${field}" content="${page.video[field]}"`));
   }
 }
-assert.equal(share.shareMetadataFields(trailerPath).openGraph.videos[0].url, videoUrl);
 assert.ok(!shareHtml(sharePageFor("/q5k4android"), { animated: true }).includes('property="og:video"'));
 
 console.log(`PASS share-preview destinations, ${linkedPages.size} distinct internal links and ${dynamicRoutes.length} dynamic routes.`);

@@ -4,6 +4,7 @@
 // Everything here is public marketing copy; private pages get a neutral card.
 
 import { AUDIO_FACTS_DESCRIPTION, AUDIO_FACTS_PATH, AUDIO_FACTS_TITLE, audioFacts, audioFactPath } from "./audio-facts.mjs";
+import { companionTrailers } from "./companion-trailer.mjs";
 
 export const SITE_ORIGIN = "https://yinyangeq.com";
 export const SITE_NAME = "YinYang EQ";
@@ -67,8 +68,9 @@ export const sharePages = [
   })),
   { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
-  { path: "/q5k4android/trailer", slug: "companion-btfo", title: "YinYang EQ Companion for Qudelix 5K and 5K Plus | Android trailer", ogTitle: "YinYang EQ Companion · Android trailer", description: "Watch the 60-second trailer. Generate your own EQ offline, compare recommendations, sync your collection and explore five themes.", image: { path: "/share/companion-btfo.jpg", width: 720, height: 1280, alt: "The Qudelix 5K above a red and blue river beneath a yin-yang moon" }, video: { path: "/android/companion-btfo.mp4?v=205", width: 720, height: 1280 } },
-  { path: "/q5k4android", slug: "android", title: "YinYangEQ Qudelix 5K and 5K Plus Companion App | YinYang EQ Lab", ogTitle: "YinYangEQ Alternative Companion App for Qudelix 5K and 5K Plus", description: "Generate accurate PEQ offline. Create Channel Match in the app. Save Main EQ and Channel Match as a paired preset. Up to 30 Main EQ bands on 5K Plus.", image: { path: "/share/q5k-dual-spotlight.jpg", width: 1200, height: 630, alt: "YinYangEQ Companion for Android. Import and export PEQ, fit offline, and use up to 30 Main EQ bands on 5K Plus. The Qudelix 5K and 5K Plus share a teal spotlight." } },
+  companionTrailers.landscape,
+  companionTrailers.portrait,
+  { path: "/q5k4android", slug: "android", title: "YinYang EQ Companion for Qudelix 5K and 5K Plus | Android", ogTitle: "YinYang EQ Companion for Qudelix 5K and 5K Plus", description: "Build EQs offline from your measurements, import and edit presets, and pair Main EQ with left and right Channel Match. Install with App Manager for Android.", image: { path: "/share/q5k-dual-spotlight.jpg", width: 1200, height: 630, alt: "The Qudelix 5K and 5K Plus share a teal spotlight." } },
   { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
   { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
   { path: "/listeners/yinyangeq", slug: "journal", kind: "journal", kicker: "PUBLIC LISTENING JOURNAL", title: "YinYangEQ Listening Journal | YinYang EQ", description: "Tests, listening notes and gear the account owner chose to publish.", tagline: "Tests, notes and gear, published by choice." },
@@ -117,10 +119,6 @@ function normalize(pathname) {
 export function sharePageFor(pathname, search = "") {
   const path = normalize(pathname);
   if (path === "/discover") return sharePageFor("/shootout", "?tab=rankings");
-  if (path === "/q5k4android/trailer/portrait") {
-    const trailer = sharePageFor("/q5k4android/trailer");
-    return { ...trailer, path, canonicalPath: trailer.path };
-  }
   const base = sharePages.find(page => page.path === path);
   if (!base || !search) return base ?? null;
   const params = new URLSearchParams(search);

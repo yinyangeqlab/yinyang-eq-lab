@@ -27,14 +27,15 @@ for (const [name, releaseAsset, checksum] of films) {
 // The approved film is served by the Android website. Owner rebuilds use the
 // preserved assets, and public builds verify their download from the same URLs.
 const companionTrailer = [
-  ["companion-btfo-hd.mp4", "d30df321cc198a98e9b664b715cf1861cb0dd32bc6caeb9ebd97aacdbcf95ca9"],
-  ["companion-btfo.mp4", "be1137965bf2141ec3f05b4b2b156074627520bd95f01685a1de5b9492fae9fb"],
+  ["companion-btfo-landscape.mp4", "cfb1ad527417f25cdea9a7baf67e02c898d6ced9be70204b8925f98bb4f6f35b"],
+  ["companion-btfo-hd.mp4", "1fb8675847ce974ce9d2c1e983bda35d0e1199cf982282d0ebf30038f5c02b9f"],
+  ["companion-btfo.mp4", "a7ae5b97985451dc71623ce44a6671ff5b98394de74303331bf1508dd02ebc2e"],
 ];
 for (const [name, checksum] of companionTrailer) {
   const file = join(source, 'android', name);
   if (!existsSync(file)) {
     const bytes = execFileSync('curl', ['--fail', '--silent', '--show-error', '--location',
-      'https://yinyangeq.com/android/' + name + '?v=205'], { maxBuffer: 25 * 1024 * 1024 });
+      'https://yinyangeq.com/android/' + name + '?v=yyeq5k'], { maxBuffer: 25 * 1024 * 1024 });
     if (createHash('sha256').update(bytes).digest('hex') !== checksum) throw Error('Unexpected Companion trailer download: ' + name);
     writeFileSync(file, bytes);
   }
