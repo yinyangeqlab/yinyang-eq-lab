@@ -34,7 +34,7 @@ function Panorama() {
   const flightsLabel = preferences.welcomeFlights ? 'Hide carpets' : 'Show carpets';
   return <>
     <section id="scene" className="landscape" aria-label="Animated YinYang EQ landscape">
-      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} />
+      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} steadyAurora />
     </section>
     {systemReduced ? null : <div className="scene-controls" role="group" aria-label="Landscape controls">
       <button type="button" className="motion-control" aria-label={motionLabel} aria-describedby="motion-benefit"

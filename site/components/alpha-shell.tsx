@@ -218,8 +218,19 @@ export default function AlphaShell({ children, helpControl, helpPanel, privateCo
   const [modalOpen, setModalOpen] = useState(false);
   const menu = useRef<HTMLButtonElement>(null);
   const phoneToggle = useRef<HTMLButtonElement>(null);
+  const workspace = useRef<HTMLDivElement>(null);
   const tuneAnimation = useRef<SVGAnimationElement>(null);
   const keepSavedLayout = useRef(false);
+  useEffect(() => {
+    const container = workspace.current;
+    const header = container?.querySelector<HTMLElement>(".site-topbar");
+    if (!container || !header) return;
+    const update = () => container.style.setProperty("--site-header-block-size", `${header.offsetHeight}px`);
+    const observer = new ResizeObserver(update);
+    observer.observe(header, { box: "border-box" });
+    update();
+    return () => observer.disconnect();
+  }, []);
   const listeningMode = pathname === "/shootout" && active === "listen" ? currentQuery?.mode : null;
   const modeTitle = listeningMode === "blind" ? "Blind Research" : listeningMode === "open" ? "Open Comparison" : null;
   const title = modeTitle ?? guideFor(pathname)?.label ?? pageTitles[pathname] ?? destinations.find(d => d.id === active)?.label ?? "YinYang EQ";
@@ -299,7 +310,7 @@ export default function AlphaShell({ children, helpControl, helpPanel, privateCo
   return <div className="alpha-app" data-alpha-layout={layout} data-phone-menu-open={phone && phoneMenuOpen || undefined} data-alpha-layout-ready={layoutLoaded || undefined} data-alpha-destination={active || "utility"}>
     <Suspense fallback={null}><QueryDestination path={pathname} onChange={setQuery}/></Suspense>
     <a className="alpha-skip" href="#alpha-content">Skip navigation</a>
-    <div className="alpha-workspace">
+    <div className="alpha-workspace" ref={workspace}>
       <div className="alpha-nav-header">
         <SiteTopbar title={title} inert={modalOpen} helpControl={helpControl} navigationControl={phone ? (
           <button

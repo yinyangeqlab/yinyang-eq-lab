@@ -216,8 +216,8 @@ export function WelcomeFlights({ running, artwork = defaultFlightArtwork }: { ru
 }
 
 /** The WebGL texture excludes the still image's baked aurora. */
-export default function WelcomeLandscape({ running, showFlights, artwork = defaultArtwork }: {
-  running: boolean; showFlights: boolean; artwork?: typeof defaultArtwork;
+export default function WelcomeLandscape({ running, showFlights, artwork = defaultArtwork, steadyAurora = false }: {
+  running: boolean; showFlights: boolean; artwork?: typeof defaultArtwork; steadyAurora?: boolean;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -232,6 +232,7 @@ export default function WelcomeLandscape({ running, showFlights, artwork = defau
     const picture = new Image();
     const ready = (value: boolean) => { container.dataset.rendered = String(value); };
     const engine = createLandscapeRenderer(surface, picture, ready, {
+      steadyAurora,
       getArtworkAnchor: () => {
         const percent = Number.parseFloat(getComputedStyle(container).getPropertyValue("--welcome-art-anchor"));
         return Number.isFinite(percent) ? percent / 100 : .25;
@@ -257,7 +258,7 @@ export default function WelcomeLandscape({ running, showFlights, artwork = defau
     if (engine) picture.src = artwork.texture;
     load();
     return () => { observer.disconnect(); visibility.disconnect(); syncMotion.current = () => {}; picture.removeEventListener("load", load); surface.removeEventListener("webglcontextlost", lost); surface.removeEventListener("webglcontextrestored", restored); reduced.removeEventListener("change", preference); document.removeEventListener("visibilitychange", preference); engine?.dispose(); container.dataset.animating = "false"; setArtMoving(false); };
-  }, [revision, artwork.texture]);
+  }, [revision, artwork.texture, steadyAurora]);
   useEffect(() => { active.current = running; syncMotion.current(); }, [running]);
   return <div ref={host} className="welcome-art" data-animating="false" aria-hidden="true">
     {/* eslint-disable-next-line @next/next/no-img-element -- The decorative fallback follows the static artwork pipeline. */}

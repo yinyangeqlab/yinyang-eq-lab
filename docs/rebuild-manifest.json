@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "bec3f393703ad2985d663d671bd18282f79d9206",
+  "baseRevision": "49dc1deb8486da94f895d6a04ba7b6bb58f261ff",
   "recordedLiveUpdate": 204,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -1722,7 +1722,7 @@
     },
     {
       "path": "infra/pulumi/index.ts",
-      "sha256": "c80463bfdee45957aad94d9289fb3a7942cfd4623dce0e229b557e0d22d37f59",
+      "sha256": "0cf9eefc4ffa47b9eb4db3a232c063858bd3a8a5e7b60f0e9a65a5b0dd31db6d",
       "executable": false
     },
     {
@@ -1747,7 +1747,7 @@
     },
     {
       "path": "infra/pulumi/public-assets.mjs",
-      "sha256": "000cb5786ae14f411ed84c03b56702b7f584a8932d7023919f2c614cb2d7f2a0",
+      "sha256": "0a66be2444728c7d7eff541f538c78b59dcb8ea9d5c8fe2ca64bff29ab34e1ad",
       "executable": false
     },
     {
@@ -1768,6 +1768,16 @@
     {
       "path": "package.json",
       "sha256": "00258994fa168a9de083a01167520391cf37507c1bdff64977a9ad9fa4260977",
+      "executable": false
+    },
+    {
+      "path": "public/android/companion-btfo-landscape.webp",
+      "sha256": "f20e35828d9cf534388ca40a2166daa95a8c43f002698a03733b40c1f37a11ab",
+      "executable": false
+    },
+    {
+      "path": "public/android/companion-btfo-portrait.webp",
+      "sha256": "59941384a507d76dd2bbafd8583283be1ae78c03cdfbc45ffa39f84b945be83e",
       "executable": false
     },
     {
@@ -1792,7 +1802,7 @@
     },
     {
       "path": "public/android/companion.svg",
-      "sha256": "bf660090904f4fab4f564c7c506f187d5e6386b973db8b01da94f3ab7893e89e",
+      "sha256": "7fde356f7901eced4f48ab39682d933b8abdc3011b227a3a846810d3a93032b3",
       "executable": false
     },
     {
@@ -1802,7 +1812,7 @@
     },
     {
       "path": "public/android/manager.svg",
-      "sha256": "bc66611e8805f67c7b2156d373fd0b6bd1f87c5c2f1a68b913f1c796d32b0e96",
+      "sha256": "dfeab0dc9656e222c8ca37f47390242bde96f695a0820f419ea870b46e05fbf4",
       "executable": false
     },
     {
@@ -3236,6 +3246,16 @@
       "executable": false
     },
     {
+      "path": "public/share/companion-btfo-landscape.jpg",
+      "sha256": "d436a85a198ce5d99b73a57a9802a8074a1b5fa4b726da41fa05d9862db4a947",
+      "executable": false
+    },
+    {
+      "path": "public/share/companion-btfo-portrait.jpg",
+      "sha256": "a81bd55684dbbf52f01786688d7847064b723ede0e3618c968b3a0cb3088dc0e",
+      "executable": false
+    },
+    {
       "path": "public/share/companion-btfo.jpg",
       "sha256": "a6f99f158a6202e27febd008fc9e4b54f82165d1269ba727466ef31fac5281f7",
       "executable": false
@@ -4057,12 +4077,12 @@
     },
     {
       "path": "scripts/checks/application/check_share_preview_routes.mjs",
-      "sha256": "fd13884828d6af70a3b1c41c25347bc201b990e9082e3b3653a57e04be776eed",
+      "sha256": "74c8fdf354614914b29646c2fa9e60497ca4dd45109336839636e8144043c294",
       "executable": false
     },
     {
       "path": "scripts/checks/application/check_share_previews.mjs",
-      "sha256": "a5ed6c337c4f7ff17c54b4e9d9d2abaff12c04897baa93340adc57ae4dde5764",
+      "sha256": "3122e10ed50b6eb5a792df7dcbfac8928b73c04d892d52a47a595906ac2fad68",
       "executable": false
     },
     {
@@ -4487,7 +4507,7 @@
     },
     {
       "path": "scripts/package-static-assets.mjs",
-      "sha256": "94d35dfdffdac64f734a4318e7966405793e6d678b9240ecde3431dcda4b4325",
+      "sha256": "6f516d94a770cf4484d91a16437d1f5351149bd3f3b9483feda713310ac93f41",
       "executable": false
     },
     {
@@ -4762,7 +4782,7 @@
     },
     {
       "path": "site/app/alpha.css",
-      "sha256": "cedf1b219ebcdfd388ca770f20df0d7d05eadc530decfe52333eb73942a9c787",
+      "sha256": "c76283b3597b173d6c8e93cca12f1cf552ea6a8e84723272d5feffbf6084b9b0",
       "executable": false
     },
     {
@@ -5232,7 +5252,7 @@
     },
     {
       "path": "site/app/eq-compare/page.tsx",
-      "sha256": "b78b76a9dec6db580febf26ed6de235dea48744a2dd1e4b5244fcdc16d084123",
+      "sha256": "b51c30cd8905f0b22c36ca18da856cc7a0c70911532ae1e4ea3d129c9cc07fef",
       "executable": false
     },
     {
@@ -5242,7 +5262,7 @@
     },
     {
       "path": "site/app/eq-compare/quick-compare.css",
-      "sha256": "15655270c95af738f508317977b22e74f851f4d17d31f4620500c2e516bf78bc",
+      "sha256": "0c742b43f3a030c28ba82652a8893738a48300652551de3c39e969cc259e704c",
       "executable": false
     },
     {
@@ -5317,7 +5337,7 @@
     },
     {
       "path": "site/app/home-content.tsx",
-      "sha256": "7c3e070e268e14aa6a7b5059bc91abf58289277c8999632d6757af9e4ba4ebc2",
+      "sha256": "f223833ecd0fcfdb6616155ad32f8e6a6e4f57d6225d0b2b99521befbe703799",
       "executable": false
     },
     {
@@ -5457,7 +5477,7 @@
     },
     {
       "path": "site/app/preference-tuning/style.css",
-      "sha256": "cf78e1991a7db6c2db4045f218e2f3dd63893fde805184f7297ae77eae7c1d5b",
+      "sha256": "270566143d7cac21f57c83d88859448251dde18e86a4b1ec29715233573a71e7",
       "executable": false
     },
     {
@@ -5487,37 +5507,37 @@
     },
     {
       "path": "site/app/q5k4android/gallery.tsx",
-      "sha256": "31f88464d163cf9bd67ba10cd2581b3f9050177a2c222a0e85d57e99861a0d5f",
+      "sha256": "e17e9170083c960386b1b4c2fbbb1cac6609995762c93a06732fd938707764b9",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/page.tsx",
-      "sha256": "ca75c29ba00903c75cc43cb4e8c6c70e8923ace352eba2542a8f617881fa70de",
+      "sha256": "1c0128926e9c10e15d0f63483cbf585b652bbb181d71026d9213b92e67d21a9a",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/share-button.tsx",
-      "sha256": "9ab7aff0a25935444a0697f3a845cc0f314a91e8d45e64da6226eeb0173827f7",
+      "sha256": "25251b2e74b455e3f5a6b00c0de59974d59bae38f4658152f1e8a971a8433c70",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/style.css",
-      "sha256": "4849543993b61cc7fd267b7cddd8a6ab95dda2721e98e2fa909be1e021c8f1e0",
+      "sha256": "00041bd4b3a8d7bfb170c41265dc8f0db40e9e1e67e2b972c018da937b5edfe0",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/trailer-player.tsx",
-      "sha256": "ac4adf4fdb0c84dd0bb6ae948e27703565313b316b6f243212faaba8e140e078",
+      "sha256": "536f177991a0cf062b68a34634da25fcc7d886c9a4ff1452b0f835c9a547a815",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/trailer/page.tsx",
-      "sha256": "134cfab4ce851b291855233672a3c3adb417e68de354b3efa74de4aa87f7cae4",
+      "sha256": "f0a833f0dc71cb621a4809ad18dcd2571a4029d5f6bf10e445d88fa28e326e6a",
       "executable": false
     },
     {
       "path": "site/app/q5k4android/trailer/portrait/page.tsx",
-      "sha256": "2b92e6afe3608d6b2b9272855aef7cb6c2ba83aab1bd6b264bcb73956ed0216d",
+      "sha256": "876395b8568f108d38ecef7e541c50253ff2df9405ce59f7f951faa8fb351d35",
       "executable": false
     },
     {
@@ -5557,7 +5577,7 @@
     },
     {
       "path": "site/app/shootout/page.tsx",
-      "sha256": "853771d4a57036b8c2ed460bdcbda508ea9f5f52f76c1eb5b0653ba6844f1447",
+      "sha256": "8889ebc215f8ed144b5e5e3d0778cfa023e69156994eb499a629779b3ee83b33",
       "executable": false
     },
     {
@@ -5742,7 +5762,7 @@
     },
     {
       "path": "site/components/alpha-shell.tsx",
-      "sha256": "b69808e9c38770df59bbb5cc9ba536aa0479b42000e6e805c6f357f5f45c2f1b",
+      "sha256": "b7c0bcc761769d1c58bfcac8f68022e0f94a47266f9e5eb495a8c4358ac5949f",
       "executable": false
     },
     {
@@ -5812,7 +5832,7 @@
     },
     {
       "path": "site/components/companion-app-brand.tsx",
-      "sha256": "f581a200086a0646aa2f4a93913738215a7bee5bc7588607241fe51db65ea071",
+      "sha256": "089571565cbfe4f3e8e3438b683e88725bb0dd663e3aff5c653ba3eef76799b8",
       "executable": false
     },
     {
@@ -6067,7 +6087,7 @@
     },
     {
       "path": "site/components/measurement-manager.tsx",
-      "sha256": "cae63578d53f9a7a1d28aa3f1052024c2fa4324476469ac4e53b6e98386a8c17",
+      "sha256": "d84056cc768f3149a2195e4e2a7f2ebe2370861c6a82933fb0ab072bf78e42ba",
       "executable": false
     },
     {
@@ -6252,12 +6272,12 @@
     },
     {
       "path": "site/components/saved-eq-collection.css",
-      "sha256": "1e916b870254b21e355256c5f22716427d3e243fea95cb24752d17f394f84c68",
+      "sha256": "f442b3090066e5df8edcd0576ff88d7df8dbf5ac0dcaa125cf0ed4632bdedf96",
       "executable": false
     },
     {
       "path": "site/components/saved-eq-collection.tsx",
-      "sha256": "b3bbbbaa14933d7002f88bb46b307ac6512a55ef14f92d05213375c0a0c8f87f",
+      "sha256": "1dfdfcfe4a0dbdf5b32b8cd49355227de234fbb0e97e7f2e5c801ccb09fae121",
       "executable": false
     },
     {
@@ -6787,7 +6807,7 @@
     },
     {
       "path": "site/components/welcome-landscape.tsx",
-      "sha256": "0701b207fa5888502d4b32b56afcf259e632dacec29c062563644a92e770ea85",
+      "sha256": "3c28c6ad1c87cea025f337fdc5e4786cee6203dc6b7dc1b29a257d44a203ed76",
       "executable": false
     },
     {
@@ -7541,6 +7561,11 @@
       "executable": false
     },
     {
+      "path": "site/lib/companion-trailer.mjs",
+      "sha256": "fa4119e70b644887ce3fe1418093cad741aba37cccd3a0d8cce600aa6b42caf1",
+      "executable": false
+    },
+    {
       "path": "site/lib/comparison-focus.ts",
       "sha256": "9d35b55246801a2c42c76b7dacd894961902ae7c110bf45b323d70a3ce6bbdc5",
       "executable": false
@@ -7792,7 +7817,7 @@
     },
     {
       "path": "site/lib/measurement.ts",
-      "sha256": "bb8dd1c909405ed86fe7a45f78d39b69b911965595a81b8471d351983b5caa4e",
+      "sha256": "97f6c4d6b7438ddbbcfbb60dbeff68a7d81b92f2f9ae605ce2ef916a94ff4938",
       "executable": false
     },
     {
@@ -7972,12 +7997,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "641c368cd68c5f9d018862ba93d691424dde50ac8d35dae9ee4b0d82ff0c6b0e",
+      "sha256": "dcd0e6cf8b5f688dec4c9f1aebaddfab9ab86eab9a96d13c00f43e7616dd8b75",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "13233f3749027e2551617e06f94b67f75292991a1757a0605fb33db1f9104450",
+      "sha256": "b3a713dc0725cf0e43a08f9693059ad1e11642ea3d60de1c71e9edb2a709bb1f",
       "executable": false
     },
     {
@@ -8037,7 +8062,7 @@
     },
     {
       "path": "site/lib/share-pages.mjs",
-      "sha256": "d17d765fc0ce4a083db01e81db5eda70ff0b8004657ac368a06098d16f0e199a",
+      "sha256": "02c502159cd447824d508fdb9c14caaa835353a8232e42330ac462a66f77a7d5",
       "executable": false
     },
     {
@@ -8177,7 +8202,7 @@
     },
     {
       "path": "site/lib/welcome-landscape.ts",
-      "sha256": "f1c6c37f4bb0169da750f93d10f22cefddfc674a99ba43a936e4c7fdaf05a503",
+      "sha256": "fb38eba3a96b7cdd737019de7ccf7ddaf95e921cd97d5e5e25970dcf596425b4",
       "executable": false
     },
     {

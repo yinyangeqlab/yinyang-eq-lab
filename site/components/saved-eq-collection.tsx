@@ -5,7 +5,7 @@ import Link from "next/link";
 import CompanionPresetHistory from "./companion-preset-history";
 import LibraryEqUpload from "./library-eq-upload";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { measurementChannelMatch, readLibraryEqs, removeLibraryEq, removeLibraryEqs, saveLibraryEq, type LibraryEq } from "@/lib/music-library-eq";
 import { downloadChannelMatch, downloadLocalFile } from "@/lib/channel-match-export";
 import { parseChannelMatchPreset } from "@/lib/peq-preset";
@@ -17,12 +17,19 @@ function SavedDate({ value, label }: { value?: number; label: string }) {
   return value ? <span>{label} <time dateTime={new Date(value).toISOString()}>{new Date(value).toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}</time></span> : <span>Saved date unavailable</span>;
 }
 
-export default function SavedEqCollection({ measurements, onUpdate, companionOnly=false }: { companionOnly?:boolean; measurements: HeadphoneMeasurement[]; onUpdate: (row: HeadphoneMeasurement) => void }) {
+export default function SavedEqCollection({ measurements, onUpdate, onSetAutomaticMatchVisibility, companionOnly=false }: {
+  companionOnly?: boolean;
+  measurements: HeadphoneMeasurement[];
+  onUpdate: (row: HeadphoneMeasurement) => void;
+  onSetAutomaticMatchVisibility: (ids: string[], visible: boolean) => void;
+}) {
   const [eqs, setEqs] = useState<LibraryEq[]>([]), [message, setMessage] = useState("");
   const [modelId, setModelId] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [deleteRequest, setDeleteRequest] = useState<string[] | null>(null);
   const [eqModels, setEqModels] = useState<Record<string, string>>({});
+  const [selectedMatchIds, setSelectedMatchIds] = useState<string[]>([]);
+  const matchesHeading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     const refresh = () => {
       const next = readLibraryEqs().filter(eq=>!companionOnly || eq.companionOrigin); setEqs(next);
@@ -33,12 +40,22 @@ export default function SavedEqCollection({ measurements, onUpdate, companionOnl
     return () => { window.removeEventListener("library-eqs-changed", refresh); window.removeEventListener("storage", refresh); window.removeEventListener("yinyang-data-changed", refresh); };
   }, [companionOnly]);
   const model = measurements.find(row => row.id === modelId);
+  const automaticMatches = measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length && !row.hideAutomaticChannelMatch);
+  const selectedMatches = automaticMatches.filter(row => selectedMatchIds.includes(row.id));
+  const modelHasAutomaticMatch = Boolean(model?.leftPoints?.length && model?.rightPoints?.length);
   const matches = useMemo(() => new Map(measurements.map(row => [row.id, measurementChannelMatch(row)])), [measurements]);
   const pendingIds = deleteRequest?.filter(id => eqs.some(eq => eq.id === id)) ?? [];
   const compareHref = selectedIds.length === 2 && !deleteRequest
     ? blindEqHref(...selectedIds)
     : null;
   function act(action: () => void, success: string) { try { action(); setMessage(success); return true; } catch (error) { setMessage(error instanceof Error ? error.message : "Could not save this change."); return false; } }
+  function removeAutomaticMatches(ids: string[]) {
+    const count = ids.length;
+    if (act(() => onSetAutomaticMatchVisibility(ids, false), `Removed ${count} automatic channel ${count === 1 ? "match" : "matches"} from the list. Choose a measurement below to add its match back.`)) {
+      setSelectedMatchIds(current => current.filter(id => !ids.includes(id)));
+      matchesHeading.current?.focus({ preventScroll: true });
+    }
+  }
   function matchDownloads(match: ChannelMatch, name: string) {
     return <div className="saved-eq-actions" role="group" aria-label={`Download ${match.channelMatchMode === "custom" ? "uploaded" : "automatic"} channel match for ${name}`}>
       <button type="button" onClick={() => act(() => downloadChannelMatch(match, name, "txt"), "Channel match TXT downloaded.")}>Channel match TXT (IIR)</button>
@@ -95,16 +112,40 @@ export default function SavedEqCollection({ measurements, onUpdate, companionOnl
         </li>;
       })}</ul>
     </> : <p>No saved EQs yet. Upload an EQ TXT above, or finalize an EQ in Tuning and choose <b>Save EQ to {PERSONAL_AREA_TITLE}</b>.</p>}
-    <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title">Channel matches by headphone model</h3>
+    <section id="channel-matches" className="saved-channel-models" aria-labelledby="saved-channel-models-title"><h3 id="saved-channel-models-title" ref={matchesHeading} tabIndex={-1}>Channel matches by headphone model</h3>
       <CompanionPresetHistory part="match"/>
-      <div className="automatch-files" role="group" aria-label="Saved automatic channel matches">{measurements.filter(row => row.leftPoints?.length && row.rightPoints?.length).map(row => <article key={row.id}>
-        <div><strong>Automatic channel match · {row.device || row.name}</strong><p>YinYang AutoMatch uses your saved Left and Right responses.</p></div>
-        {matchDownloads({ ...row, channelMatchMode: "auto" }, row.device || row.name)}
-      </article>)}</div>
+      {automaticMatches.length > 0 && <>
+        <div className="saved-eq-selection" role="group" aria-label="Select automatic channel matches">
+          <strong>{selectedMatches.length} of {automaticMatches.length} selected</strong>
+          <button type="button" disabled={selectedMatches.length === automaticMatches.length} onClick={() => setSelectedMatchIds(automaticMatches.map(row => row.id))}>Select all</button>
+          <button type="button" disabled={!selectedMatches.length} onClick={() => setSelectedMatchIds([])}>Clear selection</button>
+          <button type="button" disabled={!selectedMatches.length} onClick={() => removeAutomaticMatches(selectedMatches.map(row => row.id))}>Remove selected ({selectedMatches.length})</button>
+        </div>
+        <p className="automatch-note">Removing a match from this list keeps the saved Left and Right measurements.</p>
+        <div className="automatch-files" role="group" aria-label="Saved automatic channel matches">{automaticMatches.map(row => {
+          const name = row.device || row.name;
+          const selected = selectedMatchIds.includes(row.id);
+          return <article key={row.id} className={selected ? "is-selected" : undefined}>
+            <div className="saved-eq-row-heading">
+              <label className="saved-eq-check"><input type="checkbox" aria-label={`Select automatic channel match for ${name}`} checked={selected} onChange={event => {
+                const checked = event.target.checked;
+                setSelectedMatchIds(ids => checked ? [...ids, row.id] : ids.filter(id => id !== row.id));
+              }}/></label>
+              <div><strong>{name}</strong><p>{row.name === name ? "Automatic channel match" : row.name}</p></div>
+            </div>
+            <div className="automatch-actions">
+              {matchDownloads({ ...row, channelMatchMode: "auto" }, name)}
+              <button type="button" aria-label={`Remove automatic channel match for ${name}`} onClick={() => removeAutomaticMatches([row.id])}>Remove</button>
+            </div>
+          </article>;
+        })}</div>
+      </>}
       <label>Choose a saved headphone measurement<select value={modelId} onChange={event => setModelId(event.target.value)}><option value="">Choose headphones</option>{measurements.map(row => <option key={row.id} value={row.id}>{row.name} · {row.device}</option>)}</select></label>
       <p>Download this headphone’s Left/Right correction or add your own preset. To use it with a saved EQ, open Channel correction on that EQ above.</p>
-      {model && <><p>{model.leftPoints && model.rightPoints ? "Automatic matching is available from this model’s Left and Right responses." : "Add Left and Right responses in Headphones to enable automatic matching."}</p>
-        {model.leftPoints && model.rightPoints && <><strong>Automatic channel match</strong>{matchDownloads({ ...model, channelMatchMode: "auto" }, model.name)}</>}
+      {model && <><p>{modelHasAutomaticMatch ? model.hideAutomaticChannelMatch ? "This automatic match was removed from the list." : "Automatic matching is available from this model’s Left and Right responses." : "Add Left and Right responses in Headphones to enable automatic matching."}</p>
+        {modelHasAutomaticMatch && (model.hideAutomaticChannelMatch
+          ? <button type="button" onClick={() => act(() => onSetAutomaticMatchVisibility([model.id], true), "Automatic channel match added back to the list.")}>Add match back to list</button>
+          : <><strong>Automatic channel match</strong>{matchDownloads({ ...model, channelMatchMode: "auto" }, model.name)}</>)}
         {model.channelMatchPreset && <><strong>Uploaded channel match</strong>{matchDownloads({ ...model, channelMatchMode: "custom" }, model.name)}</>}
         <label>Attach or replace this model’s channel-match preset<input type="file" accept=".txt,text/plain" onChange={event => { void upload(event.target.files?.[0]); event.target.value = ""; }}/></label><a href="/shootout?tab=measurements#saved-measurements">Edit headphone responses and match mode</a></>}
       <details><summary>Using channel-match downloads</summary>

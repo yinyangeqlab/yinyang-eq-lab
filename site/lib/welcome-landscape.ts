@@ -30,6 +30,7 @@ const FRAGMENT = `
 precision highp float;
 uniform sampler2D artwork;
 uniform sampler2D skyline;
+uniform float steadyAurora;
 uniform vec2 imageSize;
 uniform vec2 viewSize;
 uniform float artworkAnchorY;
@@ -130,6 +131,8 @@ vec3 auroraBand(vec2 ground,vec4 sheet,vec4 wave,vec4 patches,vec2 span,float ti
  return color*(1.-exp(-gain*intensity));
 }
 vec3 equinoxAurora(vec2 uv,float phase){
+ // Keep the homepage curtains near the established composition while they move.
+ phase=mix(phase,.28*sin(phase),steadyAurora);
  // Tilt the view upward and align its horizon with the landscape plate.
  vec2 camera=vec2((uv.x-.5)*2.22,(.104-uv.y)*1.2);
  vec3 ray=vec3(camera.x,camera.y*.9063+.4226,.9063-camera.y*.4226);
@@ -374,10 +377,11 @@ export function createLandscapeRenderer(
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
   ready: (value: boolean) => void,
-  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25 }: {
+  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25, steadyAurora = false }: {
     maxWidth?: number;
     maxHeight?: number;
     getArtworkAnchor?: () => number;
+    steadyAurora?: boolean;
   } = {},
 ): LandscapeRenderer | null {
   const gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false });
@@ -417,6 +421,7 @@ export function createLandscapeRenderer(
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE_ALPHA, heights.length/2, 1, 0, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, heights);
     gl.uniform1i(gl.getUniformLocation(program, "skyline"), 1);
+    gl.uniform1f(gl.getUniformLocation(program, "steadyAurora"), Number(steadyAurora));
     gl.activeTexture(gl.TEXTURE0);
     const uniforms = Object.fromEntries(["imageSize","viewSize","artworkAnchorY","time","rhythmLength","rhythmStrengths[0]"].map(name => [name, gl.getUniformLocation(program!, name)]));
     let rhythm = rhythmPatterns.length - 1; // Open with the double-tap groove.

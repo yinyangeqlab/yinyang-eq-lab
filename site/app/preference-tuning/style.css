@@ -343,9 +343,9 @@
 .pt-shell.alpha-tuning .pt-axis-button{padding:6px 10px;font-size:11px}
 
 /* The controls column follows the card width (30cqi), so tablets keep a usable graph and widescreen gets roomier controls. */
-.pt-workspace{display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,30cqi,440px);gap:8px 14px;align-items:start;margin-top:8px}
+.pt-workspace{--pt-graph-top:calc(var(--site-header-block-size,var(--site-topbar-height,48px)) + 8px);display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,30cqi,440px);gap:8px 14px;align-items:start;margin-top:8px}
 /* Frozen graph pane. If it grows taller than the viewport (short windows, browser zoom, open EQ settings) it scrolls inside itself instead of hiding its lower controls. */
-.pt-workspace>.pt-chart-wrap{position:sticky;top:8px;min-width:0;margin:0;max-height:calc(100dvh - 16px);overflow-y:auto;scrollbar-width:thin}
+.pt-workspace>.pt-chart-wrap{position:sticky;top:var(--pt-graph-top);min-width:0;margin:0;max-height:calc(100dvh / var(--display-scale,1) - var(--pt-graph-top) - 8px);overflow-y:auto;scrollbar-width:thin}
 .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{height:clamp(210px,46vh,460px)}
 .pt-graph-hint{margin:3px 0 0;color:#9eb8c3;font-size:11px;line-height:1.5}
 .pt-shell.alpha-tuning .pt-workspace .pt-response-overlays{margin:8px 0 4px}
@@ -605,12 +605,7 @@
 /* Stacked layout on a tall enough screen: the graph stays in view while the controls scroll under it. */
 @media(min-height:620px){
   @container pt-chart (max-width:740px){
-    .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{position:sticky;top:0;z-index:6;max-height:52vh;box-shadow:0 8px 14px -6px #000c}
-  }
-}
-@media(max-width:800px) and (min-height:620px){
-  @container pt-chart (max-width:740px){
-    .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{top:var(--site-topbar-height,48px)}
+    .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{position:sticky;top:var(--pt-graph-top);z-index:6;max-height:52vh;box-shadow:0 8px 14px -6px #000c}
   }
 }
 

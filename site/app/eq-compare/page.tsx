@@ -228,18 +228,20 @@ export default function EqCompare() {
       <TrackWaveform compact maxPixelRatio={4} hideZoom hideHeading analysis={waveform} sourceUrl={song.url} position={position} duration={duration} playing={playing !== null} getPlaybackPosition={() => audio.current?.player.time ?? cursor.current} onSeek={seek} dynamicRange={0} onDynamicRangeChange={() => {}} placeholder="Loading waveform…"/>
       <PlaybackTime position={position} duration={duration}/>
     </section>
-    <div className="quick-foot"><span role="status">{pending !== null ? `Preparing ${nameOf(pending)}…` : playing !== null ? `Playing ${nameOf(playing)}` : ""}</span>
-      <details><summary>Playback settings</summary><div>
-        <label>Volume <input type="range" min="0" max="1" step=".01" value={volume} onChange={event => { const next = Number(event.target.value); setVolume(next); audio.current?.player.setVolume(next); }}/></label>
-        {device?.match && <label><input type="checkbox" checked={useCorrection} onChange={event => { invalidate(); setUseCorrection(event.target.checked); }}/> Apply headphone channel correction to both EQs</label>}
+    <div className="quick-foot">
+      <div className="quick-playback-row">
+        <label className="quick-volume">Volume <input type="range" min="0" max="1" step=".01" value={volume} onChange={event => { const next = Number(event.target.value); setVolume(next); audio.current?.player.setVolume(next); }}/></label>
+        <span role="status">{pending !== null ? `Preparing ${nameOf(pending)}…` : playing !== null ? `Playing ${nameOf(playing)}` : ""}</span>
+      </div>
+      {device?.match && <label className="quick-correction"><input type="checkbox" checked={useCorrection} onChange={event => { invalidate(); setUseCorrection(event.target.checked); }}/> Apply headphone channel correction to both EQs</label>}
+      <div className="quick-session-actions">
         <button type="button" className="quick-reminder-link" onClick={() => { playRequest.current++; audio.current?.stop(); setSkipDraft(skipReminder); setReminder({ side: null }); }}>Before you listen</button>
         <button type="button" className="quick-reminder-link" onClick={() => {
           newSession(); setTarget(-14); setSelectedSide(0); if (blind) setOrder(shuffled());
           cursor.current = 0; audio.current?.player.seek(0); setPosition(0);
           setSkipDraft(false); setReminder({ side: null });
         }}>Start new session</button>
-        <p>Wear the selected headphones. Each preset filters the audio sent to your current output.{device?.match ? "" : " These headphones use the preset filters alone."}</p>
-      </div></details>
+      </div>
     </div>
     {mismatch && <p role="status" className="quick-note">A loaded EQ was saved for a different headphone. You’re hearing its original filters on {device.name}.</p>}
     {error && <p role="alert" className="quick-error">{error}</p>}

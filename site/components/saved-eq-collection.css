@@ -10,3 +10,15 @@
 .saved-eq-compare{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px;margin-top:16px;border:1px solid light-dark(var(--workbench-line),#3c535e);border-radius:8px}
 .saved-eq-compare p{margin:0;flex:1 1 220px}
 @media(max-width:600px){.saved-eq-compare :is(a,button){width:100%}}
+
+.saved-eq-collection .automatch-note{margin:0;font-size:13px}
+.automatch-files article{flex-wrap:wrap}
+.automatch-files article.is-selected{border-color:light-dark(var(--workbench-teal-edge), #85daca)}
+.automatch-files .saved-eq-row-heading{align-items:center;flex:1 1 200px;overflow-wrap:anywhere}
+.automatch-files .saved-eq-row-heading p{margin:2px 0 0}
+.automatch-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.automatch-actions .saved-eq-actions{margin:0;gap:8px}
+@media(max-width:600px){
+  .automatch-files article{align-items:stretch;flex-direction:row}
+  .automatch-actions .saved-eq-actions{flex:1 1 100%}
+}

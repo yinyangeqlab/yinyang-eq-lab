@@ -28,6 +28,7 @@ export type HeadphoneMeasurement = {
   rightLevelDb?: number;
   channelMatchMode?: "auto" | "custom";
   channelMatchPreset?: ChannelMatchPreset;
+  hideAutomaticChannelMatch?: true;
   createdAt: number;
 };
 
@@ -78,7 +79,8 @@ export function parseMeasurement(value: unknown): HeadphoneMeasurement {
     responseFileName: field("responseFileName", 180), leftFileName: field("leftFileName", 180),
     rightFileName: field("rightFileName", 180), channelMatchFileName: field("channelMatchFileName", 180),
     leftLevelDb: level("leftLevelDb"), rightLevelDb: level("rightLevelDb"), channelMatchMode,
-    channelMatchPreset, createdAt: typeof row.createdAt === "number" && Number.isFinite(row.createdAt) ? row.createdAt : Date.now() };
+    channelMatchPreset, ...(row.hideAutomaticChannelMatch === true ? { hideAutomaticChannelMatch: true as const } : {}),
+    createdAt: typeof row.createdAt === "number" && Number.isFinite(row.createdAt) ? row.createdAt : Date.now() };
 }
 
 export function isImportedMeasurement(row: HeadphoneMeasurement) {

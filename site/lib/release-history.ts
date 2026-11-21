@@ -394,13 +394,21 @@ const update207Changes = [
   "The Glossary & Guides icon and its submenu icons glow green on hover and keyboard focus.",
 ] as const;
 
-export const candidateChanges = [
+const update208Changes = [
   "Watch the Companion trailer in portrait or landscape. The portrait cut opens with the phone panorama wallpaper, and the Welcome page links straight to the trailer.",
   "Install and update the Companion through App Manager. The Android apps have updated launcher names and icons.",
 ] as const;
 
+export const candidateChanges = [
+  "The homepage keeps the aurora visible behind the yin-yang as the wallpaper moves.",
+  "Compare EQs puts volume, channel correction and session actions below the player.",
+  "The Tuning graph stays below the site header when you scroll.",
+  "My Collection puts Add measurement beside the heading and groups Use, Edit and Delete with each saved measurement. Remove automatic channel matches from the list individually or in bulk.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: candidateChanges },
+  { update: 209, date: "2026-11-21", title: "Wallpaper, listening controls and My Collection", changes: candidateChanges },
+  { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: update208Changes },
   { update: 207, date: "2026-11-21", title: "Sidebar alignment and guide icons", changes: update207Changes },
   { update: 206, date: "2026-11-21", title: "Android download versions", changes: update206Changes },
   { update: 205, date: "2026-11-21", title: "Android trailer timing", changes: update205Changes, github: { commit: "bec3f393703ad2985d663d671bd18282f79d9206", releaseTag: "update205", linkTaggedSource: true } },
