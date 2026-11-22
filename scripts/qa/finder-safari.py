@@ -1,5 +1,6 @@
 """Verify the Finder picker using SafariDriver and capture the actual screen."""
 
+from base64 import b64decode
 from contextlib import contextmanager
 from http.client import HTTPConnection
 import json
@@ -193,6 +194,9 @@ def test_finder(browser, udid, theme):
         return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= innerHeight;
       });
     """, OPTION)
+    capture = b64decode(browser.request("GET", "/screenshot"), validate=True)
+    assert capture.startswith(b"\x89PNG\r\n\x1a\n"), "SafariDriver did not return a PNG"
+    (EVIDENCE / f"{theme}-width-page.png").write_bytes(capture)
     screenshot(udid, f"{theme}-width-open.png")
     assert usable_picker, "Picker rows were not measurable within the Safari viewport"
     if TARGET == "mac":
@@ -231,7 +235,7 @@ def main():
             output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}
             try:
                 if TARGET == "mac":
-                    browser.request("POST", "/window/rect", {"x": 15, "y": 45, "width": 1200, "height": 820})
+                    browser.request("POST", "/window/rect", {"x": 10, "y": 40, "width": 1000, "height": 675})
                 for theme in ("dark", "light"):
                     try:
                         output["themes"][theme] = test_finder(browser, udid, theme)
