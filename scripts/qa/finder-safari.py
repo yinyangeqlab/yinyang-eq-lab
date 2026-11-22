@@ -63,6 +63,10 @@ def simulator():
     if TARGET == "mac":
         yield None
         return
+    xcode = Path("/Applications/Xcode_27.0.app/Contents/Developer")
+    if xcode.is_dir():
+        os.environ["DEVELOPER_DIR"] = str(xcode)
+    subprocess.run(["xcodebuild", "-version"], check=True, timeout=20)
     devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
     phones = []
     for runtime, group in devices.items():
@@ -75,10 +79,11 @@ def simulator():
                 phones.append((release, device["name"] == "iPhone 17", device))
     if not phones:
         raise RuntimeError("No available iPhone simulator is installed")
-    release, _, device = max(phones, key=lambda row: row[:2])
+    release, _, device = max(phones, key=lambda row: (row[0] == (27, 0, 0), row[0], row[1]))
     print(f"Selected {device['name']} on iOS {'.'.join(map(str,release))}", flush=True)
     udid = device["udid"]
-    subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=150)
+    subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=125)
+    print("iPhone simulator booted", flush=True)
     try:
         yield udid
     finally:
@@ -130,6 +135,18 @@ class Safari:
                 {"type": "pointerDown", "button": 0}, {"type": "pointerUp", "button": 0},
             ],
         }]})
+
+    def wait_for_paint(self):
+        self.request("POST", "/execute/async", {
+            "script": "const done = arguments[0]; setTimeout(() => done(false), 1000); requestAnimationFrame(() => requestAnimationFrame(() => done(true)));",
+            "args": [],
+        })
+        time.sleep(0.35)
+
+    def screenshot(self, filename):
+        capture = b64decode(self.request("GET", "/screenshot"), validate=True)
+        assert capture.startswith(b"\x89PNG\r\n\x1a\n"), "SafariDriver did not return a PNG"
+        (EVIDENCE / filename).write_bytes(capture)
 
     def value(self, selector=WIDTH):
         return self.js("return document.querySelector(arguments[0])?.value;", selector)
@@ -186,17 +203,18 @@ def test_finder(browser, udid, theme):
           const el = document.querySelector(arguments[0]);
           return document.activeElement === el && el.matches(':focus-visible') && getComputedStyle(el).outlineStyle === 'solid';
         """, WIDTH), "Width did not receive visible keyboard focus"
+    browser.wait_for_paint()
+    browser.screenshot(f"{theme}-width-closed.png")
     browser.point(WIDTH)
     wait(browser.is_open)
+    browser.wait_for_paint()
     usable_picker = browser.js("""
       return [...document.querySelectorAll(arguments[0])].every(o => {
         const r = o.getBoundingClientRect();
         return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= innerHeight;
       });
     """, OPTION)
-    capture = b64decode(browser.request("GET", "/screenshot"), validate=True)
-    assert capture.startswith(b"\x89PNG\r\n\x1a\n"), "SafariDriver did not return a PNG"
-    (EVIDENCE / f"{theme}-width-page.png").write_bytes(capture)
+    browser.screenshot(f"{theme}-width-page.png")
     screenshot(udid, f"{theme}-width-open.png")
     assert usable_picker, "Picker rows were not measurable within the Safari viewport"
     if TARGET == "mac":
@@ -230,6 +248,7 @@ def main():
             capabilities = {"browserName": "Safari"}
             if udid:
                 capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceUDID": udid})
+            print("Opening Safari WebDriver session", flush=True)
             session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}})["value"]
             browser = Safari("/session/" + session["sessionId"])
             output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}

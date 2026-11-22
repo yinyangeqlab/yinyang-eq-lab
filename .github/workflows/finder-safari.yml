@@ -10,12 +10,16 @@ permissions:
 jobs:
   safari:
     name: ${{ matrix.target }} Safari
-    runs-on: xcode-27
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        target: [mac, iphone]
+        include:
+          - target: mac
+            runner: macos-26
+          - target: iphone
+            runner: xcode-27
     env:
       CI: "true"
       CLOUDFLARE_CF_FETCH_ENABLED: "false"

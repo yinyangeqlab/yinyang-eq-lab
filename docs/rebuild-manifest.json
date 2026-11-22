@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "3a530d16655e56bd4727019e5fed41a90324220e",
+  "baseRevision": "a0a5cb7712a5cdcfcee3cb810dea4942cac9b417",
   "recordedLiveUpdate": 211,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": ".github/workflows/finder-safari.yml",
-      "sha256": "f99d44eff3cd9b375abaa2ef374cc59e403fb7ec7428949fd8fff549a7599143",
+      "sha256": "5fc7f589a6dee3e845eba01f6438be32ba631319970522d2d59cf2b4d267c9b3",
       "executable": false
     },
     {
@@ -4592,7 +4592,7 @@
     },
     {
       "path": "scripts/qa/finder-safari.py",
-      "sha256": "464c0211377a284c29b4b1e3a1cb44cefc25dc424e23b6f8ee1f71c3764eb68e",
+      "sha256": "471553564f60ea43752e0ff7f8e4f42db0333e449c9b82363f9c22ae475901ae",
       "executable": false
     },
     {
