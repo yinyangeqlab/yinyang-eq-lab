@@ -37,12 +37,13 @@ jobs:
           npm ci
           node scripts/prepare-vote-font.mjs --download
           npm run setup:local
+          npm run build
       - name: Verify Finder picker in Apple Safari
         run: |
           set -eu
           mkdir -p "$RUNNER_TEMP/finder"
           export FINDER_EVIDENCE="$RUNNER_TEMP/finder"
-          npm run dev -- --host 127.0.0.1 --strictPort > "$FINDER_EVIDENCE/preview.log" 2>&1 &
+          npm run start -- --port 5173 > "$FINDER_EVIDENCE/preview.log" 2>&1 &
           preview_pid=$!
           python3 scripts/qa/finder-safari-preview.py 5813 > "$FINDER_EVIDENCE/fixture.log" 2>&1 &
           proxy_pid=$!

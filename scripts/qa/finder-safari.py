@@ -81,6 +81,11 @@ def simulator():
     subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=125)
     print("iPhone simulator booted", flush=True)
     try:
+        for key in ("WebKitDeveloperExtrasEnabled", "AllowRemoteAutomation"):
+            subprocess.run(["xcrun", "simctl", "spawn", udid, "defaults", "write",
+                            "com.apple.mobilesafari", key, "-bool", "true"], check=True, timeout=20)
+        subprocess.run(["xcrun", "simctl", "openurl", udid, ORIGIN + "/ear-tuning"], check=True, timeout=25)
+        print("Mobile Safari opened in the simulator", flush=True)
         yield udid
     finally:
         subprocess.run(["xcrun", "simctl", "shutdown", udid], check=False)
@@ -185,12 +190,16 @@ def test_finder(browser, udid, theme):
         viewport: [innerWidth, innerHeight], ua: navigator.userAgent,
         appearance: getComputedStyle(s).appearance,
         scheme: getComputedStyle(s).colorScheme,
-        options: [...s.options].map(o => ({ text: o.label, selected: o.selected, disabled: o.disabled })),
+        options: [...s.options].map(o => {
+          const css = getComputedStyle(o);
+          return {text: o.label, selected: o.selected, disabled: o.disabled,
+                  color: css.color, background: css.backgroundColor};
+        }),
       };
     """, WIDTH)
     assert measured["scheme"] == theme, measured
     assert [o["text"] for o in measured["options"]] == ["Wide", "Medium", "Narrow", "Custom"], measured
-    assert measured["options"][-1] == {"text": "Custom", "selected": True, "disabled": True}, measured
+    assert measured["options"][-1]["selected"] and measured["options"][-1]["disabled"], measured
     browser.js("document.querySelector(arguments[0]).scrollIntoView({block: 'center'});", WIDTH)
     if TARGET == "mac":
         browser.js("document.querySelector('.ear-adjustment input[type=range]').focus();")
@@ -263,10 +272,13 @@ def main():
     with driver_server(), simulator() as udid:
         capabilities = {"browserName": "Safari"}
         if udid:
-            capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceUDID": udid})
+            capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceType": "iPhone"})
         print("Opening Safari WebDriver session", flush=True)
         session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}})["value"]
         browser = Safari("/session/" + session["sessionId"])
+        if udid:
+            actual_device = session["capabilities"].get("safari:deviceUDID")
+            assert not actual_device or actual_device.casefold() == udid.casefold(), "SafariDriver selected a different simulator"
         output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}
         try:
             if TARGET == "mac":
