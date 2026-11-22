@@ -3,7 +3,7 @@ import {useEffect,useRef,useState} from 'react';
 import {bugReportUrl} from '@/lib/release-info';
 import './link.css';
 
-type Link = {challenge:string; issued:number};
+type Link = {challenge:string; issued:number; ranks?:boolean};
 type Decision = 'approve' | 'cancel';
 type Outcome = Decision | 'expired' | 'used';
 const ttl=600000;
@@ -30,7 +30,7 @@ export default function CompanionLink(){
     function restore(){
       const params=new URLSearchParams(location.hash.slice(1));
       const saved=history.state?.companionApproval;
-      const request=params.has('key') ? {challenge:params.get('key')!,issued:Number(params.get('at'))} : saved?.link;
+      const request=params.has('key') ? {challenge:params.get('key')!,issued:Number(params.get('at')),ranks:params.get('ranks')==='1'} : saved?.link;
       const previous=!location.hash && (saved?.outcome==='wrong-code' ? 'cancel' : saved?.outcome);
       const terminal:Outcome|undefined=valid(request) && Date.now()>=request.issued+ttl ? 'expired'
         : previous && Object.hasOwn(titles,previous) ? previous : undefined;
@@ -48,7 +48,7 @@ export default function CompanionLink(){
     if(inFlight.current || (!link && action!=='disconnect'))return;
     inFlight.current=true;setBusy(true);setError('');
     try {
-      const res=await fetch('/api/companion/grants',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...link,action,access:'edit-library-v1'})});
+      const res=await fetch('/api/companion/grants',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...link,action,access:link?.ranks?'edit-library-ranks-v2':'edit-library-v1'})});
       if(res.status===409 && action!=='disconnect'){remember({outcome:'used'});setOutcome('used');setLink(undefined);return;}
       if(!res.ok){const body=await res.json().catch(()=>({}));throw Error(body && typeof body==='object' && 'error' in body && typeof body.error==='string' ? body.error : 'Could not save your choice. Try again.');}
       if(action==='disconnect'){setManage(false);setDisconnected(true);}
@@ -65,6 +65,7 @@ export default function CompanionLink(){
       <div className="approval-code">{code.slice(0,4)} {code.slice(4)}</div>
       <p className="approval-expiry">Expires at {new Date(link.issued+ttl).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}</p>
       <p>This companion can read your library and save the EQs, measurements and channel matches you choose. Your live filter edits stay on the phone. Manage saved items and backup history in My Collection. The link lasts until you disconnect or revoke access.</p>
+      {link.ranks && <p>The companion can also read the target ranks from your synced Personal Tournaments. Your individual choices stay in Sync.</p>}
       <div className="approval-actions">
         <button className="approval-primary" disabled={busy} onClick={()=>submit('approve')}>Confirm</button>
         <button disabled={busy} onClick={()=>submit('cancel')}>Cancel request</button>

@@ -1,0 +1,54 @@
+{
+  "update": 212,
+  "sourceCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
+  "deploymentVerification": {
+    "at": "2026-11-22T21:55:27.888277Z",
+    "update": 212,
+    "revision": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
+    "deploymentVerified": true,
+    "migrations": [
+      "0048_companion_personal_ranks.sql"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "providerRefreshOutputOnlyDifferences": 3,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "newDataSnapshot": false,
+    "verifiedPreviousSourceCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
+    "matchingWorkerModules": 414,
+    "matchingVersionClientAssets": 38,
+    "protectedRecordingAccessRetained": true,
+    "unapprovedCredentialRejected": true,
+    "affectedPagesVerified": true,
+    "matchingFeatureClientAssets": 91
+  },
+  "browserVerification": {
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false,
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedBrowserChecks": {
+      "isolatedSyncFixturesPassed": true,
+      "authenticatedProductionBrowserTested": false
+    }
+  },
+  "candidateVerification": {
+    "sourceRevision": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
+    "regressionSuitesPassed": 127,
+    "regressionSuitesFailed": 0,
+    "protectedRecordings": 224,
+    "publicOnlyPackage": false,
+    "typeScriptAndLintPassed": true,
+    "lintWarnings": 9,
+    "retainedPreviousClientFiles": 3937
+  },
+  "recoveryRegistrationPending": true
+}

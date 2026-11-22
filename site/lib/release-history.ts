@@ -411,14 +411,20 @@ const update210Changes = [
   "The active Companion trailer format has one Share trailer button with the standard share icon.",
 ] as const;
 
-export const candidateChanges = [
+const update211Changes = [
   "Screen-reader navigation is clearer on the homepage, in the footer, and in Music Library suggestions.",
   "Missing pages link back to the homepage. Shared listening links use the appropriate layout and announce the page while loading and during comparisons.",
   "The Companion linking reminder is easier to read, and the Finder’s disabled Custom width is legible in supported browsers.",
 ] as const;
 
+export const candidateChanges = [
+  "YYEQ5K can load rankings from your synced Personal Tournaments after you approve access in the browser.",
+  "YYEQ5K searches saved measurements and site catalogs, fits Main EQ with Channel Match, and saves paired presets as TXT.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 211, date: "2026-11-21", title: "Website accessibility and navigation fixes", changes: candidateChanges },
+  { update: 212, date: "2026-11-22", title: "Android Auto EQ and Personal rank sync", changes: candidateChanges },
+  { update: 211, date: "2026-11-21", title: "Website accessibility and navigation fixes", changes: update211Changes, github: { commit: "b78e6f9fa501b4ab515bf235e632c6a87cea76f6", releaseTag: "update211", linkTaggedSource: true } },
   { update: 210, date: "2026-11-21", title: "Homepage aurora, guide icons and trailer sharing", changes: update210Changes, github: { commit: "4c907fd33ff8994565408526ae84754a33bdcda6", releaseTag: "update210", linkTaggedSource: true } },
   { update: 209, date: "2026-11-21", title: "Wallpaper, listening controls and My Collection", changes: update209Changes, github: { commit: "b5c0d90f9d25906299ed2cd309f1b147b4b44803", releaseTag: "update209", linkTaggedSource: true } },
   { update: 208, date: "2026-11-21", title: "Android trailer sharing and app branding", changes: update208Changes, github: { commit: "33b0c8006874bdeea2bda141c401f67709f0b044", releaseTag: "update208", linkTaggedSource: true } },

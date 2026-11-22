@@ -1,9 +1,14 @@
-# Current release — update211 Website accessibility and navigation fixes
+# Current release — update212 Android Auto EQ and Personal rank sync
 
 <!-- release-state:start -->
-Recorded deployment: **update211**, source `dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a`.
+Recorded deployment: **update212**, source `72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+YYEQ5K can read synced Personal Tournament rankings after browser approval. Independent reconstruction and hosted validation passed for this release. [Deployment verification](releases/update212-verification.json) [Recovery verification](releases/update212-recovery-verification.json)
+
+## Previous release records
+# Current release — update211 Website accessibility and navigation fixes
 
 Eight fixes improve screen-reader navigation, missing-page recovery, shared listening layouts, and text and native menu contrast. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update211-verification.json) [Recovery verification](releases/update211-recovery-verification.json)
 

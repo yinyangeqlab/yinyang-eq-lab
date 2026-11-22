@@ -8,6 +8,8 @@ import {segmentedHead} from '@/lib/account-sync-segments';
 import {digest} from '@/lib/device-sync.mjs';
 import {profileFailure,profileHeaders} from '@/lib/profile-api';
 import {RequestInputError} from '@/lib/request-json';
+import {PERSONAL_KEY} from '@/lib/personal-shootout';
+import {companionPersonalRankings} from '@/lib/companion-personal-ranks';
 
 import type {PeqFilter} from '@/lib/autoeq';
 import type {LibraryEq} from '@/lib/music-library-eq';
@@ -33,14 +35,17 @@ export async function GET(request:Request){try{
   }
   const writable=!!account.writable;
   const url=new URL(request.url);
+  const personal=url.searchParams.get('view')==='personal-ranks';
+  if(personal && !account.personalRanks)return reply({personalRankings:[],requiresApproval:true});
   if(url.searchParams.has('history')){
     if(!writable)throw denied();
     const offset=Number(url.searchParams.get('history'));if(!Number.isSafeInteger(offset)||offset<0)throw new RequestInputError('Invalid history offset.',400);
     const rows=await history(db,account.subject_id,offset);return reply({history:rows.slice(0,15),next:rows.length>15?offset+15:null});
   }
   const row=await readAccountSync(db,{...account,protectedAccount:!!account.slug},writable);
+  if(personal && !row?.initialized)return reply({personalRankings:[]});
   if(!row?.initialized)return reply({eqs:[],measurements:[],writable,epoch:row?.epoch,revision:row?.revision});
-  const params=new URL(request.url).searchParams,offset=Number(params.get('offset')||0),limit=2;
+  const params=url.searchParams,offset=personal?0:Number(params.get('offset')||0),limit=personal?8:2;
   if(!Number.isSafeInteger(offset)||offset<0)throw new RequestInputError('Invalid page.',400);
   if(offset && (params.get('epoch')!==row.epoch || params.get('revision')!==String(row.revision)))
     throw new RequestInputError('Your collection changed. Refresh again.',409);
@@ -50,7 +55,7 @@ export async function GET(request:Request){try{
       .bind(head.version,account.subject_id).first<{manifest:string}>():null;
   if(head && !version)throw new Error('Unavailable collection');
   const manifest=version?JSON.parse(version.manifest):null, legacy=!head?JSON.parse(row.payload):null;
-  async function selected(key:typeof keys[number]){
+  async function selected(key:typeof keys[number] | typeof PERSONAL_KEY){
     if(!head){
       const entries=JSON.parse(legacy[key]||'[]');more ||= entries.length>offset+limit;
       return entries.slice(offset,offset+limit);
@@ -72,6 +77,17 @@ export async function GET(request:Request){try{
     }
     return items;
   }
+  async function verifyFresh(){
+    const fresh=await readAccountSync(db,{...account!,protectedAccount:!!account!.slug});
+    if(fresh?.epoch!==row!.epoch || fresh.revision!==row!.revision || fresh.payload!==row!.payload)
+      throw new RequestInputError('Your account changed during refresh. Try again.',409);
+    if(personal && !(await companionAccess(db,challenge))?.personalRanks)throw denied();
+  }
+  if(personal){
+    const personalRankings=companionPersonalRankings(await selected(PERSONAL_KEY));
+    await verifyFresh();
+    return reply({personalRankings});
+  }
   // Expose audio data only. Keep notes, research IDs, votes and listening history outside this response.
   const filters=(rows:PeqFilter[])=>rows.map(({type,hz,gain,q})=>({type,hz,gain,q}));
   const match=(m:ChannelMatch | undefined)=>m && ({leftPoints:m.leftPoints,rightPoints:m.rightPoints,leftLevelDb:m.leftLevelDb,rightLevelDb:m.rightLevelDb,
@@ -79,9 +95,7 @@ export async function GET(request:Request){try{
   const eqs=(await selected(keys[0])).map((e:LibraryEq)=>({id:e.id,name:e.name,filters:filters(e.filters),preamp:e.preamp,measurementId:e.measurementId,
     target:e.target && {name:e.target.name,points:e.target.points},channelMatch:match(e.channelMatch)}));
   const measurements=(await selected(keys[1])).map((m:HeadphoneMeasurement)=>({id:m.id,name:m.name,device:m.device,type:m.type,points:m.points,...match(m)}));
-  const fresh=await readAccountSync(db,{...account,protectedAccount:!!account.slug});
-  if(fresh?.epoch!==row.epoch || fresh.revision!==row.revision || fresh.payload!==row.payload)
-    throw new RequestInputError('Your account changed during refresh. Try again.',409);
+  await verifyFresh();
   return reply({eqs,measurements,writable,epoch:row.epoch,revision:row.revision,next:more?offset+limit:null});
 }catch(e){return profileFailure(e);}}
 

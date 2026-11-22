@@ -16,10 +16,10 @@ export const editGuard=(challenge:string)=>({sql:`EXISTS(SELECT 1 ${joins} WHERE
 export async function companionAccess(db:D1Database,challenge:string){
   const now=Date.now();
   return db.prepare(`SELECT g.subject_id,COALESCE(o.slug,'') AS slug,g.device_id AS deviceId,
-    g.expires_at=0 AS writable,d.invite_id,g.access_hash AS syncAccess,g.session_hash AS syncSession
+    g.expires_at=0 AS writable,g.personal_ranks AS personalRanks,d.invite_id,g.access_hash AS syncAccess,g.session_hash AS syncSession
     ${joins} WHERE ${eligible} AND (g.expires_at=0 OR (g.expires_at>? AND d.expires_at>unixepoch() AND i.session_expires_at>unixepoch()
     AND EXISTS(SELECT 1 FROM privacy_sessions s WHERE s.subject_id=g.subject_id AND s.token_hash=g.session_hash AND s.expires_at>?)))`)
-    .bind(challenge,ACCOUNT_SYNC_NOTICE_VERSION,now,now).first<{subject_id:string;slug:string;deviceId:string;writable:number;invite_id:string;syncAccess:string;syncSession:string}>();
+    .bind(challenge,ACCOUNT_SYNC_NOTICE_VERSION,now,now).first<{subject_id:string;slug:string;deviceId:string;writable:number;personalRanks:number;invite_id:string;syncAccess:string;syncSession:string}>();
 }
 export async function companionKey(request:Request){
   const bearer=/^Bearer ([a-f0-9]{64})$/.exec(request.headers.get('Authorization')||'');
