@@ -1,0 +1,55 @@
+name: Finder Safari QA
+
+on:
+  push:
+    branches: [qa/finder-safari-width]
+
+permissions:
+  contents: read
+
+jobs:
+  safari:
+    name: ${{ matrix.target }} Safari
+    runs-on: xcode-27
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [mac, iphone]
+    env:
+      CI: "true"
+      CLOUDFLARE_CF_FETCH_ENABLED: "false"
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+      - name: Prepare public source and synthetic database
+        run: |
+          node scripts/check-live-source.mjs --source-only
+          npm ci
+          node scripts/prepare-vote-font.mjs --download
+          npm run setup:local
+      - name: Verify Finder picker in Apple Safari
+        run: |
+          set -eu
+          mkdir -p "$RUNNER_TEMP/finder"
+          export FINDER_EVIDENCE="$RUNNER_TEMP/finder"
+          npm run dev -- --host 127.0.0.1 --strictPort > "$FINDER_EVIDENCE/preview.log" 2>&1 &
+          preview_pid=$!
+          python3 scripts/qa/finder-safari-preview.py 5813 > "$FINDER_EVIDENCE/fixture.log" 2>&1 &
+          proxy_pid=$!
+          trap 'kill "$preview_pid" "$proxy_pid" 2>/dev/null || true' EXIT
+          sudo /usr/bin/safaridriver --enable
+          python3 scripts/qa/finder-safari.py "${{ matrix.target }}"
+      - name: Upload Safari picker evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: finder-safari-${{ matrix.target }}
+          path: ${{ runner.temp }}/finder/
+          if-no-files-found: warn
+          retention-days: 7
