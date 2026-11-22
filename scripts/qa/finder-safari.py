@@ -36,8 +36,8 @@ def wait(check, seconds=20):
     return r
 
 
-def api(method, path, data=None, port=4444):
-    conn = HTTPConnection("127.0.0.1", port, timeout=120)
+def api(method, path, data=None, port=4444, timeout=120):
+    conn = HTTPConnection("127.0.0.1", port, timeout=timeout)
     try:
         headers = {"Content-Type": "application/json"} if data is not None else {}
         conn.request(method, path, json.dumps(data) if data is not None else None, headers)
@@ -63,10 +63,6 @@ def simulator():
     if TARGET == "mac":
         yield None
         return
-    xcode = Path("/Applications/Xcode_27.0.app/Contents/Developer")
-    if xcode.is_dir():
-        os.environ["DEVELOPER_DIR"] = str(xcode)
-    subprocess.run(["xcodebuild", "-version"], check=True, timeout=20)
     devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
     phones = []
     for runtime, group in devices.items():
@@ -238,35 +234,52 @@ def test_finder(browser, udid, theme):
     return measured
 
 
+@contextmanager
+def driver_server():
+    with (EVIDENCE / "safaridriver.log").open("wb") as log:
+        driver = subprocess.Popen(["/usr/bin/safaridriver", "--port", "4444"], stdout=log, stderr=log)
+        def driver_ready():
+            if driver.poll() is not None:
+                raise RuntimeError(f"SafariDriver stopped with status {driver.returncode}")
+            return api("GET", "/status", timeout=4)["value"]["ready"]
+        try:
+            wait(driver_ready, 40)
+            print("SafariDriver is listening on loopback", flush=True)
+            yield
+        finally:
+            if driver.poll() is None:
+                driver.terminate()
+                driver.wait(timeout=15)
+
+
 def main():
     wait(layout_account, 105)
     print("Synthetic layout account verified", flush=True)
-    with simulator() as udid, (EVIDENCE / "safaridriver.log").open("wb") as log:
-        driver = subprocess.Popen(["/usr/bin/safaridriver", "--port", "4444"], stdout=log, stderr=log)
+    if TARGET == "iphone":
+        xcode = Path("/Applications/Xcode_27.0.app/Contents/Developer")
+        if xcode.is_dir():
+            os.environ["DEVELOPER_DIR"] = str(xcode)
+        subprocess.run(["xcodebuild", "-version"], check=True, timeout=20)
+    with driver_server(), simulator() as udid:
+        capabilities = {"browserName": "Safari"}
+        if udid:
+            capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceUDID": udid})
+        print("Opening Safari WebDriver session", flush=True)
+        session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}})["value"]
+        browser = Safari("/session/" + session["sessionId"])
+        output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}
         try:
-            wait(lambda: api("GET", "/status")["value"]["ready"])
-            capabilities = {"browserName": "Safari"}
-            if udid:
-                capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceUDID": udid})
-            print("Opening Safari WebDriver session", flush=True)
-            session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}})["value"]
-            browser = Safari("/session/" + session["sessionId"])
-            output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}
-            try:
-                if TARGET == "mac":
-                    browser.request("POST", "/window/rect", {"x": 10, "y": 40, "width": 1000, "height": 675})
-                for theme in ("dark", "light"):
-                    try:
-                        output["themes"][theme] = test_finder(browser, udid, theme)
-                    except Exception:
-                        screenshot(udid, f"{theme}-failure.png")
-                        raise
-            finally:
-                (EVIDENCE / "result.json").write_text(json.dumps(output, indent=2) + "\n")
-                browser.request("DELETE", "")
+            if TARGET == "mac":
+                browser.request("POST", "/window/rect", {"x": 10, "y": 40, "width": 1000, "height": 675})
+            for theme in ("dark", "light"):
+                try:
+                    output["themes"][theme] = test_finder(browser, udid, theme)
+                except Exception:
+                    screenshot(udid, f"{theme}-failure.png")
+                    raise
         finally:
-            driver.terminate()
-            driver.wait(timeout=15)
+            (EVIDENCE / "result.json").write_text(json.dumps(output, indent=2) + "\n")
+            browser.request("DELETE", "")
 
 
 if __name__ == "__main__":
