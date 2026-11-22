@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 210,
+  "update": 211,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-21T13:33:15.166334Z",
-  "sourceCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
-  "sourceBranch": "release/update210-homepage-guide-trailer",
-  "baselineCommit": "c7155bd2c49c958a57ac71bec392a10e2b8ad47a",
-  "evidence": "docs/releases/update210-verification.json",
+  "verifiedAt": "2026-11-22T08:35:55.528022Z",
+  "sourceCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
+  "sourceBranch": "release/update211-website-audit",
+  "baselineCommit": "90eb8da2eaa55dcb17919588bfc20f93452efe28",
+  "evidence": "docs/releases/update211-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -29,8 +29,8 @@
     "automaticExpiry": false
   },
   "gitSource": {
-    "implementationCommit": "5fdc4863f98b7c0671098547090d01125a1d2af1",
-    "branch": "release/update210-homepage-guide-trailer",
+    "implementationCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
+    "branch": "release/update211-website-audit",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": false,
@@ -47,28 +47,28 @@
     "nextScheduledRunMayRefuseBaselineMismatch": false,
     "newDataExport": false,
     "latestDataSnapshotUnchanged": true,
-    "sourceBaselineUpdate": 210,
-    "sourceBaselineVerifiedAt": "2026-11-21T13:40:15Z",
+    "sourceBaselineUpdate": 211,
+    "sourceBaselineVerifiedAt": "2026-11-22T08:50:31Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "latestHostedRunMode": "validate-only",
     "dailyWorkflowActive": true,
-    "update210SourceOnlyHandover": {
+    "update211SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update210-recovery-verification.json"
+      "evidence": "docs/releases/update211-recovery-verification.json"
     }
   },
   "documentationFiles": [
     {
-      "path": "docs/releases/update210-verification.json",
-      "sha256": "0d2fcac2d0d6d0c0f39ef2e20f5d21ac5a934fb317f2d7f1e2956b255c7ff221"
+      "path": "docs/releases/update211-verification.json",
+      "sha256": "8c753016cf40ff642bb00b224d87ca27fbe83f437dcd6117d1e866b8c9f06687"
     },
     {
-      "path": "docs/releases/update210-recovery-verification.json",
-      "sha256": "65ad16cf70ad3df259fd23b6cd7238685586903221456646f8fc8c14e1cfafe2"
+      "path": "docs/releases/update211-recovery-verification.json",
+      "sha256": "2eb09230db7692ae2611a34f35ce6c4c49582dd5bed660375ebb0c5c357dc4fa"
     }
   ]
 }

@@ -50,7 +50,7 @@ function Panorama() {
 }
 
 export default function FirstListenHome() {
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
   const toolGrid = useRef<HTMLElement>(null);
   useEffect(() => {
     const grid = toolGrid.current;
@@ -65,7 +65,7 @@ export default function FirstListenHome() {
   useEffect(() => {
     if (root.current) return mountSample(root.current);
   }, []);
-  return <div ref={root} id="first-listen-home">
+  return <main ref={root} id="first-listen-home">
   <Panorama />
   <div className="frame">
   <section className="first" aria-labelledby="home-title">
@@ -114,5 +114,5 @@ export default function FirstListenHome() {
   </section>
   <WelcomeWallpapers />
   </div>
-</div>;
+</main>;
 }

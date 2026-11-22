@@ -4,6 +4,7 @@
   "site/app/ear-tuning/layout.tsx",
   "site/app/ear-tuning/page.tsx",
   "site/app/ear-tuning/style.css",
+  "site/app/not-found.tsx",
   "site/app/api/my-data/browser-proof/route.ts",
   "site/app/api/owner-research/browser-proof/route.ts",
   "site/app/site-light.css",

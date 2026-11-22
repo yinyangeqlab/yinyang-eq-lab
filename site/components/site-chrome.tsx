@@ -11,7 +11,7 @@ import SiteTopbar from "@/components/site-topbar";
 import TuningSession from "@/components/tuning-session";
 
 // Guest shootouts use a standalone header, or no chrome when embedded.
-const STANDALONE = /^\/(?:embed|s)\/[a-z0-9]+(?:\/|$)/;
+const STANDALONE = /^\/(?:embed\/[^/]+|s\/[^/]+(?:\/results)?)\/?$/;
 
 export function isStandalonePath(pathname: string | null): boolean {
   return pathname !== null && (STANDALONE.test(pathname) || pathname === "/share-shootout");

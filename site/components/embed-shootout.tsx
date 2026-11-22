@@ -287,7 +287,10 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
 
   return <div className={`es-root${embed ? " es-embed" : ""}`}>
     <main className="es-card" aria-live="polite" aria-busy={phase === "loading" || busy}>
-      {phase === "loading" && <p className="es-status">Loading shootout…</p>}
+      {phase === "loading" && <>
+        <h1 className="sr-only">Blind shootout</h1>
+        <p className="es-status">Loading shootout…</p>
+      </>}
 
       {phase === "error" && <div className="es-center"><h1>Shootout Unavailable</h1><p>{error}</p><p>Reloading starts this quick comparison again and clears any choices not yet sent.</p><button type="button" className="es-button" onClick={()=>window.location.reload()}>Reload comparison</button>{!embed && <a className="es-button" href="/share-shootout">Make a new shootout</a>}</div>}
 
@@ -314,6 +317,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
       </section>}
 
       {(phase === "listen" || phase === "sending") && config && round && <section className="es-listen">
+        <h1 className="sr-only">{config.title}</h1>
         <div className="es-progress" role="progressbar" aria-valuemin={1} aria-valuemax={roundCount} aria-valuenow={Math.min(step + 1, roundCount)} aria-label="Round">
           <span>Round {Math.min(step + 1, roundCount)} of {roundCount}</span>
           <ol>{config.rounds.map((_, i) => <li key={i} className={i < step ? "done" : i === step ? "now" : ""} />)}</ol>

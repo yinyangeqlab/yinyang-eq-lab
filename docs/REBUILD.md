@@ -1,9 +1,14 @@
-# Current release — update210 Homepage aurora, guide icons and trailer sharing
+# Current release — update211 Website accessibility and navigation fixes
 
 <!-- release-state:start -->
-Recorded deployment: **update210**, source `5fdc4863f98b7c0671098547090d01125a1d2af1`.
+Recorded deployment: **update211**, source `dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Eight fixes improve screen-reader navigation, missing-page recovery, shared listening layouts, and text and native menu contrast. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update211-verification.json) [Recovery verification](releases/update211-recovery-verification.json)
+
+## Previous release records
+# Current release — update210 Homepage aurora, guide icons and trailer sharing
 
 The aurora stays visible when the homepage animation starts. Glossary & Guides and all four submenu icons share the sidebar glow. Each trailer format has one Share trailer button. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update210-verification.json) [Recovery verification](releases/update210-recovery-verification.json)
 

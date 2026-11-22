@@ -2,7 +2,8 @@
 .companion-approval h1 {font-size:clamp(1.9rem,5vw,2.65rem);line-height:1.14;margin:1.1rem 0}
 .companion-approval p {margin:.7rem 0}
 .companion-approval .approval-code {font:600 clamp(2rem,9vw,3rem)/1.2 ui-monospace,monospace;letter-spacing:.06em;margin:1.3rem 0 .25rem;white-space:nowrap}
-.companion-approval .approval-expiry,.companion-approval small {font-size:.85rem;opacity:.8}
+.companion-approval .approval-expiry,.companion-approval small {font-size:.85rem}
+.companion-approval .approval-expiry {opacity:.8}
 .companion-approval .approval-actions {display:flex;gap:.5rem;flex-wrap:wrap;margin:1.4rem 0}
 .companion-approval button,.companion-approval summary {cursor:pointer;font:inherit;min-height:48px}
 .companion-approval button {padding:.6rem 1rem;border:1px solid currentColor;border-radius:.5rem;background:transparent;color:inherit}
@@ -10,4 +11,4 @@
 .companion-approval button:disabled {opacity:.55}
 .companion-approval :focus-visible {outline:3px solid #62b3d8;outline-offset:3px}
 .companion-approval footer,.companion-approval details {border-top:1px solid #64747a;margin-top:1.6rem;padding-top:1rem}
-.companion-approval small {display:block;margin-top:.3rem}
+.companion-approval small {display:block;margin-top:.3rem;color:light-dark(var(--workbench-muted),#a2bac4)}

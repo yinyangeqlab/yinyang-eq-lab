@@ -52,6 +52,19 @@
 .ear-tool :is(select option, select optgroup) { background: light-dark(var(--workbench-soft), #102830); color: light-dark(var(--workbench-teal), #e7f8f5); }
 .ear-tool select option:disabled { color: light-dark(var(--workbench-muted), #9aafb5); }
 .ear-tool :focus-visible { outline: 2px solid light-dark(var(--workbench-teal), #b0f3e5); outline-offset: 3px; }
+/* The standard Chromium popup overrides the authored disabled option color. */
+@supports (appearance: base-select) and selector(select::picker(select)) {
+  .ear-adjustment select, .ear-adjustment select::picker(select) { appearance: base-select; }
+  .ear-adjustment select::picker(select) {
+    background: light-dark(var(--workbench-soft), #102830);
+    border: 1px solid light-dark(var(--workbench-line), #53757e);
+    border-radius: 6px;
+  }
+  .ear-adjustment select option { min-height: 30px; padding-inline: 10px; }
+  .ear-adjustment select option:checked { font-weight: 600; }
+  .ear-adjustment select option:disabled { background: light-dark(var(--workbench-selected), #20353e); }
+  .ear-adjustment select option:focus-visible { outline-offset: -2px; }
+}
 .ear-tool a { color: light-dark(var(--workbench-teal), #a1f0dc); }
 .ear-tool :is(input[type=range],input[type=checkbox],input[type=radio]) { accent-color: light-dark(var(--workbench-teal), #8ce5cf); }
 .ear-tool input[type=range] { width: 100%; min-width: 0; margin: 3px 0; }
