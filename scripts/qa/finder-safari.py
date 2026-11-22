@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from http.client import HTTPConnection
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -62,11 +63,19 @@ def simulator():
         yield None
         return
     devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
-    ios = [(runtime, group) for runtime, group in devices.items() if runtime.rsplit(".", 1)[-1].startswith("iOS-")]
-    def version(entry):
-        return tuple(int(n) for n in entry[0].rsplit(".", 1)[-1].removeprefix("iOS-").split("-"))
-    _, candidates = max(ios, key=version)
-    device = next(d for d in candidates if d["name"] == "iPhone 17")
+    phones = []
+    for runtime, group in devices.items():
+        version = re.match(r"^iOS-(\d+)-(\d+)(?:-(\d+))?(?:-|$)", runtime.rsplit(".", 1)[-1])
+        if not version:
+            continue
+        release = tuple(int(number or 0) for number in version.groups())
+        for device in group:
+            if device["name"].startswith("iPhone") and device.get("isAvailable", True):
+                phones.append((release, device["name"] == "iPhone 17", device))
+    if not phones:
+        raise RuntimeError("No available iPhone simulator is installed")
+    release, _, device = max(phones, key=lambda row: row[:2])
+    print(f"Selected {device['name']} on iOS {'.'.join(map(str,release))}", flush=True)
     udid = device["udid"]
     subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=150)
     try:
