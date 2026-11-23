@@ -1,9 +1,14 @@
-# Current release — update214 Four consent actions in view
+# Current release — update215 Sync ID and account recovery
 
 <!-- release-state:start -->
-Recorded deployment: **update214**, source `d0c7c9eec949baa84126289ba920d05b9347db1b`.
+Recorded deployment: **update215**, source `e97ea8032fcbd0b8a0d543020c030e80fb86e205`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Users can recover an existing Sync account with a passkey or saved recovery code and approve YYEQ5K. Physical Android verification, encrypted recovery reconstruction and hosted validation passed. [YYEQ5K 0.16.7](https://github.com/yinyangeqlab/yinyang-android/releases/tag/android-20261122-0167) is signed and available in App Manager. [Deployment verification](releases/update215-verification.json) [Recovery verification](releases/update215-recovery-verification.json)
+
+## Previous release records
+# Current release — update214 Four consent actions in view
 
 Accept all, Required only, Cancel and Save stay in view while the consent terms scroll. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update214-verification.json) [Recovery verification](releases/update214-recovery-verification.json)
 

@@ -61,6 +61,7 @@ checkDestination("/shootout?mode=unknown&tab=rankings", "/shootout?tab=rankings"
 checkDestination("/shootout?tab=shootout", "/shootout");
 checkDestination("/shootout?tab=unknown", "/shootout");
 checkDestination("/my-data?trial=fixture-secret", "/my-data");
+checkDestination("/sync-recovery?key=fixture-secret", "/sync-recovery");
 checkDestination("/participation?review=1&return_to=fixture-secret", "/participation");
 assert.equal(sharePageFor("/does-not-exist"), null);
 assert.equal(sharePageFor("/api/my-data"), null);

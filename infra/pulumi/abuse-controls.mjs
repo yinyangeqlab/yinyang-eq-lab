@@ -9,11 +9,12 @@ export const abuseBindings = [
   {name:'READ_LISTENER_LIMIT',type:'ratelimit',namespaceId:'80106',simple:{limit:180,period:60}},
 ];
 const safe = method => method==='GET'||method==='HEAD'||method==='OPTIONS';
-const signIn = path => ['/admin-login','/owner-login','/api/profile-access','/access'].includes(path);
+const signIn = path => ['/admin-login','/owner-login','/api/profile-access','/api/sync-recovery','/access'].includes(path);
 export function bodyLimit(path) {
   // A 512 KB authenticated sync snapshot may expand when form URL-encoded.
   // The sync handler independently caps unsigned requests at 2 KB.
   if(path==='/sync'||path.startsWith('/devices/'))return 3_145_728;
+  if(path==='/api/sync-recovery'||path==='/api/my-profile/sync-recovery')return 16_384;
   if(signIn(path)||path.startsWith('/__private/admin/'))return 2048;
   // Preserve the existing three-file measurement upload envelope and target exports.
   return path==='/api/research-measurements'?12_100_000:1_048_576;

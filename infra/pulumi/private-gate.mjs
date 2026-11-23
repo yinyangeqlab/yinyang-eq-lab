@@ -301,6 +301,27 @@ const privateGate = {
         return app.fetch(new Request(bounded,{headers:clean}),env,context);
       }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
+      const recoveryApi = path === "/api/sync-recovery";
+      const recoveryPage = path === "/sync-recovery";
+      const unsignedCompanion = path === "/companion-link" && !tester && !owner && ["GET","HEAD"].includes(request.method);
+      if (recoveryApi || recoveryPage || unsignedCompanion) {
+        if (owner || tester?.id === "layout-test-only" ||
+            !tester && (await dataSession(request,env,null))?.subject === "invite:layout-test-only")
+          return json({error:"Open Sync recovery in a separate listener browser."},403);
+        if (!(recoveryApi ? request.method === "POST" : ["GET","HEAD"].includes(request.method)))
+          return json({error:"Method not allowed."},405);
+        const bounded = await boundedBody(request);
+        if (bounded instanceof Response) return bounded;
+        const clean = new Headers(bounded.headers);
+        for (const name of ["authorization","oai-authenticated-user-id","oai-authenticated-user-email","oai-authenticated-user-full-name","oai-authenticated-user-full-name-encoding","x-yinyang-data-session"])
+          clean.delete(name);
+        const response = await app.fetch(new Request(bounded,{headers:clean}),env,context);
+        const privateResponse = new Response(response.body,response);
+        privateResponse.headers.set("Cache-Control","private, no-store");
+        privateResponse.headers.set("Referrer-Policy","no-referrer");
+        privateResponse.headers.set("X-Robots-Tag","noindex, nofollow");
+        return privateResponse;
+      }
       if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method) && !(path==="/api/my-data"&&request.method==="PATCH"))return blockedSubmission("test_account", json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403));
       if(tester?.id==="layout-test-only" && (path==="/sync" || path==="/pair" || path.startsWith("/devices"))) return htmlResponse('<h1>Private Test Account</h1><p>Browser Sync is unavailable for this hidden test account. Its local tests stay in this browser and cannot be copied into a participant account.</p><p><a href="/test-history">Review local test history</a></p><p><a href="/shootout/personal">Return to Personal Tournament</a></p>',403);
       // Open access still uses host-only credentials and the existing ownership,
@@ -311,7 +332,7 @@ const privateGate = {
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
       const practiceScores = path === "/api/ear-practice";
       const practiceManagement = practiceScores && (["PATCH", "DELETE"].includes(request.method) || url.searchParams.has("mine") && request.method === "GET");
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync", "/companion-link", "/api/companion/grants", "/api/companion/backups"].includes(path) || communityManagement || practiceManagement;
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/api/my-profile/sync-recovery", "/account-sync", "/companion-link", "/api/companion/grants", "/api/companion/backups"].includes(path) || communityManagement || practiceManagement;
       // The app route checks the scoped library grant, its issuing browser and current sync consent.
       const companionLibrary = path === "/api/companion/library" && ["GET","POST","DELETE"].includes(request.method)
         && /^Bearer [a-f0-9]{64}$/.test(request.headers.get("Authorization") || "") && !request.headers.has("Cookie");

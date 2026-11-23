@@ -427,13 +427,19 @@ const update213Changes = [
   "YYEQ5K 0.16.6 opens Main EQ, Channel Match, and Paired EQ in Phone EQ 0.3.0, where you can save and search your presets.",
 ] as const;
 
-export const candidateChanges = [
+const update214Changes = [
   "Accept all, Required only, Cancel and Save stay visible while you scroll through consent choices.",
   "Accept all and Required only apply their choices immediately. Save applies custom choices, and Cancel discards the draft.",
 ] as const;
 
+export const candidateChanges = [
+  "Set up a Sync ID, passkey and saved recovery code in Sync & Devices.",
+  "Approve YYEQ5K from a linked browser or recover the same Sync account when your other devices are unavailable.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: candidateChanges },
+  { update: 215, date: "2026-11-22", title: "Sync ID and account recovery", changes: candidateChanges },
+  { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: update214Changes, github: { commit: "fea57f03dfd076ced6863b30508b9aa1e6a9560e", releaseTag: "update214", linkTaggedSource: true } },
   { update: 213, date: "2026-11-22", title: "Phone EQ and the Android apps page", changes: update213Changes, github: { commit: "3733d6428b50731d58dba45f94f52c296952c64c", releaseTag: "update213", linkTaggedSource: true } },
   { update: 212, date: "2026-11-22", title: "Android Auto EQ and Personal rank sync", changes: update212Changes, github: { commit: "d5082a94b379de52fa861b06d80d29bd67a4e35f", releaseTag: "update212", linkTaggedSource: true } },
   { update: 211, date: "2026-11-21", title: "Website accessibility and navigation fixes", changes: update211Changes, github: { commit: "b78e6f9fa501b4ab515bf235e632c6a87cea76f6", releaseTag: "update211", linkTaggedSource: true } },

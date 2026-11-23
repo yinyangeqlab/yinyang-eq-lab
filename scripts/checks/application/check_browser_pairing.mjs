@@ -92,6 +92,16 @@ assert.equal((await gatedPost('/api/trials',linkedJar)).status,200,'Shared curre
 assert.equal((await gated('/api/owner-research',linkedJar)).status,403,'Linked testers cannot gain admin access');
 assert.equal((await gated('/api/trials')).status,401,'Anonymous access remains denied');
 assert.equal((await gated('/pair')).status,200,'Pairing page reachable before sign-in');
+const unsignedRecovery=await gated('/sync-recovery','',{'oai-authenticated-user-id':'owner','x-yinyang-data-session':'spoofed'});
+assert.equal(unsignedRecovery.status,200,'Recovery can start without an approved browser');
+assert.deepEqual(await unsignedRecovery.json(),{subject:null,session:null},'Unsigned recovery strips caller-supplied identities');
+assert.equal(unsignedRecovery.headers.get('cache-control'),'private, no-store');
+assert.equal(unsignedRecovery.headers.get('set-cookie'),null,'Opening recovery does not create a participant');
+assert.equal((await gated('/companion-link')).status,200,'Unsigned companion can reach the browser approval page');
+assert.equal((await gatedPost('/api/sync-recovery','')).status,200,'Unauthenticated POST reaches the credential verifier');
+assert.equal((await gated('/api/sync-recovery')).status,405);
+const limitedRecovery=await gate.fetch(request('/api/sync-recovery',{probe:'1'}),{...env,SIGNIN_LIMIT:{limit:async()=>({success:false})}},{});
+assert.equal(limitedRecovery.status,429,'Recovery uses the existing sign-in limiter');
 // Losing only the data-management cookie must not defeat later disconnection.
 const replaced=await gated('/my-data',linkedJar.split('; ')[0]);
 const replacementSession=(await replaced.json()).session;
@@ -157,6 +167,7 @@ assert.equal((await gated('/__private/admin/invite-system')).status,403);
 const ownerLogin=await gate.fetch(request('/admin-login',{password:env.PRIVATE_ACCESS_PASSWORD}),env,{});
 assert.equal(ownerLogin.status,303);
 const ownerJar=cookies(ownerLogin);
+assert.equal((await gatedPost('/api/sync-recovery',ownerJar)).status,403,'Admin sessions cannot use ordinary account recovery');
 async function mode(enabled,jar=ownerJar,originHeader=origin){return gate.fetch(new Request(origin+'/__private/admin/invite-system',{method:'PATCH',headers:{Cookie:jar,Origin:originHeader,'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.50'},body:JSON.stringify({enabled})}),env,{});}
 assert.equal((await mode(true,'')).status,403,'Only admin can toggle');
 assert.equal((await mode(true,ownerJar,'https://attacker.test')).status,403,'Toggle rejects CSRF');
