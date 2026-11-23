@@ -1,9 +1,5 @@
-import { shareMetadata } from "@/lib/share-metadata";
-import { TrailerPlayer } from "../trailer-player";
-import "../style.css";
+import { legacyAndroidRedirect, type AndroidSearchParams } from "../redirect";
 
-export const metadata = shareMetadata("/q5k4android/trailer");
-
-export default function TrailerPage() {
-  return <main className="companion-film-page"><TrailerPlayer standaloneFormat="landscape" /></main>;
+export default function LegacyAndroidPage({ searchParams }: { searchParams: AndroidSearchParams }) {
+  return legacyAndroidRedirect("/android/trailer", searchParams);
 }

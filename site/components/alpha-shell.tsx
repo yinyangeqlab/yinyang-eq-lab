@@ -171,7 +171,7 @@ function UtilityIcon({ kind }: { kind: "sync" | "keyboard" | "privacy" }) {
 
 const pageTitles: Record<string, string> = {
   "/about": "About Us",
-  "/q5k4android": "Qudelix 5K Companion",
+  "/android": "Android apps",
   "/account-sync": "Devices & Sync",
   "/community-preferences": "Community Preferences",
   "/curve-credits": "Curve Credits",

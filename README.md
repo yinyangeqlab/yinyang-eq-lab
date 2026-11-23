@@ -1,6 +1,6 @@
 # YinYang EQ
 
-[Android Companion and App Manager](https://yinyangeq.com/q5k4android) · [Watch the trailer](https://yinyangeq.com/q5k4android/trailer/portrait) · [Update192 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192)
+[Android apps and setup](https://yinyangeq.com/android) · [Watch the trailer](https://yinyangeq.com/android/trailer/portrait) · [Update192 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192)
 
 [Website version history](https://yinyangeq.com/version#update192) · [Release source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update192) · [Recovery verification](docs/releases/update192-recovery-verification.json)
 

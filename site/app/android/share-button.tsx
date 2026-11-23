@@ -36,7 +36,7 @@ function ShareLink({ url, title, label, linkLabel }: {
 }
 
 export function ShareCompanion() {
-  return <ShareLink url="https://yinyangeq.com/q5k4android?tour=qudelix"
+  return <ShareLink url="https://yinyangeq.com/android?tour=qudelix"
     title="YinYang EQ Companion for Qudelix 5K and 5K Plus" label="Share app features" linkLabel="Share link" />;
 }
 

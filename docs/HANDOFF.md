@@ -1,9 +1,14 @@
-# Current release — update212 Android Auto EQ and Personal rank sync
+# Current release — update213 Phone EQ and the Android apps page
 
 <!-- release-state:start -->
-Recorded deployment: **update212**, source `72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7`.
+Recorded deployment: **update213**, source `6db54ad6c8cace1f87896008a54d1955bb557d3f`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+The canonical [Android page](https://yinyangeq.com/android) introduces Phone EQ with Shizuku setup and Quve credit. The homepage links to Phone EQ beside Companion and App Manager. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update213-verification.json) [Recovery verification](releases/update213-recovery-verification.json)
+
+## Previous release records
+# Current release — update212 Android Auto EQ and Personal rank sync
 
 YYEQ5K can read synced Personal Tournament rankings after browser approval. Independent reconstruction and hosted validation passed for this release. [Deployment verification](releases/update212-verification.json) [Recovery verification](releases/update212-recovery-verification.json)
 

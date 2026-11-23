@@ -57,7 +57,7 @@ function allFiles(directory: string): string[] {
 
 // Immutable content-addressed files keep compiled code out of Pulumi's event
 // payloads while making every byte change visible as an input-path change.
-const moduleCache = join(projectRoot, ".sites-runtime", "deploy-modules");
+const moduleCache = process.env.DEPLOY_MODULE_CACHE || join(projectRoot, ".sites-runtime", "deploy-modules");
 mkdirSync(moduleCache, { recursive: true, mode: 0o700 });
 function moduleFile(file: string): string { return moduleSource(readFileSync(file)); }
 function moduleSource(bytes: Buffer): string {

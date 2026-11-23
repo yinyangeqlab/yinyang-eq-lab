@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 212,
+  "update": 213,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-22T21:55:27.888277Z",
-  "sourceCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
-  "sourceBranch": "release/update212-companion-personal-rank",
-  "baselineCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
-  "evidence": "docs/releases/update212-verification.json",
+  "verifiedAt": "2026-11-23T02:32:20.066577Z",
+  "sourceCommit": "6db54ad6c8cace1f87896008a54d1955bb557d3f",
+  "sourceBranch": "release/update213-android-phone-eq",
+  "baselineCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
+  "evidence": "docs/releases/update213-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -29,8 +29,8 @@
     "automaticExpiry": false
   },
   "gitSource": {
-    "implementationCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
-    "branch": "release/update212-companion-personal-rank",
+    "implementationCommit": "6db54ad6c8cace1f87896008a54d1955bb557d3f",
+    "branch": "release/update213-android-phone-eq",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": false,
@@ -45,33 +45,30 @@
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "nextScheduledRunMayRefuseBaselineMismatch": false,
-    "newDataExport": true,
-    "latestDataSnapshotUnchanged": false,
-    "sourceBaselineUpdate": 212,
-    "sourceBaselineVerifiedAt": "2026-11-22T22:09:19Z",
+    "newDataExport": false,
+    "latestDataSnapshotUnchanged": true,
+    "sourceBaselineUpdate": 213,
+    "sourceBaselineVerifiedAt": "2026-11-23T03:10:33Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
     "latestHostedRunMode": "validate-only",
     "dailyWorkflowActive": true,
-    "matchingPostMigrationDataSnapshot": true,
-    "releaseMetadataHandover": {
-      "update": 212,
-      "matchingPreparedSourceCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
-      "dataExportPerformed": true,
-      "newDataSnapshots": 1,
-      "registered": true,
-      "hostedValidationPassed": true,
-      "independentDownloadDecryptionVerified": true,
-      "fullReconstructionVerified": true,
-      "evidence": "docs/releases/update212-recovery-verification.json"
+    "update213SourceOnlyHandover": {
+      "registrationPending": false,
+      "metadataOnly": true,
+      "databaseExport": false,
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update213-recovery-verification.json"
     }
   },
   "documentationFiles": [
     {
-      "path": "docs/releases/update212-verification.json",
-      "sha256": "2f15ead752d8e969cfd9d8550a3c7d4bf3a06eca9e428a00dd4bc2b65d7bd6c3"
+      "path": "docs/releases/update213-verification.json",
+      "sha256": "db0dc623520343ec020276cd4e4de88fed9021f46396fd57d53e1aea03468672"
     },
     {
-      "path": "docs/releases/update212-recovery-verification.json",
-      "sha256": "0e8afbbfaf7644de03578b283f691528477fb2055fc80c2296425a9cfa8ac1d2"
+      "path": "docs/releases/update213-recovery-verification.json",
+      "sha256": "57247d5cbad1148c718f0b71311faae189ad75b2a87717290651849c9a0df41b"
     }
   ]
 }
