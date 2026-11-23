@@ -422,13 +422,19 @@ const update212Changes = [
   "YYEQ5K searches saved measurements and site catalogs, fits Main EQ with Channel Match, and saves paired presets as TXT.",
 ] as const;
 
-export const candidateChanges = [
+const update213Changes = [
   "The Android page at /android introduces YinYang Phone EQ, Shizuku setup, and the Quve audio engine.",
   "YYEQ5K 0.16.6 opens Main EQ, Channel Match, and Paired EQ in Phone EQ 0.3.0, where you can save and search your presets.",
 ] as const;
 
+export const candidateChanges = [
+  "Accept all, Required only, Cancel and Save stay visible while you scroll through consent choices.",
+  "Accept all and Required only apply their choices immediately. Save applies custom choices, and Cancel discards the draft.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 213, date: "2026-11-22", title: "Phone EQ and the Android apps page", changes: candidateChanges },
+  { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: candidateChanges },
+  { update: 213, date: "2026-11-22", title: "Phone EQ and the Android apps page", changes: update213Changes, github: { commit: "3733d6428b50731d58dba45f94f52c296952c64c", releaseTag: "update213", linkTaggedSource: true } },
   { update: 212, date: "2026-11-22", title: "Android Auto EQ and Personal rank sync", changes: update212Changes, github: { commit: "d5082a94b379de52fa861b06d80d29bd67a4e35f", releaseTag: "update212", linkTaggedSource: true } },
   { update: 211, date: "2026-11-21", title: "Website accessibility and navigation fixes", changes: update211Changes, github: { commit: "b78e6f9fa501b4ab515bf235e632c6a87cea76f6", releaseTag: "update211", linkTaggedSource: true } },
   { update: 210, date: "2026-11-21", title: "Homepage aurora, guide icons and trailer sharing", changes: update210Changes, github: { commit: "4c907fd33ff8994565408526ae84754a33bdcda6", releaseTag: "update210", linkTaggedSource: true } },

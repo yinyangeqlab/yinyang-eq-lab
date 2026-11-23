@@ -5,10 +5,10 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update213 |
-| Source | `6db54ad6c8cace1f87896008a54d1955bb557d3f` |
-| Verified at | 2026-11-23T02:32:20.066577Z |
-| Deployment | Verified by the [deployment receipt](../releases/update213-verification.json) |
+| Release | update214 |
+| Source | `d0c7c9eec949baa84126289ba920d05b9347db1b` |
+| Verified at | 2026-11-23T03:19:45.226295Z |
+| Deployment | Verified by the [deployment receipt](../releases/update214-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
 | Publication | Source not pushed; publication authorized in this record |
 | Recovery | Matching source-only metadata handover recorded as verified |

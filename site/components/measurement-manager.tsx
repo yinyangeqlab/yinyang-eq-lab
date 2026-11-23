@@ -214,7 +214,7 @@ export default function MeasurementManager({ rows, selectedId, editId, onAdd, on
         {form}
       </details>
     </>}
-    {review&&<DataChoicesEditor forceReview onClose={()=>setReview(null)} onSaved={participating=>{if(review.revision===revision.current){setContribute(participating&&review.contribute);setRights(participating&&review.contribute&&review.rights);}else{invalidateApproval();setError('The measurement changed during review. Review its files again before contributing.');}setReview(null);}} fileConsent={{files:review.files,contribute:review.contribute,rights:review.rights,onContribute:value=>setReview(current=>current?{...current,contribute:value,rights:value&&current.rights}:null),onRights:value=>setReview(current=>current?{...current,rights:value}:null)}}/>}
+    {review&&<DataChoicesEditor forceReview onClose={()=>setReview(null)} onSaved={(participating,preset)=>{if(review.revision===revision.current){const contribute=participating&&preset!=='required'&&review.contribute;setContribute(contribute);setRights(contribute&&review.rights);}else{invalidateApproval();setError('The measurement changed during review. Review its files again before contributing.');}setReview(null);}} fileConsent={{files:review.files,contribute:review.contribute,rights:review.rights,onContribute:value=>setReview(current=>current?{...current,contribute:value,rights:value&&current.rights}:null),onRights:value=>setReview(current=>current?{...current,rights:value}:null)}}/>}
 
   </>;
 }

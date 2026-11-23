@@ -51,3 +51,44 @@ console.log('PASS actual initial/review consent page: five-choice request, both 
 
 const testConsent=await fixture({...base,testOnly:true,consentTestOnly:true},'?return_to=/preference-tuning');assert.ok(testConsent.dialog());assert.equal(testConsent.dialog().consentTestOnly,true);testConsent.dialog().onSave();await new Promise(resolve=>setTimeout(resolve,0));assert.equal(testConsent.requests[1].options.method,'PATCH');assert.equal(testConsent.destinations.at(-1),'/');
 console.log('PASS isolated consent fixture uses the real editor/save/initial-opt-out navigation; legacy test-only bypass retained for admin.');
+
+const sealed={id:'00000000-0000-4000-8000-000000000002',opted_in:0,sealed:1};
+const studies=[...base.historicalStudies,sealed];
+const presetAll=await fixture({...base,historicalStudies:studies},'?return_to=/account-sync');
+await presetAll.dialog().onSave('all');
+const allBody=JSON.parse(presetAll.requests[1].options.body);
+for(const key of ['submissionsEnabled','shareMusic','activityMonitoringEnabled','personalResearchEnabled','communityEnabled','syncEnabled'])assert.equal(allBody[key],true,key);
+assert.deepEqual(allBody.retrospectiveChoices.map(choice=>choice.enabled),[true,false]);
+assert.equal(presetAll.destinations.at(-1),'/account-sync');
+
+const fileDecisions=[];
+const presetRequired=await fixture({...saved,syncEnabled:true,historicalStudies:studies.map(study=>({...study,opted_in:1}))},'?review=1',{
+ editorProps:{forceReview:true,fileConsent:{contribute:true,rights:false},onSaved:(active,preset)=>fileDecisions.push({active,preset})}
+});
+await presetRequired.dialog().onSave('all');
+assert.equal(presetRequired.requests.length,1,'Accept all cannot certify rights for selected measurement files');
+await presetRequired.dialog().onSave('required');
+const requiredBody=JSON.parse(presetRequired.requests[1].options.body);
+assert.equal(requiredBody.submissionsEnabled,true);
+for(const key of ['shareMusic','activityMonitoringEnabled','personalResearchEnabled','communityEnabled','syncEnabled'])assert.equal(requiredBody[key],false,key);
+assert.ok(requiredBody.retrospectiveChoices.every(choice=>!choice.enabled));
+assert.deepEqual(fileDecisions,[{active:true,preset:'required'}]);
+
+const protectedAccount=await fixture({...base,protectedAccount:true,historicalStudies:studies},'');
+await protectedAccount.dialog().onSave('all');
+assert.ok(JSON.parse(protectedAccount.requests[1].options.body).retrospectiveChoices.every(choice=>!choice.enabled));
+
+const isolated=await fixture({...base,testOnly:true,consentTestOnly:true},'');
+await isolated.dialog().onSave('all');
+assert.equal(isolated.requests.length,1,'Hidden tester cannot bypass optional consent restrictions through the editor');
+await isolated.dialog().onSave('required');
+assert.equal(JSON.parse(isolated.requests[1].options.body).submissionsEnabled,true);
+
+const doubleClick=await fixture(base,'',{holdSave:true});
+const firstClick=doubleClick.dialog();
+void firstClick.onSave('required');
+void firstClick.onSave('all');
+firstClick.onClose();
+assert.equal(doubleClick.requests.length,2,'Concurrent preset clicks issue one write');
+assert.equal(doubleClick.destinations.length,0,'Cancel waits for the first write');
+console.log('PASS direct presets save their exact choices, enforce study and file restrictions, and prevent concurrent writes. Synthetic only.');

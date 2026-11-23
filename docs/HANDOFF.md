@@ -1,9 +1,14 @@
-# Current release — update213 Phone EQ and the Android apps page
+# Current release — update214 Four consent actions in view
 
 <!-- release-state:start -->
-Recorded deployment: **update213**, source `6db54ad6c8cace1f87896008a54d1955bb557d3f`.
+Recorded deployment: **update214**, source `d0c7c9eec949baa84126289ba920d05b9347db1b`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Accept all, Required only, Cancel and Save stay in view while the consent terms scroll. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update214-verification.json) [Recovery verification](releases/update214-recovery-verification.json)
+
+## Previous release records
+# Current release — update213 Phone EQ and the Android apps page
 
 The canonical [Android page](https://yinyangeq.com/android) introduces Phone EQ with Shizuku setup and Quve credit. The homepage links to Phone EQ beside Companion and App Manager. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update213-verification.json) [Recovery verification](releases/update213-recovery-verification.json)
 
