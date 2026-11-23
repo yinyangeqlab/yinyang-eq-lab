@@ -8,3 +8,4 @@
 - [Research](research/) includes the protocol, analysis plans, and target credits.
 - [Media and credits](media/) includes demos, videos, and soundtrack attribution.
 - [Reviews](reviews/), [history](history/), and [release records](releases/) describe earlier work.
+- [Release history recovery](history/RELEASE_HISTORY_RECOVERY.md) explains the early numbering and the evidence available for historical versions.

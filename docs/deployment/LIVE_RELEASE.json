@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 215,
+  "update": 216,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-23T05:20:55.729909Z",
-  "sourceCommit": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
-  "sourceBranch": "release/update215-sync-recovery",
-  "baselineCommit": "d0c7c9eec949baa84126289ba920d05b9347db1b",
-  "evidence": "docs/releases/update215-verification.json",
+  "verifiedAt": "2026-11-23T22:49:11.113464Z",
+  "sourceCommit": "65138afb2b160b7d8329624a75300b0bcd3e86d2",
+  "sourceBranch": "release/update216-version-history",
+  "baselineCommit": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
+  "evidence": "docs/releases/update216-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -29,8 +29,8 @@
     "automaticExpiry": false
   },
   "gitSource": {
-    "implementationCommit": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
-    "branch": "release/update215-sync-recovery",
+    "implementationCommit": "65138afb2b160b7d8329624a75300b0bcd3e86d2",
+    "branch": "release/update216-version-history",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "pushed": false,
@@ -45,32 +45,30 @@
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "nextScheduledRunMayRefuseBaselineMismatch": false,
-    "newDataExport": true,
-    "latestDataSnapshotUnchanged": false,
-    "sourceBaselineUpdate": 215,
-    "sourceBaselineVerifiedAt": "2026-11-23T05:29:36Z",
+    "newDataExport": false,
+    "latestDataSnapshotUnchanged": true,
+    "sourceBaselineUpdate": 216,
+    "sourceBaselineVerifiedAt": "2026-11-23T23:27:29Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
     "latestHostedRunMode": "validate-only",
     "dailyWorkflowActive": true,
-    "releaseMetadataHandover": {
-      "update": 215,
-      "matchingPreparedSourceCommit": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
-      "dataExportPerformed": true,
-      "newDataSnapshots": 1,
-      "registered": true,
-      "hostedValidationPassed": true,
-      "independentDownloadDecryptionVerified": true,
-      "fullReconstructionVerified": true,
-      "evidence": "docs/releases/update215-recovery-verification.json"
+    "update216SourceOnlyHandover": {
+      "registrationPending": false,
+      "metadataOnly": true,
+      "databaseExport": false,
+      "newDataSnapshots": 0,
+      "evidence": "docs/releases/update216-recovery-verification.json"
     }
   },
   "documentationFiles": [
     {
-      "path": "docs/releases/update215-verification.json",
-      "sha256": "ef0cd668b7dea41b4ed142a1aac136217132f0eca4efc840f02c6142796b4909"
+      "path": "docs/releases/update216-verification.json",
+      "sha256": "1a2f32e27196a50268a43377b30db6e3eb668cae61ac8e2720943dbecc6e3888"
     },
     {
-      "path": "docs/releases/update215-recovery-verification.json",
-      "sha256": "2df3cec5a47f49b9430078a7eb133dbde766e43812216627f24a2cc1ef9187e6"
+      "path": "docs/releases/update216-recovery-verification.json",
+      "sha256": "a5d44b84828dfe5c9b18f6eff5b263148f2e84fd66327e417d41afc8848ba396"
     }
   ]
 }

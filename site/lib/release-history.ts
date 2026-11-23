@@ -4,6 +4,7 @@ export type ReleaseNotes = {
   title: string;
   changes: readonly string[];
   refreshReleases?: readonly { tag: string; label: string }[];
+  publicationTag?: string;
   github?: {
     commit: string;
     pull?: number;
@@ -432,13 +433,26 @@ const update214Changes = [
   "Accept all and Required only apply their choices immediately. Save applies custom choices, and Cancel discards the draft.",
 ] as const;
 
-export const candidateChanges = [
+const update215Changes = [
   "Set up a Sync ID, passkey and saved recovery code in Sync & Devices.",
   "Approve YYEQ5K from a linked browser or recover the same Sync account when your other devices are unavailable.",
 ] as const;
 
+export const candidateChanges = [
+  "Browse and search the release history back to the first Cloudflare deployment.",
+  "Open verified public source links and historical deployment records from the Version page.",
+] as const;
+
+const update215PublicationRevision = "4572fa8ead207e2cc3500626b335b67ac3690cb1";
+
+export const archivedDeploymentReceipts = {
+  revision: update215PublicationRevision,
+  updates: new Set([204, 203, 202, 201, 198, 197, 193, 191, 176, 154, 151, 150, 131, 130, 129, 128, 127, 126]),
+};
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 215, date: "2026-11-22", title: "Sync ID and account recovery", changes: candidateChanges },
+  { update: 216, date: "2026-11-23", title: "Release history back to update1", changes: candidateChanges, publicationTag: "update216" },
+  { update: 215, date: "2026-11-22", title: "Sync ID and account recovery", changes: update215Changes, github: { commit: update215PublicationRevision, releaseTag: "update215", linkTaggedSource: true } },
   { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: update214Changes, github: { commit: "fea57f03dfd076ced6863b30508b9aa1e6a9560e", releaseTag: "update214", linkTaggedSource: true } },
   { update: 213, date: "2026-11-22", title: "Phone EQ and the Android apps page", changes: update213Changes, github: { commit: "3733d6428b50731d58dba45f94f52c296952c64c", releaseTag: "update213", linkTaggedSource: true } },
   { update: 212, date: "2026-11-22", title: "Android Auto EQ and Personal rank sync", changes: update212Changes, github: { commit: "d5082a94b379de52fa861b06d80d29bd67a4e35f", releaseTag: "update212", linkTaggedSource: true } },
@@ -650,35 +664,139 @@ export const releaseHistory: readonly ReleaseNotes[] = [
   { update: 112, date: "2026-10-22", title: "Timing, accessibility and motion preferences", changes: [
     "Fixed fully heard five-second passages that could remain locked due to rounding.",
     "Improved landmark and focus behavior, added motion and shortcut preferences, and refined device Sync.",
-  ] },
+  ], github: { commit: "e769a0d7d81c7e6ad927324dda5b012da7a56528" } },
   { update: 111, date: "2026-10-22", title: "Passage timing and measurement entry", changes: [
     "Counted unique listening time within the selected passage and kept incomplete coverage from rounding up.",
     "Refined measurement entry, catalog keyboard focus, reminder focus and recording picker behavior.",
-  ] },
+  ], github: { commit: "2ebf5b7cabf6add86394d8591ee5ec7cbe58e314" } },
   { update: 110, date: "2026-10-22", title: "Player, library and consent style cleanup", changes: [
     "Removed superseded style rules from the player, Music library and consent dialog.",
-  ] },
+  ], github: { commit: "ed4482d7513f48f0b3a421600b7f40901fbca594" } },
   { update: 109, date: "2026-10-21", title: "Mobile readability and repository rename", changes: [
     "Improved mobile readability and updated source and issue links to the renamed YinYang EQ Lab repository.",
-  ] },
+  ], github: { commit: "5cb3356da4875ee9cf60713676c970f1e5a38058" } },
   { update: 108, date: "2026-10-21", title: "Smoother sidebar transitions", changes: [
     "Aligned the sidebar, arrow and content transitions and simplified the hover effect.",
-  ] },
+  ], github: { commit: "f35979dab3c66bc4ff22e0dd72a145a32611fe3b" } },
   { update: 107, date: "2026-10-21", title: "Sidebar controls and compact Sync", changes: [
     "Replaced separate sidebar controls with one divider control that cycles through three layouts.",
     "Refined keyboard navigation, small-screen controls, Sync presentation and saved data-choice colors.",
-  ] },
+  ], github: { commit: "81eaa8a59f36dd698851c7bde272450b3ce36b7c" } },
   { update: 106, date: "2026-10-21", title: "Nickname and focus layout", changes: [
     "Moved the optional nickname earlier in the consent dialog and gave its input and help text room on narrow screens.",
-  ] },
+  ], github: { commit: "85f9924e01353317857b556d068ea15ad28549ea" } },
   { update: 105, date: "2026-10-21", title: "Version and help access", changes: [
     "Made the version and help pages available to listeners who opt out of contributing data.",
-  ] },
+  ], github: { commit: "bc59d0b8d3a89749900a359ae697b21c0e6e424b" } },
   { update: 104, date: "2026-10-21", title: "Beta launch", changes: [
     "Refreshed Welcome, navigation, listening setup, Personal Tournament, Tuning, Music library and My space.",
     "Added draggable frequency markers, a beta testing notice and links for reporting issues.",
-  ] },
+  ], github: { commit: "e3eea27e55ba6bb003749207ba7bddb3e3117dbb" } },
   { update: 103, date: "2026-10-20", title: "Published beta baseline", changes: [
     "Isolated browser layout and consent tests from participant Sync, research and rankings.",
-  ] },
+  ], github: { commit: "e5399cb869d1b7626f2abf779083d3b1f8c9a50a" } },
+
+  // The early numbers include the failed operations and infrastructure imports preserved in the deployment log.
+  { update: 102, date: "2026-10-20", title: "Consent exits and license terms", changes: ["Returned first-time opt-outs and cancellations to Welcome and clarified site reuse terms."], github: { commit: "2d1f9ad54b4ba9a4cc522d9d27980d98396e8667" } },
+  { update: 101, date: "2026-10-19", title: "Sync for larger histories", changes: ["Transferred larger saved histories and measurements in verified pieces."], github: { commit: "e87995a5b0105002996c9de4327ba49f6fef674d" } },
+  { update: 100, date: "2026-10-19", title: "Participant Sync", changes: ["Added opt-in browser Sync and approved device controls."], github: { commit: "37cd251306c8d3504686dacb460a661478e6fe19" } },
+  { update: 99, date: "2026-10-19", title: "Profile sharing and consent", changes: ["Unified data choices and clarified category sharing and Sync review."], github: { commit: "0933762ac4e6eac3bc2056acee5af5160960469c" } },
+  { update: 98, date: "2026-10-19", title: "History review compatibility", changes: ["Kept larger history reviews within the database query limits."], github: { commit: "77949a167ceed2d9d9e06442d5799facc4e59523" } },
+  { update: 97, date: "2026-10-19", title: "Reserved account sync", changes: ["Added automatic sync and protected retention for the reserved account."], github: { commit: "faa258d9d8f9af94feb97af9bf55e0f8bd09636e" } },
+  { update: 96, date: "2026-10-19", title: "Three consent actions", changes: ["Added three clear participation choices and presets for draft sharing settings."], github: { commit: "1d2e9a5e79d6f99efe4bf1b10aa31c8b06f9eab2" } },
+  { update: 95, date: "2026-10-19", title: "Community and tournament refinements", changes: ["Simplified tournament review and addressed dependency findings."], github: { commit: "db43bcefbeb730582e043f381a62d6a4cb4a5918" } },
+  { update: 94, date: "2026-10-19", title: "Personal Tournament", changes: ["Released the reviewed Personal Tournament and listening flow."], github: { commit: "dc84b5e4735a75bedd1f4399901070f391cef519" } },
+  { update: 93, date: "2026-10-18", title: "Maintenance controls", changes: ["Refined notice durations and how paused tools are shown."], github: { commit: "7b1fb8813ef865a42d49a3ec725968ffc7dccdf6" } },
+  { update: 92, date: "2026-10-18", title: "Independent maintenance and consent", changes: ["Added controls for individual tools and kept consent review accessible during a Shootout pause."], github: { commit: "0e16d82cdeda8dc50493f70f85788dd8f311a374" } },
+  { update: 91, date: "2026-10-18", title: "Shootout-only maintenance", changes: ["Scoped a timed maintenance pause to Shootouts so other listening tools stayed available."], github: { commit: "0cca4cab881a82a5bbd348cc99d83392b549aa24" } },
+  { update: 90, date: "2026-10-18", title: "Ranking file hashes", changes: ["Improved SHA-256 file matching and preserved ties."], github: { commit: "e008fe0bdcfcba09d3cc4719c7a2ea1f2bdd9c1d" } },
+  { update: 89, date: "2026-10-18", title: "Rankings counts and file matching", changes: ["Corrected ranking subset counts and explained how the original song matching worked."], github: { commit: "b2e7dc2600a363b661a37bc950ebf49876f1dbd0" } },
+  { update: 88, date: "2026-10-18", title: "Compact participation dialog", changes: ["Kept nickname and monitoring choices usable on shorter screens."], github: { commit: "308b411cb067b78043dcd5ddd1a1735a34b04148" } },
+  { update: 87, date: "2026-10-18", title: "Nickname and monitoring choices", changes: ["Made both choices available in the participation dialog."], github: { commit: "b37e9f21ed52603603f7ca61aa26f9a390e04c2e" } },
+  { update: 86, date: "2026-10-18", title: "Optional nickname and site fixes", changes: ["Added an optional nickname and addressed findings from the site review."], github: { commit: "c80102f680bd75778ceb5c6b32540fcdb1948e98" } },
+  { update: 85, date: "2026-10-18", title: "Matched A/B rankings", changes: ["Recommended matched A/B rankings and clarified how to interpret them."], github: { commit: "764137a83c09a3ceb0036e668fcea47e9b0d8639" } },
+  { update: 84, date: "2026-10-18", title: "Notice duration controls", changes: ["Added exact service-notice durations and refined the controls."], github: { commit: "0f5ed34b0d21a78b9c0a304e7cd4c4b71c7304b3" } },
+  { update: 83, date: "2026-10-18", title: "Ultrawide and TV layouts", changes: ["Adjusted spacing and layout for ultrawide and television displays."], github: { commit: "e48cd00ea75a0b372f984f0ed279644effab5f38" } },
+  { update: 82, date: "2026-10-18", title: "Invitation controls", changes: ["Added an invitation mode with open access as the default."], github: { commit: "4780286c2c7b1fe9d5f9d3572cbe5b2f7f490dcb" } },
+  { update: 81, date: "2026-10-18", title: "Welcome tagline", changes: ["Updated the Welcome tagline and its readability over the artwork."], github: { commit: "7c191b8caf9f26ef411ac24f8ad8daddf65df717" } },
+  { update: 80, date: "2026-10-18", title: "Continue button", changes: ["Restyled Continue and verified that it starts a new blinded pair."], github: { commit: "51c315c12090e61c3a306605de19ab6ee50d5ec0" } },
+  { update: 79, date: "2026-10-18", title: "Matched listening passages", changes: ["Added movable five-second passages and improved the upload, listening and voting flow."] },
+  { update: 78, date: "2026-10-18", title: "Matched-passage rollout", changes: ["An intermediate rollout exposed a stale application preload that was corrected in update79."] },
+  { update: 77, date: "2026-10-18", title: "Alphabetical curve credits", changes: ["Sorted the curve credits alphabetically by curve name."], github: { commit: "afb97bfaf2ecf9094cb7a88399a01ba7f3bf7d2a" } },
+  { update: 76, date: "2026-10-18", title: "Full curve attribution", changes: ["Added source, creator and use information for every built-in curve."] },
+  { update: 75, date: "2026-10-18", title: "Responsive Welcome header", changes: ["Added an animated header with listening links and responsive controls."], github: { commit: "2890dc2aff7ae25bd445e230966ee873b04f3993" } },
+  { update: 74, date: "2026-10-18", title: "Welcome Sync and data controls", changes: ["Made Browser Sync more prominent and renamed the Welcome disclosure Your data control."], github: { commit: "a923cc1d068a065149602375c000cc51b1ff201d" } },
+  { update: 73, date: "2026-10-18", title: "Browser Sync", changes: ["Added the browser pairing flow and a Welcome Settings menu."], github: { commit: "19147e9bdbf9e5caeec2cc746d95d47a057afe4a" } },
+  { update: 72, date: "2026-10-18", title: "Service notices", changes: ["Deployed timed service notices."] },
+  { update: 71, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 70, date: "2026-10-18", title: "Sodium credits", changes: ["Added Sodium attribution and explained the target reconstruction."], github: { commit: "24183cce8ae99e07b7b004ed1b9a85c577d309bb" } },
+  { update: 69, date: "2026-10-18", title: "Agreement controls and navigation", changes: ["Updated data agreement controls and navigation on Welcome."], github: { commit: "4ec1271ac26d7956dca2b09c4bf0f8a5f1bfda2f" } },
+  { update: 68, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 67, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 66, date: "2026-10-18", title: "Rankings and navigation fixes", changes: ["Updated the ranking controls, saved-agreement Close button and Welcome Shootout link."] },
+  { update: 65, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 64, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 63, date: "2026-10-18", title: "YinYang target names", changes: ["Updated the names and creator attribution for the project’s three preference targets."], github: { commit: "de77fca3220259d5c39c0fc2577fa02587076019" } },
+  { update: 62, date: "2026-10-18", title: "Listening and rankings integrity", changes: ["Updated linked deletion, listening and ranking records."] },
+  { update: 61, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 60, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 59, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 58, date: "2026-10-18", title: "FLAC seeking", changes: ["Fixed FLAC byte ranges and restored assets that had been omitted from the build."] },
+  { update: 57, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 56, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 55, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 54, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 53, date: "2026-10-18", title: "Listening Pool", changes: ["Deployed the expanded Listening Pool and verified playback and seeking."] },
+  { update: 52, date: "2026-10-18", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 51, date: "2026-10-18", title: "Listening Pool rollout and history error", changes: ["The Worker upload succeeded. The infrastructure operation failed while recording its update history."] },
+  { update: 50, date: "2026-10-18", title: "Privacy and linked deletion", changes: ["Updated the listening data privacy, deletion and archive workflows."] },
+  { update: 49, date: "2026-10-17", title: "Diamond target names and export", changes: ["Renamed PEQdB Diamond entries and preserved exports through the name change."] },
+  { update: 48, date: "2026-10-17", title: "Music voting and playback controls", changes: ["Added music voting, centered playback and moved volume into the player controls."], github: { commit: "320da2e532dbfbf69bdf3ce04915ebe02d0d4dde" } },
+  { update: 47, date: "2026-10-17", title: "Public asset routing", changes: ["Enabled selective public routing for approved static assets."] },
+  { update: 46, date: "2026-10-17", title: "Infrastructure import", changes: ["The deployment history records an infrastructure import."] },
+  { update: 45, date: "2026-10-17", title: "Infrastructure import", changes: ["The deployment history records an infrastructure import."] },
+  { update: 44, date: "2026-10-17", title: "Full-width Welcome art", changes: ["Extended the Welcome background artwork to the edges of the page."], github: { commit: "3f39750edf44fcf21f82812de1aacc2e70fb3ba8" } },
+  { update: 43, date: "2026-10-17", title: "Hosting safeguards", changes: ["Added sampled logging, short-lived caching and deployment limits for static files."] },
+  { update: 42, date: "2026-10-17", title: "Verified curve credits", changes: ["Published nine curve credits with verified source and license information."] },
+  { update: 41, date: "2026-10-17", title: "Unsuccessful deployment attempt", changes: ["The deployment history records an unsuccessful rollout."] },
+  { update: 40, date: "2026-10-17", title: "Raw preference results", changes: ["Updated research results to make the raw preference results easier to identify."] },
+  { update: 39, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 38, date: "2026-10-17", title: "Navigation icons and sound", changes: ["Added icons and hover sounds to major navigation links."], github: { commit: "d79bf54957e81663682562c99e83bfd67203a84d" } },
+  { update: 37, date: "2026-10-17", title: "Responsive spacing", changes: ["Improved header spacing, the Music Library introduction and widths on pages with results."], github: { commit: "957cf9a48bb3a86471137542ad46a39bc1f5321b" } },
+  { update: 36, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 35, date: "2026-10-17", title: "Listening cooldown policy", changes: ["Removed the shared daily test cap and adjusted how cooldowns escalate and reset."] },
+  { update: 34, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 33, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 32, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 31, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 30, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 29, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 28, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 27, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 26, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 25, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 24, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 23, date: "2026-10-17", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 22, date: "2026-10-17", title: "Music Library waveforms and EQ", changes: ["Added optional Music Library EQ, hosted tracks and precomputed waveforms."] },
+  { update: 21, date: "2026-10-17", title: "Undecided track label", changes: ["Renamed New listening to Undecided in Music Library."] },
+  { update: 20, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 19, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 18, date: "2026-10-16", title: "Unsuccessful deployment attempt", changes: ["The deployment history records an unsuccessful rollout."] },
+  { update: 17, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 16, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 15, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 14, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 13, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 12, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 11, date: "2026-10-16", title: "Unsuccessful deployment attempt", changes: ["The deployment history records an unsuccessful rollout."] },
+  { update: 10, date: "2026-10-16", title: "Early deployment", changes: ["The deployment is recorded. Release notes are unavailable."] },
+  { update: 9, date: "2026-10-16", title: "Voting data acknowledgement", changes: ["Restored the homepage voting data notice for newly invited browsers."] },
+  { update: 8, date: "2026-10-16", title: "Private browsing invitation fix", changes: ["Fixed invitation redemption in private browsing."] },
+  { update: 7, date: "2026-10-16", title: "Private tester invitations", changes: ["Added one-time invitations and browser sessions for private testing."] },
+  { update: 6, date: "2026-10-16", title: "Built-in tracks for Open comparison", changes: ["Added the 20 built-in tracks to the Open comparison selector."] },
+  { update: 5, date: "2026-10-16", title: "Private access session", changes: ["Kept private site access active after sign-in while the research dashboard used a separate authorization."] },
+  { update: 4, date: "2026-10-16", title: "Staging maintenance ended", changes: ["Reopened the staging app behind private access."] },
+  { update: 3, date: "2026-10-16", title: "Staging JavaScript and CSS", changes: ["Fixed routing for the application’s JavaScript and stylesheet files."] },
+  { update: 2, date: "2026-10-16", title: "Private staging access", changes: ["Added password protection for the site and its assets."] },
+  { update: 1, date: "2026-10-16", title: "First Cloudflare deployment", changes: ["Created the staging Worker and database for the first hosted version."] },
 ];

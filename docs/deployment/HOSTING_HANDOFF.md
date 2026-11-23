@@ -1,9 +1,14 @@
-# Current release — update215 Sync ID and account recovery
+# Current release — update216 Complete Version history
 
 <!-- release-state:start -->
-Recorded deployment: **update215**, source `e97ea8032fcbd0b8a0d543020c030e80fb86e205`.
+Recorded deployment: **update216**, source `65138afb2b160b7d8329624a75300b0bcd3e86d2`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+The Version page includes every update back to the first Cloudflare deployment. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update216-verification.json) [Recovery verification](../releases/update216-recovery-verification.json)
+
+## Previous release records
+# Current release — update215 Sync ID and account recovery
 
 Users can recover an existing Sync account with a passkey or saved recovery code and approve YYEQ5K. Physical Android verification, encrypted recovery reconstruction and hosted validation passed. [YYEQ5K 0.16.7](https://github.com/yinyangeqlab/yinyang-android/releases/tag/android-20261122-0167) is signed and available in App Manager. [Deployment verification](../releases/update215-verification.json) [Recovery verification](../releases/update215-recovery-verification.json)
 
