@@ -1,9 +1,14 @@
-# Current release — update216 Complete Version history
+# Current release — update217 Exact update-number search
 
 <!-- release-state:start -->
-Recorded deployment: **update216**, source `65138afb2b160b7d8329624a75300b0bcd3e86d2`.
+Recorded deployment: **update217**, source `ada156881c618db761f189eb8fbe011694ae45f6`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Entering a full update number on the Version page shows the matching release. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update217-verification.json) [Recovery verification](releases/update217-recovery-verification.json)
+
+## Previous release records
+# Current release — update216 Complete Version history
 
 The Version page includes every update back to the first Cloudflare deployment. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update216-verification.json) [Recovery verification](releases/update216-recovery-verification.json)
 

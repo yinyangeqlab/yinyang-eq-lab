@@ -18,8 +18,12 @@ export default function ReleaseHistory({ entries, currentUpdate, currentReleaseL
 }) {
   const [query, setQuery] = useState("");
   const filteredTarget = useRef<HTMLDetailsElement | null>(null);
-  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const normalizedQuery = query.trim().toLowerCase();
+  const updateMatch = /^(?:update\s*)?(\d+)$/.exec(normalizedQuery);
+  const requestedUpdate = updateMatch ? Number(updateMatch[1]) : undefined;
+  const terms = normalizedQuery.split(/\s+/).filter(Boolean);
   const matches = terms.length === 0 ? entries : entries.filter(entry => {
+    if (requestedUpdate !== undefined) return entry.update === requestedUpdate;
     const text = [`update${entry.update}`, entry.date, entry.title, ...entry.changes].join(" ").toLowerCase();
     return terms.every(term => text.includes(term));
   });

@@ -438,9 +438,13 @@ const update215Changes = [
   "Approve YYEQ5K from a linked browser or recover the same Sync account when your other devices are unavailable.",
 ] as const;
 
-export const candidateChanges = [
+const update216Changes = [
   "Browse and search the release history back to the first Cloudflare deployment.",
   "Open verified public source links and historical deployment records from the Version page.",
+] as const;
+
+export const candidateChanges = [
+  "Search for a full update number, such as update1 or 1, to find that release. Partial keyword searches still work.",
 ] as const;
 
 const update215PublicationRevision = "4572fa8ead207e2cc3500626b335b67ac3690cb1";
@@ -451,7 +455,8 @@ export const archivedDeploymentReceipts = {
 };
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 216, date: "2026-11-23", title: "Release history back to update1", changes: candidateChanges, publicationTag: "update216" },
+  { update: 217, date: "2026-11-23", title: "Exact update-number search", changes: candidateChanges, publicationTag: "update217" },
+  { update: 216, date: "2026-11-23", title: "Release history back to update1", changes: update216Changes, github: { commit: "a713724769b33151c25b6f28b0e9c690a849e0d2", releaseTag: "update216", linkTaggedSource: true } },
   { update: 215, date: "2026-11-22", title: "Sync ID and account recovery", changes: update215Changes, github: { commit: update215PublicationRevision, releaseTag: "update215", linkTaggedSource: true } },
   { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: update214Changes, github: { commit: "fea57f03dfd076ced6863b30508b9aa1e6a9560e", releaseTag: "update214", linkTaggedSource: true } },
   { update: 213, date: "2026-11-22", title: "Phone EQ and the Android apps page", changes: update213Changes, github: { commit: "3733d6428b50731d58dba45f94f52c296952c64c", releaseTag: "update213", linkTaggedSource: true } },
