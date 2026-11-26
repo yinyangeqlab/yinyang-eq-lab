@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 223,
+  "update": 224,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-26T10:50:29.127745Z",
-  "sourceCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
-  "sourceBranch": "release/update223-shootout-threaded-lock",
-  "baselineCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
-  "evidence": "docs/releases/update223-verification.json",
+  "verifiedAt": "2026-11-26T11:49:40.662336Z",
+  "sourceCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
+  "sourceBranch": "release/update224-homepage-aurora-on-update223",
+  "baselineCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
+  "evidence": "docs/releases/update224-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,17 +31,17 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
+  "scope": "Verified homepage deployment used as the baseline for the consent and shootout display release.",
   "gitSource": {
-    "implementationCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
-    "branch": "release/update223-shootout-threaded-lock",
+    "implementationCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
+    "branch": "release/update224-homepage-aurora-on-update223",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
+    "pushed": false,
     "repository": "yinyangeqlab/yinyang-eq-lab"
   },
-  "scope": "Verified website deployment used as the baseline for the homepage aurora release.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": false,
     "sourceOnlyHandoverPending": true,
@@ -49,15 +49,13 @@
     "hostedValidationPassed": false,
     "newDataExport": false,
     "nextScheduledRunMayRefuseBaselineMismatch": true,
-    "sourceBaselineUpdate": 222,
-    "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "update223SourceOnlyHandover": {
+    "sourceBaselineUpdate": 223,
+    "update224SourceOnlyHandover": {
       "registrationPending": true,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update223-recovery-verification.json"
+      "evidence": "docs/releases/update224-recovery-verification.json"
     }
   },
   "documentationFiles": []

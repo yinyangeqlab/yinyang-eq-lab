@@ -1,7 +1,6 @@
 "use client";
 import "./playback-deck.css";
 import PassageTimeEditor from "./passage-time-editor";
-import {visualSpring} from "@/lib/visual-spring";
 import {scanMp3Source,sourceBitrateAt,type SourceEncoding} from "@/lib/source-encoding";
 import sourceCatalog from "@/data/listening-source-details.json";
 import {waveformRecordingId} from "@/lib/waveform-peaks";
@@ -155,7 +154,6 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
   const waveFrame = useRef<number | null>(null);
   const waveLevels = useRef([new Float32Array(72),new Float32Array(72)]);
   const wavePaintAt = useRef<number | null>(null);
-  const waveBounce=useRef([{level:0,velocity:0},{level:0,velocity:0}]);
   const liveReadAt = useRef(0);
   const urlRef = useRef<string | null>(null);
   const hashSerialRef = useRef(0);
@@ -702,17 +700,9 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
         const response=1-Math.exp(-delta/seconds);
         levels[i]+=(target-levels[i])*response;
       }
-      const bass=active?levels.slice(0,24).reduce((sum,value)=>sum+value,0)/24:0;
-      const bounce=visualSpring(waveBounce.current[branch].level,waveBounce.current[branch].velocity,bass,delta);waveBounce.current[branch]=bounce;
       const base=canvas.height*.75,amplitude=canvas.height*.52;
       const light = document.documentElement.dataset.siteTheme === "light";
       const tint = branch === 0 ? (light ? "164,47,76" : "255,82,111") : (light ? "20,95,157" : "72,184,255");
-      if(active&&document.documentElement.dataset.motion!=="reduced"){
-        const mid=(plotStart+plotEnd)/2;
-        const glow=pen.createRadialGradient(mid,base,0,mid,base,Math.max(1,(plotEnd-plotStart)*.55));
-        glow.addColorStop(0,`rgba(${tint},${.025+bounce.level*.09})`);glow.addColorStop(1,`rgba(${tint},0)`);
-        pen.fillStyle=glow;pen.beginPath();pen.ellipse(mid,base,(plotEnd-plotStart)*(.25+bounce.level*.12),canvas.height*(.08+bounce.level*.18),0,0,Math.PI*2);pen.fill();
-      }
       const y=(i:number)=>base-levels[i]*amplitude;
       pen.beginPath();pen.moveTo(plotStart,y(0));
       for(let i=1;i<count;i++){

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "64b5d297d2ddd8dcee303c39fe27d958d7967cf9",
-  "recordedLiveUpdate": 223,
+  "baseRevision": "b449874bea2c78db4ef963dcb87762f6916fe340",
+  "recordedLiveUpdate": 224,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "d76cbc8923e612f0ee83b4136cf840b4da1efb91b318982abcd48131a60c48c9",
+      "sha256": "877d8791ff39bb41ead45e517534287c17622af46757e99a011c3cc7f94c629e",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "23def09edb583ec36de63d29020ec08ba78e56777a1cad9dde00cbe4e6e35250",
+      "sha256": "5fe3460581e4fda2849db9e1decb9e712fb502b7bc925285690a11ab132e4ab4",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "0a438f11af0fe747ea0ac66913d9be047be5d3b6731afd8577dbb25ad9d3f416",
+      "sha256": "ef112a95f3b901393753749e90a4801851d0a6017d950deba106075a74276b25",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "f761eaa31b95ac438d03a24d3ae04abc76ebafdc6222cd8a7afbd4f832cf9549",
+      "sha256": "d33f79a123eae4b8e844698c9ac846db6609bcd5631973389c4d04474fa20f3b",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "8a1eb8e305102ab26b8ab0ec10512818c2317c72ebf5260040bb96e09f2eb3ed",
+      "sha256": "bb4289ad10b6823c9c7d27db9630a5774cdebc52cef800a887cf4809130bb7e2",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "8ce23bef157a98e65d2c55e2a4cd0083a53a27f17c5a612e4c022b68c9035782",
+      "sha256": "0cdbebff0c67ae6af6bd4d4fe955b36f7506ec171cd329c6c2e6c0767d4b11cf",
       "executable": false
     },
     {
@@ -1503,6 +1503,11 @@
     {
       "path": "docs/releases/update223-verification.json",
       "sha256": "eeb18ed0ecea581f2f8bf9a7c8ec50e2cde3d75176c1169b09006f3fbf553349",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update224-verification.json",
+      "sha256": "dd6f08c48619af50bd6a6eafd6ee8bc8d0e652b42acf84433498c107ad984598",
       "executable": false
     },
     {
@@ -4347,7 +4352,7 @@
     },
     {
       "path": "scripts/checks/audio/check_passage_time.mjs",
-      "sha256": "88524e0996a2205bb589e72fef9d5d82390e4946db64be023404ad5dbf92281d",
+      "sha256": "26e0ffb4e65cbb0928ffbe26a68fbef6a1e6b77b5f9e45376979676192443728",
       "executable": false
     },
     {
@@ -6032,12 +6037,12 @@
     },
     {
       "path": "site/components/comparison-data-settings.css",
-      "sha256": "c1cf0f57200943a10c516391efdbe5a66944f56c138c0c562bec9ff1d22524c0",
+      "sha256": "b50edceb3f4c529e7d5f5dcf7e179602ad042cbda92ab15819749ce3b135ed3d",
       "executable": false
     },
     {
       "path": "site/components/comparison-data-settings.tsx",
-      "sha256": "ec41b0d76d34df3185ef2527641a6fe30feb2c66297cd29aa129062e9569bc5c",
+      "sha256": "d7507d4efd272a57b5840e08e5f0c055a83a5d7f0d305a41f6a356e1bc58d55c",
       "executable": false
     },
     {
@@ -6287,7 +6292,7 @@
     },
     {
       "path": "site/components/music-panel.tsx",
-      "sha256": "9033ef605a59638ee3e7ac34c554f83a808b7fd169c83df19d495899aae5daee",
+      "sha256": "e57eb6a4b3f4dce3e8ab6d031e218c458b0c6ee2c2ca6167d0f2678d19780d2d",
       "executable": false
     },
     {
@@ -8242,12 +8247,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "fde769a09a5085c76f593a2fcbb0cf62da2eb7798990e74118fd990d2243593f",
+      "sha256": "eb74a05b434811dae12977a4e7eef0d0dcfe0b84786c1f7fad976117ce6140c4",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "b91548e7a0c65eb65a75c9e602b69627807476625ed69f8a92b1f057be29696b",
+      "sha256": "26fd612202fadeef06a9fc4abcdd93d86e8ae064154ffd0a8068174e3d2e4451",
       "executable": false
     },
     {
@@ -8433,11 +8438,6 @@
     {
       "path": "site/lib/utils.ts",
       "sha256": "53f3d3d070f0a9082934da25b875f9499855c2b0693868dd28be8c23d8730f68",
-      "executable": false
-    },
-    {
-      "path": "site/lib/visual-spring.ts",
-      "sha256": "74fd7b422ffa7c634f049d30ff3c95f0677a8c083a7e33a907412f5f6cc645be",
       "executable": false
     },
     {
