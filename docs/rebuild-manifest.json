@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "ada156881c618db761f189eb8fbe011694ae45f6",
-  "recordedLiveUpdate": 217,
+  "baseRevision": "8dd52f8d2c7515ed5128a8b2e8c038ec428f6580",
+  "recordedLiveUpdate": 221,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "72128d23b15e7cfd72497b9154dd75ff2e25e3b8a0bed1dfa0f66ac89b5d175e",
+      "sha256": "299c34bfb0e3dca85508e06684f00110ca126be772bd863fea1ac83bce7cea5d",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "e12f6d3aa7aff1e209ab3b5a943113dd4107863143307f590eff32903d040736",
+      "sha256": "9710ab602c6dd0e87cd0f0f068194894afa27e5f56cb399b1314f3c38937949b",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "872afb2832a80be2eb977d44441725aec1b45b6a4ed651f0a9b45c921de727d2",
+      "sha256": "3e9604d45244d922fca49184b5c63f06523a1cfd4255efd52cb8968eb61511cc",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "be94241961d2a9eed8be61613089bbbe1e974ea0fbb064d4728ac7a21c6a8870",
+      "sha256": "7f98942ec95b2b17886273905cdc4c08c2791fb56814b47a31112afb4662849a",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "9b225a0e559c5d346fcc37b614192f0b026281aa6548288927f4da1f0420c9e2",
+      "sha256": "0ff65b2b33b07d7780000d7737ae2e8943879edd19d96dd9f1bb71a704f62431",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "8238245a8258c813f4fea6b773347bd87da70d11ff4568445144eea0c804a552",
+      "sha256": "6a04d54f8ede398a37906ba40fe41d86d70269eb5f8776de22e8254a961c8f7e",
       "executable": false
     },
     {
@@ -1468,6 +1468,11 @@
     {
       "path": "docs/releases/update217-verification.json",
       "sha256": "52dec968454997a7b81957836b597c19e79af6f515accc1366303aa2c40e736c",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update221-verification.json",
+      "sha256": "26d57557ac22e5d108e38f15e007e7d019db248546e16f9bf1b2e9c0d4c8de7c",
       "executable": false
     },
     {
@@ -4057,7 +4062,7 @@
     },
     {
       "path": "scripts/checks/application/check_first_time_journey.mjs",
-      "sha256": "0560a7ca8aede090f32417786323d9fa33c06e859e9edcd9cf23623528b90d6a",
+      "sha256": "37a04f22f737f949078e870527c7c94a9f6e224f2a3b3bd04ee0e2d4d73c570b",
       "executable": false
     },
     {
@@ -5232,7 +5237,7 @@
     },
     {
       "path": "site/app/community-preferences/community.css",
-      "sha256": "0287e5e9f0e2fbd504f004cdd81608b32a041d56396d40cbc8ebbca258946ce6",
+      "sha256": "afb7c96ae0356d93102a654530cbb1078b37bc23ab87bf1bd15bed25125c79c3",
       "executable": false
     },
     {
@@ -5242,7 +5247,7 @@
     },
     {
       "path": "site/app/community-preferences/page.tsx",
-      "sha256": "57b6f2903d0e5b1af57178a416de10a490fec362720e662dbe54fb9e34e469fd",
+      "sha256": "bc1ce9c7dc16485a7d7784521c731001c60996ab572706c966e9a2a769f878f4",
       "executable": false
     },
     {
@@ -5397,17 +5402,17 @@
     },
     {
       "path": "site/app/eq-compare/quick-compare.css",
-      "sha256": "0c742b43f3a030c28ba82652a8893738a48300652551de3c39e969cc259e704c",
+      "sha256": "fab03a233ed684eca267219d2e40cc83a3e739809faecd2adb57d6ccd1eef771",
       "executable": false
     },
     {
       "path": "site/app/eq-compare/style.css",
-      "sha256": "2c5746122fa5e7f4fd6bb383e6ded5ca8bc9e2194536272210973b405eaa1f13",
+      "sha256": "8fd25370acdbd716d18162041d1cdad6f250beec3dce8144e30fdd9988cd610a",
       "executable": false
     },
     {
       "path": "site/app/globals.css",
-      "sha256": "7ef1d2fec3ae3d118f83c8e95db9c576aea03910f8db886379d24a63cda5d286",
+      "sha256": "20a1592f3010af3b013eae90255d07726ad8ce6815cf026b8aa4a2256b0cbd79",
       "executable": false
     },
     {
@@ -5492,12 +5497,12 @@
     },
     {
       "path": "site/app/listen/page.tsx",
-      "sha256": "33da314b12d5f139290d3b3863f917a12dae7d50dd6dbc2b65713b2a226c1c05",
+      "sha256": "7c3a6e1d8570eaa08d3d2fae074c6a7e78cc8480a0bcde1e5b1ab17ad0e25546",
       "executable": false
     },
     {
       "path": "site/app/listen/style.css",
-      "sha256": "ae9ba50bec996f3d569e1647bee80a417f39f9695c39b5d49de6393436fe2f40",
+      "sha256": "e9e6bff9e1dd49f625468301df87bafa12dc546aff9dde05683efc3cd7a95bd9",
       "executable": false
     },
     {
@@ -5702,7 +5707,7 @@
     },
     {
       "path": "site/app/shootout/page.tsx",
-      "sha256": "8889ebc215f8ed144b5e5e3d0778cfa023e69156994eb499a629779b3ee83b33",
+      "sha256": "efcae3cf6283465200ecd298cfad106e8f8c2bc22d5396e2c1bf379df6432533",
       "executable": false
     },
     {
@@ -5712,12 +5717,12 @@
     },
     {
       "path": "site/app/shootout/personal/page.tsx",
-      "sha256": "67485e72a2685fcdbe152786a2a1dfbd3e9088aecc3442c871a911f3ae13eedb",
+      "sha256": "844dceba06a7ce5a8963c3829c60eafde613c53c3e1554c218ed60e7c4a624cd",
       "executable": false
     },
     {
       "path": "site/app/shootout/personal/personal.css",
-      "sha256": "d1cd47c0a1368c73941e60ebc2dbb83329801b0e367c243683ec334ae7124397",
+      "sha256": "ab1b30b253b97174ad40779722f743e7c9b23e195b9531f34e37efb624448a10",
       "executable": false
     },
     {
@@ -5887,7 +5892,7 @@
     },
     {
       "path": "site/components/alpha-audio-workbench.css",
-      "sha256": "c274bb32f23be0711348a7b448842ac6b8e5ac049116c2fe078baab4db6f1ce1",
+      "sha256": "6185ae01b136f17148d7d14290397726d9a78a996d81363bfe4128e7b84e1f3c",
       "executable": false
     },
     {
@@ -5972,7 +5977,7 @@
     },
     {
       "path": "site/components/compare-strip.css",
-      "sha256": "114a7b95709a94e8229964d8ff5497097203e61f8e6b05d7f0864dbe5d86890c",
+      "sha256": "9760c3c0d98bc2cbd66276942836b13e8c6ef044085456290b7b85f6073885b4",
       "executable": false
     },
     {
@@ -6042,12 +6047,12 @@
     },
     {
       "path": "site/components/embed-shootout.css",
-      "sha256": "e68768d5f18f67db9a05bbc80a87d70c02426f7db40f48eb152695a08667d3b7",
+      "sha256": "5cfa501a9c828890f85ed6ef324603db0cca91042f3f5a4ef6809b9116db4300",
       "executable": false
     },
     {
       "path": "site/components/embed-shootout.tsx",
-      "sha256": "cf16169d08230e2b5716c107c5c73579953ae154ff54f8eb4e024fbda7bd550d",
+      "sha256": "eeecc2b58bab572769dc93cc2fa2535ed837809654ec1ece2e598c9bbba73f81",
       "executable": false
     },
     {
@@ -6132,17 +6137,17 @@
     },
     {
       "path": "site/components/generated-eq-comparison.css",
-      "sha256": "7596f9a0bb2f3799e928bed9cb27f843aeea790a0f6549bbe9578bb655d9c32d",
+      "sha256": "8a9c028f22e7ff2101456bcc7f64208234615e507c9904d45dbbdac1f09fb72a",
       "executable": false
     },
     {
       "path": "site/components/generated-eq-comparison.tsx",
-      "sha256": "db8c40d905c26deed3c8a42f8fcf5dca1b6759a5ddec3c1949d2c088dfb56e8a",
+      "sha256": "385d116a452b52a552ffe9ba068fdf72c7ea084a33c1d64533d136807c16f9c1",
       "executable": false
     },
     {
       "path": "site/components/headphone-picker.tsx",
-      "sha256": "336a1befccc00bb733276aab4b1a084fedcb30601100973146ebe6b0f6e58414",
+      "sha256": "86d01efb6cbd6ec9ec15cd813bbb7b1ee27c462bb469efd03441526fa660cc1a",
       "executable": false
     },
     {
@@ -6207,7 +6212,7 @@
     },
     {
       "path": "site/components/matched-passage-control.tsx",
-      "sha256": "862f7b6f7d948b8cf50d2235c59506d06f3f0673ecd1fac36c974a342e3b196f",
+      "sha256": "a4ffe166c81b37cacf0de1f44c8b3c129a886211df2b6f419d51fc2e98beeb65",
       "executable": false
     },
     {
@@ -6232,7 +6237,7 @@
     },
     {
       "path": "site/components/music-panel.tsx",
-      "sha256": "a57cc111b9418b32249ab93b95685c3aa20fc95676fe7444d45c38ed2b99805b",
+      "sha256": "9033ef605a59638ee3e7ac34c554f83a808b7fd169c83df19d495899aae5daee",
       "executable": false
     },
     {
@@ -6312,7 +6317,7 @@
     },
     {
       "path": "site/components/playback-deck.css",
-      "sha256": "74186bdd62fb086b0ab9a93c56cbbb6b5cd0b565343b00716f4095e956bd70fd",
+      "sha256": "67fe0fc50cdb690512a9e63bad5eaff5387ccf9eb35053b4d59063ef4dda9299",
       "executable": false
     },
     {
@@ -6441,18 +6446,18 @@
       "executable": false
     },
     {
+      "path": "site/components/shootout-ballot.css",
+      "sha256": "aeca242a1e13c58fb85d95239945cf08a2b767c790005ff4792c56c3861d9b80",
+      "executable": false
+    },
+    {
+      "path": "site/components/shootout-ballot.tsx",
+      "sha256": "4d7544d8c7d493b474f2382ae8cf477c8dbdc0a1f622149c1f06a9720e2ded30",
+      "executable": false
+    },
+    {
       "path": "site/components/shootout-organization.css",
-      "sha256": "56c19777c9abbd5e28352ff360a2c93c86acb4769d6f92195c5d7fac4cd1b06d",
-      "executable": false
-    },
-    {
-      "path": "site/components/shootout-vote-label.css",
-      "sha256": "d2860287b131d3fb98f68d5443a47e3d93275241a2f498b8bdfb204370241fe1",
-      "executable": false
-    },
-    {
-      "path": "site/components/shootout-vote-label.tsx",
-      "sha256": "37ae4c8f5e1f9b909c5be346a16e29b01a32d4b8960cb8a92c6e09607df8682e",
+      "sha256": "01a189e3ea820de0af1119f7e728d6568a5100bbe9bb94083ff7301b97d9de83",
       "executable": false
     },
     {
@@ -6522,7 +6527,7 @@
     },
     {
       "path": "site/components/sound-setup.css",
-      "sha256": "9c7518df3631571c4a62971486cd05ca28b870a1b5921a98bb456d6a822adb40",
+      "sha256": "a6cbdd38755310906b1cbb73008fc89600b3c299afd3a50c9624927a330566e3",
       "executable": false
     },
     {
@@ -6597,12 +6602,12 @@
     },
     {
       "path": "site/components/tournament-mode-tabs.css",
-      "sha256": "0a4ebde8dbb375aebbc2f20b808ccced5c318be39a64b4542399e9f5b95965cd",
+      "sha256": "edcfb5b1465608d464090e6fc79c3799bb9bbddf126594758757f9b49474a9bc",
       "executable": false
     },
     {
       "path": "site/components/tournament-mode-tabs.tsx",
-      "sha256": "9df0fd1b386b65fbb066749c879e38bf11fa46c5f3a7311902072fc43bbf577a",
+      "sha256": "57803a2bf8fe416a1faf3de9ba454600939e8f29d17de69789f6cb6436b8c17c",
       "executable": false
     },
     {
@@ -6933,6 +6938,26 @@
     {
       "path": "site/components/use-waveform-peaks.ts",
       "sha256": "e2b8337c5bf49a4baa9704423b0ce1e6e0a053c35bb55c0824bf4f65df034773",
+      "executable": false
+    },
+    {
+      "path": "site/components/vote-art/lock-a.svg",
+      "sha256": "6d89d175d48097ccf66ee455c73701042ba978f154d8b1103ebcf91cc64b3c7b",
+      "executable": false
+    },
+    {
+      "path": "site/components/vote-art/lock-b.svg",
+      "sha256": "503cd1c39f941c41d833372fb69bb8c7e8fc834f8627dc5c036fc7773dcb8855",
+      "executable": false
+    },
+    {
+      "path": "site/components/vote-art/lock-tie.svg",
+      "sha256": "0643ca1c698071a314b8d8f6bc5c0c67e044b45bc0deed2be2a8d6833196756d",
+      "executable": false
+    },
+    {
+      "path": "site/components/vote-art/necklace.svg",
+      "sha256": "382a0de59a1ce57fd15eb54659603a8f7f657541a7f68e8b3f118cfd40c2cd18",
       "executable": false
     },
     {
@@ -8157,12 +8182,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "39586d9b757165159f47b405881304b86b4082d12d135ad5d5eaa93b501ca9cb",
+      "sha256": "3d4006e05826ae1d86d10482a87961a6e03d8b2203bf0abb204d35054be36206",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "dc1f51a5add08f3292f01a3742b047ad430fa19332968ad7fedc9f9f47e5d927",
+      "sha256": "90df4d63f16182f60f8ec6aaa8c76e60febaefa76141bcc4ad3f440893f9b47d",
       "executable": false
     },
     {
@@ -8247,7 +8272,7 @@
     },
     {
       "path": "site/lib/site-help-walkthrough.ts",
-      "sha256": "29f6e41b8fd4dda290a13d1708d41abbd9945c89e2e78896957f4c996b918b09",
+      "sha256": "389997f756e029030841795b271930362fd2e47d183cdeb3d17fc89bad54f983",
       "executable": false
     },
     {

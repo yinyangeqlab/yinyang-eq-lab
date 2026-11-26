@@ -1,0 +1,153 @@
+@font-face {
+  font-family: "Public Sans Vote";
+  src: url("/fonts/public-sans/bold-latin-dace7416.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.shootout-ballot {
+  display: grid;
+  grid-template-columns: minmax(0, 7.5rem) minmax(0, 9rem) minmax(0, 7.5rem);
+  justify-content: center;
+  align-items: stretch;
+  gap: .375rem;
+  min-inline-size: 0;
+  container: ballot / inline-size;
+}
+.shootout-ballot [data-vote-choice="a"] {
+  --vote-face: #9c294c;
+  --vote-edge: #d96d8b;
+  --vote-lock: url("./vote-art/lock-a.svg");
+}
+.shootout-ballot [data-vote-choice="tie"] {
+  --vote-face: #4e5b68;
+  --vote-edge: #99a6b2;
+  --vote-lock: url("./vote-art/lock-tie.svg");
+}
+.shootout-ballot [data-vote-choice="b"] {
+  --vote-face: #126595;
+  --vote-edge: #62b7e3;
+  --vote-lock: url("./vote-art/lock-b.svg");
+}
+
+.shootout-ballot button.shootout-vote {
+  --face: var(--vote-face);
+  --edge: var(--vote-edge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .375rem;
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  min-block-size: max(44px, 2.75rem);
+  margin: 0;
+  padding: .375rem .5rem;
+  border: 1px solid var(--edge);
+  border-radius: .5rem;
+  background: linear-gradient(var(--face), color-mix(in srgb, var(--face) 82%, #101923));
+  color: #fff;
+  box-shadow: inset 0 1px 0 #ffffff22;
+  font: 700 .9375rem/1.25 "Public Sans Vote", Arial, sans-serif;
+  text-align: center;
+  cursor: pointer;
+}
+.shootout-ballot .vote-button-label {
+  position: relative;
+  min-inline-size: 0;
+  color: inherit;
+  line-height: inherit;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.shootout-ballot .shootout-vote:disabled {
+  --face: color-mix(in srgb, var(--vote-face) 54%, #4d555d);
+  --edge: color-mix(in srgb, var(--vote-edge) 52%, #737d85);
+  opacity: 1;
+  cursor: default;
+}
+.shootout-ballot .shootout-vote[data-locked] {
+  --lock-half: .5625rem;
+  --side-padding: .5rem;
+  --label-gap: .375rem;
+  display: grid;
+  grid-template-columns: minmax(var(--side-padding), 1fr)
+    [lock-start] calc(2 * var(--lock-half)) [lock-end] var(--label-gap)
+    [check-start] var(--check-space, 0px) [content-start] minmax(0, max-content) [content-end] minmax(var(--side-padding), 1fr);
+  gap: 0;
+  padding-inline: 0;
+  overflow: visible;
+  cursor: not-allowed;
+}
+.shootout-ballot .vote-necklace {
+  position: absolute;
+  grid-column: lock-start / lock-end;
+  inset-block: -.1875rem calc(50% + .22rem);
+  inset-inline-start: 50%;
+  inline-size: 2rem;
+  transform: translateX(-50%);
+  background: url("./vote-art/necklace.svg") center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.shootout-ballot .shootout-vote[data-locked] .vote-button-label {
+  grid-column: content-start / content-end;
+  grid-row: 1;
+}
+.shootout-ballot .vote-lock {
+  position: relative;
+  grid-column: lock-start / lock-end;
+  grid-row: 1;
+  inline-size: 100%;
+  block-size: 1.3125rem;
+  background: var(--vote-lock) center / contain no-repeat;
+}
+.shootout-ballot .vote-check { flex: none; }
+.shootout-ballot .shootout-vote[data-locked][aria-pressed="true"] {
+  --check-space: calc(16px + var(--label-gap));
+}
+.shootout-ballot .shootout-vote[data-locked] .vote-check {
+  grid-column: check-start / content-start;
+  grid-row: 1;
+}
+.shootout-ballot .shootout-vote[aria-pressed="true"] {
+  --face: var(--vote-face);
+  --edge: #fff;
+  box-shadow: inset 0 0 0 1px var(--edge);
+}
+@media (hover: hover) {
+  .shootout-ballot button.shootout-vote:hover:enabled {
+    --face: color-mix(in srgb, var(--vote-face) 91%, white);
+    --edge: #fff;
+  }
+}
+.shootout-ballot button.shootout-vote:focus-visible {
+  outline: 2px solid light-dark(var(--workbench-teal), #a9f0e4);
+  outline-offset: 3px;
+}
+@container ballot (max-width: 21rem) {
+  .shootout-ballot button.shootout-vote {
+    gap: .25rem;
+    padding-inline: .25rem;
+    font-size: .875rem;
+  }
+  .shootout-ballot .shootout-vote[data-locked] {
+    --lock-half: .5rem;
+    --side-padding: .25rem;
+    --label-gap: .25rem;
+    gap: 0;
+    padding-inline: 0;
+  }
+}
+@container ballot (max-width: 17rem) {
+  .shootout-ballot button.shootout-vote {
+    grid-column: 1 / -1;
+    justify-self: center;
+    inline-size: min(100%, 10rem);
+  }
+}
+@media (forced-colors: active) {
+  .shootout-ballot .vote-lock { forced-color-adjust: none; }
+  .shootout-ballot .shootout-vote[aria-pressed="true"] { border: 3px double ButtonText; }
+}

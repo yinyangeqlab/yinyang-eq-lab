@@ -1,5 +1,5 @@
 "use client";
-import ShootoutVoteLabel from "@/components/shootout-vote-label";
+import { ShootoutBallot, ShootoutVote } from "@/components/shootout-ballot";
 import { useGraphTheme } from "@/lib/graph-theme";
 import { shortcutDecision } from "@/lib/playback-shortcuts";
 import { usePlaybackShortcutContext } from "@/lib/use-playback-shortcut-context";
@@ -117,8 +117,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
   const [repeat, setRepeat] = useState(false);
 
   const audition = useRef<Audition | null>(null);
-  const order = useRef<number[]>([]);
-  const flips = useRef<boolean[]>([]);
+  const [draw, setDraw] = useState<{ order: number[]; flips: boolean[] }>({ order: [], flips: [] });
   const picks = useRef<Pick[]>([]);
   const heardRef = useRef({ a: 0, b: 0 });
   const [auditionState, setAuditionState] = useState<Audition | null>(null);
@@ -146,8 +145,8 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     return audition.current!;
   }, [config, volume]);
 
-  const round = config ? config.rounds[order.current[step]] : undefined;
-  const flipped = flips.current[order.current[step]] ?? false;
+  const round = config ? config.rounds[draw.order[step]] : undefined;
+  const flipped = draw.flips[draw.order[step]] ?? false;
   // Presented A/B -> hidden target index.
   const targetFor = useCallback((s: Side, plan = round, flip = flipped) => plan ? ((s === "a") !== flip ? plan.a : plan.b) : 0, [round, flipped]);
 
@@ -159,32 +158,32 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     void engine.resume().then(() => setPlaying(true));
   }, [round, targetFor]);
 
-  const beginRound = useCallback(async (index: number) => {
+  async function beginRound(index: number, sequence = draw) {
     const engine = audition.current;
     if (!engine || !config) return;
-    const plan = config.rounds[order.current[index]], flip = flips.current[order.current[index]];
+    const plan = config.rounds[sequence.order[index]], flip = sequence.flips[sequence.order[index]];
     setBusy(true);
     try {
       const source: SourceKind = useFile && engine.hasFile() ? "file" : plan.signal;
       await engine.useSource(source);
-      const next = config.rounds[order.current[index + 1]];
+      const next = config.rounds[sequence.order[index + 1]];
       if (next && !(useFile && engine.hasFile())) void engine.preload(next.signal).catch(() => undefined);
       engine.select(targetFor("a", plan, flip));
       heardRef.current = { a: 0, b: 0 }; setHeard({ a: 0, b: 0 });
       setSide("a"); setPlaying(true);
     } catch { setError("Audio could not start in this browser."); setPhase("error"); }
     finally { setBusy(false); }
-  }, [config, targetFor, useFile]);
+  }
 
   async function start() {
     if (!config) return;
     const engine = ensureAudition();
     await engine.resume().catch(() => undefined);
-    order.current = shuffled(config.rounds.length);
-    flips.current = config.rounds.map(() => Math.random() < 0.5);
+    const sequence = { order: shuffled(config.rounds.length), flips: config.rounds.map(() => Math.random() < 0.5) };
+    setDraw(sequence);
     picks.current = []; setPicksView([]);
     setStep(0); setPhase("listen");
-    await beginRound(0);
+    await beginRound(0, sequence);
   }
 
   // Count how long each side has actually been audible.
@@ -215,7 +214,7 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
     if (!config || !round || !canVote) return;
     const winner: Pick["winner"] = choice === "tie" ? "tie" : (choice === "a") === !flipped ? "a" : "b";
     const signal: SourceKind = useFile && audition.current?.hasFile() ? "file" : round.signal;
-    picks.current = [...picks.current, { round: order.current[step], winner, flipped, signal }];
+    picks.current = [...picks.current, { round: draw.order[step], winner, flipped, signal }];
     setPicksView(picks.current);
     if (step + 1 < config.rounds.length) { setStep(step + 1); await beginRound(step + 1); return; }
     await submit();
@@ -333,12 +332,13 @@ export default function EmbedShootout({ id, embed = false }: { id: string; embed
           <label className="es-volume">Volume<input type="range" min="0" max="1" step="0.01" value={volume} onChange={event => { const v = Number(event.target.value); setVolume(v); audition.current?.setVolume(v); }} aria-label="Volume" /></label>
           <span className="es-hint">Space or S switches sounds here. Use Pause to stop playback.</span>
         </div>
-        <div className="es-vote" role="group" aria-label="Which sounds better?">
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("a")} className="es-vote-a"><ShootoutVoteLabel choice="a"/></button>
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("tie")} className="es-vote-tie"><ShootoutVoteLabel choice="tie"/></button>
-          <button type="button" disabled={!canVote || phase === "sending"} onClick={() => void vote("b")} className="es-vote-b"><ShootoutVoteLabel choice="b"/></button>
-        </div>
-        <p className="es-note es-center-text" role="status">{phase === "sending" ? "Sending your picks…" : busy ? "Preparing the next sound…" : canVote ? "Pick the one you prefer." : `Listen to both for ${MIN_HEARD} seconds each to unlock your pick.`}</p>
+        <ShootoutBallot aria-describedby="embed-vote-status">
+          {(["a", "tie", "b"] as const).map(choice =>
+            <ShootoutVote key={choice} choice={choice} locked={heard.a < MIN_HEARD || heard.b < MIN_HEARD}
+              disabled={busy || phase === "sending"} onClick={() => void vote(choice)}/>
+          )}
+        </ShootoutBallot>
+        <p id="embed-vote-status" className="es-note es-center-text" role="status">{phase === "sending" ? "Sending your picks…" : busy ? "Preparing the next sound…" : canVote ? "Pick the one you prefer." : `Listen to both for ${MIN_HEARD} seconds each to unlock your pick.`}</p>
         {error && <p className="es-error" role="alert">{error} <button type="button" className="es-link" onClick={() => void submit()}>Try again</button></p>}
       </section>}
 
