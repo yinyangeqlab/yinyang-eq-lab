@@ -1,10 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 221,
+  "update": 222,
   "version": "0.2.0-beta.1",
-  "sourceCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
-  "sourceBranch": "release/update221-android-app-versions",
-  "baselineCommit": "eb2d92a67104673d140a582a927944d0cce793af",
+  "verifiedAt": "2026-11-26T09:46:05.484316Z",
+  "sourceCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+  "sourceBranch": "release/update222-shootout-controls",
+  "baselineCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+  "evidence": "docs/releases/update222-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -22,53 +24,44 @@
     "automaticExpiry": true,
     "originalExpiryPreserved": true
   },
-  "verifiedAt": "2026-11-26T07:39:55.514073Z",
-  "evidence": "docs/releases/update221-verification.json",
   "ownerOnlyMaintenance": {
     "enabled": false,
-    "automaticExpiry": false
+    "automaticExpiry": false,
+    "reopeningAuthorizedByOwner": true,
+    "adminLogin": "https://yinyangeq.com/admin-login",
+    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
+  "scope": "Verified website deployment used as the baseline for the threaded lock release.",
   "gitSource": {
-    "implementationCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
-    "branch": "release/update221-android-app-versions",
+    "implementationCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+    "branch": "release/update222-shootout-controls",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
+    "pushed": true,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "pushed": false,
-    "publicationAuthorized": true
+    "publicationTag": "update222",
+    "publishedSourceCommit": "27beeb4c05450ee29e42c0eef1ea9e45fb51b4bb",
+    "publishedTag": "update222"
   },
-  "scope": "Deployment and recovery record captured for update221 before publication. Production has since advanced.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
-    "nextScheduledRunMayRefuseBaselineMismatch": false,
     "newDataExport": false,
-    "latestDataSnapshotUnchanged": true,
-    "sourceBaselineUpdate": 221,
-    "sourceBaselineVerifiedAt": "2026-11-26T09:40:33Z",
+    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "sourceBaselineUpdate": 222,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "latestHostedRunMode": "validate-only",
-    "dailyWorkflowActive": true,
-    "update221SourceOnlyHandover": {
+    "update222SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update221-recovery-verification.json"
+      "evidence": "docs/releases/update222-recovery-verification.json"
     }
   },
-  "documentationFiles": [
-    {
-      "path": "docs/releases/update221-verification.json",
-      "sha256": "26d57557ac22e5d108e38f15e007e7d019db248546e16f9bf1b2e9c0d4c8de7c"
-    },
-    {
-      "path": "docs/releases/update221-recovery-verification.json",
-      "sha256": "7e46ad4e84ba940fc4bc5ce1a727872ef667bfb82f63700d467fa05498413d86"
-    }
-  ]
+  "documentationFiles": []
 }

@@ -10,3 +10,5 @@
   font-size: clamp(16px, 3.5vw, 23px);
   overflow-wrap: anywhere;
 }
+
+.generated-eq-dialog .shootout-ballot { justify-content: start; margin-block: .75rem; }

@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { isImportedMeasurement, type HeadphoneMeasurement } from "@/lib/measurement";
 import type { CatalogMeasurement } from "@/lib/public-measurements";
@@ -110,7 +111,7 @@ export default function HeadphonePicker({ rows, selectedId, headphoneType, onTyp
 
 
       <span id={`${resultsId}-help`} className="sr-only">Press Down to enter measurement results, Tab to move through their actions, and Escape to close results.</span>
-      {selected && <button type="button" className="measurement-clear-selection" aria-label="Clear selected headphones" title="Clear selection" onClick={()=>{onClear();closeResults();}}>×</button>}
+      {selected && <button type="button" className="measurement-clear-selection" aria-label="Clear selected headphones" title="Clear selection" onClick={()=>{onClear();closeResults();}}><X size={16} strokeWidth={2} aria-hidden="true"/></button>}
       {open && <div id={resultsId} className="headphone-search-results" role="region" aria-label="Measurement search results" onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); input.current?.focus(); setOpen(false); setEditingQuery(false); } }}>
         <><strong>Your uploaded measurements · all headphone types</strong>
         {savedSection(uploaded, "uploaded")}

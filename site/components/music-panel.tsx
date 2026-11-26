@@ -1062,9 +1062,11 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
     </div>;
   const playbackError = sourceError && <p className="music-meta playback-source-error" role="alert">{sourceError} {(testMode!=="blind"||personalOnly)&&<button type="button" onClick={()=>{setChooserOpen(true);chooserButton.current?.focus();}}>{file?"Choose another song":"Choose music"}</button>}</p>;
   return <section className="music-panel alpha-audio-deck" data-mode={testMode} data-passage-external={!!passageControlsHostId} aria-keyshortcuts="Space 1 2 S A B ArrowLeft ArrowRight Shift+ArrowLeft Shift+ArrowRight">
-    {choiceControls && <div className="comparison-votes-first">{choiceControls}</div>}
-    {compareControls && <div className="listening-band compare-group">{compareControls}</div>}
-    {fixedReferenceProtocol ? <p className="music-meta">Reference protocol · fixed 10-band EQ. Selectable fitters are available in Personal Tournament, Blind Research and Open Comparison.</p> : <FitterControls value={fitter} defaultValue={fitterState.defaultFitter} onChange={changeFitter} onDefault={fitterState.saveDefault} notice={fitterState.notice}/>}{fitNotice && <p className="music-meta" role="status">{fitNotice}</p>}{playbackError}
+    {(compareControls || choiceControls) && <div className="listening-band compare-group">
+      {compareControls}
+      {choiceControls && <div className="comparison-choice-area">{choiceControls}</div>}
+    </div>}
+    {playbackError}
     {passageControlsHostId ? (passageHost ? createPortal(passageControls, passageHost) : null) : !comparisonComplete && passageControls}
     {transport}
 
@@ -1094,6 +1096,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
         <button type="button" className="music-chooser-done" onClick={closeChooser}>Done</button>
       </section>
     </div>{recordingVote}</div>
+    {fixedReferenceProtocol ? <p className="music-meta">Reference protocol · fixed 10-band EQ. Selectable fitters are available in Personal Tournament, Blind Research and Open Comparison.</p> : <FitterControls value={fitter} defaultValue={fitterState.defaultFitter} onChange={changeFitter} onDefault={fitterState.saveDefault} notice={fitterState.notice}/>}{fitNotice && <p className="music-meta" role="status">{fitNotice}</p>}
     <div className="playback-hotkey-row"><ShortcutScopeSelect/><details className="playback-key-guide"><summary>Show keys</summary><div className="alpha-playback-shortcuts">
       <span className="playback-shortcut-hints">
         <span className="playback-shortcut-hint"><kbd>Space</kbd> play / pause</span>

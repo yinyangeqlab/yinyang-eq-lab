@@ -9,10 +9,6 @@
 .alpha-listening .shootout-heading-row{gap:12px}
 .alpha-listening .shootout-heading-row h1{font-size:clamp(24px,2.6vw,36px);letter-spacing:-.045em;line-height:1.12}
 .alpha-listening .shootout-setup-control{min-height:40px}
-.alpha-listening .choice-controls{gap:10px}
-.alpha-listening .choice-controls>button{min-height:48px;border-radius:10px;transition:background-color 150ms ease,border-color 150ms ease,box-shadow 150ms ease,transform 150ms ease}
-.alpha-listening .choice-controls>button:not(:disabled):hover{transform:translateY(-1px)}
-.alpha-listening .choice-controls>button:active{transform:translateY(0)}
 .alpha-listening .personal-listen-status{margin-block:6px}
 .alpha-listening .personal-progress{margin-block:8px;background:light-dark(var(--workbench-page), #07100e);border-color:light-dark(var(--workbench-line), #2d4941);border-radius:10px}
 .alpha-audio-deck{min-width:0;contain:style}
@@ -101,8 +97,6 @@
  .alpha-listening .alpha-audio-deck .playback-transport button{min-width:40px;min-height:40px}
  .alpha-listening .alpha-audio-deck .source-controls .sample-row{min-width:0;width:100%}
  .alpha-listening .alpha-audio-deck select{max-width:100%;font-size:16px}
- .alpha-listening .choice-controls{gap:7px}
- .alpha-listening .choice-controls>button{font-size:14px;min-height:48px}
  .alpha-tuning .pt-content{padding-inline:10px}
  .alpha-tuning .pt-chart-card{padding:11px 10px}
  .alpha-tuning .pt-chart-card>.pt-card-heading{align-items:flex-start;flex-direction:column;gap:6px}
@@ -382,7 +376,7 @@
 .shell.alpha-listening .music-panel-host:not(.persistent) .alpha-track-heading h2{font-size:16px}
 .shell.alpha-listening .music-panel-host:not(.persistent) .playback-title-line{min-height:0}
 .shell.alpha-listening .music-panel-host:not(.persistent) .source-controls{padding:6px 0 0;border-bottom:0}
-.shell.alpha-listening .alpha-audio-deck>.shootout-vote-actions,.shell.alpha-listening .alpha-audio-deck>.personal-votes{grid-column:1/-1;width:100%;margin:4px 0}
+.shell.alpha-listening .alpha-audio-deck>.shootout-vote-actions{grid-column:1/-1;width:100%;margin:4px 0}
 .shell.alpha-listening .alpha-audio-deck>.personal-comparison-actions{grid-column:1/-1;width:100%;margin:4px 0}
 .shell.alpha-listening .alpha-audio-deck :is(.comparison-listening-footer,.personal-listen-status){margin-block:4px}
 .shell.alpha-listening .alpha-audio-deck .matched-passage-box{margin-block:5px;padding:8px 10px}
@@ -456,11 +450,6 @@
 .shell.alpha-listening .music-panel-host.persistent.edge-expanded .music-panel>.playback-transport{display:flex!important}
 @media(min-width:641px){
  .shell.alpha-listening .shootout-content .tournament-modes{margin-bottom:8px}
- .shell.alpha-listening .shootout-content .tournament-modes .tournament-mode.mode-with-art{grid-template-columns:44px minmax(0,1fr);min-height:72px;padding:7px;gap:6px;text-align:left;justify-items:start}
- .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-copy{align-items:flex-start;gap:3px}
- .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-copy :is(.tournament-mode-suggestion,.tournament-mode-status){align-self:flex-start}
- .shell.alpha-listening .shootout-content .tournament-modes .mode-with-art .tournament-mode-label{font-size:12px}
- .shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact,.shell.alpha-listening .shootout-content .tournament-modes .mode-illustration--compact>svg{width:44px;height:33px}
  .shell.alpha-listening .shootout-content .measurement-picker{grid-template-columns:24px minmax(125px,max-content) minmax(0,1fr) 124px;gap:6px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch{width:180px;min-width:125px;max-width:100%;height:42px}
  .shell.alpha-listening .shootout-content .measurement-picker .headphone-type-switch button{font-size:10px}

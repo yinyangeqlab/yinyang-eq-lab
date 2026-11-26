@@ -468,13 +468,25 @@ export const archivedDeploymentReceipts = {
   updates: new Set([204, 203, 202, 201, 198, 197, 193, 191, 176, 154, 151, 150, 131, 130, 129, 128, 127, 126]),
 };
 
-export const candidateChanges = [
+const update221Changes = [
   "The Android page lists the installed names, versions and build numbers for all three apps and links to the matching Android release.",
   "The EQ Fitter Benchmark ranks fitters at 10, 15, 20 and 30 bands and provides both the current and original per-case scores as CSV downloads."
 ] as const;
 
+const update222Changes = [
+  "Vote labels sit directly on the buttons in white. Locked buttons have a muted face and a padlock hanging from a chain above the label area.",
+  "Listening controls sit next to the vote, with compact A/B switches and buttons that fit narrow screens.",
+  "The Listen page groups blind tests and comparisons where you choose both sides. The headphone clear button stays centered, and first-time participants can reach all consent actions."
+] as const;
+
+export const candidateChanges = [
+  "On locked shootout votes, one chain link passes through the padlock's shackle. White labels stay clear.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 221, date: "2026-11-25", title: "Android app versions and EQ fitter rankings", changes: candidateChanges },
+  { update: 223, date: "2026-11-26", title: "Threaded shootout padlock chains", changes: candidateChanges, publicationTag: "update223" },
+  { update: 222, date: "2026-11-26", title: "Clearer shootout voting and listening controls", changes: update222Changes, github: { commit: "27beeb4c05450ee29e42c0eef1ea9e45fb51b4bb", releaseTag: "update222" } },
+  { update: 221, date: "2026-11-25", title: "Android app versions and EQ fitter rankings", changes: update221Changes, github: { commit: "f23766f25fb868422f14a44caf7be16c63bfa3e5", releaseTag: "update221" } },
   { update: 220, date: "2026-11-25", title: "All target rankings", changes: update220Changes },
   { update: 219, date: "2026-11-25", title: "Listening and EQ methodology", changes: update219Changes },
   { update: 218, date: "2026-11-23", title: "Android app icons", changes: update218Changes, publicationTag: "update218" },
