@@ -9,6 +9,7 @@ import { companionTrailers } from "./companion-trailer.mjs";
 export const SITE_ORIGIN = "https://yinyangeq.com";
 export const SITE_NAME = "YinYang EQ";
 export const FITTER_GUIDE_PATH = "/glossary/eq-fitting";
+export const LISTENING_METHODOLOGY_PATH = "/glossary/methodology";
 export const EQ_FITTER_CHART = {
   path: "/share/eq-fitter-benchmark.jpg", width: 2088, height: 1218,
   alt: "Median error and peak boost across 14 cases. YinYang PEQdB has the lowest RMS error through 10 kHz at 0.13 dB. YinYang Movable Bands has the lowest RMS error through 20 kHz at 0.42 dB. Studio Standard has the lowest peak boost at 1.64 dB.",
@@ -62,11 +63,12 @@ export const sharePages = [
     },
   },
   { ...factsArtwork, path: AUDIO_FACTS_PATH, slug: "audio-facts", title: `${AUDIO_FACTS_TITLE} | YinYang EQ`, description: AUDIO_FACTS_DESCRIPTION },
+  { ...factsArtwork, path: LISTENING_METHODOLOGY_PATH, slug: "listening-methodology", title: "Listening and EQ Methodology | YinYang EQ", description: "How YinYang EQ runs listening comparisons, builds rankings, fits targets and helps you adjust headphone EQ." },
   ...audioFacts.map(fact => ({
     ...factsArtwork, path: audioFactPath(fact.slug), slug: `audio-fact-${fact.slug}`,
     title: `${fact.title} | YinYang EQ`, description: fact.answer,
   })),
-  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
+  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Rank Auto EQ fitters at 10, 15, 20 and 30 bands by curve-fit error and peak boost.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
   companionTrailers.landscape,
   companionTrailers.portrait,

@@ -443,8 +443,22 @@ const update216Changes = [
   "Open verified public source links and historical deployment records from the Version page.",
 ] as const;
 
-export const candidateChanges = [
+const update217Changes = [
   "Search for a full update number, such as update1 or 1, to find that release. Partial keyword searches still work.",
+] as const;
+
+const update218Changes = [
+  "The homepage and Android page use the new Electric Ridge App Manager icon and Split Response Ball Phone EQ icon.",
+] as const;
+
+const update219Changes = [
+  "Glossary & Guides includes Listening and EQ Methodology, with direct links to each method and its research references.",
+] as const;
+
+const update220Changes = [
+  "Target rankings open on All results, which includes eligible matched and earlier blind comparisons across fitters.",
+  "Switch directly to Matched A/B or Earlier results and use the visible fitter, test version and music source filters.",
+  "The Peak and Dip Ranked Listening Challenge uses its full name in Rankings and Finder.",
 ] as const;
 
 const update215PublicationRevision = "4572fa8ead207e2cc3500626b335b67ac3690cb1";
@@ -454,8 +468,17 @@ export const archivedDeploymentReceipts = {
   updates: new Set([204, 203, 202, 201, 198, 197, 193, 191, 176, 154, 151, 150, 131, 130, 129, 128, 127, 126]),
 };
 
+export const candidateChanges = [
+  "The Android page lists the installed names, versions and build numbers for all three apps and links to the matching Android release.",
+  "The EQ Fitter Benchmark ranks fitters at 10, 15, 20 and 30 bands and provides both the current and original per-case scores as CSV downloads."
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 217, date: "2026-11-23", title: "Exact update-number search", changes: candidateChanges, publicationTag: "update217" },
+  { update: 221, date: "2026-11-25", title: "Android app versions and EQ fitter rankings", changes: candidateChanges },
+  { update: 220, date: "2026-11-25", title: "All target rankings", changes: update220Changes },
+  { update: 219, date: "2026-11-25", title: "Listening and EQ methodology", changes: update219Changes },
+  { update: 218, date: "2026-11-23", title: "Android app icons", changes: update218Changes, publicationTag: "update218" },
+  { update: 217, date: "2026-11-23", title: "Exact update-number search", changes: update217Changes, github: { commit: "8dd52f8d2c7515ed5128a8b2e8c038ec428f6580", releaseTag: "update217", linkTaggedSource: true } },
   { update: 216, date: "2026-11-23", title: "Release history back to update1", changes: update216Changes, github: { commit: "a713724769b33151c25b6f28b0e9c690a849e0d2", releaseTag: "update216", linkTaggedSource: true } },
   { update: 215, date: "2026-11-22", title: "Sync ID and account recovery", changes: update215Changes, github: { commit: update215PublicationRevision, releaseTag: "update215", linkTaggedSource: true } },
   { update: 214, date: "2026-11-22", title: "Four consent actions in view", changes: update214Changes, github: { commit: "fea57f03dfd076ced6863b30508b9aa1e6a9560e", releaseTag: "update214", linkTaggedSource: true } },

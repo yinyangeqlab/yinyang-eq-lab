@@ -37,14 +37,14 @@ function findRanking(node) {
  const expression = ts.isJsxExpression(node) && node.expression;
  if (expression && ts.isBinaryExpression(expression) &&
      expression.left.getText(pageAst) === 'tab === "rankings" && rankingsView === "targets"' &&
-     expression.right.getText(pageAst).includes('const view=')) {
+     expression.right.getText(pageAst).includes('const view =')) {
   rankingBranches.push(expression.right.getText(pageAst));
  }
  ts.forEachChild(node, findRanking);
 }
 findRanking(pageAst);assert.equal(rankingBranches.length,1,'Find the actual ranking body rather than a navigation/eyebrow branch');
 const expression=rankingBranches[0];
-const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError="",rankQuery=""}) { const setRankQuery=()=>{}; const refresh=()=>{},setRankMode=()=>{},setRankType=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}; return (${expression}); }`;
+const source=`export function ranking({research,rankFitter=MAIN_FITTER_COHORT,rankProtocol,rankMode,rankType,researchLoading=research===null,researchError="",rankQuery="",setRankMode=()=>{},setRankProtocol=()=>{},setRankFitter=()=>{}}) { const setRankQuery=()=>{},refresh=()=>{},setRankType=()=>{}; return (${expression}); }`;
 const compiled=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText;
 const componentContext=vm.createContext({exports:{},require:createRequire(import.meta.url)});vm.runInContext(ts.transpileModule(readFileSync("site/components/ranking-change-explanation.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,componentContext);
 const context=vm.createContext({MAIN_FITTER_COHORT,searchRows,targets:[],isCatalogAutoEqTarget:()=>true,exports:{},require,RankingChangeExplanation:componentContext.exports.default,rankingDeviceFilters:eqRankings.rankingDeviceFilters,EqPresetRankings:props=>EqPresetRankings({...props,models}),ArrowRight:require("lucide-react").ArrowRight});
@@ -68,7 +68,7 @@ for(const protocol of ['all','current','legacy','free'])for(const type of ['all'
  const view=protocol==='free'?research.freeListening:protocol==='all'?research:research.protocols[protocol];
  const markup=renderToStaticMarkup(context.exports.ranking({research,rankProtocol:protocol,rankMode:mode,rankType:type}));
  const expected=key=>(type==='all'?view[key].rows:view.categories[key][type])[0].comparisons;
- const countPill=plain(markup.match(/<span class="count-pill">(.*?)<\/span>/s)?.[1]??'');
+ const countPill=plain(markup.match(/<span class="count-pill"[^>]*>(.*?)<\/span>/s)?.[1]??'');
  assert.equal(countPill,`${expected(mode)} QUALIFIED COMPARISONS`,`${protocol}/${type}/${mode} main count includes ties`);
  const buttons=[...markup.matchAll(/<button[^>]*>(.*?)<\/button>/gs)].map(m=>plain(m[1]));
  assert.ok(!buttons.some(text=>/curated|original.*songs|selected songs/i.test(text)),'Historical 20-song filter is absent');
@@ -98,6 +98,52 @@ for(const [savedMode,expected] of [['curated','all'],['verified','verified'],['r
  let restored;vm.runInNewContext(restore,{saved:{rankMode:savedMode},localStorage:{getItem:()=> 'true'},setRankMode:value=>{restored=value;}});assert.equal(restored,expected);
 }
 console.log('Removed historical view safely restores to All blind votes; valid saved views remain available.');
+
+// The All results default uses the same pooled order as the Android catalog.
+assert.match(page,/const \[rankFitter,setRankFitter\]=useState\("all"\)/);
+assert.match(page,/const \[rankProtocol,setRankProtocol\]=useState<[^>]+>\("all"\)/);
+const withEarlier = {
+ ...research,
+ allFitters: {...cohort(50), all: {rows: rows(7, 0).reverse(), voteCount: 7}},
+ fitterCohorts: [
+  {key: MAIN_FITTER_COHORT, view: research},
+  {key: 'historical', view: {...cohort(40), all: {rows: rows(2, 0), voteCount: 2}}},
+ ],
+};
+const defaults = {research: withEarlier, rankFitter: 'all', rankProtocol: 'all', rankMode: 'all', rankType: 'all'};
+const changes = [];
+const setters = {
+ setRankFitter: key => changes.push(key),
+ setRankProtocol: protocol => changes.push(protocol),
+ setRankMode: mode => changes.push(mode),
+};
+function findPressedButtons(node) {
+ if (Array.isArray(node)) return node.flatMap(findPressedButtons);
+ if (node?.type === 'button' && typeof node.props['aria-pressed'] === 'boolean') return [node.props];
+ return node?.props ? findPressedButtons(node.props.children) : [];
+}
+const findShortcut = (props, label) => findPressedButtons(context.exports.ranking({...props, ...setters}))
+ .find(button => button.children === label);
+
+const defaultMarkup = renderToStaticMarkup(context.exports.ranking(defaults));
+assert.ok(defaultMarkup.includes('7 QUALIFIED COMPARISONS'));
+assert.ok(defaultMarkup.indexOf('<strong>Beta</strong>') < defaultMarkup.indexOf('<strong>Alpha</strong>'));
+assert.ok(defaultMarkup.indexOf('id="ranking-fitter"') < defaultMarkup.indexOf('How these rankings work'));
+assert.equal(findShortcut(defaults, 'All results')['aria-pressed'], true);
+const earlierLabel = 'Earlier results';
+const earlierButton = findShortcut(defaults, earlierLabel);
+assert.equal(earlierButton['aria-pressed'], false);
+earlierButton.onClick();
+assert.deepEqual(changes.splice(0), ['historical', 'all', 'all']);
+const earlier = {...defaults, rankFitter: 'historical', rankProtocol: 'all'};
+assert.equal(findShortcut(earlier, earlierLabel)['aria-pressed'], true);
+assert.ok(renderToStaticMarkup(context.exports.ranking(earlier)).includes('2 QUALIFIED COMPARISONS'));
+findShortcut(earlier, 'Matched A/B').onClick();
+assert.deepEqual(changes.splice(0), [MAIN_FITTER_COHORT, 'current', 'all']);
+findShortcut(earlier, 'All results').onClick();
+assert.deepEqual(changes, ['all', 'all', 'all']);
+assert.equal(findShortcut({...defaults, research}, earlierLabel), undefined);
+console.log('All results preserves API order; the visible shortcuts select combined, matched, and earlier evidence.');
 
 const failed=renderToStaticMarkup(context.exports.ranking({research:null,rankProtocol:'current',rankMode:'all',rankType:'oe',researchLoading:false,researchError:'Synthetic unavailable'}));assert.ok(failed.includes('Synthetic unavailable')&&failed.includes('Try again')&&!failed.includes('No comparisons match'),'Failed reads never pretend research is empty');
 

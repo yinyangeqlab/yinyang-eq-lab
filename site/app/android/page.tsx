@@ -1,4 +1,4 @@
-import { DownloadAppManager } from "@/components/companion-app-brand";
+import { DownloadAppManager, phoneEqIconSrc } from "@/components/companion-app-brand";
 import { shareMetadata } from "@/lib/share-metadata";
 import { TrailerPlayer } from "./trailer-player";
 import { CompanionGallery } from "./gallery";
@@ -7,6 +7,7 @@ import "./style.css";
 
 export const metadata = shareMetadata("/android");
 const repository = "https://github.com/yinyangeqlab/yinyang-android";
+const releaseTag = "android-20261125-0169";
 
 export default async function AndroidPage({ searchParams }: { searchParams: Promise<{ download?: string }> }) {
   const { download } = await searchParams;
@@ -23,7 +24,13 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
           <p className="companion-plus-pitch">On the <strong>5K Plus</strong>, use <strong>up to 30 Main EQ bands</strong> or split the available slots between Main EQ and separate left and right correction.</p>
           <div className="companion-install" id="install">
             <DownloadAppManager className="companion-download companion-download-primary" describedBy="manager-download-note"/>
-            <p id="manager-download-note">Use App Manager on Android 9 or newer to install and update the Companion.</p>
+            <p id="manager-download-note">App Manager requires Android 9 or newer. Use it to install and update YYEQ 5K and YYEQ PhoneEQ.</p>
+            <dl className="companion-app-versions" aria-label="Android app versions">
+              <div><dt>YYEQ App Manager</dt><dd>1.6.8 (Build 30)</dd></div>
+              <div><dt>YYEQ 5K</dt><dd>0.16.9 (Build 70)</dd></div>
+              <div><dt>YYEQ PhoneEQ</dt><dd>0.3.5 (Build 10)</dd></div>
+            </dl>
+            <a className="companion-release-link" href={repository + "/releases/tag/" + releaseTag}>View this Android release on GitHub</a>
             {(download === "testing" || download === "unavailable") &&
               <p role="status">The App Manager download is temporarily unavailable. Try again later.</p>}
           </div>
@@ -49,11 +56,11 @@ export default async function AndroidPage({ searchParams }: { searchParams: Prom
 
       <section className="phone-eq" id="phone-eq" aria-labelledby="phone-eq-title">
         <div className="phone-eq-copy">
-          <h2 id="phone-eq-title"><img src="/android/phone-eq.png" width="48" height="48" alt=""/>YinYang Phone EQ</h2>
-          <p>Apply system-wide parametric EQ to media and games on your Android phone without a Qudelix. Import a TXT file or open a fit from YYEQ5K. Save and search Main EQ, Channel Match, and paired presets in your on-device library.</p>
+          <h2 id="phone-eq-title"><img src={phoneEqIconSrc} width="48" height="48" alt=""/>YYEQ PhoneEQ</h2>
+          <p>Apply system-wide parametric EQ to media and games on your Android phone without a Qudelix. Import a TXT file or open a fit from YYEQ 5K. Save and search Main EQ, Channel Match, and paired presets in your on-device library.</p>
           <a className="companion-download companion-download-primary" href={repository + "/releases/latest/download/YinYang-Phone-EQ.apk"} aria-describedby="phone-eq-requirements">Download Phone EQ</a>
           <p id="phone-eq-requirements">Android 13 or newer. Also available in <a href="/android/download">App Manager</a>. Playback requires Shizuku.</p>
-          <p className="phone-eq-credits">The audio engine is adapted from <a href="https://github.com/nanbeimerco/Quve/releases/tag/v1.0.2">Quve by nanbeimerco</a>. <a href={repository + "/tree/android-20261122-0166/android-playback"}>Phone EQ source and license</a></p>
+          <p className="phone-eq-credits">The audio engine is adapted from <a href="https://github.com/nanbeimerco/Quve/releases/tag/v1.0.2">Quve by nanbeimerco</a>. <a href={repository + "/tree/" + releaseTag + "/android-playback"}>Phone EQ source and license</a></p>
         </div>
         <div className="phone-eq-setup">
           <h3>Set up Shizuku</h3>

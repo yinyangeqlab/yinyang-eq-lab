@@ -1,12 +1,10 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 217,
+  "update": 221,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-24T01:26:48.050520Z",
-  "sourceCommit": "ada156881c618db761f189eb8fbe011694ae45f6",
-  "sourceBranch": "release/update217-exact-version-search",
-  "baselineCommit": "65138afb2b160b7d8329624a75300b0bcd3e86d2",
-  "evidence": "docs/releases/update217-verification.json",
+  "sourceCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+  "sourceBranch": "release/update221-android-app-versions",
+  "baselineCommit": "eb2d92a67104673d140a582a927944d0cce793af",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -24,21 +22,23 @@
     "automaticExpiry": true,
     "originalExpiryPreserved": true
   },
+  "verifiedAt": "2026-11-26T07:39:55.514073Z",
+  "evidence": "docs/releases/update221-verification.json",
   "ownerOnlyMaintenance": {
     "enabled": false,
     "automaticExpiry": false
   },
   "gitSource": {
-    "implementationCommit": "ada156881c618db761f189eb8fbe011694ae45f6",
-    "branch": "release/update217-exact-version-search",
+    "implementationCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+    "branch": "release/update221-android-app-versions",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "pushed": false,
+    "publicationAuthorized": true
   },
-  "scope": "Public deployment record captured before GitHub publication. See the live Version page for release links.",
+  "scope": "Deployment and recovery record captured for update221 before publication. Production has since advanced.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
@@ -47,28 +47,28 @@
     "nextScheduledRunMayRefuseBaselineMismatch": false,
     "newDataExport": false,
     "latestDataSnapshotUnchanged": true,
-    "sourceBaselineUpdate": 217,
-    "sourceBaselineVerifiedAt": "2026-11-24T02:09:58Z",
+    "sourceBaselineUpdate": 221,
+    "sourceBaselineVerifiedAt": "2026-11-26T09:40:33Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "latestHostedRunMode": "validate-only",
     "dailyWorkflowActive": true,
-    "update217SourceOnlyHandover": {
+    "update221SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update217-recovery-verification.json"
+      "evidence": "docs/releases/update221-recovery-verification.json"
     }
   },
   "documentationFiles": [
     {
-      "path": "docs/releases/update217-verification.json",
-      "sha256": "52dec968454997a7b81957836b597c19e79af6f515accc1366303aa2c40e736c"
+      "path": "docs/releases/update221-verification.json",
+      "sha256": "26d57557ac22e5d108e38f15e007e7d019db248546e16f9bf1b2e9c0d4c8de7c"
     },
     {
-      "path": "docs/releases/update217-recovery-verification.json",
-      "sha256": "b06b0da8286a3ddcce2caf5bf16e01f832c393327586695f86d46a1a2fcfb598"
+      "path": "docs/releases/update221-recovery-verification.json",
+      "sha256": "7e46ad4e84ba940fc4bc5ce1a727872ef667bfb82f63700d467fa05498413d86"
     }
   ]
 }

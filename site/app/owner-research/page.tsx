@@ -349,7 +349,7 @@ export default function OwnerResearch() {
         <h2>More tools</h2>
         <AdminBrowserOwnershipProof />
         <AdminLegacyReview />
-        <details className="admin-tool-group"><summary>Ranked practice participants</summary><EarPracticeLeaderboard owner /></details>
+        <details className="admin-tool-group"><summary>Ranked listening challenge participants</summary><EarPracticeLeaderboard owner /></details>
         <details className="admin-tool-group" id="protected-archive"><summary>Statistics archive and planning</summary><StatisticsArchivePanel /></details>
         <details className="admin-tool-group" id="tester-access"><summary>Tester access and local tests</summary><TesterInvites /><AdminTestPanel /><TestAccountControls /></details>
         <details className="admin-tool-group"><summary>Listening account recovery</summary><YinYangAccountPanel /></details>

@@ -21,7 +21,7 @@ export default function ListenPage(){return <main className="listen-page">
         <div><dt>Community Preferences</dt><dd>An optional research pilot with its own sharing permission. Public numerical results are withheld until independent listener validation and privacy review; earlier private-only contributions stay private.</dd></div>
         <div><dt>Open Comparison and your data</dt><dd>No public ranking votes. Choices involving approved settings can enter private owner research under the existing agreement; comparisons involving private settings stay local. Sharing song details from your own files is optional.</dd></div>
       </dl><p><a href="/my-data">Review your sharing choices</a> · <a href="/privacy">Read the privacy notice</a> · <a href="/community-preferences">About the research pilot</a></p></details>
-      <details className="welcome-ranking-guide"><summary>More help with your first comparison</summary><p>Both sounds use the same headphones and song. Personal and Blind Research keep setting names hidden while you choose. Volume can still differ between settings, so use a comfortable listening level.</p><p><a href="/shortcuts">Open the step-by-step listening guide</a></p></details>
+      <details className="welcome-ranking-guide"><summary>More help with your first comparison</summary><p>Both sounds use the same headphones and song. Personal and Blind Research keep setting names hidden while you choose. Volume can still differ between settings, so use a comfortable listening level.</p><p><a href="/shortcuts">Open the step-by-step listening guide</a> · <a href="/glossary/methodology">Listening and EQ methodology</a></p></details>
     </section>
 
 </main>;}

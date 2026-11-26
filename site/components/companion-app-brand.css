@@ -27,4 +27,4 @@
 }
 .companion-app-icons a:hover figcaption { text-decoration: underline; text-underline-offset: .2em; }
 .android-download { gap: .52em; }
-.android-download svg { flex: none; }
+.android-download img { flex: none; }

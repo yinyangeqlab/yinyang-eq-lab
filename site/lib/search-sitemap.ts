@@ -1,5 +1,5 @@
 import { AUDIO_FACTS_PATH, audioFactPath, audioFacts } from "./audio-facts.mjs";
-import { FITTER_GUIDE_PATH, SITE_ORIGIN } from "./share-pages.mjs";
+import { FITTER_GUIDE_PATH, SITE_ORIGIN, LISTENING_METHODOLOGY_PATH } from "./share-pages.mjs";
 
 export const audioFactSitemapPaths = [AUDIO_FACTS_PATH, ...audioFacts.map(fact => audioFactPath(fact.slug))];
 
@@ -10,6 +10,7 @@ export const searchSitemapPaths = [
   "/glossary",
   "/glossary/iem-measurement",
   FITTER_GUIDE_PATH,
+  LISTENING_METHODOLOGY_PATH,
   ...audioFactSitemapPaths,
   "/android",
   "/android/trailer",

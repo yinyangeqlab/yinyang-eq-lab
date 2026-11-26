@@ -229,10 +229,12 @@ const privateGate = {
       "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf",
       "/guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
     ];
-    const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
+    const publicFitterScores = path === "/eq-fitting/eq-fitter-scores.csv" || path === "/eq-fitting/eq-fitter-web-scores.csv";
+    const publicLandingAsset = isPublicAsset(path) || publicFitterScores || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     const publicSearchFile = path === "/robots.txt" || path === "/sitemap.xml";
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/android/trailer" || path === "/android/trailer/portrait" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/q5k4android/trailer/portrait" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || publicProfile || publicLandingAsset || publicSearchFile)) {
+    const publicMethodologyGuide = path === "/glossary/methodology";
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/android/trailer" || path === "/android/trailer/portrait" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/q5k4android/trailer/portrait" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || publicProfile || publicLandingAsset || publicSearchFile || publicMethodologyGuide)) {
       if (publicLandingAsset) {
         if (isCompanionTrailer(path)) return serveCompanionTrailer(request, env.ASSETS);
         const response = await env.ASSETS.fetch(request);
@@ -405,14 +407,14 @@ const privateGate = {
       // This cache is consulted only AFTER owner/tester validation. Cache only
       // aggregate rankings; never research records, music, HTML or auth responses.
       const rankingCache = typeof caches !== "undefined" ? caches.default : null;
-      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only`);
+      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v4-all-fitters`);
       const cacheRanking = request.method === "GET" && path === "/api/research" && env.MAINTENANCE_MODE !== "true";
       if (cacheRanking && rankingCache) {
         // Revision keys prevent stale results after erasure across cache locations
         // and prevent an in-flight old computation from repopulating the new key.
         const version=await env.DB.prepare("SELECT revision FROM ranking_revision WHERE id=1").first();
         if(!version) throw new Error("Ranking revision unavailable");
-        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only/${version.revision}`);
+        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v4-all-fitters/${version.revision}`);
         try {
           const cached = await rankingCache.match(rankingKey);
           if (cached) { const hit=rankingResponse(cached, "HIT"); if(data?.setCookie) hit.headers.append("Set-Cookie",data.setCookie); return hit; }

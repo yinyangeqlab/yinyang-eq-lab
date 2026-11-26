@@ -1,9 +1,16 @@
-# Current release — update217 Exact update-number search
+# Published source snapshot — update221
 
 <!-- release-state:start -->
-Recorded deployment: **update217**, source `ada156881c618db761f189eb8fbe011694ae45f6`.
+Recorded deployment: **update221**, source `dcc86c4fe373d38e0d2a3d364b6fef6c53316799`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Update221 lists the Android app versions and expands the EQ Fitter Benchmark with rankings at 10, 15, 20 and 30 bands and two CSV downloads. This source snapshot also includes the Listening and EQ Methodology guide and All Target Rankings. The release passed independent reconstruction and hosted validation with the existing database recovery point.
+
+[Deployment verification](releases/update221-verification.json) · [Recovery verification](releases/update221-recovery-verification.json)
+
+## Previous release records
+# Current release — update217 Exact update-number search
 
 Entering a full update number on the Version page shows the matching release. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](releases/update217-verification.json) [Recovery verification](releases/update217-recovery-verification.json)
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookA, ChartSpline, ChevronDown, ClipboardCheck, PanelLeftIcon, PanelTopIcon, Ruler } from "lucide-react";
+import { BookA, ChartSpline, ChevronDown, ClipboardCheck, ListChecks, PanelLeftIcon, PanelTopIcon, Ruler } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, Ref } from "react";
@@ -51,6 +51,7 @@ const destinations: { id: Destination; label: string; href: string }[] = [
 
 const guides = [
   { label: "Glossary", href: "/glossary", icon: BookA },
+  { label: "Listening and EQ Methodology", href: "/glossary/methodology", icon: ListChecks },
   { label: "IEM Measurement Guide", href: "/glossary/iem-measurement", icon: Ruler },
   { label: "Audio Fact Checks", href: "/glossary/audio-facts", icon: ClipboardCheck },
   { label: "EQ Fitter Benchmark", href: "/glossary/eq-fitting", icon: ChartSpline },

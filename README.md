@@ -41,7 +41,7 @@ Research sharing from Personal Tournament, song tags and fingerprints, activity 
 
 ## EQ fitters
 
-YinYang EQ offers fixed-band and movable-band fitters and integrates the open-source PEQdB AutoEQ optimizer. The benchmark compares RMS curve-fit error and peak boost across 14 cases. These metrics describe how closely a preset follows a target and how much headroom it needs. Listening preferences are measured separately. [EQ fitter benchmark](https://yinyangeq.com/glossary/eq-fitting) · [Per-case scores (CSV)](public/eq-fitting/eq-fitter-scores.csv)
+YinYang EQ offers fixed-band and movable-band fitters and integrates the open-source PEQdB AutoEQ optimizer. The benchmark compares RMS curve-fit error and peak boost across shared headphone measurements and filter budgets. These metrics describe how closely a preset follows a target and how much headroom it needs. [EQ fitter benchmark](https://yinyangeq.com/glossary/eq-fitting) · [Dated per-case scores (CSV)](public/eq-fitting/eq-fitter-web-scores.csv) · [Original scores (CSV)](public/eq-fitting/eq-fitter-scores.csv)
 
 ## Run locally
 
