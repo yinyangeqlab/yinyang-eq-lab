@@ -479,12 +479,17 @@ const update222Changes = [
   "The Listen page groups blind tests and comparisons where you choose both sides. The headphone clear button stays centered, and first-time participants can reach all consent actions."
 ] as const;
 
-export const candidateChanges = [
+const update223Changes = [
   "On locked shootout votes, one chain link passes through the padlock's shackle. White labels stay clear.",
 ] as const;
 
+export const candidateChanges = [
+  "The ultrawide homepage renders one panorama, so the aurora stays visible behind the yin-yang and the mountain ridgelines stay clean as motion starts.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 223, date: "2026-11-26", title: "Threaded shootout padlock chains", changes: candidateChanges, publicationTag: "update223" },
+  { update: 224, date: "2026-11-26", title: "Ultrawide homepage aurora", changes: candidateChanges, publicationTag: "update224" },
+  { update: 223, date: "2026-11-26", title: "Threaded shootout padlock chains", changes: update223Changes, publicationTag: "update223" },
   { update: 222, date: "2026-11-26", title: "Clearer shootout voting and listening controls", changes: update222Changes, github: { commit: "27beeb4c05450ee29e42c0eef1ea9e45fb51b4bb", releaseTag: "update222" } },
   { update: 221, date: "2026-11-25", title: "Android app versions and EQ fitter rankings", changes: update221Changes, github: { commit: "f23766f25fb868422f14a44caf7be16c63bfa3e5", releaseTag: "update221" } },
   { update: 220, date: "2026-11-25", title: "All target rankings", changes: update220Changes },

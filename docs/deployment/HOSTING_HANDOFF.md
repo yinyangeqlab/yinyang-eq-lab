@@ -1,9 +1,15 @@
-# Published source snapshot — update221
+# Current release — update223 Threaded shootout padlock chains
 
 <!-- release-state:start -->
-Recorded deployment: **update222**, source `02ffec82a6471a0e6320350d1dadfd216a2089d0`.
+Recorded deployment: **update223**, source `24448fa641328cbe18f53ee61ede3717cb37b858`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+A chain link passes through the padlock shackle on locked shootout votes. Matching encrypted source recovery and hosted validation are pending. [Deployment verification](../releases/update223-verification.json)
+
+## Previous release records
+
+# Published source snapshot — update221
 
 Update221 lists the Android app versions and expands the EQ Fitter Benchmark with rankings at 10, 15, 20 and 30 bands and two CSV downloads. This source snapshot also includes the Listening and EQ Methodology guide and All Target Rankings. The release passed independent reconstruction and hosted validation with the existing database recovery point.
 

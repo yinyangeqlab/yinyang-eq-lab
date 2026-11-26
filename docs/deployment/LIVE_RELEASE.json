@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 222,
+  "update": 223,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-26T09:46:05.484316Z",
-  "sourceCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
-  "sourceBranch": "release/update222-shootout-controls",
-  "baselineCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
-  "evidence": "docs/releases/update222-verification.json",
+  "verifiedAt": "2026-11-26T10:50:29.127745Z",
+  "sourceCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
+  "sourceBranch": "release/update223-shootout-threaded-lock",
+  "baselineCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+  "evidence": "docs/releases/update223-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,36 +31,33 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "Verified website deployment used as the baseline for the threaded lock release.",
   "gitSource": {
-    "implementationCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
-    "branch": "release/update222-shootout-controls",
+    "implementationCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
+    "branch": "release/update223-shootout-threaded-lock",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": true,
+    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publicationTag": "update222",
-    "publishedSourceCommit": "27beeb4c05450ee29e42c0eef1ea9e45fb51b4bb",
-    "publishedTag": "update222"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
+  "scope": "Verified website deployment used as the baseline for the homepage aurora release.",
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": true,
-    "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
+    "matchingCurrentReleaseBaseline": false,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
     "newDataExport": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "nextScheduledRunMayRefuseBaselineMismatch": true,
     "sourceBaselineUpdate": 222,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update222SourceOnlyHandover": {
-      "registrationPending": false,
+    "update223SourceOnlyHandover": {
+      "registrationPending": true,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update222-recovery-verification.json"
+      "evidence": "docs/releases/update223-recovery-verification.json"
     }
   },
   "documentationFiles": []

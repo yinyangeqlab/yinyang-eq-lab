@@ -20,8 +20,15 @@ const destinations = [
 ] as const;
 
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
+// Match the panoramic artwork breakpoint in first-listen/home.css.
+const panoramaQuery = '(min-width: 1600px) and (min-aspect-ratio: 2/1)';
 function subscribeMotion(change: () => void) {
   const media = matchMedia(reducedMotionQuery);
+  media.addEventListener('change', change);
+  return () => media.removeEventListener('change', change);
+}
+function subscribePanorama(change: () => void) {
+  const media = matchMedia(panoramaQuery);
   media.addEventListener('change', change);
   return () => media.removeEventListener('change', change);
 }
@@ -29,12 +36,13 @@ function subscribeMotion(change: () => void) {
 function Panorama() {
   const preferences = parseDisplayPreferences(useSyncExternalStore(subscribeDisplayPreferences, displayPreferencesSnapshot, () => '{}'));
   const systemReduced = useSyncExternalStore(subscribeMotion, () => matchMedia(reducedMotionQuery).matches, () => false);
+  const panorama = useSyncExternalStore(subscribePanorama, () => matchMedia(panoramaQuery).matches, () => false);
   const running = !systemReduced && preferences.motion !== 'reduced';
   const motionLabel = running ? 'Pause motion' : 'Resume motion';
   const flightsLabel = preferences.welcomeFlights ? 'Hide carpets' : 'Show carpets';
   return <>
     <section id="scene" className="landscape" aria-label="Animated YinYang EQ landscape">
-      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} preserveStillSky />
+      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} preserveStillSky panorama={panorama} />
     </section>
     {systemReduced ? null : <div className="scene-controls" role="group" aria-label="Landscape controls">
       <button type="button" className="motion-control" aria-label={motionLabel} aria-describedby="motion-benefit"

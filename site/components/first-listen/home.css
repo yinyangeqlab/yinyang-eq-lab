@@ -165,26 +165,41 @@
   z-index: 0;
 }
 #first-listen-home .landscape .welcome-landscape-image { object-fit: cover; }
-/* Frame the moving center by the banner height. The wider landscape fills
-   the sides independently, so showing more ocean never pushes the title down. */
-@media (min-width: 1600px) and (min-aspect-ratio: 2/1) {
-  #first-listen-home .landscape {
-    container-type: size;
-    background: #0b1928 url("./landscape-panorama.webp") center 53% / cover no-repeat;
-  }
-  #first-listen-home .landscape .welcome-art {
-    width: min(100%, 210cqh);
-    margin-inline: auto;
-    container-type: inline-size;
-    mask-image: linear-gradient(to right, transparent, black 19%, black 81%, transparent);
-  }
-}
+#first-listen-home .landscape .welcome-art[data-panorama] .welcome-landscape-image { opacity: 1; }
+#first-listen-home .landscape .welcome-art[data-panorama] .welcome-landscape-canvas { visibility: hidden; }
 /* Keep the optional flights and their ridge mask on the original 2:1 sky crop. */
 #first-listen-home .landscape .welcome-landscape-flights {
   inset-block: var(--welcome-art-anchor) auto;
   height: 50cqw;
   /* The 2:1 mask was drawn at 25% inside the taller source plate. */
   transform: translateY(calc(-17% + (100cqw * 758 / 1400 - 50cqw) * .08));
+}
+/* Match panoramaQuery in home-content.tsx. The still and the canvas use the same crop. */
+@media (min-width: 1600px) and (min-aspect-ratio: 2/1) {
+  #first-listen-home .landscape { container-type: size; }
+  #first-listen-home .landscape .welcome-art {
+    --welcome-art-anchor: 53%;
+    background: #0b1928 url("./landscape-panorama.webp") center var(--welcome-art-anchor) / cover no-repeat;
+  }
+  #first-listen-home .landscape .welcome-landscape-image { visibility: hidden; }
+  #first-listen-home .landscape .welcome-art:not([data-panorama][data-rendered=true])::before {
+    content: "";
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    width: 53cqh;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    background: url("/brand-mark.svg") center / contain no-repeat;
+  }
+  #first-listen-home .landscape .welcome-landscape-canvas { visibility: hidden; }
+  #first-listen-home .landscape .welcome-art[data-panorama] .welcome-landscape-canvas { visibility: visible; }
+  #first-listen-home .landscape .welcome-landscape-flights {
+    inset: 17% auto auto 50%;
+    width: 210cqh;
+    height: 105cqh;
+    transform: translate(-50%, -15%);
+  }
 }
 #first-listen-home .scene-controls {
   display: flex;
