@@ -502,13 +502,19 @@ const update227Changes = [
   "Research Admin shows AutoEq target names in listening results and submission review.",
 ] as const;
 
-export const candidateChanges = [
+const update228Changes = [
   "IEM Measurement Guide Revision 03 explains WASAPI exclusive mode in REW and how to turn off Windows 11 microphone enhancements when using the Apple USB-C dongle.",
   "The guide and technical PDF show how shared mode can roll off bass and make sweeps uneven, using a Fosi Audio IM4 comparison.",
 ] as const;
 
+export const candidateChanges = [
+  "Joint Fit 20 joins the 20-band benchmark using the same seven measurement–target pairs. It had the lowest median error on all seven fit-error metrics.",
+  "The leaderboard shows Loundess PEQ under its RootlessJamesDSP fork name, with its Android fitting range and median active filter count.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 228, date: "2026-11-26", title: "IEM Measurement Guide Revision 03", changes: candidateChanges, publicationTag: "update228" },
+  { update: 229, date: "2026-11-27", title: "Joint Fit 20 and the RootlessJamesDSP benchmark reference", changes: candidateChanges, publicationTag: "update229" },
+  { update: 228, date: "2026-11-26", title: "IEM Measurement Guide Revision 03", changes: update228Changes, github: { commit: "42dcdb6327e4cc8885d205f14d4fcc8b801c9f02", releaseTag: "update228" } },
   { update: 227, date: "2026-11-26", title: "AutoEq target names in Research Admin", changes: update227Changes },
   { update: 226, date: "2026-11-26", title: "Device limits and recommended EQ fits", changes: update226Changes, github: { commit: "be62f31d3e4b7802b26750b160e82b39bd259665", releaseTag: "update226" } },
   { update: 225, date: "2026-11-26", title: "Nickname first in consent and cleaner shootout waves", changes: update225Changes, github: { commit: "2d75b331bbcaa4857ccdf4edb0ba7ec713273e40", releaseTag: "update225" } },

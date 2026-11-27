@@ -1474,6 +1474,27 @@
         "max_single_filter_cut_db": 2,
         "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
       }
+    },
+    {
+      "fitter": "YinYang Joint Fit 20",
+      "tool": "YinYang EQ",
+      "budget": 20,
+      "cases": 7,
+      "medians": {
+        "active_filters": 20,
+        "rms_20Hz_to_10kHz_db": 0.02631,
+        "rms_20Hz_to_20kHz_db": 0.02541,
+        "rms_20Hz_to_200Hz_db": 0.01876,
+        "rms_5kHz_to_10kHz_db": 0.02663,
+        "rms_10kHz_to_20kHz_db": 0.03332,
+        "p95_absolute_error_db": 0.05243,
+        "max_absolute_error_db": 0.10285,
+        "peak_combined_boost_db": 4.59138,
+        "peak_combined_boost_20Hz_to_80Hz_db": 1.56525,
+        "max_single_filter_boost_db": 8.92991,
+        "max_single_filter_cut_db": 12.81294,
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+      }
     }
   ],
   "androidReference": [
@@ -1561,5 +1582,9 @@
         "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
       }
     }
-  ]
+  ],
+  "jointFit": {
+    "date": "2026-11-27",
+    "version": "yinyang-joint-fit-v1"
+  }
 }

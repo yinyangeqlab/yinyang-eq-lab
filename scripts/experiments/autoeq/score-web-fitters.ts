@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { eqCoefficients, type EqFilter } from "../../../site/lib/blind-eq";
-import { FIT_BANDS } from "../../../site/lib/fitter-settings";
+import { FIT_BANDS, JOINT_FITTER, JOINT_FITTER_VERSION } from "../../../site/lib/fitter-settings";
+import { fitJointEq } from "../../../site/lib/joint-fit";
 import { at, fitGrid, validatePoints } from "../../../site/lib/peqdb-engine";
 import type { Point } from "../../../site/lib/curves";
 
@@ -12,6 +13,7 @@ type NativeCoefficients = [b0: number, b1: number, b2: number, a1: number, a2: n
 type Capture = { name: string; bands: number; filters: Filter[]; nativeCoefficients?: NativeCoefficients[] };
 
 const filterTypes = { PK: "PK", LSQ: "LSC", HSQ: "HSC" } as const;
+const captureTypes = { PK: "PK", LSC: "LSQ", HSC: "HSQ" } as const;
 const snapshotDate = "2026-11-25";
 const sampleRate = 48_000;
 const all = FIT_BANDS;
@@ -82,8 +84,15 @@ function measure(fixture: Fixture, capture: Capture) {
   };
 }
 
-const [inputDirectory, csvPath, summaryPath] = process.argv.slice(2);
+const [inputDirectory, csvPath, summaryPath, jointFlag, jointDate, ...extra] = process.argv.slice(2);
 assert(inputDirectory && csvPath && summaryPath, "Provide the input directory and destinations for the scores and ranking summary.");
+assert(extra.length === 0 && (!jointFlag || jointFlag === "--joint-fit-date" && jointDate), "Use --joint-fit-date YYYY-MM-DD to add Joint Fit 20.");
+if (jointDate) {
+  const date = new Date(jointDate);
+  assert(/^\d{4}-\d{2}-\d{2}$/.test(jointDate) && jointDate > snapshotDate &&
+    Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === jointDate,
+  "Joint Fit needs its own measurement date after the original snapshot.");
+}
 const read = (filename: string) => JSON.parse(readFileSync(join(inputDirectory, filename), "utf8"));
 const fixtures: Fixture[] = [...read("fixtures.json"), read("studio-fixture.json")];
 assert.equal(fixtures.length, 7);
@@ -102,7 +111,7 @@ type Metrics = ReturnType<typeof measure>;
 const keys = Object.keys(measure(fixtures[0], { name: fixtures[0].name, bands: 10, filters: [] })) as (keyof Metrics)[];
 const columns = ["snapshot_date", "sample_rate_hz", "headphone", "bands", "platform", "tool", "fitter", ...keys];
 const rows: (string | number)[][] = [];
-const summarize = (fitter: string, tool: string, budget: number, captures: Capture[], platform = "web") => {
+const summarize = (fitter: string, tool: string, budget: number, captures: Capture[], platform = "web", date = snapshotDate) => {
   const scores = fixtures.map(fixture => {
     const matches = captures.filter(capture => capture.name === fixture.name && capture.bands === budget);
     assert.equal(matches.length, 1, `Expected one ${fitter} result for ${fixture.name} at ${budget} bands`);
@@ -117,7 +126,7 @@ const summarize = (fitter: string, tool: string, budget: number, captures: Captu
     }
     const metrics = measure(fixture, capture);
     assert(Object.values(metrics).every(Number.isFinite));
-    rows.push([snapshotDate, sampleRate, fixture.name, budget, platform, tool, fitter, ...keys.map(key => round(metrics[key]))]);
+    rows.push([date, sampleRate, fixture.name, budget, platform, tool, fitter, ...keys.map(key => round(metrics[key]))]);
     return metrics;
   });
   return {
@@ -137,10 +146,25 @@ assert.equal(androidCaptures.length, fixtures.length * all.length);
 const androidReference = all.map(budget =>
   summarize("Loundess PEQ Squig AutoEQ", "Loundess PEQ", budget, androidCaptures, "android"));
 
+if (jointDate) {
+  const { bands } = JOINT_FITTER;
+  const captures = fixtures.map(({ name, points, target }) => {
+    const filters = fitJointEq(points, target, sampleRate).map(filter => ({
+      ...filter, type: captureTypes[filter.type ?? "PK"],
+    }));
+    assert.equal(filters.length, bands, `Unexpected Joint Fit band count for ${name}`);
+    return { name, bands, filters };
+  });
+  scores.push(summarize("YinYang Joint Fit 20", "YinYang EQ", bands, captures, "web", jointDate));
+}
+
 const csvCell = (value: string | number) => typeof value === "string" && /[",\r\n]/.test(value)
   ? `"${value.replaceAll('"', '""')}"`
   : value;
 writeFileSync(csvPath, [columns, ...rows].map(row => row.map(csvCell).join(",")).join("\n") + "\n");
-const snapshot = { date: snapshotDate, fixtureCount: fixtures.length, sampleRate, baseline, scores, androidReference };
+const snapshot = {
+  date: snapshotDate, fixtureCount: fixtures.length, sampleRate, baseline, scores, androidReference,
+  ...(jointDate ? { jointFit: { date: jointDate, version: JOINT_FITTER_VERSION } } : {}),
+};
 writeFileSync(summaryPath, JSON.stringify(snapshot, null, 2) + "\n");
 console.log(`Scored ${scores.length * fixtures.length} web fits across ${new Set(sources.map(({ tool }) => tool)).size} tools, plus ${androidCaptures.length} Android fits and before-EQ baselines.`);

@@ -78,6 +78,8 @@ Adopt the unsmoothed solver first only after owner review and broader measuremen
 
 The ranked snapshot compares 14 browser-based tools on seven identical measurement–target pairs at 48 kHz. The four requested budgets are 10, 15, 20 and 30 filters. Each ranked median uses all seven pairs for that budget, and each tool uses the supported budgets below. Several websites share CrinGraph/Squiglink code. They are distinct hosted tools with some identical defaults and outputs. Equal scores share a rank. The per-case CSV records active filters so an unused slot never appears as a fitted band. The original two-budget scores are retained as a historical record. [Ranked snapshot CSV](../../../public/eq-fitting/eq-fitter-web-scores.csv) · [Original CSV](../../../public/eq-fitting/eq-fitter-scores.csv)
 
+On November 27 we ran the shipped Joint Fit 20 implementation (`yinyang-joint-fit-v1`, added in update226) on all seven pairs using the same evaluation grid and level offset. The seven additional rows have their own date in the CSV. The original captured scores reproduce byte for byte when the Joint Fit flag is omitted.
+
 The six oratory1990 measurements and Harman targets use the Git blobs in `prepare.py` and the catalog. For the Samsung EO-IA500 with stock tips, the measurement and Harman IE 2019 are the Studio exports. Their SHA-256 hashes are `415599898d3bab4449ed6f1520a6db823e3b3ecc1ce3ab5d825933112741d58a` and `a9d9663666159620c4ae4a921f31471b1a0d687d93c025b0e9ea6e3bb2ea9044`. The similarly named AutoEq Harman 2019 target is a distinct input file.
 
 | Tool or mode | Budgets tested | Build and settings |
@@ -116,7 +118,7 @@ To rescore the snapshot, keep curves and preset captures outside Git. The input 
 ```sh
 node_modules/.bin/esbuild scripts/experiments/autoeq/score-web-fitters.ts \
   --bundle --platform=node --format=esm --outfile=/tmp/score-web-fitters.mjs
-node /tmp/score-web-fitters.mjs /path/to/captures /tmp/eq-fitter-web-scores.csv /tmp/eq-fitter-rankings.json
+node /tmp/score-web-fitters.mjs /path/to/captures /tmp/eq-fitter-web-scores.csv /tmp/eq-fitter-rankings.json --joint-fit-date 2026-11-27
 cmp /tmp/eq-fitter-web-scores.csv public/eq-fitting/eq-fitter-web-scores.csv
 cmp /tmp/eq-fitter-rankings.json site/data/eq-fitter-rankings.json
 ```

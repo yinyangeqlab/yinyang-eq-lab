@@ -75,9 +75,12 @@ export default function EqFitterRankings() {
         })}
       </tbody>
       <tfoot>
-        <tr>
+        <tr id="rootlessjamesdsp-reference">
           <td />
-          <th scope="row">Loundess PEQ (Android)</th>
+          <th scope="row">
+            <strong>Loundess PEQ (RootlessJamesDSP fork)</strong>
+            <span className="fitter-reference-note">Android reference. Fits 30 Hz–6 kHz. Median of {android.medians.active_filters} active filters.</span>
+          </th>
           <td>{android.medians[metric.key].toFixed(3)}</td>
           <td>{android.medians[supportingMetric.key].toFixed(3)}</td>
         </tr>
@@ -98,7 +101,7 @@ export default function EqFitterRankings() {
           <dd>{budgets.join(", ")} bands</dd>
         </div>)}
       </dl>
-      <p>Loundess PEQ is a RootlessJamesDSP fork with a Squig AutoEQ fitter. Its Android reference uses a 30 Hz–6 kHz matching range and returned the same fits at every budget, using a median of three filters. Poweramp Equalizer supplies and imports preset files. <a href="https://github.com/evoeram/Loundess-PEQ-RootlessJamesDSP">Loundess PEQ</a> · <a href="https://forum.powerampapp.com/files/file/84-powerampequalizer-build-963-uniapk/?changelog=27">Poweramp Equalizer</a></p>
+      <p>Loundess PEQ uses the Squig AutoEQ fitter and returned the same fits at every tested budget. Poweramp Equalizer supplies and imports preset files. <a href="https://github.com/evoeram/Loundess-PEQ-RootlessJamesDSP">Loundess PEQ</a> · <a href="https://forum.powerampapp.com/files/file/84-powerampequalizer-build-963-uniapk/?changelog=27">Poweramp Equalizer</a></p>
     </details>
   </>;
 }

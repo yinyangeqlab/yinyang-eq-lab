@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 227,
+  "update": 228,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-27T07:06:20.297523Z",
-  "sourceCommit": "b7f629158a3df62b564c606ce690d83276613a5c",
-  "sourceBranch": "release/update227-admin-target-labels",
-  "baselineCommit": "87c1d6bfb0e281a5753b4c46bfebaa7c85f67a39",
-  "evidence": "docs/releases/update227-verification.json",
+  "verifiedAt": "2026-11-27T07:54:16.220739Z",
+  "sourceCommit": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+  "sourceBranch": "release/update228-iem-guide-revision-03",
+  "baselineCommit": "b7f629158a3df62b564c606ce690d83276613a5c",
+  "evidence": "docs/releases/update228-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,33 +31,37 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "Verified update227 production baseline for IEM Measurement Guide Revision 03.",
+  "scope": "Verified IEM guide deployment used as the baseline for the benchmark refresh.",
   "gitSource": {
-    "implementationCommit": "b7f629158a3df62b564c606ce690d83276613a5c",
-    "branch": "release/update227-admin-target-labels",
+    "implementationCommit": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+    "branch": "release/update228-iem-guide-revision-03",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
-    "publicationAuthorized": false,
+    "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "pushed": true,
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "42dcdb6327e4cc8885d205f14d4fcc8b801c9f02",
+    "publishedTag": "update228",
+    "publicationTag": "update228"
   },
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": false,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
+    "matchingCurrentReleaseBaseline": true,
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
     "newDataExport": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": true,
-    "sourceBaselineUpdate": 226,
+    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "sourceBaselineUpdate": 228,
+    "sourceBaselineVerifiedAt": "2026-11-27T08:35:25Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update227SourceOnlyHandover": {
-      "registrationPending": true,
+    "update228SourceOnlyHandover": {
+      "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update227-recovery-verification.json"
+      "evidence": "docs/releases/update228-recovery-verification.json"
     }
   },
   "documentationFiles": []

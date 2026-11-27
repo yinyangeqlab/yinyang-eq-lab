@@ -45,6 +45,8 @@
 .fitter-score-table td { white-space: nowrap; }
 .fitter-score-table tbody th, .fitter-score-table tfoot th { font-weight: 500; }
 .fitter-score-table tfoot { color: #b4c8d2; }
+.fitter-score-table #rootlessjamesdsp-reference { scroll-margin-top: 72px; }
+.fitter-reference-note { display: block; margin-top: 3px; font-size: .9em; }
 .fitter-score-table td strong { color: #e8f0f4; font-weight: 750; }
 .fitter-coverage { margin: 14px 0; font-size: 14px; }
 .fitter-coverage summary { width: fit-content; padding: 5px 0; color: #bddeec; cursor: pointer; }
