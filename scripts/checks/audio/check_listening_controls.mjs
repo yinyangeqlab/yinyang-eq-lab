@@ -7,6 +7,11 @@ const modules=new Map();
 function load(name){name=resolve(name);if(modules.has(name))return modules.get(name);const mod={exports:{}};modules.set(name,mod.exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,JSON,Math,require(id){const path=id.startsWith('@/')?resolve('site',id.slice(2)):resolve(dirname(name),id);return load(path.endsWith('.ts')?path:path+'.ts');}});return mod.exports;}
 const settings=load('site/lib/fitter-settings.ts'),core=load('site/lib/autoeq-fit.ts');
 const flat=[[20,0],[20000,0]],raw=[[20,4],[1000,0],[20000,-3]],request={raw,targets:[flat,[[20,3],[1000,0],[20000,-2]]],kind:'shootout',sampleRate:48000};
+const jointRequest = {...request, method:'joint', bands:20};
+assert.throws(()=>core.validateRequest(jointRequest), /Unsupported EQ request/);
+assert.doesNotThrow(()=>core.validateRequest({...jointRequest, kind:'export'}));
+assert.equal(settings.validFitter(jointRequest),false);
+assert.equal(settings.validExportFitter(jointRequest),true);
 let assertions=0;const check=(value,message)=>{assert.ok(value,message);assertions++;};
 for(const method of ['standard','precise'])for(const bands of [10,15,20,30]){
  const fits=core.legacyBatch({...request,method,bands},'');
@@ -31,7 +36,7 @@ const results=[0,-.75,.75].map(amount=>{const out=process(amount),contrast=20*Ma
 check(results[1].contrast<results[0].contrast-3,'Compression reduces loud/quiet level contrast');check(results[2].contrast>results[0].contrast+3,'Expansion increases loud/quiet level contrast');
 console.log('Dynamics steady-state level contrast:',results);
 console.log(`PASS ${assertions} fitter/cohort/channel filename/dynamics assertions plus malformed-provenance rejection cases. Physical audio, Apple devices and perceptual improvement are not certified.`);
-const {deepBassBoost,recommendCandidates}=load('site/lib/eq-recommendation.ts');
+const {deepBassBoost,recommendCandidates,fitsWithinBandLimit}=load('site/lib/eq-recommendation.ts');
 const candidate=(bands,rms,preamp,q)=>({method:'precise',priority:'close',engine:'legacy',bands,rms,preamp,filters:[{hz:1000,gain:2,q}]});
 const fewer=candidate(10,.4,-6,2),closer=candidate(20,.31,-4,3),narrow=candidate(30,.1,-1,9),awards=recommendCandidates([narrow,closer,fewer]);
 check(awards.recommended===fewer,'Recommendation prefers fewer bands within the disclosed bounded-Q error tolerance');
@@ -54,7 +59,18 @@ const constrained = recommendCandidates([deepBoost], tuningCurves);
 check(constrained.recommended === deepBoost && constrained.lowerBoost.reducedBoost, 'A boost-heavy set offers a scaled alternative while keeping the full correction selected');
 check(deepBassBoost(constrained.lowerBoost) <= 6 && constrained.lowerBoost.peakBoost <= 8, 'The scaled version stays within its boost limits after recomputing the combined curve');
 check(constrained.lowerBoost.preamp > deepBoost.preamp && constrained.lowerBoost.preamp === -Math.ceil((constrained.lowerBoost.peakBoost + .5) * 10) / 10, 'The scaled version recalculates its preamp from the reduced boost');
-assert.throws(()=>load('site/lib/preference-finalize.ts').exportQudelixGuide(narrow),/20 bands/);
+const withFilters = (fit, count) => ({ ...fit, filters: Array.from({ length: count }, () => fit.filters[0]) });
+const fits = [withFilters(fewer, 10), withFilters({ ...closer, bands: 15 }, 15), withFilters({ ...closer, rms: .26 }, 20), withFilters({ ...narrow, rms: .22 }, 30)];
+check(fitsWithinBandLimit(fits, 10).best === fits[0], "Device limit excludes every fit over ten filters");
+check(fitsWithinBandLimit(fits, 15).best === fits[1], "Band-limit winners use strict numerical RMS");
+check(fitsWithinBandLimit(fits, 20).best === fits[2] && fitsWithinBandLimit(fits, 20).recommended === fits[0], "A close simpler fit gets the device default without changing its lowest-RMS winner");
+check(fitsWithinBandLimit(fits, 30).best === fits[3] && fitsWithinBandLimit(fits, 30).recommended === fits[1], "The overall winner is independent of the near-tie recommendation");
+const short = withFilters(narrow, 12);
+check(fitsWithinBandLimit([...fits, short], 15).best === short, "The export's actual filter count determines compatibility");
+check(!fitsWithinBandLimit(fits, 5).best, "No compatible fit is distinct from the overall winner");
+const { exportQudelixGuide } = load('site/lib/preference-finalize.ts');
+assert.throws(() => exportQudelixGuide(fits[3]), /20 filters/);
+assert.match(exportQudelixGuide(short), /at least 12 bands/);
 console.log('PASS recommendation balance, independent headroom/error awards, empty results and 30-band hardware-export refusal.');
 
 const referencePage=fs.readFileSync("site/app/community-preferences/page.tsx","utf8"),playerSource=fs.readFileSync("site/components/music-panel.tsx","utf8");

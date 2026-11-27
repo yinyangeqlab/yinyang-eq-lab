@@ -1,5 +1,5 @@
 import { PERSONAL_AREA_TITLE } from "./personal-area";
-import { validFitter, type FitterSettings } from "./fitter-settings";
+import { validExportFitter, type FitterSettings } from "./fitter-settings";
 import type { Point } from "./curves";
 import type { PeqFilter } from "@/lib/autoeq";
 import { peakBoost } from "@/lib/preference-finalize";
@@ -7,7 +7,7 @@ import type { ChannelMatch } from "./channel-balance";
 import { safeChannelMatch } from "./channel-match-export";
 import { isPresetQ, MAX_PRESET_Q, MIN_PRESET_Q } from "./peq-preset";
 
-export type LibraryEq = { companionOrigin?:true; fitter?: FitterSettings; engine?: "peqdb" | "legacy"; engineVersion?: string; id: string; name: string; filters: PeqFilter[]; preamp: number; source: string; measurementId?: string; headphone?: string; channelMatch?: ChannelMatch; createdAt?: number; updatedAt?: number; target?: { id?: string; name: string; points: Point[] } };
+export type LibraryEq = { companionOrigin?:true; fitter?: FitterSettings; engine?: "peqdb" | "legacy" | "joint"; engineVersion?: string; id: string; name: string; filters: PeqFilter[]; preamp: number; source: string; measurementId?: string; headphone?: string; channelMatch?: ChannelMatch; createdAt?: number; updatedAt?: number; target?: { id?: string; name: string; points: Point[] } };
 export const LIBRARY_EQ_KEY = "target-lab-library-eqs-v1";
 export const LIBRARY_EQ_FILTER_LIMIT = 40;
 // Headroom depends only on the filters. Keep validation on every read, while
@@ -38,7 +38,7 @@ export function safeLibraryEq(value: LibraryEq): LibraryEq {
     throw new Error(`Each saved EQ filter needs a supported peak or shelf type, 20–20,000 Hz, −24 to +24 dB gain and Q ${MIN_PRESET_Q}–${MAX_PRESET_Q}.`);
   }
   const preamp = libraryEqPreamp(value.filters, value.preamp);
-  return { ...(value.companionOrigin===true?{companionOrigin:true as const}:{}), ...(validFitter(value.fitter) ? {fitter:{...value.fitter}} : {}), ...(["peqdb", "legacy"].includes(value.engine ?? "") ? { engine: value.engine, engineVersion: String(value.engineVersion ?? "").slice(0, 160) } : {}), id: String(value.id).slice(0, 100), name: String(value.name).slice(0, 100), source: String(value.source).slice(0, 100),
+  return { ...(value.companionOrigin===true?{companionOrigin:true as const}:{}), ...(validExportFitter(value.fitter) ? {fitter:{...value.fitter}} : {}), ...(["peqdb", "legacy", "joint"].includes(value.engine ?? "") ? { engine: value.engine, engineVersion: String(value.engineVersion ?? "").slice(0, 160) } : {}), id: String(value.id).slice(0, 100), name: String(value.name).slice(0, 100), source: String(value.source).slice(0, 100),
     filters: value.filters.map(f => ({ ...(f.type ? { type: f.type } : {}), hz: f.hz, gain: f.gain, q: f.q })), preamp,
     measurementId: value.measurementId ? String(value.measurementId).slice(0, 100) : undefined,
     headphone: value.headphone ? String(value.headphone).slice(0, 120) : undefined,
@@ -59,7 +59,7 @@ export function parseLibraryEq(text: string, name: string): LibraryEq {
   const filterLine = new RegExp(`^Filter(?:\\s+\\d+)?:\\s*ON\\s+(PK|PEQ|LS|LSC|HS|HSC)\\s+Fc\\s+${number}\\s*Hz\\s+Gain\\s+${number}\\s*dB(?:\\s+Q\\s+${number})?$`, "i");
   for (const [index, raw] of text.replace(/^\uFEFF/, "").split(/\r?\n/).entries()) {
     const line = raw.trim();
-    const provenance = /^# Engine: (peqdb|legacy) (.+)$/.exec(line);
+    const provenance = /^# Engine: (peqdb|legacy|joint) (.+)$/.exec(line);
     if (provenance) { engine = provenance[1] as LibraryEq["engine"]; engineVersion = provenance[2].slice(0, 160); }
     const setting = line.split("#")[0].trim();
     if (!setting || /^Filter(?:\s+\d+)?:\s*OFF\b/i.test(setting) || /^Channel:\s*(ALL|L\s+R|1\s+2)$/i.test(setting)) continue;

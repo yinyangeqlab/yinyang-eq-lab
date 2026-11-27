@@ -1,0 +1,54 @@
+{
+  "update": 225,
+  "sourceCommit": "43ef72434e9051db2b81a208decec1b83c65c065",
+  "deploymentVerification": {
+    "at": "2026-11-26T13:51:28.667735Z",
+    "update": 225,
+    "revision": "43ef72434e9051db2b81a208decec1b83c65c065",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 428,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 225,
+    "liveShootoutStyleChunks": 1,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true,
+    "listeningHubGroupingVerified": true,
+    "foregroundShackleLinkStyleVerified": true,
+    "consentNicknameFirstVerified": true,
+    "playingSpectrumWithoutOvalVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "nicknameIsFirst": true,
+    "liveSpectrumHasNoOval": true,
+    "blindTargetNamesCurvesAndMetersHidden": true,
+    "lockedAndUnlockedLabelsVerified": true,
+    "keyboardAndTouchVerified": true,
+    "zoomPercentRange": [
+      50,
+      500
+    ]
+  },
+  "candidateVerification": {
+    "sourceRevision": "43ef72434e9051db2b81a208decec1b83c65c065",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

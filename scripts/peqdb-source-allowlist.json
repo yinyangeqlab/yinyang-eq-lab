@@ -50,6 +50,7 @@
   "site/lib/eq-response.ts",
   "site/lib/fitter-settings.ts",
   "site/lib/generated-eq-comparison.ts",
+  "site/lib/joint-fit.ts",
   "site/lib/graph-theme.ts",
   "site/lib/peqdb-engine.ts",
   "site/lib/peqdb-wasm.d.ts",

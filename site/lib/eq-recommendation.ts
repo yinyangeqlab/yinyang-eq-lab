@@ -49,12 +49,26 @@ export function recommendDeviceFits<T extends {rms:number;peak:number;count:numb
   return {best,close};
 }
 
+const byAccuracy = (a: FinalizedVariant, b: FinalizedVariant) =>
+  a.rms - b.rms || a.filters.length - b.filters.length || b.preamp - a.preamp;
+
+/** Rank exactly the filters the download will contain. The close window only affects the default. */
+export function fitsWithinBandLimit(fits: FinalizedVariant[], limit: number) {
+  const compatible = fits.filter(fit =>
+    fit.filters.length > 0 && fit.filters.length <= limit && Number.isFinite(fit.rms) && Number.isFinite(fit.preamp)
+  ).sort(byAccuracy);
+  const best = compatible[0];
+  const recommended = best && compatible.filter(fit => fit.rms <= best.rms + CLOSE_FIT_RMS_DB)
+    .sort((a, b) => a.filters.length - b.filters.length || byAccuracy(a, b))[0];
+  return { best, recommended };
+}
+
 /** A disclosed numerical heuristic, not an audibility threshold or preference result. */
 export function recommendCandidates(fits: FinalizedVariant[], tuning?: { raw: Point[]; target: Point[] }) {
   if (!fits.length) return null;
   const valid = fits.filter(f => Number.isFinite(f.rms) && Number.isFinite(f.preamp) && (!tuning || Number.isFinite(f.peakBoost)) && f.filters.length);
   if (!valid.length) return null;
-  const bestError = [...valid].sort((a,b)=>a.rms-b.rms)[0];
+  const bestError = [...valid].sort((a,b)=>a.rms-b.rms || a.bands-b.bands || b.preamp-a.preamp)[0];
   const leastHeadroom = [...valid].sort((a,b)=>b.preamp-a.preamp || a.rms-b.rms)[0];
   if (tuning) {
     // Charge three times as much per dB of deep-bass boost as overall peak boost.

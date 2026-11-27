@@ -1,5 +1,6 @@
 import { at, createEngine } from './peqdb-engine';
 import type { Point } from './curves';
+import { fitJointEq } from './joint-fit';
 import { correction, describeFit, fitSmoothing, legacyBatch, validateRequest, type AutoEqRequest } from './autoeq-fit';
 export function createFitRunner(loadEngine: () => ReturnType<typeof createEngine>) {
   let engine: ReturnType<typeof createEngine> | undefined;
@@ -7,6 +8,10 @@ export function createFitRunner(loadEngine: () => ReturnType<typeof createEngine
   return async (request: AutoEqRequest) => {
     validateRequest(request);
     let results;
+    if (request.method === "joint") {
+      results = request.targets.map(target => describeFit(request, target, fitJointEq(request.raw, target, request.sampleRate), "joint"));
+      return { results, unavailable: false };
+    }
     if (request.method === "standard" || request.method === "precise") {
       results = legacyBatch(request, "");
       return {results, unavailable};

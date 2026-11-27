@@ -1,12 +1,15 @@
 export type FitBands = 10 | 15 | 20 | 30;
 export const FIT_METHODS = ["standard", "precise", "peqdb", "peqdb-smoothed"] as const;
-export type FitterMethod = typeof FIT_METHODS[number];
+export type FitterMethod = typeof FIT_METHODS[number] | "joint";
 export const isPeqdbMethod = (method: unknown) => method === "peqdb" || method === "peqdb-smoothed";
 export type FitterSettings = { method: FitterMethod; bands: FitBands };
 export const DEFAULT_FITTER: FitterSettings = { method: "standard", bands: 10 };
 export const FITTER_STORAGE = "yinyang-default-fitter-v1";
 export const FIT_BANDS = [10, 15, 20, 30] as const;
+export const JOINT_FITTER = { method: "joint", bands: 20 } as const;
+export const JOINT_FITTER_VERSION = "yinyang-joint-fit-v1";
 export const FIT_CANDIDATE_COUNT = FIT_METHODS.length * FIT_BANDS.length;
+export const WEB_FIT_CANDIDATE_COUNT = FIT_CANDIDATE_COUNT + 1;
 export const MAIN_FITTER_COHORT = "standard:10:legacy:yinyang-standard-close@listening-fitter-v1";
 export type FitProvenance = { method?: FitterMethod; bands: number; filterCount?: number; engine: string; engineVersion: string; sampleRate: number; rms: number; preamp: number };
 
@@ -24,7 +27,13 @@ export function cleanFitMetadata(value: unknown): FitProvenance[] {
 export function validFitter(value: unknown): value is FitterSettings {
   if (!value || typeof value !== "object") return false;
   const v = value as FitterSettings;
-  return FIT_METHODS.includes(v.method) && FIT_BANDS.includes(v.bands);
+  return v.method !== "joint" && FIT_METHODS.includes(v.method) && FIT_BANDS.includes(v.bands);
+}
+export function validExportFitter(value: unknown): value is FitterSettings {
+  if (validFitter(value)) return true;
+  if (!value || typeof value !== "object") return false;
+  const fit = value as Partial<FitterSettings>;
+  return fit.method === JOINT_FITTER.method && fit.bands === JOINT_FITTER.bands;
 }
 export function readDefaultFitter(): FitterSettings {
   try { const value: unknown = JSON.parse(localStorage.getItem(FITTER_STORAGE) || "null"); if (validFitter(value)) return value; } catch {}
@@ -35,6 +44,7 @@ const fitterNames: Record<FitterMethod, string> = {
   precise: "Precise",
   peqdb: "PEQdB · Unsmoothed",
   "peqdb-smoothed": "PEQdB · Smoothed",
+  joint: "Joint Fit",
 };
 export const fitterLabel = (settings: FitterSettings) => `${fitterNames[settings.method]} · ${settings.bands} bands`;
 

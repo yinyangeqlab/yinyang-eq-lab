@@ -4,9 +4,11 @@ import { graphColor } from "@/lib/graph-theme";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type {Point} from "@/lib/curves";
 import {eqResponse} from "@/lib/eq-response";
-import {candidateKey,deepBassBoost,recommendCandidates} from "@/lib/eq-recommendation";
+import {candidateKey,CLOSE_FIT_RMS_DB,fitsWithinBandLimit,recommendCandidates} from "@/lib/eq-recommendation";
 import {FIT_BANDS, fitterLabel, isPeqdbMethod, type FitBands} from "@/lib/fitter-settings";
-import type {FinalizedVariant} from "@/lib/preference-finalize";
+import { QUDELIX_GUIDE_MAX_BANDS, type FinalizedVariant } from "@/lib/preference-finalize";
+import { MAX_MAIN_EQ_BANDS, type EqDeviceLimits } from "@/lib/use-generated-eq-results";
+import { downloadChannelMatch, MAX_CHANNEL_MATCH_BANDS } from "@/lib/channel-match-export";
 import "./eq-candidate-results.css";
 import GeneratedEqComparison, { type GeneratedEqContext } from "./generated-eq-comparison";
 import { generatedSignature } from "@/lib/generated-eq-comparison";
@@ -126,20 +128,65 @@ function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVari
   </section>;
 }
 
-export default function EqCandidateResults({variants,raw,target,onDownload,onSave,comparisonContext,channelMatch,onCompare,tuning=false}:{variants:FinalizedVariant[];raw:Point[];target:Point[];onDownload:(fit:FinalizedVariant,format:string)=>void;onSave:(fit:FinalizedVariant)=>void;comparisonContext:GeneratedEqContext;channelMatch?:ChannelMatch;onCompare?:()=>void;tuning?:boolean}) {
- const awards=useMemo(()=>recommendCandidates(variants,tuning ? {raw,target} : undefined),[variants,tuning,raw,target]);
- const [selected,setSelected]=useState("");const [format,setFormat]=useState("txt");
- const [comparison,setComparison]=useState<"pair" | "all" | "smoothing" | null>(null);
+const mainBandOptions = Array.from({ length: MAX_MAIN_EQ_BANDS }, (_, index) => index + 1);
+const channelBandOptions = Array.from({ length: MAX_CHANNEL_MATCH_BANDS }, (_, index) => index + 1);
+
+export function EqDeviceLimitFields({ limits, onChange }: { limits: EqDeviceLimits; onChange: (limits: EqDeviceLimits) => void }) {
+  const mainLabel = useId();
+  const channelLabel = useId();
+  return <fieldset className="eq-device-limits">
+    <legend>Device filter limits</legend>
+    <label><span id={mainLabel}>Main EQ filter limit</span>
+      <select aria-labelledby={mainLabel} value={limits.mainBands} onChange={event => onChange({ ...limits, mainBands: Number(event.target.value) })}>
+        {mainBandOptions.map(bands => <option key={bands} value={bands}>{bands === MAX_MAIN_EQ_BANDS ? `${bands} bands or more` : `${bands} ${bands === 1 ? "band" : "bands"}`}</option>)}
+      </select>
+    </label>
+    <label><span id={channelLabel}>Channel Match filter limit</span>
+      <select aria-labelledby={channelLabel} value={limits.channelBands} onChange={event => onChange({ ...limits, channelBands: Number(event.target.value) })}>
+        <option value={0}>No Channel Match TXT</option>
+        {channelBandOptions.map(bands => <option key={bands} value={bands}>{bands} per side</option>)}
+      </select>
+    </label>
+    <p>Enter the filters available for each stage on your playback device.</p>
+  </fieldset>;
+}
+
+type EqCandidateResultsProps = {
+  variants: FinalizedVariant[];
+  raw: Point[];
+  target: Point[];
+  limits: EqDeviceLimits;
+  onDownload: (fit: FinalizedVariant, format: string) => void;
+  onSave: (fit: FinalizedVariant) => void;
+  comparisonContext: GeneratedEqContext;
+  channelMatch?: ChannelMatch;
+  onCompare?: () => void;
+  tuning?: boolean;
+};
+
+export default function EqCandidateResults({ variants, raw, target, limits, onDownload, onSave, comparisonContext, channelMatch, onCompare, tuning = false }: EqCandidateResultsProps) {
+ const winners = useMemo(() => FIT_BANDS.map(bands => ({ bands, best: fitsWithinBandLimit(variants, bands).best })), [variants]);
+ const { best: deviceBest, recommended } = useMemo(() => fitsWithinBandLimit(variants, limits.mainBands), [variants, limits.mainBands]);
+ const overall = winners.at(-1)?.best;
+ const lowerBoost = useMemo(() => tuning
+   ? recommendCandidates(variants.filter(fit => fit.filters.length <= limits.mainBands), { raw, target })?.lowerBoost
+   : null, [variants, tuning, raw, target, limits.mainBands]);
+ const [selected, setSelected] = useState("");
+ const [format, setFormat] = useState("txt");
+ const [channelMessage, setChannelMessage] = useState("");
+ const [comparison, setComparison] = useState<"pair" | "all" | "smoothing" | null>(null);
  const [comparisonBands, setComparisonBands] = useState<FitBands>();
  const smoothingHeading = useId();
  const smoothingBandLabel = useId();
- const lowerBoost = awards?.lowerBoost;
- const quickPair = useMemo(() => awards && lowerBoost ? [awards.bestError, lowerBoost] : null, [awards, lowerBoost]);
- const candidates = useMemo(() => lowerBoost?.reducedBoost ? [lowerBoost, ...variants] : variants, [lowerBoost, variants]);
- const active=candidates.find(f=>candidateKey(f)===selected)??awards?.recommended;
- const plots=useMemo(()=>candidates.map(fit=>({fit,rows:eqResponse(raw,target,fit.filters,[],48000,"1khz")??[]})),[candidates,raw,target]);
- if(!awards||!active||!plots[0]?.rows.length)return null;
- const exportFormat=format==="qudelix5k"&&active.bands>20?"txt":format;
+ const quickPair = deviceBest && lowerBoost ? [deviceBest, lowerBoost] : null;
+ const candidates = useMemo(() => lowerBoost?.reducedBoost ? [...variants, lowerBoost] : variants, [lowerBoost, variants]);
+ const active = candidates.find(fit => candidateKey(fit) === selected) ?? recommended ?? overall;
+ const plots = useMemo(() => candidates.map(fit => ({ fit, rows: eqResponse(raw, target, fit.filters, [], 48000, "1khz") ?? [] })), [candidates, raw, target]);
+ if (!overall || !active || !plots[0]?.rows.length) return null;
+
+ const canExport = active.filters.length <= limits.mainBands;
+ const wrongGuideFormat = format === "qudelix5k" && active.filters.length > QUDELIX_GUIDE_MAX_BANDS;
+ const overallLimit = winners.find(row => row.best === overall)?.bands;
  const availableBands = FIT_BANDS.filter(bands => (["peqdb", "peqdb-smoothed"] as const).every(method =>
    variants.some(fit => fit.bands === bands && fit.method === method && fit.engine === "peqdb")));
  const compareBands = comparisonBands && availableBands.includes(comparisonBands) ? comparisonBands
@@ -148,36 +195,27 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
    .map(method => variants.find(fit => fit.bands === compareBands && fit.method === method && fit.engine === "peqdb"))
    .filter((fit): fit is FinalizedVariant => !!fit);
  const listeningFits = comparison === "smoothing" ? smoothingPair : comparison === "pair" && quickPair ? quickPair : variants;
- const signature = comparison ? generatedSignature({raw,target,comparisonContext,channelMatch}, listeningFits) : "";
+ const signature = comparison ? generatedSignature({ raw, target, comparisonContext, channelMatch }, listeningFits) : "";
+
  function openComparison(mode: "pair" | "all" | "smoothing") {
    onCompare?.();
    setComparison(mode);
  }
- const allResultsButton = <div className="eq-results-audition">
-   <button type="button" onClick={() => openComparison("all")}>Compare {variants.length} generated EQ results</button>
-   <p>Choose which results from this generation to compare by listening.</p>
- </div>;
- const choiceLabel = (fit: FinalizedVariant) =>
-   fit === awards.bestError ? "Target match" : fit === lowerBoost ? "Lower boost" : fitterLabel(fit);
- const candidateGrid = <div className="eq-candidate-grid" role="group" aria-label="Generated EQ comparisons">
-   {candidates.map(fit => {
-     const recommended = fit === awards.recommended;
-     const headroom = Math.abs(fit.preamp - awards.leastHeadroom.preamp) < .05;
-     return <button type="button" key={candidateKey(fit)}
-       className={`eq-candidate${recommended ? " is-recommended" : ""}${headroom ? " is-headroom" : ""}`}
-       aria-pressed={active === fit} onClick={() => setSelected(candidateKey(fit))}
-     >
-       <strong>{fitterLabel(fit)}</strong>
-       {recommended && <span className="eq-gold-badge">{tuning ? "Target match" : "Recommended"}</span>}
-       {fit === lowerBoost && <small>Lower boost</small>}
-       {headroom && <span className="eq-headroom-badge">Least preamp reduction</span>}
-       {fit === awards.bestError && !tuning && <small>Lowest numerical error</small>}
-       <span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span>
-       <span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span>
-       <small>{fit.engine === "peqdb" ? "PEQdB engine" : isPeqdbMethod(fit.method) ? "Precise fallback · PEQdB unavailable" : "YinYang engine"} · max Q {Math.max(...fit.filters.map(f => f.q)).toFixed(2)}</small>
-     </button>;
-   })}
- </div>;
+ function downloadMatch() {
+   if (!channelMatch) return;
+   try {
+     downloadChannelMatch(channelMatch, comparisonContext.headphones, "txt", limits.channelBands);
+     setChannelMessage("Channel Match TXT downloaded.");
+   } catch (error) {
+     setChannelMessage(error instanceof Error ? error.message : "Could not download Channel Match.");
+   }
+ }
+ function fitMetrics(fit: FinalizedVariant) {
+   return <>
+     <span><b>{fit.rms.toFixed(3)} dB RMS</b> fit error</span>
+     <span>{fit.filters.length} filters · {fit.preamp.toFixed(1)} dB preamp</span>
+   </>;
+ }
  return <div className="eq-candidates">
    {comparison && <GeneratedEqComparison
      key={`${comparison}:${signature}`}
@@ -189,32 +227,70 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
      onClose={() => setComparison(null)}
      onChoose={fit => { setSelected(candidateKey(fit)); setComparison(null); }}
    />}
-   {tuning ? <>
-     <div className="eq-tuning-choices" role="group" aria-label="Select an EQ">
-       {(quickPair ?? [awards.recommended]).map(fit => <button
-         type="button" key={candidateKey(fit)}
-         className={`eq-candidate${fit === awards.recommended ? " is-recommended" : ""}`}
+   {recommended ? <div className="eq-recommendation-explanation">
+     <strong>Recommended for up to {limits.mainBands} bands</strong>
+     <button type="button" className="eq-device-recommendation" aria-pressed={active === recommended} onClick={() => setSelected(candidateKey(recommended))}>
+       <b>{fitterLabel(recommended)}</b>
+       {fitMetrics(recommended)}
+     </button>
+     {recommended !== deviceBest && <p>This fit uses fewer filters and is within {CLOSE_FIT_RMS_DB.toFixed(2)} dB RMS of the lowest error for your device.</p>}
+   </div> : <p className="eq-results-caveat">No generated fit uses {limits.mainBands} filters or fewer.</p>}
+   <div className="eq-candidate-grid eq-limit-winners" role="group" aria-label="Lowest RMS by band limit">
+     {winners.map(({ bands, best }) => best ? <button
+       type="button" key={bands} className={`eq-candidate${bands === overallLimit ? " is-recommended" : ""}`}
+       aria-pressed={active === best} onClick={() => setSelected(candidateKey(best))}
+     >
+       <strong>Up to {bands} bands</strong>
+       <small>{fitterLabel(best)}</small>
+       {fitMetrics(best)}
+       {bands === overallLimit && <span className="eq-gold-badge">Lowest RMS overall</span>}
+       {best.filters.length > limits.mainBands && <small>Exceeds device limit</small>}
+     </button> : <div key={bands} className="eq-limit-unavailable">
+       <strong>Up to {bands} bands</strong><small>No generated fit at this limit</small>
+     </div>)}
+   </div>
+   <div className="eq-results-actions">
+     <strong>Selected · {fitterLabel(active)}</strong>
+     <label>Download format<select value={format} onChange={event => setFormat(event.target.value)}>
+       <option value="txt">EQ TXT</option>
+       <option value="equalizerapo">Equalizer APO · Windows</option>
+       <option value="easyeffects">EasyEffects · Linux</option>
+       <option value="qudelix5k">Qudelix 5K entry guide</option>
+     </select></label>
+     <button type="button" disabled={!canExport || wrongGuideFormat} onClick={() => onDownload(active, format)}>Download selected EQ</button>
+     <button type="button" disabled={!canExport} onClick={() => onSave(active)}>Save selected EQ to {PERSONAL_AREA_TITLE}</button>
+   </div>
+   {!canExport ? <p className="eq-results-caveat" role="status">This EQ uses {active.filters.length} filters. Select a fit within your {limits.mainBands}-band Main EQ limit to save or download it.</p>
+     : wrongGuideFormat && <p className="eq-results-caveat" role="status">The Qudelix entry guide accepts up to {QUDELIX_GUIDE_MAX_BANDS} filters. Select a smaller fit or a different format.</p>}
+   {channelMatch && limits.channelBands > 0 && <div className="eq-results-actions eq-channel-export">
+     <button type="button" onClick={downloadMatch}>Download Channel Match TXT</button>
+     <span>Up to {limits.channelBands} filters per side</span>
+     {channelMessage && <p role="status">{channelMessage}</p>}
+   </div>}
+   <EqResultsPlot plots={plots} active={active}/>
+   <details className="eq-results-advanced">
+     <summary>Compare all fits</summary>
+     <div className="eq-results-audition">
+       <button type="button" onClick={() => openComparison("all")}>Listen to {variants.length} generated EQs</button>
+       <p>Choose Tie if both fits sound the same to you. If there’s no clear preference, use the recommended fit for your device.</p>
+     </div>
+     <div className="eq-candidate-grid" role="group" aria-label="All generated fits">
+       {variants.map(fit => <button
+         type="button" key={candidateKey(fit)} className={`eq-candidate${fit === overall ? " is-recommended" : ""}`}
          aria-pressed={active === fit} onClick={() => setSelected(candidateKey(fit))}
        >
-         <strong>{choiceLabel(fit)}</strong>
-         <span>Deep bass boost <b>{deepBassBoost(fit).toFixed(1)} dB</b></span>
-         <span>Fit error <b>{fit.rms.toFixed(2)} dB RMS</b></span>
-         <span>Preamp <b>{fit.preamp.toFixed(1)} dB</b></span>
+         <strong>{fitterLabel(fit)}</strong>
+         {fitMetrics(fit)}
+         {fit === overall && <span className="eq-gold-badge">Lowest RMS overall</span>}
+         {fit.filters.length > limits.mainBands && <small>Exceeds device limit</small>}
+         {isPeqdbMethod(fit.method) && fit.engine !== "peqdb" && <small>Precise fallback · PEQdB unavailable</small>}
        </button>)}
      </div>
-     {lowerBoost && <p className="eq-results-caveat">{lowerBoost.reducedBoost
-       ? "Lower boost limits the combined boost to 6 dB from 20 to 80 Hz and 8 dB overall."
-       : "Lower boost can leave a larger gap to your target."}</p>}
-     {quickPair && <div className="eq-results-audition">
+     {quickPair && lowerBoost && <section className="eq-results-audition" aria-label="Lower boost comparison">
+       <button type="button" onClick={() => setSelected(candidateKey(lowerBoost))}>Select lower boost</button>
        <button type="button" onClick={() => openComparison("pair")}>Listen to both EQs</button>
-     </div>}
-   </> : <>
-     {allResultsButton}
-     <div className="eq-recommendation-explanation">
-       <strong>Recommended · {fitterLabel(awards.recommended)}</strong>
-       <p>Favors fewer bands and less preamp reduction among fits with similar numerical error and moderate filter widths.</p>
-     </div>
-   </>}
+       <p>{lowerBoost.rms.toFixed(3)} dB RMS · {lowerBoost.peakBoost.toFixed(1)} dB peak boost</p>
+     </section>}
  {smoothingPair.length === 2 ? <section className="eq-smoothing-comparison" aria-labelledby={smoothingHeading}>
    <div className="eq-smoothing-header">
      <h3 id={smoothingHeading}>Compare PEQdB smoothing</h3>
@@ -227,7 +303,7 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
      {smoothingPair.map((fit, index) => {
        const other = smoothingPair[1 - index];
        const error = fit.rms.toFixed(2), boost = fit.peakBoost.toFixed(1);
-       const closer = Number(error) < Number(other.rms.toFixed(2));
+       const closer = fit.rms < other.rms;
        const lessBoost = Number(boost) < Number(other.peakBoost.toFixed(1));
        return <button type="button" className="eq-candidate" key={fit.method} aria-pressed={active === fit}
          onClick={() => { setComparisonBands(fit.bands); setSelected(candidateKey(fit)); }}>
@@ -242,12 +318,7 @@ export default function EqCandidateResults({variants,raw,target,onDownload,onSav
  </section> : variants.some(fit => fit.method === "peqdb-smoothed" && fit.engine !== "peqdb") ?
    <p className="eq-results-caveat">PEQdB was unavailable for this generation. The fallback results cannot show the effect of smoothing.</p> :
    <p className="eq-results-caveat">Regenerate EQ settings to compare Smoothed and Unsmoothed PEQdB fits.</p>}
- <EqResultsPlot plots={plots} active={active}/>
- {tuning ? <details className="eq-results-advanced">
-   <summary>Advanced EQ results</summary>
-   {allResultsButton}
-   {candidateGrid}
- </details> : candidateGrid}
- <div className="eq-results-actions"><strong>Selected · {tuning ? choiceLabel(active) : fitterLabel(active)}</strong><label>Download format<select value={exportFormat} onChange={e=>setFormat(e.target.value)}><option value="txt">EQ TXT</option><option value="equalizerapo">Equalizer APO · Windows</option><option value="easyeffects">EasyEffects · Linux</option><option value="qudelix5k" disabled={active.bands>20}>Qudelix 5K · up to 20 bands</option></select></label><button type="button" onClick={()=>onDownload(active,exportFormat)}>Download selected EQ</button><button type="button" onClick={()=>onSave(active)}>Save selected EQ to {PERSONAL_AREA_TITLE}</button></div><p className="eq-results-caveat">Preamp values nearer 0 dB need less attenuation. The graph excludes uniform volume and preamp, so it shows changes in sound balance. Predictions use the uploaded measurement, not a new measurement at your ears. Extra bands and lower errors can also follow measurement artifacts.</p>
+   </details>
+   <p className="eq-results-caveat">Preamp values nearer 0 dB need less attenuation. Fit error measures the match to this headphone measurement.</p>
  </div>;
 }

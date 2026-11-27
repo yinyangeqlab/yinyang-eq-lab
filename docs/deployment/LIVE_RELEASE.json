@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 224,
+  "update": 225,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-26T11:49:40.662336Z",
-  "sourceCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
-  "sourceBranch": "release/update224-homepage-aurora-on-update223",
-  "baselineCommit": "24448fa641328cbe18f53ee61ede3717cb37b858",
-  "evidence": "docs/releases/update224-verification.json",
+  "verifiedAt": "2026-11-26T13:51:28.667735Z",
+  "sourceCommit": "43ef72434e9051db2b81a208decec1b83c65c065",
+  "sourceBranch": "release/update225-nickname-and-spectrum",
+  "baselineCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
+  "evidence": "docs/releases/update225-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,31 +31,37 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "Verified homepage deployment used as the baseline for the consent and shootout display release.",
+  "scope": "Verified update225 was the baseline for the device-limit and EQ export release.",
   "gitSource": {
-    "implementationCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
-    "branch": "release/update224-homepage-aurora-on-update223",
+    "implementationCommit": "43ef72434e9051db2b81a208decec1b83c65c065",
+    "branch": "release/update225-nickname-and-spectrum",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "pushed": false,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "pushed": true,
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "2d75b331bbcaa4857ccdf4edb0ba7ec713273e40",
+    "publishedTag": "update225",
+    "publicationTag": "update225"
   },
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": false,
-    "sourceOnlyHandoverPending": true,
-    "hostedValidationPending": true,
-    "hostedValidationPassed": false,
+    "matchingCurrentReleaseBaseline": true,
+    "sourceOnlyHandoverPending": false,
+    "hostedValidationPending": false,
+    "hostedValidationPassed": true,
     "newDataExport": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": true,
-    "sourceBaselineUpdate": 223,
-    "update224SourceOnlyHandover": {
-      "registrationPending": true,
+    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "sourceBaselineUpdate": 225,
+    "sourceBaselineVerifiedAt": "2026-11-26T14:35:30Z",
+    "metadataOnlyHandoverVerified": true,
+    "metadataValidationPassed": true,
+    "update225SourceOnlyHandover": {
+      "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update224-recovery-verification.json"
+      "evidence": "docs/releases/update225-recovery-verification.json"
     }
   },
   "documentationFiles": []

@@ -8,9 +8,19 @@ export function channelMatchText(match: ChannelMatch) {
   return match.channelMatchPreset.channels.map((channel, index) => `CH: ${index}\nPreamp: ${channel.preampDb} dB\n${channel.filters.map((f, i) => `Filter ${i + 1}: ON ${f.type} Fc ${f.hz} Hz Gain ${f.gain} dB Q ${f.q}`).join("\n")}\n`).join("\n");
 }
 
-export function channelMatchIirText(match: ChannelMatch) {
+export const MAX_CHANNEL_MATCH_BANDS = 32;
+
+export function channelMatchIirText(match: ChannelMatch, maxBands = 10) {
+  if (!Number.isInteger(maxBands) || maxBands < 1 || maxBands > MAX_CHANNEL_MATCH_BANDS) {
+    throw new Error("Select a Channel Match limit from 1 to 32 filters per side for TXT export.");
+  }
   const safe = safeChannelMatch(match);
-  if (safe.channelMatchMode === "custom") return channelMatchText(safe);
+  if (safe.channelMatchMode === "custom") {
+    if (safe.channelMatchPreset?.channels.some(channel => channel.filters.length > maxBands)) {
+      throw new Error("The uploaded preset exceeds your Channel Match filter limit. Choose a smaller preset or export a FIR WAV.");
+    }
+    return channelMatchText(safe);
+  }
   const { leftPoints, rightPoints, leftLevelDb = 0, rightLevelDb = 0 } = safe;
   if (!leftPoints || !rightPoints) throw new Error("AutoMatch needs paired Left and Right responses.");
   const correction = Array.from({ length: 241 }, (_, i): Point => {
@@ -18,7 +28,7 @@ export function channelMatchIirText(match: ChannelMatch) {
     const db = automaticChannelCorrection(hz, leftPoints, rightPoints, leftLevelDb, rightLevelDb);
     return [hz, Math.max(-40, Math.min(40, db))];
   });
-  const left = finalizeVariant([[20, 0], [20000, 0]], correction, 10, "precise", "close");
+  const left = finalizeVariant([[20, 0], [20000, 0]], correction, maxBands, "precise", "close");
   // AutoMatch applies opposite corrections. Inverting peak gains preserves that
   // relationship, and shared headroom preserves the left/right level difference.
   const right = left.filters.map(filter => ({ ...filter, gain: -filter.gain }));
@@ -32,7 +42,7 @@ export function channelMatchIirText(match: ChannelMatch) {
   if (channels.some(channel => Math.abs(channel.preampDb) > 40)) {
     throw new Error("This match needs more level correction than the TXT format supports. Download the FIR WAV instead.");
   }
-  return `# YinYang AutoMatch channel match · approximate 10-band IIR fit\n# CH: 0 is Left. CH: 1 is Right.\n${channelMatchText({ channelMatchPreset: { channels } })}`;
+  return `# YinYang AutoMatch channel match · approximate IIR fit · up to ${maxBands} filters per side\n# CH: 0 is Left. CH: 1 is Right.\n${channelMatchText({ channelMatchPreset: { channels } })}`;
 }
 
 export function safeChannelMatch(value: ChannelMatch): ChannelMatch {
@@ -75,8 +85,8 @@ export function autoMatchFilename(name: string, uploaded = false, format: "txt" 
   return `${model}-${uploaded ? "uploaded-channel-match" : "YinYang-AutoMatch"}-${format === "txt" ? "IIR.txt" : "48k.wav"}`;
 }
 
-export function downloadChannelMatch(match: ChannelMatch, name: string, format: "txt" | "wav") {
+export function downloadChannelMatch(match: ChannelMatch, name: string, format: "txt" | "wav", maxBands?: number) {
   const filename = autoMatchFilename(name, match.channelMatchMode === "custom", format);
-  if (format === "txt") downloadLocalFile(filename, channelMatchIirText(match), "text/plain");
+  if (format === "txt") downloadLocalFile(filename, channelMatchIirText(match, maxBands), "text/plain");
   else downloadLocalFile(filename, channelMatchWav(match), "audio/wav");
 }

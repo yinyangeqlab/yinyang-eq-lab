@@ -2,7 +2,7 @@ import { submissionContext } from "@/lib/submission-ownership";
 import { isSourceAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { getDb } from "@/db";
 import { preferenceExports } from "@/db/schema";
-import { isPeqdbMethod, validFitter } from "@/lib/fitter-settings";
+import { isPeqdbMethod, validExportFitter } from "@/lib/fitter-settings";
 import { readJsonObject, requestInputResponse } from "@/lib/request-json";
 
 const kinds = ["original-target", "preference-target", "eq"] as const;
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const preamp = exportKind === "eq" ? Number(fit?.preamp) : null;
     const rms = exportKind === "eq" ? Number(fit?.rms) : null;
     const filters = exportKind === "eq" ? fit?.filters : null;
-    if (exportKind === "eq" && (!validFitter({ method, bands }) || !["smooth", "close"].includes(priority!) || isPeqdbMethod(method) && priority !== "close" || !Number.isFinite(preamp) || !Number.isFinite(rms) || !Array.isArray(filters) || filters.length !== bands || JSON.stringify(filters).length > 10_000 || preamp! > 0 || rms! < 0 || filters.some(f => !f || typeof f !== "object" || !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || ![f.hz, f.gain, f.q].every(v => typeof v === "number" && Number.isFinite(v)) || f.hz < 20 || f.hz > 20000 || Math.abs(f.gain) > 24 || f.q < .1 || f.q > 20)))
+    if (exportKind === "eq" && (!validExportFitter({ method, bands }) || !["smooth", "close"].includes(priority!) || (isPeqdbMethod(method) || method === "joint") && priority !== "close" || !Number.isFinite(preamp) || !Number.isFinite(rms) || !Array.isArray(filters) || filters.length < 1 || filters.length > bands! || JSON.stringify(filters).length > 10_000 || preamp! > 0 || rms! < 0 || filters.some(f => !f || typeof f !== "object" || !["PK", "LSC", "HSC"].includes(f.type ?? "PK") || ![f.hz, f.gain, f.q].every(v => typeof v === "number" && Number.isFinite(v)) || f.hz < 20 || f.hz > 20000 || Math.abs(f.gain) > 24 || f.q < .1 || f.q > 20)))
       return Response.json({ error: "Invalid EQ export." }, { status: 400 });
 
     const db = getDb();

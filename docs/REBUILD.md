@@ -1,7 +1,7 @@
 # Current release — update223 Threaded shootout padlock chains
 
 <!-- release-state:start -->
-Recorded deployment: **update224**, source `ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44`.
+Recorded deployment: **update225**, source `43ef72434e9051db2b81a208decec1b83c65c065`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 
