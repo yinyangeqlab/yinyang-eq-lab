@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 225,
+  "update": 227,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-26T13:51:28.667735Z",
-  "sourceCommit": "43ef72434e9051db2b81a208decec1b83c65c065",
-  "sourceBranch": "release/update225-nickname-and-spectrum",
-  "baselineCommit": "ee6b5c4de8c6e8dd3e84a13c03b753846cddfd44",
-  "evidence": "docs/releases/update225-verification.json",
+  "verifiedAt": "2026-11-27T07:06:20.297523Z",
+  "sourceCommit": "b7f629158a3df62b564c606ce690d83276613a5c",
+  "sourceBranch": "release/update227-admin-target-labels",
+  "baselineCommit": "87c1d6bfb0e281a5753b4c46bfebaa7c85f67a39",
+  "evidence": "docs/releases/update227-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,37 +31,33 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "Verified update225 was the baseline for the device-limit and EQ export release.",
+  "scope": "Verified update227 production baseline for IEM Measurement Guide Revision 03.",
   "gitSource": {
-    "implementationCommit": "43ef72434e9051db2b81a208decec1b83c65c065",
-    "branch": "release/update225-nickname-and-spectrum",
+    "implementationCommit": "b7f629158a3df62b564c606ce690d83276613a5c",
+    "branch": "release/update227-admin-target-labels",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "publicationAuthorized": true,
+    "pushed": false,
+    "publicationAuthorized": false,
     "publicationSeparateFromDeployment": true,
-    "pushed": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "2d75b331bbcaa4857ccdf4edb0ba7ec713273e40",
-    "publishedTag": "update225",
-    "publicationTag": "update225"
+    "repository": "yinyangeqlab/yinyang-eq-lab"
   },
   "recoveryProcess": {
-    "matchingCurrentReleaseBaseline": true,
-    "sourceOnlyHandoverPending": false,
-    "hostedValidationPending": false,
-    "hostedValidationPassed": true,
+    "matchingCurrentReleaseBaseline": false,
+    "sourceOnlyHandoverPending": true,
+    "hostedValidationPending": true,
+    "hostedValidationPassed": false,
     "newDataExport": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": false,
-    "sourceBaselineUpdate": 225,
-    "sourceBaselineVerifiedAt": "2026-11-26T14:35:30Z",
+    "nextScheduledRunMayRefuseBaselineMismatch": true,
+    "sourceBaselineUpdate": 226,
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "update225SourceOnlyHandover": {
-      "registrationPending": false,
+    "update227SourceOnlyHandover": {
+      "registrationPending": true,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update225-recovery-verification.json"
+      "evidence": "docs/releases/update227-recovery-verification.json"
     }
   },
   "documentationFiles": []

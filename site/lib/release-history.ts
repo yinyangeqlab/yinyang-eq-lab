@@ -492,17 +492,28 @@ const update225Changes = [
   "Shootout frequency cards show the moving spectrum without the decorative oval underneath.",
 ] as const;
 
-export const candidateChanges = [
+const update226Changes = [
   "Enter separate Main EQ and per-side Channel Match filter limits. The browser remembers both for future exports.",
   "See the lowest RMS at each band limit and the overall winner. The recommended fit favors fewer filters when the error is close.",
   "Open Compare all fits to inspect the full grid and listen blind to a subset or all available results, including Joint Fit 20.",
 ] as const;
 
+const update227Changes = [
+  "Research Admin shows AutoEq target names in listening results and submission review.",
+] as const;
+
+export const candidateChanges = [
+  "IEM Measurement Guide Revision 03 explains WASAPI exclusive mode in REW and how to turn off Windows 11 microphone enhancements when using the Apple USB-C dongle.",
+  "The guide and technical PDF show how shared mode can roll off bass and make sweeps uneven, using a Fosi Audio IM4 comparison.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 226, date: "2026-11-26", title: "Device limits and recommended EQ fits", changes: candidateChanges, publicationTag: "update226" },
+  { update: 228, date: "2026-11-26", title: "IEM Measurement Guide Revision 03", changes: candidateChanges, publicationTag: "update228" },
+  { update: 227, date: "2026-11-26", title: "AutoEq target names in Research Admin", changes: update227Changes },
+  { update: 226, date: "2026-11-26", title: "Device limits and recommended EQ fits", changes: update226Changes, github: { commit: "be62f31d3e4b7802b26750b160e82b39bd259665", releaseTag: "update226" } },
   { update: 225, date: "2026-11-26", title: "Nickname first in consent and cleaner shootout waves", changes: update225Changes, github: { commit: "2d75b331bbcaa4857ccdf4edb0ba7ec713273e40", releaseTag: "update225" } },
   { update: 224, date: "2026-11-26", title: "Ultrawide homepage aurora", changes: update224Changes, github: { commit: "b449874bea2c78db4ef963dcb87762f6916fe340", releaseTag: "update224" } },
-  { update: 223, date: "2026-11-26", title: "Threaded shootout padlock chains", changes: update223Changes, publicationTag: "update223" },
+  { update: 223, date: "2026-11-26", title: "Threaded shootout padlock chains", changes: update223Changes, github: { commit: "64b5d297d2ddd8dcee303c39fe27d958d7967cf9", releaseTag: "update223" } },
   { update: 222, date: "2026-11-26", title: "Clearer shootout voting and listening controls", changes: update222Changes, github: { commit: "27beeb4c05450ee29e42c0eef1ea9e45fb51b4bb", releaseTag: "update222" } },
   { update: 221, date: "2026-11-25", title: "Android app versions and EQ fitter rankings", changes: update221Changes, github: { commit: "f23766f25fb868422f14a44caf7be16c63bfa3e5", releaseTag: "update221" } },
   { update: 220, date: "2026-11-25", title: "All target rankings", changes: update220Changes },

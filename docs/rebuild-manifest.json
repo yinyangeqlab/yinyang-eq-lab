@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "2d75b331bbcaa4857ccdf4edb0ba7ec713273e40",
-  "recordedLiveUpdate": 225,
+  "baseRevision": "e16fa639590cd08b50dbb78111db34ee8e64de36",
+  "recordedLiveUpdate": 227,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "7e811fe0c0403bdb78acff5e025266bf59b4d201d7173ccba59addfa1e8df07a",
+      "sha256": "b739d3041160a8799cd404cb255cfc197b477d1515ebc028d5315ff14666bc95",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "884a1ffcab274adb8dfc65d51e2dd3d09f700eeb9ec1bd94f8cd5e23df033925",
+      "sha256": "ba009f3a952eb11af8eac1146c494ced3850237b9c0b58d8fcb8cede1fc053c2",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "92d642339c0d6dbaaaaf403b963c6150589c670b19fc406b0afffe51a7a0bfe7",
+      "sha256": "5597771d3145065f70b3cf0cb4fb1424d1427394d521188e4ef67faf935686d0",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "9bdef9e6be1d278f6125bbba6322ec5ff610172d2399334e41e7be44e4b48bbe",
+      "sha256": "4bff0eb1285f8855427e62f6842064dd2e6b11cbd32a75d3acfcbaf81b4147bc",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "51adce8db604d7cd9c1c440e9a24055373e843596198509934f7c7e0e6ce657b",
+      "sha256": "c7aa028e61bdbc57377fa951d385a22c10f4bf4af7ccf6c595228999a94b82eb",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "1f4d09ea97a17ddda08e2cfac4febe868b13de4602589553c456441ea4975bc1",
+      "sha256": "0643bcd13a0ca782ce1dd0888377bf9193c94c85406fc176b65bb0d343da2280",
       "executable": false
     },
     {
@@ -1516,6 +1516,11 @@
       "executable": false
     },
     {
+      "path": "docs/releases/update227-verification.json",
+      "sha256": "d2376c2c39e201fbb446a503952f1f879abe46416ecb19feb5865b2ccb27b83d",
+      "executable": false
+    },
+    {
       "path": "docs/releases/update97-recovery-verification.json",
       "sha256": "7eb509e52dcd9a9a7b76f350479230dfb4da15653870a9129e7b7ddc72835c31",
       "executable": false
@@ -1867,7 +1872,7 @@
     },
     {
       "path": "infra/pulumi/private-gate.mjs",
-      "sha256": "f202e62abb81b91072dad71eb9ada67a6c900e5386ea313ce5b338ef85a7df8b",
+      "sha256": "08606151060d462129817da2750b7f273e181536cc0eb453114b1aa601afa450",
       "executable": false
     },
     {
@@ -4052,7 +4057,7 @@
     },
     {
       "path": "scripts/checks/access-and-data/check_yinyangeq_gate.mjs",
-      "sha256": "f3070a6ecd0b56f5c489c26b153efcd52c776f9795bd9bb3df7a49c9b68dcf2e",
+      "sha256": "0936adb544fc8fe0a05970ea6fae6b64ab7332e80f570572e0faf10b72e2bbbb",
       "executable": false
     },
     {
@@ -4172,7 +4177,7 @@
     },
     {
       "path": "scripts/checks/application/check_owner_only_maintenance.mjs",
-      "sha256": "f249a117336dbbe26ed1f832ac5779eb95572e0a3d16eb8928aa1ed8d5fc171e",
+      "sha256": "9b278ba920ba36b30b5cda44a8e9485867e80c6eb46059c4325c25df2d3132ee",
       "executable": false
     },
     {
@@ -4622,7 +4627,7 @@
     },
     {
       "path": "scripts/iem-guide-assets.json",
-      "sha256": "1dc238ecb527a1566ea7f3b6babe3bfd0e67432f4ed682143ca4d0f6d3555b28",
+      "sha256": "44abda9e5d091bc0d34d01b2e4a596db3e50eb45611f1c26f51fcf30058b81ba",
       "executable": false
     },
     {
@@ -5502,7 +5507,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/guide-revisions.json",
-      "sha256": "b2ebe70bd4ed8dbab656bd7df62b23bb79a0b249dcada7b7125e003a77783b7f",
+      "sha256": "7ba6be227ebe335bf016e6a46c1fce2bb7f219e4b4be3926a2924c04c3b1200a",
       "executable": false
     },
     {
@@ -5512,7 +5517,7 @@
     },
     {
       "path": "site/app/glossary/iem-measurement/page.tsx",
-      "sha256": "ad8b9eaf47d6c88c499e98ec31d0af911eabf3c8010a2dac55f893ccbacb0b1c",
+      "sha256": "1cc2affdb5a15e7a0c0ede1c8206b6dbf5957f185a76a992a9c70a857b0ffbfe",
       "executable": false
     },
     {
@@ -8257,12 +8262,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "da2110869a1cbf68a049338b0ff56fe19184d10f4dca192197622823048d3838",
+      "sha256": "e32aba62d8c331a7b98fe8870dec3a1e6fb3fb77b719e4c046eeb5466989b1d8",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "09e5a72b19845639d4e878078da7a7463b2b790805ce77dab44dd42600ef5b23",
+      "sha256": "2a352e69c567a2dce343596c4096b651d10f268b28b4652055f4296ac01ec259",
       "executable": false
     },
     {

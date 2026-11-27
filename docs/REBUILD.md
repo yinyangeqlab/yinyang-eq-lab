@@ -1,9 +1,15 @@
-# Current release — update223 Threaded shootout padlock chains
+# Current release — update227 AutoEq target names in Research Admin
 
 <!-- release-state:start -->
-Recorded deployment: **update225**, source `43ef72434e9051db2b81a208decec1b83c65c065`.
+Recorded deployment: **update227**, source `b7f629158a3df62b564c606ce690d83276613a5c`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
+
+Research Admin shows AutoEq target names in listening results and submission review. Matching encrypted source recovery and hosted validation were pending when this source snapshot was captured.
+
+## Previous release records
+
+# Current release — update223 Threaded shootout padlock chains
 
 A chain link passes through the padlock shackle on locked shootout votes. Matching encrypted source recovery and hosted validation are pending. [Deployment verification](releases/update223-verification.json)
 

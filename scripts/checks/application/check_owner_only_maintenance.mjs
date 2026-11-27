@@ -35,7 +35,7 @@ const paths=['/','/home','/robots.txt','/sitemap.xml','/shootout','/shootout/per
 const enginePaths = ['autoeq-wasm.mjs','autoeq-wasm.wasm','LICENSE','COPYING','RUNTIME-NOTICES.txt','source.tar.gz'].map(name => '/vendor/peqdb-autoeq/' + name);
 const wallpaperPaths = ['/wallpapers/files.json', '/wallpapers/yinyang-eq-landscape-4k.mp4', '/wallpapers/yinyang-eq-flying-gear-1080p.jpg'];
 const fitterScorePaths = ['/eq-fitting/eq-fitter-scores.csv', '/eq-fitting/eq-fitter-web-scores.csv'];
-paths.push(...enginePaths, ...wallpaperPaths, ...fitterScorePaths, '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf', '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf');
+paths.push(...enginePaths, ...wallpaperPaths, ...fitterScorePaths, '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf', '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf', '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r03.pdf', '/guides/iem-measurement/fosi-im4-windows-exclusive.png');
 let cases=0;
 for(const actor of actors)for(const path of paths)for(const method of ['GET','HEAD','POST','OPTIONS']){
  const response=await context.exports.handler.fetch(new Request('https://fixture.test'+path,{method,headers:{...actor,'User-Agent':'Discordbot'}}),env,{});

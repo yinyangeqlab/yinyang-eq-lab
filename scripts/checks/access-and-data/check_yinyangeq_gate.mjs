@@ -33,9 +33,9 @@ for (const path of ['/robots.txt/private','/sitemap.xml/private','/version/priva
 }
 const guideEnv={...env,ASSETS:{fetch:async () => new Response('guide file')}};
 const guidePdfPath = '/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf';
-const revisedGuideFilename = 'yinyang-eq-iem-711-measurement-guide-r02.pdf';
+const revisedGuideFilename = 'yinyang-eq-iem-711-measurement-guide-r03.pdf';
 const revisedGuidePath = '/guides/iem-measurement/' + revisedGuideFilename;
-for(const path of [guidePdfPath,revisedGuidePath,'/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
+for(const path of [guidePdfPath,revisedGuidePath,'/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf','/guides/iem-measurement/fosi-im4-windows-exclusive.png','/guides/iem-measurement/figure-06.png','/guides/iem-measurement/figure-17.jpg']){
  for(const method of ['GET','HEAD']){
   const response=await readThroughGate(new Request('https://fixture.invalid'+path,{method}),guideEnv,{},()=>false,app,async()=>null);
   assert.equal(await response.text(),'guide file');
