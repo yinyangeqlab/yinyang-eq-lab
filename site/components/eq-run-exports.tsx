@@ -6,7 +6,8 @@ import type {Point} from "@/lib/curves";
 import type {HeadphoneMeasurement} from "@/lib/measurement";
 import {WEB_FIT_CANDIDATE_COUNT} from "@/lib/fitter-settings";
 import {generateEqCandidates} from "@/lib/eq-candidates";
-import {exportPeq,exportEqualizerApo,exportEasyEffects,exportQudelixGuide,type FinalizedVariant} from "@/lib/preference-finalize";
+import type {FinalizedVariant} from "@/lib/preference-finalize";
+import type {EqExportFile} from "@/lib/platform-eq-export";
 import {measurementChannelMatch,saveLibraryEq} from "@/lib/music-library-eq";
 import {downloadLocalFile} from "@/lib/channel-match-export";
 import {recordAdminTestIfNeeded} from "@/lib/admin-test-store";
@@ -24,16 +25,19 @@ export default function EqRunExports({measurement,target,onCompare,scope="shooto
  const { current: result, heading: resultsHeading, save: saveResults } = useGeneratedEqResults(scope, key, priorKey);
  useEffect(()=>()=>abort.current?.abort(),[key]);
  async function generate(){abort.current?.abort();const request=new AbortController();abort.current=request;setBusy(true);setProgress(0);setMessage("");try{const variants=await generateEqCandidates(measurement.points,target.points,request.signal,setProgress,measurement.type);if(!request.signal.aborted)saveResults(variants);}catch(error){if(!request.signal.aborted)setMessage(error instanceof Error?error.message:"Could not calculate these EQs.");}finally{if(abort.current===request)setBusy(false);}}
- async function download(variant:FinalizedVariant,format:string){const run=async()=>{try{const contents=format==="equalizerapo"?exportEqualizerApo(variant):format==="easyeffects"?exportEasyEffects(variant):format==="qudelix5k"?exportQudelixGuide(variant):exportPeq(variant),filename=`shootout-${variant.method}-${variant.bands}band${format==="txt"?"":"-"+format}.txt`;
+ async function download(file: EqExportFile, variant: FinalizedVariant) {
+ const run=async()=>{try{
+ const {filename,text:contents,mime}=file;
+ const format=filename.endsWith("-equalizerapo.txt")?"equalizerapo":filename.endsWith("-easyeffects.txt")?"easyeffects":"txt";
  const test=!localAutoEq&&await recordAdminTestIfNeeded("export",{targetName:target.name,exportKind:"eq",format,filename,contents,variant});
  if(!test&&!localAutoEq){const response=await fetch("/api/preference-exports",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({targetId:target.id,targetName:target.name,targetCreator:target.creator||"Target creator",measurementName:measurement.name,exportKind:"eq",format,filename,contents,settings:{source:"shootout-results"},curve:target.points,variant})});if(!response.ok)throw Error(((await response.json()) as {error?:string}).error||"Could not save the export.");}
- downloadLocalFile(filename,contents,"text/plain");setMessage("EQ downloaded.");}catch(error){setMessage(error instanceof Error?error.message:"Could not download this EQ.");}};if(localAutoEq)await run();else await consent.ask(run);}
+ downloadLocalFile(filename,contents,mime);setMessage("EQ downloaded.");}catch(error){setMessage(error instanceof Error?error.message:"Could not download this EQ.");}};if(localAutoEq)await run();else await consent.ask(run);}
  function save(variant:FinalizedVariant){try{saveLibraryEq({id:crypto.randomUUID(),name:`${measurement.device||measurement.name} → ${target.name}`,fitter:{method:variant.method,bands:variant.bands},source:`Shootout result · ${variant.method} · ${variant.bands} bands`,engine:variant.engine,engineVersion:variant.engineVersion,filters:variant.filters,preamp:variant.preamp,measurementId:measurement.id,headphone:measurement.device||measurement.name,channelMatch:measurementChannelMatch(measurement),target:localAutoEq?undefined:{...target}});setMessage(`EQ saved to ${PERSONAL_AREA_TITLE}, Tuning and Music library.`);}catch(error){setMessage(error instanceof Error?error.message:"Could not save this EQ.");}}
  return <section className="eq-run-exports"><h3>EQs for {target.name}</h3><p>Compare downloadable EQs for this target and your selected headphones. This does not change your shootout answers or the fitter used in that test. Show any generated fit and see where it differs from the target.</p><EqDeviceLimitFields limits={limits} onChange={changeLimits}/><button type="button" disabled={busy} onClick={()=>void generate()}>{busy?`Comparing ${progress} / ${WEB_FIT_CANDIDATE_COUNT} EQs…`:"Generate EQ comparisons"}</button>{result && <section className="eq-results-section">
    <header className="eq-results-heading">
      <h3 ref={resultsHeading} tabIndex={-1}>Generated EQ results</h3>
      <p>{result.saved ? "The last generated set is saved in this browser for this setup." : "These results are available in this tab. Browser storage is unavailable."}</p>
    </header>
-   <EqCandidateResults limits={limits} comparisonContext={{headphones:measurement.device||measurement.name,target:target.name}} channelMatch={measurementChannelMatch(measurement)} onCompare={onCompare} key={`${key}:${limits.mainBands}`} variants={result.variants} raw={measurement.points} target={target.points} onDownload={(fit,format)=>void download(fit,format)} onSave={save}/>
+   <EqCandidateResults limits={limits} comparisonContext={{headphones:measurement.device||measurement.name,target:target.name}} channelMatch={measurementChannelMatch(measurement)} onCompare={onCompare} key={`${key}:${limits.mainBands}`} variants={result.variants} raw={measurement.points} target={target.points} exportBase={fit=>`shootout-${fit.method}-${fit.bands}band`} onDownload={(file,fit)=>void download(file,fit)} savesLocally={localAutoEq} onSave={save}/>
  </section>}<p role="status">{message}</p>{consent.dialog}</section>;
 }

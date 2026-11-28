@@ -1677,6 +1677,19 @@
       ],
       "owner": "audio-protocol",
       "scope": "Generated-set pairing, within-set outcomes, exact-set resume, no Sync inclusion, shared stereo FIR routing, rendered RMS matching and headroom with synthetic inputs."
+    },
+    {
+      "id": "platform-eq-export",
+      "path": "scripts/checks/audio/check_platform_eq_export.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 30000,
+      "requires": [
+        "node_modules/typescript/lib/typescript.js"
+      ],
+      "owner": "audio-protocol",
+      "scope": "EQ format serialization, asymmetric channel trims and response, headroom, and Qudelix bank allocation on synthetic fixtures."
     }
   ]
 }

@@ -512,14 +512,20 @@ const update229Changes = [
   "The leaderboard shows Loundess PEQ under its RootlessJamesDSP fork name, with its Android fitting range and median active filter count.",
 ] as const;
 
-export const candidateChanges = [
+const update230Changes = [
   "Joint Fit 20 is the automatic fitter for new target shootouts and the default in Personal EQ Tuning.",
   "Ranked shootouts match both sides to the same playback level after EQ. Eligible votes and ties join the existing Target leaderboards.",
   "Earlier Personal Tournaments are still available in saved history. New tournaments use Joint Fit 20.",
 ] as const;
 
+export const candidateChanges = [
+  "Download Main EQ, Channel Match, or both and choose the format for your app or device.",
+  "Channel Match appears directly below the Tuning graph. On wide screens, the editor scrolls separately and Save & export stays within reach.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 230, date: "2026-11-27", title: "Joint Fit 20 by default", changes: candidateChanges, publicationTag: "update230" },
+  { update: 231, date: "2026-11-27", title: "EQ exports by platform and a clearer Tuning layout", changes: candidateChanges },
+  { update: 230, date: "2026-11-27", title: "Joint Fit 20 by default", changes: update230Changes, github: { commit: "7d0ddca480b1577769d99fd6cdffa678f520dadc", releaseTag: "update230" } },
   { update: 229, date: "2026-11-27", title: "Joint Fit 20 and the RootlessJamesDSP benchmark reference", changes: update229Changes, github: { commit: "f449ea8299cf7938c51c5232a0c6839c868c3363", releaseTag: "update229" } },
   { update: 228, date: "2026-11-26", title: "IEM Measurement Guide Revision 03", changes: update228Changes, github: { commit: "42dcdb6327e4cc8885d205f14d4fcc8b801c9f02", releaseTag: "update228" } },
   { update: 227, date: "2026-11-26", title: "AutoEq target names in Research Admin", changes: update227Changes },

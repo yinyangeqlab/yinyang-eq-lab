@@ -319,7 +319,7 @@
 .pt-listening-checks{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pt-listening-checks label{display:flex;align-items:center;gap:5px;min-height:36px;color:light-dark(var(--workbench-teal), #d3ece5);font-size:12px;white-space:nowrap}.pt-listening-checks input{width:16px;height:16px;accent-color:light-dark(var(--workbench-teal), #80e3c1)}.pt-response-overlays{overflow:visible}.pt-overlay-after{paint-order:stroke;filter:drop-shadow(0 1px 2px #000)}.pt-fit-status{margin:8px 0 0;color:light-dark(var(--workbench-teal), #abdfd4);font-size:11px}.pt-tone-gain input[type=range]{color:inherit}.pt-tone-strip:focus-within{border-color:currentColor}.pt-tone-gain output{padding:2px 5px;min-width:42px;border-radius:4px;background:light-dark(var(--workbench-page), #030a0e);font-family:ui-monospace,monospace}.pt-tone-gain strong{letter-spacing:.025em}.pt-shell .pt-chart-card{overflow:visible}@media(max-width:600px){.pt-chart-meta{justify-content:flex-start}.pt-listening-checks{flex-basis:100%}.pt-tone-strips,.pt-shell .pt-frequency-guide .pt-region-tabs{gap:4px}.pt-tone-strip{padding:8px 2px}.pt-tone-gain strong{min-height:42px;line-height:14px}}
 .pt-match-download{display:grid;gap:9px;margin-top:8px;color:#aac3cc;font-size:12px;line-height:1.5}
 .pt-match-heading{display:flex;flex-wrap:wrap;gap:3px 10px}
-.pt-match-heading strong{color:#d5ecee}
+.pt-match-heading strong{color:var(--pt-ink)}
 .pt-match-heading a{color:light-dark(var(--workbench-teal), #9edbd1)}
 .pt-match-formats{display:flex;flex-wrap:wrap;gap:10px 20px}
 .pt-match-formats>div{flex:1 1 185px;max-width:285px}
@@ -344,14 +344,26 @@
 
 /* The controls column follows the card width (30cqi), so tablets keep a usable graph and widescreen gets roomier controls. */
 .pt-workspace{--pt-graph-top:calc(var(--site-header-block-size,var(--site-topbar-height,48px)) + 8px);display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,30cqi,440px);gap:8px 14px;align-items:start;margin-top:8px}
-/* Frozen graph pane. If it grows taller than the viewport (short windows, browser zoom, open EQ settings) it scrolls inside itself instead of hiding its lower controls. */
-.pt-workspace>.pt-chart-wrap{position:sticky;top:var(--pt-graph-top);min-width:0;margin:0;max-height:calc(100dvh / var(--display-scale,1) - var(--pt-graph-top) - 8px);overflow-y:auto;scrollbar-width:thin}
+.pt-chart-column{min-width:0;display:grid;align-content:start;gap:12px}
+.pt-chart-column>.pt-chart-wrap{min-width:0;margin:0}
+.pt-chart-column .pt-match-download{margin:0;color:var(--pt-dim)}
+.pt-match-heading{min-height:36px}
+.pt-match-switch{display:inline-flex;align-items:center;gap:6px;min-height:36px;color:var(--pt-ink-2);cursor:pointer}
+.pt-match-switch input{inline-size:16px;block-size:16px;accent-color:var(--pt-accent-fill)}
+.pt-match-platforms{margin:0}
 .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{height:clamp(210px,46vh,460px)}
 .pt-graph-hint{margin:3px 0 0;color:#9eb8c3;font-size:11px;line-height:1.5}
 .pt-shell.alpha-tuning .pt-workspace .pt-response-overlays{margin:8px 0 4px}
 @media(hover:none){.pt-graph-hint-keys{display:none}}
 
 .pt-panel{container:pt-panel/inline-size;display:grid;gap:8px;min-width:0}
+.pt-panel-scroll{min-width:0;display:grid;align-content:start;gap:8px}
+@media (min-width:901px) and (min-height:540px){
+  @container pt-chart (min-width:780px){
+    .pt-panel{position:sticky;top:var(--pt-graph-top);grid-template-rows:minmax(0,1fr) auto;max-height:calc(100dvh / var(--display-scale,1) - var(--pt-graph-top) - 12px)}
+    .pt-panel-scroll{overflow-y:auto;scrollbar-width:thin;padding:3px;margin:-3px}
+  }
+}
 .pt-shell.alpha-tuning .pt-panel .pt-panel-block{display:block;min-width:0;margin:0;padding:10px 12px;border:1px solid #233b42;border-radius:10px}
 .pt-editor-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 10px;margin-bottom:10px}
 .pt-editor-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;margin-left:auto}
@@ -477,7 +489,6 @@
 /* Keep the graph and its footer together before the tuning controls. The plot can still stick while the page scrolls. */
 @container pt-chart (max-width:740px){
   .pt-workspace{grid-template-columns:minmax(0,1fr)}
-  .pt-workspace>.pt-chart-wrap{display:contents}
   .pt-shell.alpha-tuning .pt-workspace .pt-chart-surface{height:clamp(180px,34vh,300px);border:1px solid light-dark(var(--workbench-line), #1b3339);border-radius:10px}
   .pt-graph-footer{min-width:0;padding:0 2px 2px}
   .pt-graph-footer .pt-graph-readout{margin-top:0}

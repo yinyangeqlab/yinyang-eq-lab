@@ -5,15 +5,15 @@ This view describes the recorded production release. It does not assert that thi
 
 | Field | Recorded value |
 | --- | --- |
-| Release | update229 |
-| Source | `0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25` |
-| Verified at | 2026-11-27T21:25:24.848046Z |
-| Deployment | Verified by the [deployment receipt](../releases/update229-verification.json) |
+| Release | update230 |
+| Source | `38b703561f72a7a4e88e18e075a12626dba0e75b` |
+| Verified at | 2026-11-28T00:28:33.320813Z |
+| Deployment | Verified by the [deployment receipt](../releases/update230-verification.json) |
 | Maintenance | Feature freeze off; owner-only maintenance off |
-| Publication | Reviewed source published as `f449ea8299cf7938c51c5232a0c6839c868c3363`; publication authorized in this record |
-| Recovery | Matching source-only metadata handover recorded as verified |
+| Publication | Reviewed source published as `7d0ddca480b1577769d99fd6cdffa678f520dadc`; publication authorized in this record |
+| Recovery | Matching recovery registration recorded as verified, including a separately recorded data export |
 
-Source/build metadata registration is separate from a fresh data export. Existing encrypted off-device backup data retains its original coverage and timestamp. Generating this view performs no recovery operation.
+Source/build metadata registration is separate from a fresh data export. The recorded export has its own capture time and coverage; registration does not make it a new live-data capture. Generating this view performs no recovery operation.
 
 The immutable source/build and infrastructure paths remain in [LIVE_RELEASE.json](LIVE_RELEASE.json). Owner snapshot checks use the owner's release record. Private inputs are intentionally absent from public clones. Candidate source hashes live separately in [docs/rebuild-manifest.json](../rebuild-manifest.json).
 

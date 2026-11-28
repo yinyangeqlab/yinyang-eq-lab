@@ -1,0 +1,19 @@
+{
+  "update": 230,
+  "sourceCommit": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+  "newDataSnapshots": 1,
+  "databaseExportPerformed": true,
+  "preMigrationSnapshotPreserved": true,
+  "postMigrationSnapshotAt": "2026-11-28T00:31:06.235128+00:00",
+  "independentDownloadDecryptionVerified": true,
+  "fullReconstructionVerified": true,
+  "originalRecordingUploads": 0,
+  "exportCapturedAt": "2026-11-28T00:23:22.008309+00:00",
+  "exportedBeforeProductionMigration": true,
+  "newEncryptedObjectBytes": 233943482,
+  "exportRowsRead": 125482,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "dailyWorkflowActive": true,
+  "verifiedAt": "2026-11-28T00:44:11Z"
+}

@@ -1,0 +1,64 @@
+{
+  "update": 230,
+  "sourceCommit": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+  "deploymentVerification": {
+    "at": "2026-11-28T00:28:33.320813Z",
+    "update": 230,
+    "revision": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+    "deploymentVerified": true,
+    "migrations": [
+      "0050_joint_ranked_guards.sql"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "verifiedPreviousSourceCommit": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": true,
+    "matchingWorkerModules": 428,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 230,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "benchmarkCsvMatches": true,
+    "rootlessJamesDspVisible": true,
+    "jointFitCasesVerified": 7,
+    "targetLeaderboardPageVerified": true,
+    "tuningPageVerified": true,
+    "postEqMethodologyVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "revision": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+    "jointDefaultInFiveFlows": true,
+    "stereoPlaybackVerified": true,
+    "leaderboardDesktopAndNarrowVerified": true,
+    "viewports": [
+      1280,
+      360
+    ],
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224,
+    "scopedLintPassed": true,
+    "appTypesPassed": true,
+    "exactPackagedPlaybackVerified": true
+  },
+  "recoveryRegistrationPending": true
+}

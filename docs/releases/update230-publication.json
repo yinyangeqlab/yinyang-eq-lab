@@ -1,0 +1,20 @@
+{
+  "update": 230,
+  "deployedSourceCommit": "38b703561f72a7a4e88e18e075a12626dba0e75b",
+  "publishedSourceCommit": "7d0ddca480b1577769d99fd6cdffa678f520dadc",
+  "tag": "update230",
+  "releaseUrl": "https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update230",
+  "sourceUrl": "https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update230",
+  "commitUrl": "https://github.com/yinyangeqlab/yinyang-eq-lab/commit/7d0ddca480b1577769d99fd6cdffa678f520dadc",
+  "verifiedLabAccount": "yinyangeqlab",
+  "verifiedAuthorAndCommitter": true,
+  "privateInputScanPassed": true,
+  "runtimeSourceMatchesDeployment": true,
+  "publishedOnMain": true,
+  "versionReleaseLinkVerified": true,
+  "versionCommitLinkVerified": true,
+  "exactPublicCommitLinkVerified": true,
+  "verifiedFreshPublicClone": true,
+  "freshPublicCloneVerified": true,
+  "verifiedAt": "2026-11-28T00:45:01.639346Z"
+}
