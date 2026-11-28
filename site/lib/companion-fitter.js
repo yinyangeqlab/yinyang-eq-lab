@@ -1,4 +1,4 @@
-import {FIT_METHODS,FIT_BANDS,fitterLabel} from './fitter-settings';
+import {FIT_CANDIDATE_COUNT,WEB_FIT_CANDIDATE_COUNT,fitterLabel} from './fitter-settings';
 import {collectEqCandidates} from './eq-candidate-core';
 import {recommendCandidates,recommendDeviceFits,CLOSE_FIT_RMS_DB} from './eq-recommendation';
 import {createFitRunner} from './autoeq-runner';
@@ -31,7 +31,9 @@ function combinedPeak(a,b) {
   return peak;
 }
 const gainOK=db=>Number.isFinite(db)&&Math.abs(db)<=24;
-export async function search({raw,target,match,plus,type},progress=()=>{}){
+export async function search({raw,target,match,plus,type,allBand=false},progress=()=>{}){
+  const includeAllBand=allBand===true;
+  const fitCount=includeAllBand?WEB_FIT_CANDIDATE_COUNT:FIT_CANDIDATE_COUNT;
   const wanted=correction(raw,target,'export').map(p=>p[1]);
   const user=[], matches=[];
   const custom=match?.channelMatchMode==='custom' && match.channelMatchPreset;
@@ -50,13 +52,14 @@ export async function search({raw,target,match,plus,type},progress=()=>{}){
   }else if(auto){addMatch([],[],Math.min(0,2*center),Math.min(0,-2*center),'Level match');}
   else addMatch([],[],0,0,'No channel correction');
   const siteFits=await collectEqCandidates(async req=>(await runner(req)).results,raw,target,new AbortController().signal,
-    n=>progress('Main EQ '+n+' / '+(FIT_METHODS.length*FIT_BANDS.length)),type);
+    n=>progress('Main EQ '+n+' / '+fitCount),type,includeAllBand);
   const awards=recommendCandidates(siteFits,{raw,target}),general=recommendCandidates(siteFits);
   const variants=awards.lowerBoost?.reducedBoost?[...siteFits,awards.lowerBoost]:siteFits;
   const options=[];
   for(const result of variants){
     const {method,bands}=result;
-    progress(method+' · '+bands+' bands');
+    const label=includeAllBand?fitterLabel(result):method+' · '+bands+' bands';
+    progress(label);
     const req={raw,targets:[target],kind:'export',bands,method,headphoneType:type,sampleRate:rate,legacyPriority:'close'};
     const filters=quantize(result.filters,plus),index=options.length;
     const labels=[];
@@ -70,7 +73,7 @@ export async function search({raw,target,match,plus,type},progress=()=>{}){
       const reqMatch={...req,raw:flat,targets:[fitGrid.map((hz,i)=>[hz,delta[i]])]};
       const [m]=(await runner(reqMatch)).results, left=m.filters, right=left.map(f=>({...f,gain:-f.gain}));
       const atten=Math.ceil((Math.max(0,center+peakBoost(left),-center+peakBoost(right))+1.5)*10)/10;
-      addMatch(left,right,center-atten,-center-atten,method+' · '+bands);
+      addMatch(left,right,center-atten,-center-atten,includeAllBand?label:method+' · '+bands);
     }
   }
   const ranked=[];

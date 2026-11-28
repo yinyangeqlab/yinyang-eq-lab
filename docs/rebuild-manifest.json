@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "96a23452789d230b2a2a91c74214202715195574",
+  "baseRevision": "f7134a83b7b691c0f6fba0f5af0f62a53fd18291",
   "recordedLiveUpdate": 233,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -3847,7 +3847,7 @@
     },
     {
       "path": "scripts/build/companion-fitter.mjs",
-      "sha256": "3a09ba33178e99b773e73c4a8f6effab6f3ca50e76bdde9a44bfd3c01f65c0be",
+      "sha256": "eb8457fdaeda1285133f1e1482fe2e687362ec10d7e4a27d2e8b98a3cff50253",
       "executable": false
     },
     {
@@ -4482,7 +4482,7 @@
     },
     {
       "path": "scripts/checks/release/check_peqdb_package.mjs",
-      "sha256": "ef30fa3c364c77b345cd46e12f51dfe55b055860f14c9aa76ce392e69f8ad5ff",
+      "sha256": "46df64dea6f0411066c5ebd1120a10bb2697b4e7608d20afa48f1db01050e274",
       "executable": false
     },
     {
@@ -5747,7 +5747,7 @@
     },
     {
       "path": "site/app/privacy/page.tsx",
-      "sha256": "9542dbc3678f62b6571f9249164ed41bfc2b4e4d5321ad4a37b425f0f477ee45",
+      "sha256": "40e709d90d7aeda0c8152c752694b39766087169c1a5bcbc9c6d4e5f574eb060",
       "executable": false
     },
     {
@@ -7867,7 +7867,7 @@
     },
     {
       "path": "site/lib/companion-fitter.js",
-      "sha256": "ab1417aff6edf737d253381d8d1ee5575f25fe71261519318c8a0fbbbb7810b6",
+      "sha256": "e7b12cae6bb72333df474528c3549d35d8cc01da87c92b3642a272b26f291625",
       "executable": false
     },
     {
@@ -8332,12 +8332,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "5d5682aa0c0024d0d13e6f73d8793e23c9fb2563254eacc671ac371e89f48f16",
+      "sha256": "029999414893dd608fc2559d2c330166fafc5473f3c2639a49bb4a7738d15a95",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "4ef8f095bd3a71e55d1f5c3c1cedb498ca5a1291d5160bdfa8a2377318e77d5e",
+      "sha256": "ddbe8c78707a8efe597be36b43f52b0c140c592f6217799f301c5d5d1e461891",
       "executable": false
     },
     {

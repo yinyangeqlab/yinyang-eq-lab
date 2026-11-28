@@ -12,7 +12,7 @@ export function compileCompanionFitter(assets) {
     alias:{'@':site,'production-wasm':resolve(assets,'autoeq-wasm.mjs'),'production-bytes':resolve(assets,'autoeq-wasm.wasm')},
     loader:{'.wasm':'binary'}});
   const worker=outputFiles[0].contents;
-  return {worker,manifest:{format:1,sha256:createHash('sha256').update(worker).digest('hex'),bytes:worker.length}};
+  return {worker,manifest:{format:1,allBand:true,sha256:createHash('sha256').update(worker).digest('hex'),bytes:worker.length}};
 }
 
 export function packageCompanionFitter(assets,dest) {
