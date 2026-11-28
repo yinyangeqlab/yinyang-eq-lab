@@ -269,7 +269,7 @@ export const privacySessions = sqliteTable("privacy_sessions", {
   tokenHash: text("token_hash").primaryKey(),
   subjectId: text("subject_id").notNull(),
   expiresAt: integer("expires_at").notNull(),
-});
+}, table => [index("privacy_sessions_expires_at_idx").on(table.expiresAt)]);
 export const browserOwnershipCodes = sqliteTable("browser_ownership_codes", {
   sessionHash: text("session_hash").primaryKey().notNull().references(() => privacySessions.tokenHash, { onDelete: "cascade" }),
   codeHash: text("code_hash").notNull().unique(),

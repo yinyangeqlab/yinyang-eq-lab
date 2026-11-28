@@ -529,14 +529,19 @@ const update232Changes = [
   "The benchmark guide explains device limits, when to use lower boost, and how to spot overcorrection or undercorrection.",
 ] as const;
 
-export const candidateChanges = [
+const update233Changes = [
   "The EQ fit guide explains when each fitter is useful and how to weigh RMS, headroom, and 711 measurement repeatability.",
   "Loundess PEQ, the RootlessJamesDSP fork, scored 0.321 dB RMS across 30 Hz–6 kHz at all four band limits, compared with 1.774 dB before EQ.",
   "The Version page links to the verified public source for update232.",
 ] as const;
 
+export const candidateChanges = [
+  "Expired privacy sessions are found through a database index, reducing database reads during session cleanup.",
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 233, date: "2026-11-27", title: "EQ fit guide and Android in-range scores", changes: candidateChanges, publicationTag: "update233" },
+  { update: 234, date: "2026-11-27", title: "Faster privacy session cleanup", changes: candidateChanges },
+  { update: 233, date: "2026-11-27", title: "EQ fit guide and Android in-range scores", changes: update233Changes, github: { commit: "aef236702b24b9c60e57c6cb1a6539c42acf41b4", releaseTag: "update233" } },
   { update: 232, date: "2026-11-27", title: "All-Band Fit at every benchmark limit", changes: update232Changes, github: { commit: "557cb626914178e97050ada3f0512e5a43e2e5c7", releaseTag: "update232" } },
   { update: 231, date: "2026-11-27", title: "EQ exports by platform and a clearer Tuning layout", changes: update231Changes, github: { commit: "71fc2e4733bea9b451ff972e6ba344b538edc380", releaseTag: "update231" } },
   { update: 230, date: "2026-11-27", title: "Joint Fit 20 by default", changes: update230Changes, github: { commit: "7d0ddca480b1577769d99fd6cdffa678f520dadc", releaseTag: "update230" } },

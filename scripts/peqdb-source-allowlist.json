@@ -46,6 +46,7 @@
   "site/lib/eq-playback.ts",
   "site/drizzle/0044_browser_ownership_codes.sql",
   "site/drizzle/0050_joint_ranked_guards.sql",
+  "site/drizzle/0051_privacy_session_expiry_index.sql",
   "site/lib/browser-ownership-proof.ts",
   "site/lib/eq-recommendation.ts",
   "site/lib/eq-response.ts",

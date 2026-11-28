@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 232,
+  "update": 233,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-28T03:54:42.442441Z",
-  "sourceCommit": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
-  "sourceBranch": "release/all-band-fitter-232",
-  "baselineCommit": "4d36a06bf33c6de67a0d3ab3a3b6242862e13e0f",
-  "evidence": "docs/releases/update232-verification.json",
+  "verifiedAt": "2026-11-28T05:45:53.082701Z",
+  "sourceCommit": "1f649414ff956692e91e2f004165d81aed47dfd3",
+  "sourceBranch": "release/eq-guide-233-current",
+  "baselineCommit": "8735dcd6bf8072ee6a100671af1d8b9293288a33",
+  "evidence": "docs/releases/update233-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,37 +31,46 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "The released All-Band Fit and guide are the verified baseline for the guide follow-up.",
+  "scope": "The EQ fit guide explains how to judge fit accuracy, peak boost and repeatability. The RootlessJamesDSP fork has a separate 30 Hz\u20136 kHz RMS table. The update232 GitHub source link points to its verified public commit.",
   "gitSource": {
-    "implementationCommit": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
-    "branch": "release/all-band-fitter-232",
+    "implementationCommit": "1f649414ff956692e91e2f004165d81aed47dfd3",
+    "branch": "release/eq-guide-233-current",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
+    "pushed": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "pushed": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "557cb626914178e97050ada3f0512e5a43e2e5c7",
-    "publishedTag": "update232",
-    "publicationTag": "update232"
+    "publishedSourceCommit": "aef236702b24b9c60e57c6cb1a6539c42acf41b4",
+    "publishedMainCommit": "96a23452789d230b2a2a91c74214202715195574",
+    "publishedTag": "update233",
+    "publicationTag": "update233",
+    "publicationEvidence": "docs/releases/update233-publication.json",
+    "publishedAt": "2026-11-28T06:31:22Z"
   },
   "recoveryProcess": {
-    "sourceBaselineUpdate": 232,
-    "sourceBaselineVerifiedAt": "2026-11-28T04:38:30Z",
+    "previousSchemaUpdate": 232,
+    "sourceBaselineUpdate": 233,
+    "sourceBaselineVerifiedAt": "2026-11-28T06:29:49Z",
+    "dailyWorkflowActive": true,
+    "schemaRecoveryDeferred": false,
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "newDataExport": false,
-    "update232SourceOnlyHandover": {
+    "nextScheduledRunMayRefuseBaselineMismatch": false,
+    "update233SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update232-recovery-verification.json"
+      "evidence": "docs/releases/update233-recovery-verification.json"
     },
     "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true
+    "metadataValidationPassed": true,
+    "latestDataSnapshotUnchanged": true,
+    "latestHostedRunMode": "validate-only"
   },
   "documentationFiles": []
 }

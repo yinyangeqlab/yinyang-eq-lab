@@ -1,0 +1,56 @@
+{
+  "update": 233,
+  "sourceCommit": "1f649414ff956692e91e2f004165d81aed47dfd3",
+  "deploymentVerification": {
+    "at": "2026-11-28T05:45:53.082701Z",
+    "update": 233,
+    "revision": "1f649414ff956692e91e2f004165d81aed47dfd3",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "8735dcd6bf8072ee6a100671af1d8b9293288a33",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 427,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 233,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "benchmarkCsvMatches": true,
+    "benchmarkSharePreviewVerified": true,
+    "rootlessJamesDspVisible": true,
+    "jointFitCasesVerified": 28,
+    "androidRangeRows": 4,
+    "update232SourceLinkVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "revision": "1f649414ff956692e91e2f004165d81aed47dfd3",
+    "viewports": [
+      1280,
+      320
+    ],
+    "checkedAllMetricsAndBudgets": true,
+    "androidRangeRows": 4,
+    "noContributions": true,
+    "update232SourceLinkVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "1f649414ff956692e91e2f004165d81aed47dfd3",
+    "regressionSuitesPassed": 129,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

@@ -29,6 +29,7 @@ manual = {
     "0048_companion_personal_ranks.sql": "f3691c00aa3f5311e5c2e50d96d4e63a7e369379d69fe55aa522a80f7dbd5bb9",
     "0049_sync_account_recovery.sql": "ed580183d8957794e3729701f809e52ac3ba4c83fa318b339721f9ff18e4012f",
     "0050_joint_ranked_guards.sql": "7af9c99c8cfeb75fd926a33e972543870cdad576a2d9422af07250607ab77bcc",
+    "0051_privacy_session_expiry_index.sql": "1e3cec014d59341c34f14c672b863219875cbecb89a3f29caa2fb3973f2d7016",
 }
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:
@@ -44,9 +45,14 @@ def check_columns(expected):
 db = sqlite3.connect(":memory:")
 db.execute("PRAGMA foreign_keys = ON")
 legacy_payload = json.dumps({"year": 2026, "methodology": "bounded-geometric-v1", "pairs": []})
+session_fixture = [("before", "subject", 999), ("cutoff", "subject", 1000), ("active", "subject", 1001)]
 for path in paths:
     if path.name == "0022_small_study_retention.sql":
         db.execute("INSERT INTO statistics_archive VALUES (?,?,?)", (2026,"bounded-geometric-v1",legacy_payload))
+    if path.name == "0051_privacy_session_expiry_index.sql":
+        db.executemany("INSERT INTO privacy_sessions VALUES (?,?,?)", session_fixture)
+        db.executemany("INSERT INTO browser_ownership_codes VALUES (?,?,?)",
+                       [("cutoff", "expired-code", 1001), ("active", "active-code", 1001)])
     db.executescript(path.read_text())
     if path.stem == journal["entries"][-1]["tag"]:
         check_columns({name: table["columns"] for name, table in snapshot["tables"].items()})
@@ -61,6 +67,15 @@ check_columns({table["name"]: [column["name"] for column in table["columns"]] fo
 for table in current:
     actual = {row[1]: row[2].upper() for row in db.execute(f'PRAGMA table_info("{table["name"]}")')}
     assert actual == {column["name"]: column["type"] for column in table["columns"]}, table["name"]
+assert db.execute("SELECT * FROM privacy_sessions ORDER BY expires_at").fetchall() == session_fixture
+expiry_index = "privacy_sessions_expires_at_idx"
+assert [row[2] for row in db.execute(f"PRAGMA index_info('{expiry_index}')")] == ["expires_at"]
+cleanup = "DELETE FROM privacy_sessions WHERE expires_at<=?"
+plan = db.execute("EXPLAIN QUERY PLAN " + cleanup, (1000,)).fetchall()
+assert any("SEARCH privacy_sessions" in row[3] and expiry_index in row[3] for row in plan), plan
+db.execute(cleanup, (1000,))
+assert db.execute("SELECT * FROM privacy_sessions").fetchall() == [session_fixture[-1]]
+assert db.execute("SELECT session_hash, code_hash FROM browser_ownership_codes").fetchall() == [("active", "active-code")]
 db.execute("INSERT INTO research_measurements (id,contributor_id,local_id,name,device,type,rig,files,created_at) VALUES (?,?,?,?,?,?,?,?,?)",
            ("sample", "browser", "local", "Example", "Example", "ie", "Example", "[]", 0))
 db.execute("INSERT INTO research_measurement_chunks VALUES (?,?,?,?)", ("sample", "single", 0, "YWJj"))
@@ -72,6 +87,6 @@ except sqlite3.IntegrityError:
 db.execute("DELETE FROM research_measurements WHERE id = ?", ("sample",))
 assert db.execute("SELECT COUNT(*) FROM research_measurement_chunks").fetchone()[0] == 0
 db.executescript((root / "site/db/service-status.sql").read_text())
-assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 240
+assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 241
 assert not db.execute("PRAGMA foreign_key_check").fetchall()
-print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema240, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")
+print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries. Operational schema241, indexed session cleanup, attachment ownership and cascades pass. Historical metadata unchanged.")
