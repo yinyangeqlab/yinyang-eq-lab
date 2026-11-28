@@ -1,0 +1,58 @@
+{
+  "update": 232,
+  "sourceCommit": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
+  "deploymentVerification": {
+    "at": "2026-11-28T03:54:42.442441Z",
+    "update": 232,
+    "revision": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "4d36a06bf33c6de67a0d3ab3a3b6242862e13e0f",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 427,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 232,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "benchmarkCsvMatches": true,
+    "rootlessJamesDspVisible": true,
+    "jointFitCasesVerified": 28
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "viewports": [
+      1280,
+      320
+    ],
+    "checkedAllMetricsAndBudgets": true,
+    "tuningCandidates": 20,
+    "jointBands": [
+      10,
+      15,
+      20,
+      30
+    ],
+    "noContributions": true,
+    "revision": "6d9824c1bac21d58e6a4b8877a9780f67b27208e"
+  },
+  "candidateVerification": {
+    "sourceRevision": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
+    "regressionSuitesPassed": 129,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}
