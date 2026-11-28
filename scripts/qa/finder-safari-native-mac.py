@@ -57,14 +57,14 @@ def main():
         before = (EVIDENCE / "native-state.json").stat().st_mtime_ns
         click(executable, expanded, custom["box"])
         time.sleep(0.9)
-        state = wait_state(lambda s: (EVIDENCE / "native-state.json").stat().st_mtime_ns > before)
+        state = wait_state(lambda s: s.get("theme") == theme and (EVIDENCE / "native-state.json").stat().st_mtime_ns > before)
         assert state["value"] == "custom", state
         if not state["open"]:
             click(executable, state, state["width"])
-            state = wait_state(lambda s: s.get("open"))
+            state = wait_state(lambda s: s.get("theme") == theme and s.get("open"))
         narrow = next(row for row in state["options"] if row["value"] == "8")
         click(executable, state, narrow["box"])
-        wait_state(lambda s: s.get("value") == "8" and not s.get("open"))
+        wait_state(lambda s: s.get("theme") == theme and s.get("value") == "8" and not s.get("open"))
         result[theme] = expanded
         (EVIDENCE / "native-result.json").write_text(json.dumps(result, indent=2) + "\n")
         print(f"{theme}: Safari UI opened the picker and ignored disabled Custom", flush=True)

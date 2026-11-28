@@ -38,6 +38,7 @@ jobs:
           node scripts/prepare-vote-font.mjs --download
           npm run setup:local
           npm run build
+          cp public/brand-mark.svg dist/client/brand-mark.svg
       - name: Prepare native iPhone UI test runner
         if: matrix.target == 'iphone'
         run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
@@ -64,7 +65,8 @@ jobs:
           if [ "${{ matrix.target }}" = iphone ]; then
             bash scripts/qa/run-finder-safari-ios.sh
           else
-            python3 scripts/qa/finder-safari-native-mac.py
+            defaults write com.apple.Safari WebKitDebugAcceleratedDrawingEnabled -bool false
+            caffeinate -diu python3 scripts/qa/finder-safari-native-mac.py
           fi
       - name: Upload Safari picker evidence
         if: always()

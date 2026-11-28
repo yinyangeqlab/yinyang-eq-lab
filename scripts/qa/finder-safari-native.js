@@ -30,7 +30,7 @@ async function prepare() {
     const s = width();
     const params = new URLSearchParams({state: JSON.stringify({
       theme, ua: navigator.userAgent, open: s.matches(":open"), value: s.value,
-      width: box(s), viewport: [innerWidth, innerHeight],
+      width: box(s), frequency: box(document.querySelector(".ear-adjustment input[type=number]")), viewport: [innerWidth, innerHeight],
       window: [screenX, screenY, outerWidth, outerHeight],
       options: [...s.options].map(o => ({text: o.label, value: o.value, disabled: o.disabled, selected: o.selected, box: box(o)})),
     })});
