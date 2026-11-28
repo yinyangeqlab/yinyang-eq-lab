@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           - target: mac
-            runner: macos-26-intel
+            runner: macos-26
           - target: iphone
             runner: xcode-27
     env:
@@ -38,6 +38,9 @@ jobs:
           node scripts/prepare-vote-font.mjs --download
           npm run setup:local
           npm run build
+      - name: Prepare native iPhone UI test runner
+        if: matrix.target == 'iphone'
+        run: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - name: Verify Finder picker in Apple Safari
         run: |
           set -eu
@@ -53,8 +56,16 @@ jobs:
             xcodebuild -version
             xcrun simctl runtime list
           fi
-          sudo /usr/bin/safaridriver --enable
-          python3 scripts/qa/finder-safari.py "${{ matrix.target }}"
+          for attempt in {1..75}; do
+            if curl -fsS --max-time 4 http://127.0.0.1:5813/api/my-data -o "$RUNNER_TEMP/finder-fixture.json"; then break; fi
+            sleep 1
+          done
+          python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d["testOnly"] and not d["submissionsEnabled"] and not d.get("sharedAdmin")' "$RUNNER_TEMP/finder-fixture.json"
+          if [ "${{ matrix.target }}" = iphone ]; then
+            bash scripts/qa/run-finder-safari-ios.sh
+          else
+            python3 scripts/qa/finder-safari-native-mac.py
+          fi
       - name: Upload Safari picker evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
