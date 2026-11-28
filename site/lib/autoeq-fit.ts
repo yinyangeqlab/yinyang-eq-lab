@@ -1,4 +1,4 @@
-import { FIT_BANDS, JOINT_FITTER_VERSION, validFitter, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
+import { FIT_BANDS, jointFitterVersion, validFitter, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
 import { fitAutoEq, autoEqReferenceOffset, response, type PeqFilter } from './autoeq';
 import { finalizeVariant, peakBoost } from './preference-finalize';
 import { at, fitGrid, validatePoints, type SmoothMode } from './peqdb-engine';
@@ -39,7 +39,7 @@ export function describeFit(request: AutoEqRequest, target: Point[], filters: Pe
   const rms = Math.sqrt(residual.reduce((sum, value) => sum + (value - offset) ** 2, 0) / desired.length);
   if (![peak, rms].every(Number.isFinite)) throw Error('The EQ engine returned an invalid response.');
   return { filters, peakBoost: peak, preamp: -Math.ceil((Math.max(0, peak) + (request.kind === 'shootout' ? 1 : .5)) * 10) / 10,
-    rms, engine, ...(request.method ? { method: request.method, bands: request.bands } : {}), engineVersion: engine === 'joint' ? JOINT_FITTER_VERSION : engine === 'peqdb' ? `${PEQDB_VERSION}:${request.method === 'peqdb-smoothed' ? `smoothed-${fitSmoothing(request)}` : 'unsmoothed'}-fixed-reference-v1` : request.method && !isPeqdbMethod(request.method) ? `yinyang-${request.method}-${request.legacyPriority ?? 'close'}@listening-fitter-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
+    rms, engine, ...(request.method ? { method: request.method, bands: request.bands } : {}), engineVersion: engine === 'joint' ? jointFitterVersion(request.bands) : engine === 'peqdb' ? `${PEQDB_VERSION}:${request.method === 'peqdb-smoothed' ? `smoothed-${fitSmoothing(request)}` : 'unsmoothed'}-fixed-reference-v1` : request.method && !isPeqdbMethod(request.method) ? `yinyang-${request.method}-${request.legacyPriority ?? 'close'}@listening-fitter-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
     smoothing: engine === 'joint' ? 'none' : engine === 'peqdb' ? fitSmoothing(request) : 'legacy', ...(fallbackReason ? { fallbackReason } : {}) };
 }
 

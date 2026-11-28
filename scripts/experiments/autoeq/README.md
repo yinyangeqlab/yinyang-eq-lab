@@ -80,6 +80,8 @@ The ranked snapshot compares 14 browser-based tools on seven identical measureme
 
 On November 27 we ran the shipped Joint Fit 20 implementation (`yinyang-joint-fit-v1`, added in update226) on all seven pairs using the same evaluation grid and level offset. The seven additional rows have their own date in the CSV. The original captured scores reproduce byte for byte when the Joint Fit flag is omitted.
 
+We then scored the 10-, 15- and 30-band versions (`yinyang-joint-fit-band-limits-v1`) on the same seven pairs. The 10-band optimizer gives 5–10 kHz more weight when placing its limited filters. The 15- and 30-band optimizers refine all filters together, starting from smaller fits and separate layouts. The added options share the display name All-Band Fit. The scorer retains the original CSV names and results, including the existing 20-band rows.
+
 The six oratory1990 measurements and Harman targets use the Git blobs in `prepare.py` and the catalog. For the Samsung EO-IA500 with stock tips, the measurement and Harman IE 2019 are the Studio exports. Their SHA-256 hashes are `415599898d3bab4449ed6f1520a6db823e3b3ecc1ce3ab5d825933112741d58a` and `a9d9663666159620c4ae4a921f31471b1a0d687d93c025b0e9ea6e3bb2ea9044`. The similarly named AutoEq Harman 2019 target is a distinct input file.
 
 | Tool or mode | Budgets tested | Build and settings |
@@ -118,7 +120,7 @@ To rescore the snapshot, keep curves and preset captures outside Git. The input 
 ```sh
 node_modules/.bin/esbuild scripts/experiments/autoeq/score-web-fitters.ts \
   --bundle --platform=node --format=esm --outfile=/tmp/score-web-fitters.mjs
-node /tmp/score-web-fitters.mjs /path/to/captures /tmp/eq-fitter-web-scores.csv /tmp/eq-fitter-rankings.json --joint-fit-date 2026-11-27
+node /tmp/score-web-fitters.mjs /path/to/captures /tmp/eq-fitter-web-scores.csv /tmp/eq-fitter-rankings.json --joint-fit-date 2026-11-27 --additional-joint-fit-date 2026-11-27
 cmp /tmp/eq-fitter-web-scores.csv public/eq-fitting/eq-fitter-web-scores.csv
 cmp /tmp/eq-fitter-rankings.json site/data/eq-fitter-rankings.json
 ```

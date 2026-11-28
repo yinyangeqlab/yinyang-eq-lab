@@ -1,4 +1,4 @@
-import { FIT_CANDIDATE_COUNT, JOINT_FITTER_VERSION } from './fitter-settings';
+import { WEB_FIT_CANDIDATE_COUNT, jointFitterVersion } from './fitter-settings';
 import { legacyBatch, validateRequest, type AutoEqFit, type AutoEqRequest } from './autoeq-fit';
 type Reply = { id: number; results?: AutoEqFit[]; error?: string; unavailable?: boolean };
 type Pending = { resolve: (fits: AutoEqFit[]) => void; reject: (error: Error) => void; request: AutoEqRequest; cleanup: () => void };
@@ -14,11 +14,11 @@ export function createAutoEqService(makeWorker = () => new Worker(new URL('./aut
   const remember = (request: AutoEqRequest, results: AutoEqFit[]) => {
     const encoded = key(request); if (encoded.length > 500000) return;
     if (cache.has(encoded)) { cache.delete(encoded); cacheChars -= encoded.length; }
-    while (cache.size && (cache.size >= FIT_CANDIDATE_COUNT || cacheChars + encoded.length > 500000)) { const oldest = cache.keys().next().value!; cacheChars -= oldest.length; cache.delete(oldest); }
+    while (cache.size && (cache.size >= WEB_FIT_CANDIDATE_COUNT || cacheChars + encoded.length > 500000)) { const oldest = cache.keys().next().value!; cacheChars -= oldest.length; cache.delete(oldest); }
     cache.set(encoded, structuredClone(results)); cacheChars += encoded.length;
   };
   const validResults = (results: AutoEqFit[] | undefined, request: AutoEqRequest) => Array.isArray(results) && results.length === request.targets.length && results.every(f =>
-    f && (!request.method || f.method === request.method && f.bands === request.bands) && (request.method === 'joint' ? f.engine === 'joint' && f.engineVersion === JOINT_FITTER_VERSION : ['peqdb', 'legacy'].includes(f.engine)) && f.engine === results[0].engine && typeof f.engineVersion === 'string' && f.engineVersion.length <= 160 && f.sampleRate === request.sampleRate &&
+    f && (!request.method || f.method === request.method && f.bands === request.bands) && (request.method === 'joint' ? f.engine === 'joint' && f.engineVersion === jointFitterVersion(request.bands) : ['peqdb', 'legacy'].includes(f.engine)) && f.engine === results[0].engine && typeof f.engineVersion === 'string' && f.engineVersion.length <= 160 && f.sampleRate === request.sampleRate &&
     [f.preamp, f.rms, f.peakBoost].every(Number.isFinite) && f.preamp <= 0 && f.rms >= 0 && Array.isArray(f.filters) && (request.method === "joint" ? f.filters.length === request.bands : f.filters.length >= 1 && f.filters.length <= request.bands) && f.filters.every(filter =>
       ['PK', 'LSC', 'HSC'].includes(filter.type ?? 'PK') && [filter.hz, filter.gain, filter.q].every(Number.isFinite) && filter.hz >= 20 && filter.hz < request.sampleRate / 2 && Math.abs(filter.gain) <= 24 && filter.q >= .1 && filter.q <= 20));
   function stop() {

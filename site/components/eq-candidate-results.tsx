@@ -6,9 +6,11 @@ import type {Point} from "@/lib/curves";
 import {eqResponse} from "@/lib/eq-response";
 import {candidateKey,CLOSE_FIT_RMS_DB,fitsWithinBandLimit,recommendCandidates} from "@/lib/eq-recommendation";
 import {FIT_BANDS, fitterLabel, isPeqdbMethod, type FitBands} from "@/lib/fitter-settings";
-import { QUDELIX_GUIDE_MAX_BANDS, type FinalizedVariant } from "@/lib/preference-finalize";
+import type { FinalizedVariant } from "@/lib/preference-finalize";
+import type { EqExportFile } from "@/lib/platform-eq-export";
+import EqExportControls from "./eq-export-controls";
 import { MAX_MAIN_EQ_BANDS, type EqDeviceLimits } from "@/lib/use-generated-eq-results";
-import { downloadChannelMatch, MAX_CHANNEL_MATCH_BANDS } from "@/lib/channel-match-export";
+import { MAX_CHANNEL_MATCH_BANDS } from "@/lib/channel-match-export";
 import "./eq-candidate-results.css";
 import GeneratedEqComparison, { type GeneratedEqContext } from "./generated-eq-comparison";
 import { generatedSignature } from "@/lib/generated-eq-comparison";
@@ -156,7 +158,10 @@ type EqCandidateResultsProps = {
   raw: Point[];
   target: Point[];
   limits: EqDeviceLimits;
-  onDownload: (fit: FinalizedVariant, format: string) => void;
+  onDownload: (file: EqExportFile, fit: FinalizedVariant) => void;
+  exportBase: (fit: FinalizedVariant) => string;
+  availableMatch?: ChannelMatch;
+  savesLocally?: boolean;
   onSave: (fit: FinalizedVariant) => void;
   comparisonContext: GeneratedEqContext;
   channelMatch?: ChannelMatch;
@@ -164,7 +169,7 @@ type EqCandidateResultsProps = {
   tuning?: boolean;
 };
 
-export default function EqCandidateResults({ variants, raw, target, limits, onDownload, onSave, comparisonContext, channelMatch, onCompare, tuning = false }: EqCandidateResultsProps) {
+export default function EqCandidateResults({ variants, raw, target, limits, onDownload, onSave, comparisonContext, channelMatch, availableMatch = channelMatch, exportBase, savesLocally, onCompare, tuning = false }: EqCandidateResultsProps) {
  const winners = useMemo(() => FIT_BANDS.map(bands => ({ bands, best: fitsWithinBandLimit(variants, bands).best })), [variants]);
  const { best: deviceBest, recommended } = useMemo(() => fitsWithinBandLimit(variants, limits.mainBands), [variants, limits.mainBands]);
  const overall = winners.at(-1)?.best;
@@ -172,8 +177,6 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
    ? recommendCandidates(variants.filter(fit => fit.filters.length <= limits.mainBands), { raw, target })?.lowerBoost
    : null, [variants, tuning, raw, target, limits.mainBands]);
  const [selected, setSelected] = useState("");
- const [format, setFormat] = useState("txt");
- const [channelMessage, setChannelMessage] = useState("");
  const [comparison, setComparison] = useState<"pair" | "all" | "smoothing" | null>(null);
  const [comparisonBands, setComparisonBands] = useState<FitBands>();
  const smoothingHeading = useId();
@@ -185,7 +188,6 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
  if (!overall || !active || !plots[0]?.rows.length) return null;
 
  const canExport = active.filters.length <= limits.mainBands;
- const wrongGuideFormat = format === "qudelix5k" && active.filters.length > QUDELIX_GUIDE_MAX_BANDS;
  const overallLimit = winners.find(row => row.best === overall)?.bands;
  const availableBands = FIT_BANDS.filter(bands => (["peqdb", "peqdb-smoothed"] as const).every(method =>
    variants.some(fit => fit.bands === bands && fit.method === method && fit.engine === "peqdb")));
@@ -200,15 +202,6 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
  function openComparison(mode: "pair" | "all" | "smoothing") {
    onCompare?.();
    setComparison(mode);
- }
- function downloadMatch() {
-   if (!channelMatch) return;
-   try {
-     downloadChannelMatch(channelMatch, comparisonContext.headphones, "txt", limits.channelBands);
-     setChannelMessage("Channel Match TXT downloaded.");
-   } catch (error) {
-     setChannelMessage(error instanceof Error ? error.message : "Could not download Channel Match.");
-   }
  }
  function fitMetrics(fit: FinalizedVariant) {
    return <>
@@ -249,24 +242,13 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
        <strong>Up to {bands} bands</strong><small>No generated fit at this limit</small>
      </div>)}
    </div>
-   <div className="eq-results-actions">
+   <div className="eq-results-actions eq-selected-fit">
      <strong>Selected · {fitterLabel(active)}</strong>
-     <label>Download format<select value={format} onChange={event => setFormat(event.target.value)}>
-       <option value="txt">EQ TXT</option>
-       <option value="equalizerapo">Equalizer APO · Windows</option>
-       <option value="easyeffects">EasyEffects · Linux</option>
-       <option value="qudelix5k">Qudelix 5K entry guide</option>
-     </select></label>
-     <button type="button" disabled={!canExport || wrongGuideFormat} onClick={() => onDownload(active, format)}>Download selected EQ</button>
      <button type="button" disabled={!canExport} onClick={() => onSave(active)}>Save selected EQ to {PERSONAL_AREA_TITLE}</button>
    </div>
-   {!canExport ? <p className="eq-results-caveat" role="status">This EQ uses {active.filters.length} filters. Select a fit within your {limits.mainBands}-band Main EQ limit to save or download it.</p>
-     : wrongGuideFormat && <p className="eq-results-caveat" role="status">The Qudelix entry guide accepts up to {QUDELIX_GUIDE_MAX_BANDS} filters. Select a smaller fit or a different format.</p>}
-   {channelMatch && limits.channelBands > 0 && <div className="eq-results-actions eq-channel-export">
-     <button type="button" onClick={downloadMatch}>Download Channel Match TXT</button>
-     <span>Up to {limits.channelBands} filters per side</span>
-     {channelMessage && <p role="status">{channelMessage}</p>}
-   </div>}
+   {!canExport && <p className="eq-results-caveat" role="status">Select a fit within your {limits.mainBands}-band Main EQ limit to save it.</p>}
+   <EqExportControls basename={exportBase(active)} fit={active} match={availableMatch} matchName={comparisonContext.headphones}
+     limits={limits} onRecordedDownload={onDownload} savesLocally={savesLocally}/>
    <EqResultsPlot plots={plots} active={active}/>
    <details className="eq-results-advanced">
      <summary>Compare all fits</summary>
@@ -283,7 +265,7 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
          {fitMetrics(fit)}
          {fit === overall && <span className="eq-gold-badge">Lowest RMS overall</span>}
          {fit.filters.length > limits.mainBands && <small>Exceeds device limit</small>}
-         {isPeqdbMethod(fit.method) && fit.engine !== "peqdb" && <small>Precise fallback · PEQdB unavailable</small>}
+         {isPeqdbMethod(fit.method) && fit.engine !== "peqdb" && <small>Sequential Fit fallback · PEQdB unavailable</small>}
        </button>)}
      </div>
      {quickPair && lowerBoost && <section className="eq-results-audition" aria-label="Lower boost comparison">

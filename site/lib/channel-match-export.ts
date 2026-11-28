@@ -10,16 +10,18 @@ export function channelMatchText(match: ChannelMatch) {
 
 export const MAX_CHANNEL_MATCH_BANDS = 32;
 
-export function channelMatchIirText(match: ChannelMatch, maxBands = 10) {
+export function channelMatchIirPreset(match: ChannelMatch, maxBands = 10): ChannelMatchPreset {
   if (!Number.isInteger(maxBands) || maxBands < 1 || maxBands > MAX_CHANNEL_MATCH_BANDS) {
     throw new Error("Select a Channel Match limit from 1 to 32 filters per side for TXT export.");
   }
   const safe = safeChannelMatch(match);
   if (safe.channelMatchMode === "custom") {
-    if (safe.channelMatchPreset?.channels.some(channel => channel.filters.length > maxBands)) {
+    const preset = safe.channelMatchPreset;
+    if (!preset) throw new Error("No uploaded channel-match preset is attached.");
+    if (preset.channels.some(channel => channel.filters.length > maxBands)) {
       throw new Error("The uploaded preset exceeds your Channel Match filter limit. Choose a smaller preset or export a FIR WAV.");
     }
-    return channelMatchText(safe);
+    return preset;
   }
   const { leftPoints, rightPoints, leftLevelDb = 0, rightLevelDb = 0 } = safe;
   if (!leftPoints || !rightPoints) throw new Error("AutoMatch needs paired Left and Right responses.");
@@ -42,7 +44,14 @@ export function channelMatchIirText(match: ChannelMatch, maxBands = 10) {
   if (channels.some(channel => Math.abs(channel.preampDb) > 40)) {
     throw new Error("This match needs more level correction than the TXT format supports. Download the FIR WAV instead.");
   }
-  return `# YinYang AutoMatch channel match · approximate IIR fit · up to ${maxBands} filters per side\n# CH: 0 is Left. CH: 1 is Right.\n${channelMatchText({ channelMatchPreset: { channels } })}`;
+  return { channels };
+}
+
+export function channelMatchIirText(match: ChannelMatch, maxBands = 10) {
+  const preset = channelMatchIirPreset(match, maxBands);
+  const text = channelMatchText({ channelMatchPreset: preset });
+  if (match.channelMatchMode === "custom") return text;
+  return `# YinYang AutoMatch channel match · approximate IIR fit · up to ${maxBands} filters per side\n# CH: 0 is Left. CH: 1 is Right.\n${text}`;
 }
 
 export function safeChannelMatch(value: ChannelMatch): ChannelMatch {

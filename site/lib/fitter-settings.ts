@@ -9,7 +9,8 @@ export const FIT_BANDS = [10, 15, 20, 30] as const;
 export const JOINT_FITTER = { method: "joint", bands: 20 } as const;
 export const JOINT_FITTER_VERSION = "yinyang-joint-fit-v1";
 export const FIT_CANDIDATE_COUNT = FIT_METHODS.length * FIT_BANDS.length;
-export const WEB_FIT_CANDIDATE_COUNT = FIT_CANDIDATE_COUNT + 1;
+export const jointFitterVersion = (bands: FitBands) => bands === JOINT_FITTER.bands ? JOINT_FITTER_VERSION : "yinyang-joint-fit-band-limits-v1";
+export const WEB_FIT_CANDIDATE_COUNT = FIT_CANDIDATE_COUNT + FIT_BANDS.length;
 export const MAIN_FITTER_COHORT = "standard:10:legacy:yinyang-standard-close@listening-fitter-v1";
 export const JOINT_FITTER_COHORT = `joint:20:joint:${JOINT_FITTER_VERSION}`;
 export type FitProvenance = { method?: FitterMethod; bands: number; filterCount?: number; engine: string; engineVersion: string; sampleRate: number; rms: number; preamp: number };
@@ -29,7 +30,7 @@ export function cleanFitMetadata(value: unknown): FitProvenance[] {
 export function validFitter(value: unknown): value is FitterSettings {
   if (!value || typeof value !== "object") return false;
   const v = value as FitterSettings;
-  return v.method === "joint" ? v.bands === JOINT_FITTER.bands : FIT_METHODS.includes(v.method) && FIT_BANDS.includes(v.bands);
+  return FIT_BANDS.includes(v.bands) && (v.method === "joint" || FIT_METHODS.includes(v.method));
 }
 export const validExportFitter = validFitter;
 
@@ -41,12 +42,12 @@ export function readDefaultFitter(scope: "tuning" | "listening" = "listening"): 
   } catch {}
   return { ...(scope === "tuning" ? JOINT_FITTER : DEFAULT_FITTER) };
 }
-const fitterNames: Record<FitterMethod, string> = {
-  standard: "Standard",
-  precise: "Precise",
+export const fitterNames: Record<FitterMethod, string> = {
+  standard: "Preset Frequencies",
+  precise: "Sequential Fit",
   peqdb: "PEQdB · Unsmoothed",
   "peqdb-smoothed": "PEQdB · Smoothed",
-  joint: "Joint Fit",
+  joint: "All-Band Fit",
 };
 export const fitterLabel = (settings: FitterSettings) => `${fitterNames[settings.method]} · ${settings.bands} bands`;
 

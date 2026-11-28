@@ -1,6 +1,6 @@
 "use client";
 import { useId } from "react";
-import { DEFAULT_FITTER, JOINT_FITTER, FIT_BANDS, fitterLabel, isPeqdbMethod, type FitterSettings } from "@/lib/fitter-settings";
+import { DEFAULT_FITTER, JOINT_FITTER, FIT_BANDS, fitterLabel, fitterNames, isPeqdbMethod, type FitterSettings } from "@/lib/fitter-settings";
 import { FITTER_GUIDE_PATH } from "@/lib/share-pages.mjs";
 import "./fitter-controls.css";
 
@@ -16,11 +16,11 @@ export default function FitterControls({ value, defaultValue, onChange, onDefaul
           <label htmlFor={`${id}-method`}><span id={`${id}-method-label`}>Method</span>
             <select id={`${id}-method`} aria-labelledby={`${id}-method-label`} aria-describedby={advanced ? `${id}-method-help` : isPeqdbMethod(value.method) ? `${id}-peqdb-help` : undefined} value={value.method} onChange={event => {
               const method = event.target.value as FitterSettings["method"];
-              onChange(method === "joint" ? JOINT_FITTER : { ...value, method });
+              onChange({ ...value, method });
             }}>
-              {advanced && <option value="joint">Joint Fit · 20 bands</option>}
-              <option value="standard">Standard · Fixed bands</option>
-              <option value="precise">Precise · Movable bands</option>
+              {advanced && <option value="joint">{fitterNames.joint}</option>}
+              <option value="standard">{fitterNames.standard}</option>
+              <option value="precise">{fitterNames.precise}</option>
               <optgroup label="PEQdB AutoEQ">
                 <option value="peqdb">PEQdB · Unsmoothed</option>
                 <option value="peqdb-smoothed">PEQdB · Smoothed</option>
@@ -29,17 +29,17 @@ export default function FitterControls({ value, defaultValue, onChange, onDefaul
           </label>
           <div>
             <label htmlFor={`${id}-bands`}>Bands
-              <select id={`${id}-bands`} disabled={value.method === "joint"} aria-describedby={advanced ? `${id}-band-help` : undefined} value={value.bands} onChange={event => onChange({ ...value, bands: Number(event.target.value) as FitterSettings["bands"] })}>
+              <select id={`${id}-bands`} aria-describedby={advanced ? `${id}-band-help` : undefined} value={value.bands} onChange={event => onChange({ ...value, bands: Number(event.target.value) as FitterSettings["bands"] })}>
                 {FIT_BANDS.map(bands => <option key={bands} value={bands}>{bands} bands</option>)}
               </select>
             </label>
-            {advanced && <p id={`${id}-band-help`} className="fitter-band-help">{value.method === "joint" ? "Joint Fit uses 20 filters." : "Sets how many EQ filters the app can use."}</p>}
+            {advanced && <p id={`${id}-band-help`} className="fitter-band-help">Sets how many filters the preview uses.</p>}
           </div>
         </div>
         {advanced && <ul id={`${id}-method-help`} className="fitter-method-help">
-          <li><strong>Joint Fit</strong> adjusts filter frequencies, widths and gains together to follow the target curve.</li>
-          <li><strong>Standard · Fixed bands</strong> uses the same evenly spaced frequencies for a given band count. It tries a few widths shared by all bands and fits each band’s boost or cut. Start here for broad changes.</li>
-          <li><strong>Precise · Movable bands</strong> chooses a frequency, width, and boost or cut one band at a time. Each new band tackles what’s still off target. Try it for narrow peaks or dips between Standard’s bands.</li>
+          <li><strong>{fitterNames.joint}</strong> adjusts every filter’s frequency, width and gain together.</li>
+          <li><strong>{fitterNames.standard}</strong> keeps filter frequencies on a preset grid and adjusts their gains and shared width.</li>
+          <li><strong>{fitterNames.precise}</strong> places one filter at a time to reduce the remaining error.</li>
           <li><strong>PEQdB</strong> fits bell filters and bass and treble shelves together. Unsmoothed follows finer measurement details. Smoothed softens narrow peaks and dips before fitting.</li>
         </ul>}
         {!advanced && isPeqdbMethod(value.method) && <p id={`${id}-peqdb-help`}>Unsmoothed follows finer details. Smoothed softens narrow peaks and dips before fitting.</p>}

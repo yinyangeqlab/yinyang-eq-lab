@@ -10,9 +10,9 @@ export default function EqFitterBenchmarkPage() {
     <article>
       <header>
         <h1>EQ Fitter Benchmark</h1>
-        <p>Rank Auto EQ fitters at 10, 15, 20 and 30 bands using the same headphone measurements and targets.</p>
+        <p>Compare how closely Auto EQ fits the same targets and choose a fit you can use on your device.</p>
       </header>
-      <EqFittingGuide showContents />
+      <EqFittingGuide />
     </article>
   </main>;
 }

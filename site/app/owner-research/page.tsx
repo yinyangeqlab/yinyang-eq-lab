@@ -9,6 +9,7 @@ import AdminTestPanel from "@/components/admin-test-panel";
 import ActivityMonitoringPanel from "@/components/activity-monitoring-panel";
 import EarPracticeLeaderboard from "@/components/ear-practice-leaderboard";
 import ServiceStatusPanel from "@/components/service-status-panel";
+import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { targetDisplayName } from "@/lib/target-labels";
 import "./admin-layout.css";
 import {AdminLegacyReview} from "@/components/legacy-review";
@@ -105,7 +106,10 @@ export default function OwnerResearch() {
   }
   const recordings = useMemo(() => new Map(listeningPool.map(track => [track.filename, track])), []);
   const musicByUrl = useMemo(() => new Map(musicTracks.map(track => [track.url, track])), []);
-  const name = useMemo(() => new Map(data?.targets.map(target => [target.id, target.name]) || []), [data]);
+  const targetName = useMemo(() => {
+    const storedNames = new Map(data?.targets.map(target => [target.id, target.name]));
+    return (id: string) => storedNames.get(id) || sharedAutoEqTarget(id)?.name;
+  }, [data]);
   const songs = useMemo(() => {
     const map = new Map<string, string>();
     data?.votes.forEach(row => map.set(songKey(row), songLabel(row)));
@@ -131,9 +135,12 @@ export default function OwnerResearch() {
       else {const winner=choice.result === "a" ? choice.targetAId : choice.targetBId, loser=choice.result === "a" ? choice.targetBId : choice.targetAId;map.get(winner)!.wins++;map.get(loser)!.losses++;}
     }
     const rate=(row:{wins:number;losses:number}) => row.wins+row.losses ? row.wins/(row.wins+row.losses) : -1;
-    return [...map.values()].sort((a,b) => rate(b)-rate(a) || b.wins-a.wins || (name.get(a.id) || "").localeCompare(name.get(b.id) || ""));
-  }, [filteredVotes, filteredOpen, name]);
-  const choiceById = useMemo(() => new Map<string,string>([...(data?.votes || []).map(row => [row.id, name.get(row.winnerId) || row.winnerId] as [string,string]),...(data?.openChoices || []).map(row => [row.id, row.result === "tie" ? "Tie" : name.get(row.result === "a" ? row.targetAId : row.targetBId) || "Unknown"] as [string,string])]), [data,name]);
+    return [...map.values()].sort((a,b) => rate(b)-rate(a) || b.wins-a.wins || (targetName(a.id) || "").localeCompare(targetName(b.id) || ""));
+  }, [filteredVotes, filteredOpen, targetName]);
+  const choiceById = useMemo(() => new Map<string, string>([
+    ...(data?.votes ?? []).map(row => [row.id, targetName(row.winnerId) || row.winnerId] as const),
+    ...(data?.openChoices ?? []).map(row => [row.id, row.result === "tie" ? "Tie" : targetName(row.result === "a" ? row.targetAId : row.targetBId) || "Unknown"] as const),
+  ]), [data, targetName]);
   const grouped = useMemo(() => {
     const map = new Map<string, { id: string; row: Feedback; a?: Feedback; b?: Feedback }>();
     for (const row of (data?.feedback ?? []).filter(inScope).sort(newest)) {
@@ -146,7 +153,7 @@ export default function OwnerResearch() {
     return [...map.values()].map(group => ({ ...group.row, ...group, id: group.id }));
   }, [data, inScope]);
   const runs = useMemo(() => (data?.listeningRuns ?? []).filter(inScope).sort(newest), [data, inScope]);
-  const target = (id: string) => name.get(id) || id;
+  const target = (id: string) => targetName(id) || id;
   const choices = [
     ...filteredVotes.map(row => ({
       ...row, key: `vote:${row.id}`, winner: target(row.winnerId), other: target(row.loserId),
@@ -185,7 +192,7 @@ export default function OwnerResearch() {
         <span>{data.songSuggestions.length.toLocaleString()} song suggestions</span>
         <button type="button" onClick={() => void load()} disabled={loading}>{loading ? "Refreshing…" : "Refresh records"}</button>
       </div>
-      <div id="submission-review">{rawData && <AdminReview data={rawData} reload={load} />}</div>
+      <div id="submission-review">{rawData && <AdminReview data={rawData} reload={load} targetLabel={target} />}</div>
       <section id="research-records" aria-label="Listening research">
         <h2>Listening research</h2>
         <p>Song and mode apply to the next four tables. Each table has its own keyword filters.</p>

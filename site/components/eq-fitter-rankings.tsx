@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import snapshot from "@/data/eq-fitter-rankings.json";
-import { FIT_BANDS, type FitBands } from "@/lib/fitter-settings";
+import { FIT_BANDS, fitterNames, type FitBands } from "@/lib/fitter-settings";
 
 const core = "rms_20Hz_to_10kHz_db";
 const full = "rms_20Hz_to_20kHz_db";
@@ -16,6 +16,13 @@ const metrics = [
   { key: "max_absolute_error_db", label: "Worst error", heading: "Worst error" },
   { key: "peak_combined_boost_db", label: "Peak boost", heading: "Peak boost" },
 ] as const;
+
+function displayFitter(name: string) {
+  if (name === "YinYang Fixed Bands") return `YinYang ${fitterNames.standard}`;
+  if (name === "YinYang Movable Bands") return `YinYang ${fitterNames.precise}`;
+  if (name.startsWith("YinYang Joint Fit ")) return `YinYang ${fitterNames.joint}`;
+  return name;
+}
 
 const tools = [...new Set(snapshot.scores.map(row => row.tool))].map(tool => ({
   tool,
@@ -68,7 +75,7 @@ export default function EqFitterRankings() {
           const rank = rows.findIndex(other => other.medians[metric.key] === value) + 1;
           return <tr key={row.fitter}>
             <td>{rank}</td>
-            <th scope="row">{row.fitter}</th>
+            <th scope="row">{displayFitter(row.fitter)}</th>
             <td>{rank === 1 ? <strong>{value.toFixed(3)}</strong> : value.toFixed(3)}</td>
             <td>{row.medians[supportingMetric.key].toFixed(3)}</td>
           </tr>;
@@ -101,7 +108,6 @@ export default function EqFitterRankings() {
           <dd>{budgets.join(", ")} bands</dd>
         </div>)}
       </dl>
-      <p>Loundess PEQ uses the Squig AutoEQ fitter and returned the same fits at every tested budget. Poweramp Equalizer supplies and imports preset files. <a href="https://github.com/evoeram/Loundess-PEQ-RootlessJamesDSP">Loundess PEQ</a> · <a href="https://forum.powerampapp.com/files/file/84-powerampequalizer-build-963-uniapk/?changelog=27">Poweramp Equalizer</a></p>
     </details>
   </>;
 }

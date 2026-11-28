@@ -12,7 +12,13 @@ const flat=[[20,0],[20000,0]],raw=[[20,4],[1000,0],[20000,-3]],request={raw,targ
 const jointRequest = {...request, method:'joint', bands:20};
 assert.doesNotThrow(() => core.validateRequest(jointRequest));
 assert.doesNotThrow(() => core.validateRequest({ ...jointRequest, kind: 'export' }));
-assert.throws(() => core.validateRequest({ ...jointRequest, bands: 10 }), /Unsupported EQ request/);
+for (const bands of settings.FIT_BANDS) {
+  assert.doesNotThrow(() => core.validateRequest({ ...jointRequest, bands }));
+}
+assert.throws(() => core.validateRequest({ ...jointRequest, bands: 12 }), /Unsupported EQ request/);
+assert.equal(settings.WEB_FIT_CANDIDATE_COUNT, 20);
+assert.equal(settings.jointFitterVersion(20), settings.JOINT_FITTER_VERSION);
+assert.notEqual(settings.jointFitterVersion(10), settings.JOINT_FITTER_VERSION);
 assert.equal(settings.validExportFitter(jointRequest), true);
 savedSettings.set(settings.FITTER_STORAGE, JSON.stringify({ method: 'precise', bands: 10 }));
 assert.equal(settings.readDefaultFitter().method, 'precise');

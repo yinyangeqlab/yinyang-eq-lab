@@ -1,11 +1,16 @@
 import { at, fitGrid } from "./peqdb-engine";
 import type { PeqFilter } from "./autoeq";
+import type { FitBands } from "./fitter-settings";
 import type { Point } from "./curves";
 
 const DB = 10 / Math.LN10;
 const LOG_GAIN = Math.LN10 / 40;
 const PEAK_CAP = 6;
-const weights = fitGrid.map(hz => Math.sqrt((hz <= 10_000 ? 1.7 : 1) * (hz <= 200 ? 2.3 : 1)));
+const weightsFor = (trebleWeight: number) => fitGrid.map(hz =>
+  Math.sqrt((hz <= 10_000 ? 1.7 : 1) * (hz <= 200 ? 2.3 : 1) * (hz >= 5_000 && hz <= 10_000 ? trebleWeight : 1)));
+const defaultWeights = weightsFor(1);
+// With ten filters, emphasize the lower treble so broad corrections do not crowd it out.
+const tenBandWeights = weightsFor(1.75);
 const clamp = (x: number, low: number, high: number) => Math.max(low, Math.min(high, x));
 type Kind = 0 | 1 | -1;
 type Section = { center: number; gain: number; logQ: number; kind: Kind };
@@ -51,7 +56,7 @@ function section(section: Section, grid: Float64Array, output: Float64Array, col
   }
 }
 
-function evaluate(sections: Section[], grid: Float64Array, desired: Float64Array, columns?: Float64Array[]) {
+function evaluate(sections: Section[], grid: Float64Array, desired: Float64Array, weights: number[], columns?: Float64Array[]) {
   const response = new Float64Array(grid.length);
   sections.forEach((value, i) => section(value, grid, response, columns?.slice(i * 3, i * 3 + 3)));
   const residual = response.map((value, i) => value - desired[i]);
@@ -72,7 +77,7 @@ function evaluate(sections: Section[], grid: Float64Array, desired: Float64Array
   return { error, response, cost: dot(error, error) };
 }
 
-function dictionary(grid: Float64Array) {
+function dictionary(grid: Float64Array, weights: number[]) {
   const kinds: Kind[] = [0, 1, -1];
   const qs = [.45, .65, .9, 1.25, 1.8, 2.6, 3.8, 5.5, 8];
   return kinds.flatMap(kind => Array.from({ length: kind ? 49 : 145 }, (_, i) =>
@@ -88,11 +93,11 @@ function dictionary(grid: Float64Array) {
 }
 
 function seed(initial: Section[], bands: number, grid: Float64Array, desired: Float64Array,
-  shapes: ReturnType<typeof dictionary>, allowShelves: boolean) {
+  shapes: ReturnType<typeof dictionary>, weights: number[], allowShelves: boolean) {
   const result = initial.slice();
   const used = new Set<number>();
   while (result.length < bands) {
-    const { error } = evaluate(result, grid, desired);
+    const { error } = evaluate(result, grid, desired, weights);
     let bestIndex = -1, bestGain = 0, best = -Infinity;
     const kinds = new Set(result.map(value => value.kind));
     for (const [i, { definition, basis, power }] of shapes.entries()) {
@@ -131,14 +136,14 @@ function step(normal: Float64Array, gradient: Float64Array, damping: number, loc
   return answer;
 }
 
-function refine(initial: Section[], grid: Float64Array, desired: Float64Array): Candidate {
+function refine(initial: Section[], grid: Float64Array, desired: Float64Array, weights: number[]): Candidate {
   let sections = initial, damping = .01;
   const size = sections.length * 3;
   const low = sections.flatMap(() => [grid[0], -16, Math.log(.35)]);
   const high = sections.flatMap(({ kind }) => [grid.at(-1)!, 16, Math.log(kind ? 3 : 8)]);
   const columns = Array.from({ length: size }, () => new Float64Array(grid.length * 2));
   const normal = new Float64Array(size * size);
-  let current = evaluate(sections, grid, desired, columns);
+  let current = evaluate(sections, grid, desired, weights, columns);
   for (let iteration = 0; iteration < 105; iteration++) {
     const gradient = Float64Array.from(columns, column => dot(column, current.error));
     for (let i = 0; i < size; i++) for (let j = 0; j <= i; j++) normal[i * size + j] = dot(columns[i], columns[j]);
@@ -150,11 +155,11 @@ function refine(initial: Section[], grid: Float64Array, desired: Float64Array): 
       const movement = Math.max(1, ...delta.map((value, i) => Math.abs(value) / (i % 3 === 1 ? 5 : .7)));
       const next = values.map((value, i) => clamp(value + delta[i] / movement, low[i], high[i]));
       const trial = sections.map((value, i) => ({ ...value, center: next[i * 3], gain: next[i * 3 + 1], logQ: next[i * 3 + 2] }));
-      const candidate = evaluate(trial, grid, desired);
+      const candidate = evaluate(trial, grid, desired, weights);
       if (candidate.cost < current.cost) {
         const improvement = current.cost - candidate.cost;
         sections = trial;
-        current = evaluate(sections, grid, desired, columns);
+        current = evaluate(sections, grid, desired, weights, columns);
         if (improvement < 1e-8 * Math.max(1, current.cost)) return { sections, cost: current.cost };
         damping = Math.max(1e-7, damping / 2.5);
         accepted = true;
@@ -167,20 +172,26 @@ function refine(initial: Section[], grid: Float64Array, desired: Float64Array): 
   return { sections, cost: current.cost };
 }
 
-let prepared: { rate: number; grid: Float64Array; shapes: ReturnType<typeof dictionary> } | undefined;
+let prepared: { rate: number; grid: Float64Array; shapes: Map<number[], ReturnType<typeof dictionary>> } | undefined;
 
-export function fitJointEq(raw: Point[], target: Point[], rate: number): PeqFilter[] {
+export function fitJointEq(raw: Point[], target: Point[], rate: number, bandLimit: FitBands = 20): PeqFilter[] {
   if (!prepared || prepared.rate !== rate) {
     const grid = Float64Array.from(fitGrid, hz => Math.log(Math.tan(Math.PI * hz / rate)));
-    prepared = { rate, grid, shapes: dictionary(grid) };
+    prepared = { rate, grid, shapes: new Map() };
   }
-  const { grid, shapes } = prepared;
+  const { grid } = prepared;
+  const weights = bandLimit === 10 ? tenBandWeights : defaultWeights;
+  let shapes = prepared.shapes.get(weights);
+  if (!shapes) {
+    shapes = dictionary(grid, weights);
+    prepared.shapes.set(weights, shapes);
+  }
   const desired = Float64Array.from(fitGrid, hz => at(target, hz) - at(raw, hz));
   let best: Candidate = { sections: [], cost: Infinity };
-  for (const bands of [10, 15, 20]) {
-    const layouts = [seed(best.sections, bands, grid, desired, shapes, true), seed([], bands, grid, desired, shapes, false)];
-    if (best.sections.length) layouts.push(seed([], bands, grid, desired, shapes, true));
-    best = layouts.map(layout => refine(layout, grid, desired)).reduce((a, b) => a.cost <= b.cost ? a : b);
+  for (let bands = 10; bands <= bandLimit; bands += 5) {
+    const layouts = [seed(best.sections, bands, grid, desired, shapes, weights, true), seed([], bands, grid, desired, shapes, weights, false)];
+    if (best.sections.length) layouts.push(seed([], bands, grid, desired, shapes, weights, true));
+    best = layouts.map(layout => refine(layout, grid, desired, weights)).reduce((a, b) => a.cost <= b.cost ? a : b);
   }
   const names = { 0: "PK", 1: "LSC", [-1]: "HSC" } as const;
   return best.sections.map(value => ({

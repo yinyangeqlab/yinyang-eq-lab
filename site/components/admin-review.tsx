@@ -7,9 +7,9 @@ import { moderationIndex, type ModerationEvent, type RecordKind } from "@/lib/mo
 import type { Trial } from "@/components/results-profile";
 
 type Row = SubmissionIdentity & { id: string; createdAt: number; [key: string]: unknown };
-type ReviewData = { votes: Row[]; openChoices: Row[]; listeningRuns: Row[]; feedback: Row[]; researchMeasurements: Row[]; preferenceExports: Row[]; moderationEvents: ModerationEvent[]; targets: { id: string; name: string }[] };
+type ReviewData = { votes: Row[]; openChoices: Row[]; listeningRuns: Row[]; feedback: Row[]; researchMeasurements: Row[]; preferenceExports: Row[]; moderationEvents: ModerationEvent[] };
 const sources: [RecordKind, keyof ReviewData, string][] = [["vote", "votes", "Ranked votes"], ["open", "openChoices", "Open choices"], ["run", "listeningRuns", "Listening runs"], ["feedback", "feedback", "Descriptions"], ["measurement", "researchMeasurements", "Measurements"], ["export", "preferenceExports", "Exports"]];
-export default function AdminReview({ data, reload }: { data: ReviewData; reload: () => Promise<void> }) {
+export default function AdminReview({ data, reload, targetLabel }: { data: ReviewData; reload: () => Promise<void>; targetLabel: (id: string) => string }) {
   const [kind, setKind] = useState<RecordKind>("vote"), [status, setStatus] = useState("active");
   const [ownerConfirmation,setOwnerConfirmation]=useState("");
   const [erasing, setErasing] = useState(false), [eraseConfirmed, setEraseConfirmed] = useState(false);
@@ -17,7 +17,6 @@ export default function AdminReview({ data, reload }: { data: ReviewData; reload
   const [browserTrials, setBrowserTrials] = useState<Trial[]>([]), [browserLog, setBrowserLog] = useState<ModerationEvent[]>([]);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- Bootstrap external browser/server state and expose loading or reset feedback before asynchronous completion.
   useEffect(() => { try { setBrowserTrials((JSON.parse(localStorage.getItem("target-lab-trials") || "[]") as Trial[]).map(trialDisplayLabels)); setBrowserLog(JSON.parse(localStorage.getItem("target-lab-browser-reviews") || "[]")); } catch { setMessage("Browser history could not be read."); } }, []);
-  const names = new Map(data.targets.map(target => [target.id, target.name]));
   const latest = useMemo(() => moderationIndex(data.moderationEvents), [data]);
   const rows = (data[sources.find(source => source[0] === kind)![1]] as Row[]).filter(row => {
     const removed = latest.get(`${kind}:${row.id}`)?.action === "remove";
@@ -27,7 +26,7 @@ export default function AdminReview({ data, reload }: { data: ReviewData; reload
   const recordStatus = (row: Row) => reviewFor(row)?.action === "remove" ? "Removed" : "Active";
   const text = (row: Row, key: string) => typeof row[key] === "string" ? String(row[key]) : "";
   const evidence = (row: Row) => ["winnerId", "loserId", "targetAId", "targetBId"]
-    .map(key => text(row, key)).filter(Boolean).map(id => names.get(id) || id).join(" / ") || text(row, "targetName") || text(row, "name") || row.id;
+    .map(key => text(row, key)).filter(Boolean).map(targetLabel).join(" / ") || text(row, "targetName") || text(row, "name") || row.id;
   function select(row: Row, erase: boolean) {
     setSelected(row);
     setErasing(erase);

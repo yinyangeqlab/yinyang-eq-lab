@@ -9,7 +9,7 @@ export function createFitRunner(loadEngine: () => ReturnType<typeof createEngine
     validateRequest(request);
     let results;
     if (request.method === "joint") {
-      results = request.targets.map(target => describeFit(request, target, fitJointEq(request.raw, target, request.sampleRate), "joint"));
+      results = request.targets.map(target => describeFit(request, target, fitJointEq(request.raw, target, request.sampleRate, request.bands), "joint"));
       return { results, unavailable: false };
     }
     if (request.method === "standard" || request.method === "precise") {

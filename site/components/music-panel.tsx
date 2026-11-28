@@ -1169,7 +1169,7 @@ const MusicPanel = forwardRef<MusicPanelHandle, { fixedReferenceProtocol?: boole
         <button type="button" className="music-chooser-done" onClick={closeChooser}>Done</button>
       </section>
     </div>{recordingVote}</div>
-    {levelMatchPassage ? <p className="music-meta">Joint Fit · 20 bands. A and B are level-matched on the selected passage.</p> : fixedReferenceProtocol ? <p className="music-meta">Reference protocol · fixed 10-band EQ.</p> : <p className="music-meta">{fitterLabel(fitter)}</p>}{fitNotice && <p className="music-meta" role="status">{fitNotice}</p>}{levelMatchError && <p className="music-meta" role="alert">{levelMatchError}</p>}
+    {levelMatchPassage ? <p className="music-meta">{fitterLabel(fitter)}. A and B are level-matched on the selected passage.</p> : fixedReferenceProtocol ? <p className="music-meta">Reference protocol · fixed 10-band EQ.</p> : <p className="music-meta">{fitterLabel(fitter)}</p>}{fitNotice && <p className="music-meta" role="status">{fitNotice}</p>}{levelMatchError && <p className="music-meta" role="alert">{levelMatchError}</p>}
     <div className="playback-hotkey-row"><ShortcutScopeSelect/><details className="playback-key-guide"><summary>Show keys</summary><div className="alpha-playback-shortcuts">
       <span className="playback-shortcut-hints">
         <span className="playback-shortcut-hint"><kbd>Space</kbd> play / pause</span>

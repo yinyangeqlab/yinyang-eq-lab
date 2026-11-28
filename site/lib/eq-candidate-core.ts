@@ -6,7 +6,8 @@ import { FIT_BANDS, FIT_METHODS, JOINT_FITTER } from "./fitter-settings";
 export async function collectEqCandidates(fitAutoEqAsync: typeof import("./autoeq-client").fitAutoEqAsync, raw: Point[], target: Point[], signal: AbortSignal, onProgress: (count: number) => void = () => {}, headphoneType?: HeadphoneMeasurement["type"], tuning = false) {
   const candidates: FinalizedVariant[]=[];
   const settings = FIT_METHODS.flatMap(method => FIT_BANDS.map(bands => ({ method, bands })));
-  const requested = tuning ? [JOINT_FITTER, ...settings] : settings;
+  const otherJointFits = FIT_BANDS.filter(bands => bands !== JOINT_FITTER.bands).map(bands => ({ ...JOINT_FITTER, bands }));
+  const requested = tuning ? [JOINT_FITTER, ...otherJointFits, ...settings] : settings;
   for (const [index, { method, bands }] of requested.entries()) {
     if (signal.aborted) throw new DOMException("EQ calculation cancelled.","AbortError");
     try {
