@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "91720fb62fe73bd29059eb0f11a09cb22345b1d9",
+  "baseRevision": "56442e860f5a598ea646b1a441b0f08dd24bac2e",
   "recordedLiveUpdate": 229,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -12,7 +12,7 @@
   "files": [
     {
       "path": ".github/workflows/finder-safari.yml",
-      "sha256": "5010082408c7c951c2d19c85d6a12f2c65a047544e38016a2a25a7a00e1e323c",
+      "sha256": "bd4e67deec3aabc8d475c90ce0ac884eb4f05096bc3235b5211f1b989ec4d3e1",
       "executable": false
     },
     {
@@ -4732,17 +4732,17 @@
     },
     {
       "path": "scripts/qa/finder-safari-ios.swift",
-      "sha256": "05e20587cdc7e2ee07ab7631cb5439b02a5cb98ee2a76a0b7385392c0fc9d52c",
+      "sha256": "4bb1b6c931eedb192e3752444f19b18f624b49fa3dd35af7491f6288a7208904",
       "executable": false
     },
     {
       "path": "scripts/qa/finder-safari-native-mac.py",
-      "sha256": "534a7dab84e2977a9477537c64cfd2cac8444e617735299495913c791ad437ca",
+      "sha256": "8798b72faeff718b41a31f730e37a49bd825377f8f9b27fcfc9580431b2b17e9",
       "executable": false
     },
     {
       "path": "scripts/qa/finder-safari-native.js",
-      "sha256": "718d618dc34703318aec4d351bc38b9e2888604824d7e899a229eebf7e045f3a",
+      "sha256": "f2e0880b422039543587e912e3017fcc1d318259a493d9f272f94f632af44716",
       "executable": false
     },
     {
@@ -4757,7 +4757,7 @@
     },
     {
       "path": "scripts/qa/run-finder-safari-ios.sh",
-      "sha256": "a531cfec51078764ed7521af35518af71e23d0b8debf317be0879d0fd2be25ce",
+      "sha256": "b9bd049fea9faa070cbfc651c8b08b5ae11a3de48a41cac41bcf1d0c86470796",
       "executable": false
     },
     {

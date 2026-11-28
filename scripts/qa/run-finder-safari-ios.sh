@@ -52,7 +52,7 @@ YAML
   xcodegen generate
 )
 xcrun simctl list devices available -j > "$qa/devices.json"
-udid="$(python3 - "$qa/devices.json" <<'PY'
+udid="$(python3 - "$qa/devices.json" "$FINDER_SAFARI_MAJOR" <<'PY'
 import json
 import re
 import sys
@@ -60,20 +60,21 @@ from pathlib import Path
 groups = json.loads(Path(sys.argv[1]).read_text())["devices"]
 candidates = []
 for runtime, devices in groups.items():
-    match = re.search(r"\.iOS-(27)-(\d+)(?:-(\d+))?$", runtime)
+    match = re.search(r"\.iOS-(" + sys.argv[2] + r")-(\d+)(?:-(\d+))?$", runtime)
     if match:
         version = tuple(int(n or 0) for n in match.groups())
         for device in devices:
             if device["name"].startswith("iPhone") and device.get("isAvailable", True):
                 candidates.append((version[:2] == (27, 2), version, device["name"] == "iPhone 17", device["udid"]))
 if not candidates:
-    raise SystemExit("No available iPhone with iOS 27")
+    raise SystemExit("No available iPhone with iOS " + sys.argv[2] + " on this runner")
 print(max(candidates)[-1])
 PY
 )"
 xcrun simctl bootstatus "$udid" -b
-xcrun simctl openurl "$udid" 'http://127.0.0.1:5813/ear-tuning?finder-qa=dark'
+xcrun simctl openurl "$udid" 'http://127.0.0.1:5813/ear-tuning?finder-qa=light'
 
+xcrun simctl ui "$udid" appearance light
 result="$qa/FinderSafariQA.xcresult"
 code=0
 xcodebuild test -project "$qa/FinderSafariQA.xcodeproj" -scheme FinderSafariQA \

@@ -60,34 +60,96 @@ final class FinderSafariTest: XCTestCase {
         return frame
     }
 
-    func tap(_ box: [Double], widthBox: [Double], anchor: XCUIElement, frame: CGRect) {
+    func tap(_ box: [Double], widthBox: [Double], anchor: XCUIElement, frame: CGRect, scale: Double = 1) {
         XCTAssertEqual(box.count, 4)
         XCTAssertEqual(widthBox.count, 4)
-        let dx = frame.midX + box[0] + box[2] / 2 - widthBox[0] - widthBox[2] / 2
-        let dy = frame.midY + box[1] + box[3] / 2 - widthBox[1] - widthBox[3] / 2
+        let dx = frame.midX + scale * (box[0] + box[2] / 2 - widthBox[0] - widthBox[2] / 2)
+        let dy = frame.midY + scale * (box[1] + box[3] / 2 - widthBox[1] - widthBox[3] / 2)
         anchor.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: dx, dy: dy)).tap()
+    }
+
+    func evidence(_ name: String, _ attachment: XCTAttachment) {
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func zoom(_ state: [String: Any], in browser: XCUIApplication) throws -> [String: Any] {
+        let web = browser.webViews.firstMatch
+        let before = try XCTUnwrap(state["visualViewport"] as? [Double])
+        let menu = browser.buttons.matching(NSPredicate(
+            format: "label CONTAINS[c] %@ OR label CONTAINS[c] %@", "Page Menu", "Page Settings"
+        )).firstMatch
+        if menu.exists && menu.isHittable {
+            menu.tap()
+            evidence("Safari-page-menu-accessibility", XCTAttachment(string: browser.debugDescription))
+            let pageZoom = browser.descendants(matching: .any).matching(
+                NSPredicate(format: "label == %@", "Page Zoom")
+            ).firstMatch
+            if pageZoom.exists && pageZoom.isHittable { pageZoom.tap() }
+            let larger = browser.buttons.matching(NSPredicate(
+                format: "label CONTAINS[c] %@ OR label CONTAINS[c] %@", "Zoom In", "Increase"
+            )).firstMatch
+            if larger.exists && larger.isHittable {
+                larger.tap()
+                if larger.exists && larger.isHittable { larger.tap() }
+                evidence("Safari-page-zoom-controls", XCTAttachment(screenshot: XCUIScreen.main.screenshot()))
+                web.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.12)).tap()
+            } else {
+                web.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.12)).tap()
+            }
+        }
+        var after = try readState()
+        if let viewport = after["visualViewport"] as? [Double], viewport[0] >= before[0] * 0.94 {
+            web.pinch(withScale: 1.4, velocity: 1)
+        }
+        after = try waitState {
+            guard let viewport = $0["visualViewport"] as? [Double] else { return false }
+            return viewport[0] <= before[0] * 0.94
+        }
+        evidence("Safari-zoom-geometry", XCTAttachment(string: "Before: \(before)\nAfter: \(after["visualViewport"] ?? [])"))
+        return after
     }
 
     func testFinderWidthPicker() throws {
         let safari = XCUIApplication(bundleIdentifier: "com.apple.mobilesafari")
         safari.activate()
-        let closed = try waitState { ($0["value"] as? String) == "custom" }
+        var closed = try waitState { ($0["value"] as? String) == "custom" && ($0["theme"] as? String) == "light" }
         let userAgent = try XCTUnwrap(closed["ua"] as? String)
         XCTAssertTrue(userAgent.contains("iPhone") && userAgent.contains("Safari/"))
-        var frame = try openWidth(closed, in: safari)
+        let customPicker = (closed["appearance"] as? String) == "base-select"
+        let major = customPicker ? "27" : "26"
+        XCTAssertTrue(userAgent.contains("Version/\(major)."), userAgent)
+        if customPicker { closed = try zoom(closed, in: safari) }
+        let control = try XCTUnwrap(widthControl(safari))
+        evidence("iPhone-Safari-Width-accessibility", XCTAttachment(string: control.debugDescription))
+        var frame = control.frame
+        control.tap()
+        if !customPicker {
+            Thread.sleep(forTimeInterval: 0.8)
+            evidence("iPhone-Safari-26-light-Width-open", XCTAttachment(screenshot: XCUIScreen.main.screenshot()))
+            evidence("iPhone-Safari-26-open-accessibility", XCTAttachment(string: safari.debugDescription))
+            let before = try readState()
+            let options = try XCTUnwrap(before["options"] as? [[String: Any]])
+            XCTAssertEqual(options.first { ($0["value"] as? String) == "custom" }?["disabled"] as? Bool, true)
+            let narrow = safari.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Narrow"))
+                .allElementsBoundByIndex.first { $0.isHittable && $0.isEnabled }
+            try XCTUnwrap(narrow).tap()
+            _ = try waitState { ($0["value"] as? String) == "8" }
+            return
+        }
+
         let opened = try waitState { ($0["open"] as? Bool) == true }
         let options = try XCTUnwrap(opened["options"] as? [[String: Any]])
         let custom = try XCTUnwrap(options.first { ($0["value"] as? String) == "custom" })
         XCTAssertEqual(custom["disabled"] as? Bool, true)
         XCTAssertEqual(custom["selected"] as? Bool, true)
+        evidence("iPhone-Safari-27-light-zoom-Width-open", XCTAttachment(screenshot: XCUIScreen.main.screenshot()))
+        evidence("iPhone-Safari-27-open-accessibility", XCTAttachment(string: safari.webViews.firstMatch.debugDescription))
 
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "iPhone-Safari-dark-Width-open"
-        attachment.lifetime = .keepAlways
-        add(attachment)
-
-        tap(try XCTUnwrap(custom["box"] as? [Double]),
-            widthBox: try XCTUnwrap(opened["width"] as? [Double]), anchor: safari, frame: frame)
+        let originalWidth = try XCTUnwrap(opened["width"] as? [Double])
+        let scale = frame.width / originalWidth[2]
+        tap(try XCTUnwrap(custom["box"] as? [Double]), widthBox: originalWidth, anchor: safari, frame: frame, scale: scale)
         Thread.sleep(forTimeInterval: 0.8)
         var state = try readState()
         XCTAssertEqual(state["value"] as? String, "custom")
@@ -98,7 +160,7 @@ final class FinderSafariTest: XCTestCase {
         let reopened = try XCTUnwrap(state["options"] as? [[String: Any]])
         let narrow = try XCTUnwrap(reopened.first { ($0["value"] as? String) == "8" })
         tap(try XCTUnwrap(narrow["box"] as? [Double]),
-            widthBox: try XCTUnwrap(state["width"] as? [Double]), anchor: safari, frame: frame)
+            widthBox: try XCTUnwrap(state["width"] as? [Double]), anchor: safari, frame: frame, scale: scale)
         _ = try waitState { ($0["value"] as? String) == "8" && ($0["open"] as? Bool) == false }
     }
 }

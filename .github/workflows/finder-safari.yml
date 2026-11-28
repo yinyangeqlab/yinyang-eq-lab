@@ -9,18 +9,27 @@ permissions:
 
 jobs:
   safari:
-    name: ${{ matrix.target }} Safari
+    name: ${{ matrix.target }} Safari ${{ matrix.version }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    timeout-minutes: 24
     strategy:
       fail-fast: false
       matrix:
         include:
           - target: mac
+            version: 26
+            runner: macos-26-intel
+          - target: iphone
+            version: 26
+            runner: macos-26
+          - target: mac
+            version: 27
             runner: macos-26
           - target: iphone
+            version: 27
             runner: xcode-27
     env:
+      FINDER_SAFARI_MAJOR: ${{ matrix.version }}
       CI: "true"
       CLOUDFLARE_CF_FETCH_ENABLED: "false"
       WRANGLER_SEND_METRICS: "false"
@@ -54,6 +63,10 @@ jobs:
           trap 'kill "$preview_pid" "$proxy_pid" 2>/dev/null || true' EXIT
           sw_vers
           if [ "${{ matrix.target }}" = iphone ]; then
+            if [ "$FINDER_SAFARI_MAJOR" = 26 ]; then
+              export DEVELOPER_DIR="$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' | sort | tail -n 1)/Contents/Developer"
+              test -d "$DEVELOPER_DIR"
+            fi
             xcodebuild -version
             xcrun simctl runtime list
           fi
@@ -66,13 +79,15 @@ jobs:
             bash scripts/qa/run-finder-safari-ios.sh
           else
             defaults write com.apple.Safari WebKitDebugAcceleratedDrawingEnabled -bool false
+            defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+            defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
             caffeinate -diu python3 scripts/qa/finder-safari-native-mac.py
           fi
       - name: Upload Safari picker evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: finder-safari-${{ matrix.target }}
+          name: finder-safari-${{ matrix.target }}-${{ matrix.version }}
           path: ${{ runner.temp }}/finder/
           if-no-files-found: warn
           retention-days: 7

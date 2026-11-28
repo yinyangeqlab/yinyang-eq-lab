@@ -26,11 +26,21 @@ async function prepare() {
     const r = element.getBoundingClientRect();
     return [r.left, r.top, r.width, r.height];
   };
-  for (let attempt = 0; attempt < 240; attempt++) {
+  const input = document.querySelector(".ear-adjustment input[type=number]");
+  const keys = [];
+  document.addEventListener("keydown", event => {
+    if (!event.isTrusted) return;
+    keys.push(event.key);
+    if (keys.length > 20) keys.shift();
+  }, true);
+  for (let attempt = 0; attempt < 600; attempt++) {
     const s = width();
     const params = new URLSearchParams({state: JSON.stringify({
       theme, ua: navigator.userAgent, open: s.matches(":open"), value: s.value,
-      width: box(s), frequency: box(document.querySelector(".ear-adjustment input[type=number]")), viewport: [innerWidth, innerHeight],
+      appearance: getComputedStyle(s).appearance,
+      focused: document.activeElement === s, keys,
+      width: box(s), frequency: box(input), viewport: [innerWidth, innerHeight],
+      visualViewport: [visualViewport.width, visualViewport.height, visualViewport.scale],
       window: [screenX, screenY, outerWidth, outerHeight],
       options: [...s.options].map(o => ({text: o.label, value: o.value, disabled: o.disabled, selected: o.selected, box: box(o)})),
     })});
