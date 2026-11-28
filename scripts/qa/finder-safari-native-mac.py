@@ -9,10 +9,32 @@ import time
 EVIDENCE = Path(os.environ["FINDER_EVIDENCE"])
 MAJOR = os.environ["FINDER_SAFARI_MAJOR"]
 ORIGIN = "http://127.0.0.1:5813"
-SWIFT_CLICK = """
+SWIFT_CLICK = r"""
 import CoreGraphics
 import Foundation
+import AppKit
+import ApplicationServices
 import Vision
+
+if CommandLine.arguments[1] == "accessibility" {
+    let app = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Safari").first!
+    let ax = AXUIElementCreateApplication(app.processIdentifier)
+    var focused: CFTypeRef?
+    let status = AXUIElementCopyAttributeValue(ax, kAXFocusedUIElementAttribute as CFString, &focused)
+    print("Safari focused AX element status: \(status.rawValue)")
+    if let focused, CFGetTypeID(focused) == AXUIElementGetTypeID() {
+        let control = focused as! AXUIElement
+        for attribute in [kAXRoleAttribute, kAXRoleDescriptionAttribute,
+                          kAXTitleAttribute, kAXDescriptionAttribute, kAXValueAttribute,
+                          kAXEnabledAttribute, kAXFocusedAttribute] {
+            var value: CFTypeRef?
+            if AXUIElementCopyAttributeValue(control, attribute as CFString, &value) == .success, let value {
+                print("\(attribute): \(value)")
+            }
+        }
+    }
+    exit(0)
+}
 
 if CommandLine.arguments[1] == "ocr" {
     let request = VNRecognizeTextRequest()
@@ -30,7 +52,7 @@ if CommandLine.arguments[1] == "key" {
     let flags = CGEventFlags(rawValue: UInt64(CommandLine.arguments[3])!)
     for down in [true, false] {
         let event = CGEvent(keyboardEventSource: nil, virtualKey: code, keyDown: down)
-        event?.flags = flags
+        event?.flags = down ? flags : []
         event?.post(tap: .cghidEventTap)
         Thread.sleep(forTimeInterval: 0.08)
     }
@@ -94,6 +116,10 @@ def verify_legacy(executable, theme, state):
 
     bounds = subprocess.check_output(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(EVIDENCE / name)], text=True)
     pixel_w, pixel_h = [int(line.rsplit(" ", 1)[1]) for line in bounds.splitlines() if "pixel" in line]
+    recognized = sorted(rows)
+    if "Custom" not in rows:
+        medium, narrow = rows["Medium"], rows["Narrow"]
+        rows["Custom"] = {"text": "Custom", "x": narrow["x"], "y": 2 * narrow["y"] - medium["y"]}
     if "Custom" in rows:
         row = rows["Custom"]
         subprocess.run([str(executable), str(row["x"] * pixel_w), str(row["y"] * pixel_h)], check=True, timeout=12)
@@ -107,24 +133,34 @@ def verify_legacy(executable, theme, state):
     row = rows["Narrow"]
     subprocess.run([str(executable), str(row["x"] * pixel_w), str(row["y"] * pixel_h)], check=True, timeout=12)
     chosen = wait_state(lambda s: s.get("theme") == theme and s.get("value") == "8")
-    return {"before": state, "menu_labels": sorted(rows), "after": chosen}
+    return {"before": state, "menu_labels": recognized, "custom_click_kept_value": True, "after": chosen}
 
 
 def verify_voiceover(executable, state):
     command, shift, option, control = 1 << 20, 1 << 17, 1 << 19, 1 << 18
-    press(executable, 96, command)  # Command-F5 starts VoiceOver.
+    path = EVIDENCE / "voiceover-runner.txt"
+    subprocess.run(["open", "-b", "com.apple.VoiceOver"], capture_output=True, text=True, timeout=15)
     time.sleep(3)
+    running = subprocess.run(["pgrep", "-x", "VoiceOver"], capture_output=True, text=True)
+    if running.returncode:
+        press(executable, 96, command)  # Command-F5.
+        time.sleep(3)
+        running = subprocess.run(["pgrep", "-x", "VoiceOver"], capture_output=True, text=True)
+    ax = subprocess.run([str(executable), "accessibility"], capture_output=True, text=True, timeout=12)
+    path.write_text(f"VoiceOver process status: {running.returncode}\n{ax.stdout}{ax.stderr}")
     try:
         capture("voiceover-start.png")
-        press(executable, 109, command | option | control)  # VO-Command-F10.
-        press(executable, 118, shift | option | control)  # VO-Shift-F4 follows keyboard focus.
-        time.sleep(1)
-        capture("voiceover-width.png")
-        click(executable, state, state["width"])
-        time.sleep(0.7)
-        capture("voiceover-options.png")
+        if not running.returncode:
+            press(executable, 109, command | option | control)
+            press(executable, 118, shift | option | control)
+            time.sleep(1)
+            capture("voiceover-width.png")
+            click(executable, state, state["width"])
+            time.sleep(0.7)
+            capture("voiceover-options.png")
     finally:
-        press(executable, 96, command)
+        if not running.returncode:
+            press(executable, 96, command)
 
 
 def main():

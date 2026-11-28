@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "0cb9fd416327b8a428a213bad339bb28ccdd0e22",
+  "baseRevision": "1bb8c36b028f5a1e7601029ceeffcf07c3843b28",
   "recordedLiveUpdate": 229,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
@@ -4732,12 +4732,12 @@
     },
     {
       "path": "scripts/qa/finder-safari-ios.swift",
-      "sha256": "c5396fd9d6d9672d549bfa2f6bb556adc8bf944e7b33c6e815a2fdc48ebb1962",
+      "sha256": "967fd398438f1f94e11d8386d40f1dbb186c6f47a23b930b67ff7eafc2bac39c",
       "executable": false
     },
     {
       "path": "scripts/qa/finder-safari-native-mac.py",
-      "sha256": "14568f5dc7a4feeaa6063be6cd2a3f443d55bcff9472b59f7b4f4b7d6e8de11c",
+      "sha256": "dc5444ba55637b2cbbbe11124f13d82540942b3c5e7f51be62b06973c7caeddc",
       "executable": false
     },
     {

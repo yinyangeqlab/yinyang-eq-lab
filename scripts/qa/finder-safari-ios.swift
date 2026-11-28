@@ -129,15 +129,17 @@ final class FinderSafariTest: XCTestCase {
         var frame = control.frame
         control.tap()
         if !customPicker {
-            Thread.sleep(forTimeInterval: 0.8)
+            let options = try XCTUnwrap(closed["options"] as? [[String: Any]])
+            XCTAssertEqual(options.first { ($0["value"] as? String) == "custom" }?["disabled"] as? Bool, true)
+            let narrow = safari.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Narrow")).firstMatch
+            if !narrow.waitForExistence(timeout: 3) {
+                // A fresh Safari profile can consume the first tap to dismiss its toolbar tip.
+                control.tap()
+            }
             evidence("iPhone-Safari-26-light-Width-open", XCTAttachment(screenshot: XCUIScreen.main.screenshot()))
             evidence("iPhone-Safari-26-open-accessibility", XCTAttachment(string: safari.debugDescription))
-            let before = try readState()
-            let options = try XCTUnwrap(before["options"] as? [[String: Any]])
-            XCTAssertEqual(options.first { ($0["value"] as? String) == "custom" }?["disabled"] as? Bool, true)
-            let narrow = safari.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Narrow"))
-                .allElementsBoundByIndex.first { $0.isHittable && $0.isEnabled }
-            try XCTUnwrap(narrow).tap()
+            XCTAssertTrue(narrow.waitForExistence(timeout: 5))
+            narrow.tap()
             _ = try waitState { ($0["value"] as? String) == "8" }
             return
         }
