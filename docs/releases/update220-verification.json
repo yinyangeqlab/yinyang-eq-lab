@@ -1,0 +1,47 @@
+{
+  "update": 220,
+  "sourceCommit": "eb2d92a67104673d140a582a927944d0cce793af",
+  "deploymentVerification": {
+    "at": "2026-11-26T06:31:24.543695Z",
+    "update": 220,
+    "revision": "eb2d92a67104673d140a582a927944d0cce793af",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "3cb0a72fdea1c1b21fbd34ec87694147d6e13ad4",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "existingBindingsUnchanged": true,
+    "matchingWorkerModules": 426,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 220,
+    "allResultsApiVerified": true,
+    "allComparisons": 102,
+    "allParticipantGroups": 9,
+    "earlierComparisons": 89,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "desktopAndNarrowRankingsVerified": true,
+    "allResultsApiVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "eb2d92a67104673d140a582a927944d0cce793af",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

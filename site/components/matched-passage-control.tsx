@@ -29,13 +29,13 @@ export function BlindListeningMode({ required, onChange, disabled }: { required:
     <legend>Blind listening mode</legend>
     <label><input type="radio" name={description} checked={required} onChange={() => onChange(true)} />Ranked Blind Shootout</label>
     <label><input type="radio" name={description} checked={!required} onChange={() => onChange(false)} />Rapid Shootout</label>
-    <p id={description}>{required ? "Five matched seconds per side. Eligible choices count toward rankings." : "Choose anytime. Eligible choices count toward the Free Listening ranking. Playback timing is recorded."}</p>
+    <p id={description}>{required ? "Five level-matched seconds per side. Eligible choices count toward the leaderboard." : "Choose anytime. Eligible choices count toward the Free Listening ranking. Playback timing is recorded."}</p>
   </fieldset>;
 }
 
 /** One compact control surface for the five-second comparison: Play/Shuffle, both listening meters, status and the requirement switch. */
-export function MatchedPassageStrip({required,qualified,heard,onRequiredChange,disabled=false,hostId,switchControl,showRequirement=true}:{required:boolean;qualified:boolean;heard:[number,number];onRequiredChange:(value:boolean)=>void;disabled?:boolean;hostId:string;switchControl:ReactNode;showRequirement?:boolean}){
-  const state=qualified?"ready":required?"waiting":"optional";
+export function MatchedPassageStrip({required,qualified,heard,onRequiredChange,disabled=false,hostId,switchControl,showRequirement=true,voteHold}:{required:boolean;qualified:boolean;heard:[number,number];onRequiredChange:(value:boolean)=>void;disabled?:boolean;hostId:string;switchControl:ReactNode;showRequirement?:boolean;voteHold?:string}){
+  const state=voteHold?"waiting":qualified?"ready":required?"waiting":"optional";
   const title=required?qualified?"5-second requirement met":"Listen to the same section twice":qualified?"5-second match detected · still optional":"5-second requirement off";
   const detail=required?qualified?"You heard the same section for at least 5 seconds on both sounds. You can now choose.":"Use Play both segments, or listen to the same 5 seconds on A and B, before choosing.":"Vote anytime. Timing is still tracked; collection follows your consent settings.";
   return <section id={hostId==="ranked-passage-actions"?"listen-progress":"personal-listen-progress"} className={`compare-strip is-${state}`} aria-label="Matched listening passage">
@@ -46,7 +46,7 @@ export function MatchedPassageStrip({required,qualified,heard,onRequiredChange,d
       <MatchedPassageMeter variant="strip" side="B" seconds={heard[1]} required={required} qualified={qualified}/>
     </div>
     <div className="compare-strip-status">
-      <p className="compare-strip-message"><span className="compare-strip-icon" aria-hidden="true"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><rect x="4.5" y="9" width="11" height="8" rx="2"/>{qualified||!required?<path d="M7 9V6.5a3 3 0 0 1 5.6-1.5"/>:<path d="M7 9V6.5a3 3 0 0 1 6 0V9"/>}</svg></span><span className="compare-strip-copy"><span className="compare-strip-tag">{qualified?"Ready to choose":required?"Listen before choosing":"Voting open"}</span><strong>{required&&!qualified?"Listen to the selected section on both sounds before choosing":title}</strong></span></p>
+      <p id={`${hostId}-status`} className="compare-strip-message" role="status"><span className="compare-strip-icon" aria-hidden="true"><svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><rect x="4.5" y="9" width="11" height="8" rx="2"/>{!voteHold&&(qualified||!required)?<path d="M7 9V6.5a3 3 0 0 1 5.6-1.5"/>:<path d="M7 9V6.5a3 3 0 0 1 6 0V9"/>}</svg></span><span className="compare-strip-copy"><span className="compare-strip-tag">{voteHold?"Voting locked":qualified?"Ready to choose":required?"Listen before choosing":"Voting open"}</span><strong>{voteHold ?? (required&&!qualified?"Listen to the selected section on both sounds before choosing":title)}</strong></span></p>
 
       {showRequirement && <label className="compare-strip-toggle"><input type="checkbox" aria-label="Require 5 seconds of the same passage on A and B" checked={required} disabled={disabled} onChange={event=>onRequiredChange(event.target.checked)}/><span className="compare-strip-track" aria-hidden="true"/><span className="compare-strip-toggle-label">Require 5-second comparison</span><b className="compare-strip-toggle-state">{required?"ON":"OFF"}</b></label>}<MatchedPassageHelp className="compare-strip-help"><p>{detail}</p></MatchedPassageHelp>
     </div>

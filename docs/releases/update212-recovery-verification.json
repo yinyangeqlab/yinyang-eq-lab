@@ -1,0 +1,14 @@
+{
+  "update": 212,
+  "sourceCommit": "72d522b6c4e1fb7c81e5d5a5848fe16bf42bffe7",
+  "preMigrationSnapshotPreserved": true,
+  "postMigrationSnapshotAt": "2026-11-22T21:57:27.319809+00:00",
+  "databaseExportPerformed": true,
+  "newDataSnapshots": 1,
+  "independentDownloadDecryptionVerified": true,
+  "fullReconstructionVerified": true,
+  "hostedValidationPassed": true,
+  "hostedValidateOnlyConfirmed": true,
+  "dailyWorkflowActive": true,
+  "verifiedAt": "2026-11-22T22:09:19Z"
+}

@@ -58,37 +58,24 @@ def layout_account():
     return flags.get("testOnly") and not flags.get("submissionsEnabled") and not flags.get("sharedAdmin")
 
 
-@contextmanager
-def simulator():
-    if TARGET == "mac":
-        yield None
-        return
-    devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
+def iphone_capabilities():
+    inventory = subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"], timeout=40)
     phones = []
-    for runtime, group in devices.items():
-        version = re.match(r"^iOS-(\d+)-(\d+)(?:-(\d+))?(?:-|$)", runtime.rsplit(".", 1)[-1])
+    for runtime, group in json.loads(inventory)["devices"].items():
+        version = re.match(r"^iOS-(\d+)-(\d+)(?:-(\d+))?$", runtime.rsplit(".", 1)[-1])
         if not version:
             continue
         release = tuple(int(number or 0) for number in version.groups())
         for device in group:
             if device["name"].startswith("iPhone") and device.get("isAvailable", True):
-                phones.append((release, device["name"] == "iPhone 17", device))
+                phones.append((release, device["name"]))
     if not phones:
         raise RuntimeError("No available iPhone simulator is installed")
-    release, _, device = max(phones, key=lambda row: (row[0] == (27, 0, 0), row[0], row[1]))
-    print(f"Selected {device['name']} on iOS {'.'.join(map(str,release))}", flush=True)
-    udid = device["udid"]
-    subprocess.run(["xcrun", "simctl", "bootstatus", udid, "-b"], check=True, timeout=125)
-    print("iPhone simulator booted", flush=True)
-    try:
-        for key in ("WebKitDeveloperExtrasEnabled", "AllowRemoteAutomation"):
-            subprocess.run(["xcrun", "simctl", "spawn", udid, "defaults", "write",
-                            "com.apple.mobilesafari", key, "-bool", "true"], check=True, timeout=20)
-        subprocess.run(["xcrun", "simctl", "openurl", udid, ORIGIN + "/ear-tuning"], check=True, timeout=25)
-        print("Mobile Safari opened in the simulator", flush=True)
-        yield udid
-    finally:
-        subprocess.run(["xcrun", "simctl", "shutdown", udid], check=False)
+    release, name = max(phones, key=lambda row: (row[0][:2] == (27, 2), row[0], row[1] == "iPhone 17"))
+    version = ".".join(map(str, release[:2]))
+    print(f"SafariDriver will boot {name} on iOS {version}", flush=True)
+    return {"platformName": "iOS", "safari:useSimulator": True,
+            "safari:deviceName": name, "safari:platformVersion": version}
 
 
 class Safari:
@@ -144,8 +131,9 @@ class Safari:
         })
         time.sleep(0.35)
 
-    def screenshot(self, filename):
-        capture = b64decode(self.request("GET", "/screenshot"), validate=True)
+    def screenshot(self, filename, selector=None):
+        endpoint = f"/element/{self.element(selector)}/screenshot" if selector else "/screenshot"
+        capture = b64decode(self.request("GET", endpoint), validate=True)
         assert capture.startswith(b"\x89PNG\r\n\x1a\n"), "SafariDriver did not return a PNG"
         (EVIDENCE / filename).write_bytes(capture)
 
@@ -219,8 +207,13 @@ def test_finder(browser, udid, theme):
         return r.width > 0 && r.height > 0 && r.top >= 0 && r.bottom <= innerHeight;
       });
     """, OPTION)
-    browser.screenshot(f"{theme}-width-page.png")
     screenshot(udid, f"{theme}-width-open.png")
+    browser.screenshot(f"{theme}-width-page.png")
+    if TARGET == "mac":
+        try:
+            browser.screenshot(f"{theme}-width-fieldset.png", ".ear-adjustment")
+        except RuntimeError as error:
+            print(f"Optional Safari element capture unavailable: {error}", flush=True)
     assert usable_picker, "Picker rows were not measurable within the Safari viewport"
     if TARGET == "mac":
         browser.key("\uE00C")
@@ -264,21 +257,21 @@ def driver_server():
 def main():
     wait(layout_account, 105)
     print("Synthetic layout account verified", flush=True)
+    capabilities = {"browserName": "Safari"}
     if TARGET == "iphone":
-        xcode = Path("/Applications/Xcode_27.0.app/Contents/Developer")
-        if xcode.is_dir():
-            os.environ["DEVELOPER_DIR"] = str(xcode)
-        subprocess.run(["xcodebuild", "-version"], check=True, timeout=20)
-    with driver_server(), simulator() as udid:
-        capabilities = {"browserName": "Safari"}
-        if udid:
-            capabilities.update({"platformName": "iOS", "safari:useSimulator": True, "safari:deviceType": "iPhone"})
+        capabilities.update(iphone_capabilities())
+    with driver_server():
         print("Opening Safari WebDriver session", flush=True)
-        session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}})["value"]
+        session = api("POST", "/session", {"capabilities": {"alwaysMatch": capabilities}}, timeout=330)["value"]
         browser = Safari("/session/" + session["sessionId"])
-        if udid:
-            actual_device = session["capabilities"].get("safari:deviceUDID")
-            assert not actual_device or actual_device.casefold() == udid.casefold(), "SafariDriver selected a different simulator"
+        returned = session["capabilities"]
+        assert returned.get("browserName", "").casefold() == "safari", returned
+        udid = None
+        if TARGET == "iphone":
+            assert returned.get("platformName") == "iOS" and returned.get("safari:useSimulator") is True, returned
+            udid = returned["safari:deviceUDID"]
+        else:
+            assert returned.get("platformName") == "macOS", returned
         output = {"target": TARGET, "capabilities": session["capabilities"], "themes": {}}
         try:
             if TARGET == "mac":

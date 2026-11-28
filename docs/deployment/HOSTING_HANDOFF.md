@@ -1,9 +1,58 @@
-# Current release — update211 Website accessibility and navigation fixes
+# Current release — update227 AutoEq target names in Research Admin
 
 <!-- release-state:start -->
-Recorded deployment: **update211**, source `dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a`.
+Recorded deployment: **update229**, source `0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](LIVE_STATE.md).
 <!-- release-state:end -->
+
+Research Admin shows AutoEq target names in listening results and submission review. Matching encrypted source recovery and hosted validation were pending when this source snapshot was captured.
+
+## Previous release records
+
+# Current release — update223 Threaded shootout padlock chains
+
+A chain link passes through the padlock shackle on locked shootout votes. Matching encrypted source recovery and hosted validation are pending. [Deployment verification](../releases/update223-verification.json)
+
+## Previous release records
+
+# Published source snapshot — update221
+
+Update221 lists the Android app versions and expands the EQ Fitter Benchmark with rankings at 10, 15, 20 and 30 bands and two CSV downloads. This source snapshot also includes the Listening and EQ Methodology guide and All Target Rankings. The release passed independent reconstruction and hosted validation with the existing database recovery point.
+
+[Deployment verification](../releases/update221-verification.json) · [Recovery verification](../releases/update221-recovery-verification.json)
+
+## Previous release records
+# Current release — update217 Exact update-number search
+
+Entering a full update number on the Version page shows the matching release. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update217-verification.json) [Recovery verification](../releases/update217-recovery-verification.json)
+
+## Previous release records
+# Current release — update216 Complete Version history
+
+The Version page includes every update back to the first Cloudflare deployment. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update216-verification.json) [Recovery verification](../releases/update216-recovery-verification.json)
+
+## Previous release records
+# Current release — update215 Sync ID and account recovery
+
+Users can recover an existing Sync account with a passkey or saved recovery code and approve YYEQ5K. Physical Android verification, encrypted recovery reconstruction and hosted validation passed. [YYEQ5K 0.16.7](https://github.com/yinyangeqlab/yinyang-android/releases/tag/android-20261122-0167) is signed and available in App Manager. [Deployment verification](../releases/update215-verification.json) [Recovery verification](../releases/update215-recovery-verification.json)
+
+## Previous release records
+# Current release — update214 Four consent actions in view
+
+Accept all, Required only, Cancel and Save stay in view while the consent terms scroll. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update214-verification.json) [Recovery verification](../releases/update214-recovery-verification.json)
+
+## Previous release records
+# Current release — update213 Phone EQ and the Android apps page
+
+The canonical [Android page](https://yinyangeq.com/android) introduces Phone EQ with Shizuku setup and Quve credit. The homepage links to Phone EQ beside Companion and App Manager. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update213-verification.json) [Recovery verification](../releases/update213-recovery-verification.json)
+
+## Previous release records
+# Current release — update212 Android Auto EQ and Personal rank sync
+
+YYEQ5K can read synced Personal Tournament rankings after browser approval. Independent reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update212-verification.json) [Recovery verification](../releases/update212-recovery-verification.json)
+
+## Previous release records
+# Current release — update211 Website accessibility and navigation fixes
 
 Eight fixes improve screen-reader navigation, missing-page recovery, shared listening layouts, and text and native menu contrast. Independent source reconstruction and hosted validation passed for this release. [Deployment verification](../releases/update211-verification.json) [Recovery verification](../releases/update211-recovery-verification.json)
 

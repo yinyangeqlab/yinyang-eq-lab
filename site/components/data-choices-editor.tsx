@@ -1,14 +1,14 @@
 "use client";
 import {useEffect,useRef,useState} from 'react';
-import ComparisonDataSettings, {type FileConsent} from '@/components/comparison-data-settings';
+import ComparisonDataSettings, {type ConsentPreset, type FileConsent} from '@/components/comparison-data-settings';
 import type {ConsentStudy} from '@/lib/consent-studies';
 import {VOTE_DATA_NOTICE_VERSION} from '@/lib/vote-data-notice';
 import {ACTIVITY_MONITORING_NOTICE_VERSION} from '@/lib/activity-monitoring';
 import {notifySharingChoicesChanged} from '@/lib/browser-data';
 import {participationChoiceBody} from '@/lib/participation-choices';
 type Saved={syncEnabled?:boolean;historicalStudies?:ConsentStudy[];submissionsEnabled:boolean;agreementVersion?:string;shareMusic:boolean;activityMonitoringEnabled:boolean;activityMonitoringVersion?:string;personalResearchEnabled:boolean;communityEnabled:boolean;nickname?:string;sharedAdmin?:boolean;testOnly?:boolean;consentTestOnly?:boolean;protectedAccount?:boolean;error?:string};
-export default function DataChoicesEditor({forceReview=false,onClose,onSaved,fileConsent,context}:{forceReview?:boolean;onClose?:()=>void;onSaved?:(participating:boolean)=>void;fileConsent?:FileConsent;context?:string}){
- const leaving=useRef(false);const [retry,setRetry]=useState(0);
+export default function DataChoicesEditor({forceReview=false,onClose,onSaved,fileConsent,context}:{forceReview?:boolean;onClose?:()=>void;onSaved?:(participating:boolean,preset?:ConsentPreset)=>void;fileConsent?:FileConsent;context?:string}){
+ const leaving=useRef(false);const saving=useRef(false);const [retry,setRetry]=useState(0);
  const [syncEnabled,setSyncEnabled]=useState(false);
  const [historical,setHistorical]=useState<Record<string,boolean>>({});
  const [loading,setLoading]=useState(true),[failed,setFailed]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[saved,setSaved]=useState<Saved|null>(null);
@@ -16,12 +16,48 @@ export default function DataChoicesEditor({forceReview=false,onClose,onSaved,fil
  // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate browser-only return routing and start the saved consent check after SSR.
  useEffect(()=>{let stopped=false;setLoading(true);setFailed(false);setError("");const params=new URLSearchParams(window.location.search),requested=params.get('return_to'),destination=['/music-library','/preference-tuning','/personal-tuning','/shootout','/shootout/personal','/community-preferences','/my-data','/my-profile','/account-sync'].includes(requested||'')?requested!:'/music-library';setNext(destination);
  void fetch('/api/my-data',{cache:'no-store'}).then(async response=>{const data=await response.json() as Saved;if(!response.ok)throw Error(data.error||'Could not load your saved choices.');if(stopped||leaving.current)return;const accepted=data.submissionsEnabled&&data.agreementVersion===VOTE_DATA_NOTICE_VERSION;if((accepted||data.testOnly&&!data.consentTestOnly)&&!forceReview&&params.get('review')!=='1'){window.location.replace(destination);return;}setSaved(data);setSyncEnabled(data.syncEnabled===true);setHistorical(Object.fromEntries((data.historicalStudies||[]).map(study=>[study.id,study.opted_in===1])));setSubmit(accepted);setMusic(accepted&&data.shareMusic);setMonitor(accepted&&data.activityMonitoringEnabled&&data.activityMonitoringVersion===ACTIVITY_MONITORING_NOTICE_VERSION);setPersonal(accepted&&data.personalResearchEnabled);setCommunity(accepted&&data.communityEnabled);setNickname(data.nickname||'');setLoading(false);}).catch(cause=>{if(!stopped&&!leaving.current){setError(cause instanceof Error?cause.message:'Could not load your saved choices.');setFailed(true);setLoading(false);}});return()=>{stopped=true;};},[forceReview,retry]);
- async function save(){if(saved?.testOnly&&!saved.consentTestOnly)return;setBusy(true);setError('');try{const response=await fetch('/api/my-data',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(participationChoiceBody({syncEnabled,submit,shareMusic:music,activityMonitoring:monitor,personalResearch:personal,community,historical,...(!saved?.sharedAdmin?{nickname}:{})}))});const result=await response.json() as {error?:string};if(!response.ok)throw Error(result.error||'Your choices were not saved.');try{localStorage.setItem('yinyang-activity-monitoring',String(submit&&monitor));window.dispatchEvent(new Event('yinyang-monitoring-choice'));notifySharingChoicesChanged();}catch{}if(!submit){if(onClose&&!returning){setBusy(false);onClose();return;}window.location.assign(returning?'/my-data?participation=off':'/');return;}if(onSaved){onSaved(true);setBusy(false);}else window.location.assign(next);}catch(cause){setError(cause instanceof Error?cause.message:'Your choices were not saved.');setBusy(false);}}
+ async function save(preset?:ConsentPreset){
+  if(loading||failed||saving.current||leaving.current||!saved||saved.testOnly&&!saved.consentTestOnly||preset==='all'&&saved.consentTestOnly)return;
+  if(preset!=='required'&&fileConsent?.contribute&&!fileConsent.rights)return;
+  const all=preset==='all';
+  const participating=!!preset||submit;
+  const monitoring=preset?all:monitor;
+  const studyChoices={...historical};
+  if(preset){
+   for(const study of saved.historicalStudies||[]){
+    if(!all||(!study.sealed&&!saved.protectedAccount))studyChoices[study.id]=all;
+   }
+  }
+  const body=participationChoiceBody({
+   syncEnabled:preset?all:syncEnabled,submit:participating,shareMusic:preset?all:music,
+   activityMonitoring:monitoring,personalResearch:preset?all:personal,community:preset?all:community,
+   historical:studyChoices,...(!saved.sharedAdmin?{nickname}:{})
+  });
+  saving.current=true;setBusy(true);setError('');
+  try{
+   const response=await fetch('/api/my-data',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+   const result=await response.json() as {error?:string};
+   if(!response.ok)throw Error(result.error||'Your choices were not saved.');
+   try{
+    localStorage.setItem('yinyang-activity-monitoring',String(participating&&monitoring));
+    window.dispatchEvent(new Event('yinyang-monitoring-choice'));
+    notifySharingChoicesChanged();
+   }catch{}
+   if(!participating){
+    if(onClose&&!returning){onClose();}
+    else window.location.assign(returning?'/my-data?participation=off':'/');
+   }else if(onSaved){onSaved(true,preset);}
+   else window.location.assign(next);
+  }catch(cause){
+   setError(cause instanceof Error?cause.message:'Your choices were not saved.');
+   saving.current=false;setBusy(false);
+  }
+ }
  const returning=!!saved?.submissionsEnabled&&saved.agreementVersion===VOTE_DATA_NOTICE_VERSION;
- function close(){if(busy)return;leaving.current=true;if(onClose){onClose();return;}window.location.assign(returning?next:'/');}
+ function close(){if(saving.current)return;leaving.current=true;if(onClose){onClose();return;}window.location.assign(returning?next:'/');}
  const changed=!saved||syncEnabled!==!!saved.syncEnabled||submit!==returning||music!==saved.shareMusic||monitor!==(saved.activityMonitoringEnabled&&saved.activityMonitoringVersion===ACTIVITY_MONITORING_NOTICE_VERSION)||personal!==saved.personalResearchEnabled||community!==saved.communityEnabled||nickname!==(saved.nickname||'')||!!fileConsent||Object.entries(historical).some(([id,value])=>value!==!!saved?.historicalStudies?.find(study=>study.id===id)?.opted_in);
  // Embedded editors open inside another page's main landmark; their dialog supplies its own heading.
  const Region=onClose?"div":"main";
  if(saved?.testOnly&&!saved.consentTestOnly)return <Region className={onClose ? undefined : "participation-page"}><h1>Test Account</h1><p>Research and Community contributions are disabled for this account.</p><a href={next}>Return without changing participation</a></Region>;
- return <Region className={onClose ? undefined : "participation-page"}>{!onClose&&<h1>Your Participation Choices</h1>}{failed&&<p role="alert">Your saved choices could not be checked. Nothing has been changed. <button type="button" disabled={busy||loading} onClick={()=>setRetry(value=>value+1)}>Try loading again</button></p>}<ComparisonDataSettings context={context} consentTestOnly={saved?.consentTestOnly} syncEnabled={syncEnabled} onSyncChange={setSyncEnabled} studies={saved?.historicalStudies} historical={historical} onHistoricalChange={(id,enabled)=>setHistorical(current=>({...current,[id]:enabled}))} fileConsent={fileConsent} protectedAccount={saved?.protectedAccount} personalResearch={personal} community={community} onPersonalResearchChange={setPersonal} onCommunityChange={setCommunity} savedActivityMonitoring={saved?.activityMonitoringEnabled??false} loadFailed={failed} nickname={nickname} sharedAdmin={saved?.sharedAdmin??false} loading={loading} onNicknameChange={setNickname} submit={submit} shareMusic={music} activityMonitoring={monitor} busy={busy||loading} closeDisabled={busy} error={error} returning={returning} changed={changed} onClose={close} onSubmitChange={setSubmit} onMusicChange={setMusic} onActivityMonitoringChange={setMonitor} onSave={()=>void save()}/></Region>;
+ return <Region className={onClose ? undefined : "participation-page"}>{!onClose&&<h1>Your Participation Choices</h1>}{failed&&<p role="alert">Your saved choices could not be checked. Nothing has been changed. <button type="button" disabled={busy||loading} onClick={()=>setRetry(value=>value+1)}>Try loading again</button></p>}<ComparisonDataSettings context={context} consentTestOnly={saved?.consentTestOnly} syncEnabled={syncEnabled} onSyncChange={setSyncEnabled} studies={saved?.historicalStudies} historical={historical} onHistoricalChange={(id,enabled)=>setHistorical(current=>({...current,[id]:enabled}))} fileConsent={fileConsent} protectedAccount={saved?.protectedAccount} personalResearch={personal} community={community} onPersonalResearchChange={setPersonal} onCommunityChange={setCommunity} savedActivityMonitoring={saved?.activityMonitoringEnabled??false} loadFailed={failed} nickname={nickname} sharedAdmin={saved?.sharedAdmin??false} loading={loading} onNicknameChange={setNickname} submit={submit} shareMusic={music} activityMonitoring={monitor} busy={busy||loading} closeDisabled={busy} error={error} returning={returning} changed={changed} onClose={close} onSubmitChange={setSubmit} onMusicChange={setMusic} onActivityMonitoringChange={setMonitor} onSave={save}/></Region>;
 }

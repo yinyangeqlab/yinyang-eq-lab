@@ -28,6 +28,38 @@
 .eq-fitting-guide figure img { display: block; width: 100%; height: auto; border-radius: 9px; }
 .eq-fitting-guide figcaption { margin-top: 8px; font-size: 13px; }
 
+.fitter-ranking-controls { display: grid; gap: 14px; margin: 18px 0 14px; }
+.fitter-ranking-controls fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.fitter-ranking-controls legend { margin-bottom: 6px; color: #e8f0f4; font-size: 14px; font-weight: 650; }
+.fitter-ranking-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.fitter-ranking-options button { min-height: 36px; border: 1px solid #536e7a; padding: 6px 10px; border-radius: 6px; background: #0d1c24; color: #c9d8df; font: inherit; font-size: 13px; cursor: pointer; }
+.fitter-ranking-options button:hover { border-color: #a1cdd7; }
+.fitter-ranking-options button[aria-pressed="true"] { border-color: #8ed7cf; background: #173b3c; color: #edfffc; font-weight: 650; }
+.fitter-ranking-options button:focus-visible, .fitter-coverage summary:focus-visible { outline: 2px solid var(--guide-blue); outline-offset: 3px; }
+.fitter-score-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; line-height: 1.35; }
+.fitter-score-table caption { color: #b4c8d2; text-align: left; padding-bottom: 8px; }
+.fitter-score-table th, .fitter-score-table td { border-bottom: 1px solid #334851; padding: 8px 10px; }
+.fitter-score-table thead { background: #0d1c24; color: #e8f0f4; }
+.fitter-score-table th { text-align: left; }
+.fitter-score-table th:nth-child(n+3), .fitter-score-table td:nth-child(n+3), .fitter-score-table td:first-child { text-align: right; font-variant-numeric: tabular-nums; }
+.fitter-score-table td { white-space: nowrap; }
+.fitter-score-table tbody th, .fitter-score-table tfoot th { font-weight: 500; }
+.fitter-score-table tfoot { color: #b4c8d2; }
+.fitter-score-table #rootlessjamesdsp-reference { scroll-margin-top: 72px; }
+.fitter-reference-note { display: block; margin-top: 3px; font-size: .9em; }
+.fitter-score-table td strong { color: #e8f0f4; font-weight: 750; }
+.fitter-coverage { margin: 14px 0; font-size: 14px; }
+.fitter-coverage summary { width: fit-content; padding: 5px 0; color: #bddeec; cursor: pointer; }
+.fitter-coverage dl { display: block; margin: 4px 0 10px; }
+.fitter-coverage dl > div { display: flex; flex-wrap: wrap; gap: 2px 10px; padding: 5px 0; background: transparent; border: 0; }
+.fitter-coverage dt, .fitter-coverage dd { margin: 0; font-size: 14px; }
+.eq-fitting-guide p + p { margin-top: 8px; }
+@media (max-width: 450px) {
+  .fitter-ranking-controls fieldset:first-child .fitter-ranking-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .fitter-ranking-options button { min-height: 44px; }
+  .fitter-score-table { font-size: 13px; }
+  .fitter-score-table th, .fitter-score-table td { padding: 8px 5px; }
+}
 
 .guide-jump-links{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font-size:14px}
 #glossary-terms,.eq-fitting-guide h3[id],.terms-page dl > div[id]{scroll-margin-top:72px}
@@ -37,3 +69,11 @@
 .fitter-article header>a{font-size:14px}
 .fitter-article .eq-fitting-guide{margin-top:24px}
 .eq-fitting-guide .guide-section-link{display:inline-flex;align-items:center;justify-content:center;min-width:28px;min-height:28px;vertical-align:middle;border-radius:4px}
+
+.listening-methodology article{max-width:72ch}
+.listening-methodology section{margin-top:28px}
+.listening-methodology h2{font-size:clamp(18px,3vw,22px);line-height:1.3;margin:0 0 8px;scroll-margin-top:72px}
+.listening-methodology p,.listening-methodology ul{margin:0 0 12px;font-size:1rem;line-height:1.65}
+.listening-methodology ul{padding-inline-start:21px}
+.listening-methodology li+li{margin-top:8px}
+.listening-methodology article>p:last-child{margin-top:24px}

@@ -1,4 +1,5 @@
 import ridgeline from "./landscape-ridgeline.json" with { type: "json" };
+import panoramaRidgeline from "./landscape-panorama-ridgeline.json" with { type: "json" };
 
 /** Decorative image-space motion. It never reads audio or changes playback. */
 const pulseSeconds = 8.5;
@@ -32,6 +33,7 @@ uniform sampler2D artwork;
 uniform sampler2D skyline;
 uniform sampler2D stillSky;
 uniform bool useStillSky;
+uniform bool panorama;
 uniform vec2 imageSize;
 uniform vec2 viewSize;
 uniform float artworkAnchorY;
@@ -184,14 +186,15 @@ void main(){
  float aspect=imageSize.x/imageSize.y, viewport=viewSize.x/viewSize.y;
  vec2 span=viewport>aspect?vec2(1.,aspect/viewport):vec2(viewport/aspect,1.);
  vec2 uv=screenUv*span+vec2((1.-span.x)*.5,(1.-span.y)*artworkAnchorY);
- // Clear the baked orb at plate. The drawn orb floats along the centre line.
- vec2 plate=vec2(${LANDSCAPE_ORB.x},${LANDSCAPE_ORB.y});
- float radius=${LANDSCAPE_ORB.radius};
+ // On ultrawide screens the orb follows the banner height as the panorama is cropped.
+ float orbScale=panorama?span.y*2.1/(1400./758.):1.;
+ vec2 plate=vec2(${LANDSCAPE_ORB.x},panorama?.31*span.y+(1.-span.y)*artworkAnchorY:${LANDSCAPE_ORB.y});
+ float radius=${LANDSCAPE_ORB.radius}*orbScale;
  float cycle=mod(time,PERIOD+PULSE_GAP);
  float turn=cycle*TAU/(PERIOD+PULSE_GAP);
  // The lowest point of the float coincides with the start of the wave.
  float hover=sin(turn-.262);
- vec2 moon=plate+vec2(0.,(${LANDSCAPE_ORB_REST_OFFSET})+${orbFloat}*hover);
+ vec2 moon=plate+vec2(0.,orbScale*((${LANDSCAPE_ORB_REST_OFFSET})+${orbFloat}*hover));
  float waveAge=cycle-PULSE_GAP;
  float orbPress=smoothstep(0.,.065,waveAge)*(1.-smoothstep(.065,.21,waveAge));
  /* Keep the strongest thump on the wave launch, with softer taps between waves. */
@@ -206,8 +209,10 @@ void main(){
  // The lower silhouette softens in the horizon haze.
  float edgeFeather=mix(.009,.035,smoothstep(-.12,.90,local.y));
  float disc=1.-smoothstep(1.-edgeFeather,1.003,dd), outside=1.-disc;
- float horizon=.493;
- float water=smoothstep(horizon-.004,horizon+.04,uv.y);           /* explicit, disc-independent */
+ float horizon=panorama?.56:.493;
+ // The panoramic foothills extend below the central waterline on both sides.
+ float shore=horizon+(panorama?.073*smoothstep(.035,.26,abs(uv.x-.5)):0.);
+ float water=smoothstep(shore-.004,shore+.04,uv.y);
  float depth=smoothstep(horizon,1.,uv.y);
  /* A broad ripple leaves the disc, softens as it spreads, then rests between passes. */
  float phase=clamp(waveAge/PERIOD,0.,1.);
@@ -220,13 +225,13 @@ void main(){
  /* Each tap bends nearby air. The original wave carries the longer refraction. */
  float pressure=currentTap*pressureShear(age,imageDistance)+previousTap*pressureShear(age+.25,imageDistance);
  float refraction=(lens*.021+pressure*.17)*outside;
- vec2 warped=uv-radial*refraction*(1.-water);
+ vec2 warped=panorama?uv:uv-radial*refraction*(1.-water);
  /* The bright mountain traces vibrate vertically and respond to the passing ring. */
  vec3 original=texture2D(artwork,uv).rgb;
  float mountainSide=abs(uv.x-.5);
  // The outer foothills sit below the central waterline in the source artwork.
  float ridgeFoot=horizon+mix(.018,.155,smoothstep(.12,.37,mountainSide));
- float ridge=sat(original)*smoothstep(horizon-.29,horizon-.15,uv.y)
+ float ridge=panorama?0.:sat(original)*smoothstep(horizon-.29,horizon-.15,uv.y)
    *(1.-smoothstep(ridgeFoot-.035,ridgeFoot,uv.y))*smoothstep(.10,.24,mountainSide)*outside;
  float drift=abs(uv.x-.5)*18.+uv.y*8.;
  float brightness=max(original.r,max(original.g,original.b));
@@ -295,7 +300,7 @@ void main(){
  vec3 orbReflection=mix(vec3(.67,.31,.32),vec3(.15,.67,.88),smoothstep(-.028,.028,uv.x-moon.x));
  col+=max(vec3(0.),1.-col)*orbReflection*reflectionMask
    *(.085+.04*(.5+.5*hover)+.145*reflectionPulse);
- col=clearBakedOrb(artwork,warped,plate,1.03*radius,aspect,col);
+ if(!panorama) col=clearBakedOrb(artwork,warped,plate,1.03*radius,aspect,col);
  /* Build the sky and halo behind the translucent orb. */
  float skyLimit=ridgeSkyHeight(warped.x);
  float fromSkyline=warped.y-skyLimit;
@@ -303,7 +308,10 @@ void main(){
   float skyMask=1.-smoothstep(-2./imageSize.y,0.,fromSkyline);
   vec3 aurora=equinoxAurora(vec2(uv.x,min(uv.y,skyLimit-.004)),turn);
   vec3 twilight=vec3(.019,.034,.079)*(1.-smoothstep(0.,.40,uv.y));
-  if(useStillSky){
+  if(panorama){
+   // The panorama has its own unobstructed aurora and matching skyline.
+   col+=.12*aurora*skyMask;
+  }else if(useStillSky){
    // The still has a smaller, higher baked orb than the animation texture.
    vec3 sky=clearBakedOrb(stillSky,uv,vec2(.5,.259),.184,aspect,texture2D(stillSky,uv).rgb);
    // Retain the same aurora through the handoff and layer motion over it.
@@ -341,7 +349,7 @@ void main(){
   col=mix(col,mix(cobalt,ruby,warm),disc*orbOpacity);
  }
  // Keep the mist out of the high sky and foreground water.
- if(uv.y>.26&&uv.y<.67){
+ if(!panorama&&uv.y>.26&&uv.y<.67){
   // Use the aurora's clock, with small offsets and no water or pulse refraction.
   vec2 mistPoint=uv+vec2(.009*sin(turn+.45),.0025*cos(turn+.45));
   vec2 mistField=mistPoint*vec2(13.,29.);
@@ -381,11 +389,12 @@ export function createLandscapeRenderer(
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
   ready: (value: boolean) => void,
-  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25, stillSky }: {
+  { maxWidth = 1280, maxHeight = 800, getArtworkAnchor = () => .25, stillSky, panorama = false }: {
     maxWidth?: number;
     maxHeight?: number;
     getArtworkAnchor?: () => number;
     stillSky?: HTMLImageElement;
+    panorama?: boolean;
   } = {},
 ): LandscapeRenderer | null {
   const gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: "low-power", preserveDrawingBuffer: false });
@@ -413,8 +422,9 @@ export function createLandscapeRenderer(
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     crest = gl.createTexture();
     if (!crest) throw new Error("Decorative skyline unavailable");
-    const heights = new Uint8Array(ridgeline.length * 2);
-    ridgeline.forEach((height, x) => {
+    const profile = panorama ? panoramaRidgeline : ridgeline;
+    const heights = new Uint8Array(profile.length * 2);
+    profile.forEach((height, x) => {
       heights[x * 2] = height >> 8;
       heights[x * 2 + 1] = height & 255;
     });
@@ -426,6 +436,7 @@ export function createLandscapeRenderer(
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE_ALPHA, heights.length/2, 1, 0, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, heights);
     gl.uniform1i(gl.getUniformLocation(program, "skyline"), 1);
+    gl.uniform1i(gl.getUniformLocation(program, "panorama"), panorama ? 1 : 0);
     gl.uniform1i(gl.getUniformLocation(program, "useStillSky"), stillSky ? 1 : 0);
     if (stillSky) {
       skyTexture = gl.createTexture();

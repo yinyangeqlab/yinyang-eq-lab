@@ -1,6 +1,6 @@
 # YinYang EQ
 
-[Android Companion and App Manager](https://yinyangeq.com/q5k4android) · [Watch the trailer](https://yinyangeq.com/q5k4android/trailer/portrait) · [Update192 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192)
+[Android apps and setup](https://yinyangeq.com/android) · [Watch the trailer](https://yinyangeq.com/android/trailer/portrait) · [Update192 release](https://github.com/yinyangeqlab/yinyang-eq-lab/releases/tag/update192)
 
 [Website version history](https://yinyangeq.com/version#update192) · [Release source](https://github.com/yinyangeqlab/yinyang-eq-lab/tree/update192) · [Recovery verification](docs/releases/update192-recovery-verification.json)
 
@@ -41,7 +41,7 @@ Research sharing from Personal Tournament, song tags and fingerprints, activity 
 
 ## EQ fitters
 
-YinYang EQ offers fixed-band and movable-band fitters and integrates the open-source PEQdB AutoEQ optimizer. The benchmark compares RMS curve-fit error and peak boost across 14 cases. These metrics describe how closely a preset follows a target and how much headroom it needs. Listening preferences are measured separately. [EQ fitter benchmark](https://yinyangeq.com/glossary/eq-fitting) · [Per-case scores (CSV)](public/eq-fitting/eq-fitter-scores.csv)
+YinYang EQ offers fixed-band and movable-band fitters and integrates the open-source PEQdB AutoEQ optimizer. The benchmark compares RMS curve-fit error and peak boost across shared headphone measurements and filter budgets. These metrics describe how closely a preset follows a target and how much headroom it needs. [EQ fitter benchmark](https://yinyangeq.com/glossary/eq-fitting) · [Dated per-case scores (CSV)](public/eq-fitting/eq-fitter-web-scores.csv) · [Original scores (CSV)](public/eq-fitting/eq-fitter-scores.csv)
 
 ## Run locally
 

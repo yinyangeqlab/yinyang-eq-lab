@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FIT_CANDIDATE_COUNT, validFitter } from "./fitter-settings";
+import { FIT_BANDS, WEB_FIT_CANDIDATE_COUNT, validExportFitter } from "./fitter-settings";
+import { MAX_CHANNEL_MATCH_BANDS } from "./channel-match-export";
 import type { FinalizedVariant } from "./preference-finalize";
 
 type ResultsScope = "tuning" | "shootout" | "personal";
 type GeneratedResults = { key: string; variants: FinalizedVariant[]; saved: boolean };
 
 function readVariants(value: unknown): value is FinalizedVariant[] {
-  if (!Array.isArray(value) || value.length < 1 || value.length > FIT_CANDIDATE_COUNT) return false;
-  return value.every((fit: FinalizedVariant) => fit && validFitter(fit) && fit.priority === "close" &&
-    (fit.engine === "legacy" || fit.engine === "peqdb") &&
+  if (!Array.isArray(value) || value.length < 1 || value.length > WEB_FIT_CANDIDATE_COUNT) return false;
+  return value.every((fit: FinalizedVariant) => fit && validExportFitter(fit) && fit.priority === "close" &&
+    (fit.engine === "legacy" || fit.engine === "peqdb" || fit.engine === "joint") &&
     Number.isFinite(fit.rms) && fit.rms >= 0 &&
     Number.isFinite(fit.peakBoost) && fit.peakBoost >= 0 &&
     Number.isFinite(fit.preamp) && fit.preamp <= 0 &&
@@ -62,4 +63,41 @@ export function useGeneratedEqResults(scope: ResultsScope, inputKey: string, pri
   }
 
   return { result, current, heading, save, clear };
+}
+
+export const MAX_MAIN_EQ_BANDS = Math.max(...FIT_BANDS);
+export type EqDeviceLimits = { mainBands: number; channelBands: number };
+const DEVICE_LIMITS_KEY = "yinyang-eq-device-limits-v1";
+const defaultDeviceLimits: EqDeviceLimits = { mainBands: 20, channelBands: 10 };
+
+export function readEqDeviceLimits(): EqDeviceLimits {
+  try {
+    const limits: EqDeviceLimits = JSON.parse(localStorage.getItem(DEVICE_LIMITS_KEY) || "null");
+    if (limits && Number.isInteger(limits.mainBands) && limits.mainBands >= 1 && limits.mainBands <= MAX_MAIN_EQ_BANDS &&
+      Number.isInteger(limits.channelBands) &&
+      limits.channelBands >= 0 && limits.channelBands <= MAX_CHANNEL_MATCH_BANDS) return limits;
+  } catch { /* Use device-independent defaults if browser storage is unavailable. */ }
+  return defaultDeviceLimits;
+}
+
+export function useEqDeviceLimits() {
+  const [limits, setLimits] = useState(defaultDeviceLimits);
+  useEffect(() => {
+    const refresh = () => setLimits(readEqDeviceLimits());
+    refresh();
+    window.addEventListener("storage", refresh);
+    window.addEventListener(DEVICE_LIMITS_KEY, refresh);
+    return () => {
+      window.removeEventListener("storage", refresh);
+      window.removeEventListener(DEVICE_LIMITS_KEY, refresh);
+    };
+  }, []);
+  function changeLimits(next: EqDeviceLimits) {
+    setLimits(next);
+    try {
+      localStorage.setItem(DEVICE_LIMITS_KEY, JSON.stringify(next));
+      window.dispatchEvent(new Event(DEVICE_LIMITS_KEY));
+    } catch { /* The limits still apply in this tab. */ }
+  }
+  return { limits, changeLimits };
 }

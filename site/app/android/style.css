@@ -49,6 +49,11 @@
 .companion-page .companion-download-primary { color: #0c292b; background: var(--page-accent); border-color: var(--page-accent); }
 .companion-page .companion-download-primary:hover { background: #ccf5eb; }
 .companion-install #manager-download-note { margin-top: 7px; font-size: .87rem; color: var(--page-muted); max-width: 48ch; }
+.companion-install .companion-app-versions { display: grid; gap: 5px; width: fit-content; margin-top: 14px; font-size: .875rem; line-height: 1.4; }
+.companion-app-versions > div { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; column-gap: 14px; }
+.companion-app-versions dt { font-weight: 700; }
+.companion-app-versions dd { margin: 0; color: var(--page-muted); font-variant-numeric: tabular-nums; }
+.companion-release-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 6px; font-size: .875rem; }
 .companion-install [role="status"] { margin-top: 12px; }
 .companion-jumps { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
 .companion-jumps a, .companion-guide-link, .companion-share button { display: inline-flex; align-items: center; min-height: 44px; }
@@ -70,6 +75,23 @@
 .companion-band-table td { border-top: 1px solid var(--page-line); font-size: 1rem; line-height: 1.18; }
 .companion-band-table td:first-child { font-weight: 700; color: var(--page-accent); }
 .companion-allocation > p { margin-top: 10px; line-height: 1.5; font-size: .86rem; color: var(--page-muted); }
+.phone-eq {
+  display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, .92fr);
+  gap: 24px clamp(32px, 5vw, 64px); margin-top: clamp(28px,5vw,56px);
+  padding: clamp(24px,4vw,40px) 0; border-block: 1px solid var(--page-line); scroll-margin-top: 1rem;
+}
+.phone-eq h2 { display:flex; align-items:center; gap:10px; margin-bottom: 12px; font-size: clamp(1.85rem,3.25vw,3rem); line-height: 1.08; letter-spacing: -.033em; }
+.phone-eq h2 img { flex:none; width:48px; height:48px; }
+.phone-eq p, .phone-eq li { color: var(--page-muted); font-size: 1rem; line-height: 1.55; max-width: 56ch; }
+.phone-eq .companion-download { margin: 18px 0 8px; }
+.phone-eq #phone-eq-requirements, .phone-eq .phone-eq-credits { font-size: .875rem; }
+.phone-eq .phone-eq-credits { margin-top: 16px; }
+.phone-eq h3 { font-size: 1.15rem; margin-bottom: 10px; }
+.phone-eq ol { margin: 0; padding-inline-start: 1.5rem; list-style: decimal; }
+.phone-eq li { padding-inline-start: .25rem; }
+.phone-eq li + li { margin-top: 10px; }
+.phone-eq li::marker, .phone-eq strong { color: var(--page-ink); }
+@media (max-width: 710px) { .phone-eq { grid-template-columns: minmax(0, 1fr); } }
 .companion-gallery, .companion-support { margin-top: clamp(36px,6vw,76px); border-top: 1px solid var(--page-line); padding-top: clamp(24px,4vw,48px); scroll-margin-top: 1rem; }
 .companion-gallery > h2, .companion-support h2 { margin: 0 0 16px; font-size: clamp(1.85rem,3.25vw,3rem); line-height: 1.06; letter-spacing: -.033em; }
 .companion-page .tour-intro { color: var(--page-muted); line-height: 1.5; margin: -4px 0 20px; }

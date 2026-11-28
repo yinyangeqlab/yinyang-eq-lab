@@ -58,6 +58,10 @@ assert.equal(flatMatch.channels[0].filters.length, 0, 'Broadband imbalance only 
 const shape = { type:'PK', hz:500, gain:5, q:1 };
 const uneven = { ...model, leftLevelDb:-1, rightLevelDb:1, rightPoints:points.map(([hz])=>[hz, 2 * presetFilterResponse(hz, shape, 48000)]) };
 const fitted = parseChannelMatchPreset(channelMatchIirText(uneven));
+const oneBandMatch = parseChannelMatchPreset(channelMatchIirText(uneven, 1));
+assert.ok(oneBandMatch.channels.every(channel=>channel.filters.length<=1),'AutoMatch TXT is refit using the selected maximum for each side');
+assert.ok(Math.abs(oneBandMatch.channels[0].preampDb - oneBandMatch.channels[1].preampDb) > .5,'A tighter limit preserves broadband correction');
+assert.throws(()=>channelMatchIirText(uneven,0),/1 to 32 filters per side/);
 const residual = (hz, db) => 2 + db + presetResponse(hz, fitted, 1, 48000) - presetResponse(hz, fitted, 0, 48000);
 assert.ok(uneven.rightPoints.reduce((error,[hz,db])=>error + residual(hz,db)**2,0) < 6, 'TXT corrects the shape and level of a synthetic mismatch');
 for (const rate of [44100,48000,96000]) for (const [hz] of points) for (const channel of [0,1]) {
@@ -65,6 +69,8 @@ for (const rate of [44100,48000,96000]) for (const [hz] of points) for (const ch
 }
 const uploaded = parseChannelMatchPreset('CH: 0\nPreamp: -3 dB\nFilter 1: ON LSC Fc 80 Hz Gain 1 dB Q 0.7\nCH: 1\nPreamp: -2 dB');
 assert.deepEqual(parseChannelMatchPreset(channelMatchIirText({channelMatchMode:'custom',channelMatchPreset:uploaded})),uploaded,'Uploaded TXT preserves its original settings');
+const overLimit = {...uploaded,channels:[{...uploaded.channels[0],filters:[...uploaded.channels[0].filters,...uploaded.channels[0].filters]},uploaded.channels[1]]};
+assert.throws(()=>channelMatchIirText({channelMatchMode:'custom',channelMatchPreset:overLimit},1),/exceeds your Channel Match filter limit/);
 assert.deepEqual(parseChannelMatchPreset(channelMatchIirText({...uneven,channelMatchPreset:uploaded})),fitted,'Auto mode exports its own correction even when an uploaded preset is attached');
 assert.throws(()=>channelMatchIirText({...model,rightLevelDb:100}),/FIR WAV instead/,'TXT fails clearly when the required levels exceed its format');
 const nodes=[];

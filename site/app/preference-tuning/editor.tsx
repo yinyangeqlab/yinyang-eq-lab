@@ -22,12 +22,12 @@ import { parseCurve, type Point } from "@/lib/curves";
 import { packRegionLabels, placeMarkerLabels } from "@/lib/curve-label-layout";
 import { peakingHalfGainEdges, presetFilterResponse, tuningFilterEffectRange, type PresetFilter } from "@/lib/peq-preset";
 import { fitAutoEqAsync } from "@/lib/autoeq-client";
-import EqCandidateResults from "@/components/eq-candidate-results";
-import { useGeneratedEqResults } from "@/lib/use-generated-eq-results";
+import EqCandidateResults, { EqDeviceLimitFields } from "@/components/eq-candidate-results";
+import { useEqDeviceLimits, useGeneratedEqResults } from "@/lib/use-generated-eq-results";
 import { generateEqCandidates } from "@/lib/eq-candidates";
 import FitterControls from "@/components/fitter-controls";
 import { useFitterSettings } from "@/lib/use-fitter-settings";
-import { FIT_CANDIDATE_COUNT, fitterLabel, type FitterSettings } from "@/lib/fitter-settings";
+import { WEB_FIT_CANDIDATE_COUNT, fitterLabel, type FitterSettings } from "@/lib/fitter-settings";
 import type { AutoEqFit } from "@/lib/autoeq-fit";
 import { replaceEqStage, safeGain, watchAudioInterruptions, type EqStage } from "@/lib/eq-playback";
 import { exportPeq, exportEqualizerApo, exportEasyEffects, exportQudelixGuide, type FinalizedVariant } from "@/lib/preference-finalize";
@@ -742,7 +742,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [analyser,setAnalyser]=useState<AnalyserNode | null>(null);
   const media = useRef<HTMLAudioElement>(null);
   const objectUrl = useRef("");
-  const { fitter, setFitter, defaultFitter, saveDefault, notice: fitterNotice } = useFitterSettings();
+  const { fitter, setFitter, defaultFitter, saveDefault, notice: fitterNotice } = useFitterSettings("tuning");
   const [bypass, setBypass] = useState(false);
   const [matchEnabled, setMatchEnabled] = useState(true);
   const [soundMode, setSoundMode] = useState<SoundMode>("target");
@@ -1005,6 +1005,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const priorFinalizeKey = useMemo(() => JSON.stringify({ selected, settings, measurementId, raw: measurement?.points, target: normalized }), [selected, settings, measurementId, measurement?.points, normalized]);
   const finalizeKey = JSON.stringify([priorFinalizeKey, measurement?.type]);
   useEffect(() => () => { finalizeAbort.current?.abort(); }, [finalizeKey]);
+  const { limits: deviceLimits, changeLimits } = useEqDeviceLimits();
   const { result: previousResults, current: finalized, heading: resultsHeading, save: saveResults, clear: clearResults } = useGeneratedEqResults("tuning", finalizeKey, priorFinalizeKey);
   /** Tuning itself needs no agreement. Viewing the finished EQ or exporting it keeps the file, curve and settings for private research, so that step asks once. */
   async function finalizeCurve() { if (!sourceCurves.ready) return; if (localAutoEq) await runFinalize(); else await consent.ask(runFinalize); }
@@ -1140,7 +1141,11 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   }, [matchLoudness, playing, analyser, heardKey, applyTrim]);
   const ensureGraph = useCallback(() => {
     if (graph.current) return graph.current;
-    const context = new AudioContext();
+    let context = new AudioContext();
+    if (context.sampleRate < 44_100 || context.sampleRate > 192_000) {
+      void context.close();
+      context = new AudioContext({ sampleRate: 48000 });
+    }
     setPreviewRate(context.sampleRate);
     const input = context.createGain();
     const toneInput = context.createGain(), toneOutput = context.createGain();
@@ -1783,7 +1788,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   function downloadMatch(format: "txt" | "wav") {
     if (!activeMatch) return;
     try {
-      downloadChannelMatch(activeMatch, matchHeadphone || "headphones", format);
+      downloadChannelMatch(activeMatch, matchHeadphone || "headphones", format, deviceLimits.channelBands);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Could not download the channel match.");
     }
@@ -1867,7 +1872,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
             target={<>
               <TuningTargetPicker targets={targetOptions} selected={selectedTargetOption} onSelect={changeTarget}/>
               <p id="tuning-target-rank-source">{targetRanking.rows.length
-                ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use Standard 10-band matched-passage results."
+                ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use matched-passage results from the Target leaderboard."
                 : "Global ranks appear when matched-passage results are available."}</p>
               <div className="pt-target-actions">
                 <label className="pt-import" title="Import a target CSV or TXT"><Upload size={15} aria-hidden="true"/><span>Import</span><input type="file" aria-label="Import a target CSV or TXT" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.currentTarget.files?.[0])}/></label>
@@ -2153,8 +2158,8 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
             </div>
             {activeMatch && <div className="pt-match-formats" role="group" aria-label="Download channel match">
               <div>
-                <button type="button" onClick={() => downloadMatch("txt")} aria-describedby="pt-match-txt-help">Download TXT (IIR)</button>
-                <p id="pt-match-txt-help">Editable left/right parametric EQ settings.{activeMatch.channelMatchMode !== "custom" && " This approximates AutoMatch."}</p>
+                <button type="button" onClick={() => downloadMatch("txt")} disabled={deviceLimits.channelBands === 0} aria-describedby="pt-match-txt-help">Download TXT (IIR)</button>
+                <p id="pt-match-txt-help">{deviceLimits.channelBands === 0 ? "Enable Channel Match TXT under Device filter limits." : `Editable left/right EQ with up to ${deviceLimits.channelBands} filters per side.`}{deviceLimits.channelBands > 0 && activeMatch.channelMatchMode !== "custom" && " This approximates AutoMatch."}</p>
               </div>
               <div>
                 <button type="button" onClick={() => downloadMatch("wav")} aria-describedby="pt-match-wav-help">Download WAV (FIR)</button>
@@ -2177,7 +2182,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
         </section>
         {soundMode === "target" && <section className="pt-finalize" id="tuning-export" aria-label="Make EQ settings">
           <div className="pt-finalize-intro">
-            <div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings for this site’s music library or a compatible EQ app. The default EQ has the lowest fit error for your target.</p></div>
+            <div><span className="pt-step">EXPORT</span><h2>Make EQ settings for my headphones</h2><p>Create settings for this site’s music library or a compatible EQ app. The recommendation favors a close match with fewer filters within your device limit.</p></div>
             <div className="pt-finalize-action">
               <button ref={finalizeButton} type="button" className="pt-finalize-button"
                 disabled={finalizing || !sourceCurves.ready} aria-describedby={!measurement?.points?.length ? "pt-finalize-requirement" : undefined}
@@ -2189,11 +2194,12 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
                   }
                   void finalizeCurve();
                 }}>
-                {finalizing ? `Generating EQ ${finalProgress} / ${FIT_CANDIDATE_COUNT}…` : finalized ? "Regenerate EQ" : "Generate My EQ"}
+                {finalizing ? `Generating EQ ${finalProgress} / ${WEB_FIT_CANDIDATE_COUNT}…` : finalized ? "Regenerate EQ" : "Generate My EQ"}
               </button>
               {!measurement?.points?.length && <p id="pt-finalize-requirement" className="pt-finalize-requirement">Requires a headphone measurement.</p>}
             </div>
           </div>
+          <EqDeviceLimitFields limits={deviceLimits} onChange={changeLimits}/>
           {finalized && <a className="eq-results-jump" href="#tuning-eq-results">View generated EQ results</a>}
           <p id="pt-export-disclosure" className="pt-export-disclosure">{localAutoEq ? "Downloads from this local AutoEq curve stay on this device. Saved EQs store filters without the source curve." : "For participating listener accounts, downloading sends the selected target, adjusted curve, settings and exported file for administrator-only research. EQ exports also include the selected measurement name. Admin and hidden test accounts save local tests instead. Music files and raw headphone measurements are not collected here."}</p>
           <div className="pt-curve-downloads">
@@ -2223,7 +2229,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
               <p>{finalized.saved ? "The last generated set is saved in this browser for this setup." : "These results are available in this tab. Browser storage is unavailable."}</p>
             </header>
 
-            {visible && <EqCandidateResults tuning comparisonContext={{headphones:measurement?.device || measurement?.name || "Selected headphones",target:target.name}} channelMatch={matchEnabled?activeMatch:undefined} onCompare={stop} variants={finalized.variants} raw={measurement!.points} target={preferenceCurve} onDownload={(variant,format)=>{const base=`preference-${variant.bands}band-${variant.method}${variant.reducedBoost ? "-reduced-boost" : ""}`;const content=format==="equalizerapo"?exportEqualizerApo(variant):format==="easyeffects"?exportEasyEffects(variant):format==="qudelix5k"?exportQudelixGuide(variant):exportPeq(variant);void downloadText(`${base}${format==="txt"?"":"-"+format}.txt`,content,"text/plain",variant);}} onSave={variant=>{try { saveLibraryEq({id:crypto.randomUUID(),name:`${measurement?.device || measurement?.name} → ${target.name}`,fitter:{method:variant.method,bands:variant.bands},source:`Tuning · ${variant.bands} bands · ${variant.method}${variant.reducedBoost ? " · reduced boost" : ""}`,engine:variant.engine,engineVersion:variant.engineVersion,filters:variant.filters,preamp:variant.preamp,measurementId:measurement?.id,headphone:measurement?.device || measurement?.name,channelMatch:measurementChannelMatch(measurement),target:localAutoEq?undefined:{id:target.id,name:target.name,points:preferenceCurve}});setMessage(`EQ saved to ${PERSONAL_AREA_TITLE}, Tuning and Music library.`);} catch(error){setMessage(error instanceof Error?error.message:"Could not save this EQ.");}}}/>}
+            {visible && <EqCandidateResults tuning key={deviceLimits.mainBands} limits={deviceLimits} comparisonContext={{headphones:measurement?.device || measurement?.name || "Selected headphones",target:target.name}} channelMatch={matchEnabled?activeMatch:undefined} onCompare={stop} variants={finalized.variants} raw={measurement!.points} target={preferenceCurve} onDownload={(variant,format)=>{const base=`preference-${variant.bands}band-${variant.method}${variant.reducedBoost ? "-reduced-boost" : ""}`;const content=format==="equalizerapo"?exportEqualizerApo(variant):format==="easyeffects"?exportEasyEffects(variant):format==="qudelix5k"?exportQudelixGuide(variant):exportPeq(variant);void downloadText(`${base}${format==="txt"?"":"-"+format}.txt`,content,"text/plain",variant);}} onSave={variant=>{try { saveLibraryEq({id:crypto.randomUUID(),name:`${measurement?.device || measurement?.name} → ${target.name}`,fitter:{method:variant.method,bands:variant.bands},source:`Tuning · ${variant.bands} bands · ${variant.method}${variant.reducedBoost ? " · reduced boost" : ""}`,engine:variant.engine,engineVersion:variant.engineVersion,filters:variant.filters,preamp:variant.preamp,measurementId:measurement?.id,headphone:measurement?.device || measurement?.name,channelMatch:measurementChannelMatch(measurement),target:localAutoEq?undefined:{id:target.id,name:target.name,points:preferenceCurve}});setMessage(`EQ saved to ${PERSONAL_AREA_TITLE}, Tuning and Music library.`);} catch(error){setMessage(error instanceof Error?error.message:"Could not save this EQ.");}}}/>}
 
             <p className="pt-export-help">EasyEffects uses its Import APO action; set its input gain to the listed preamp if needed. The Qudelix 5K file is a manual-entry guide.</p>
             <details className="pt-finalize-note"><summary>How the volume adjustment is calculated</summary><p>Preamp is rounded down from the highest calculated EQ boost over 20 Hz–20 kHz at 44.1, 48, and 96 kHz, plus 0.5 dB headroom. Keep additional player or device headroom for intersample peaks and other processing. This does not measure the sound level at your ears.</p></details>

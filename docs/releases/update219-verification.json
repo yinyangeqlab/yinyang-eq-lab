@@ -1,0 +1,46 @@
+{
+  "update": 219,
+  "sourceCommit": "3cb0a72fdea1c1b21fbd34ec87694147d6e13ad4",
+  "deploymentVerification": {
+    "at": "2026-11-26T05:39:05.339842Z",
+    "update": 219,
+    "revision": "3cb0a72fdea1c1b21fbd34ec87694147d6e13ad4",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "22843867b78bdaad56e5116f2277cad4deb1a741",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 426,
+    "matchingGuideClientAssets": 37,
+    "guideSections": 13,
+    "liveGuideUrl": "https://yinyangeq.com/glossary/methodology",
+    "publicReadVerified": true,
+    "sitemapVerified": true,
+    "linkPreviewVerified": true,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "desktopAndNarrowGuideVerified": true,
+    "directSectionLinkVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "3cb0a72fdea1c1b21fbd34ec87694147d6e13ad4",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

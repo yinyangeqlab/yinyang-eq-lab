@@ -6,12 +6,13 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 import {parseIntervals,intervalStats} from '../../../site/lib/listening.ts';
-import {LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS} from '../../../site/lib/listening-protocol.ts';
+import * as protocol from '../../../site/lib/listening-protocol.ts';
+const {LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,LEVEL_MATCHED_LISTENING_PROTOCOL,PASSAGE_LEVEL_MATCH_METHOD}=protocol;
 import {rankPreferences} from '../../../site/lib/preference-ranking.ts';
 const targets=[{id:'a',name:'Alpha',creator:'QA',status:'approved'},{id:'b',name:'Beta',creator:'QA',status:'approved'}];
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let votes=[],runs=[],owners=[],inactive=new Set();
-const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!inactive.has(`${kind}:${id}`)},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':{LISTENING_PROTOCOL,FREE_LISTENING_PROTOCOL,MIN_SIDE_SECONDS,MIN_COMMON_SECONDS},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
+const deps={'@/lib/request-json':requestInput,'@/lib/file-fingerprint':fingerprints,'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id)=>!inactive.has(`${kind}:${id}`)},'@/lib/listening':{parseIntervals,intervalStats},'@/lib/listening-protocol':protocol,'@/lib/maintenance':{maintenanceResponse:()=>null},'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:'Track',artist:'Artist',album:'Album',recordingId:'recording'}]}};
 function load(file){const fixtureModule={exports:{}};vm.runInNewContext(ts.transpileModule(readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:fixtureModule,exports:fixtureModule.exports,require:name=>{if(name==="@/lib/fitter-settings")return fitters;if(!(name in deps))throw Error('Unexpected dependency '+name);return deps[name];},Response});return fixtureModule.exports;}
 deps['@/lib/admin-contributions']=load('site/lib/admin-contributions.ts');
 deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
@@ -59,10 +60,46 @@ assert.equal(latest.freeListening.random.voteCount,2);
 assert.equal(latest.freeListening.bring.voteCount,1);
 for (const row of latest.freeListening.all.rows) assert.deepEqual([row.wins,row.losses,row.ties],[1,1,1]);
 assert.equal(latest.protocols.current.all.voteCount,0);
+assert.equal(latest.allFitters.protocols.current.all.voteCount,2);
 assert.equal(latest.protocols.legacy.all.voteCount,0);
 assert.equal(latest.fitterCohorts.find(cohort=>cohort.key==='historical').view.protocols.current.all.voteCount,2);
 checks++;
 console.log('PASS newly disclosed rapid A/B choices and ties rank on their own without a playback minimum; legacy, open, unowned, isolated, inactive and invalid choices stay excluded');
+runs=[];owners=[];inactive.clear();
+
+const standard = { method: 'standard', bands: 10, filterCount: 10, engine: 'legacy', engineVersion: 'yinyang-standard-close@listening-fitter-v1', sampleRate: 48000, rms: .3, preamp: -4 };
+votes.push(row("older-standard", pair(0, 6)));
+runs.push({ ...row("older-standard-run", pair(0, 6)), trialId: "older-standard", targetAId: "a", targetBId: "b", result: "a", researchContext: JSON.stringify({ eqFits: [standard, standard] }) });
+const previous = await (await route.GET()).json();
+assert.equal(previous.protocols.current.all.voteCount, 1);
+const joint = { ...fitters.JOINT_FITTER, filterCount: 20, engine: "joint", engineVersion: fitters.JOINT_FITTER_VERSION, sampleRate: 48000, rms: .03, preamp: -6 };
+const match = { method: PASSAGE_LEVEL_MATCH_METHOD, start: 2, end: 7, differenceLu: .001 };
+const matchedRow = (id, intervals, extra = {}) => row(id, intervals, { testMode: "blind", protocolVersion: LEVEL_MATCHED_LISTENING_PROTOCOL, ...extra });
+const matchedRun = (id, trialId, result, intervals, researchContext, extra = {}) => ({
+  ...matchedRow(id, intervals, extra), trialId, result, targetAId: "a", targetBId: "b", researchContext: JSON.stringify(researchContext),
+});
+const matchedContext = { eqFits: [joint, joint], passageLevelMatch: match };
+votes.push(matchedRow("new-decision", pair(2, 7)), matchedRow("missing-proof", pair(2, 7)));
+runs.push(
+  matchedRun("new-run", "new-decision", "a", pair(2, 7), matchedContext),
+  matchedRun("new-tie", "new-tie-trial", "tie", pair(2, 7), matchedContext),
+  matchedRun("bring-tie", "bring-tie-trial", "tie", pair(2, 7), matchedContext, {testMode:"bring"}),
+  matchedRun("invalid-match", "bad-match-trial", "tie", pair(2, 7), {...matchedContext, passageLevelMatch: {...match, differenceLu: .06}}),
+  matchedRun("moved", "moved-trial", "tie", pair(1, 6), matchedContext),
+);
+const combined = await (await route.GET()).json();
+assert.equal(combined.all.voteCount, previous.all.voteCount + 3);
+assert.equal(combined.protocols.current.all.voteCount, previous.protocols.current.all.voteCount + 3);
+assert.equal(combined.allFitters.all.voteCount, previous.allFitters.all.voteCount + 3);
+assert.deepEqual(combined.allFitters.protocols.legacy, previous.allFitters.protocols.legacy);
+assert.deepEqual(combined.all.rows.map(row => row.ties), [2, 2]);
+assert.equal(combined.bring.voteCount, previous.bring.voteCount + 1);
+assert.deepEqual(combined.protocols.legacy, previous.protocols.legacy);
+assert.deepEqual(combined.freeListening, previous.freeListening);
+inactive.add("run:new-run");
+assert.equal((await (await route.GET()).json()).all.voteCount, previous.all.voteCount + 2);
+checks++;
+console.log("PASS old and new preferences and ties share the same leaderboard; invalid level-match evidence is excluded.");
 runs=[];owners=[];inactive.clear();
 // Optional real browser fixture is explicit; the default suite is self-contained.
 const fixtureIndex=process.argv.indexOf('--browser-events');

@@ -26,10 +26,24 @@
 .quick-deck { min-width: 0; --side: light-dark(#8a3f37, #eb9b8a); border-top: 2px solid var(--side); }
 .quick-deck[data-side=B] { --side: light-dark(#245f78, #8cc9e5); }
 .quick-deck h2 { margin: 0; }
-button.quick-side { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 6px; color: var(--side); padding: 16px 6px 6px 0; }
-.quick-letter { font-family: inherit; font-size: clamp(52px, 8vw, 96px); font-weight: 550; letter-spacing: -.06em; line-height: 1; }
-.quick-side-state { font-size: 13px; font-weight: 650; letter-spacing: 0; }
-.quick-side:hover .quick-letter { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+button.quick-side {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 44px;
+  min-width: min(100%, 4.25rem);
+  max-width: 100%;
+  margin-block: .5rem .125rem;
+  padding: .25rem .625rem;
+  color: var(--side);
+  border: 1px solid var(--line);
+  border-radius: .375rem;
+}
+.quick-letter { font-size: 1.375rem; font-weight: 650; line-height: 1; }
+.quick-side-state { min-width: 0; font-size: .8125rem; line-height: 1.2; overflow-wrap: anywhere; }
+.quick-side[aria-pressed=true] { border-color: var(--side); background: color-mix(in srgb, var(--side) 12%, var(--surface)); }
+@media (hover: hover) { .quick-side:hover { border-color: var(--side); } }
 .quick-preset, .quick-song { display: flex; align-items: center; width: 100%; min-width: 0; gap: 8px; text-align: left; }
 .quick-preset { justify-content: space-between; min-height: 46px; padding: 2px 2px 7px; font-size: clamp(15px, 2vw, 21px) !important; font-weight: 600 !important; }
 .quick-preset span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

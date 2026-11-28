@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { isPublicAsset, publicAssetBypassPatterns, serveCompanionTrailer } from '../../../infra/pulumi/public-assets.mjs';
-import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../../../site/lib/share-pages.mjs';
+import { FITTER_GUIDE_PATH, EQ_FITTER_CHART, SHARE_MOTION_FPS, LISTENING_METHODOLOGY_PATH, sharePages, sharePreviewCards, sharePageFor, shareHtml, shareImageUrl, shareAnimationUrl, shareMetadataFields, isUnfurlCrawler, isPublicAudioFactRoute, previewTitle } from '../../../site/lib/share-pages.mjs';
 
 // Every page route in app/ has its own preview entry (or is a documented alias / dynamic route).
 const routes = [];
@@ -219,6 +219,14 @@ for (const method of ['GET', 'HEAD']) assert.equal((await run(FITTER_GUIDE_PATH,
 assert.equal(await run(FITTER_GUIDE_PATH, { method: 'POST' }), null, 'Only read requests bypass admission for the guide');
 assert.equal(await run(`${FITTER_GUIDE_PATH}/private`), null, 'Only the standalone guide path is public');
 assert.equal(previewTitle(sharePageFor('/glossary')), 'Glossary');
+
+const methodologyGuide = sharePageFor(LISTENING_METHODOLOGY_PATH);
+assert.equal(previewTitle(methodologyGuide), 'Listening and EQ Methodology');
+const methodologyPreview = await (await run(LISTENING_METHODOLOGY_PATH, { headers: discord })).text();
+assert.ok(methodologyPreview.includes(`property="og:url" content="https://yinyangeq.com${LISTENING_METHODOLOGY_PATH}"`));
+for (const method of ['GET', 'HEAD']) assert.equal((await run(LISTENING_METHODOLOGY_PATH, { method })).status, 200);
+assert.equal(await run(LISTENING_METHODOLOGY_PATH, { method: 'POST' }), null);
+assert.equal(await run(`${LISTENING_METHODOLOGY_PATH}/private`), null);
 
 const measurementPath = '/glossary/iem-measurement';
 const measurementPage = sharePageFor(measurementPath);

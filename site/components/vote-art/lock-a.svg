@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 36">
+<defs>
+<linearGradient id="steel" x1="0" y1="0" x2="1" y2=".6">
+<stop offset="0" stop-color="#f1d7cb"/>
+<stop offset=".22" stop-color="#b8a39a"/>
+<stop offset=".48" stop-color="#685952"/>
+<stop offset=".76" stop-color="#c8b3a7"/>
+<stop offset="1" stop-color="#48413f"/>
+</linearGradient>
+<linearGradient id="body" x1="0" y1="0" x2=".25" y2="1">
+<stop offset="0" stop-color="#f1d7cb"/>
+<stop offset=".22" stop-color="#b8a39a"/>
+<stop offset=".48" stop-color="#685952"/>
+<stop offset=".76" stop-color="#c8b3a7"/>
+<stop offset="1" stop-color="#48413f"/>
+</linearGradient>
+<pattern id="brush" width="6" height="2" patternUnits="userSpaceOnUse">
+<path d="M0 .4h6" stroke="#fff" opacity=".16" stroke-width=".35"/>
+<path d="M1 1.3h4" stroke="#111" opacity=".2" stroke-width=".3"/>
+</pattern>
+<clipPath id="face">
+<rect x="4" y="15" width="24" height="18" rx="3"/>
+</clipPath>
+</defs>
+<path d="M8.5 15V9a7.5 7.5 0 0 1 15 0v6" fill="none" stroke="#111820" stroke-width="6"/>
+<path d="M8.5 15V9a7.5 7.5 0 0 1 15 0v6" fill="none" stroke="url(#steel)" stroke-width="4"/>
+<path d="M7.4 12V9a8.5 8.5 0 0 1 15.6-4.6" fill="none" stroke="#fff" stroke-width=".65" opacity=".7"/>
+<rect x="2.5" y="13.5" width="27" height="21" rx="4.2" fill="#151b23" stroke="#080c12" stroke-width="1"/>
+<rect x="3" y="13" width="26" height="21" rx="4" fill="url(#body)" stroke="url(#steel)" stroke-width="1"/>
+<path d="M7 14h18q3 0 3 3" fill="none" stroke="#f7faff" opacity=".75" stroke-width=".8"/>
+<path d="M4 29q0 4 4 4h17q3 0 3-3" fill="none" stroke="#161e29" opacity=".65" stroke-width="1"/>
+<rect x="3" y="14" width="26" height="20" fill="url(#brush)" clip-path="url(#face)"/>
+<path d="M6 18h20M7 19h18" stroke="#fff" stroke-width=".3" opacity=".18"/>
+<circle cx="16" cy="22" r="3" fill="#d4e1ed" opacity=".5"/>
+<path d="M16 19.5a2.5 2.5 0 0 0-1.4 4.6l-.6 4.2h4l-.6-4.2a2.5 2.5 0 0 0-1.4-4.6" fill="#111820"/>
+<path d="M14 28.5h4" stroke="#e0e8ee" opacity=".55" stroke-width=".6"/>
+<circle cx="6" cy="30.5" r=".65" fill="#2b333d" opacity=".6"/>
+<circle cx="26" cy="30.5" r=".65" fill="#2b333d" opacity=".6"/>
+</svg>

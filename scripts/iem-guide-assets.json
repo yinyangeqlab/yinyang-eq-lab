@@ -68,6 +68,10 @@
     "sha256": "5cf30f638bbf428aff1a2c717a5b4dca332f630b28625c74c8f6155f5f3cdc06"
   },
   {
+    "path": "guides/iem-measurement/fosi-im4-windows-exclusive.png",
+    "sha256": "55c365897a44d07d57bc67f3bf4959b4e6de8610570f997ffcf8cd5efddca8b2"
+  },
+  {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
     "sha256": "268572da6f94ac91a9796b634c433a498f511f7c35ea3e765269a401b2837d66"
   },
@@ -78,6 +82,10 @@
   {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf",
     "sha256": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d"
+  },
+  {
+    "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r03.pdf",
+    "sha256": "543d20d5c981bf814ae26ddc0316832d51abbc2ae5c796788f8f86a338cd6741"
   },
   {
     "path": "guides/iem-measurement/yinyang-eq-iem-711-measurement-guide.pdf",

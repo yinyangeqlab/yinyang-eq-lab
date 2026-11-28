@@ -1,8 +1,12 @@
 .companion-app-icons {
-  display: flex;
-  gap: clamp(18px, 2.2vw, 28px);
+  --app-icon-size: clamp(68px, 8vw, 104px);
+  --app-icon-gap: clamp(8px, 2vw, 22px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--app-icon-gap);
   align-items: start;
-  width: fit-content;
+  width: calc(3 * var(--app-icon-size) + 2 * var(--app-icon-gap));
+  max-width: 100%;
 }
 .companion-app-icons figure {
   display: grid;
@@ -12,12 +16,15 @@
 }
 .companion-app-icons img {
   display: block;
-  width: clamp(86px, 8vw, 108px);
+  width: 100%;
+  max-width: var(--app-icon-size);
   height: auto;
 }
 .companion-app-icons figcaption {
   color: #b8cccc;
   font: 600 .85rem/1.25 Barlow, sans-serif;
+  text-align: center;
 }
+.companion-app-icons a:hover figcaption { text-decoration: underline; text-underline-offset: .2em; }
 .android-download { gap: .52em; }
-.android-download svg { flex: none; }
+.android-download img { flex: none; }

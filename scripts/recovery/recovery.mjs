@@ -8,7 +8,7 @@ import {releaseRecordRelativePath} from '../project-paths.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 export const sha=p=>{const h=createHash('sha256');h.update(readFileSync(p));return h.digest('hex')};
 const fail=s=>{throw Error(s)};
-const authTables=['browser_ownership_codes','privacy_sessions','private_tester_devices','browser_pairings','private_access_attempts','public_write_limits','owner_profile_grants','owner_history_claims','owner_history_transfer_scope','account_device_status'];
+const authTables=['browser_ownership_codes','privacy_sessions','private_tester_devices','browser_pairings','private_access_attempts','public_write_limits','owner_profile_grants','owner_history_claims','owner_history_transfer_scope','account_device_status','companion_library_grants','sync_recovery_challenges','sync_recovery_codes','sync_recovery_passkeys'];
 const ident=s=>'"'+s.replaceAll('"','""')+'"';
 function safe(base,path){if(existsSync(base)&&lstatSync(base).isSymbolicLink())fail('Symlink base refused');if(typeof path!=='string'||path.includes('\\')||path.split('/').some(p=>!p||p==='.'||p==='..')||path.startsWith('/'))fail('Unsafe bundle path');const target=resolve(base,path);if(!target.startsWith(resolve(base)+sep))fail('Path escapes destination');let cursor=resolve(base);for(const segment of path.split('/')){cursor=resolve(cursor,segment);if(existsSync(cursor)&&lstatSync(cursor).isSymbolicLink())fail('Symlink refused');}return target;}
 function json(p){return JSON.parse(readFileSync(p,'utf8'))}

@@ -13,6 +13,10 @@ try{
  db.prepare('INSERT INTO '+ 'private_tester_invites (id,label,code_hash,created_at,code_expires_at) VALUES (?,?,?,?,?)').run('fixture','Fixture', 'old-credential-hash',0,9999999999);
  db.prepare('INSERT INTO '+ 'privacy_sessions(token_hash,subject_id,expires_at) VALUES (?,?,?)').run('old-data-hash','fixture',9999999999999);
  db.prepare("INSERT INTO privacy_accounts(subject_id) VALUES('invite:fixture')").run();
+ db.exec(`INSERT INTO sync_recovery_accounts VALUES ('fixture-sync-id','invite:fixture','fixture');
+   INSERT INTO sync_recovery_challenges VALUES ('fixture-challenge','recover','fixture-sync-id',NULL,9999999999);
+   INSERT INTO sync_recovery_codes VALUES ('fixture-sync-id','fixture-code-hash');
+   INSERT INTO sync_recovery_passkeys VALUES ('fixture-credential','fixture-sync-id','fixture-public-key',0,'Fixture',0);`);
  db.prepare("INSERT INTO owner_public_profiles(slug,subject_id,invite_id,policy_at,created_at) VALUES('yinyangeq','invite:fixture','fixture',0,0)").run();
  db.prepare("INSERT INTO owner_profile_devices(id,profile_slug,session_hash,label,created_at) VALUES('fixture-device','yinyangeq','old-session','Fixture',0)").run();
  db.prepare("INSERT INTO owner_profile_grants(id,profile_slug,token_hash,label,created_at,expires_at) VALUES('fixture-grant','yinyangeq','old-grant','Fixture',0,9999999999999)").run();
@@ -20,6 +24,14 @@ try{
  for(const [id,committed]of [['pending-transfer',null],['committed-transfer',1]]){db.prepare('INSERT INTO account_sync_versions(id,subject_id,device_id,epoch,base_revision,manifest,created_at,committed_at) VALUES(?,?,?,?,?,?,?,?)').run(id,'invite:fixture','old-device','fixture',0,'{}',0,committed);db.prepare('INSERT INTO account_sync_entries(version_id,storage_key,entry_index,part_count,content_hash) VALUES(?,?,?,?,?)').run(id,'target-lab-trials',0,1,'synthetic-hash');db.prepare('INSERT INTO account_sync_parts(version_id,storage_key,entry_index,part_index,payload) VALUES(?,?,?,?,?)').run(id,'target-lab-trials',0,0,'{"id":"synthetic-saved-result"}');}
  const clean=resolve(dir,'clean.sqlite');test('sanitize removes active credentials, retains schema',()=>{sanitizeDatabase(input,clean);const d=new DatabaseSync(clean);assert.equal(d.prepare('SELECT count(*) n FROM privacy_sessions').get().n,0);assert.equal(d.prepare('SELECT count(*) n FROM account_sync_versions WHERE committed_at IS NULL').get().n,0);assert.equal(d.prepare('SELECT count(*) n FROM account_sync_entries WHERE version_id=?').get('pending-transfer').n,0);assert.equal(d.prepare('SELECT count(*) n FROM account_sync_parts WHERE version_id=?').get('pending-transfer').n,0);assert.equal(d.prepare('SELECT count(*) n FROM account_sync_parts WHERE version_id=?').get('committed-transfer').n,1);assert.equal(d.prepare('SELECT count(*) n FROM private_tester_invites WHERE revoked_at IS NULL').get().n,0);assert.equal(d.prepare('SELECT count(*) n FROM owner_profile_grants').get().n,0);assert.equal(d.prepare('SELECT count(*) n FROM owner_profile_devices WHERE session_hash IS NOT NULL OR revoked_at IS NULL').get().n,0);assert.equal(d.prepare("SELECT state FROM owner_profile_entries").get().state,'draft');d.close()});db.close();
  const pub=resolve(dir,'public');mkdirSync(pub);writeFileSync(resolve(pub,'asset.txt'),'synthetic recovery fixture');
+ test('restore snapshots keep Sync account identity with recovery credentials invalidated',()=>{
+   const d=new DatabaseSync(clean,{readOnly:true});
+   try {
+     assert.equal(d.prepare('SELECT sync_id FROM sync_recovery_accounts').get().sync_id,'fixture-sync-id');
+     for (const table of ['sync_recovery_challenges','sync_recovery_codes','sync_recovery_passkeys'])
+       assert.equal(d.prepare('SELECT count(*) n FROM '+table).get().n,0);
+   } finally { d.close(); }
+ });
  const release=resolve(dir,'release.json');writeFileSync(release,JSON.stringify({update:81,assetFiles:[{path:'public/asset.txt',sha256:sha(resolve(pub,'asset.txt'))}]}));
  const review=resolve(dir,'review.json');writeFileSync(review,JSON.stringify({databaseSha256:sha(clean),reviewedAt:new Date().toISOString(),source:'current-live-export',deletedRecordsExcluded:true}));
  const bundle=resolve(dir,'bundle');

@@ -73,3 +73,52 @@ The engine is LGPL-3.0-or-later, copyright 2026 PEQdB Inc. Our application remai
 Before any public release, review the complete delivered package for LGPLv3 section 4, source availability, notices and practical recombination/replacement; separation by itself does not establish compliance. A link to unmodified upstream is insufficient for our modified build. Relevant primary sources: https://www.gnu.org/licenses/lgpl-3.0.html and https://www.gnu.org/licenses/gpl-faq.en.html#LGPLStaticVsDynamic.
 
 Adopt the unsmoothed solver first only after owner review and broader measurement/browser checks. Keep correction limits, normalization, sample-rate handling, headroom, fallback/cancellation and engine-version provenance explicit. Changing official listening filters can affect research comparability even when scoring formulas remain unchanged. Adaptive smoothing is a separate policy decision. A production integration, commit, push and deployment are separate later steps.
+
+## November 25, 2026 web fitter benchmark
+
+The ranked snapshot compares 14 browser-based tools on seven identical measurement–target pairs at 48 kHz. The four requested budgets are 10, 15, 20 and 30 filters. Each ranked median uses all seven pairs for that budget, and each tool uses the supported budgets below. Several websites share CrinGraph/Squiglink code. They are distinct hosted tools with some identical defaults and outputs. Equal scores share a rank. The per-case CSV records active filters so an unused slot never appears as a fitted band. The original two-budget scores are retained as a historical record. [Ranked snapshot CSV](../../../public/eq-fitting/eq-fitter-web-scores.csv) · [Original CSV](../../../public/eq-fitting/eq-fitter-scores.csv)
+
+On November 27 we ran the shipped Joint Fit 20 implementation (`yinyang-joint-fit-v1`, added in update226) on all seven pairs using the same evaluation grid and level offset. The seven additional rows have their own date in the CSV. The original captured scores reproduce byte for byte when the Joint Fit flag is omitted.
+
+The six oratory1990 measurements and Harman targets use the Git blobs in `prepare.py` and the catalog. For the Samsung EO-IA500 with stock tips, the measurement and Harman IE 2019 are the Studio exports. Their SHA-256 hashes are `415599898d3bab4449ed6f1520a6db823e3b3ecc1ce3ab5d825933112741d58a` and `a9d9663666159620c4ae4a921f31471b1a0d687d93c025b0e9ea6e3bb2ea9044`. The similarly named AutoEq Harman 2019 target is a distinct input file.
+
+| Tool or mode | Budgets tested | Build and settings |
+| --- | --- | --- |
+| YinYang EQ | 10, 15, 20, 30 | Export runner at `8dd52f8`, verified identical to the deployed update218 fitter files. Fixed Bands, Movable Bands, PEQdB Unsmoothed and Smoothed. PEQdB runs 3,000 steps with a fixed 1 kHz export reference. |
+| [PEQdB Studio](https://peqdb.com/studio/) | 10, 15, 20 | Captured `index-CmzEZqn4.js` Standard and Precise solver at 100 steps with free overall gain. The menu in that build offers 5, 10, 15 and 20. The snapshot scores solver output on all seven fixtures. |
+| [Super* Review Squiglink](https://squig.link/) | 10, 15, 20 | Automatic preset with 20–6,000 Hz filter centers, plus its 20–20,000 Hz configuration. Bell filters, ±40 dB gain, Q 0.1–10 and 60-phon graph normalization. |
+| [Hangout Audio](https://eq.hangout.audio/) | 10, 15, 20 | Advanced Auto EQ defaults. 20–15,000 Hz centers, ±12 dB gain, Q 0.5–2 and 0-phon graph normalization. |
+| [AutoEq.app](https://autoeq.app/) | 10, 15, 20, 30 | Custom Parametric EQ sent to the live /equalize endpoint. Fixed shelves at 105 Hz and 10 kHz with Q 0.7, additional bells to reach each budget, 10 kHz optimization ceiling and 0.5 s optimizer limit. Imported targets used zero added bass and treble boost and zero tilt. The timed endpoint may return different fits on repeat calls. |
+| [modernGraphTool](https://potatosalad775.github.io/modernGraphTool/docs/features/autoeq-benchmarks/) | 10, 15, 20, 30 | v2.3.6, source `c47101a861d4969c30306732f5faa41e38a47f76`, turboEQ 0.3.1 verified against its lockfile. Exact match and Treble-safe, two movable shelves included in each budget, 20–15,000 Hz requested centers, gain ±12 dB, bell Q 0.5–2, 1/48-octave preprocessing and 500 Hz normalization. Treble-safe applies its internal 10 kHz center ceiling. |
+| [Tryptify](https://tryptify.com/autoeq) | 10, 20 | November 25 browser engine, Peaking and Shelf ends, smoothing Off and 16 kHz fitting limit. The live page offers 5, 8, 10, 16, 20 and 31 bands. The captured engine accepts the shared custom targets and its native matched-Z coefficients are evaluated at 48 kHz. |
+| [CurveLab](https://curvelab.fit/generator/) | 10 | November 25 generator, its maximum 10 bands, default ±6 dB per band and 1/12-octave measurement smoothing. Both curves use the app’s 1 kHz alignment. |
+| [Audio Discourse](https://iems.audiodiscourse.com/), [Bedrock Reviews](https://bedrock.squig.link/), [HiFiEndgame](https://graphs.hifiendgame.com/), [Boizoff](https://boizoff.squig.link/headphones/) | 10, 15, 20 each | November 25 graph tools. Same 20–15,000 Hz center range, ±12 dB gain, Q 0.5–2 and 60-phon normalization. |
+| [Unheard Lab](https://sai.squig.link/) | 10, 15, 20 | November 25 graph tool, 20–15,000 Hz centers, ±12 dB gain, Q 0.5–3 and 85-phon normalization. |
+| [CSI-Zone](https://csi-zone.squig.link/) | 10, 15, 20 | November 25 graph tool, automatic preset and the same settings as Super* Review’s 6 kHz configuration. |
+
+RootlessJamesDSP and Quve are Android DSP applications. Poweramp Equalizer’s AutoEq feature installs or imports presets. Loundess PEQ, a RootlessJamesDSP fork, adds the Squig AutoEQ optimizer. We replayed that fork’s Kotlin fitter at `a89c5a6f37536613febe9e04873617235e205109` with the shared curves, 500 Hz normalization, its default 30 Hz–6 kHz matching range and all four filter caps. It returned the same fits at every cap, with a median of three active filters. Its 28 Android reference results are in the CSV. The replay covered the JVM fitter and its response calculator. [RootlessJamesDSP](https://github.com/timschneeb/RootlessJamesDSP) · [Loundess PEQ fork](https://github.com/evoeram/Loundess-PEQ-RootlessJamesDSP/tree/a89c5a6f37536613febe9e04873617235e205109) · [Quve](https://github.com/nanbeimerco/Quve) · [Poweramp Equalizer](https://forum.powerampapp.com/files/file/84-powerampequalizer-build-963-uniapk/?changelog=27)
+
+The captured graph engines ran locally on each site’s 1/48-octave input grid with site normalization. The benchmark uses the original 384-point logarithmic evaluation grid from 20 Hz to 20 kHz. At each sample the error is post-EQ measurement minus target. A single mean residual is removed over the full grid before computing all RMS ranges. Peak boost is the largest positive combined response on that grid before preamp attenuation. P95 error is the nearest-rank 95th percentile of the absolute residual. Worst error is its maximum. The no-EQ reference reproduces all five original RMS ranges for all seven measurements to CSV precision.
+
+| Captured asset | SHA-256 |
+| --- | --- |
+| YinYang `autoeq-wasm.wasm` | `5e241beb0f382b80ca868f8e932bdff8033ea326878d34812add6f53eab461a8` |
+| Studio `index-CmzEZqn4.js` | `93dcaf1d0e79e0c948c51d4bc4aaa62eefd2e929755b7b6299d4fbaea3c199c3` |
+| Super* Review and CSI-Zone `equalizer.js` | `a8e630acee49b02355bfc794d7cb306ce47d7bdd6f9bf0c70042f9aef1fac124` |
+| Hangout Audio, Audio Discourse, Bedrock Reviews and HiFiEndgame `equalizer.js` | `c261f39fb31c34af5f270bf3080c7529194b709ed5ef3763a01b2261d36cd4ce` |
+| Boizoff `equalizer.js` | `a896360bbaae292303c4d1b6581e73df9b396c5e11ebd92935a8bcc5b4131aae` |
+| Unheard Lab `equalizer.js` | `798025ba9d377ed95642e2f28233cc37017b156e60310c891d1428f349c1767d` |
+| AutoEq.app `main.3996d468.js` | `449a15ea71fd30c0e78bca463db3ddc9bde185712704f2169256cdda08c09a3f` |
+| modernGraphTool’s turboEQ package 0.3.1 | `5bb99341def0f011868efea293e24e89b0040a530d267cb60c54dc313abf6317` |
+| Tryptify `autoeq-engine.js` | `b4a71270b9a16df7dc797b39c444bfb5ad661e88c445c6705b2df49ef16902d6` |
+| CurveLab `219-8a82911d4218dd8f.js` | `857c3e9dfa7f6b29f9059298f481df93f7c8156bdd71705f446d777ca6c39d17` |
+
+To rescore the snapshot, keep curves and preset captures outside Git. The input directory contains `fixtures.json` for the six oratory1990 fixture objects and `studio-fixture.json` for the one Studio fixture. Each uses `name`, `points` and `target`. Capture filenames, including `loundess-peq-fits.json`, are listed in `score-web-fitters.ts`. Each capture row contains `name`, `bands` and `filters`, with each filter specifying `type` (`PK`, `LSQ`, `HSQ`), `hz`, `gain` and `q`. For the Tryptify rows, `nativeCoefficients` contains `[b0, b1, b2, a1, a2]` for each filter.
+
+```sh
+node_modules/.bin/esbuild scripts/experiments/autoeq/score-web-fitters.ts \
+  --bundle --platform=node --format=esm --outfile=/tmp/score-web-fitters.mjs
+node /tmp/score-web-fitters.mjs /path/to/captures /tmp/eq-fitter-web-scores.csv /tmp/eq-fitter-rankings.json --joint-fit-date 2026-11-27
+cmp /tmp/eq-fitter-web-scores.csv public/eq-fitting/eq-fitter-web-scores.csv
+cmp /tmp/eq-fitter-rankings.json site/data/eq-fitter-rankings.json
+```

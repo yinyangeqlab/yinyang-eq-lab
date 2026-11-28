@@ -227,12 +227,15 @@ const privateGate = {
       guidePdfPath,
       "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r01.pdf",
       "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r02.pdf",
+      "/guides/iem-measurement/yinyang-eq-iem-711-measurement-guide-r03.pdf",
       "/guides/iem-measurement/yinyang-eq-iem-711-bench-checklist-r01.pdf",
     ];
-    const publicLandingAsset = isPublicAsset(path) || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
+    const publicFitterScores = path === "/eq-fitting/eq-fitter-scores.csv" || path === "/eq-fitting/eq-fitter-web-scores.csv";
+    const publicLandingAsset = isPublicAsset(path) || publicFitterScores || approvedGuidePdfPaths.includes(path) || ["/guides/iem-measurement/fosi-im4-windows-exclusive.png", "/guides/iem-measurement/first-sweep-repeats.png", "/guides/iem-measurement/channel-match-off.png", "/guides/iem-measurement/channel-match-practical.png", "/guides/iem-measurement/channel-match-ideal.png"].includes(path) || /^\/guides\/iem-measurement\/(?:figure-(?:02|04)\.webp|figure-(?:05|06|08|09|10|12|13)\.png|figure-(?:14|15|16|17)\.jpg)$/.test(path);
     const publicProfile = path === "/listeners/yinyangeq" || path === "/api/public-profiles/yinyangeq" || /^\/api\/public-profiles\/yinyangeq\/files\/[a-f0-9-]{36}\/(single|left|right|curve|export)$/.test(path);
     const publicSearchFile = path === "/robots.txt" || path === "/sitemap.xml";
-    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/q5k4android/trailer/portrait" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || publicProfile || publicLandingAsset || publicSearchFile)) {
+    const publicMethodologyGuide = path === "/glossary/methodology";
+    if ((request.method === "GET" || request.method === "HEAD") && (path === "/" || path === "/listen" || path === "/privacy" || path === "/terms" || path === "/curve-credits" || path === "/version" || path === "/about" || path === "/android" || path === "/android/trailer" || path === "/android/trailer/portrait" || path === "/q5k4android" || path === "/q5k4android/trailer" || path === "/q5k4android/trailer/portrait" || path === "/android/download" || path === "/shortcuts" || path === "/glossary" || path === "/glossary/eq-fitting" || path === "/glossary/iem-measurement" || isPublicAudioFactRoute(path) || path === "/api/maintenance" || publicProfile || publicLandingAsset || publicSearchFile || publicMethodologyGuide)) {
       if (publicLandingAsset) {
         if (isCompanionTrailer(path)) return serveCompanionTrailer(request, env.ASSETS);
         const response = await env.ASSETS.fetch(request);
@@ -301,6 +304,27 @@ const privateGate = {
         return app.fetch(new Request(bounded,{headers:clean}),env,context);
       }
       let tester = owner ? null : await validTester(request, env.DB, enabled);
+      const recoveryApi = path === "/api/sync-recovery";
+      const recoveryPage = path === "/sync-recovery";
+      const unsignedCompanion = path === "/companion-link" && !tester && !owner && ["GET","HEAD"].includes(request.method);
+      if (recoveryApi || recoveryPage || unsignedCompanion) {
+        if (owner || tester?.id === "layout-test-only" ||
+            !tester && (await dataSession(request,env,null))?.subject === "invite:layout-test-only")
+          return json({error:"Open Sync recovery in a separate listener browser."},403);
+        if (!(recoveryApi ? request.method === "POST" : ["GET","HEAD"].includes(request.method)))
+          return json({error:"Method not allowed."},405);
+        const bounded = await boundedBody(request);
+        if (bounded instanceof Response) return bounded;
+        const clean = new Headers(bounded.headers);
+        for (const name of ["authorization","oai-authenticated-user-id","oai-authenticated-user-email","oai-authenticated-user-full-name","oai-authenticated-user-full-name-encoding","x-yinyang-data-session"])
+          clean.delete(name);
+        const response = await app.fetch(new Request(bounded,{headers:clean}),env,context);
+        const privateResponse = new Response(response.body,response);
+        privateResponse.headers.set("Cache-Control","private, no-store");
+        privateResponse.headers.set("Referrer-Policy","no-referrer");
+        privateResponse.headers.set("X-Robots-Tag","noindex, nofollow");
+        return privateResponse;
+      }
       if(tester?.id==="layout-test-only" && !["GET","HEAD","OPTIONS"].includes(request.method) && !(path==="/api/my-data"&&request.method==="PATCH"))return blockedSubmission("test_account", json({error:"Private test account: submissions, uploads, sync and public contributions are disabled."},403));
       if(tester?.id==="layout-test-only" && (path==="/sync" || path==="/pair" || path.startsWith("/devices"))) return htmlResponse('<h1>Private Test Account</h1><p>Browser Sync is unavailable for this hidden test account. Its local tests stay in this browser and cannot be copied into a participant account.</p><p><a href="/test-history">Review local test history</a></p><p><a href="/shootout/personal">Return to Personal Tournament</a></p>',403);
       // Open access still uses host-only credentials and the existing ownership,
@@ -311,7 +335,7 @@ const privateGate = {
       const communityManagement=path==="/api/community-preferences/personal"&&["GET","HEAD","PATCH"].includes(request.method);
       const practiceScores = path === "/api/ear-practice";
       const practiceManagement = practiceScores && (["PATCH", "DELETE"].includes(request.method) || url.searchParams.has("mine") && request.method === "GET");
-      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/account-sync", "/companion-link", "/api/companion/grants", "/api/companion/backups"].includes(path) || communityManagement || practiceManagement;
+      const dataRoute = ["/my-data", "/api/my-data", "/api/my-data/browser-proof", "/api/my-data/legacy", "/api/my-data/retrospective", "/api/my-data/yinyangeq-link", "/my-profile", "/api/my-profile", "/api/my-profile/sync", "/api/my-profile/devices", "/api/my-profile/sync-recovery", "/account-sync", "/companion-link", "/api/companion/grants", "/api/companion/backups"].includes(path) || communityManagement || practiceManagement;
       // The app route checks the scoped library grant, its issuing browser and current sync consent.
       const companionLibrary = path === "/api/companion/library" && ["GET","POST","DELETE"].includes(request.method)
         && /^Bearer [a-f0-9]{64}$/.test(request.headers.get("Authorization") || "") && !request.headers.has("Cookie");
@@ -384,14 +408,14 @@ const privateGate = {
       // This cache is consulted only AFTER owner/tester validation. Cache only
       // aggregate rankings; never research records, music, HTML or auth responses.
       const rankingCache = typeof caches !== "undefined" ? caches.default : null;
-      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only`);
+      let rankingKey = new Request(`${url.origin}/__internal/ranking-cache/v4-all-fitters`);
       const cacheRanking = request.method === "GET" && path === "/api/research" && env.MAINTENANCE_MODE !== "true";
       if (cacheRanking && rankingCache) {
         // Revision keys prevent stale results after erasure across cache locations
         // and prevent an in-flight old computation from repopulating the new key.
         const version=await env.DB.prepare("SELECT revision FROM ranking_revision WHERE id=1").first();
         if(!version) throw new Error("Ranking revision unavailable");
-        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v3-participant-only/${version.revision}`);
+        rankingKey=new Request(`${url.origin}/__internal/ranking-cache/v4-all-fitters/${version.revision}`);
         try {
           const cached = await rankingCache.match(rankingKey);
           if (cached) { const hit=rankingResponse(cached, "HIT"); if(data?.setCookie) hit.headers.append("Set-Cookie",data.setCookie); return hit; }

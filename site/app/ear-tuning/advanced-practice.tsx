@@ -258,7 +258,7 @@ export default function AdvancedPractice({ requestListening, onBeforePractice, s
         {estimate && <button type="button" className="ear-guide-next" onClick={() => seek(targetHz)}>Move to the answer frequency</button>}
         {estimate && score.answered === 6 && <div className="ear-ranked-invitation">
           <p>Ready for a scored challenge? Ranked play has its own rounds and public leaderboard.</p>
-          <button type="button" onClick={onOpenRanked}>Open Ranked Practice Challenge</button>
+          <button type="button" onClick={onOpenRanked}>Open Peak and Dip Ranked Listening Challenge</button>
         </div>}
       </>}
     </div>

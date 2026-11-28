@@ -117,7 +117,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
     aria-labelledby={owner ? "ear-practice-admin-title" : "ear-practice-board-title"}>
     <header className="ear-practice-board-header">
       <div>
-        <h2 id={owner ? "ear-practice-admin-title" : "ear-practice-board-title"}>{owner ? "Ranked practice participants" : "Ranked Practice Challenge results"}</h2>
+        <h2 id={owner ? "ear-practice-admin-title" : "ear-practice-board-title"}>{owner ? "Ranked challenge participants" : "Peak and Dip Ranked Listening Challenge results"}</h2>
         {owner && <p>Scores combine results at the account level. Each row shows the published username and the private participant ID.</p>}
       </div>
       {!owner && <a className="ear-practice-play-link" href="/ear-tuning">Open Peak &amp; Dip Finder</a>}
@@ -126,7 +126,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
       : <>
         {loadingPage && <p role="status">Loading page {pageIndex + 1}…</p>}
         {board.rows.length ? <>
-          {owner ? <AdminTable label="Ranked practice participants" rows={board.rows} rowKey={row => row.participantId ?? row.username} columns={[
+          {owner ? <AdminTable label="Ranked challenge participants" rows={board.rows} rowKey={row => row.participantId ?? row.username} columns={[
             { key: "rank", label: "Rank", value: row => row.rank },
             { key: "username", label: "Username", value: row => row.username },
             { key: "participant", label: "Participant ID", value: row => row.participantId, render: row => <code className="admin-id">{row.participantId}</code> },
@@ -138,7 +138,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
             { key: "level", label: "Level cleared", value: row => row.furthest, search: row => row.furthest === 100 ? "Grandmaster" : null,
               render: row => <>{row.furthest}{row.furthest === 100 && <small className="ear-practice-grandmaster">Grandmaster</small>}
                 <small>{levelPercentile(row.furthest).toFixed(1)}th percentile</small></> },
-          ]} /> : <div key={board.page} className="ear-practice-table" aria-busy={loadingPage} tabIndex={0} role="region" aria-label="Ranked practice scores">
+          ]} /> : <div key={board.page} className="ear-practice-table" aria-busy={loadingPage} tabIndex={0} role="region" aria-label="Ranked listening challenge scores">
             <table>
               <caption>{participants > board.pageSize
                 ? `Showing ${(board.page * board.pageSize + 1).toLocaleString("en-US")}–${(board.page * board.pageSize + board.rows.length).toLocaleString("en-US")} of ${participants.toLocaleString("en-US")} players`
@@ -153,7 +153,7 @@ export default function EarPracticeLeaderboard({ owner = false }: { owner?: bool
               </tr>)}</tbody>
             </table>
           </div>}
-          {!owner && participants > board.pageSize && <nav className="ear-practice-pagination" aria-label="Ranked practice result pages">
+          {!owner && participants > board.pageSize && <nav className="ear-practice-pagination" aria-label="Ranked listening challenge result pages">
             <button type="button" disabled={loadingPage || pageIndex === 0} onClick={() => changePage(pageIndex - 1)}>Previous page</button>
             <span aria-live="polite">Page {board.page + 1} of {Math.ceil(participants / board.pageSize)}</span>
             <button type="button" disabled={loadingPage || (pageIndex + 1) * board.pageSize >= participants} onClick={() => changePage(pageIndex + 1)}>Next page</button>

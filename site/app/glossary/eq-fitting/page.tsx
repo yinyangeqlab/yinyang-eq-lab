@@ -10,7 +10,7 @@ export default function EqFitterBenchmarkPage() {
     <article>
       <header>
         <h1>EQ Fitter Benchmark</h1>
-        <p>See how closely six EQ fitters matched the same targets across seven headphone measurements.</p>
+        <p>Rank Auto EQ fitters at 10, 15, 20 and 30 bands using the same headphone measurements and targets.</p>
       </header>
       <EqFittingGuide showContents />
     </article>

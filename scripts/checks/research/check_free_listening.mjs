@@ -11,13 +11,13 @@ import * as listening from '../../../site/lib/listening.ts';
 import * as protocol from '../../../site/lib/listening-protocol.ts';
 import {targetHeadphoneType} from '../../../site/lib/target-type.ts';
 import {cleanFeedback} from '../../../site/lib/feedback.ts';
-const schema=Object.fromEntries(['listeningRuns','rankedTrials','targets','comparisonRecords','submissionOwners','feedbackSubmissions'].map(name=>[name,new Proxy({table:name},{get:(obj,key)=>obj[key]??key})]));
+const schema=Object.fromEntries(['listeningRuns','rankedTrials','targets','comparisonRecords','submissionOwners','feedbackSubmissions','votes'].map(name=>[name,new Proxy({table:name},{get:(obj,key)=>obj[key]??key})]));
 const id=n=>`${String(n).padStart(8,'0')}-0000-4000-8000-000000000000`;
-let subject='participant',consent=true,shareMusic=false,stored=[],owner=[],writes=[],targetRows=[];
+let subject='participant',consent=true,shareMusic=false,stored=[],owner=[],writes=[],targetRows=[],issued=[];
 const match=(row,c)=>!c||c.every(({key,value})=>row[key]===value);
-const db={insert:table=>({values:value=>({table,value})}),batch:async commands=>{writes.push(...commands);for(const c of commands){if(c.table===schema.listeningRuns)stored.push(c.value);if(c.table===schema.submissionOwners)owner.push(c.value);}},select:()=>({from:table=>({where:condition=>{const rows=table===schema.targets?targetRows:table===schema.listeningRuns?stored:table===schema.submissionOwners?owner:[];const result=rows.filter(row=>match(row,condition));const query={then:(yes,no)=>Promise.resolve(result).then(yes,no),limit:async n=>result.slice(0,n),get:async()=>result[0],orderBy:()=>({limit:async n=>result.slice(0,n)})};return query;}})})};
+const db={insert:table=>({values:value=>({table,value})}),batch:async commands=>{writes.push(...commands);for(const c of commands){if(c.table===schema.listeningRuns)stored.push(c.value);if(c.table===schema.rankedTrials)issued.push(c.value);if(c.table===schema.submissionOwners)owner.push(c.value);}},select:()=>({from:table=>({where:condition=>{const rows=table===schema.targets?targetRows:table===schema.listeningRuns?stored:table===schema.rankedTrials?issued:table===schema.submissionOwners?owner:[];const result=rows.filter(row=>match(row,condition));const query={then:(yes,no)=>Promise.resolve(result).then(yes,no),limit:async n=>result.slice(0,n),get:async()=>result[0],orderBy:()=>({limit:async n=>result.slice(0,n)})};return query;}})})};
 const linked={id:id(75),status:'approved',points:'[]',version:'pinned-source-version'};
-const deps={'@/lib/autoeq-target-sources':{autoEqRankingTargets:[linked],sharedAutoEqTarget:key=>key===linked.id?linked:undefined},'@/lib/target-type':{targetHeadphoneType},'@/db':{getDb:()=>db},'@/db/schema':schema,'@/lib/public-targets':{publicTargetPredicate:null},'drizzle-orm':{eq:(key,value)=>[{key,value}],and:(...c)=>c.flat().filter(Boolean),gte:()=>[],desc:x=>x},'@/lib/submission-ownership':{submissionContext:async kind=>{if(!consent||['owner','invite:layout-test-only'].includes(subject))throw new input.RequestInputError('Not permitted',403);return {subjectId:subject,shareMusic,record:recordId=>({table:schema.submissionOwners,value:{recordKind:kind,recordId,subjectId:subject}}),requireTrial:async()=>{throw new input.RequestInputError('Not owned',403);}};}},'@/lib/curve-version':{curveVersion:async()=> 'version'},'@/lib/listening-protocol':protocol,'@/lib/listening':listening,'@/lib/request-json':input,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'fixture'},'@/lib/public-write-gate':{publicWriteGate:async()=>null},'@/lib/feedback':{cleanFeedback}};
+const deps={'@/lib/autoeq-target-sources':{autoEqRankingTargets:[linked],sharedAutoEqTarget:key=>key===linked.id?linked:undefined},'@/lib/target-type':{targetHeadphoneType},'@/db':{getDb:()=>db},'@/db/schema':schema,'@/lib/public-targets':{publicTargetPredicate:null},'drizzle-orm':{eq:(key,value)=>[{key,value}],and:(...c)=>c.flat().filter(Boolean),gte:()=>[],desc:x=>x},'@/lib/submission-ownership':{submissionContext:async kind=>{if(!consent||['owner','invite:layout-test-only'].includes(subject))throw new input.RequestInputError('Not permitted',403);return {subjectId:subject,shareMusic,record:recordId=>({table:schema.submissionOwners,value:{recordKind:kind,recordId,subjectId:subject}}),requireTrial:async id=>{if(!owner.some(row=>row.recordKind==='trial'&&row.recordId===id&&row.subjectId===subject))throw new input.RequestInputError('Not owned',403);}};}},'@/lib/curve-version':{curveVersion:async()=> 'version'},'@/lib/listening-protocol':protocol,'@/lib/listening':listening,'@/lib/request-json':input,'@/lib/vote-data-notice':{VOTE_DATA_NOTICE_VERSION:'fixture'},'@/lib/public-write-gate':{publicWriteGate:async()=>null},'@/lib/feedback':{cleanFeedback}};
 const loggingCode=ts.transpileModule(readFileSync('site/lib/shootout-submission-logs.ts','utf8'),{
   compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS},
 }).outputText;
@@ -25,9 +25,9 @@ const loggingContext={exports:{}};
 vm.runInNewContext(loggingCode,loggingContext);
 deps['@/lib/shootout-submission-logs']=loggingContext.exports;
 function load(path){const exports={};vm.runInNewContext(ts.transpileModule(readFileSync(path,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{exports,require:key=>{if(key==="@/lib/fitter-settings")return fitters;assert.ok(key in deps,key);return deps[key];},Response,crypto:webcrypto,Date});return exports;}
-const runs=load('site/app/api/listening-runs/route.ts'),feedback=load('site/app/api/feedback/route.ts');
+const runs=load('site/app/api/listening-runs/route.ts'),feedback=load('site/app/api/feedback/route.ts'), trials=load('site/app/api/trials/route.ts');
 const body={id:id(1),voterId:id(2),targetAId:id(3),targetBId:id(4),headphoneType:'ie',result:'a',testMode:'bring',matchedPassageRequired:false,intervals:[],voteDataNoticeVersion:'fixture',shareSong:true,songTitle:'Private song',researchContext:{targetVersions:['version','version'],recordingId:'private',sha256:'a'.repeat(64),rig:'Synthetic',duration:200}};
-function reset(){subject='participant';consent=true;shareMusic=false;stored=[];owner=[];writes=[];targetRows=[{id:id(3),status:'approved',measurement:JSON.stringify({type:'ie'}),points:'[]'},{id:id(4),status:'approved',measurement:null,points:'[]'}];}
+function reset(){subject='participant';consent=true;shareMusic=false;stored=[];owner=[];writes=[];issued=[];targetRows=[{id:id(3),status:'approved',measurement:JSON.stringify({type:'ie'}),points:'[]'},{id:id(4),status:'approved',measurement:null,points:'[]'}];}
 async function post(route,data){return route.POST(new Request('http://local.test/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(data)}));}
 let checks=0;
 for(const mode of ['blind','bring','open'])for(const seconds of [0,6]){reset();const intervals=seconds?[0,1].map(side=>({side,start:2,end:2+seconds,rate:1})):[];assert.equal((await post(runs,{...body,testMode:mode,intervals})).status,201);const row=stored[0],context=JSON.parse(row.researchContext);assert.equal(row.protocolVersion,protocol.FREE_LISTENING_PROTOCOL);assert.equal(row.trialId,null);assert.equal(row.heardA,seconds);assert.equal(row.overlapSeconds,seconds);assert.equal(context.matchedPassageRequired,false);assert.equal(context.matchedPassage,seconds>=5);if(mode!=='blind'){assert.equal(row.songTitle,null);assert.equal(context.sha256,undefined);}assert.equal(writes.length,3);checks++;}
@@ -76,6 +76,39 @@ try {
 } finally {db.batch=batch;}
 console.log('PASS listening-run failure markers contain only fixed codes, including database errors.');
 console.log(`PASS ${checks} free-listening API cases: actual timing, protocol separation, consent changes, private targets, category/input validation, admin/test denials, song privacy and owned feedback context.`);
+
+const levelMatch = { method: protocol.PASSAGE_LEVEL_MATCH_METHOD, start: 4, end: 9, differenceLu: .01 };
+const jointFit = { ...fitters.JOINT_FITTER, engine: "joint", engineVersion: fitters.JOINT_FITTER_VERSION, filterCount: 20, rms: .04, preamp: -7, sampleRate: 48000 };
+const rankedTrialRequest = { voterId: body.voterId, headphoneType: body.headphoneType, autoEqCatalog: "fixture" };
+deps["@/lib/autoeq-target-sources"].autoEqCatalogId = "actual fixture catalog";
+for (const testMode of ["blind","bring"]) for (const [label, patch, expected] of [
+  ["clean level match", {}, 201],
+  ["missing matching evidence", { passageLevelMatch: undefined }, 400],
+  ["difference beyond tolerance", { passageLevelMatch: { ...levelMatch, differenceLu: .1 } }, 400],
+  ["other passage", { passageLevelMatch: { ...levelMatch, start: 5, end: 10 } }, 400],
+  ["wrong fitter", { eqFits: [] }, 400],
+  ["wrong filter count", { eqFits: [{ ...jointFit, filterCount: 19 }, jointFit] }, 400],
+]) {
+  reset();
+  const assignment = await post(trials, {...rankedTrialRequest,testMode});
+  assert.equal(assignment.status, 200);
+  const {trialId, pair, protocolVersion} = await assignment.json();
+  assert.equal(protocolVersion, protocol.LEVEL_MATCHED_LISTENING_PROTOCOL);
+  issued[0].issuedAt -= 12_000;
+  const payload = { ...body, testMode, trialId, targetAId: pair[0], targetBId: pair[1], matchedPassageRequired: true,
+    intervals: [0, 1].map(side => ({side, start: 4, end: 9, rate: 1})),
+    researchContext: {...body.researchContext, eqFits: [jointFit, jointFit], passageLevelMatch: levelMatch, ...patch},
+  };
+  const response = await post(runs, payload);
+  assert.equal(response.status, expected, label);
+  if (expected === 201) {
+    assert.equal(stored[0].protocolVersion, protocol.LEVEL_MATCHED_LISTENING_PROTOCOL);
+    assert.deepEqual(JSON.parse(stored[0].researchContext).passageLevelMatch, levelMatch);
+  } else assert.equal(stored.length, 0);
+  assert.equal((await post(runs, {...payload, matchedPassageRequired: false})).status, 400, "No downgrade to Rapid Shootout");
+}
+
+console.log("PASS both ranked music sources automatically receive the 20-band protocol and require matching evidence.");
 
 // The real migration chain must roll back the entire run when consent/session
 // changes after the handler's initial ownership read but before its atomic batch.

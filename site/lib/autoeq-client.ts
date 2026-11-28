@@ -1,4 +1,4 @@
-import { FIT_CANDIDATE_COUNT } from './fitter-settings';
+import { FIT_CANDIDATE_COUNT, JOINT_FITTER_VERSION } from './fitter-settings';
 import { legacyBatch, validateRequest, type AutoEqFit, type AutoEqRequest } from './autoeq-fit';
 type Reply = { id: number; results?: AutoEqFit[]; error?: string; unavailable?: boolean };
 type Pending = { resolve: (fits: AutoEqFit[]) => void; reject: (error: Error) => void; request: AutoEqRequest; cleanup: () => void };
@@ -6,7 +6,7 @@ const abortError = () => new DOMException('EQ request cancelled.', 'AbortError')
 
 export function createAutoEqService(makeWorker = () => new Worker(new URL('./autoeq.worker.ts', import.meta.url), { type: 'module' }), timeoutMs = 20000, idleMs = 30000) {
   let worker: Worker | null = null, id = 0, idle: ReturnType<typeof setTimeout> | undefined;
-  let unavailable = false;
+  let unavailable = false, peqdbUnavailable = false;
   const pending = new Map<number, Pending>();
   const cache = new Map<string, AutoEqFit[]>();
   let cacheChars = 0;
@@ -18,8 +18,8 @@ export function createAutoEqService(makeWorker = () => new Worker(new URL('./aut
     cache.set(encoded, structuredClone(results)); cacheChars += encoded.length;
   };
   const validResults = (results: AutoEqFit[] | undefined, request: AutoEqRequest) => Array.isArray(results) && results.length === request.targets.length && results.every(f =>
-    f && (!request.method || f.method === request.method && f.bands === request.bands) && ['peqdb', 'legacy'].includes(f.engine) && f.engine === results[0].engine && typeof f.engineVersion === 'string' && f.engineVersion.length <= 160 && f.sampleRate === request.sampleRate &&
-    [f.preamp, f.rms, f.peakBoost].every(Number.isFinite) && f.preamp <= 0 && f.rms >= 0 && Array.isArray(f.filters) && f.filters.length >= 1 && f.filters.length <= request.bands && f.filters.every(filter =>
+    f && (!request.method || f.method === request.method && f.bands === request.bands) && (request.method === 'joint' ? f.engine === 'joint' && f.engineVersion === JOINT_FITTER_VERSION : ['peqdb', 'legacy'].includes(f.engine)) && f.engine === results[0].engine && typeof f.engineVersion === 'string' && f.engineVersion.length <= 160 && f.sampleRate === request.sampleRate &&
+    [f.preamp, f.rms, f.peakBoost].every(Number.isFinite) && f.preamp <= 0 && f.rms >= 0 && Array.isArray(f.filters) && (request.method === "joint" ? f.filters.length === request.bands : f.filters.length >= 1 && f.filters.length <= request.bands) && f.filters.every(filter =>
       ['PK', 'LSC', 'HSC'].includes(filter.type ?? 'PK') && [filter.hz, filter.gain, filter.q].every(Number.isFinite) && filter.hz >= 20 && filter.hz < request.sampleRate / 2 && Math.abs(filter.gain) <= 24 && filter.q >= .1 && filter.q <= 20));
   function stop() {
     if (worker) { worker.onmessage = null; worker.onerror = null; worker.onmessageerror = null; worker.terminate(); }
@@ -42,7 +42,7 @@ export function createAutoEqService(makeWorker = () => new Worker(new URL('./aut
     connected.onmessage = (event: MessageEvent<Reply>) => {
       if (worker !== connected) return;
       const p = pending.get(event.data.id); if (!p) return;
-      if (event.data.unavailable === true) unavailable = true;
+      if (event.data.unavailable === true) peqdbUnavailable = true;
       pending.delete(event.data.id); p.cleanup();
       if (event.data.error || !validResults(event.data.results, p.request)) {
         try { const fits = legacyBatch(p.request, 'The background EQ result was invalid; the original fitter was used.'); remember(p.request, fits); p.resolve(fits); }
@@ -60,7 +60,7 @@ export function createAutoEqService(makeWorker = () => new Worker(new URL('./aut
       // Match the worker's cloned inputs throughout fallback and cache insertion.
       request = structuredClone(request);
       const cached = cache.get(key(request)); if (cached) return structuredClone(cached);
-      if (unavailable) {
+      if (unavailable || peqdbUnavailable && request.method !== "joint") {
         const fits = legacyBatch(request, 'The background EQ engine was unavailable; the original fitter was used.');
         remember(request, fits); return fits;
       }

@@ -1,0 +1,56 @@
+{
+  "update": 229,
+  "sourceCommit": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+  "deploymentVerification": {
+    "at": "2026-11-27T21:25:24.848046Z",
+    "update": 229,
+    "revision": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 429,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 229,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "benchmarkCsvMatches": true,
+    "rootlessJamesDspVisible": true,
+    "jointFitCasesVerified": 7
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "revision": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "jointFitFirstOnSevenErrorMetrics": true,
+    "rootlessJamesDspForkInEveryBudget": true,
+    "desktopAndMobileBenchmarkVerified": true,
+    "viewportWidths": [
+      1280,
+      320
+    ],
+    "csvMatches": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224,
+    "scopedLintPassed": true,
+    "appTypesPassed": true,
+    "benchmarkScoresReplayed": true
+  },
+  "recoveryRegistrationPending": true
+}

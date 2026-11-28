@@ -412,6 +412,7 @@ export default function EarTuningPage() {
     <header className="ear-intro">
       <h1>Peak &amp; Dip Finder</h1>
       <p>Find peaks that sound too strong and dips that sound too quiet. Try an adjustment and check it with music you know.</p>
+      <p><a href="/glossary/methodology#peak-dip-finder">Peak &amp; Dip Finder methodology</a></p>
       <div className="ear-safety">
         <p><strong>Start low and listen briefly.</strong> Consider skipping the sound tests if you have tinnitus, sound sensitivity, or an elevated risk of hearing damage.</p>
         <button type="button" onClick={() => { stop(); stopPracticeRef.current?.(); stopRankedRef.current?.(); setWarningOpen(true); }}>Before you listen</button>

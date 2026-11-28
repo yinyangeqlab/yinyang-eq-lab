@@ -1,3 +1,4 @@
+import * as protocol from "../site/lib/listening-protocol.ts";
 import * as fitters from "../site/lib/fitter-settings.ts";
 import * as fingerprints from "../site/lib/file-fingerprint.ts";
 import assert from 'node:assert/strict';
@@ -13,7 +14,7 @@ const votes=[{...base,id:'one',winnerId:'a',loserId:'b',voterId:'private-browser
 const schema={targets:{},votes:{},listeningRuns:{},submissionOwners:{}};
 let removed = new Set();let owners=[];let runs=[];
 const deps={'@/lib/admin-contributions':{isTestSubject:subject=>subject==='owner'||subject==='invite:layout-test-only'},'@/lib/file-fingerprint':fingerprints,'@/lib/active-submissions':{activeSubmissions:async()=> (kind,id) => !removed.has(`${kind}:${id}`)},'@/lib/maintenance':{maintenanceResponse:()=>null},'@/db':{getDb:()=>({select:()=>({from:async table=>table===schema.targets?targets:table===schema.votes?votes:table===schema.listeningRuns?runs:owners})})},'@/db/schema':schema,'@/lib/preference-ranking':{rankPreferences},'@/lib/curated-tracks':{curatedTracks:[{title:base.songTitle,artist:base.songArtist,album:base.songAlbum,recordingId:base.recordingId}]}};
-deps['@/lib/listening-protocol']={LISTENING_PROTOCOL:'matched-passage-v2',MIN_SIDE_SECONDS:5,MIN_COMMON_SECONDS:5};
+deps['@/lib/listening-protocol']=protocol;
 deps['@/lib/listening']={intervalStats,parseIntervals};
 deps['@/lib/autoeq-target-sources']={autoEqRankingTargets:[]};
 deps['@/lib/target-labels']={oratoryInEarId:'oratory-fixture',oratoryInEarLabel:'oratory1990 in-ear (aka USOUND1v1 approximation)'};
@@ -21,7 +22,7 @@ const evidenceCode=ts.transpileModule(readFileSync(new URL('../site/lib/ranking-
 const evidenceContext=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name]});vm.runInContext(evidenceCode,evidenceContext);deps['@/lib/ranking-evidence']=evidenceContext.exports;
 const context=vm.createContext({exports:{},require:name=>name==="@/lib/fitter-settings"?fitters:deps[name],Response});vm.runInContext(code,context);
 const rawGET=context.exports.GET;
-const first=await(await rawGET()).json();assert.equal(first.all.voteCount,0,'Historical unrecorded fitters never enter the new main reference');assert.equal(first.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
+const first=await(await rawGET()).json();assert.equal(first.allFitters.all.voteCount,3);assert.equal(first.all.voteCount,0,'Historical unrecorded fitters remain available through All results');assert.equal(first.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
 context.exports.GET=async()=>{const data=await(await rawGET()).json();return Response.json(data.fitterCohorts.find(c=>c.key==='historical')?.view ?? data);};
 const response=await context.exports.GET();assert.equal(response.status,200);
 const data=await response.json();assert.equal(data.methodology,'participant-balanced-fractional-bt-v2');
@@ -62,7 +63,7 @@ votes.push({...base,id:'admin-decisive',winnerId:'a',loserId:'b',voterId:'admin-
 owners=[...owners,{recordKind:'vote',recordId:'admin-decisive',subjectId:'owner'}];
 runs=[...runs,{...base,id:'admin-tie',result:'tie',targetAId:'a',targetBId:'b',voterId:'admin-private-browser',trialId:null}];
 owners.push({recordKind:'run',recordId:'admin-tie',subjectId:'owner'});
-const withoutAdmin=await (await context.exports.GET()).json();assert.equal(withoutAdmin.all.voteCount,baselineAdmin);
+const withoutAdmin=await (await rawGET()).json();assert.equal(withoutAdmin.allFitters.all.voteCount,baselineAdmin);
 owners=savedOwners;runs=savedRuns;votes.splice(0,votes.length,...savedVotes);
 console.log('PASS valid historical admin decisive votes and ties never enter public rankings.');
 
@@ -80,7 +81,7 @@ votes.push({...base,id:'layout-test-vote',voterId:'layout-browser',winnerId:'a',
 owners=[...savedOwners,{recordKind:'vote',recordId:'layout-test-vote',subjectId:'invite:layout-test-only'}];
 runs=[...savedRuns,{...base,id:'layout-test-tie',voterId:'layout-browser',trialId:null,result:'tie',targetAId:'a',targetBId:'b'}];
 owners.push({recordKind:'run',recordId:'layout-test-tie',subjectId:'invite:layout-test-only'});
-assert.equal((await(await context.exports.GET()).json()).all.voteCount,beforeTest,'Private review identity cannot enter any public ranking');
+assert.equal((await(await rawGET()).json()).allFitters.all.voteCount,beforeTest,'Private review identity cannot enter any public ranking');
 votes.splice(0,votes.length,...savedVotes);owners=savedOwners;runs=savedRuns;
 console.log('PASS private layout-test decisive votes and ties excluded from public ranking evidence.');
 
@@ -90,8 +91,8 @@ votes.push({...base,id:'new-main',winnerId:'a',loserId:'b',voterId:'new-main-bro
 runs.push({...base,id:'new-main-run',trialId:'new-main',result:'a',targetAId:'a',targetBId:'b',researchContext:JSON.stringify({eqFits:[config,config]})});
 const precise={...config,method:'precise',engineVersion:'yinyang-precise-close@listening-fitter-v1'};
 runs.push({...base,id:'precise-tie',trialId:null,result:'tie',targetAId:'a',targetBId:'b',researchContext:JSON.stringify({eqFits:[precise,precise]})});
-const split=await(await rawGET()).json();assert.equal(split.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key.startsWith('precise:10:')).view.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
-votes.splice(0,votes.length,...priorVotes);runs=priorRuns;console.log('PASS main Standard/10, Precise/10 and unrecorded historical cohorts never mix.');
+const split=await(await rawGET()).json();assert.equal(split.allFitters.all.voteCount,5);assert.equal(split.allFitters.all.participantGroups,3);assert.equal(split.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key===fitters.MAIN_FITTER_COHORT).view.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key.startsWith('precise:10:')).view.all.voteCount,1);assert.equal(split.fitterCohorts.find(c=>c.key==='historical').view.all.voteCount,3);
+votes.splice(0,votes.length,...priorVotes);runs=priorRuns;console.log('PASS All results combines eligible observations and individual fitter views remain separately available.');
 
 const sourceId='21432a66-aad2-5465-8e24-e107823bf908';
 deps['@/lib/autoeq-target-sources'].autoEqRankingTargets.push({id:sourceId,name:'Source fixture',creator:'Fixture',status:'approved',points:'[]'});

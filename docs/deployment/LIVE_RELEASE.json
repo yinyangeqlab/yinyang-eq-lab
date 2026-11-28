@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 211,
+  "update": 229,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-22T08:35:55.528022Z",
-  "sourceCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
-  "sourceBranch": "release/update211-website-audit",
-  "baselineCommit": "90eb8da2eaa55dcb17919588bfc20f93452efe28",
-  "evidence": "docs/releases/update211-verification.json",
+  "verifiedAt": "2026-11-27T21:25:24.848046Z",
+  "sourceCommit": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+  "sourceBranch": "release/update229-joint-fit-benchmark",
+  "baselineCommit": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+  "evidence": "docs/releases/update229-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -26,49 +26,42 @@
   },
   "ownerOnlyMaintenance": {
     "enabled": false,
-    "automaticExpiry": false
+    "automaticExpiry": false,
+    "reopeningAuthorizedByOwner": true,
+    "adminLogin": "https://yinyangeq.com/admin-login",
+    "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
+  "scope": "The verified EQ fitter benchmark release is the production baseline for the Joint Fit default.",
   "gitSource": {
-    "implementationCommit": "dc09b2e0fb1cbe6c25caf764f1d7aa345120db1a",
-    "branch": "release/update211-website-audit",
+    "implementationCommit": "0bc71aa826bbde9d8bbdfe09b1cb0616e6be0e25",
+    "branch": "release/update229-joint-fit-benchmark",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
-    "pushed": false,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab"
+    "pushed": true,
+    "repository": "yinyangeqlab/yinyang-eq-lab",
+    "publishedSourceCommit": "f449ea8299cf7938c51c5232a0c6839c868c3363",
+    "publishedTag": "update229",
+    "publicationTag": "update229"
   },
-  "scope": "Public deployment record captured before GitHub publication. See the live Version page for release links.",
   "recoveryProcess": {
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
-    "nextScheduledRunMayRefuseBaselineMismatch": false,
     "newDataExport": false,
-    "latestDataSnapshotUnchanged": true,
-    "sourceBaselineUpdate": 211,
-    "sourceBaselineVerifiedAt": "2026-11-22T08:50:31Z",
+    "sourceBaselineUpdate": 229,
+    "sourceBaselineVerifiedAt": "2026-11-27T22:28:38Z",
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
-    "latestHostedRunMode": "validate-only",
-    "dailyWorkflowActive": true,
-    "update211SourceOnlyHandover": {
+    "update229SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update211-recovery-verification.json"
+      "evidence": "docs/releases/update229-recovery-verification.json"
     }
   },
-  "documentationFiles": [
-    {
-      "path": "docs/releases/update211-verification.json",
-      "sha256": "8c753016cf40ff642bb00b224d87ca27fbe83f437dcd6117d1e866b8c9f06687"
-    },
-    {
-      "path": "docs/releases/update211-recovery-verification.json",
-      "sha256": "2eb09230db7692ae2611a34f35ce6c4c49582dd5bed660375ebb0c5c357dc4fa"
-    }
-  ]
+  "documentationFiles": []
 }

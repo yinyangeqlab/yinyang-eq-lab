@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { releaseInfo, repositoryUrl } from "@/lib/release-info";
-import type { ReleaseNotes } from "@/lib/release-history";
+import { archivedDeploymentReceipts, type ReleaseNotes } from "@/lib/release-history";
 
 const releaseUrl = (tag: string) => `${repositoryUrl}/releases/tag/${encodeURIComponent(tag)}`;
 
@@ -18,8 +18,12 @@ export default function ReleaseHistory({ entries, currentUpdate, currentReleaseL
 }) {
   const [query, setQuery] = useState("");
   const filteredTarget = useRef<HTMLDetailsElement | null>(null);
-  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const normalizedQuery = query.trim().toLowerCase();
+  const updateMatch = /^(?:update\s*)?(\d+)$/.exec(normalizedQuery);
+  const requestedUpdate = updateMatch ? Number(updateMatch[1]) : undefined;
+  const terms = normalizedQuery.split(/\s+/).filter(Boolean);
   const matches = terms.length === 0 ? entries : entries.filter(entry => {
+    if (requestedUpdate !== undefined) return entry.update === requestedUpdate;
     const text = [`update${entry.update}`, entry.date, entry.title, ...entry.changes].join(" ").toLowerCase();
     return terms.every(term => text.includes(term));
   });
@@ -73,7 +77,9 @@ export default function ReleaseHistory({ entries, currentUpdate, currentReleaseL
         {entries.map((entry, index) => {
           const id = `update${entry.update}`;
           const previous = entries[index + 1]?.github;
-          const releaseTag = entry.github?.releaseTag;
+          const releaseTag = entry.github?.releaseTag ?? entry.publicationTag;
+          const baseline = id === releaseInfo.baseline.label;
+          const compareRef = entry.github?.commit ?? entry.publicationTag;
           return (
             <details key={id} id={id} open={entry.update === currentUpdate} hidden={!visibleUpdates.has(entry.update)}>
               <summary>
@@ -90,12 +96,16 @@ export default function ReleaseHistory({ entries, currentUpdate, currentReleaseL
                   {releaseTag ? <a href={releaseUrl(releaseTag)}>GitHub release</a>
                     : entry.update === currentUpdate && currentReleaseLink}
                   {entry.refreshReleases?.map(({ tag, label }) => <a key={tag} href={releaseUrl(tag)}>{label}</a>)}
-                  {entry.github && (entry.github.linkTaggedSource && releaseTag
+                  {entry.github && !(baseline && entry.github.commit === releaseInfo.baseline.commit) && (entry.github.linkTaggedSource && releaseTag
                     ? <a href={`${repositoryUrl}/tree/${encodeURIComponent(releaseTag)}`}>GitHub source</a>
                     : <a href={`${repositoryUrl}/commit/${entry.github.commit}`}>GitHub commit</a>)}
-                  {entry.github && previous && <a href={`${repositoryUrl}/compare/${previous.commit}..${entry.github.commit}`}>Compare published updates</a>}
+                  {entry.publicationTag && <a href={`${repositoryUrl}/tree/${encodeURIComponent(entry.publicationTag)}`}>GitHub source</a>}
+                  {compareRef && previous && <a href={`${repositoryUrl}/compare/${previous.commit}..${encodeURIComponent(compareRef)}`}>Compare published updates</a>}
                   {entry.github?.pull && <a href={`${repositoryUrl}/pull/${entry.github.pull}`}>Pull request #{entry.github.pull}</a>}
-                  {id === releaseInfo.baseline.label && <a href={`${repositoryUrl}/tree/${releaseInfo.baseline.commit}`}>Published baseline snapshot</a>}
+                  {baseline && <a href={`${repositoryUrl}/tree/${releaseInfo.baseline.commit}`}>Published baseline snapshot</a>}
+                  {!entry.github && archivedDeploymentReceipts.updates.has(entry.update) && (
+                    <a href={`${repositoryUrl}/blob/${archivedDeploymentReceipts.revision}/docs/releases/${id}-verification.json`}>Deployment record</a>
+                  )}
                   <a href={`#${id}`}>Link to {id}</a>
                 </div>
               </div>

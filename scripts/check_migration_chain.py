@@ -12,7 +12,7 @@ journal = json.loads((root / "site/drizzle/meta/_journal.json").read_text())
 journaled = len(journal["entries"])
 assert [e["tag"] for e in journal["entries"]] == [p.stem for p in paths[:journaled]]
 assert [e["idx"] for e in journal["entries"]] == list(range(journaled))
-# Updates100/101 and the target removal request release shipped these manual, additive migrations after snapshot0037.
+# Additive migrations authored after snapshot0037 use a separately fingerprinted SQL chain.
 # Preserve their exact original SQL and journal provenance. Never accept an
 # unknown suffix or silently treat snapshot0037 as the current full schema.
 manual = {
@@ -26,6 +26,9 @@ manual = {
     "0045_eq_preset_reactions.sql": "c80ac98549609535c84cca8170c8c377025ca095633df15915e291f3c5eb5259",
     "0046_companion_library.sql": "957ed43fab698b5582602a751e37ab31ea640c31fb329829326c03ff7c9cb36f",
     "0047_companion_preset_history.sql": "710098e15bc75b112ee0dfc77e6c36bce1eb2274170af126b8374a6a50cd205b",
+    "0048_companion_personal_ranks.sql": "f3691c00aa3f5311e5c2e50d96d4e63a7e369379d69fe55aa522a80f7dbd5bb9",
+    "0049_sync_account_recovery.sql": "ed580183d8957794e3729701f809e52ac3ba4c83fa318b339721f9ff18e4012f",
+    "0050_joint_ranked_guards.sql": "7af9c99c8cfeb75fd926a33e972543870cdad576a2d9422af07250607ab77bcc",
 }
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:
@@ -69,6 +72,6 @@ except sqlite3.IntegrityError:
 db.execute("DELETE FROM research_measurements WHERE id = ?", ("sample",))
 assert db.execute("SELECT COUNT(*) FROM research_measurement_chunks").fetchone()[0] == 0
 db.executescript((root / "site/db/service-status.sql").read_text())
-assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 234
+assert db.execute("SELECT COUNT(*) FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").fetchone()[0] == 240
 assert not db.execute("PRAGMA foreign_key_check").fetchall()
-print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema234, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")
+print(f"All {len(paths)} migrations apply: {journaled} journaled and {len(manual)} explicitly fingerprinted manual migrations. Historical snapshot and current ORM columns/types match at their respective boundaries; operational schema240, attachment ownership and cascade cleanup pass. Historical metadata unchanged.")

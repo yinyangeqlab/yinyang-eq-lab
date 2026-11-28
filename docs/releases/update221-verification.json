@@ -1,0 +1,61 @@
+{
+  "update": 221,
+  "sourceCommit": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+  "deploymentVerification": {
+    "at": "2026-11-26T07:39:55.514073Z",
+    "update": 221,
+    "revision": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "eb2d92a67104673d140a582a927944d0cce793af",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 428,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 221,
+    "iconPagesVerified": [
+      "/",
+      "/android",
+      "/q5k4android",
+      "/android/trailer",
+      "/android/trailer/portrait"
+    ],
+    "exactTransparentIconAssetsVerified": true,
+    "androidDownloadsVerified": true,
+    "androidReleaseTag": "android-20261125-0169",
+    "androidVersionsVerified": true,
+    "deploymentRecordLinks": 18,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true,
+    "eqFitterBandLevels": [
+      10,
+      15,
+      20,
+      30
+    ],
+    "eqFitterRankingChecks": 32,
+    "eqFitterCSVLinksVerified": 2
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "desktopAndNarrowAndroidVersionsVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

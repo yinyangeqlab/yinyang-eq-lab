@@ -16,7 +16,7 @@ export const publicAssetPaths = [
   ...companionThemes.flatMap(theme =>
     ["eq", "presets", "match", "compare", "output", "audio", "device", "usb", "mixer", "debug"]
       .map(screen => `/android/screens/ui-preview-v4/${theme}/${screen}.webp`)),
-  "/android/companion.svg", "/android/manager.svg", "/android/compare.webp",
+  "/android/companion.svg", "/android/manager.svg", "/android/phone-eq.png", "/android/compare.webp",
   // Only the fixed, original instrumental preview is public.
   "/sample-assets/a.flac", "/sample-assets/b.flac",
   "/sample-assets/Barlow-Regular.ttf", "/sample-assets/Barlow-SemiBold.ttf", "/sample-assets/OFL.txt",

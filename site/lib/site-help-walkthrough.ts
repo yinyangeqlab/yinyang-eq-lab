@@ -60,11 +60,11 @@ const tours: Partial<Record<string, readonly HelpStep[]>> = {
   vote: [
     { text: "Play Sample A. For a matched passage, note where you started in the track.", target: "[aria-label='Play Sample A']", ifMissing: startButton, prerequisite: "Start a tournament and load music to see the sample controls." },
     { text: "Play Sample B. When matched listening is on, play at least five seconds of the same passage on both sides.", target: "[aria-label='Play Sample B']", ifMissing: startButton, prerequisite: "The B sample appears during an active comparison." },
-    { text: "Read the status below the samples. When the choices unlock, make your selection.", target: ".personal-votes", manual: true, ifMissing: startButton, prerequisite: "The preference controls appear during a comparison." },
+    { text: "Read the status below the samples. When the choices unlock, make your selection.", target: ".personal-shootout .shootout-ballot", manual: true, ifMissing: startButton, prerequisite: "The preference controls appear during a comparison." },
   ],
   listen: [
     { text: "Play A and B to hear the same song with each sound. If playback is silent, make sure a track is loaded.", target: ".personal-ab", ifMissing: startButton, prerequisite: "Start a tournament and load a track to see both samples." },
-    { text: "Choose Unsure / Tie when neither sounds better. Use Skip comparison if you can’t judge this pair.", target: ".personal-votes", manual: true, prerequisite: "The choices appear during a comparison." },
+    { text: "Choose Unsure / Tie when neither sounds better. Use Skip comparison if you can’t judge this pair.", target: ".personal-shootout .shootout-ballot", manual: true, prerequisite: "The choices appear during a comparison." },
   ],
   finalists: [
     { text: "Open your results and review the message above your ranking. It explains what’s needed for a finalist check.", target: ".personal-finalist-readiness", ifMissing: ".personal-session-bar > button", prerequisite: "Pause and see your results to check readiness." },

@@ -1459,6 +1459,20 @@
       "scope": "Existing tuning unified regression assertions; synthetic/source scope in the script"
     },
     {
+      "id": "sync-recovery",
+      "path": "scripts/checks/access-and-data/check_sync_recovery.mjs",
+      "runtime": "node",
+      "args": [],
+      "profile": "public",
+      "timeoutMs": 60000,
+      "requires": [
+        "node_modules/@simplewebauthn/server/package.json",
+        "node_modules/esbuild/package.json"
+      ],
+      "owner": "access-and-data",
+      "scope": "Migrated in-memory database, credential enrollment and consumption, signed WebAuthn assertions, account-bound companion access, expiry, and erasure. Synthetic only."
+    },
+    {
       "id": "unified-consent-flow",
       "path": "scripts/checks/access-and-data/check_unified_consent_flow.mjs",
       "runtime": "node",

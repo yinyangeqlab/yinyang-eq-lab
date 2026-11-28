@@ -1,0 +1,50 @@
+{
+  "update": 222,
+  "sourceCommit": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+  "deploymentVerification": {
+    "at": "2026-11-26T09:46:05.484316Z",
+    "update": 222,
+    "revision": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "dcc86c4fe373d38e0d2a3d364b6fef6c53316799",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 428,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 222,
+    "liveShootoutStyleChunks": 1,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true,
+    "listeningHubGroupingVerified": true,
+    "padlockNecklaceStyleVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "necklaceThreadedThroughShackle": true,
+    "lockedAndUnlockedLabelsVerified": true,
+    "keyboardAndTouchVerified": true,
+    "zoomPercentRange": [
+      50,
+      500
+    ]
+  },
+  "candidateVerification": {
+    "sourceRevision": "02ffec82a6471a0e6320350d1dadfd216a2089d0",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

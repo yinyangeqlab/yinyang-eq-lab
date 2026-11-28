@@ -28,7 +28,7 @@ async function PublishedBuildLink() {
 export default function VersionPage() {
   const { build, version } = releaseInfo;
   const currentEntry = releaseHistory.find(entry => entry.update === build.update);
-  const currentReleaseLink = !build.preview && currentEntry && !currentEntry.github?.releaseTag
+  const currentReleaseLink = !build.preview && currentEntry && !currentEntry.github?.releaseTag && !currentEntry.publicationTag
     ? <Suspense fallback={null}><PublishedBuildLink /></Suspense>
     : undefined;
 

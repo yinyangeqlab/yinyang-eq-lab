@@ -1,4 +1,5 @@
 import { comparisonGains, eqCoefficients, type EqPreset } from "./blind-eq";
+import { estimateLufs } from "./loudness";
 import { channelBalance, type ChannelMatch } from "./channel-balance";
 
 export const EQ_COMPARISON_PLAY_EVENT = "yinyang:eq-comparison-play";
@@ -36,15 +37,14 @@ export function connectPreset(context: BaseAudioContext, input: AudioNode, chann
   return merger;
 }
 
-export async function prepareComparison(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, seconds: number, match: boolean, signal?: AbortSignal, sharedMatch?: ChannelMatch, freeListening = false): Promise<PreparedComparison> {
+async function renderComparison(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, seconds: number, balance: ReturnType<typeof channelBalance>, signal?: AbortSignal, freeListening = false): Promise<[AudioBuffer, AudioBuffer]> {
   const checkActive = () => { if (signal?.aborted) throw Error("Comparison preparation was cancelled."); };
   checkActive();
   if (source.numberOfChannels > 2) throw Error("Use a mono or stereo recording for this comparison.");
-  if (!Number.isFinite(start) || start < 0 || !Number.isFinite(seconds) || seconds < (freeListening ? 1 / source.sampleRate : 5) || start + seconds > source.duration + .001) throw Error("Choose a section inside the recording.");
+  if (!Number.isFinite(start) || start < 0 || !Number.isFinite(seconds) || seconds < (freeListening ? 1 / source.sampleRate : 5 - 1e-6) || start + seconds > source.duration + .001) throw Error("Choose a section inside the recording.");
   // Include half a second of prior audio so IIR filters settle before the passage.
   const lead = Math.min(start, .5), rate = source.sampleRate;
   const frames = Math.floor(seconds * rate), warmup = Math.floor(lead * rate);
-  const balance = sharedMatch ? channelBalance(sharedMatch, rate) : null;
   const buffers: AudioBuffer[] = [];
   // Render sequentially to keep memory bounded on narrow/mobile devices.
   for (const preset of presets) {
@@ -58,14 +58,42 @@ export async function prepareComparison(source: AudioBuffer, presets: [EqPreset,
     for (let channel = 0; channel < 2; channel++) trimmed.copyToChannel(rendered.getChannelData(channel).subarray(warmup, warmup + frames), channel);
     buffers.push(trimmed);
   }
+  return [buffers[0], buffers[1]];
+}
+
+export async function prepareComparison(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, seconds: number, match: boolean, signal?: AbortSignal, sharedMatch?: ChannelMatch, freeListening = false): Promise<PreparedComparison> {
+  const balance = sharedMatch ? channelBalance(sharedMatch, source.sampleRate) : null;
+  const buffers = await renderComparison(source, presets, start, seconds, balance, signal, freeListening);
   const gains = comparisonGains([stats(buffers[0]), stats(buffers[1])], match);
+  applyComparisonGains(buffers, gains);
+  return { buffers, seconds: buffers[0].duration, gains };
+}
+
+function applyComparisonGains(buffers: [AudioBuffer, AudioBuffer], gains: [number, number]) {
   buffers.forEach((buffer, index) => {
     for (let channel = 0; channel < 2; channel++) {
       const samples = buffer.getChannelData(channel);
       for (let i = 0; i < samples.length; i++) samples[i] *= gains[index];
     }
   });
-  return { buffers: buffers as [AudioBuffer, AudioBuffer], seconds: frames / rate, gains };
+}
+
+export async function preparePassageLevelMatch(source: AudioBuffer, presets: [EqPreset, EqPreset], start: number, end: number, balance: ReturnType<typeof channelBalance>, signal: AbortSignal) {
+  if (source.numberOfChannels !== 2) throw Error("Ranked playback requires a stereo recording.");
+  const buffers = await renderComparison(source, presets, start, end - start, balance, signal);
+  const a = await estimateLufs(buffers[0]);
+  const b = await estimateLufs(buffers[1]);
+  const samplePeak = 10 ** (-3 / 20);
+  const ceiling = (buffer: AudioBuffer, level: number) => level + 20 * Math.log10(samplePeak / stats(buffer).peak);
+  const target = Math.min(a, b, -16, ceiling(buffers[0], a), ceiling(buffers[1], b));
+  const gains: [number, number] = [10 ** ((target - a) / 20), 10 ** ((target - b) / 20)];
+  applyComparisonGains(buffers, gains);
+  // The absolute loudness gate can change after attenuation. Verify the measured result.
+  const matchedA = await estimateLufs(buffers[0]);
+  const matchedB = await estimateLufs(buffers[1]);
+  const differenceLu = Math.abs(matchedA - matchedB);
+  if (signal.aborted || !Number.isFinite(differenceLu) || differenceLu > .05) throw Error("Could not level-match the selected passage.");
+  return { gains, differenceLu };
 }
 
 /** Both branches run at the same playhead. Switching changes only their gains. */

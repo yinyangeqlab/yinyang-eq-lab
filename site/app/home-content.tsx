@@ -20,8 +20,15 @@ const destinations = [
 ] as const;
 
 const reducedMotionQuery = '(prefers-reduced-motion: reduce)';
+// Match the panoramic artwork breakpoint in first-listen/home.css.
+const panoramaQuery = '(min-width: 1600px) and (min-aspect-ratio: 2/1)';
 function subscribeMotion(change: () => void) {
   const media = matchMedia(reducedMotionQuery);
+  media.addEventListener('change', change);
+  return () => media.removeEventListener('change', change);
+}
+function subscribePanorama(change: () => void) {
+  const media = matchMedia(panoramaQuery);
   media.addEventListener('change', change);
   return () => media.removeEventListener('change', change);
 }
@@ -29,12 +36,13 @@ function subscribeMotion(change: () => void) {
 function Panorama() {
   const preferences = parseDisplayPreferences(useSyncExternalStore(subscribeDisplayPreferences, displayPreferencesSnapshot, () => '{}'));
   const systemReduced = useSyncExternalStore(subscribeMotion, () => matchMedia(reducedMotionQuery).matches, () => false);
+  const panorama = useSyncExternalStore(subscribePanorama, () => matchMedia(panoramaQuery).matches, () => false);
   const running = !systemReduced && preferences.motion !== 'reduced';
   const motionLabel = running ? 'Pause motion' : 'Resume motion';
   const flightsLabel = preferences.welcomeFlights ? 'Hide carpets' : 'Show carpets';
   return <>
     <section id="scene" className="landscape" aria-label="Animated YinYang EQ landscape">
-      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} preserveStillSky />
+      <WelcomeLandscape running={running} showFlights={preferences.welcomeFlights} preserveStillSky panorama={panorama} />
     </section>
     {systemReduced ? null : <div className="scene-controls" role="group" aria-label="Landscape controls">
       <button type="button" className="motion-control" aria-label={motionLabel} aria-describedby="motion-benefit"
@@ -103,14 +111,14 @@ export default function FirstListenHome() {
   </nav>
   <section className="home-companion" aria-labelledby="home-companion-title">
     <CompanionAppIcons/>
-    <h2 id="home-companion-title">Android companion for Qudelix 5K and 5K Plus</h2>
-    <p className="home-companion-copy"><strong>Build and manage EQs right from your phone.</strong> Import and edit presets, or use your measurements to create an EQ offline.</p>
+    <h2 id="home-companion-title">EQ apps for Android</h2>
+    <p className="home-companion-copy">Build and manage presets for the Qudelix 5K and 5K Plus, or use Phone EQ for system-wide equalization on your phone.</p>
     <div className="home-companion-actions">
       <DownloadAppManager className="home-manager-download"/>
-      <a className="companion-more" href="/q5k4android#trailer">Watch trailer</a>
-      <a className="companion-more" href="/q5k4android">See app features</a>
+      <a className="companion-more" href="/android#trailer">Watch trailer</a>
+      <a className="companion-more" href="/android">See app features</a>
     </div>
-    <p className="home-companion-hint">Use App Manager on Android to install and update the Qudelix Companion.</p>
+    <p className="home-companion-hint">Install and update Companion and Phone EQ with App Manager.</p>
   </section>
   <WelcomeWallpapers />
   </div>

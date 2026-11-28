@@ -3,6 +3,7 @@ import type { PersonalPlayback } from "@/lib/personal-playback";
 // Local discovery policy v1. These are scheduling heuristics, not a calibrated
 // best-arm identification procedure or a population preference estimator.
 export const MAX_PERSONAL_CANDIDATES = 200;
+export const MAX_PERSONAL_SETUPS = 8;
 export const PERSONAL_KEY = "target-lab-personal-shootouts-v1";
 export const PERSONAL_TOURNAMENT_SCHEDULER = "personal-v3";
 const RETIRE_LOSSES = 8;
@@ -35,6 +36,10 @@ export function targetFamily(target: { id: string; name: string; parentTargetId?
   if (/^MrChillStorm ISO 226 85 phon (?:0\.00|0\.25|0\.3661543|0\.50|0\.75|1\.00)$/.test(target.name)) return "mrchillstorm-iso226-85";
   return target.parentTargetId || target.id;
 }
+export function usesJointFit(run: PersonalRun) {
+  return run.fitter?.method === "joint" && run.fitter.bands === 20;
+}
+
 export function createPersonalRun(context: string, label: string, candidates: Candidate[], budget = 20, schedulerVersion: PersonalRun["schedulerVersion"] = "personal-v2"): PersonalRun {
   if (candidates.length < 2 || candidates.length > MAX_PERSONAL_CANDIDATES) throw Error(`Choose 2–${MAX_PERSONAL_CANDIDATES} targets before starting. Your saved runs are unchanged.`);
   return { version: 1, schedulerVersion, context, label, candidates, choices: [], excluded: [], restored: [], pending: null, phase: "explore", finalists: [], budget, checkpoint: budget, updatedAt: Date.now() };
@@ -290,7 +295,7 @@ export function recordPersonalChoice(run: PersonalRun, choice: PersonalChoice): 
 export function parsePersonalRuns(raw: string | null): PersonalRun[] {
   if (!raw) return [];
   const runs: unknown = JSON.parse(raw);
-  if (!Array.isArray(runs) || runs.length > 8) throw Error("Personal progress could not be read. Export or clear the saved data before starting again.");
+  if (!Array.isArray(runs) || runs.length > 2 * MAX_PERSONAL_SETUPS) throw Error("Personal progress could not be read. Export or clear the saved data before starting again.");
   for (const value of runs) {
     const r = value as PersonalRun;
     if (!r || r.version !== 1 || typeof r.context !== "string" || typeof r.label !== "string" || !Number.isFinite(r.updatedAt) || !Array.isArray(r.candidates) || r.candidates.length < 2 || r.candidates.length > MAX_PERSONAL_CANDIDATES || !Array.isArray(r.choices) || r.choices.length > 500 || !Array.isArray(r.excluded) || !Array.isArray(r.restored) || !Array.isArray(r.finalists) || ![10,20,40].includes(r.budget) || !Number.isInteger(r.checkpoint) || r.checkpoint < 0 || !["explore", "confirm"].includes(r.phase)) throw Error("Invalid saved personal run.");
@@ -299,7 +304,8 @@ export function parsePersonalRuns(raw: string | null): PersonalRun[] {
     if(r.adminTestOnly!==undefined&&typeof r.adminTestOnly!=="boolean")throw Error("Invalid saved test mode.");
     if(r.requireMatchedPassage!==undefined&&typeof r.requireMatchedPassage!=="boolean")throw Error("Invalid saved passage requirement.");
     if (r.schedulerVersion !== undefined && r.schedulerVersion !== "personal-v2" && r.schedulerVersion !== PERSONAL_TOURNAMENT_SCHEDULER) throw Error("Unsupported saved scheduler version.");
-    if (r.fitter && (!["standard", "precise", "peqdb", "peqdb-smoothed"].includes(r.fitter.method) || ![10, 15, 20, 30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
+    if (r.fitter && !usesJointFit(r) &&
+      (!["standard", "precise", "peqdb", "peqdb-smoothed"].includes(r.fitter.method) || ![10, 15, 20, 30].includes(r.fitter.bands))) throw Error("Invalid saved fitter settings.");
     if (r.playback && (!["-14","-16","-18","off"].includes(r.playback.loudnessTarget)||!["auto","uploaded","off"].includes(r.playback.channelMode))) throw Error("Invalid saved playback settings.");
     if (r.music && (!["pool","song","playlist","upload"].includes(r.music.mode) || !Array.isArray(r.music.ids) || r.music.ids.length > 200 || r.music.ids.some(id => typeof id !== "string") || r.music.mode === "song" && r.music.ids.length !== 1)) throw Error("Invalid saved music choices.");
     const ids = new Set(r.candidates.map(c => c?.id));

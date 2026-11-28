@@ -215,8 +215,8 @@ export function WelcomeFlights({ running, artwork = defaultFlightArtwork }: { ru
   </div>;
 }
 
-export default function WelcomeLandscape({ running, showFlights, artwork = defaultArtwork, preserveStillSky = false }: {
-  running: boolean; showFlights: boolean; artwork?: typeof defaultArtwork; preserveStillSky?: boolean;
+export default function WelcomeLandscape({ running, showFlights, artwork = defaultArtwork, preserveStillSky = false, panorama = false }: {
+  running: boolean; showFlights: boolean; artwork?: typeof defaultArtwork; preserveStillSky?: boolean; panorama?: boolean;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -230,10 +230,11 @@ export default function WelcomeLandscape({ running, showFlights, artwork = defau
     if (!host.current || !canvas.current) return;
     const container = host.current, surface = canvas.current;
     const picture = new Image();
-    const stillSky = preserveStillSky ? still.current ?? undefined : undefined;
+    const stillSky = preserveStillSky && !panorama ? still.current ?? undefined : undefined;
     const ready = (value: boolean) => { container.dataset.rendered = String(value); };
     const engine = createLandscapeRenderer(surface, picture, ready, {
       stillSky,
+      panorama,
       getArtworkAnchor: () => {
         const percent = Number.parseFloat(getComputedStyle(container).getPropertyValue("--welcome-art-anchor"));
         return Number.isFinite(percent) ? percent / 100 : .25;
@@ -257,12 +258,16 @@ export default function WelcomeLandscape({ running, showFlights, artwork = defau
     picture.addEventListener("load", load); stillSky?.addEventListener("load", load);
     surface.addEventListener("webglcontextlost", lost); surface.addEventListener("webglcontextrestored", restored);
     reduced.addEventListener("change", preference); document.addEventListener("visibilitychange", preference);
-    if (engine) picture.src = artwork.texture;
+    if (engine) {
+      picture.src = panorama
+        ? new URL("./first-listen/landscape-panorama.webp", import.meta.url).href
+        : artwork.texture;
+    }
     load();
     return () => { observer.disconnect(); visibility.disconnect(); syncMotion.current = () => {}; picture.removeEventListener("load", load); stillSky?.removeEventListener("load", load); surface.removeEventListener("webglcontextlost", lost); surface.removeEventListener("webglcontextrestored", restored); reduced.removeEventListener("change", preference); document.removeEventListener("visibilitychange", preference); engine?.dispose(); container.dataset.animating = "false"; setArtMoving(false); };
-  }, [revision, artwork.texture, artwork.still, preserveStillSky]);
+  }, [revision, artwork.texture, artwork.still, preserveStillSky, panorama]);
   useEffect(() => { active.current = running; syncMotion.current(); }, [running]);
-  return <div ref={host} className="welcome-art" data-animating="false" aria-hidden="true">
+  return <div ref={host} className="welcome-art" data-animating="false" data-panorama={panorama || undefined} aria-hidden="true">
     {/* eslint-disable-next-line @next/next/no-img-element -- The decorative fallback follows the static artwork pipeline. */}
     <img ref={still} className="welcome-landscape-image" src={artwork.still} alt="" />
     <canvas ref={canvas} className="welcome-landscape-canvas" aria-hidden="true" />

@@ -150,7 +150,7 @@ try {
   });
   await page.goto('http://127.0.0.1:5200/preference-tuning');
   await page.getByRole('heading', { name: 'Play your music', exact: true }).waitFor({ timeout: 30000 });
-  await page.waitForFunction(() => window.appFits?.some(f => f.engine === 'peqdb'), undefined, { timeout: 20000 }).catch(async error => { await writeFile(`${out}/app-failure.json`, JSON.stringify({ text: await page.locator('body').innerText(), fits: await page.evaluate(() => window.appFits), workerErrors: await page.evaluate(() => window.appWorkerErrors), workerArgs: await page.evaluate(() => window.appWorkerArgs), appErrors, requests }, null, 2)); throw error; });
+  await page.waitForFunction(() => window.appFits?.some(f => f.engine === 'joint' && f.filters.length === 20), undefined, { timeout: 20000 }).catch(async error => { await writeFile(`${out}/app-failure.json`, JSON.stringify({ text: await page.locator('body').innerText(), fits: await page.evaluate(() => window.appFits), workerErrors: await page.evaluate(() => window.appWorkerErrors), workerArgs: await page.evaluate(() => window.appWorkerArgs), appErrors, requests }, null, 2)); throw error; });
   if (audioChecks) {
     await page.locator('input[type=file][accept^="audio/"]:not([multiple])').setInputFiles({ name: 'webkit-tuning.wav', mimeType: 'audio/wav', buffer: wav });
     await page.waitForFunction(() => document.querySelector('audio')?.readyState >= 1);

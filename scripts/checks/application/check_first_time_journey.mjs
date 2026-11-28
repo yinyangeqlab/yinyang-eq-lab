@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import { X } from 'lucide-react';
 import ts from 'typescript';
 
 const source = path => ts.createSourceFile(path, fs.readFileSync(path, 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
@@ -42,7 +43,7 @@ function picker(onImport = async () => {}) {
   vm.runInNewContext(compile(fs.readFileSync('site/components/headphone-picker.tsx', 'utf8')), {
     module: mod, exports: mod.exports, document, Error, requestAnimationFrame: fn => frames.push(fn), window: { confirm: () => true },
     fetch: async () => ({ ok: true, json: async () => ({ entries: catalog }) }),
-    require(id) { if (id === 'react') return react; if (id === 'react/jsx-runtime') return { jsx, jsxs: jsx }; if (id.endsWith('.css')) return {}; if (id === '@/lib/search') return searchModule.exports; if (id === '@/lib/measurement') return measurement; throw Error(id); },
+    require(id) { if (id === 'lucide-react') return { X }; if (id === 'react') return react; if (id === 'react/jsx-runtime') return { jsx, jsxs: jsx }; if (id.endsWith('.css')) return {}; if (id === '@/lib/search') return searchModule.exports; if (id === '@/lib/measurement') return measurement; throw Error(id); },
   });
   props = { rows: [{ id: 'saved', name: 'Saved synthetic', type: 'oe', origin: 'upload', rig: 'Fixture', source: 'Fixture', notes: '' }], selectedId: 'saved', headphoneType: 'oe', onType() {}, onSelect(id) { props.selectedId = id; }, onClear() { props.selectedId = ''; }, onImport, onUpload() {}, onEdit() {}, onDelete() {} };
   const render = () => { index = 0; tree = mod.exports.default(props); while (effects.length) effects.shift()(); return tree; };

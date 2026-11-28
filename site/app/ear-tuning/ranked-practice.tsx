@@ -33,7 +33,7 @@ const prettyHz = (hz: number) => hz.toLocaleString("en-US") + " Hz";
 
 async function responseJson<T>(response: Response): Promise<T> {
   const body = await response.json() as T & { error?: string };
-  if (!response.ok) throw Error(body.error || "Ranked practice is temporarily unavailable.");
+  if (!response.ok) throw Error(body.error || "The ranked challenge is temporarily unavailable.");
   return body;
 }
 
@@ -185,7 +185,7 @@ export default function RankedPractice({ detailsRef, stopRef, requestListening, 
       setConsent(false);
       if (result.set?.answer) setVolume(DEFAULT_PRACTICE_VOLUME);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Ranked practice could not be opened.");
+      setMessage(error instanceof Error ? error.message : "The ranked challenge could not be opened.");
     } finally {
       setBusy(false);
     }
@@ -355,7 +355,7 @@ export default function RankedPractice({ detailsRef, stopRef, requestListening, 
     <summary><span className="ear-guide-summary">
       <Trophy size={18} aria-hidden="true"/>
       <span className="ear-guide-summary-copy">
-        <strong>Ranked Practice Challenge</strong>
+        <strong>Peak and Dip Ranked Listening Challenge</strong>
         <small>Randomized listening challenges · Level 100 Grandmaster</small>
       </span>
     </span></summary>
@@ -374,7 +374,7 @@ export default function RankedPractice({ detailsRef, stopRef, requestListening, 
       </ol>
       <p>Clear Level 100 to earn this challenge’s Grandmaster milestone. Win a round by identifying every change’s type and frequency within a quarter octave. Your frequency accuracy measures how close each mark is to the exact answer, separately from wins and losses.</p>
       </details>
-      <Link href="/shootout?tab=rankings&view=practice">View ranked practice results</Link>
+      <Link href="/shootout?tab=rankings&view=practice">View ranked challenge results</Link>
       {profile?.canPublish === false && <p>This session can use the unranked exercises in Recommended practice. Ranked scores are available to participant accounts.</p>}
       {set?.legacy && <p>This saved round uses the earlier challenge format. You can finish it here, then begin the new mixed challenge at Level 1. Earlier scores stay separate.</p>}
       {needsConsent && !active && <form className="ear-ranked-start" onSubmit={event => {
@@ -386,9 +386,9 @@ export default function RankedPractice({ detailsRef, stopRef, requestListening, 
         <label className="ear-check"><input type="checkbox" checked={consent} onChange={event => setConsent(event.target.checked)}/>
           Publish my name or anonymous label, level, wins, losses and frequency accuracy in the rankings and player distribution. Each challenge counts once I start; wrong or unfinished rounds count as losses with zero accuracy until submitted.</label>
         <p>Your records stay linked to a private participant ID visible to the site admin, including when you use an anonymous label or change your name. You can rename your entry or withdraw your scores from Rankings.</p>
-        <button type="submit" disabled={busy || !consent}>Start ranked practice challenge</button>
+        <button type="submit" disabled={busy || !consent}>Start ranked challenge</button>
       </form>}
-      {profile?.canPublish && !needsConsent && !set && <button type="button" className="ear-guide-next" disabled={busy} onClick={begin}>Start ranked practice challenge</button>}
+      {profile?.canPublish && !needsConsent && !set && <button type="button" className="ear-guide-next" disabled={busy} onClick={begin}>Start ranked challenge</button>}
       {busy && !set && <p role="status">Loading ranked challenge…</p>}
       {set && <p role="status">{complete ? "Grandmaster · Level 100 cleared" : "Level " + set.stage + " of " + EAR_PRACTICE_MAX_STAGE + " · " + set.count + " hidden " + (set.count === 1 ? "change" : "changes")}</p>}
       {answer && <>
@@ -406,7 +406,7 @@ export default function RankedPractice({ detailsRef, stopRef, requestListening, 
         <FrequencyNavigator frequency={hz} range={EAR_PRACTICE_RANGE} onSeek={seek}/>
         <PracticeVolume volume={volume} onChange={setVolume}/>
         <p className="ear-playback-keys">Space plays or pauses. Arrows change frequency. A selects Reference. B selects Mystery.</p>
-        <div className="ear-guide-actions" role="group" aria-label="Ranked practice playback">
+        <div className="ear-guide-actions" role="group" aria-label="Ranked challenge playback">
           <button type="button" onClick={togglePlayback} disabled={busy || volume <= 0 && !playing && !starting}>
             {starting ? "Cancel playback" : playing ? "Pause sweep" : "Play sweep"}
           </button>

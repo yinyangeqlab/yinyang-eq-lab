@@ -214,7 +214,7 @@ export async function POST(request: Request) {
       }
       const profile = await db.prepare("SELECT username,cleared_at FROM ear_practice_profiles WHERE subject_id=?")
         .bind(subject).first<{ username: string | null; cleared_at: number }>();
-      if ((profile?.cleared_at ?? 0) !== data.revision) throw new RequestInputError("Your leaderboard settings changed. Reopen ranked practice.", 409);
+      if ((profile?.cleared_at ?? 0) !== data.revision) throw new RequestInputError("Your leaderboard settings changed. Reopen the ranked challenge.", 409);
       const existing = await loadSet(db, subject);
       if (existing && (!existing.answer || existing.id === data.id)) {
         return json({ set: formatSet(existing), username: profile?.username ?? null });
@@ -248,16 +248,16 @@ export async function POST(request: Request) {
         }
       }
       const result = await loadSet(db, subject);
-      if (!result) throw new RequestInputError("Your leaderboard settings changed. Reopen ranked practice.", 409);
+      if (!result) throw new RequestInputError("Your leaderboard settings changed. Reopen the ranked challenge.", 409);
       const savedProfile = await db.prepare("SELECT username,cleared_at FROM ear_practice_profiles WHERE subject_id=?")
         .bind(subject).first<{ username: string | null; cleared_at: number }>();
-      if (savedProfile?.cleared_at !== data.revision) throw new RequestInputError("Your leaderboard settings changed. Reopen ranked practice.", 409);
+      if (savedProfile?.cleared_at !== data.revision) throw new RequestInputError("Your leaderboard settings changed. Reopen the ranked challenge.", 409);
       return json({ set: formatSet(result), username: savedProfile?.username ?? null });
     }
 
     const set = await loadSet(db, subject);
     if (!set || set.id !== data.id) throw new RequestInputError("This ranked challenge is no longer active.", 409);
-    if (data.action !== "answer") throw new RequestInputError("Choose a ranked practice action.", 400);
+    if (data.action !== "answer") throw new RequestInputError("Choose an action for the ranked challenge.", 400);
     if (set.answer) return json({ set: formatSet(set) });
     const bands = JSON.parse(set.bands) as EarPracticeBand[];
     if (!Array.isArray(data.guesses) || data.guesses.length > bands.length) throw new RequestInputError("Check the number of guesses.", 400);

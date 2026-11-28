@@ -1,8 +1,8 @@
 import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
-import { cleanFitMetadata } from "@/lib/fitter-settings";
+import { cleanFitMetadata, isJointFitPair } from "@/lib/fitter-settings";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
-import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { LISTENING_PROTOCOL, FREE_LISTENING_PROTOCOL, LEVEL_MATCHED_LISTENING_PROTOCOL, isRankedPassageProtocol, cleanPassageLevelMatch, matchedPassageContains } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { eq } from "drizzle-orm";
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
     const db = getDb();
     const matchedPassageRequired=data.matchedPassageRequired!==false;
     const trialId = testMode === "open" || !matchedPassageRequired ? null : String(data.trialId ?? "");
+    if (!matchedPassageRequired && data.trialId) return reject("invalid_trial", 400, "Ranked trials require matched-passage playback.");
     let protocolVersion = matchedPassageRequired ? LISTENING_PROTOCOL : FREE_LISTENING_PROTOCOL;
     let issuedVersions: string[] | null=null;
     if (trialId !== null) {
@@ -54,7 +55,7 @@ export async function POST(request: Request) {
       if(issued.headphoneType!==headphoneType)return reject("headphone_category_changed", 409, "Headphone category changed. Start a new pairing.");
       issuedVersions=JSON.parse(issued.targetVersions||"null");
       protocolVersion = issued.protocolVersion;
-      if (protocolVersion !== LISTENING_PROTOCOL) return reject("protocol_changed", 409, "The listening protocol was updated. Start a new pairing; your older saved results remain available.");
+      if (!isRankedPassageProtocol(protocolVersion)) return reject("protocol_changed", 409, "The listening protocol was updated. Start a new pairing; your older saved results remain available.");
       if (stats.overlapSeconds < 5) return reject("insufficient_overlap", 400, "Replay the same passage under A and B: at least 5 seconds must overlap.");
       if (stats.heardA + stats.heardB > (Date.now()-issued.issuedAt)/1000 + 1) return reject("playback_exceeds_trial_age", 400, "Playback intervals exceed the elapsed trial time.");
       if (Date.now() - issued.issuedAt < 10000 || stats.heardA < 5 || stats.heardB < 5) return reject("insufficient_playback", 400, "Blind comparisons require at least 5 seconds of playback per side.");
@@ -67,7 +68,19 @@ export async function POST(request: Request) {
     for (const key of ["rig","measurementType","normalizationStatus","loudnessTarget","recordingId","sha256","audioFormat"]) if(typeof context[key]==="string") cleanContext[key]=context[key].slice(0,160);
     for (const key of ["sampleRate","bitrate","duration"]) if(typeof context[key]==="number" && Number.isFinite(context[key]) && Number(context[key])>=0) cleanContext[key]=context[key];
     if (!shareSong) for (const key of ["recordingId","sha256","audioFormat","sampleRate","bitrate","duration"]) delete cleanContext[key];
-    try { cleanContext.eqFits = cleanFitMetadata(context.eqFits); } catch { return reject("invalid_fitter_provenance", 400, "Both sides need valid matching EQ fitter provenance."); }
+    const fitRecords = (() => { try { return cleanFitMetadata(context.eqFits); } catch { return null; } })();
+    if (!fitRecords) return reject("invalid_fitter_provenance", 400, "Both sides need valid matching EQ fitter provenance.");
+    cleanContext.eqFits = fitRecords;
+    if (protocolVersion === LEVEL_MATCHED_LISTENING_PROTOCOL) {
+      const match = cleanPassageLevelMatch(context.passageLevelMatch);
+      if (!isJointFitPair(fitRecords) || !match ||
+          !matchedPassageContains(match, intervals)) {
+        return reject("invalid_fitter_provenance", 400, "Refresh the page and play both sides of the level-matched passage with the standard 20-band fitter.");
+      }
+      cleanContext.passageLevelMatch = match;
+    } else if (trialId && fitRecords.some(fit => fit.method === "joint" || fit.engine === "joint")) {
+      return reject("invalid_fitter_provenance", 400, "Start a new pairing to use the current 20-band fitter.");
+    }
     stage = "targets";
     const targetRows = await db.select().from(targets).where(publicTargetPredicate);
     const targetVersions = await Promise.all([targetAId, targetBId].map(id => {

@@ -1,0 +1,46 @@
+{
+  "update": 215,
+  "sourceCommit": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
+  "deploymentVerification": {
+    "at": "2026-11-23T05:20:55.729909Z",
+    "update": 215,
+    "revision": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
+    "deploymentVerified": true,
+    "migrations": [
+      "0049_sync_account_recovery.sql"
+    ],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "verifiedPreviousSourceCommit": "d0c7c9eec949baa84126289ba920d05b9347db1b",
+    "existingBindingsUnchanged": true,
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 425,
+    "matchingVersionClientAssets": 39,
+    "protectedRecordingAccessRetained": true,
+    "affectedPagesVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "isolatedAndroidSyncCodeAndPasskeyVerified": true,
+    "physicalAndroidLibraryLoadedAfterBothRecoveries": true,
+    "device": "Samsung Galaxy S26 Ultra",
+    "physicalAudioQualityVerified": false,
+    "expandedNativeMenuPixelsCertified": false
+  },
+  "candidateVerification": {
+    "sourceRevision": "e97ea8032fcbd0b8a0d543020c030e80fb86e205",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

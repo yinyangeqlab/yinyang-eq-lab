@@ -1,0 +1,69 @@
+{
+  "update": 228,
+  "sourceCommit": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+  "deploymentVerification": {
+    "at": "2026-11-27T07:54:16.220739Z",
+    "update": 228,
+    "revision": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "b7f629158a3df62b564c606ce690d83276613a5c",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 429,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 228,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "guidePageVerified": true,
+    "windowsInstructionsVerified": true,
+    "pdfPage32LinkVerified": true,
+    "publicPlotVerified": true,
+    "guideAssetsVerified": {
+      "fosi-im4-windows-exclusive.png": "55c365897a44d07d57bc67f3bf4959b4e6de8610570f997ffcf8cd5efddca8b2",
+      "yinyang-eq-iem-711-bench-checklist-r01.pdf": "268572da6f94ac91a9796b634c433a498f511f7c35ea3e765269a401b2837d66",
+      "yinyang-eq-iem-711-measurement-guide-r01.pdf": "747b2d6d3841d349cd7c96edcc7e0ea1437889b9ffcdf397259e6c5ae363ab58",
+      "yinyang-eq-iem-711-measurement-guide-r02.pdf": "518b7bf566397492a4fb8a7f5a847a81ec4fbd14e56f9ceff2dc600ff4c81d5d",
+      "yinyang-eq-iem-711-measurement-guide-r03.pdf": "543d20d5c981bf814ae26ddc0316832d51abbc2ae5c796788f8f86a338cd6741",
+      "yinyang-eq-iem-711-measurement-guide.pdf": "e5abcd16a79bb3f790dff80b9700693fe70fa4719202c6023baf6b52ac452897"
+    },
+    "downloadHeaderVerified": true,
+    "versionEntryVerified": true
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "localPackagedPagesVerified": true,
+    "revision": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+    "desktopAndMobileGuideVerified": true,
+    "viewportWidths": [
+      1440,
+      390
+    ],
+    "anonymousReadOnly": true,
+    "livePublicGuideVerifiedAtViewportWidths": [
+      1440,
+      390
+    ]
+  },
+  "candidateVerification": {
+    "sourceRevision": "77ea8e38dab6dbc76c5a410abde742934b2fc85a",
+    "regressionSuitesPassed": 128,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224,
+    "scopedLintPassed": true,
+    "appAndInfraTypesPassed": true,
+    "repositoryLintBaselineErrors": 7
+  },
+  "recoveryRegistrationPending": true
+}

@@ -1,23 +1,25 @@
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {buildSync} from 'esbuild';
+import panoramaRidgeline from '../../../site/lib/landscape-panorama-ridgeline.json' with {type:'json'};
 const source=buildSync({entryPoints:['site/lib/welcome-landscape.ts'],bundle:true,format:'cjs',write:false,target:'es2022'}).outputFiles[0].text;
-function fixture({available=true,compile=true,buffer=true,getArtworkAnchor,stillSky}={}){
- const jobs=new Map(),calls=[],ready=[],uniforms={};let id=0;
+function fixture({available=true,compile=true,buffer=true,getArtworkAnchor,stillSky,panorama}={}){
+ const jobs=new Map(),calls=[],ready=[],uniforms={},textures=[];let id=0;
  const gl={VERTEX_SHADER:1,FRAGMENT_SHADER:2,COMPILE_STATUS:3,LINK_STATUS:4,ARRAY_BUFFER:5,STATIC_DRAW:6,FLOAT:7,TEXTURE_2D:8,TEXTURE_WRAP_S:9,TEXTURE_WRAP_T:10,CLAMP_TO_EDGE:11,TEXTURE_MIN_FILTER:12,TEXTURE_MAG_FILTER:13,LINEAR:14,RGB:15,UNSIGNED_BYTE:16,TRIANGLES:17,
-  createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>compile,createProgram:()=>({}),attachShader(){},linkProgram(){},getProgramParameter:()=>true,useProgram(){},createBuffer:()=>buffer?{}:null,bindBuffer(){},bufferData(){},getAttribLocation:()=>0,enableVertexAttribArray(){},vertexAttribPointer(){},createTexture:()=>({}),bindTexture(){},activeTexture(){},uniform1i:(n,v)=>uniforms[n]=v,texParameteri(){},getUniformLocation:(_,n)=>n,uniform2f:(n,...v)=>uniforms[n]=v,uniform4fv:(n,v)=>uniforms[n]=Array.from(v),uniform1f:(n,v)=>uniforms[n]=v,viewport(){},texImage2D:()=>calls.push('texture'),drawArrays:()=>calls.push('draw'),isContextLost:()=>false,deleteBuffer:()=>calls.push('free-buffer'),deleteTexture:()=>calls.push('free-texture'),deleteProgram:()=>calls.push('free-program'),deleteShader:()=>calls.push('free-shader')};
+  createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>compile,createProgram:()=>({}),attachShader(){},linkProgram(){},getProgramParameter:()=>true,useProgram(){},createBuffer:()=>buffer?{}:null,bindBuffer(){},bufferData(){},getAttribLocation:()=>0,enableVertexAttribArray(){},vertexAttribPointer(){},createTexture:()=>({}),bindTexture(){},activeTexture(){},uniform1i:(n,v)=>uniforms[n]=v,texParameteri(){},getUniformLocation:(_,n)=>n,uniform2f:(n,...v)=>uniforms[n]=v,uniform4fv:(n,v)=>uniforms[n]=Array.from(v),uniform1f:(n,v)=>uniforms[n]=v,viewport(){},texImage2D:(...args)=>{calls.push('texture');textures.push(args)},drawArrays:()=>calls.push('draw'),isContextLost:()=>false,deleteBuffer:()=>calls.push('free-buffer'),deleteTexture:()=>calls.push('free-texture'),deleteProgram:()=>calls.push('free-program'),deleteShader:()=>calls.push('free-shader')};
  const canvas={width:0,height:0,getContext:()=>available?gl:null,getBoundingClientRect:()=>({width:2000,height:1200})},image={complete:true,naturalWidth:1400,naturalHeight:758};
  const fixtureModule={exports:{}},document={hidden:false};
  vm.runInNewContext(source,{module:fixtureModule,exports:fixtureModule.exports,Float32Array,window:{devicePixelRatio:3},document,requestAnimationFrame:fn=>{jobs.set(++id,fn);return id},cancelAnimationFrame:i=>jobs.delete(i)});
- const engine=fixtureModule.exports.createLandscapeRenderer(canvas,image,value=>ready.push(value),{getArtworkAnchor,stillSky});
+ const engine=fixtureModule.exports.createLandscapeRenderer(canvas,image,value=>ready.push(value),{getArtworkAnchor,stillSky,panorama});
  const step=now=>{const pending=[...jobs.values()];jobs.clear();for(const fn of pending)fn(now)};
- return {engine,canvas,image,document,jobs,calls,ready,uniforms,step};
+ return {engine,canvas,image,document,jobs,calls,ready,uniforms,textures,step};
 }
 assert.equal(fixture({available:false}).engine,null,'unavailable WebGL retains original picture');
 let f=fixture({compile:false});assert.equal(f.engine,null);assert.ok(f.calls.includes('free-program'));assert.ok(f.calls.includes('free-shader'));
 f=fixture({buffer:false});assert.equal(f.engine,null,'allocation failure falls back');
 f=fixture();f.engine.setRunning(true);assert.equal(f.jobs.size,0,'no animation before image is loaded');f.image.complete=false;f.engine.load();assert.equal(f.ready.length,0);f.image.complete=true;f.engine.load();assert.equal(f.ready.at(-1),true);assert.equal(f.jobs.size,1);assert.ok(f.canvas.width<=1280&&f.canvas.height<=800,'bounded decorative drawing buffer');
 assert.equal(f.uniforms.skyline,1,'the measured ridge uses its own texture');
+assert.equal(f.uniforms.panorama,0,'other landscape renderers keep their existing artwork');
 assert.equal(f.uniforms.artworkAnchorY,.25,'default framing for other landscape renderers');
 f.step(100);const initial=f.calls.filter(x=>x==='draw').length;f.step(120);assert.equal(f.calls.filter(x=>x==='draw').length,initial,'render is capped rather than drawing each display frame');f.step(160);assert.ok(f.uniforms.time>0);const time=f.uniforms.time;
 f.engine.setRunning(false);assert.equal(f.jobs.size,0,'Pause cancels pending work');f.step(10000);assert.equal(f.uniforms.time,time,'paused image remains still');
@@ -58,4 +60,17 @@ assert.equal(f.uniforms.stillSky,2,'the animated sky samples the same image show
 assert.equal(f.calls.filter(call=>call==='texture').length,3);
 f.engine.dispose();
 assert.equal(f.calls.filter(call=>call==='free-texture').length,3,'the still sky texture is released');
+f=fixture({panorama:true,getArtworkAnchor:()=>.53});
+f.image.naturalWidth=2172;
+f.image.naturalHeight=724;
+f.engine.load();
+assert.equal(f.ready.at(-1),true,'the panorama does not wait for a separate sky image');
+assert.equal(f.uniforms.panorama,1);
+assert.equal(f.uniforms.useStillSky,0);
+assert.equal(f.uniforms.artworkAnchorY,.53);
+assert.deepEqual(f.uniforms.imageSize,[2172,724]);
+assert.equal(f.textures.length,2,'the panorama uses one landscape image and its skyline');
+const panoramaSkyline=f.textures[0].at(-1);
+assert.deepEqual(panoramaRidgeline.map((_,x)=>panoramaSkyline[x*2]*256+panoramaSkyline[x*2+1]),panoramaRidgeline);
+f.engine.dispose();
 console.log('PASS decorative renderer fallback, resource cleanup, image readiness, bounded resolution, frame cap, pause/resume, hidden-tab stop, shared landscape texture, automatic rhythm changes and disposal.');

@@ -1,7 +1,7 @@
 import { autoEqRankingTargets, autoEqCatalogId, sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { curveVersion } from "@/lib/curve-version";
-import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { LEVEL_MATCHED_LISTENING_PROTOCOL } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { and, desc, eq } from "drizzle-orm";
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     if (!validVoter(data.voterId) || (data.testMode !== "blind" && data.testMode !== "bring") || (data.headphoneType !== "ie" && data.headphoneType !== "oe")) {
       return Response.json({ error: "Invalid trial request." }, { status: 400 });
     }
+    const protocolVersion = LEVEL_MATCHED_LISTENING_PROTOCOL;
     const headphoneType = data.headphoneType as HeadphoneType;
     const db = getDb();
     const now = Date.now();
@@ -54,8 +55,8 @@ export async function POST(request: Request) {
     }
     const targetVersions=await Promise.all(pair.map(id=>sharedAutoEqTarget(id)?.version ?? curveVersion(approved.find(t=>t.id===id)!.points)));
     const id = crypto.randomUUID();
-    await db.batch([db.insert(rankedTrials).values({ id, protocolVersion: LISTENING_PROTOCOL, targetVersions:JSON.stringify(targetVersions),headphoneType, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"trial",recordId:id,comparisonId:id})]);
-    return Response.json({ trialId: id, pair }, { headers: { "Cache-Control": "no-store" } });
+    await db.batch([db.insert(rankedTrials).values({ id, protocolVersion, targetVersions:JSON.stringify(targetVersions),headphoneType, voterId: data.voterId, testMode: data.testMode, sideA: pair[0], sideB: pair[1], issuedAt: now }), ownership.record(id), db.insert(comparisonRecords).values({recordKind:"trial",recordId:id,comparisonId:id})]);
+    return Response.json({ trialId: id, pair, protocolVersion }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     const inputError = requestInputResponse(error);
     if (inputError) return inputError;

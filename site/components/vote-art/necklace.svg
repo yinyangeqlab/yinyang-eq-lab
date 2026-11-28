@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 22" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="silver" x2=".4" y2="1">
+      <stop stop-color="#dbe4e9"/>
+      <stop offset=".34" stop-color="#a9b9c4"/>
+      <stop offset=".65" stop-color="#6a7d89"/>
+      <stop offset="1" stop-color="#c4d2da"/>
+    </linearGradient>
+    <g id="link">
+      <ellipse rx="1.25" ry="2.65" fill="none" stroke="#182129" stroke-width="1.6"/>
+      <ellipse rx="1.25" ry="2.65" fill="none" stroke="url(#silver)" stroke-width=".85"/>
+    </g>
+    <g id="join">
+      <path d="M0-2.3v4.6" stroke="#24313a" stroke-width="1.9" stroke-linecap="round"/>
+      <path d="M0-2.3v4.6" stroke="#a5b5bf" stroke-width=".95" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <use href="#link" transform="translate(5 1.4) rotate(-17)"/>
+  <use href="#link" transform="translate(29 1.4) rotate(17)"/>
+  <use href="#join" transform="translate(6.25 5) rotate(-23)"/>
+  <use href="#join" transform="translate(27.75 5) rotate(23)"/>
+  <use href="#link" transform="translate(8 8.6) rotate(-29)"/>
+  <use href="#link" transform="translate(26 8.6) rotate(29)"/>
+  <use href="#join" transform="translate(10.1 12) rotate(-34)"/>
+  <use href="#join" transform="translate(23.9 12) rotate(34)"/>
+  <use href="#link" transform="translate(12.6 15.2) rotate(-43)"/>
+  <use href="#link" transform="translate(21.4 15.2) rotate(43)"/>
+  <use href="#join" transform="translate(15 17.5) rotate(-45)"/>
+  <use href="#join" transform="translate(19 17.5) rotate(45)"/>
+  <use href="#link" transform="translate(17 19.1) rotate(90)"/>
+</svg>

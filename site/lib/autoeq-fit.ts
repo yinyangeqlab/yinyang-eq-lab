@@ -1,4 +1,4 @@
-import { FIT_BANDS, FIT_METHODS, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
+import { FIT_BANDS, JOINT_FITTER_VERSION, validFitter, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
 import { fitAutoEq, autoEqReferenceOffset, response, type PeqFilter } from './autoeq';
 import { finalizeVariant, peakBoost } from './preference-finalize';
 import { at, fitGrid, validatePoints, type SmoothMode } from './peqdb-engine';
@@ -6,14 +6,15 @@ import type { Point } from './curves';
 
 export const PEQDB_VERSION = 'fdc0db772164387c2df8739742594197c6851fc3';
 export type AutoEqRequest = { raw: Point[]; targets: Point[][]; kind: 'shootout' | 'export'; bands: FitBands; method?: FitterMethod; headphoneType?: "ie" | "oe"; sampleRate: number; legacyPriority?: 'smooth' | 'close' };
-export type AutoEqFit = { filters: PeqFilter[]; preamp: number; peakBoost: number; rms: number; engine: 'peqdb' | 'legacy'; engineVersion: string; sampleRate: number; smoothing: SmoothMode | 'legacy'; fallbackReason?: string; method?: FitterMethod; bands?: FitBands };
+export type AutoEqFit = { filters: PeqFilter[]; preamp: number; peakBoost: number; rms: number; engine: 'peqdb' | 'legacy' | 'joint'; engineVersion: string; sampleRate: number; smoothing: SmoothMode | 'legacy'; fallbackReason?: string; method?: FitterMethod; bands?: FitBands };
 
 export function validateRequest(request: AutoEqRequest) {
   validatePoints(request.raw);
   if (request.headphoneType !== undefined && request.headphoneType !== "ie" && request.headphoneType !== "oe") throw Error("Unsupported headphone type.");
-  if (!['shootout', 'export'].includes(request.kind) || !FIT_BANDS.includes(request.bands) || request.method !== undefined && !FIT_METHODS.includes(request.method) || !request.method && request.kind === 'shootout' && request.bands !== 10 ||
+  if (!['shootout', 'export'].includes(request.kind) || !FIT_BANDS.includes(request.bands) || request.method !== undefined && !validFitter(request) || !request.method && request.kind === 'shootout' && request.bands !== 10 ||
       !Number.isFinite(request.sampleRate) || request.sampleRate < 3000 || request.sampleRate > 768000 || request.targets.length < 1 || request.targets.length > 3 || request.legacyPriority !== undefined && !['smooth', 'close'].includes(request.legacyPriority)) throw Error('Unsupported EQ request.');
   request.targets.forEach(validatePoints);
+  if (request.method === "joint" && (request.sampleRate < 44_100 || request.sampleRate > 192_000)) throw Error("Joint Fit requires a playback sample rate from 44.1 to 192 kHz.");
 }
 
 export function correction(raw: Point[], target: Point[], kind: AutoEqRequest['kind']): Point[] {
@@ -33,15 +34,18 @@ export function describeFit(request: AutoEqRequest, target: Point[], filters: Pe
     const hz = 20 * (Math.min(20000, request.sampleRate * .49) / 20) ** (i / 4096);
     peak = Math.max(peak, filters.reduce((sum, filter) => sum + response(hz, filter, request.sampleRate), 0));
   }
-  const rms = Math.sqrt(desired.reduce((sum, [hz, db]) => sum + (db - filters.reduce((s, f) => s + response(hz, f, request.sampleRate), 0)) ** 2, 0) / desired.length);
+  const residual = desired.map(([hz, db]) => db - filters.reduce((s, f) => s + response(hz, f, request.sampleRate), 0));
+  const offset = engine === 'joint' ? residual.reduce((sum, value) => sum + value, 0) / residual.length : 0;
+  const rms = Math.sqrt(residual.reduce((sum, value) => sum + (value - offset) ** 2, 0) / desired.length);
   if (![peak, rms].every(Number.isFinite)) throw Error('The EQ engine returned an invalid response.');
   return { filters, peakBoost: peak, preamp: -Math.ceil((Math.max(0, peak) + (request.kind === 'shootout' ? 1 : .5)) * 10) / 10,
-    rms, engine, ...(request.method ? { method: request.method, bands: request.bands } : {}), engineVersion: engine === 'peqdb' ? `${PEQDB_VERSION}:${request.method === 'peqdb-smoothed' ? `smoothed-${fitSmoothing(request)}` : 'unsmoothed'}-fixed-reference-v1` : request.method && !isPeqdbMethod(request.method) ? `yinyang-${request.method}-${request.legacyPriority ?? 'close'}@listening-fitter-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
-    smoothing: engine === 'peqdb' ? fitSmoothing(request) : 'legacy', ...(fallbackReason ? { fallbackReason } : {}) };
+    rms, engine, ...(request.method ? { method: request.method, bands: request.bands } : {}), engineVersion: engine === 'joint' ? JOINT_FITTER_VERSION : engine === 'peqdb' ? `${PEQDB_VERSION}:${request.method === 'peqdb-smoothed' ? `smoothed-${fitSmoothing(request)}` : 'unsmoothed'}-fixed-reference-v1` : request.method && !isPeqdbMethod(request.method) ? `yinyang-${request.method}-${request.legacyPriority ?? 'close'}@listening-fitter-v1` : `yinyang-${request.kind === 'shootout' ? 'shootout' : `precise-${request.legacyPriority ?? 'close'}`}@update124;metrics=autoeq-fit-v1`, sampleRate: request.sampleRate,
+    smoothing: engine === 'joint' ? 'none' : engine === 'peqdb' ? fitSmoothing(request) : 'legacy', ...(fallbackReason ? { fallbackReason } : {}) };
 }
 
 export function legacyBatch(request: AutoEqRequest, reason: string): AutoEqFit[] {
   validateRequest(request);
+  if (request.method === "joint") throw Error("Joint Fit could not prepare EQ for this comparison.");
   return request.targets.map(target => {
     const result = request.method ? finalizeVariant(request.raw, target, request.bands, request.method === 'standard' ? 'standard' : 'precise', request.legacyPriority ?? 'close', request.kind === 'shootout' ? 'shootout' : '1khz') : request.kind === 'shootout' ? fitAutoEq(request.raw, target) : finalizeVariant(request.raw, target, request.bands, 'precise', request.legacyPriority ?? 'close');
     const filters = (result.filters.length ? result.filters : [{ hz: 1000, gain: 0, q: 1 }]).map(f => ({ ...f, hz: Math.min(f.hz, request.sampleRate * .49) }));

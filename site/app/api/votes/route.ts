@@ -1,7 +1,7 @@
 import { sharedAutoEqTarget } from "@/lib/autoeq-target-sources";
 import { publicTargetPredicate } from "@/lib/public-targets";
 import { env } from "cloudflare:workers";
-import { LISTENING_PROTOCOL } from "@/lib/listening-protocol";
+import { isRankedPassageProtocol } from "@/lib/listening-protocol";
 import { comparisonRecords } from "@/db/schema";
 import { submissionContext } from "@/lib/submission-ownership";
 import { activeSubmissions } from "@/lib/active-submissions";
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     if (alreadyUsed.length) return reject("vote_already_saved", 409, "This trial has already been submitted.");
     stage = "listening_record";
     const completed = await db.select().from(listeningRuns).where(eq(listeningRuns.trialId,trialId)).get();
-    if (!completed || completed.voterId!==voterId || completed.testMode!==data.testMode || completed.headphoneType!==data.headphoneType || completed.targetAId!==trial.sideA || completed.targetBId!==trial.sideB || completed.result==="tie" || (completed.result==="a" ? trial.sideA : trial.sideB)!==winnerId || completed.protocolVersion!==LISTENING_PROTOCOL || trial.protocolVersion!==LISTENING_PROTOCOL) return reject("listening_record_mismatch", 409, "A matching completed listening record is required before a ranked vote.");
+    if (!completed || completed.voterId!==voterId || completed.testMode!==data.testMode || completed.headphoneType!==data.headphoneType || completed.targetAId!==trial.sideA || completed.targetBId!==trial.sideB || completed.result==="tie" || (completed.result==="a" ? trial.sideA : trial.sideB)!==winnerId || completed.protocolVersion!==trial.protocolVersion || !isRankedPassageProtocol(trial.protocolVersion)) return reject("listening_record_mismatch", 409, "A matching completed listening record is required before a ranked vote.");
     const owner = await env.DB!.prepare("SELECT subject_id FROM submission_owners WHERE record_kind='run' AND record_id=?").bind(completed.id).first<{subject_id:string}>();
     if(owner?.subject_id!==ownership.subjectId) return reject("listening_record_not_owned", 403, "The listening record is not owned by your sign-in.");
     const activeRun=await activeSubmissions();
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     stage = "save";
     await db.batch([
       db.insert(votes).values({
-        id: trialId, protocolVersion: LISTENING_PROTOCOL, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
+        id: trialId, protocolVersion: trial.protocolVersion, winnerId, loserId, voterId, reliabilityWeight, createdAt: Date.now(),
         songTitle: String(shareDetails ? completed.songTitle ?? "" : "").trim().slice(0, 120) || null,
         songArtist: String(shareDetails ? completed.songArtist ?? "" : "").trim().slice(0, 120) || null,
         songAlbum: String(shareDetails ? completed.songAlbum ?? "" : "").trim().slice(0, 120) || null,

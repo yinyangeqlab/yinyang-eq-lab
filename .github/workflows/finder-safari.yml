@@ -17,7 +17,7 @@ jobs:
       matrix:
         include:
           - target: mac
-            runner: macos-26
+            runner: macos-26-intel
           - target: iphone
             runner: xcode-27
     env:
@@ -48,6 +48,11 @@ jobs:
           python3 scripts/qa/finder-safari-preview.py 5813 > "$FINDER_EVIDENCE/fixture.log" 2>&1 &
           proxy_pid=$!
           trap 'kill "$preview_pid" "$proxy_pid" 2>/dev/null || true' EXIT
+          sw_vers
+          if [ "${{ matrix.target }}" = iphone ]; then
+            xcodebuild -version
+            xcrun simctl runtime list
+          fi
           sudo /usr/bin/safaridriver --enable
           python3 scripts/qa/finder-safari.py "${{ matrix.target }}"
       - name: Upload Safari picker evidence

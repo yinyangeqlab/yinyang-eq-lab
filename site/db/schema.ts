@@ -548,7 +548,9 @@ export const companionLibraryGrants = sqliteTable("companion_library_grants", {
   sessionHash: text("session_hash").notNull(),
   deviceId: text("device_id").notNull().references(()=>accountDeviceStatus.id,{onDelete:"cascade"}),
   expiresAt: integer("expires_at").notNull(),
-}, table => [index("companion_grants_subject").on(table.subjectId, table.expiresAt)]);
+  personalRanks: integer("personal_ranks").notNull().default(0),
+}, table => [index("companion_grants_subject").on(table.subjectId, table.expiresAt),
+  check("companion_personal_ranks_scope",sql`${table.personalRanks} IN (0, 1)`)]);
 
 export const companionPresetHistory = sqliteTable("companion_preset_history", {
   id:text("id").primaryKey(),subjectId:text("subject_id").notNull().references(()=>privacyAccounts.subjectId,{onDelete:"cascade"}),
@@ -556,3 +558,37 @@ export const companionPresetHistory = sqliteTable("companion_preset_history", {
   mainName:text("main_name").notNull(),matchName:text("match_name").notNull(),
   mainEq:text("main_eq").notNull(),channelMatch:text("channel_match").notNull(),savedAt:integer("saved_at").notNull()
 },table=>[index("companion_history_account").on(table.subjectId,table.savedAt,table.id)]);
+
+export const syncRecoveryAccounts = sqliteTable("sync_recovery_accounts", {
+  syncId: text("sync_id").primaryKey().notNull(),
+  subjectId: text("subject_id").notNull().unique().references(() => privacyAccounts.subjectId, { onDelete: "cascade" }),
+  inviteId: text("invite_id").notNull().unique().references(() => privateTesterInvites.id, { onDelete: "cascade" }),
+});
+
+export const syncRecoveryPasskeys = sqliteTable("sync_recovery_passkeys", {
+  credentialId: text("credential_id").primaryKey().notNull(),
+  syncId: text("sync_id").notNull().references(() => syncRecoveryAccounts.syncId, { onDelete: "cascade" }),
+  publicKey: text("public_key").notNull(),
+  counter: integer("counter").notNull(),
+  label: text("label").notNull(),
+  createdAt: integer("created_at").notNull(),
+}, table => [
+  index("sync_recovery_passkeys_account").on(table.syncId),
+  check("sync_recovery_passkeys_counter", sql`${table.counter} >= 0`),
+]);
+
+export const syncRecoveryCodes = sqliteTable("sync_recovery_codes", {
+  syncId: text("sync_id").primaryKey().notNull().references(() => syncRecoveryAccounts.syncId, { onDelete: "cascade" }),
+  codeHash: text("code_hash").notNull(),
+});
+
+export const syncRecoveryChallenges = sqliteTable("sync_recovery_challenges", {
+  challenge: text("challenge").primaryKey().notNull(),
+  purpose: text("purpose", { enum: ["register", "recover"] }).notNull(),
+  syncId: text("sync_id").notNull(),
+  browserHash: text("browser_hash"),
+  expiresAt: integer("expires_at").notNull(),
+}, table => [
+  index("sync_recovery_challenges_expiry").on(table.expiresAt),
+  check("sync_recovery_challenges_purpose", sql`${table.purpose} IN ('register', 'recover')`),
+]);

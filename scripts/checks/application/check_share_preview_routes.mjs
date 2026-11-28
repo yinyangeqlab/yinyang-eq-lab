@@ -5,8 +5,10 @@ import * as share from "../../../site/lib/share-pages.mjs";
 
 const { SITE_ORIGIN, sharePageFor, sharePages, shareHtml, shareImageUrl, shareAnimationUrl, previewTitle } = share;
 const aliasDestinations = new Map([
-  ["/android/download", "/q5k4android"],
-  ["/android", "/q5k4android"],
+  ["/android/download", "/android"],
+  ["/q5k4android", "/android"],
+  ["/q5k4android/trailer", "/android/trailer"],
+  ["/q5k4android/trailer/portrait", "/android/trailer/portrait"],
   ["/home", "/"],
   ["/personal-tuning", "/preference-tuning"],
   ["/discover", "/shootout?tab=rankings"],
@@ -59,6 +61,7 @@ checkDestination("/shootout?mode=unknown&tab=rankings", "/shootout?tab=rankings"
 checkDestination("/shootout?tab=shootout", "/shootout");
 checkDestination("/shootout?tab=unknown", "/shootout");
 checkDestination("/my-data?trial=fixture-secret", "/my-data");
+checkDestination("/sync-recovery?key=fixture-secret", "/sync-recovery");
 checkDestination("/participation?review=1&return_to=fixture-secret", "/participation");
 assert.equal(sharePageFor("/does-not-exist"), null);
 assert.equal(sharePageFor("/api/my-data"), null);
@@ -161,7 +164,7 @@ assert.deepEqual(missing.twitter.images, []);
 assert.deepEqual(missing.robots, { index: false, follow: false });
 
 // Discord fetches crawler HTML before loading the MP4 independently.
-const trailerPath = "/q5k4android/trailer";
+const trailerPath = "/android/trailer";
 for (const [path, movie, width, height] of [
   [trailerPath, "/android/companion-btfo-landscape.mp4", 1920, 1080],
   [trailerPath + "/portrait", "/android/companion-btfo.mp4?v=yyeq5k", 720, 1280],
@@ -184,6 +187,6 @@ for (const [path, movie, width, height] of [
     for (const type of ["image", "video"]) assert.ok(html.includes(`property="og:${type}:${field}" content="${page.video[field]}"`));
   }
 }
-assert.ok(!shareHtml(sharePageFor("/q5k4android"), { animated: true }).includes('property="og:video"'));
+assert.ok(!shareHtml(sharePageFor("/android"), { animated: true }).includes('property="og:video"'));
 
 console.log(`PASS share-preview destinations, ${linkedPages.size} distinct internal links and ${dynamicRoutes.length} dynamic routes.`);

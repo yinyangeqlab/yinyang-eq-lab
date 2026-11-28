@@ -5,7 +5,7 @@ import { autoEqReferenceOffset, response, type PeqFilter } from "@/lib/autoeq";
 export type FitMethod = FitterMethod;
 export type FitPriority = "smooth" | "close";
 export type FinalizedVariant = {
-  engine?: "peqdb" | "legacy";
+  engine?: "peqdb" | "legacy" | "joint";
   engineVersion?: string;
   fallbackReason?: string;
   reducedBoost?: boolean;
@@ -51,7 +51,7 @@ function loss(target: number[], filters: PeqFilter[]) {
   }, 0);
 }
 
-function standardFit(target: number[], bands: FitBands, qDivisor: number) {
+function standardFit(target: number[], bands: number, qDivisor: number) {
   const q = bands / qDivisor;
   const filters: PeqFilter[] = Array.from({ length: bands }, (_, i) => ({ hz: Math.round(20 * 1000 ** ((i + .5) / bands)), gain: 0, q: +q.toFixed(2) }));
   const basis = filters.map(filter => fitGrid.map(hz => response(hz, { ...filter, gain: 1 })));
@@ -71,7 +71,7 @@ function standardFit(target: number[], bands: FitBands, qDivisor: number) {
   return filters.map(filter => ({ ...filter, gain: +filter.gain.toFixed(2) }));
 }
 
-function preciseFit(target: number[], bands: FitBands, priority: FitPriority) {
+function preciseFit(target: number[], bands: number, priority: FitPriority) {
   const filters: PeqFilter[] = [];
   const residual = [...target];
   const qChoices = priority === "smooth" ? [.45, .65, .9, 1.2, 1.7, 2.4] : [.55, .8, 1.2, 1.8, 2.8, 4.2, 6.5, 9];
@@ -126,7 +126,8 @@ export function peakBoost(filters: PeqFilter[]) {
   return peak;
 }
 
-export function finalizeVariant(raw: Point[], desired: Point[], bands: FitBands, method: FitMethod, priority: FitPriority, reference: "1khz" | "shootout" = "1khz"): FinalizedVariant {
+export function finalizeVariant<Bands extends number>(raw: Point[], desired: Point[], bands: Bands, method: FitMethod, priority: FitPriority, reference: "1khz" | "shootout" = "1khz"): Omit<FinalizedVariant, "bands"> & { bands: Bands } {
+  if (method === "joint") throw Error("Use the asynchronous Joint Fit export service.");
   if (isPeqdbMethod(method)) throw Error("Use the asynchronous PEQdB export service.");
   if (raw.length < 2 || desired.length < 2) throw new Error("Choose a headphone measurement and a target curve first.");
   const rawAt1k = at(raw, 1000), desiredAt1k = at(desired, 1000);
@@ -168,7 +169,10 @@ export function exportEasyEffects(variant: FinalizedVariant) {
   return `# EasyEffects: open Equalizer and choose Import APO.\n# Set the Equalizer input gain to ${variant.preamp.toFixed(1)} dB if the importer does not apply Preamp.\n${exportEqualizerApo(variant)}`;
 }
 
+export const QUDELIX_GUIDE_MAX_BANDS = 20;
+
 export function exportQudelixGuide(variant: FinalizedVariant) {
-  if (variant.bands > 20) throw Error("Qudelix 5K supports up to 20 bands. Choose a 10-, 15- or 20-band fit.");
-  return `Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\nPreference Tuning Lab · Qudelix 5K entry guide\n${variant.bands} bands · ${variant.method} · ${variant.priority}\nSet PRE GAIN to ${variant.preamp.toFixed(1)} dB. Use a PEQ mode with at least ${variant.bands} bands. Enter the listed Peak (PK), Low Shelf (LSC), or High Shelf (HSC) type with its Q; this is a manual-entry guide, not a native preset import.\n\nBand\tType\tFrequency (Hz)\tGain (dB)\tQ\n${variant.filters.map((filter, i) => `${i + 1}\t${filter.type ?? "PK"}\t${filter.hz}\t${filter.gain.toFixed(6)}\t${filter.q.toFixed(6)}`).join("\n")}\n`;
+  const count = variant.filters.length;
+  if (count > QUDELIX_GUIDE_MAX_BANDS) throw Error("Choose an EQ with up to 20 filters for this guide.");
+  return `Engine: ${variant.engine ?? "legacy"} ${versionFor(variant)}\nPreference Tuning Lab · Qudelix 5K entry guide\n${count} bands · ${variant.method} · ${variant.priority}\nSet PRE GAIN to ${variant.preamp.toFixed(1)} dB. Use a PEQ mode with at least ${count} bands. Enter the listed Peak (PK), Low Shelf (LSC), or High Shelf (HSC) type with its Q; this is a manual-entry guide, not a native preset import.\n\nBand\tType\tFrequency (Hz)\tGain (dB)\tQ\n${variant.filters.map((filter, i) => `${i + 1}\t${filter.type ?? "PK"}\t${filter.hz}\t${filter.gain.toFixed(6)}\t${filter.q.toFixed(6)}`).join("\n")}\n`;
 }

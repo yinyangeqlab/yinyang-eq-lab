@@ -36,9 +36,15 @@ export function response(hz: number, filter: PeqFilter, rate = 48000) {
   return 10 * Math.log10((nr * nr + ni * ni) / (dr * dr + di * di));
 }
 
+const midrange = grid.filter(hz => hz >= 250 && hz <= 2500);
+
 export function autoEqReferenceOffset(raw: Point[], target: Point[]) {
-  const mids = grid.filter(hz => hz >= 250 && hz <= 2500).map(hz => at(target, hz) - at(raw, hz));
-  return mids.reduce((a, b) => a + b, 0) / mids.length;
+  return midrange.reduce((sum, hz) => sum + (at(target, hz) - at(raw, hz)), 0) / midrange.length;
+}
+
+/** Remove the fitter's free gain when playing outside a calibrated passage. */
+export function midrangeEqTrim(filters: PeqFilter[], sampleRate: number) {
+  return -midrange.reduce((sum, hz) => sum + filters.reduce((db, filter) => db + response(hz, filter, sampleRate), 0), 0) / midrange.length;
 }
 
 export function fitAutoEq(raw: Point[], target: Point[]) {

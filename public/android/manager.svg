@@ -1,22 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="18.5 17 71 71">
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="YinYangEQ App Manager with an electric blue Ridge-rhythm arrow and sparks">
   <defs>
-    <radialGradient id="g1" gradientUnits="userSpaceOnUse" cx="21" cy="16" r="34">
-      <stop stop-color="#79a6ec" offset="0" />
-      <stop stop-color="#3f6ac0" offset="0.58" />
-      <stop stop-color="#193971" offset="1" />
+    <linearGradient id="rr" gradientUnits="userSpaceOnUse" x1="0" y1="27" x2="0" y2="74">
+      <stop stop-color="#47201c" />
+      <stop offset=".56" stop-color="#221317" />
+      <stop offset="1" stop-color="#120a12" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="br" gradientUnits="userSpaceOnUse" x1="0" y1="27" x2="0" y2="74">
+      <stop stop-color="#174253" />
+      <stop offset=".56" stop-color="#0c2430" />
+      <stop offset="1" stop-color="#0a1721" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="rf" gradientUnits="userSpaceOnUse" x1="15" y1="28" x2="38" y2="67">
+      <stop stop-color="#f1684f" stop-opacity=".7" />
+      <stop offset="1" stop-color="#d4473d" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="bf" gradientUnits="userSpaceOnUse" x1="113" y1="28" x2="87" y2="67">
+      <stop stop-color="#5eabbe" stop-opacity=".7" />
+      <stop offset="1" stop-color="#387f97" stop-opacity="0" />
+    </linearGradient>
+    <clipPath id="orb-edge">
+      <circle cx="32" cy="32" r="24" />
+    </clipPath>
+    <radialGradient id="warm" gradientUnits="userSpaceOnUse" cx="40" cy="29" r="34">
+      <stop stop-color="#f56d78" />
+      <stop offset=".58" stop-color="#db4b5c" />
+      <stop offset="1" stop-color="#8e2341" />
     </radialGradient>
-    <radialGradient id="g2" gradientUnits="userSpaceOnUse" cx="21" cy="16" r="34">
-      <stop stop-color="#f56d78" offset="0" />
-      <stop stop-color="#db4b5c" offset="0.58" />
-      <stop stop-color="#8e2341" offset="1" />
+    <radialGradient id="cool" gradientUnits="userSpaceOnUse" cx="40" cy="29" r="34">
+      <stop stop-color="#79a6ec" />
+      <stop offset=".58" stop-color="#3f6ac0" />
+      <stop offset="1" stop-color="#193971" />
     </radialGradient>
+    <linearGradient id="bolt-study-a-grad" gradientUnits="userSpaceOnUse" x1="64" y1="56" x2="64" y2="107">
+      <stop offset="0" stop-color="#77EDFF" />
+      <stop offset=".55" stop-color="#27C6FF" />
+      <stop offset="1" stop-color="#2188FF" />
+    </linearGradient>
   </defs>
-  <rect x="18.5" y="17" width="71" height="71" rx="12" fill="#020708"/>
-  <g transform="translate(38 25) scale(.666667)">
-      <path d="M0 24a24 24 0 1 0 48 0a24 24 0 1 0 -48 0Z" fill="url(#g1)" />
-      <path d="M0 24A12 12 0 0 1 24 24A12 12 0 0 0 48 24A24 24 0 0 1 0 24Z" fill="url(#g2)" />
-      <path d="M8.35 24a3.65 3.65 0 1 0 7.3 0a3.65 3.65 0 1 0 -7.3 0Z" fill="#245ab4" />
-      <path d="M32.35 24a3.65 3.65 0 1 0 7.3 0a3.65 3.65 0 1 0 -7.3 0Z" fill="#f0586c" />
+  <g transform="translate(12.8 44.4) scale(.8)">
+    <path d="M3 56c4-5 6-3 8-11l2-6 2 4c4-2 3-12 6-11l2-10 3 16 4-4c4 2 3 10 7 9l3 3c6-1 9 8 15 8l7 5-9 12H3Z" fill="url(#rr)" />
+    <path d="M66 59c6-1 9-7 13-7l5-5 3 1c4-1 4-9 8-10l4 4 4-12 3 5 3-11 3 15 4-3c4 6 4 14 9 17v18H75Z" fill="url(#br)" />
+    <path d="m23 22-3 26 8-5 7 20 6-5-11-24-4 4Zm-10 17-3 20 9 7-4-23Z" fill="url(#rf)" />
+    <path d="m109 24-7 31-8 12 16-12 2-16Zm-6 6-4 12-4-4-8 24 12-9Z" fill="url(#bf)" />
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 56c4-5 6-3 8-11l2-6 2 4c4-2 3-12 6-11l2-10 3 16 4-4c4 2 3 10 7 9l3 3c6-1 9 8 15 8l7 5" stroke="#f4795a" stroke-width="3" />
+      <path d="M66 59c6-1 9-7 13-7l5-5 3 1c4-1 4-9 8-10l4 4 4-12 3 5 3-11 3 15 4-3c4 6 4 14 9 17" stroke="#87ccd4" stroke-width="3" />
+      <path d="M3 62c5-6 9-4 12-11s7-1 10-4 6 7 10 6 7 8 13 7l10 4" stroke="#ee694d" stroke-width="1.9" stroke-opacity=".7" />
+      <path d="M72 64c7-4 10-2 15-8s7-5 10-3 9-11 13-8 7 10 15 12" stroke="#58adbd" stroke-width="1.9" stroke-opacity=".7" />
+    </g>
   </g>
-  <path d="M54 58v13m-6.7-6.7L54 71l6.7-6.7 M41 71v5a3 3 0 0 0 3 3h20a3 3 0 0 0 3-3v-5" fill="none" stroke="#8AF3E3" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round"/>
+  <g fill="none" stroke-linecap="round" stroke-width="1.7" opacity=".7">
+    <path d="M22 100c5-2 9-1 13 0M26 106c4-1 7-1 10 0" stroke="#eb765f" />
+    <path d="M93 100c5 1 9 0 13-1M92 106c4 1 7 0 10-1" stroke="#68b9c8" />
+  </g>
+  <g>
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M51 69.7l-3.8-3.6-2.8 1.2-3.3-3.5m35.7 12.6 3.2-3.8 2.7 1 3.4-3.8" stroke="#249FFF" stroke-width="2.65" />
+      <path d="m49.8 77.4-4.5.9m31.6-11.8 2.3-3.3" stroke="#57D5FF" stroke-width="1.9" />
+    </g>
+    <g stroke-linecap="round" stroke-linejoin="round">
+      <path d="M68.4 56.8 56.5 72.3 66.3 77.6 61.8 103H66.2L71.3 75.2 60.3 70.6Z" fill="url(#bolt-study-a-grad)" stroke="url(#bolt-study-a-grad)" stroke-width="1" />
+      <path d="M53.6 95.2 64 104.6 74.4 95.2" fill="none" stroke="url(#bolt-study-a-grad)" stroke-width="4.6" />
+      <path d="M55 112.4c3.2-1.1 6-1.3 9-.6s6 .6 9-.5" fill="none" stroke="#218EFF" stroke-width="1.7" stroke-opacity=".85" />
+    </g>
+  </g>
+  <g transform="translate(64 33) scale(1.12) translate(-32 -32)">
+    <g clip-path="url(#orb-edge)" transform="rotate(-90 32 32)">
+      <path d="M0 0H64V64H0Z" fill="url(#cool)" />
+      <path d="M32 0V8a12 12 0 0 1 0 24 12 12 0 0 0 0 24v8H0V0Z" fill="url(#warm)" />
+      <circle cx="32" cy="20" r="3.65" fill="#245ab4" />
+      <circle cx="32" cy="44" r="3.65" fill="#f0586c" />
+    </g>
+  </g>
 </svg>

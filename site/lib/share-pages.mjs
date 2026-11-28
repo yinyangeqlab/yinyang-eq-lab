@@ -9,6 +9,7 @@ import { companionTrailers } from "./companion-trailer.mjs";
 export const SITE_ORIGIN = "https://yinyangeq.com";
 export const SITE_NAME = "YinYang EQ";
 export const FITTER_GUIDE_PATH = "/glossary/eq-fitting";
+export const LISTENING_METHODOLOGY_PATH = "/glossary/methodology";
 export const EQ_FITTER_CHART = {
   path: "/share/eq-fitter-benchmark.jpg", width: 2088, height: 1218,
   alt: "Median error and peak boost across 14 cases. YinYang PEQdB has the lowest RMS error through 10 kHz at 0.13 dB. YinYang Movable Bands has the lowest RMS error through 20 kHz at 0.42 dB. Studio Standard has the lowest peak boost at 1.64 dB.",
@@ -62,15 +63,16 @@ export const sharePages = [
     },
   },
   { ...factsArtwork, path: AUDIO_FACTS_PATH, slug: "audio-facts", title: `${AUDIO_FACTS_TITLE} | YinYang EQ`, description: AUDIO_FACTS_DESCRIPTION },
+  { ...factsArtwork, path: LISTENING_METHODOLOGY_PATH, slug: "listening-methodology", title: "Listening and EQ Methodology | YinYang EQ", description: "How YinYang EQ runs listening comparisons, builds rankings, fits targets and helps you adjust headphone EQ." },
   ...audioFacts.map(fact => ({
     ...factsArtwork, path: audioFactPath(fact.slug), slug: `audio-fact-${fact.slug}`,
     title: `${fact.title} | YinYang EQ`, description: fact.answer,
   })),
-  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Compare six EQ fitters across 14 cases. See the original chart, why the winner changes at 20 kHz and how YinYang uses the PEQdB optimizer.", image: EQ_FITTER_CHART },
+  { path: FITTER_GUIDE_PATH, slug: "eq-fitter-benchmark", title: "EQ Fitter Benchmark | YinYang EQ", description: "Rank Auto EQ fitters at 10, 15, 20 and 30 bands by curve-fit error and peak boost.", image: EQ_FITTER_CHART },
   { path: "/shortcuts", slug: "shortcuts", kind: "keys", kicker: "PLAYBACK CONTROLS", title: "Help & Hotkeys | YinYang EQ", description: "Playback hotkeys and display preferences for comparisons.", tagline: "Playback hotkeys for every comparison." },
   companionTrailers.landscape,
   companionTrailers.portrait,
-  { path: "/q5k4android", slug: "android", title: "YinYang EQ Companion for Qudelix 5K and 5K Plus | Android", ogTitle: "YinYang EQ Companion for Qudelix 5K and 5K Plus", description: "Build EQs offline from your measurements, import and edit presets, and pair Main EQ with left and right Channel Match. Install with App Manager for Android.", image: { path: "/share/q5k-dual-spotlight.jpg", width: 1200, height: 630, alt: "The Qudelix 5K and 5K Plus share a teal spotlight." } },
+  { path: "/android", slug: "android", title: "YinYang EQ for Android | Phone EQ and Qudelix 5K Companion", ogTitle: "YinYang EQ for Android", description: "Build presets in the Qudelix 5K Companion and apply system-wide EQ to Android media and games with YinYang Phone EQ and Shizuku.", image: { path: "/share/q5k-dual-spotlight.jpg", width: 1200, height: 630, alt: "The Qudelix 5K and 5K Plus share a teal spotlight." } },
   { path: "/about", slug: "about", kind: "journal", kicker: "THE LISTENING LAB", title: "About Us | YinYang EQ", description: "YinYang EQ is a listening lab for anyone curious about how their headphones sound. Compare, tune and find a sound you enjoy.", tagline: "Find what sounds right to you." },
   { path: "/version", slug: "version", kind: "history", kicker: "RELEASE HISTORY", title: "About This Version | YinYang EQ", description: "Release information, source code and bug reporting for YinYang EQ.", tagline: "Release notes, source and bug reports." },
   { path: "/listeners/yinyangeq", slug: "journal", kind: "journal", kicker: "PUBLIC LISTENING JOURNAL", title: "YinYangEQ Listening Journal | YinYang EQ", description: "Tests, listening notes and gear the account owner chose to publish.", tagline: "Tests, notes and gear, published by choice." },
@@ -79,6 +81,7 @@ export const sharePages = [
   { path: "/participation", slug: "private", title: "Participation Choices | YinYang EQ", description: "Review and change how your comparison data is used.", private: true },
   { path: "/companion-link", slug: "private", title: "Companion sync | YinYang EQ", description: "Private account page.", private: true },
   { path: "/account-sync", slug: "private", title: "Sync & Devices | YinYang EQ", description: "Private account page.", private: true },
+  { path: "/sync-recovery", slug: "private", title: "Sync recovery | YinYang EQ", description: "Private account page.", private: true },
   { path: "/my-profile", slug: "private", title: "Profile | YinYang EQ", description: "Private account page.", private: true },
   { path: "/profile-access", slug: "private", title: "Approved Device Access | YinYang EQ", description: "Private account page.", private: true },
   { path: "/sync", slug: "private", title: "Link A Browser | YinYang EQ", description: "Private account page.", private: true },
@@ -92,7 +95,7 @@ export const sharePages = [
 ];
 
 // Paths that only redirect elsewhere share the destination's card.
-const aliases = { "/android/download": "/q5k4android", "/android": "/q5k4android", "/personal-tuning": "/preference-tuning", "/home": "/" };
+const aliases = { "/android/download": "/android", "/q5k4android": "/android", "/q5k4android/trailer": "/android/trailer", "/q5k4android/trailer/portrait": "/android/trailer/portrait", "/personal-tuning": "/preference-tuning", "/home": "/" };
 
 // Shootout tabs and modes are query parameters on one route.
 const shootoutVariants = [
