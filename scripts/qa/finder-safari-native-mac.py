@@ -117,11 +117,11 @@ def verify_voiceover(executable, state):
     try:
         capture("voiceover-start.png")
         press(executable, 109, command | option | control)  # VO-Command-F10.
-        click(executable, state, state["width"])
         press(executable, 118, shift | option | control)  # VO-Shift-F4 follows keyboard focus.
         time.sleep(1)
         capture("voiceover-width.png")
-        press(executable, 125, option | control)
+        click(executable, state, state["width"])
+        time.sleep(0.7)
         capture("voiceover-options.png")
     finally:
         press(executable, 96, command)
@@ -170,22 +170,28 @@ def main():
         wait_state(lambda s: s.get("theme") == theme and not s.get("focused"))
         press(executable, 48)
         wait_state(lambda s: s.get("theme") == theme and s.get("focused"))
-        entered = None
-        for name, code, modifiers in (("Space", 49, 0), ("Return", 36, 0), ("Option-Down", 125, 1 << 19), ("Down", 125, 0)):
-            press(executable, code, modifiers)
-            time.sleep(0.6)
-            capture(f"{theme}-keyboard-{name}.png")
-            entered = wait_state(lambda s: s.get("theme") == theme and s.get("focused"))
-            if entered["open"]:
-                break
+        press(executable, 49)  # Opening moves focus into the picker.
+        entered = wait_state(lambda s: s.get("theme") == theme and s.get("open"))
+        capture(f"{theme}-keyboard-Space.png")
+        press(executable, 126)  # Arrow Up highlights Medium.
+        navigated = wait_state(lambda s: s.get("theme") == theme and any(
+            o["value"] == "4" and o["focused"] for o in s["options"]))
+        capture(f"{theme}-keyboard-ArrowUp.png")
         press(executable, 53)
         escaped = wait_state(lambda s: s.get("theme") == theme and not s.get("open") and s.get("focused"))
-        result[theme] = {"expanded": expanded, "keyboard_open": entered, "keyboard_after_escape": escaped}
+        capture(f"{theme}-keyboard-Escape.png")
+        assert escaped["value"] == "8", escaped
+        result[theme] = {"expanded": expanded, "keyboard_open": entered, "keyboard_arrow_up": navigated, "keyboard_after_escape": escaped}
         (EVIDENCE / "native-result.json").write_text(json.dumps(result, indent=2) + "\n")
         print(f"{theme}: keyboard focused Width, keyboard-open={entered['open']}", flush=True)
-    if MAJOR == "27":
-        verify_voiceover(executable, escaped)
-        assert all(row["keyboard_open"]["open"] for row in result.values()), "No keyboard opener reported by Safari"
+        if theme == "light":
+            subprocess.run(["open", "-a", "Safari", ORIGIN + "/ear-tuning?finder-qa=light&voiceover=1"], check=True, timeout=20)
+            voice = wait_state(lambda s: s.get("theme") == "light" and s.get("value") == "custom")
+            click(executable, voice, voice["width"])
+            wait_state(lambda s: s.get("theme") == "light" and s.get("value") == "custom" and s.get("open"))
+            press(executable, 53)
+            voice = wait_state(lambda s: s.get("theme") == "light" and s.get("value") == "custom" and s.get("focused"))
+            verify_voiceover(executable, voice)
 
 
 if __name__ == "__main__":

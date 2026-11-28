@@ -42,7 +42,7 @@ async function prepare() {
       width: box(s), frequency: box(input), viewport: [innerWidth, innerHeight],
       visualViewport: [visualViewport.width, visualViewport.height, visualViewport.scale],
       window: [screenX, screenY, outerWidth, outerHeight],
-      options: [...s.options].map(o => ({text: o.label, value: o.value, disabled: o.disabled, selected: o.selected, box: box(o)})),
+      options: [...s.options].map(o => ({text: o.label, value: o.value, disabled: o.disabled, selected: o.selected, focused: o === document.activeElement, box: box(o)})),
     })});
     await fetch("/__finder_qa_state?" + params, {cache: "no-store"});
     await pause(450);
