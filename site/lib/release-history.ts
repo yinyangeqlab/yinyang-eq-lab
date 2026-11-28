@@ -535,12 +535,25 @@ const update233Changes = [
   "The Version page links to the verified public source for update232.",
 ] as const;
 
-export const candidateChanges = [
+const update234Changes = [
   "Expired privacy sessions are found through a database index, reducing database reads during session cleanup.",
 ] as const;
 
+const update235Changes = [
+  "The Privacy Notice explains optional Android bug reports, the 90-day retention period, and how to delete a report early.",
+  "The Companion app can refresh its fitter from the website, including All-Band Fit at 10, 15, 20 and 30 bands.",
+] as const;
+
+export const candidateChanges = [
+  "Search the EQ Fitter Benchmark by headphone or IEM, measurement source, and rig.",
+  "Compare fit error and peak boost for five Tuning fitters at 10, 15, 20, and 30 bands across 7,604 public catalog measurements.",
+  "Personal EQ Tuning aligns each fit to the target's overall level before reporting RMS. Previously generated fits are rescored when opened."
+] as const;
+
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 234, date: "2026-11-27", title: "Faster privacy session cleanup", changes: candidateChanges },
+  { update: 236, date: "2026-11-28", title: "Headphone benchmark and Tuning fit scores", changes: candidateChanges, publicationTag: "update236" },
+  { update: 235, date: "2026-11-27", title: "Android report privacy and shared EQ fitters", changes: update235Changes },
+  { update: 234, date: "2026-11-27", title: "Faster privacy session cleanup", changes: update234Changes, github: { commit: "f7134a83b7b691c0f6fba0f5af0f62a53fd18291", releaseTag: "update234" } },
   { update: 233, date: "2026-11-27", title: "EQ fit guide and Android in-range scores", changes: update233Changes, github: { commit: "aef236702b24b9c60e57c6cb1a6539c42acf41b4", releaseTag: "update233" } },
   { update: 232, date: "2026-11-27", title: "All-Band Fit at every benchmark limit", changes: update232Changes, github: { commit: "557cb626914178e97050ada3f0512e5a43e2e5c7", releaseTag: "update232" } },
   { update: 231, date: "2026-11-27", title: "EQ exports by platform and a clearer Tuning layout", changes: update231Changes, github: { commit: "71fc2e4733bea9b451ff972e6ba344b538edc380", releaseTag: "update231" } },

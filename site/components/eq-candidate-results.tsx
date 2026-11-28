@@ -6,7 +6,7 @@ import type {Point} from "@/lib/curves";
 import {eqResponse} from "@/lib/eq-response";
 import {candidateKey,CLOSE_FIT_RMS_DB,fitsWithinBandLimit,recommendCandidates} from "@/lib/eq-recommendation";
 import {FIT_BANDS, fitterLabel, isPeqdbMethod, type FitBands} from "@/lib/fitter-settings";
-import type { FinalizedVariant } from "@/lib/preference-finalize";
+import { levelMatchedExportFit, type FinalizedVariant } from "@/lib/preference-finalize";
 import type { EqExportFile } from "@/lib/platform-eq-export";
 import EqExportControls from "./eq-export-controls";
 import { MAX_MAIN_EQ_BANDS, type EqDeviceLimits } from "@/lib/use-generated-eq-results";
@@ -28,7 +28,7 @@ const rawColor = graphColor("#839ba9", "#466170");
 type Plot = { fit: FinalizedVariant; rows: NonNullable<ReturnType<typeof eqResponse>> };
 type CurveSelection = "selected" | "all" | Set<string>;
 
-function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVariant }) {
+function EqResultsPlot({ plots, active, levelMatched }: { plots: Plot[]; active: FinalizedVariant; levelMatched: boolean }) {
   const [deviation, setDeviation] = useState(true);
   const [selection, setSelection] = useState<CurveSelection>("selected");
   const surface = useRef<HTMLDivElement>(null);
@@ -91,7 +91,7 @@ function EqResultsPlot({ plots, active }: { plots: Plot[]; active: FinalizedVari
         <button type="button" onClick={() => setSelection("selected")}>Show selected EQ</button>
       </div>
     </div>
-    <p className="eq-plot-caption">{deviation
+    <p className="eq-plot-caption">{levelMatched && "Each fit is aligned to the target’s overall level. "}{deviation
       ? "The gray dotted line is the target at 0 dB. Above it means more level than the target. Below it means less."
       : "Compare the solid predictions with the gray dotted target and the muted raw headphone response."}</p>
     <div className="eq-plot-surface" ref={surface}>
@@ -169,13 +169,26 @@ type EqCandidateResultsProps = {
   tuning?: boolean;
 };
 
-export default function EqCandidateResults({ variants, raw, target, limits, onDownload, onSave, comparisonContext, channelMatch, availableMatch = channelMatch, exportBase, savesLocally, onCompare, tuning = false }: EqCandidateResultsProps) {
+export default function EqCandidateResults({ variants: generatedVariants, raw, target, limits, onDownload, onSave, comparisonContext, channelMatch, availableMatch = channelMatch, exportBase, savesLocally, onCompare, tuning = false }: EqCandidateResultsProps) {
+ const scored = useMemo(() => {
+   const offsets = new Map<FinalizedVariant, number>();
+   const fits = tuning ? generatedVariants.map(variant => {
+     const { rms, offset } = levelMatchedExportFit(raw, target, variant.filters);
+     const fit = { ...variant, rms };
+     offsets.set(fit, offset);
+     return fit;
+   }) : generatedVariants;
+   return { fits, offsets };
+ }, [tuning, generatedVariants, raw, target]);
+ const variants = scored.fits;
  const winners = useMemo(() => FIT_BANDS.map(bands => ({ bands, best: fitsWithinBandLimit(variants, bands).best })), [variants]);
  const { best: deviceBest, recommended } = useMemo(() => fitsWithinBandLimit(variants, limits.mainBands), [variants, limits.mainBands]);
  const overall = winners.at(-1)?.best;
- const lowerBoost = useMemo(() => tuning
-   ? recommendCandidates(variants.filter(fit => fit.filters.length <= limits.mainBands), { raw, target })?.lowerBoost
-   : null, [variants, tuning, raw, target, limits.mainBands]);
+ const lowerBoost = useMemo(() => {
+   if (!tuning) return null;
+   const fit = recommendCandidates(variants.filter(fit => fit.filters.length <= limits.mainBands), { raw, target })?.lowerBoost;
+   return fit?.reducedBoost ? { ...fit, rms: levelMatchedExportFit(raw, target, fit.filters).rms } : fit;
+ }, [variants, tuning, raw, target, limits.mainBands]);
  const [selected, setSelected] = useState("");
  const [comparison, setComparison] = useState<"pair" | "all" | "smoothing" | null>(null);
  const [comparisonBands, setComparisonBands] = useState<FitBands>();
@@ -184,7 +197,11 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
  const quickPair = deviceBest && lowerBoost ? [deviceBest, lowerBoost] : null;
  const candidates = useMemo(() => lowerBoost?.reducedBoost ? [...variants, lowerBoost] : variants, [lowerBoost, variants]);
  const active = candidates.find(fit => candidateKey(fit) === selected) ?? recommended ?? overall;
- const plots = useMemo(() => candidates.map(fit => ({ fit, rows: eqResponse(raw, target, fit.filters, [], 48000, "1khz") ?? [] })), [candidates, raw, target]);
+ const plots = useMemo(() => candidates.map(fit => {
+   const rows = eqResponse(raw, target, fit.filters, [], 48000, "1khz") ?? [];
+   const offset = tuning ? scored.offsets.get(fit) ?? levelMatchedExportFit(raw, target, fit.filters).offset : 0;
+   return { fit, rows: offset ? rows.map(row => ({ ...row, after: row.after - offset })) : rows };
+ }), [candidates, raw, target, tuning, scored]);
  if (!overall || !active || !plots[0]?.rows.length) return null;
 
  const canExport = active.filters.length <= limits.mainBands;
@@ -249,7 +266,7 @@ export default function EqCandidateResults({ variants, raw, target, limits, onDo
    {!canExport && <p className="eq-results-caveat" role="status">Select a fit within your {limits.mainBands}-band Main EQ limit to save it.</p>}
    <EqExportControls basename={exportBase(active)} fit={active} match={availableMatch} matchName={comparisonContext.headphones}
      limits={limits} onRecordedDownload={onDownload} savesLocally={savesLocally}/>
-   <EqResultsPlot plots={plots} active={active}/>
+   <EqResultsPlot plots={plots} active={active} levelMatched={tuning}/>
    <details className="eq-results-advanced">
      <summary>Compare all fits</summary>
      <div className="eq-results-audition">

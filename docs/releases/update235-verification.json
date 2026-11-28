@@ -1,0 +1,45 @@
+{
+  "update": 235,
+  "sourceCommit": "0dba869a10a343fdf37d814f2f1b67755e1d99c5",
+  "deploymentVerification": {
+    "at": "2026-11-28T08:28:59.957583Z",
+    "update": 235,
+    "revision": "0dba869a10a343fdf37d814f2f1b67755e1d99c5",
+    "deploymentVerified": true,
+    "migrations": [],
+    "cpuMs": 5000,
+    "abuseBindings": 6,
+    "publicWorkerUrls": false,
+    "guardedRollout": true,
+    "maintenanceDisabled": true,
+    "ownerOnlyMaintenance": false,
+    "previousSourceVerified": "83f469a8615668415251da1c08e90d516bcb7339",
+    "nonAppResourcesUnchanged": true,
+    "infrastructureDrift": false,
+    "productionAdminSessionUsed": false,
+    "newDataExport": false,
+    "matchingWorkerModules": 427,
+    "matchingVersionClientAssets": 39,
+    "versionHistoryEntries": 235,
+    "protectedRecordingAccessRetained": true,
+    "adminAccessProtectionVerified": true,
+    "affectedPagesVerified": true,
+    "reportPrivacyNoticeVerified": true,
+    "sharedFitterManifestVerified": true,
+    "sharedFitterSha256": "c1aeedf167f0ab6a4dbeaa2720fc65fc9f0299a6bc7b71468f239a4040f6d106"
+  },
+  "browserVerification": {
+    "productionAdminSessionUsed": false,
+    "authenticatedProductionChecks": [],
+    "anonymousLivePrivacyPageVerified": true,
+    "androidFitterArtifactVerified": true
+  },
+  "candidateVerification": {
+    "sourceRevision": "0dba869a10a343fdf37d814f2f1b67755e1d99c5",
+    "regressionSuitesPassed": 129,
+    "regressionSuitesFailed": 0,
+    "publicOnlyPackage": false,
+    "protectedRecordings": 224
+  },
+  "recoveryRegistrationPending": true
+}

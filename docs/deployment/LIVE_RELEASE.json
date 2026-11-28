@@ -1,13 +1,17 @@
 {
-  "site": "https://yinyangeq.com",
-  "update": 233,
-  "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-28T05:45:53.082701Z",
-  "sourceCommit": "1f649414ff956692e91e2f004165d81aed47dfd3",
-  "sourceBranch": "release/eq-guide-233-current",
-  "baselineCommit": "8735dcd6bf8072ee6a100671af1d8b9293288a33",
-  "evidence": "docs/releases/update233-verification.json",
+  "baselineCommit": "83f469a8615668415251da1c08e90d516bcb7339",
   "cpuLimitMs": 5000,
+  "evidence": "docs/releases/update235-verification.json",
+  "gitSource": {
+    "implementationCommit": "0dba869a10a343fdf37d814f2f1b67755e1d99c5",
+    "branch": "release/android-reporting-privacy-235",
+    "githubLogin": "yinyangeqlab",
+    "authorAndCommitterVerified": true,
+    "pushed": false,
+    "publicationAuthorized": false,
+    "publicationSeparateFromDeployment": true,
+    "repository": "yinyangeqlab/yinyang-eq-lab"
+  },
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
     "expiresAt": 1792389524011,
@@ -31,27 +35,10 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "The EQ fit guide explains how to judge fit accuracy, peak boost and repeatability. The RootlessJamesDSP fork has a separate 30 Hz\u20136 kHz RMS table. The update232 GitHub source link points to its verified public commit.",
-  "gitSource": {
-    "implementationCommit": "1f649414ff956692e91e2f004165d81aed47dfd3",
-    "branch": "release/eq-guide-233-current",
-    "githubLogin": "yinyangeqlab",
-    "authorAndCommitterVerified": true,
-    "pushed": true,
-    "publicationAuthorized": true,
-    "publicationSeparateFromDeployment": true,
-    "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "aef236702b24b9c60e57c6cb1a6539c42acf41b4",
-    "publishedMainCommit": "96a23452789d230b2a2a91c74214202715195574",
-    "publishedTag": "update233",
-    "publicationTag": "update233",
-    "publicationEvidence": "docs/releases/update233-publication.json",
-    "publishedAt": "2026-11-28T06:31:22Z"
-  },
   "recoveryProcess": {
     "previousSchemaUpdate": 232,
-    "sourceBaselineUpdate": 233,
-    "sourceBaselineVerifiedAt": "2026-11-28T06:29:49Z",
+    "sourceBaselineUpdate": 235,
+    "sourceBaselineVerifiedAt": "2026-11-28T09:08:22Z",
     "dailyWorkflowActive": true,
     "schemaRecoveryDeferred": false,
     "matchingCurrentReleaseBaseline": true,
@@ -60,17 +47,33 @@
     "hostedValidationPassed": true,
     "newDataExport": false,
     "nextScheduledRunMayRefuseBaselineMismatch": false,
-    "update233SourceOnlyHandover": {
+    "update235SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update233-recovery-verification.json"
+      "evidence": "docs/releases/update235-recovery-verification.json"
     },
     "metadataOnlyHandoverVerified": true,
     "metadataValidationPassed": true,
     "latestDataSnapshotUnchanged": true,
     "latestHostedRunMode": "validate-only"
   },
-  "documentationFiles": []
+  "scope": "The privacy notice explains optional Android bug reports, 90-day retention and early deletion. Companion shares the website EQ fitters, including All-Band Fit, through the same packaged worker.",
+  "site": "https://yinyangeq.com",
+  "sourceBranch": "release/android-reporting-privacy-235",
+  "sourceCommit": "0dba869a10a343fdf37d814f2f1b67755e1d99c5",
+  "update": 235,
+  "verifiedAt": "2026-11-28T08:28:59.957583Z",
+  "version": "0.2.0-beta.1",
+  "documentationFiles": [
+    {
+      "path": "docs/releases/update235-verification.json",
+      "sha256": "623801b4d13bb3ed098d10da7dae00aee04df336b81ec807be7ab77235b1fd93"
+    },
+    {
+      "path": "docs/releases/update235-recovery-verification.json",
+      "sha256": "fdb8f7904ad872d9b2b1c615088d15ae3ebaa6a27343be06fcae39f7cdcaccc6"
+    }
+  ]
 }

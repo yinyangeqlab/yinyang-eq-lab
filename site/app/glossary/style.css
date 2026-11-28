@@ -54,6 +54,21 @@
 .fitter-coverage dl > div { display: flex; flex-wrap: wrap; gap: 2px 10px; padding: 5px 0; background: transparent; border: 0; }
 .fitter-coverage dt, .fitter-coverage dd { margin: 0; font-size: 14px; }
 .eq-fitting-guide p + p { margin-top: 8px; }
+
+.catalog-benchmark { margin-block: 20px; }
+.catalog-search { display: grid; gap: 6px; max-width: 420px; margin-block: 12px; }
+.catalog-search input { min-width: 0; padding: 9px 11px; color: #e8f0f4; background: #0d1c24; border: 1px solid #536e7c; border-radius: 6px; font: inherit; }
+.catalog-result-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 6px; }
+.catalog-result-list button { display: grid; justify-items: start; gap: 3px; min-width: 0; padding: 8px 10px; color: #e8f0f4; background: #0d1c24; border: 1px solid #334851; border-radius: 6px; text-align: left; overflow-wrap: anywhere; }
+.catalog-result-list button[aria-pressed="true"] { background: #19383b; border-color: #70c8c4; }
+.catalog-result-list button small { color: #b4c8d2; }
+.catalog-more { margin-top: 10px; }
+.catalog-case { margin-top: 16px; }
+.catalog-case .fitter-score-table td { font-variant-numeric: tabular-nums; text-align: right; }
+@media (max-width: 480px) {
+  .catalog-case .fitter-score-table { font-size: 12px; }
+  .catalog-case .fitter-score-table th, .catalog-case .fitter-score-table td { padding-inline: 5px; }
+}
 @media (max-width: 450px) {
   .fitter-ranking-controls fieldset:first-child .fitter-ranking-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .fitter-ranking-options button { min-height: 44px; }

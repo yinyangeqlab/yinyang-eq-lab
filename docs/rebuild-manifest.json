@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "kind": "candidate-source",
-  "baseRevision": "96a23452789d230b2a2a91c74214202715195574",
-  "recordedLiveUpdate": 233,
+  "baseRevision": "6b2ebb0a2f09fd4d8fc3510ab9564c81eb7c9450",
+  "recordedLiveUpdate": 235,
   "scope": "Tracked and nonignored untracked regular source files, except this manifest. Hash refresh is not test, build, deployment, or recovery verification.",
   "environment": {
     "node": "26.12.0",
@@ -72,7 +72,7 @@
     },
     {
       "path": "docs/HANDOFF.md",
-      "sha256": "4a6bae5a11ebe3fa592f2d7856fd33c2e243c581bb5f56b3edb4979fa2cae846",
+      "sha256": "d249cce9ae85855a9be86004abcd7b7924ef7a029f87fc8a6477ff2aee4de98c",
       "executable": false
     },
     {
@@ -97,12 +97,12 @@
     },
     {
       "path": "docs/REBUILD.md",
-      "sha256": "ac0fb7e07c1a10e4c009537e88e12a0a426bcce2e8f7f41f45b897b776924250",
+      "sha256": "3dbeff0624d484a358550aa06b273b07b3ee55bb118d069dd2a6fe4bccc2e436",
       "executable": false
     },
     {
       "path": "docs/RECOVERY.md",
-      "sha256": "448897bdf0849818cdf98cfb88fd9235ec45719720e2c02fafb27b7971caf7ac",
+      "sha256": "356b58fb17a5f15606db37cd11d22794a8bb283ed2d393d27f87ddc0c4853814",
       "executable": false
     },
     {
@@ -112,17 +112,17 @@
     },
     {
       "path": "docs/deployment/HOSTING_HANDOFF.md",
-      "sha256": "54030947b1c9b7a05c515eff0730bf558a72db2a29a91d9e009907f675fec889",
+      "sha256": "039828e3aee01bfe4222040d6e647286dce85c8faefd5c255fa6ba3464786839",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_RELEASE.json",
-      "sha256": "9d92db9f679099eca6b39b47705955c669d2d8df31248b64eb6b5b0bb06ac82f",
+      "sha256": "c99bb4988d4b0c804453652fb9704ce2fe014111cda7baf2f8036e9d7e3cdffd",
       "executable": false
     },
     {
       "path": "docs/deployment/LIVE_STATE.md",
-      "sha256": "c218b093215a6d7709c44e0567c2e201645c8d834c25677edac3b0b29c8a690b",
+      "sha256": "dcb8ceef3ac6bb12a41fd5ed6c744f97b0ac9a37a1a07abc3ff974838be615ed",
       "executable": false
     },
     {
@@ -1563,6 +1563,16 @@
     {
       "path": "docs/releases/update233-verification.json",
       "sha256": "0bedcbffeb5e58c69a7223f713967fde86a1366324c5d336b28395c395e33b77",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update235-recovery-verification.json",
+      "sha256": "fdb8f7904ad872d9b2b1c615088d15ae3ebaa6a27343be06fcae39f7cdcaccc6",
+      "executable": false
+    },
+    {
+      "path": "docs/releases/update235-verification.json",
+      "sha256": "623801b4d13bb3ed098d10da7dae00aee04df336b81ec807be7ab77235b1fd93",
       "executable": false
     },
     {
@@ -3346,6 +3356,1291 @@
       "executable": false
     },
     {
+      "path": "public/eq-fitting/catalog-v1/cases/00.json",
+      "sha256": "12f1ec91399f32797e7ae611342c01e32c15dd6f86ccd25f4348072e63f98a2e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/01.json",
+      "sha256": "e5ab365f22dfeb1572530ddfdd7b36d0e2bb0dee334e629bfcb73b26bec0a9b5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/02.json",
+      "sha256": "2a3fbe6e87e0093eb0c46905bf30eecbce50d82b6b53fb8b383a4477e03931ab",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/03.json",
+      "sha256": "35708f0c6f0719e3f7f5406e5d6ef87c4921906ae0bbe543b5ac0052f062240f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/04.json",
+      "sha256": "2be326e4b681a27e2dbcadd30b484c036fcaabe6758370624add6c049566b0c4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/05.json",
+      "sha256": "1e3c4ca9bf0f1832eda3102ff95522a027aa962648630a7ad3028b4c78d91bfb",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/06.json",
+      "sha256": "e50f86407060decd075c07801c16f32c1d4c62bf9e98840c87d448c465904ea2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/07.json",
+      "sha256": "4060d7cc9cb15a26dd78a8f48d74cc62e7c43edfdd9dd2c22d205340bad76d0e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/08.json",
+      "sha256": "26e4b5f0152a417d8aa773363891bfb1ac98ed1fc6e9646e196e9c007d4447f2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/09.json",
+      "sha256": "f466e59ef5e04cecb03a4ea3b6f2b78c8ab7d9f477e822c25cf1ce916f623a2c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0a.json",
+      "sha256": "6e3c9143dc6b203b202830f2ec2129a5450cf6c81bb8011faed6cdb2cccb2442",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0b.json",
+      "sha256": "73b45bc9df6129f001f907f2b6e8eba1537c3fbf8bf8e7359e6d54116d2b6e09",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0c.json",
+      "sha256": "36e844499e3226b5ebd2407b0761a7a14fb81d4594a8ef0c6d3af64da4e3de52",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0d.json",
+      "sha256": "4970f6ea9c552517b7a584dd106761d3946a7c95c8fe3f09e9bc132744313d34",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0e.json",
+      "sha256": "7105898b02ef2fc83a6b782e3dfabab2ba21c80e647d1f6a963dbd455b1610ea",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/0f.json",
+      "sha256": "9b23d71c649163af9f30e2240f78b1ddd08b2ec620755ab2ea74df879db8c3fc",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/10.json",
+      "sha256": "0e38eeba7230be5f4f7ddce23bf2c38e7e45de719450f8e2a3ba594b615f41da",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/11.json",
+      "sha256": "3a5a9cb0acee096f3b6d4a562c79ae17446677ae9ebcfe8df18d59be52f60e5a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/12.json",
+      "sha256": "df3292f5fcf176607781360a5d2345e093c730fab0371e41a584d365e0d62109",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/13.json",
+      "sha256": "b484da9b3934fe83f9ef21ad61e2c0d67849bbc760191863c72c6da22058be4d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/14.json",
+      "sha256": "abaac231e96edf46d5e31baeb136a72d0d89332e29b86205bec24d2b40a221fe",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/15.json",
+      "sha256": "4c4d7df756933978149d6348c062f06a50264fad162f88d0b7a382d396de9532",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/16.json",
+      "sha256": "344a49dfc3bb393b15793b7a9d9210171de049bfbf90a34bb93e940871a88ed4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/17.json",
+      "sha256": "deaf7ba18d7c40606a56637507eec54b1d501c0d75f1d3903405b7f4610a97c9",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/18.json",
+      "sha256": "b7e996c5ffd65c1c132d7436ab2b2adf939b7ec9708d60c5ea517874d86b2d9d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/19.json",
+      "sha256": "059a9eeaeda3170a08536a8db51479b69b6cd9574440e2ef0603951bfeb2c5e4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1a.json",
+      "sha256": "ec6d16acbf550ac531d353ee9cc017a444eba0626957006281806e0d3d74b92b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1b.json",
+      "sha256": "3bfa3f61eb3e563179075fa5c04bb0016b320052718f20e066eaa059ab9dd428",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1c.json",
+      "sha256": "da34856855a21eb4e01e04cad8d818259b52927aa37ce37d53787524a0037713",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1d.json",
+      "sha256": "56093f6347326f7ed42e3d348d79a31de9487a689707c251daae46ca8c4b76aa",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1e.json",
+      "sha256": "7ef7085d0e3258f40b2327b871d2d6c223e14b0ad2bf5f73dcdea810ec071d52",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/1f.json",
+      "sha256": "cb1485ed0f610d3f3b4550f107f81ae58c01eb0c17682134efae9c4acea31231",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/20.json",
+      "sha256": "ec9c93ed4f20bafb81f1c836969f0b6caa38d9821612094f87303626ee0cdf2d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/21.json",
+      "sha256": "58fc369ed3c949b99f0fda92a8e21e299ff5c39be1da855cd1b5d204fe2b24e5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/22.json",
+      "sha256": "3dce2cacba7fddf8a7495a037c1eac5baa1f082e6669d3c6072ef6bca71578e7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/23.json",
+      "sha256": "ee44065cf85284e1ee9e5ee0704987a487948f2718a2f7fa48508ba280ef63b8",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/24.json",
+      "sha256": "b55b188728aa5511c6f4da88c2cee16023afa04de8aaf2683c75223824fb0eb7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/25.json",
+      "sha256": "77e4194c5de4c8e6fa1c808faf7f6b4e6726dc3eb66a30fd7c058f5b52c52b3f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/26.json",
+      "sha256": "3ef88c91c8cfa432547b64c0db39bb138b738569f7aeffa668f2b4512efa6533",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/27.json",
+      "sha256": "43122089ae431b61c3ba4f7ac9c0ed00136427238cf6d955aa13406c589bf270",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/28.json",
+      "sha256": "9f67919fdf08bf51240c442dfa22832d6b4045ad466fc39f395d84b02d76dc37",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/29.json",
+      "sha256": "1660bcbcbba2bbfd6ff73aee2143cab9e18b4ca2adea3fe6a857f8ba2ec768c3",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2a.json",
+      "sha256": "50647ab4f85ec572a5c30a371dbca7c149ad7edd34ed04d3ba4a444ce67f8a7b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2b.json",
+      "sha256": "78c7c1877b5a49b7ba0d7730a6b58ce76017598ed5279dc4da938b8a2efe1f69",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2c.json",
+      "sha256": "bdd904a47947ba42a024c19770b7a6111251470fcb4eff7ce1580767d64fbe6f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2d.json",
+      "sha256": "c87687241021516590ecb6cc8d7e0045ef1a54d3c9525841f0aaa6770d1cafe5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2e.json",
+      "sha256": "0b2659165e7d1a8d17e6fa1a1aa80ce35b806034fd4543f1c11e01d6c0d204d6",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/2f.json",
+      "sha256": "0cdad820a81fc11aaf6ca49497124c4d54ac4758526121fad1737276ef247868",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/30.json",
+      "sha256": "71a59d98108a249868ab884898468c3f7ac3221134cd79dab1572f2a221d4741",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/31.json",
+      "sha256": "12353a023021565219e4a16dad76dfc6112c6624b8e8be78bcefefa62f500b65",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/32.json",
+      "sha256": "17efea2f6ac4a3f49f22f1cb00f723cfeb3db7c881d58cbcce32af2fe3f2f48e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/33.json",
+      "sha256": "4b862befcf81313656f1cb14a65db36e1f3cee59cef59b365417d4f025c23b31",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/34.json",
+      "sha256": "bedb239e30cbd8624aeba2895241606847fd272375cf9f1d0d9681ca61740e4f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/35.json",
+      "sha256": "4bb0e279d63a64563ee8a4fea4ea314c1d40eb9dab7781487c828c10bce3378a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/36.json",
+      "sha256": "b4eb465aaf1815797edcacbcb65b968702f283cef9ec87c60b26b9fca592aa23",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/37.json",
+      "sha256": "f595b2c549d75428001ed0d5aaa8a0f9d643727ce98c37a9069afa563a4b84e9",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/38.json",
+      "sha256": "13f9a368500cea7f5665b051f661a30a66248201283fdefdcf330a1b96414ce9",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/39.json",
+      "sha256": "b92a6651f286486f68c60f6d9ba3b4d4c3c60831c6983953cc27f9b3dd2dbdb9",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3a.json",
+      "sha256": "dc9f02f192de47c82e72f5950906bf189f2d4fb2bc6c7b938d6e887f2ba23ccc",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3b.json",
+      "sha256": "6aea0c8a3dc4eee0dc3c16d6f65e07a19f84cbecdc7d647b48acc805a44c55ce",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3c.json",
+      "sha256": "884ac6b1be88fdc7c61a29a7d6caebc2f5a08bd1baf9d85ba537175a424d4755",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3d.json",
+      "sha256": "30232ee128febc912ac18c3d300078287387d096f6cc77e1f8cccb9844b8303a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3e.json",
+      "sha256": "f586fe76229a657ac1b6bd367b88527b1e4de9231953d1de17301c3e7e033714",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/3f.json",
+      "sha256": "2bd31a657173f4a6ca61b453e124888b8e8e396e0fc5245df5a3e6f5a22b8391",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/40.json",
+      "sha256": "1c2d61b4f378ae1e3ad6dac787c28a5c95f96c1552d1e8765d630f302300af6a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/41.json",
+      "sha256": "7590c37b19b787801f7f53cf8bb57732eb7486833f78ec031dfc57afb3ab66e1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/42.json",
+      "sha256": "331d8f53fddb6437273aeb78b8b70d16c88d32ff8b349fa37338bfa162e2fa6d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/43.json",
+      "sha256": "70f8ce29207e7149e41494f43f4e4deb080ef6f61ea4ab42a432f9c2a3cc6249",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/44.json",
+      "sha256": "937859380e60336fc545cbf79f47c7ab807ba373e2783fe69fef89afb700ce7d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/45.json",
+      "sha256": "2522b5cf46c0be5d2a9263cfd3f44e1f54deb3042ec8ca9554e701316e0d2504",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/46.json",
+      "sha256": "9e7a24b9d17a3401901366bb990d868f7652d3a63cf8288d56072ae1b6ef4af1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/47.json",
+      "sha256": "4b88130a2330d54a81f74f5d2f66e6b54d7c3027428bbf9cf42b83f66698fd99",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/48.json",
+      "sha256": "c2b59b2ac8c904641fdc64d058d61d1742f513664f8263ffed90fd1798ccb60a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/49.json",
+      "sha256": "b553103d595faba3849165a20a313812017c20312cb5738bf6dd9778437012b2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4a.json",
+      "sha256": "fbd42d435840031e58b8f89a7857f96b8b3cb2cb017d8bc44999b4dd13ebaac7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4b.json",
+      "sha256": "a32bb9008de2bb10585c959bfa08b41d01722a0aeab08e1afc4e60bc24ada862",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4c.json",
+      "sha256": "09c62307cf3fa1231b54307b69e8178b1f591416bad8c6f52aefc2167e83e4f8",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4d.json",
+      "sha256": "a7d197de7f1382dcbf0637155cb3fcab30063935e3b75f8902b46877593f5907",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4e.json",
+      "sha256": "59ef2fac049f474cd3fdde1137fedb745a7363569888dd0dc9fe6504237d30eb",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/4f.json",
+      "sha256": "34a46eb691e50e1f019d828a3f48375d60184a744f14c2d3a140cb8e3729cf55",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/50.json",
+      "sha256": "94cb2968342fc4f69a09e29d02ced6cdebe44d1943b868153435c6ddbbe6502e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/51.json",
+      "sha256": "7b248f59390e452b652205ec5bc6e54a9bc8fa53e8ff2dbf3debb22b67c121ec",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/52.json",
+      "sha256": "f325386e26942b3c50dd573b0e236d721950ccf3ef0eae8960703732de5528c9",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/53.json",
+      "sha256": "8d9af49595e3c8fcb4de3e90fba6c8231b4233dface16c2717085643b6144372",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/54.json",
+      "sha256": "0558dc47401c6933b894e182f0c829b69f138adb53182600088097196f7c8db8",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/55.json",
+      "sha256": "17cd614e66f9d1228830a53960a8ef7c7c51ba73e2e58f2e0ce3b5c67f864bfd",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/56.json",
+      "sha256": "ed7ebaf32863964eb6ff78668a42281f973fada30a0dc412f348f37ee7ad2561",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/57.json",
+      "sha256": "b2def0df6f9f8d577a959cca17cfd6c91ea92a173c18469d649b18bb1cdf366f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/58.json",
+      "sha256": "2ded4338d98d171d4fd58ce4a501aadea317edda15155cd9377c82832e21acc0",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/59.json",
+      "sha256": "f8c03bcdaf43bdac48928c7d88825309839cc1dbfdd3a63710c74557744bce80",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5a.json",
+      "sha256": "de8dd6dd2836cd27694358cf3f928fb1274455fdf8a6b2255281b432c604c274",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5b.json",
+      "sha256": "b5995c92e1b678d163bc89f4cc6cbd742aeb1d2d18bc80017701d41ffea883b1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5c.json",
+      "sha256": "5bac3cb1704fec4e005566351f4847ab765c8e27fa138b633c3e5c203082fe05",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5d.json",
+      "sha256": "04add313957b9ccaa8600f73391e2fc18b94433100873a7ea253ce080b6e71d1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5e.json",
+      "sha256": "ab3cb2c1bbaa43addeb027f0a40e70da8a475dc75e552ce3a5d2d2b27de006d0",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/5f.json",
+      "sha256": "7900540d91d3beae9eed9ac6096ef3de4129316af884c8b9d3a3600327870a41",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/60.json",
+      "sha256": "659d892e8cb49c0e02dcf43447a80ab4b8b929b853d79a6b1e1be8d5f561ec62",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/61.json",
+      "sha256": "6ed64dceb965a8335b678b2fab728b004854ae57146fb7187d0c2ebc86e732d2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/62.json",
+      "sha256": "91bbc66c1dad357d3dd7e028eee93d9103f3895eceb223d70f78d90aa1e7d321",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/63.json",
+      "sha256": "c0d22a1e996628c5a07b719a303fed62de3071280815907f76c968c6750cca01",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/64.json",
+      "sha256": "c57e25924ecf5028c6dd0855d06f74403c50c24d49a781e97ee4129b6d2f857e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/65.json",
+      "sha256": "c2d3719f04f9c95295b769edf7f11cdd5e1d00ae396e91bd028c85f8d3a07c38",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/66.json",
+      "sha256": "8a2b5f225a85b1cebf2447931553f346abd33c552d69968b33900fb3683a978c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/67.json",
+      "sha256": "25d6653a6886bc6d11517bdd2ecae1e4800c0faba53f98d001ab7acd6b7d4bb5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/68.json",
+      "sha256": "4d1c21a66e77e274e7acaecadfdbadf93a4f661d58a0c2df89b5fefe892d2907",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/69.json",
+      "sha256": "131674494af2480141169f2c191fdd8d65e2204eda5d8b9f5d5931b9c43aeb1b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6a.json",
+      "sha256": "11be5b3abd1f2a0c3ba3d4e3bdd31d8e1ed11a5b2090fc8356cbd11cff216468",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6b.json",
+      "sha256": "87c08565d9eaa2c7c4a7f1a15c52a351f380cd3037e4a6b505a7af7cbccb3b6b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6c.json",
+      "sha256": "bc11dcfb671d2e2b6d3a4d4a49f66c0e6b20a3ef0e160080ef81eb5de835b04f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6d.json",
+      "sha256": "e47a8714802e6fa78d695e1b6c07a775b963eb731d7ce52a6168cbb0aa0aa908",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6e.json",
+      "sha256": "11da1392e24aa23f551819cdf014079432b78ccfee011e350f3121abe6816e8c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/6f.json",
+      "sha256": "8fb59181fd419e4c2371051edab9f276e0c3570d2a0900f02c5a687105c5e1d4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/70.json",
+      "sha256": "0dc32651e068533be3af22a488521a04a9241e2d037486b1a95574c1310a2beb",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/71.json",
+      "sha256": "4d012316221ae32110a99e21c99c70bb48524b1c60a2ae6c9cee7a55393cbb9a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/72.json",
+      "sha256": "09e3ae24462ffe1a96046d79963ac1d71592ded58ef8f0d9b6a24d7a58c94032",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/73.json",
+      "sha256": "9cf1fac02df07a5575186a1679812c568ee4649594dbe04651e04d39eae05c3b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/74.json",
+      "sha256": "f2cd6e9f2464bac3d6c55d602a0efb2d82a7d84708e9b74e2252319ee75b033d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/75.json",
+      "sha256": "793e9879374910aa139ff1e45a024a255238354bbac9fab4e8d0589578d469da",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/76.json",
+      "sha256": "f7e6b2dc57d01ab11214746d74ccc304bfcd8e9d2c411cbe8c7993e6b85dbb7f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/77.json",
+      "sha256": "e23245af86c41431e556665b2507bd26bdced78c863b5e7a57ce1c888d7cb5ec",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/78.json",
+      "sha256": "74f74d62307660fd1b565efd7b94286c16bddf430f1c9459b642e46eb7018086",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/79.json",
+      "sha256": "c1ca6b79e95aefd08603b45be2e8bbdde8501038de01d5461d653577c653d10c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7a.json",
+      "sha256": "a3db5afe6f1e409f5933db7a38ba6bc57ab6008217befb2c14dee8c3f6918d4e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7b.json",
+      "sha256": "9d7fe09d464fb46d2a7a6a1b6a220822d4d90472d321f8703643f360fa2d7a79",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7c.json",
+      "sha256": "65edc001d674761551e66e5c141f0d8e2baf0e05babb60556e69e347f5d8a50a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7d.json",
+      "sha256": "fb30e7046402b11d7c70afaf06f3a6b99d13617eae89fd0011f1ddb9adfb7cc6",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7e.json",
+      "sha256": "17e880ba38936abb7cf1122f38801151b1b71a477c6deec583c42d519335c97c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/7f.json",
+      "sha256": "11265b0c3efadd20635b510f1d89094eedf466a5c07e66b3161ed558a74be322",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/80.json",
+      "sha256": "7be83276d79a116fbbfc07a216131de3b4f26a31d2b25aa60db47996aeb9e1ab",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/81.json",
+      "sha256": "c5675b5a581a61b69545ee990a6d3650420c48877f6b210eef3a08bbb46d679d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/82.json",
+      "sha256": "132cc0c40bf997161430ea85436743de234f3edd6e44b7ed6e0f8ff611d4b83a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/83.json",
+      "sha256": "73425ec1b2b525165c70d5c70c1bdf0617341b7eed5101df390ec2d2e32b1eaf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/84.json",
+      "sha256": "e4565e352a970abfaa562c20ad8283ca3f2c70161384308a2d8d82687620afbc",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/85.json",
+      "sha256": "1bc8a21851d20105c82dfbbbbb2aa33a3c652ebfb913050434ce77bf320c4134",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/86.json",
+      "sha256": "8ac890605325c2b6ffe840eaeb9371d64e6991b6af47772a208adff8b7c57e17",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/87.json",
+      "sha256": "75d4cee000db7202c40c3cdfddf61ef74af83c78a6fff40c641aaaff4b62245d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/88.json",
+      "sha256": "194a85fbaaf88b783cb68f357574dbdbff5a6fad4dcbe3f32c96cc262a88ff90",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/89.json",
+      "sha256": "94c8c9473a908239d061abec153dfb6d84d0be05e0baed69f621853de5cca5c4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8a.json",
+      "sha256": "91b969991084627865d25a13154e09a912534cf854c29a13b0f010e12535f919",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8b.json",
+      "sha256": "c5716206949deffa0c212f43d269ec7011e06c4f5a20dad6b80f0608304d92bf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8c.json",
+      "sha256": "233cc60e4235c41bde5d81eab461e9464e0d7f92bfc8340eec81d6c7334f5a88",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8d.json",
+      "sha256": "c052b02c3ef57c6d522c74eb2483c57c0d0a555ef4a0f77752204578ead50a36",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8e.json",
+      "sha256": "f9564c1aa3196bca6307ec610aa093b735889764bac1c36376a46e74b021fe08",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/8f.json",
+      "sha256": "6f28976161a9c721fee64696bdf344e3ab2f3aae3657a965eba979d5d7ab08fe",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/90.json",
+      "sha256": "bf11ad7289c26380f1c27ee8d59ded7c339cd612038da11de1b6cb5f5bedbeac",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/91.json",
+      "sha256": "585d405f8e844bc624b34e9c789dd16e691ed3c52b9484fc26ecfcf8940f65a7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/92.json",
+      "sha256": "8e91e00b724ab52845fb7e60658a90d38fda16c73e111831919cfa8c96d38d5e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/93.json",
+      "sha256": "6bf626249e8b52b90df050eee361095582084955e6993f6d230ee0cba799c361",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/94.json",
+      "sha256": "31295503bed065899481da19ec5861a863febe7bb18bda6a5421e4f56cc8914a",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/95.json",
+      "sha256": "a46a0c9accae0c61cfc17e592e8352dea5c864216d1e386c9d444f4ebfc34475",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/96.json",
+      "sha256": "5c7fa85e020dff976f6ef690fb0cade1ea24003e0ec7f55deea38a9c4ae83816",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/97.json",
+      "sha256": "0eff3c25830d0f221cf2e0cb79b57c587bcf1312eb069f23249f19dfd7110a91",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/98.json",
+      "sha256": "a4ff8f2dc262d48794221bf6420e3d5f781ecff037b528b011b197da1de5c4ac",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/99.json",
+      "sha256": "068b4596cf2eef52fc8f4390a9f25b2ecb366637645877bd3a7ba64b61380cc7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9a.json",
+      "sha256": "dbb7b7d696ff479e7bfec03e392c3b9fc4f8e0f25e60b4d7e6c3cfaee13d0425",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9b.json",
+      "sha256": "699df841fd4adc07d320aae2bf39a30047ca29bfe7baace0eb0b172fd84480d4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9c.json",
+      "sha256": "aaf0a351ffade18dbd78b65fc1329a0f022a3455686b88ec7fc7c50881dc592f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9d.json",
+      "sha256": "6b0111c1c3f390ff3abe4d660c93d2c7d73769494296596e85bfbbb1cdc482ea",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9e.json",
+      "sha256": "8891cb294b82cd722e1bd280ca52c789b383a80b257754518d1477987f6a0d55",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/9f.json",
+      "sha256": "8f870ec8b154aef302b37d24bf12a1a88bb73f0989583ee58eae0da5d684fc32",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a0.json",
+      "sha256": "584995934e539bfa5b5ef25a4ed82f98b55275ed1bf84e3295a17429e39427e0",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a1.json",
+      "sha256": "04c3c44ec7a8792e596c42d3d4d6d7fa796811b9de133b0d8ee01535dafdaa15",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a2.json",
+      "sha256": "cde6493b789841323c31c96c7ca1ea13f61ca4b0423b7beb98ab742c3a47d9dd",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a3.json",
+      "sha256": "837a747a8daf96e567f895ea6a6a4d06856f2e3658aa580261d912006f062fcf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a4.json",
+      "sha256": "17176945f4093ea5fb0696fb3369205338929772a5875785382e3fde2908cf83",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a5.json",
+      "sha256": "8ac8232011797a259d4c4e25e1c703d6df2711c34611a5bf3a1e6f965e530798",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a6.json",
+      "sha256": "bdca3ef67b92cf87663ca383366d780f2abe10da60957ba4f4f1fc9cd6a16c0f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a7.json",
+      "sha256": "cfa2a890f7248d9a13d055805fbfc47a556a5774e22bbda4d546799fe800e9bf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a8.json",
+      "sha256": "b2a0c7d132aeac54d194e1dd24b6dac7567143f2882b7d2261db089d13c8cb81",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/a9.json",
+      "sha256": "98e67e2f877ee214f59b32665953eb10ecc9b12d84b2875cac6b9827e23c7aa1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/aa.json",
+      "sha256": "2484a2946febc23d5d5860f33527bde79b0b9d5c9260317a9293e4cc194f9212",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ab.json",
+      "sha256": "3ee89365ccf4a101eb1190f654c4ec19c81e2a857709dc9eeee3cc4360017bc2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ac.json",
+      "sha256": "34873fbfcbc99f3675ebbf6becbdf2ca1ed2bca906a245e8eb42aa8744f6ea43",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ad.json",
+      "sha256": "ca4dc1e097fbc7e761d7f6e1ccb6a993f7cba2dc202b4237e146add91208fcb2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ae.json",
+      "sha256": "c6a94a1a366ca7bd6537e520ddf4aa637236bfbe0fe44b0712ee38d3b9f1c3b7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/af.json",
+      "sha256": "7729efe471dd7869e0924a4576847f9e149ffda77184c4d62c1f80f9a7985a39",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b0.json",
+      "sha256": "cfa809b155c0a55b2a074895b1814f9f684e07790daecb14d5d32c407276c353",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b1.json",
+      "sha256": "2e9b504c66dde8505d994dca3c7c4a35e12a274495f3f07081f87cb87a0699b2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b2.json",
+      "sha256": "613f91e64ad9e7aea6b4f1f8bb41b05c0c28a514d808e470adcd47671898dc2b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b3.json",
+      "sha256": "fe661a6d23fbb8dfed17c1951eefa2df8c3324eada5fe815638b0a21f38990e0",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b4.json",
+      "sha256": "5a15b68c22a80753a90ae365eb433ef558420d9e947ddf76e929d1e7df32630d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b5.json",
+      "sha256": "f16c9a031dbbe2454d3d84f73471becbee1ff539bfa537becde0a77170dc1499",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b6.json",
+      "sha256": "87fcb6c7380590735f75f54d00088f1fc2debee12633b80a387fc4749183dc7b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b7.json",
+      "sha256": "bc8059a91aa340f2b40946a042efbcb2ba593235b92ff50fb9776cb17f614cda",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b8.json",
+      "sha256": "a7b291bb21e0a30ac9b05d301b9df8ab628c45a658ee2fbc7786e7a8054f49e3",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/b9.json",
+      "sha256": "c4bad1db30199e3685f1cb0a7dcedb36f8bad4762d531b3a741f0963b2dad9a4",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ba.json",
+      "sha256": "43c610cb26d49799135e68efabe4fe9ac81a1808a92593e9853168f79d7f9707",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/bb.json",
+      "sha256": "f15a080162fb761f9ec02db22afd182b3d40409943801aec8027827f855af1cc",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/bc.json",
+      "sha256": "85b1deaa1af34d9e5e1c91bc449b458c9cb9aa1791fcbb461a39a16b97af779e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/bd.json",
+      "sha256": "8d8147037706177e3e873271d6481508ff869884893d02673b58d6a1bad64425",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/be.json",
+      "sha256": "f55472552ff5ebf4a1f4ce007c4b17a6daec8f47728baa01efad70ff49fe0e4c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/bf.json",
+      "sha256": "3713bf030325ce0ec13fd9e13f11e4ffbbc726c1255cf771f21b207c5f3aa490",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c0.json",
+      "sha256": "d1e0ff1a3bb08e37f96f11ff6359696b869ae27dc3feeeff0e4d91012a43a7bf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c1.json",
+      "sha256": "9c1671bef493eb2a9d20013eb842ca20ec598ef7451f8ae5c0a27b50138a098d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c2.json",
+      "sha256": "eee26e6c89552cf84c996d5118a6336b95466e988005cc1b684ce38a70f3300e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c3.json",
+      "sha256": "277fb29f31859c4f27a6b93b609792758bda407f30cdec9f93df0005d40391d2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c4.json",
+      "sha256": "884cba5272e460f283f6655bff89d614800d668a43fb5291a1062f53bce3b305",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c5.json",
+      "sha256": "99a74f4d2b3c6a9a8e27abace64cf47c4b395ee762f219c4e41cfdc39495d2f3",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c6.json",
+      "sha256": "e8265e5c54869afb27abbc04c6508cfb710690a9a87f8e6799571261f45fd475",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c7.json",
+      "sha256": "1826dc936e68af60ee5eb197ca2caaa5dae612b1e810457978a7d7fbdaeffe5e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c8.json",
+      "sha256": "5a79a4520b87487ccbd84383513f0ab77cb2235f0c227559dcfa241a5a33c931",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/c9.json",
+      "sha256": "aaf490800dc7f71028197fdfe1982226b029281cc64f483dffadf967358ed98b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ca.json",
+      "sha256": "a8fd2bedf99d98eeb5ed0da91a7843835745931978d9077da91286233eddde5c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/cb.json",
+      "sha256": "b9d1acf29f337358ba0eb4ee98ce215ef36ea4e87b559618f13632949e6d8a2c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/cc.json",
+      "sha256": "889548c173340c9c24bcfb7e33833af4360439f167d738d1d44c53991145f2ea",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/cd.json",
+      "sha256": "04fc6d4960b3012b98b670c6e5b4476fe14bd5222dc8f4b73f1185334660efe2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ce.json",
+      "sha256": "98e2fed1f8362b91113fe0f8837ef2248b5cea0a319e040089ce4c972600624f",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/cf.json",
+      "sha256": "3ad4a01f09dc16ec954fbec435a22b0429ea0d25985b5ade54c51eb60957d477",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d0.json",
+      "sha256": "f6503d2b9d7d1a0d3aeb6f23bfed9e77be6a36ce1af9da72838cc2651ec6f984",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d1.json",
+      "sha256": "0edb0ec3da84b0b165cb3098fe495c1ecaf6cb5ad897170e9bf98b6ef3d3822e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d2.json",
+      "sha256": "4a37f516f8cf4b7352d52e2da571c653e4897989f3cd14fc8db821168080f0f6",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d3.json",
+      "sha256": "4986af2abc01d5fbf250725f12e2549d031705493becf1c7ddcff42e9edb2942",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d4.json",
+      "sha256": "fabd95bf901ed37b149fd708b6d21352dada44393ad88b6ab3b0978efc9a7559",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d5.json",
+      "sha256": "74040e4cb92a3a8f55a0d09c60b7840c155de3dc4a12312c52974510e47dae6c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d6.json",
+      "sha256": "5e3103dec5da8475b2626f9823bcda7ac7dc749f856ecc1c4d65904aed7946fc",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d7.json",
+      "sha256": "2248db71338d6fdc7dcb94719ace4946fb028229820d6032d756d09a914ef545",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d8.json",
+      "sha256": "639ce5b554605113530a37f9a4a77d96aebe3ba251348514a43da103b6146a56",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/d9.json",
+      "sha256": "bc0acc5f1609808583fd63a03287358c34e1668fc201be44654d695b3e81fd43",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/da.json",
+      "sha256": "5bb87a24a3d05a4bfd073d0e0301edfe00e84837402497304e4560b022ae1ba0",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/db.json",
+      "sha256": "59ee7083db72ff8c6233372e7e2b19c92465d833c1987462c8b408ba51e5672c",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/dc.json",
+      "sha256": "efbac138c8388c1353fb0dc1a014e11d95fde45bc3cee5e80a050a2c6e5545f1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/dd.json",
+      "sha256": "501d1dce9b128a57720299d0f8d79f2fb034ee8b3dcdb29f2a5aefc5e36124c5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/de.json",
+      "sha256": "d0314943227bcd8ec72e20d37ac48d7a7b244870cc4be8027d3f14b7b34d58f6",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/df.json",
+      "sha256": "c96ed7ecee0926c849d02211a208c6a8ea1ddeb1e896d14a3203496d3c561514",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e0.json",
+      "sha256": "6a01ae04b8be4351519c7cd1009d62c0e5e6a1182d42b8081daea6a225864252",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e1.json",
+      "sha256": "4e08f3614c6a73b0c8d3d70a3e95f89e397bb80e20bcff67f6c03bced5c21b41",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e2.json",
+      "sha256": "e40f679f20fd301ed6434ece4fa76ff9088b45f5add67a4911173895a60152b1",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e3.json",
+      "sha256": "d440e61107688431818c3d88a33246f561450682857e1edaa81323c9b8f298a7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e4.json",
+      "sha256": "50aadd7d75020fb864c4d51d0d09bda0763342191b7684326bb54428477cc3ed",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e5.json",
+      "sha256": "6a35bdaedba5eea873846336684d81e9cb1c670bbf497eeb4f0f15741d7b67e2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e6.json",
+      "sha256": "38e1bac51bb1e45bbaf23ad8c58b5a9e3dc6c38132e3b28bfbccdeea83b70e27",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e7.json",
+      "sha256": "d98a763ec240062156cf22b8fe3d0fa12627c4690904ddb9a1ffcd9014d7c9e2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e8.json",
+      "sha256": "3a3c51b62919810f112b8e1eda19ecba3b3f741685308948fe9d8039c8658b98",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/e9.json",
+      "sha256": "5175d7cf33711b489c80f041967ba69aadb161ccb3901397137ee71fd1118ca2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ea.json",
+      "sha256": "cb8db3b999c5b32f7764ff2bae39fa0cead68e7a618a457621534090d8342d42",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/eb.json",
+      "sha256": "31ec378d7aa3815a51f4a66abb66cfd193e51290a43eafc0adfa82d767c203c6",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ec.json",
+      "sha256": "7d6382fea12b37c9854680013e10bfcd8e09ebaf4db8f669c69620ca803e4125",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ed.json",
+      "sha256": "a637b08272c86d9f8e2c5501f4573bebd7f3ceef35c7ef38af361dd5f30c930b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ee.json",
+      "sha256": "71dfbc7e62cc195bcb07dd728833ea43853166ee62549bc468c294f688d397e3",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ef.json",
+      "sha256": "4afd2c1e3c5cc210211ac94762e2ed91451fdfc55c2e3065943a37367923cd1e",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f0.json",
+      "sha256": "e0515248f2e6a438e43deaaf1152a29916a090203a1dd503a1e54b19e41cc737",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f1.json",
+      "sha256": "9bc1e376a60ab5b0fb007bbfbbe2c04202db28c4b44ea08e3ee9fa99c4907128",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f2.json",
+      "sha256": "2e47879199fc35af1580aa57a364f40bb0493e5060c6da5b1182f4472037a116",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f3.json",
+      "sha256": "6a612037ef96cb14f30709f2ccf982e5dc460d7fc6290779bb5513bbf7ad87a5",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f4.json",
+      "sha256": "fc91026a58c7e65b978edc00efda0963026fd80398128939edfbb4cc56dad8e7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f5.json",
+      "sha256": "635044e2daf79a22c0109a5c4d681d77f9c6ee60381baaeecab1340a940158e7",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f6.json",
+      "sha256": "0434f8a469a9ce8e1123d1555c0ed783fb90537d7247c06d5667d42c661a8355",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f7.json",
+      "sha256": "33a19e0482975914375c93f6f38cf799c7fa147f096aa2b8c469b2be0975031b",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f8.json",
+      "sha256": "86a8bf1428a2db5b0c25123fc4c9215b94a7f57414408ec83d0dd5a17b789dcd",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/f9.json",
+      "sha256": "5885b2cb1678036d90cc0b6de68b2f11550aac46618cad34f7f78ebf68bece22",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/fa.json",
+      "sha256": "911d465959d318b5614ea7d528a1df130d615e7a977e42d9f5f4139158deff4d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/fb.json",
+      "sha256": "2a25aa422a55a0b287c0e7ab6bc51ff67d0aa199e35f9932608179d7db4159e2",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/fc.json",
+      "sha256": "34995252ee3d7f790f67b45c1a1f68a5d9d810d7054a29fe43eae9bb896bd4ae",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/fd.json",
+      "sha256": "524fe7794ae89c4b618058092396503ab2c27d459bdd37ae93b3a8dc43071931",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/fe.json",
+      "sha256": "b074273e57125d0b1f66652d3d2fdc251f058b5e63ff49d3edbf9f3926e17dbf",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/cases/ff.json",
+      "sha256": "85bee7e8856ad58a4676a3694547bd1dba588d45592ec4af1766ae22a9398e8d",
+      "executable": false
+    },
+    {
+      "path": "public/eq-fitting/catalog-v1/index.json",
+      "sha256": "0dfed4c3cea388e9084af15c7927f8260b87b0c1ccf4e870c2a7f835f856ef5e",
+      "executable": false
+    },
+    {
       "path": "public/eq-fitting/eq-fitter-benchmark.png",
       "sha256": "d9c678edbaa863c9eb31af9b918054e6175c0b8480b0193234cf8f8819e1f616",
       "executable": false
@@ -4362,7 +5657,7 @@
     },
     {
       "path": "scripts/checks/audio/check_listening_controls.mjs",
-      "sha256": "bf3d74a5ae8007c0c3b5c1cf34be1b2f74b8e42cf29a8ddb226b110e6a9af287",
+      "sha256": "1d49558b1c97096333867d3ed833ea375d75f226883dec2532a02d195f72a22a",
       "executable": false
     },
     {
@@ -5582,7 +6877,7 @@
     },
     {
       "path": "site/app/glossary/style.css",
-      "sha256": "476eb82061ca2261b5e6ee19c122f2a3dbfcb7be77384ad44da919d64b6dae4b",
+      "sha256": "0deba0565340da8bc256634730c10228cfc20d053e8e18808755cf12acd2816b",
       "executable": false
     },
     {
@@ -6172,7 +7467,12 @@
     },
     {
       "path": "site/components/eq-candidate-results.tsx",
-      "sha256": "921cc0d987d8dd60eb415fb6b38e0be8d893fd0939dfa197ca76740349235f5c",
+      "sha256": "4bd0039865b10c3db0a555a6abf5961d8816f8de02cde999914d759afd5ba832",
+      "executable": false
+    },
+    {
+      "path": "site/components/eq-catalog-benchmark.tsx",
+      "sha256": "304aa7c635a8e14cc15b6018f0170f5f564254bd0d5733a38fea892f019f0e0a",
       "executable": false
     },
     {
@@ -6187,7 +7487,7 @@
     },
     {
       "path": "site/components/eq-fitting-guide.tsx",
-      "sha256": "b8071c86ed3539b671ec82066676bbb141e9f46cd335389d3d0e0d5aa0c03b2a",
+      "sha256": "9eae292db64359c9540533ba1dac9e3ea6f164c46d044dcf63820a722bae0830",
       "executable": false
     },
     {
@@ -8282,7 +9582,7 @@
     },
     {
       "path": "site/lib/preference-finalize.ts",
-      "sha256": "5e8ea7d6cc95c7806703549f4b13c131c29866f0b898c25bbef04f926a73cbb4",
+      "sha256": "e4f9872e7ce66a973223e81da29f09e00509344e95ac70865cf00357c92182bb",
       "executable": false
     },
     {
@@ -8332,12 +9632,12 @@
     },
     {
       "path": "site/lib/release-history.ts",
-      "sha256": "5d5682aa0c0024d0d13e6f73d8793e23c9fb2563254eacc671ac371e89f48f16",
+      "sha256": "8552556d8dae7ed715b855ebbe7a603e79d356d99e55845de69592a081d59cfc",
       "executable": false
     },
     {
       "path": "site/lib/release-info.ts",
-      "sha256": "4ef8f095bd3a71e55d1f5c3c1cedb498ca5a1291d5160bdfa8a2377318e77d5e",
+      "sha256": "6997af47f607b595464cf2c112cf95a4e7276b98c468b58976baa71704ed2508",
       "executable": false
     },
     {

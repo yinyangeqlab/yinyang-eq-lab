@@ -1,5 +1,6 @@
 import { Link2 } from "lucide-react";
 import EqFitterRankings from "@/components/eq-fitter-rankings";
+import EqCatalogBenchmark from "@/components/eq-catalog-benchmark";
 import snapshot from "@/data/eq-fitter-rankings.json";
 import { CLOSE_FIT_RMS_DB } from "@/lib/eq-recommendation";
 import { fitterNames } from "@/lib/fitter-settings";
@@ -22,13 +23,14 @@ export default function EqFittingGuide() {
       <li><strong>Check where the error is.</strong> Use the response plot to see whether the fit overshoots a peak, leaves a dip, or misses a broad stretch of bass or mids. A higher RMS may come from leaving a sharp treble feature alone. Check whether that feature stays in the same place when you reseat the earphone before correcting it.</li>
       <li id="listening-preference"><strong>Compare at the same playback level.</strong> Listen for the changes that matter to you. If both fits sound the same, use Recommended. It can take fewer filters to get the result you want.</li>
     </ul>
-    <p><a href="#benchmark">See the benchmark results</a> · <a href="#peqdb-optimizer">What the fitter names mean</a></p>
+    <p><a href="#benchmark">See the benchmark results</a> · <a href="#benchmark-by-headphone">Find your headphones or IEMs</a> · <a href="#peqdb-optimizer">What the fitter names mean</a></p>
 
     <SectionHeading id="benchmark" title="Benchmark results" />
     <p>We compared {toolCount} browser-based tools on seven measurement–target pairs at 48 kHz, with four in-ear and three over-ear. Each ranking uses the same pairs at the selected filter limit.</p>
     <p><strong>YinYang All-Band Fit led all seven error measures at 10, 15, 20 and 30 bands.</strong> Several fits used less peak boost. <a href="#eq-fitting-title">Choose a fit for your device</a>.</p>
     <EqFitterRankings />
     <p><a href="/eq-fitting/eq-fitter-web-scores.csv">Download per-case scores (CSV)</a></p>
+    <EqCatalogBenchmark />
 
     <SectionHeading id="frequency-ranges" title="How to read the scores" />
     <ul>

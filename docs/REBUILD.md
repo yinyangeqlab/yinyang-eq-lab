@@ -1,7 +1,7 @@
 # Current release — update227 AutoEq target names in Research Admin
 
 <!-- release-state:start -->
-Recorded deployment: **update233**, source `1f649414ff956692e91e2f004165d81aed47dfd3`.
+Recorded deployment: **update235**, source `0dba869a10a343fdf37d814f2f1b67755e1d99c5`.
 Current maintenance, publication and recovery status: [LIVE_STATE.md](deployment/LIVE_STATE.md).
 <!-- release-state:end -->
 

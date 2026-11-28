@@ -154,6 +154,18 @@ export function exportFitRms(raw: Point[], desired: Point[], filters: PeqFilter[
   return Math.sqrt(loss(correction, filters) / fitGrid.reduce((sum, hz) => sum + weightAt(hz), 0));
 }
 
+/** Compare the shape of generated Tuning fits at the same overall level. */
+export function levelMatchedExportFit(raw: Point[], desired: Point[], filters: PeqFilter[]) {
+  const reference = at(desired, 1000) - at(raw, 1000);
+  const residuals = fitGrid.map(hz => at(raw, hz) - at(desired, hz) + reference +
+    filters.reduce((sum, filter) => sum + response(hz, filter), 0));
+  const weights = fitGrid.map(weightAt);
+  const total = weights.reduce((sum, weight) => sum + weight, 0);
+  const offset = residuals.reduce((sum, residual, i) => sum + weights[i] * residual, 0) / total;
+  const rms = Math.sqrt(residuals.reduce((sum, residual, i) => sum + weights[i] * (residual - offset) ** 2, 0) / total);
+  return { rms, offset };
+}
+
 const versionFor = (variant: FinalizedVariant) => variant.engineVersion ?? `yinyang-${variant.method}-${variant.priority}@update124;metrics=export-rms-v1`;
 
 export function exportPeq(variant: FinalizedVariant) {

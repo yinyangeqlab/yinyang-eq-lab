@@ -69,6 +69,15 @@ const samePeakAboveBass = { ...deepBoost, filters: [{ hz: 2000, gain: 8, q: 1 }]
 check(Math.abs(deepBassBoost(smallBoost) - 1) < .01, 'Bass boost measures the combined curve after overlapping cuts');
 check(Math.abs(deepBassBoost(deepBoost) - 8) < .01, 'Bass boost counts overlapping positive filters together');
 const tuningCurves = { raw, target: flat };
+const { exportFitRms, levelMatchedExportFit } = load('site/lib/preference-finalize.ts');
+const broadAttenuation = [
+  { type: 'HSC', hz: 20, gain: -10, q: Math.SQRT1_2 },
+  { type: 'LSC', hz: 20000, gain: -10, q: Math.SQRT1_2 },
+];
+const fixedReference = exportFitRms(flat, flat, broadAttenuation);
+const matched = levelMatchedExportFit(flat, flat, broadAttenuation);
+check(matched.offset < -10 && matched.rms < fixedReference / 4, 'Tuning separates output-level changes from curve shape');
+check(Math.abs(fixedReference ** 2 - (matched.rms ** 2 + matched.offset ** 2)) < 1e-8, 'Level matching leaves frequency-dependent error in the RMS');
 const tuning = recommendCandidates([smallBoost, deepBoost], tuningCurves);
 check(tuning.recommended === deepBoost && tuning.bestError === deepBoost, 'Tuning defaults to the original lowest-error fit even when deep bass needs a large boost');
 check(tuning.lowerBoost === smallBoost, 'A suitable lower-boost fit remains selectable');
