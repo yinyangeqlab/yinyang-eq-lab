@@ -6,6 +6,7 @@ import { FIT_BANDS, fitterNames, type FitBands } from "@/lib/fitter-settings";
 
 const core = "rms_20Hz_to_10kHz_db";
 const full = "rms_20Hz_to_20kHz_db";
+const androidRange = "rms_30Hz_to_6kHz_db";
 const metrics = [
   { key: core, label: "Through 10 kHz", heading: "RMS to 10 kHz" },
   { key: full, label: "Through 20 kHz", heading: "RMS to 20 kHz" },
@@ -99,6 +100,27 @@ export default function EqFitterRankings() {
         </tr>
       </tfoot>
     </table>
+    <section aria-labelledby="android-fit-adherence">
+      <h3 id="android-fit-adherence">RootlessJamesDSP fork, 30 Hz–6 kHz</h3>
+      <p>Only frequencies in this range set the level offset and count toward the error score.</p>
+      <table className="fitter-score-table">
+        <caption>Median across {snapshot.fixtureCount} pairs. Before EQ, {baseline.medians[androidRange].toFixed(3)} dB RMS.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Band limit</th>
+            <th scope="col">Active filters</th>
+            <th scope="col">RMS error</th>
+          </tr>
+        </thead>
+        <tbody>
+          {snapshot.androidReference.map(row => <tr key={row.budget}>
+            <th scope="row">{row.budget} bands</th>
+            <td>{row.medians.active_filters}</td>
+            <td>{row.medians[androidRange].toFixed(3)} dB</td>
+          </tr>)}
+        </tbody>
+      </table>
+    </section>
     <details className="fitter-coverage">
       <summary>Band budgets tested by tool</summary>
       <p>Each ranking includes configurations that completed all seven pairs at the selected budget.</p>

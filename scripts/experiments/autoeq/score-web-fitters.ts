@@ -62,6 +62,8 @@ function measure(fixture: Fixture, capture: Capture) {
   const residual = fitGrid.map((hz, index) => response[index] + at(fixture.points, hz) - at(fixture.target, hz));
   const offset = average(residual);
   const errors = residual.map(value => Math.abs(value - offset));
+  const androidRangeResidual = residual.filter((_, index) => fitGrid[index] >= 30 && fitGrid[index] <= 6_000);
+  const androidRangeOffset = average(androidRangeResidual);
   const rms = (low: number, high: number) => Math.sqrt(average(errors
     .filter((_, index) => fitGrid[index] >= low && fitGrid[index] <= high)
     .map(value => value ** 2)));
@@ -81,6 +83,7 @@ function measure(fixture: Fixture, capture: Capture) {
     max_single_filter_cut_db: Math.max(0, ...active.map(filter => -filter.gain)),
     filters_at_or_above_16kHz_with_6dB_gain_magnitude:
       active.filter(filter => filter.hz >= 16_000 && Math.abs(filter.gain) >= 6).length,
+    rms_30Hz_to_6kHz_db: Math.sqrt(average(androidRangeResidual.map(value => (value - androidRangeOffset) ** 2))),
   };
 }
 

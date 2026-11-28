@@ -21,7 +21,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 0,
         "max_single_filter_cut_db": 0,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 1.7738
       }
     },
     {
@@ -42,7 +43,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 0,
         "max_single_filter_cut_db": 0,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 1.7738
       }
     },
     {
@@ -63,7 +65,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 0,
         "max_single_filter_cut_db": 0,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 1.7738
       }
     },
     {
@@ -84,7 +87,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 0,
         "max_single_filter_cut_db": 0,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 1.7738
       }
     }
   ],
@@ -107,7 +111,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.03126,
         "max_single_filter_boost_db": 3.52,
         "max_single_filter_cut_db": 2.92,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.55567
       }
     },
     {
@@ -128,7 +133,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.00292,
         "max_single_filter_boost_db": 4.69,
         "max_single_filter_cut_db": 6.15,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.40107
       }
     },
     {
@@ -149,7 +155,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.97888,
         "max_single_filter_boost_db": 6.69,
         "max_single_filter_cut_db": 7.22,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.23492
       }
     },
     {
@@ -170,7 +177,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.08126,
         "max_single_filter_boost_db": 6.79,
         "max_single_filter_cut_db": 8.42,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.11351
       }
     },
     {
@@ -191,7 +199,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.23959,
         "max_single_filter_boost_db": 7,
         "max_single_filter_cut_db": 10.22,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.33649
       }
     },
     {
@@ -212,7 +221,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.23778,
         "max_single_filter_boost_db": 7,
         "max_single_filter_cut_db": 10.22,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.24341
       }
     },
     {
@@ -233,7 +243,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.10996,
         "max_single_filter_boost_db": 7,
         "max_single_filter_cut_db": 10.22,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.16364
       }
     },
     {
@@ -254,7 +265,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.06096,
         "max_single_filter_boost_db": 7,
         "max_single_filter_cut_db": 10.22,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.14454
       }
     },
     {
@@ -275,7 +287,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.02254,
         "max_single_filter_boost_db": 11.1738,
         "max_single_filter_cut_db": 8.51812,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.13686
       }
     },
     {
@@ -296,7 +309,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.92771,
         "max_single_filter_boost_db": 10.55684,
         "max_single_filter_cut_db": 6.35076,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.03849
       }
     },
     {
@@ -317,7 +331,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.99633,
         "max_single_filter_boost_db": 10.41946,
         "max_single_filter_cut_db": 6.50957,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.03049
       }
     },
     {
@@ -338,7 +353,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.0054,
         "max_single_filter_boost_db": 10.98315,
         "max_single_filter_cut_db": 10.86701,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.02414
       }
     },
     {
@@ -359,7 +375,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.00079,
         "max_single_filter_boost_db": 6.66097,
         "max_single_filter_cut_db": 5.78875,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.09469
       }
     },
     {
@@ -380,7 +397,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.02019,
         "max_single_filter_boost_db": 7.18639,
         "max_single_filter_cut_db": 6.25051,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.08876
       }
     },
     {
@@ -401,7 +419,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.99542,
         "max_single_filter_boost_db": 7.39893,
         "max_single_filter_cut_db": 13.79521,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.08626
       }
     },
     {
@@ -422,7 +441,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.02107,
         "max_single_filter_boost_db": 8.10634,
         "max_single_filter_cut_db": 14.53972,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.08542
       }
     },
     {
@@ -443,7 +463,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 6.43188,
         "max_single_filter_cut_db": 9.65169,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.12815
       }
     },
     {
@@ -464,7 +485,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 6.29729,
         "max_single_filter_cut_db": 8.75955,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.0978
       }
     },
     {
@@ -485,7 +507,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 6.55613,
         "max_single_filter_cut_db": 9.38178,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.08836
       }
     },
     {
@@ -506,7 +529,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0.94811,
         "max_single_filter_boost_db": 9.03512,
         "max_single_filter_cut_db": 11.62185,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.1342
       }
     },
     {
@@ -527,7 +551,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.17794,
         "max_single_filter_boost_db": 7.88203,
         "max_single_filter_cut_db": 13.10828,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.0497
       }
     },
     {
@@ -548,7 +573,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.66987,
         "max_single_filter_boost_db": 7.05627,
         "max_single_filter_cut_db": 8.96058,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.03413
       }
     },
     {
@@ -569,7 +595,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15754
       }
     },
     {
@@ -590,7 +617,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15517
       }
     },
     {
@@ -611,7 +639,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15517
       }
     },
     {
@@ -632,7 +661,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13188,
         "max_single_filter_boost_db": 5.8,
         "max_single_filter_cut_db": 3.9,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.19146
       }
     },
     {
@@ -653,7 +683,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13171,
         "max_single_filter_boost_db": 5.8,
         "max_single_filter_cut_db": 7.6,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.18318
       }
     },
     {
@@ -674,7 +705,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13171,
         "max_single_filter_boost_db": 5.8,
         "max_single_filter_cut_db": 6.8,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.18318
       }
     },
     {
@@ -695,7 +727,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.9263,
         "max_single_filter_boost_db": 9.2,
         "max_single_filter_cut_db": 5.9,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.16223
       }
     },
     {
@@ -716,7 +749,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.9263,
         "max_single_filter_boost_db": 9.5,
         "max_single_filter_cut_db": 5.9,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15956
       }
     },
     {
@@ -737,7 +771,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.9263,
         "max_single_filter_boost_db": 9.5,
         "max_single_filter_cut_db": 5.9,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.16223
       }
     },
     {
@@ -758,7 +793,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.16229,
         "max_single_filter_boost_db": 4.4537,
         "max_single_filter_cut_db": 2.62714,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.13111
       }
     },
     {
@@ -779,7 +815,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.19158,
         "max_single_filter_boost_db": 4.45984,
         "max_single_filter_cut_db": 2.3516,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.29234
       }
     },
     {
@@ -800,7 +837,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.65301,
         "max_single_filter_boost_db": 4.82039,
         "max_single_filter_cut_db": 2.13938,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.54709
       }
     },
     {
@@ -821,7 +859,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.67173,
         "max_single_filter_boost_db": 5.19648,
         "max_single_filter_cut_db": 2.14459,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.62337
       }
     },
     {
@@ -842,7 +881,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.09662,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 12,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.18337
       }
     },
     {
@@ -863,7 +903,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.19847,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 12,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.06189
       }
     },
     {
@@ -884,7 +925,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.24744,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 12,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.05339
       }
     },
     {
@@ -905,7 +947,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.22526,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 12,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.04064
       }
     },
     {
@@ -926,7 +969,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1989,
         "max_single_filter_boost_db": 9.4,
         "max_single_filter_cut_db": 9.6,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.07345
       }
     },
     {
@@ -947,7 +991,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.21891,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 11.5,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.04109
       }
     },
     {
@@ -968,7 +1013,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.252,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 10.9,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.04361
       }
     },
     {
@@ -989,7 +1035,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.20773,
         "max_single_filter_boost_db": 12,
         "max_single_filter_cut_db": 12,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.04472
       }
     },
     {
@@ -1010,7 +1057,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.46995,
         "max_single_filter_boost_db": 5.08881,
         "max_single_filter_cut_db": 5.96684,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.28268
       }
     },
     {
@@ -1031,7 +1079,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.54929,
         "max_single_filter_boost_db": 4.46652,
         "max_single_filter_cut_db": 6.46748,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.16335
       }
     },
     {
@@ -1052,7 +1101,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.44735,
         "max_single_filter_boost_db": 4.66421,
         "max_single_filter_cut_db": 7.34732,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.26881
       }
     },
     {
@@ -1073,7 +1123,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.46826,
         "max_single_filter_boost_db": 3.76715,
         "max_single_filter_cut_db": 7.12544,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15149
       }
     },
     {
@@ -1094,7 +1145,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0.00035,
         "max_single_filter_boost_db": 5.61105,
         "max_single_filter_cut_db": 6,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.80863
       }
     },
     {
@@ -1115,7 +1167,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13175,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.17639
       }
     },
     {
@@ -1136,7 +1189,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.19825
       }
     },
     {
@@ -1157,7 +1211,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15379
       }
     },
     {
@@ -1178,7 +1233,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13175,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.17639
       }
     },
     {
@@ -1199,7 +1255,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.19825
       }
     },
     {
@@ -1220,7 +1277,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15379
       }
     },
     {
@@ -1241,7 +1299,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13175,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.17639
       }
     },
     {
@@ -1262,7 +1321,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.19825
       }
     },
     {
@@ -1283,7 +1343,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15379
       }
     },
     {
@@ -1304,7 +1365,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13175,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.17639
       }
     },
     {
@@ -1325,7 +1387,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.19825
       }
     },
     {
@@ -1346,7 +1409,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.13167,
         "max_single_filter_boost_db": 7.5,
         "max_single_filter_cut_db": 5.7,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15379
       }
     },
     {
@@ -1367,7 +1431,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.34803,
         "max_single_filter_boost_db": 6.8,
         "max_single_filter_cut_db": 4.5,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.17174
       }
     },
     {
@@ -1388,7 +1453,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.34803,
         "max_single_filter_boost_db": 6.8,
         "max_single_filter_cut_db": 4.5,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.16179
       }
     },
     {
@@ -1409,7 +1475,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.34803,
         "max_single_filter_boost_db": 6.8,
         "max_single_filter_cut_db": 4.5,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15828
       }
     },
     {
@@ -1430,7 +1497,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15754
       }
     },
     {
@@ -1451,7 +1519,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15517
       }
     },
     {
@@ -1472,7 +1541,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.1317,
         "max_single_filter_boost_db": 4.5,
         "max_single_filter_cut_db": 2,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.15517
       }
     },
     {
@@ -1493,7 +1563,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.56525,
         "max_single_filter_boost_db": 8.92991,
         "max_single_filter_cut_db": 12.81294,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.01973
       }
     },
     {
@@ -1514,7 +1585,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 0,
         "max_single_filter_boost_db": 16,
         "max_single_filter_cut_db": 16,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.15314
       }
     },
     {
@@ -1535,7 +1607,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.98199,
         "max_single_filter_boost_db": 8.98209,
         "max_single_filter_cut_db": 14.62409,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.06553
       }
     },
     {
@@ -1556,7 +1629,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 1.86795,
         "max_single_filter_boost_db": 8.05645,
         "max_single_filter_cut_db": 12.26561,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 1,
+        "rms_30Hz_to_6kHz_db": 0.01311
       }
     }
   ],
@@ -1579,7 +1653,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.14546,
         "max_single_filter_boost_db": 5.78932,
         "max_single_filter_cut_db": 2.323,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.32072
       }
     },
     {
@@ -1600,7 +1675,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.14546,
         "max_single_filter_boost_db": 5.78932,
         "max_single_filter_cut_db": 2.323,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.32072
       }
     },
     {
@@ -1621,7 +1697,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.14546,
         "max_single_filter_boost_db": 5.78932,
         "max_single_filter_cut_db": 2.323,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.32072
       }
     },
     {
@@ -1642,7 +1719,8 @@
         "peak_combined_boost_20Hz_to_80Hz_db": 2.14546,
         "max_single_filter_boost_db": 5.78932,
         "max_single_filter_cut_db": 2.323,
-        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0
+        "filters_at_or_above_16kHz_with_6dB_gain_magnitude": 0,
+        "rms_30Hz_to_6kHz_db": 0.32072
       }
     }
   ],

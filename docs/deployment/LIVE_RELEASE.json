@@ -1,12 +1,12 @@
 {
   "site": "https://yinyangeq.com",
-  "update": 231,
+  "update": 232,
   "version": "0.2.0-beta.1",
-  "verifiedAt": "2026-11-28T01:48:41.567792Z",
-  "sourceCommit": "4d36a06bf33c6de67a0d3ab3a3b6242862e13e0f",
-  "sourceBranch": "release/update231-tuning-platform-exports",
-  "baselineCommit": "38b703561f72a7a4e88e18e075a12626dba0e75b",
-  "evidence": "docs/releases/update231-verification.json",
+  "verifiedAt": "2026-11-28T03:54:42.442441Z",
+  "sourceCommit": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
+  "sourceBranch": "release/all-band-fitter-232",
+  "baselineCommit": "4d36a06bf33c6de67a0d3ab3a3b6242862e13e0f",
+  "evidence": "docs/releases/update232-verification.json",
   "cpuLimitMs": 5000,
   "maintenanceFreeze": {
     "activatedAt": "2026-10-19T04:58:44.142Z",
@@ -31,44 +31,37 @@
     "adminLogin": "https://yinyangeq.com/admin-login",
     "futureClosureVerification": "A future owner-requested whole-site lock must report active=true, enabled=true, ownerOnly=true and expiresAt=null in the admin service-status endpoint."
   },
-  "scope": "The deployed Tuning export release is the verified production source baseline for the fitter and guide update.",
+  "scope": "The released All-Band Fit and guide are the verified baseline for the guide follow-up.",
   "gitSource": {
-    "implementationCommit": "4d36a06bf33c6de67a0d3ab3a3b6242862e13e0f",
-    "branch": "release/update231-tuning-platform-exports",
+    "implementationCommit": "6d9824c1bac21d58e6a4b8877a9780f67b27208e",
+    "branch": "release/all-band-fitter-232",
     "githubLogin": "yinyangeqlab",
     "authorAndCommitterVerified": true,
     "publicationAuthorized": true,
     "publicationSeparateFromDeployment": true,
     "pushed": true,
     "repository": "yinyangeqlab/yinyang-eq-lab",
-    "publishedSourceCommit": "71fc2e4733bea9b451ff972e6ba344b538edc380",
-    "publishedTag": "update231",
-    "publicationTag": "update231",
-    "publishedOnMain": false
+    "publishedSourceCommit": "557cb626914178e97050ada3f0512e5a43e2e5c7",
+    "publishedTag": "update232",
+    "publicationTag": "update232"
   },
   "recoveryProcess": {
-    "previousSchemaUpdate": 230,
-    "sourceBaselineUpdate": 231,
-    "sourceBaselineVerifiedAt": "2026-11-28T03:40:11Z",
-    "dailyWorkflowActive": true,
-    "schemaRecoveryDeferred": false,
+    "sourceBaselineUpdate": 232,
+    "sourceBaselineVerifiedAt": "2026-11-28T04:38:30Z",
     "matchingCurrentReleaseBaseline": true,
     "sourceOnlyHandoverPending": false,
     "hostedValidationPending": false,
     "hostedValidationPassed": true,
     "newDataExport": false,
-    "nextScheduledRunMayRefuseBaselineMismatch": false,
-    "update231SourceOnlyHandover": {
+    "update232SourceOnlyHandover": {
       "registrationPending": false,
       "metadataOnly": true,
       "databaseExport": false,
       "newDataSnapshots": 0,
-      "evidence": "docs/releases/update231-recovery-verification.json"
+      "evidence": "docs/releases/update232-recovery-verification.json"
     },
     "metadataOnlyHandoverVerified": true,
-    "metadataValidationPassed": true,
-    "latestDataSnapshotUnchanged": true,
-    "latestHostedRunMode": "validate-only"
+    "metadataValidationPassed": true
   },
   "documentationFiles": []
 }
