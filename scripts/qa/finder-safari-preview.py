@@ -17,6 +17,7 @@ PORT = int(sys.argv[1])
 SESSION = secrets.token_hex(32)
 NATIVE_SCRIPT = Path(__file__).with_name("finder-safari-native.js")
 PROBE = Path(os.environ["FINDER_EVIDENCE"]) / "native-state.json" if "FINDER_EVIDENCE" in os.environ else None
+CENTER = PROBE.with_name(".center-picker") if PROBE else None
 
 database, = sorted(Path(".wrangler/state").glob("v3/d1/miniflare-D1DatabaseObject/" + "?" * 64 + ".sqlite"))
 with sqlite3.connect(database) as db:
@@ -38,9 +39,14 @@ class Preview(BaseHTTPRequestHandler):
                 scratch.write_text(json.dumps(state))
                 scratch.replace(PROBE)
             self.send_response(204)
+            if CENTER.is_file():
+                CENTER.unlink(missing_ok=True)
+                self.send_header("X-Finder-QA-Center", "1")
             self.end_headers()
             return
         if PROBE and url.path == "/__finder_qa_status":
+            if url.query == "center=1":
+                CENTER.touch()
             body = PROBE.read_bytes() if PROBE.is_file() else b"{}"
             self.send_response(200)
             self.send_header("Content-Type", "application/json")

@@ -2,8 +2,9 @@ import Foundation
 import XCTest
 
 final class FinderSafariTest: XCTestCase {
-    func readState() throws -> [String: Any] {
-        let url = URL(string: "http://127.0.0.1:5813/__finder_qa_status")!
+    func readState(center: Bool = false) throws -> [String: Any] {
+        let path = "http://127.0.0.1:5813/__finder_qa_status" + (center ? "?center=1" : "")
+        let url = URL(string: path)!
         let done = XCTestExpectation(description: "Read Finder state from the loopback fixture")
         final class ResultBox: @unchecked Sendable { var data: Data? }
         let box = ResultBox()
@@ -94,10 +95,8 @@ final class FinderSafariTest: XCTestCase {
                 larger.tap()
                 if larger.exists && larger.isHittable { larger.tap() }
                 evidence("Safari-page-zoom-controls", XCTAttachment(screenshot: XCUIScreen.main.screenshot()))
-                web.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.12)).tap()
-            } else {
-                web.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.12)).tap()
             }
+            browser.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.5)).tap()
         }
         var after = try readState()
         if let viewport = after["visualViewport"] as? [Double], viewport[0] >= before[0] * 0.94 {
@@ -108,7 +107,11 @@ final class FinderSafariTest: XCTestCase {
             return viewport[0] <= before[0] * 0.94
         }
         evidence("Safari-zoom-geometry", XCTAttachment(string: "Before: \(before)\nAfter: \(after["visualViewport"] ?? [])"))
-        return after
+        _ = try readState(center: true)
+        return try waitState {
+            guard let box = $0["width"] as? [Double], let viewport = $0["visualViewport"] as? [Double] else { return false }
+            return box[1] > 100 && box[1] + box[3] < viewport[1] - 75 && viewport[0] <= before[0] * 0.94
+        }
     }
 
     func testFinderWidthPicker() throws {

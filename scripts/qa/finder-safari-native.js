@@ -44,7 +44,10 @@ async function prepare() {
       window: [screenX, screenY, outerWidth, outerHeight],
       options: [...s.options].map(o => ({text: o.label, value: o.value, disabled: o.disabled, selected: o.selected, focused: o === document.activeElement, box: box(o)})),
     })});
-    await fetch("/__finder_qa_state?" + params, {cache: "no-store"});
+    const response = await fetch("/__finder_qa_state?" + params, {cache: "no-store"});
+    if (response.headers.get("X-Finder-QA-Center")) {
+      s.scrollIntoView({block: "center", inline: "nearest"});
+    }
     await pause(450);
   }
 }
