@@ -530,7 +530,7 @@ export const candidateChanges = [
 ] as const;
 
 export const releaseHistory: readonly ReleaseNotes[] = [
-  { update: 232, date: "2026-11-27", title: "All-Band Fit at every benchmark limit", changes: candidateChanges, publicationTag: "update232" },
+  { update: 232, date: "2026-11-27", title: "All-Band Fit at every benchmark limit", changes: candidateChanges, github: { commit: "557cb626914178e97050ada3f0512e5a43e2e5c7", releaseTag: "update232" } },
   { update: 231, date: "2026-11-27", title: "EQ exports by platform and a clearer Tuning layout", changes: update231Changes, github: { commit: "71fc2e4733bea9b451ff972e6ba344b538edc380", releaseTag: "update231" } },
   { update: 230, date: "2026-11-27", title: "Joint Fit 20 by default", changes: update230Changes, github: { commit: "7d0ddca480b1577769d99fd6cdffa678f520dadc", releaseTag: "update230" } },
   { update: 229, date: "2026-11-27", title: "Joint Fit 20 and the RootlessJamesDSP benchmark reference", changes: update229Changes, github: { commit: "f449ea8299cf7938c51c5232a0c6839c868c3363", releaseTag: "update229" } },
