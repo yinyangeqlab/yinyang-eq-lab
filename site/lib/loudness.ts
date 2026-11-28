@@ -15,10 +15,10 @@ export type TrackAnalysis = {
 const db = (amplitude: number) => amplitude > 0 ? 20 * Math.log10(amplitude) : -Infinity;
 const percentile = (sorted: number[], fraction: number) => sorted[Math.min(sorted.length - 1, Math.floor((sorted.length - 1) * fraction))];
 
-export async function analyzeTrack(file: Blob): Promise<TrackAnalysis> {
-  const decoder = new AudioContext();
+export async function analyzeTrack(file: Blob, source?: Promise<AudioBuffer>): Promise<TrackAnalysis> {
+  const decoder = source ? null : new AudioContext();
   try {
-    const decoded = await decoder.decodeAudioData(await file.arrayBuffer());
+    const decoded = await (source ?? decoder!.decodeAudioData(await file.arrayBuffer()));
     if (decoded.numberOfChannels !== 2) throw new Error("Stereo audio required.");
     const left = decoded.getChannelData(0), right = decoded.getChannelData(1);
     const count = Math.min(Math.ceil(decoded.length / 64), 1_048_576);
@@ -66,7 +66,7 @@ export async function analyzeTrack(file: Blob): Promise<TrackAnalysis> {
       channelBalanceDb: db(Math.sqrt(sumL / decoded.length)) - db(Math.sqrt(sumR / decoded.length)),
       loudnessSpreadDb, clippedSamples, integratedLufs,
     };
-  } finally { await decoder.close(); }
+  } finally { await decoder?.close(); }
 }
 
 export function connectLoudnessWeighting(context: BaseAudioContext, source: AudioNode) {
@@ -76,7 +76,7 @@ export function connectLoudnessWeighting(context: BaseAudioContext, source: Audi
   return highpass;
 }
 
-async function estimateLufs(decoded: AudioBuffer): Promise<number> {
+export async function estimateLufs(decoded: AudioBuffer): Promise<number> {
   const offline = new OfflineAudioContext(2, decoded.length, decoded.sampleRate);
   const source = offline.createBufferSource(); source.buffer = decoded;
   connectLoudnessWeighting(offline, source).connect(offline.destination); source.start();

@@ -16,7 +16,7 @@ const points=Array.from({length:20},(_,i)=>[20*1000**(i/19),i/10]);
 const target=(id,type='ie')=>({id,name:`Reference ${id}`,points,status:'approved',measurement:{type}});
 function harness(extra={}){
  const stored=new Map(),calls=[];
- const state={sourceCurves:{ready:true},autoEqCatalogId:"synthetic-catalog",sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
+ const state={levelMatchPassage:false,setPilotSelected(){},sourceCurves:{ready:true},autoEqCatalogId:"synthetic-catalog",sharedAdmin:false,targetVisibility:'private',removalRequests:[],passageRequired:true,setResearchComparisonId(){},Error,curveVersion:()=>"qa-version",crypto:webcrypto,parseCurve,compareTargets,screenTargetName,targetHeadphoneType,
  name:'Warm reference',creator:'QA',description:'Synthetic',targetCategory:'ie',referenceSystem:'Unknown',submissionKind:'target',targetMeasurementId:'',measurements:[],csv:points.map(p=>p.join(',')).join('\n'),fileName:'curve.csv',curveKind:'original',parentTargetId:'',
  selectedMeasurement:{id:'measurement',name:'QA',type:'ie',points},headphoneType:'ie',rankType:'ie',targets:[target('a')],localTargets:[],testMode:'blind',sessionExpired:false,sessionFinished:false,sessionTrials:[],sessionId:'old',pair:['old-a','old-b'],trialId:'old-trial',revealed:true,busy:false,submissionsEnabled:true,voteDataAccepted:true,
  feedbackNonce:2,describeOpen:true,openFeedbackIdRef:{current:'old-feedback-id'},nextComparisonFocusPending:{current:false},autoCollapseSetupRef:{current:true},lastActivityRef:{current:0},lastPersistedRef:{current:0},router:{replace(){}},

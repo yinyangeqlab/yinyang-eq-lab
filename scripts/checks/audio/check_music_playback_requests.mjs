@@ -25,7 +25,7 @@ const failure = name => Object.assign(new Error(name), { name });
 function fixture() {
   const errors = [], calls = [], plays = [], resumes = [];
   const audio = { paused: true, play() { calls.push('play'); this.paused = false; const p = deferred(); plays.push(p); return p.promise; }, pause() { this.paused = true; }, removeAttribute() {}, load() {} };
-  const state = {fitter:{method:"standard",bands:10},fitInputs:null,
+  const state = {levelMatchPassage:false,fitter:{method:"standard",bands:10},fitInputs:null,
     audioRef: { current: audio }, playbackRequestRef: { current: 0 }, sourceSerialRef: { current: 1 }, folderSerialRef: { current: 0 }, passageRunRef: { current: null },
     beforePlayback: undefined, file: { name: 'synthetic.wav' }, setupEngine() {}, applyFit() {}, preparePlaybackFit() { return true; }, selectSide() {},
     setPassageRun() {}, setSourceError: value => errors.push(value), mediaRecovery: { current: { retry: () => false } },

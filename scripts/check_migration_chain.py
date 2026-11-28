@@ -28,6 +28,7 @@ manual = {
     "0047_companion_preset_history.sql": "710098e15bc75b112ee0dfc77e6c36bce1eb2274170af126b8374a6a50cd205b",
     "0048_companion_personal_ranks.sql": "f3691c00aa3f5311e5c2e50d96d4e63a7e369379d69fe55aa522a80f7dbd5bb9",
     "0049_sync_account_recovery.sql": "ed580183d8957794e3729701f809e52ac3ba4c83fa318b339721f9ff18e4012f",
+    "0050_joint_ranked_guards.sql": "7af9c99c8cfeb75fd926a33e972543870cdad576a2d9422af07250607ab77bcc",
 }
 assert [p.name for p in paths[journaled:]] == list(manual), "Unreviewed manual migration suffix"
 for path in paths[journaled:]:

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
+import * as protocol from "../site/lib/listening-protocol.ts";
 
 // Run the real vote route against a controlled database, never production votes.
 const source = readFileSync(new URL("../site/app/api/votes/route.ts", import.meta.url), "utf8");
@@ -11,7 +12,7 @@ const logCode = ts.transpileModule(logSource, { compilerOptions: { target: ts.Sc
 const voterId = "11111111-1111-4111-8111-111111111111";
 const trialId = "22222222-2222-4222-8222-222222222222";
 const schema = Object.fromEntries(["votes", "rankedTrials", "targets", "rankedPairClaims", "listeningRuns", "comparisonRecords"].map(table => [table, new Proxy({ table }, { get: (target, key) => target[key] ?? key })]));
-async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [], linked = false } = {}) {
+async function submit({ recentCount = 0, gate = false, used = false, prior = false, age = 11000, heard = 6, result, checks = [], linked = false, protocolVersion = protocol.LISTENING_PROTOCOL, completedProtocol = protocolVersion } = {}) {
   let batches = 0; let savedVote;
   let targetRead = 0;
   const logs = { exports: {} };
@@ -20,11 +21,11 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     select(fields) {
       let table;
       const query = {
-        from(value) { table = value; return query; }, get: async()=>({id:"run",voterId,testMode:"blind",headphoneType:"ie",targetAId:"a",targetBId:"b",result:"a",protocolVersion:"matched-passage-v2",intervals:"[]",researchContext:"{}"}), where() { return query; }, orderBy() { return query; }, limit() { return query; },
+        from(value) { table = value; return query; }, get: async()=>({id:"run",voterId,testMode:"blind",headphoneType:"ie",targetAId:"a",targetBId:"b",result:"a",protocolVersion:completedProtocol,intervals:"[]",researchContext:"{}"}), where() { return query; }, orderBy() { return query; }, limit() { return query; },
         then(resolve, reject) {
           let rows;
           if (table === schema.listeningRuns) rows = checks;
-          else if (table === schema.rankedTrials) rows = [{ id: trialId, voterId, testMode: "blind", sideA: "a", sideB: "b", protocolVersion:"matched-passage-v2",issuedAt: Date.now() - age }];
+          else if (table === schema.rankedTrials) rows = [{ id: trialId, voterId, testMode: "blind", sideA: "a", sideB: "b", protocolVersion,issuedAt: Date.now() - age }];
           else if (table === schema.targets) rows = [{ id: targetRead++ ? "b" : "a", name: "Target", rating: 1500, wins: 0, losses: 0, status: "approved" }];
           else if (fields?.otherReason) rows = Array.from({ length: recentCount }, () => ({ createdAt: Date.now() - 1000, otherReason: "" }));
           else if (fields?.id) rows = used ? [{ id: trialId }] : [];
@@ -39,7 +40,7 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     async batch() { batches++; },
   };
   const imports = {"@/lib/autoeq-target-sources":{sharedAutoEqTarget:id=>linked&&id==="a"?{id}:undefined},"@/lib/public-targets":{publicTargetPredicate:{}},
-    "@/lib/listening-protocol":{LISTENING_PROTOCOL:"matched-passage-v2"},
+    "@/lib/listening-protocol":protocol,
     "cloudflare:workers":{env:{DB:{prepare:()=>({bind:()=>({first:async()=>({subject_id:"test-account"})})})}}},
     "@/lib/submission-ownership": { submissionContext: async () => ({subjectId:"test-account",shareMusic:true,requireTrial:async()=>{},record:()=>({})}) },
     "@/lib/active-submissions": { activeSubmissions: async () => (kind,id) => id !== "removed-check" },
@@ -59,10 +60,13 @@ async function submit({ recentCount = 0, gate = false, used = false, prior = fal
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ winnerId: "a", loserId: "b", voterId, trialId, testMode: "blind", headphoneType: "ie", result, heardA: heard, heardB: heard, intervals: [] }),
   }));
-  if (response.ok) assert.equal(response.headers.get("X-Internal-Shootout-Failure"), null);
+  if (response.ok) {
+    assert.equal(response.headers.get("X-Internal-Shootout-Failure"), null);
+    assert.equal(savedVote.protocolVersion, protocolVersion);
+  }
   else {
-    const reason = gate ? "write_blocked" : used ? "vote_already_saved" : age < 10000 || heard < 5 ? "insufficient_playback" : "invalid_result_type";
-    const stage = gate ? "write_gate" : used || age < 10000 ? "trial" : heard < 5 ? "request_body" : "listening_evidence";
+    const reason = completedProtocol !== protocolVersion ? "listening_record_mismatch" : gate ? "write_blocked" : used ? "vote_already_saved" : age < 10000 || heard < 5 ? "insufficient_playback" : "invalid_result_type";
+    const stage = completedProtocol !== protocolVersion ? "listening_record" : gate ? "write_gate" : used || age < 10000 ? "trial" : heard < 5 ? "request_body" : "listening_evidence";
     assert.equal(response.headers.get("X-Internal-Shootout-Failure"), `${stage}:${reason}`);
   }
   return { status: response.status, batches, ...(checks.length ? { reliabilityWeight: savedVote?.reliabilityWeight } : {}) };
@@ -82,3 +86,7 @@ const removedCheck = await submit({checks:[{id:'removed-check',trialId:'issued',
 assert.equal(removedCheck.reliabilityWeight,1,'Removed checks cannot calibrate future votes');
 
 assert.equal((await submit({linked:true})).status,200,"A pinned source ID can receive a vote without a target-table row.");
+
+assert.deepEqual(await submit({protocolVersion:protocol.LEVEL_MATCHED_LISTENING_PROTOCOL}), {status:200,batches:1});
+assert.deepEqual(await submit({protocolVersion:protocol.LEVEL_MATCHED_LISTENING_PROTOCOL,completedProtocol:protocol.LISTENING_PROTOCOL}), {status:409,batches:0});
+console.log("Vote route preserves the issued level-matched protocol and rejects completed runs from another protocol.");

@@ -742,7 +742,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   const [analyser,setAnalyser]=useState<AnalyserNode | null>(null);
   const media = useRef<HTMLAudioElement>(null);
   const objectUrl = useRef("");
-  const { fitter, setFitter, defaultFitter, saveDefault, notice: fitterNotice } = useFitterSettings();
+  const { fitter, setFitter, defaultFitter, saveDefault, notice: fitterNotice } = useFitterSettings("tuning");
   const [bypass, setBypass] = useState(false);
   const [matchEnabled, setMatchEnabled] = useState(true);
   const [soundMode, setSoundMode] = useState<SoundMode>("target");
@@ -1141,7 +1141,11 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
   }, [matchLoudness, playing, analyser, heardKey, applyTrim]);
   const ensureGraph = useCallback(() => {
     if (graph.current) return graph.current;
-    const context = new AudioContext();
+    let context = new AudioContext();
+    if (context.sampleRate < 44_100 || context.sampleRate > 192_000) {
+      void context.close();
+      context = new AudioContext({ sampleRate: 48000 });
+    }
     setPreviewRate(context.sampleRate);
     const input = context.createGain();
     const toneInput = context.createGain(), toneOutput = context.createGain();
@@ -1868,7 +1872,7 @@ export default function TuningEditor({ visible = true }: { visible?: boolean }) 
             target={<>
               <TuningTargetPicker targets={targetOptions} selected={selectedTargetOption} onSelect={changeTarget}/>
               <p id="tuning-target-rank-source">{targetRanking.rows.length
-                ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use Standard 10-band matched-passage results."
+                ? targetRanking.earlier ? "Global ranks use earlier matched-passage results. Fitter unrecorded." : "Global ranks use matched-passage results from the Target leaderboard."
                 : "Global ranks appear when matched-passage results are available."}</p>
               <div className="pt-target-actions">
                 <label className="pt-import" title="Import a target CSV or TXT"><Upload size={15} aria-hidden="true"/><span>Import</span><input type="file" aria-label="Import a target CSV or TXT" accept=".csv,.txt,text/plain,text/csv" onChange={event => void loadCurve(event.currentTarget.files?.[0])}/></label>

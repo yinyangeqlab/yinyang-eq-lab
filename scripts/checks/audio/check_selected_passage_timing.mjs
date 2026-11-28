@@ -14,7 +14,7 @@ function visit(node){if(ts.isFunctionDeclaration(node)&&node.name)handlers.set(n
 const names=['closeInterval','startInterval','snapshotIntervals','heardNow','resetHeard'];
 const code=ts.transpileModule(names.map(name=>handlers.get(name)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function harness(required,freeListening=false){
-  const state={required,freeListening,volume:1,document:{visibilityState:'visible'},intervalStats,selectedPassageIntervals,selectedPassageProgress,engine:{current:{context:{state:'running'}}},
+  const state={required,freeListening,levelMatchPassage:false,matchedPlayback:{current:{enabled:false,volume:1}},volume:1,document:{visibilityState:'visible'},intervalStats,selectedPassageIntervals,selectedPassageProgress,engine:{current:{context:{state:'running'}}},
     audioRef:{current:{paused:false,seeking:false,currentTime:0,playbackRate:1}},
     intervalsRef:{current:[]},activeRef:{current:null},sideRef:{current:0},heardRef:{current:[0,0]},
     lastPlaybackPosition:{current:0},passageRunRef:{current:null},passageRef:{current:{start:10,end:15}},
@@ -76,6 +76,18 @@ for(const required of [false,true]){
    {side:0,start:0,end:2,rate:1},
    {side:1,start:2,end:3,rate:1},
  ],'Free listening credits both versions outside the selected passage');
+}
+{
+ const h=harness(true);
+ h.state.levelMatchPassage=true;
+ h.state.matchedPlayback.current={enabled:true,volume:1};
+ h.audio.currentTime=10;h.run("startInterval()");h.audio.currentTime=12;
+ assert.deepEqual(h.run("heardNow()"),[0,0],"A ranked round without a level match earns no listening credit");
+ h.state.matchedPlayback.current.match={start:10,end:15};
+ h.state.document.visibilityState="hidden";h.state.passageRunRef.current={pendingStart:true,range:{start:10,end:15}};
+ h.run("startInterval()");h.audio.currentTime=13;
+ h.state.document.visibilityState="visible";h.run("startInterval()");h.audio.currentTime=15;
+ assert.deepEqual(h.run("heardNow()"),[2,0],"Ranked playback before audibility is not silently credited");
 }
 // Longer Personal selections still have a five-second meter, but matched source
 // overlap is evaluated within that selection, never elsewhere in the song.

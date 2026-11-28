@@ -5,7 +5,7 @@ import "./research-header.css";
 
 export type ResearchSection = "rankings" | "targets" | "community";
 const sections = [
-  { id: "rankings", href: "/shootout?tab=rankings", label: "Rankings", title: "Public EQ Rankings", description: "Explore preferences from blind listening comparisons.", Icon: ChartNoAxesColumn },
+  { id: "rankings", href: "/shootout?tab=rankings", label: "Leaderboards", title: "Public EQ Leaderboards", description: "Explore preferences from blind listening comparisons.", Icon: ChartNoAxesColumn },
   { id: "targets", href: "/curve-credits", label: "Targets & Credits", title: "Targets & Credits", description: "Find the sources and creators behind the headphone targets.", Icon: AudioLines },
   { id: "community", href: "/community-preferences", label: "Community Preferences", title: "Community Preferences", description: "Take part in the optional listening research pilot.", Icon: UsersRound },
 ] as const;

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import vm from 'node:vm';import ts from 'typescript';import{parseCurve}from'../../../site/lib/curves.ts';
-import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,personalFinalistReadiness,personalAppearance,targetFamily,PERSONAL_KEY,PERSONAL_TOURNAMENT_SCHEDULER} from '../../../site/lib/personal-shootout.ts';
+import {checkpointPersonalRun,createPersonalRun,nextPersonalPair,recordPersonalChoice,personalStandings,personalFavorite,parsePersonalRuns,confirmationComplete,confirmationEvidence,personalFinalistReadiness,personalAppearance,targetFamily,usesJointFit,MAX_PERSONAL_SETUPS,PERSONAL_KEY,PERSONAL_TOURNAMENT_SCHEDULER} from '../../../site/lib/personal-shootout.ts';
 import {captureSyncPayload,replaceSyncStorage} from '../../../site/lib/browser-sync.mjs';
 let checks=0;const check=(description,action)=>{action();checks++;console.log('PASS',description);};
 const candidates=Array.from({length:12},(_,i)=>({id:`t${i}`,name:`Target ${i}`,family:i<6?'variants':`family${i}`}));
@@ -9,6 +9,20 @@ const initial=()=>{const run=createPersonalRun('synthetic-context','Synthetic he
 function rng(seed){return()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function choose(run,result='a',recording='song-one') {run={...run,pending:run.pending??nextPersonalPair(run,rng(run.choices.length+4))};return recordPersonalChoice(run,{pair:run.pending,result,recording,start:0,end:5,at:run.choices.length,phase:run.phase});}
 check('Round-trip restores exact pending sides and progress',()=>{const run=initial();run.pending=nextPersonalPair(run,rng(12));assert.deepEqual(parsePersonalRuns(JSON.stringify([run]))[0],run);});
+check('New Joint Fit tournament settings round-trip as exactly 20 bands',()=>{
+ const run={...initial(),fitter:{method:"joint",bands:20}};
+ assert.deepEqual(parsePersonalRuns(JSON.stringify([run]))[0].fitter,run.fitter);
+ assert.throws(()=>parsePersonalRuns(JSON.stringify([{...run,fitter:{method:"joint",bands:15}}])),/Invalid saved fitter settings/);
+});
+check('Full legacy history leaves room for eight active 20-band setups',()=>{
+ const archive=Array.from({length:MAX_PERSONAL_SETUPS},(_,i)=>({...initial(),context:"old"+i,fitter:i%2?{method:"standard",bands:10}:undefined}));
+ const active=Array.from({length:MAX_PERSONAL_SETUPS},(_,i)=>({...initial(),context:"new"+i,fitter:{method:"joint",bands:20}}));
+ assert.equal(parsePersonalRuns(JSON.stringify(archive)).filter(usesJointFit).length,0);
+ const restored=parsePersonalRuns(JSON.stringify([...archive,...active]));
+ assert.equal(restored.filter(usesJointFit).length,MAX_PERSONAL_SETUPS);
+ assert.deepEqual(restored.filter(run=>!usesJointFit(run)),JSON.parse(JSON.stringify(archive)));
+ assert.throws(()=>parsePersonalRuns(JSON.stringify([...restored,initial()])),/Personal progress could not be read/);
+});
 check('Unknown versions, malformed pairs and corrupt choice data fail closed',()=>{for(const mutate of [r=>r.version=2,r=>r.pending=['t0','t0'],r=>r.choices=[{pair:['missing','t1']}],r=>r.budget=0,r=>r.excluded=['missing']]){const r=initial();mutate(r);assert.throws(()=>parsePersonalRuns(JSON.stringify([r])));}assert.throws(()=>parsePersonalRuns('{broken'));});
 check('Early coverage visits every candidate and spreads family exposure',()=>{let r=initial();const random=rng(42);for(let i=0;i<16;i++){r.pending=nextPersonalPair(r,random);assert.notEqual(r.pending[0],r.pending[1]);if(i<3)assert.notEqual(candidates.find(c=>c.id===r.pending[0]).family,candidates.find(c=>c.id===r.pending[1]).family);r=choose(r,'tie');}assert.equal(personalStandings(r).filter(t=>t.heard>0).length,12);});
 check('One loss never benches a target; ties do not bench targets',()=>{let r=initial();r.pending=['t0','t1'];r=choose(r,'b');assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,false);for(let i=0;i<10;i++){r.pending=['t0','t1'];r=choose(r,'tie');}assert.equal(personalStandings(r).find(t=>t.id==='t0').benched,false);});

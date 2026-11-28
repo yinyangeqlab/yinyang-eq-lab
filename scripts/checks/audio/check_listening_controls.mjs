@@ -4,14 +4,22 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import {resolve,dirname} from 'node:path';
 const modules=new Map();
-function load(name){name=resolve(name);if(modules.has(name))return modules.get(name);const mod={exports:{}};modules.set(name,mod.exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,JSON,Math,require(id){const path=id.startsWith('@/')?resolve('site',id.slice(2)):resolve(dirname(name),id);return load(path.endsWith('.ts')?path:path+'.ts');}});return mod.exports;}
+const savedSettings = new Map();
+const storage = { getItem: key => savedSettings.get(key) ?? null };
+function load(name){name=resolve(name);if(modules.has(name))return modules.get(name);const mod={exports:{}};modules.set(name,mod.exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(name,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{module:mod,exports:mod.exports,Float32Array,Float64Array,JSON,Math,localStorage:storage,require(id){const path=id.startsWith('@/')?resolve('site',id.slice(2)):resolve(dirname(name),id);return load(path.endsWith('.ts')?path:path+'.ts');}});return mod.exports;}
 const settings=load('site/lib/fitter-settings.ts'),core=load('site/lib/autoeq-fit.ts');
 const flat=[[20,0],[20000,0]],raw=[[20,4],[1000,0],[20000,-3]],request={raw,targets:[flat,[[20,3],[1000,0],[20000,-2]]],kind:'shootout',sampleRate:48000};
 const jointRequest = {...request, method:'joint', bands:20};
-assert.throws(()=>core.validateRequest(jointRequest), /Unsupported EQ request/);
-assert.doesNotThrow(()=>core.validateRequest({...jointRequest, kind:'export'}));
-assert.equal(settings.validFitter(jointRequest),false);
-assert.equal(settings.validExportFitter(jointRequest),true);
+assert.doesNotThrow(() => core.validateRequest(jointRequest));
+assert.doesNotThrow(() => core.validateRequest({ ...jointRequest, kind: 'export' }));
+assert.throws(() => core.validateRequest({ ...jointRequest, bands: 10 }), /Unsupported EQ request/);
+assert.equal(settings.validExportFitter(jointRequest), true);
+savedSettings.set(settings.FITTER_STORAGE, JSON.stringify({ method: 'precise', bands: 10 }));
+assert.equal(settings.readDefaultFitter().method, 'precise');
+assert.equal(settings.readDefaultFitter('tuning').method, 'joint');
+assert.equal(settings.readDefaultFitter('tuning').bands, 20);
+savedSettings.set(settings.fitterStorage('tuning'), JSON.stringify({ method: 'standard', bands: 15 }));
+assert.equal(settings.readDefaultFitter('tuning').bands, 15);
 let assertions=0;const check=(value,message)=>{assert.ok(value,message);assertions++;};
 for(const method of ['standard','precise'])for(const bands of [10,15,20,30]){
  const fits=core.legacyBatch({...request,method,bands},'');
@@ -25,6 +33,12 @@ const base={method:'standard',bands:10,filterCount:10,engine:'legacy',engineVers
 check(settings.fitterCohort(JSON.stringify({eqFits:[base,base]})).key===settings.MAIN_FITTER_COHORT,'Main ranking reference has an exact version-bound key');
 for(const changes of [{method:'precise'},{bands:30},{engineVersion:'changed'},{sampleRate:44100},{bands:11},{engine:'unrecognized'},{filterCount:11},{rms:NaN},{preamp:1}])assert.throws(()=>settings.cleanFitMetadata([base,{...base,...changes}]));
 for(const context of [null,'{bad','{}',JSON.stringify({eqFits:[{bands:10},{bands:10}]})])check(settings.fitterCohort(context).key==='historical','Missing or invalid historical provenance never becomes today’s default');
+const joint = { ...base, ...settings.JOINT_FITTER, engine: 'joint', engineVersion: settings.JOINT_FITTER_VERSION, filterCount: 20 };
+check(settings.isJointFitPair(settings.cleanFitMetadata([joint, joint])), 'Joint Fit is an exact, versioned 20-band pair');
+for (const changes of [{ engine: 'legacy' }, { engineVersion: 'changed' }, { filterCount: 19 }, { bands: 10 }, { sampleRate: 32000 }]) {
+  const altered = { ...joint, ...changes };
+  assert.throws(() => settings.cleanFitMetadata([altered, altered]));
+}
 const wav=load('site/lib/channel-match-export.ts');check(wav.autoMatchFilename('Bose Comfort').endsWith('YinYang-AutoMatch-48k.wav'),'Automatic files have an explicit portable name');
 check(wav.autoMatchFilename('Model',true).includes('uploaded-channel-match'),'Uploaded corrections cannot be mislabeled as generated AutoMatch');
 // Execute the real AudioWorklet, retaining its stereo detector, smoothing and ceiling.

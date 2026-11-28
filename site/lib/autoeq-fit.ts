@@ -1,4 +1,4 @@
-import { FIT_BANDS, JOINT_FITTER_VERSION, validFitter, validExportFitter, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
+import { FIT_BANDS, JOINT_FITTER_VERSION, validFitter, isPeqdbMethod, type FitBands, type FitterMethod } from "./fitter-settings";
 import { fitAutoEq, autoEqReferenceOffset, response, type PeqFilter } from './autoeq';
 import { finalizeVariant, peakBoost } from './preference-finalize';
 import { at, fitGrid, validatePoints, type SmoothMode } from './peqdb-engine';
@@ -11,7 +11,7 @@ export type AutoEqFit = { filters: PeqFilter[]; preamp: number; peakBoost: numbe
 export function validateRequest(request: AutoEqRequest) {
   validatePoints(request.raw);
   if (request.headphoneType !== undefined && request.headphoneType !== "ie" && request.headphoneType !== "oe") throw Error("Unsupported headphone type.");
-  if (!['shootout', 'export'].includes(request.kind) || !FIT_BANDS.includes(request.bands) || request.method !== undefined && !(request.kind === "export" ? validExportFitter(request) : validFitter(request)) || !request.method && request.kind === 'shootout' && request.bands !== 10 ||
+  if (!['shootout', 'export'].includes(request.kind) || !FIT_BANDS.includes(request.bands) || request.method !== undefined && !validFitter(request) || !request.method && request.kind === 'shootout' && request.bands !== 10 ||
       !Number.isFinite(request.sampleRate) || request.sampleRate < 3000 || request.sampleRate > 768000 || request.targets.length < 1 || request.targets.length > 3 || request.legacyPriority !== undefined && !['smooth', 'close'].includes(request.legacyPriority)) throw Error('Unsupported EQ request.');
   request.targets.forEach(validatePoints);
   if (request.method === "joint" && (request.sampleRate < 44_100 || request.sampleRate > 192_000)) throw Error("Joint Fit requires a playback sample rate from 44.1 to 192 kHz.");

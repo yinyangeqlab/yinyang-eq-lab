@@ -29,7 +29,7 @@ export function BlindListeningMode({ required, onChange, disabled }: { required:
     <legend>Blind listening mode</legend>
     <label><input type="radio" name={description} checked={required} onChange={() => onChange(true)} />Ranked Blind Shootout</label>
     <label><input type="radio" name={description} checked={!required} onChange={() => onChange(false)} />Rapid Shootout</label>
-    <p id={description}>{required ? "Five matched seconds per side. Eligible choices count toward rankings." : "Choose anytime. Eligible choices count toward the Free Listening ranking. Playback timing is recorded."}</p>
+    <p id={description}>{required ? "Five level-matched seconds per side. Eligible choices count toward the leaderboard." : "Choose anytime. Eligible choices count toward the Free Listening ranking. Playback timing is recorded."}</p>
   </fieldset>;
 }
 

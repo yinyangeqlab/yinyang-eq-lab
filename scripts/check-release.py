@@ -74,7 +74,8 @@ public_evidence = {
 # not private numerical target seeds. Only these exact blobs waive that one rule;
 # every credential/path guard still applies, and any edited/new fixture fails closed.
 reviewed_synthetic_target_fixtures = {
-    "scripts/checks/access-and-data/check_audit_privacy.mjs": "aeb873a5317e0c8a13d2cfb1cd382de57ad01052cc631d0d9ebed27c087b5412",
+    "scripts/checks/access-and-data/check_audit_privacy.mjs": "aba137a78bfbd76721069c7f8f150afe305da5a270028d3dc953ba0587243f84",
+    "scripts/check_ranked_runs.mjs": "fef9178529a39359e2206a96b50870cfaf1e3bb0cec601d25dc01fa8fa39410d",
     "scripts/checks/research/check_personal_research.mjs": "0912f5452eb92893e0ad8b320ef0b7fbfa16bae4889c8a7c61f332be2272f705",
     "scripts/checks/research/check_community_reference.mjs": "205f75e28cf20ef3505e54ceb1dc3420ae9cf80170595802718cf1a503f60afe",
     "scripts/checks/application/check_target_context_and_changes.mjs": "8a461b0ec764ef1c31d3d0e2d4bec0f1b96f9a59f8723a55b065e86b90cde2ae",

@@ -22,7 +22,7 @@ assert.equal(await local.chooseRandomSample('random',false),true);assert.equal(c
 console.log('PASS empty local source never silently loads the pool; a selected local folder still samples normally.');
 
 let emptyPicker=false;
-const emptyPool={testModeRef:{current:'blind'},openMusicSourceRef:{current:'pool'},sampleChoice:'random',samplesRef:{current:[]},beforePlayback:undefined,curatedFetchRef:{current:0},sourceSerialRef:{current:0},hashSerialRef:{current:0},excludedRecordingIdsRef:{current:[]},includedRecordingIdsRef:{current:[]},curatedQueueRef:{current:[]},curatedMusic:[{url:'synthetic-track'}],setSourceError(){},setChooserOpen:value=>emptyPicker=value};
+const emptyPool={levelMatchPassage:false,testModeRef:{current:'blind'},openMusicSourceRef:{current:'pool'},sampleChoice:'random',samplesRef:{current:[]},beforePlayback:undefined,curatedFetchRef:{current:0},sourceSerialRef:{current:0},hashSerialRef:{current:0},excludedRecordingIdsRef:{current:[]},includedRecordingIdsRef:{current:[]},curatedQueueRef:{current:[]},curatedMusic:[{url:'synthetic-track'}],setSourceError(){},setChooserOpen:value=>emptyPicker=value};
 vm.createContext(emptyPool);vm.runInContext(ts.transpileModule(sampler[0],{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,emptyPool);
 assert.equal(await emptyPool.chooseRandomSample('random',false),false);assert.equal(emptyPicker,true);
 console.log('PASS an empty eligible playlist reopens the chooser without loading or silently selecting a different song.');
